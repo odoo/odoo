@@ -8,9 +8,8 @@ odoo.define('web.kanban_record_quick_create', function (require) {
 
 var core = require('web.core');
 var QuickCreateFormView = require('web.QuickCreateFormView');
+const session = require('web.session');
 var Widget = require('web.Widget');
-
-var qweb = core.qweb;
 
 var RecordQuickCreate = Widget.extend({
     className: 'o_kanban_quick_create',
@@ -71,7 +70,7 @@ var RecordQuickCreate = Widget.extend({
             var formView = new QuickCreateFormView(fieldsViews.form, {
                 context: self.context,
                 modelName: self.model,
-                userContext: self.getSession().user_context,
+                userContext: session.user_context,
             });
             return formView.getController(self).then(function (controller) {
                 self.controller = controller;
@@ -85,7 +84,7 @@ var RecordQuickCreate = Widget.extend({
      */
     start: function () {
         this.$el.append(this.controller.$el);
-        this.$el.append(qweb.render('KanbanView.RecordQuickCreate.buttons'));
+        this.controller.renderButtons(this.$el);
 
         // focus the first field
         this.controller.autofocus();
@@ -277,6 +276,11 @@ var RecordQuickCreate = Widget.extend({
             return;
         }
 
+        // ignore clicks while a modal is just about to open
+        if ($(document.body).hasClass('modal-open')) {
+            return;
+        }
+
         // ignore clicks if target is no longer in dom (e.g., a click on the
         // 'delete' trash icon of a m2m tag)
         if (!document.contains(ev.target)) {
@@ -284,7 +288,7 @@ var RecordQuickCreate = Widget.extend({
         }
 
         // ignore clicks if target is inside the quick create
-        if (this.el.contains(ev.target) && this.el !== ev.target) {
+        if (this.el.contains(ev.target) || this.el === ev.target) {
             return;
         }
 

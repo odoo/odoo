@@ -66,10 +66,10 @@ var isCorrectAnswer = function (answer) {
 };
 
 /**
- * The check is based on the specific opacity (0.3) and color of incorrect answers.
+ * The check is based on the specific opacity (0.2) and color of incorrect answers.
  */
 var isIncorrectAnswer = function (answer) {
-    return answer.backgroundColor.includes('0.3') &&
+    return answer.backgroundColor.includes('0.2') &&
         answer.labelColor === WRONG_ANSWER_COLOR;
 };
 
@@ -282,8 +282,9 @@ tour.register('test_survey_session_manage_tour', {
             }
         }
 
-        // after 1 second, results are displayed automatically because question timer
-        // runs out
+        // after 1 second, results are displayed automatically because question timer runs out
+        // we add 1 extra second because of the way the timer works:
+        // it only triggers the time_up event 1 second AFTER the delay is passed
         setTimeout(function () {
             chartData = getChartData();
             var firstAnswerData = chartData[0];
@@ -338,7 +339,7 @@ tour.register('test_survey_session_manage_tour', {
             }
 
             nextScreen();
-        }, 1500);
+        }, 2100);
     }
 }, {
     trigger: 'h1:contains("Final Leaderboard")',
@@ -413,23 +414,14 @@ tour.register('test_survey_session_manage_tour', {
             }
         }
 
-        // Now we go forward to the "Final Leaderboard" again (4 times)
-        for (i = 0; i < 4; i++) {
+        // Now we go forward to the "Final Leaderboard" again (3 times)
+        for (i = 0; i < 3; i++) {
             nextScreen();
         }
     }
 }, {
     trigger: 'h1:contains("Final Leaderboard")',
     run: function () {} // Final Leaderboard is displayed
-}, {
-    trigger: '.o_survey_session_leaderboard_item:contains("azerty"):contains("1."):contains("40")',
-    run: function () {} // 'azerty' is first with 40 points
-}, {
-    trigger: '.o_survey_session_leaderboard_item:contains("xxxTheB"):contains("2."):contains("20")',
-    run: function () {} // 'xxxTheBestxxx' is second with 20 points
-}, {
-    trigger: '.o_survey_session_leaderboard_item:contains("nicktalope"):contains("3."):contains("10")',
-    run: function () {} // 'nicktalope' is third with 10 points
 }, {
     trigger: '.o_survey_session_close:has("i.fa-close")'
 }, {

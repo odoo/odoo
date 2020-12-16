@@ -14,7 +14,7 @@
                 <div class="content-group">
                     <div class="row mt16"
                         id="website_warehouse_setting"
-                        attrs="{'invisible': [('group_stock_multi_warehouses', '=', False)]}">
+                        groups="stock.group_stock_multi_warehouses">
                         <label for="website_warehouse_id" string="Warehouse" class="col-lg-3 o_light_label" />
                         <field name="website_warehouse_id"/>
                     </div>

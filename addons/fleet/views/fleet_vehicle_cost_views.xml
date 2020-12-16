@@ -8,7 +8,7 @@
                 <header>
                     <button name="contract_open" states="futur" type="object" string="Start Contract" class="oe_highlight" groups="fleet.fleet_group_manager"/>
                     <button name="contract_close" states="futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>
-                    <button name="contract_close" states="open,expired,future" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
+                    <button name="contract_close" states="open,expired,futur" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
                     <button name="contract_draft" states="closed" type="object" string="Reset To Draft" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
                 </header>
@@ -20,13 +20,13 @@
                         <h1><field name="name"/></h1>
                     </div>
                     <group col="2">
-                        <group string="Contract Informations">
+                        <group string="Contract Information">
                             <field name="user_id"/>
                             <field name="cost_subtype_id"/>
                             <field name="insurer_id"/>
                             <field name="ins_ref"/>
                         </group>
-                        <group string="Vehicle Informations">
+                        <group string="Vehicle Information">
                             <field name="vehicle_id"/>
                             <field name="purchaser_id"/>
                         </group>
@@ -54,9 +54,9 @@
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -66,18 +66,23 @@
         <field name="name">fleet.vehicle.log.contract.tree</field>
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
-            <tree string="Contract logs" decoration-danger="days_left==0" decoration-muted="state=='closed'" default_order="expiration_date">
+            <tree string="Contract logs"
+                decoration-danger="days_left==0"
+                decoration-muted="state=='closed'"
+                default_order="expiration_date"
+                sample="1">
                 <field name="active" invisible="1"/>
-                <field name="name" />
+                <field name="name" class="font-weight-bold" />
                 <field name="start_date" />
-                <field name="expiration_date" />
+                <field name="expiration_date" widget="remaining_days"/>
                 <field name="days_left" invisible="1"/>
-                <field name="vehicle_id" />
+                <field name="vehicle_id" widget="many2one_avatar" />
                 <field name="insurer_id" />
                 <field name="purchaser_id"/>
-                <field name="cost_generated"/>
+                <field name="cost_generated" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
                 <field name="cost_frequency"/>
-                <field name="state" />
+                <field name="state" widget="badge" decoration-info="state == 'open'" decoration-danger="state == 'expired'" />
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -87,7 +92,7 @@
         <field name="name">fleet.vehicle.log.contract.kanban</field>
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="activity_state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
@@ -95,7 +100,7 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <strong>
-                                    <field name="vehicle_id"/>
+                                    <field name="vehicle_id" widget="res_partner_many2one"/>
                                     <span class="float-right badge badge-secondary">
                                         <field name="state"/>
                                     </span>
@@ -105,7 +110,7 @@
                                 <field name="start_date"/> - <field name="expiration_date"/>
                             </div>
                             <div>
-                                <field name="insurer_id"/>
+                                <field name="insurer_id" widget="res_partner_many2one"/>
                             </div>
                         </div>
                     </t>
@@ -118,7 +123,7 @@
        <field name="name">fleet.vehicle.log.contract.graph</field>
        <field name="model">fleet.vehicle.log.contract</field>
        <field name="arch" type="xml">
-            <graph string="Contract Costs Per Month" type="bar" stacked="True">
+            <graph string="Contract Costs Per Month" type="bar" stacked="True" sample="1">
                 <field name="date" type="row"/>
                 <field name="vehicle_id" type="row"/>
                 <field name="amount" type="measure"/>
@@ -198,10 +203,16 @@
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
             <form string="Services Logs">
+                <field name="active" invisible="1" />
                 <field name="currency_id" invisible="1" />
+                <header>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group col="2">
                         <group>
+                            <field name="description" />
                             <field name="service_type_id" />
                             <field name="date" />
                             <field name="amount" widget="monetary"/>
@@ -222,9 +233,9 @@
                     </group>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -234,15 +245,18 @@
         <field name="name">fleet.vehicle.log.services.tree</field>
         <field name="model">fleet.vehicle.log.services</field>
         <field name="arch" type="xml">
-            <tree string="Services Logs">
-                <field name="date" />
+            <tree string="Services Logs" multi_edit="1">
+                <field name="date" readonly="1" />
+                <field name="description" />
                 <field name="service_type_id" />
-                <field name="vehicle_id" />
-                <field name="purchaser_id"/>
-                <field name="vendor_id" />
+                <field name="vehicle_id" readonly="1" widget="many2one_avatar" />
+                <field name="purchaser_id" readonly="1" widget="many2one_avatar"/>
+                <field name="vendor_id" optional="show" />
                 <field name="inv_ref" invisible="1" />
-                <field name="notes" />
-                <field name="amount" sum="Total"/>
+                <field name="notes" optional="show" />
+                <field name="amount" sum="Total" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state" readonly="1" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'todo'"  decoration-info="state == 'running'" />
             </tree>
         </field>
     </record>
@@ -258,15 +272,15 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <strong>
-                                    <field name="vehicle_id"/>
+                                    <field name="vehicle_id" widget="res_partner_many2one"/>
                                     <span class="float-right"><field name="date"/></span>
                                 </strong>
                             </div>
                             <div>
-                                <field name="purchaser_id"/>
+                                <field name="purchaser_id" widget="res_partner_many2one"/>
                             </div>
                             <div>
-                                <span><field name="vendor_id"/></span>
+                                <span><field name="vendor_id" widget="res_partner_many2one"/></span>
                                 <span class="float-right"><field name="amount" widget="monetary"/></span>
                             </div>
                         </div>
@@ -280,7 +294,7 @@
        <field name="name">fleet.vehicle.log.services.graph</field>
        <field name="model">fleet.vehicle.log.services</field>
        <field name="arch" type="xml">
-            <graph string="Services Costs Per Month" stacked="True">
+            <graph string="Services Costs Per Month" stacked="True" sample="1">
                 <field name="date" type="row"/>
                 <field name="vehicle_id" type="row"/>
                 <field name="amount" type="measure"/>
@@ -295,6 +309,8 @@
             <search string="Services Logs" >
                 <field name="vehicle_id"/>
                 <field name="service_type_id"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
             </search>
         </field>
     </record>

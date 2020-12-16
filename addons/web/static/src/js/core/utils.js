@@ -205,6 +205,28 @@ var diacriticsMap = {
 
 const patchMap = new WeakMap();
 
+/**
+ * Helper function returning an extraction handler to use on array elements to
+ * return a certain attribute or mutated form of the element.
+ *
+ * @private
+ * @param {string | function} criterion
+ * @returns {(element: any) => any}
+ */
+function _getExtractorFrom(criterion) {
+    if (criterion) {
+        switch (typeof criterion) {
+            case 'string': return element => element[criterion];
+            case 'function': return criterion;
+            default: throw new Error(
+                `Expected criterion of type 'string' or 'function' and got '${typeof criterion}'`
+            );
+        }
+    } else {
+        return element => element;
+    }
+}
+
 var utils = {
 
     /**
@@ -302,6 +324,31 @@ var utils = {
             reader.addEventListener('error', reject);
             reader.readAsDataURL(file);
         });
+    },
+    /**
+     * Returns an object holding different groups defined by a given criterion
+     * or a default one. Each group is a subset of the original given list.
+     * The given criterion can either be:
+     * - a string: a property name on the list elements which value will be the
+     * group name,
+     * - a function: a handler that will return the group name from a given
+     * element.
+     *
+     * @param {any[]} list
+     * @param {string | function} [criterion]
+     * @returns {Object}
+     */
+    groupBy: function (list, criterion) {
+        const extract = _getExtractorFrom(criterion);
+        const groups = {};
+        for (const element of list) {
+            const group = String(extract(element));
+            if (!(group in groups)) {
+                groups[group] = [];
+            }
+            groups[group].push(element);
+        }
+        return groups;
     },
     /**
      * Returns a human readable number (e.g. 34000 -> 34k).
@@ -447,11 +494,25 @@ var utils = {
     },
     /**
      * Checks if a class is an extension of owl.Component.
-     * 
+     *
      * @param {any} value A class reference
      */
     isComponent: function (value) {
         return value.prototype instanceof owl.Component;
+    },
+    /**
+     * Checks if a keyboard event concerns
+     * the numpad decimal separator key.
+     *
+     * Some countries may emit a comma instead
+     * of a period when this key get pressed.
+     * More info: https://www.iso.org/schema/isosts/v1.0/doc/n-cdf0.html
+     *
+     * @param {KeyboardEvent} ev
+     * @returns {boolean}
+     */
+    isNumpadDecimalSeparatorKey(ev) {
+        return ['.', ','].includes(ev.key) && ev.code === 'NumpadDecimal';
     },
     /**
      * Returns whether the given anchor is valid.
@@ -525,8 +586,38 @@ var utils = {
         return new Array(size - str.length + 1).join('0') + str;
     },
     /**
+     * @param {any[]} arr
+     * @param {Function} fn
+     * @returns {any[]}
+     */
+    partitionBy(arr, fn) {
+        let lastGroup = false;
+        let lastValue;
+        return arr.reduce((acc, cur) => {
+            let curVal = fn(cur);
+            if (lastGroup) {
+                if (curVal === lastValue) {
+                    lastGroup.push(cur);
+                } else {
+                    lastGroup = false;
+                }
+            }
+            if (!lastGroup) {
+                lastGroup = [cur];
+                acc.push(lastGroup);
+            }
+            lastValue = curVal;
+            return acc;
+        }, []);
+    },
+    /**
      * Patch a class and return a function that remove the patch
      * when called.
+     *
+     * This function is the last resort solution for monkey-patching an
+     * ES6 Class, for people that do not control the code defining the Class
+     * to patch (e.g. partners), and when that Class isn't patchable already
+     * (i.e. when it doesn't have a 'patch' function, defined by the 'web.patchMixin').
      *
      * @param {Class} C Class to patch
      * @param {string} patchName
@@ -643,6 +734,30 @@ var utils = {
             'max-age=' + ttl,
             'expires=' + new Date(new Date().getTime() + ttl*1000).toGMTString()
         ].join(';');
+    },
+    /**
+     * Return a shallow copy of a given array sorted by a given criterion or a default one.
+     * The given criterion can either be:
+     * - a string: a property name on the array elements returning the sortable primitive
+     * - a function: a handler that will return the sortable primitive from a given element.
+     *
+     * @param {any[]} array
+     * @param {string | function} [criterion]
+     * @param {('asc' | 'desc')} [order='asc'] sort by ascending if order is 'asc' else descending
+     */
+    sortBy: function (array, criterion, order = 'asc') {
+        const extract = _getExtractorFrom(criterion);
+        return array.slice().sort((elA, elB) => {
+            const a = extract(elA);
+            const b = extract(elB);
+            let result;
+            if (isNaN(a) && isNaN(b)) {
+                result = a > b ? 1 : a < b ? -1 : 0;
+            } else {
+                result = a - b;
+            }
+            return order === 'asc' ? result : -result;
+        });
     },
     /**
      * Returns a string formatted using given values.
@@ -900,8 +1015,10 @@ var utils = {
             '&',
             ['res_model', '=', 'ir.ui.view'],
             '|',
+            '|',
             ['name', '=like', '%.assets\_%.css'],
             ['name', '=like', '%.assets\_%.js'],
+            ['name', '=like', '%.report_assets\_%.css'],
         ];
     },
 };

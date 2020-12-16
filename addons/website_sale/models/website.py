@@ -3,10 +3,11 @@
 
 import logging
 
-from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo import api, fields, models, tools, SUPERUSER_ID, _
 
 from odoo.http import request
 from odoo.addons.website.models import ir_http
+from odoo.addons.http_routing.models.ir_http import url_for
 
 _logger = logging.getLogger(__name__)
 
@@ -47,6 +48,8 @@ class Website(models.Model):
     shop_ppg = fields.Integer(default=20, string="Number of products in the grid on the shop")
     shop_ppr = fields.Integer(default=4, string="Number of grid columns on the shop")
 
+    shop_extra_field_ids = fields.One2many('website.sale.extra.field', 'website_id', string='E-Commerce Extra Fields')
+
     @api.depends('all_pricelist_ids')
     def _compute_pricelist_ids(self):
         Pricelist = self.env['product.pricelist']
@@ -55,12 +58,9 @@ class Website(models.Model):
                 Pricelist._get_website_pricelists_domain(website.id)
             )
 
-    @api.depends_context('website_id')
     def _compute_pricelist_id(self):
         for website in self:
-            if website._context.get('website_id') != website.id:
-                website = website.with_context(website_id=website.id)
-            website.pricelist_id = website.get_current_pricelist()
+            website.pricelist_id = website.with_context(website_id=website.id).get_current_pricelist()
 
     # This method is cached, must not return records! See also #8795
     @tools.ormcache('self.env.uid', 'country_code', 'show_visible', 'website_pl', 'current_pl', 'all_pl', 'partner_pl', 'order_pl')
@@ -114,7 +114,7 @@ class Website(models.Model):
             if country_code:
                 # keep partner_pl only if GeoIP compliant in case of GeoIP enabled
                 partner_pl = partner_pl.filtered(
-                    lambda pl: pl.country_group_ids and country_code in pl.country_group_ids.mapped('country_ids.code')
+                    lambda pl: pl.country_group_ids and country_code in pl.country_group_ids.mapped('country_ids.code') or not pl.country_group_ids
                 )
             pricelists |= partner_pl
 
@@ -137,7 +137,7 @@ class Website(models.Model):
         isocountry = req and req.session.geoip and req.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         last_order_pl = partner.last_website_so_id.pricelist_id
-        partner_pl = partner.with_user(self.env.user).property_product_pricelist
+        partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    req and req.session.get('website_sale_current_pl') or None,
@@ -229,6 +229,8 @@ class Website(models.Model):
         company = self.company_id or pricelist.company_id
         if company:
             values['company_id'] = company.id
+            if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
+                values['note'] = company.sale_note or ""
 
         return values
 
@@ -244,15 +246,27 @@ class Website(models.Model):
         self.ensure_one()
         partner = self.env.user.partner_id
         sale_order_id = request.session.get('sale_order_id')
+        check_fpos = False
         if not sale_order_id and not self.env.user._is_public():
             last_order = partner.last_website_so_id
             if last_order:
                 available_pricelists = self.get_pricelist_available()
                 # Do not reload the cart of this user last visit if the cart uses a pricelist no longer available.
                 sale_order_id = last_order.pricelist_id in available_pricelists and last_order.id
+                check_fpos = True
 
         # Test validity of the sale_order_id
         sale_order = self.env['sale.order'].with_company(request.website.company_id.id).sudo().browse(sale_order_id).exists() if sale_order_id else None
+
+        # Do not reload the cart of this user last visit if the Fiscal Position has changed.
+        if check_fpos and sale_order:
+            fpos_id = (
+                self.env['account.fiscal.position'].sudo()
+                .with_company(sale_order.company_id.id)
+                .get_fiscal_position(sale_order.partner_id.id, delivery_id=sale_order.partner_shipping_id.id)
+            ).id
+            if sale_order.fiscal_position_id.id != fpos_id:
+                sale_order = None
 
         if not (sale_order or force_create or code):
             if request.session.get('sale_order_id'):
@@ -306,7 +320,7 @@ class Website(models.Model):
 
             # change the partner, and trigger the onchange
             sale_order.write({'partner_id': partner.id})
-            sale_order.onchange_partner_id()
+            sale_order.with_context(not_self_saleperson=True).onchange_partner_id()
             sale_order.write({'partner_invoice_id': partner.id})
             sale_order.onchange_partner_shipping_id() # fiscal position
             sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
@@ -362,5 +376,25 @@ class Website(models.Model):
     @api.model
     def action_dashboard_redirect(self):
         if self.env.user.has_group('sales_team.group_sale_salesman'):
-            return self.env.ref('website.backend_dashboard').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return super(Website, self).action_dashboard_redirect()
+
+    def get_suggested_controllers(self):
+        suggested_controllers = super(Website, self).get_suggested_controllers()
+        suggested_controllers.append((_('eCommerce'), url_for('/shop'), 'website_sale'))
+        return suggested_controllers
+
+
+class WebsiteSaleExtraField(models.Model):
+    _name = 'website.sale.extra.field'
+    _description = 'E-Commerce Extra Info Shown on product page'
+    _order = 'sequence'
+
+    website_id = fields.Many2one('website')
+    sequence = fields.Integer(default=10)
+    field_id = fields.Many2one(
+        'ir.model.fields',
+        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])]
+    )
+    label = fields.Char(related='field_id.field_description')
+    name = fields.Char(related='field_id.name')

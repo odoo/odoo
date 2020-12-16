@@ -5,7 +5,6 @@ odoo.define('board.AddToBoardMenu', function (require) {
     const Domain = require('web.Domain');
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
-    const pyUtils = require('web.py_utils');
     const { sprintf } = require('web.utils');
     const { useAutofocus } = require('web.custom_hooks');
 
@@ -48,7 +47,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
          * @private
          */
         async _addToBoard() {
-            const searchQuery = this.env.controlPanelModel.getQuery();
+            const searchQuery = this.env.searchModel.get('query');
             const context = new Context(this.env.action.context);
             context.add(searchQuery.context);
             context.add({
@@ -56,13 +55,12 @@ odoo.define('board.AddToBoardMenu', function (require) {
                 orderedBy: searchQuery.orderedBy,
             });
             if (searchQuery.timeRanges && searchQuery.timeRanges.hasOwnProperty('fieldName')) {
-                const { fieldName: field, range, comparisonRange } = searchQuery.timeRanges;
                 context.add({
-                    time_ranges : { field, range, comparisonRange },
+                    comparison: searchQuery.timeRanges,
                 });
             }
             let controllerQueryParams;
-            this.env.controlPanelModel.trigger('get-controller-query-params', params => {
+            this.env.searchModel.trigger('get-controller-query-params', params => {
                 controllerQueryParams = params || {};
             });
             controllerQueryParams.context = controllerQueryParams.context || {};
@@ -82,7 +80,7 @@ odoo.define('board.AddToBoardMenu', function (require) {
             evalutatedContext.dashboard_merge_domains_contexts = false;
 
             Object.assign(this.state, {
-                name: this.env.action.name || "",
+                name: $(".o_input").val() || "",
                 open: false,
             });
 

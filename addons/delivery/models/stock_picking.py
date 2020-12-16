@@ -66,7 +66,8 @@ class StockPicking(models.Model):
     @api.depends('move_line_ids.result_package_id', 'move_line_ids.result_package_id.shipping_weight', 'weight_bulk')
     def _compute_shipping_weight(self):
         for picking in self:
-            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight for pack in picking.package_ids])
+            # if shipping weight is not assigned => default to calculated product weight
+            picking.shipping_weight = picking.weight_bulk + sum([pack.shipping_weight or pack.weight for pack in picking.package_ids])
 
     def _get_default_weight_uom(self):
         return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
@@ -83,8 +84,9 @@ class StockPicking(models.Model):
     carrier_tracking_url = fields.Char(string='Tracking URL', compute='_compute_carrier_tracking_url')
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', readonly=True, default=_get_default_weight_uom)
     package_ids = fields.Many2many('stock.quant.package', compute='_compute_packages', string='Packages')
-    weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight')
-    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight', help="Total weight of the packages and products which are not in a package. That's the weight used to compute the cost of the shipping.")
+    weight_bulk = fields.Float('Bulk Weight', compute='_compute_bulk_weight', help="Total weight of products which are not in a package.")
+    shipping_weight = fields.Float("Weight for Shipping", compute='_compute_shipping_weight',
+        help="Total weight of packages and products not in a package. Packages with no shipping weight specified will default to their products' total weight. This is the weight used to compute the cost of the shipping.")
     is_return_picking = fields.Boolean(compute='_compute_return_picking')
     return_label_ids = fields.One2many('ir.attachment', compute='_compute_return_label')
 
@@ -112,7 +114,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         try:
             return json.loads(self.carrier_tracking_url)
-        except ValueError:
+        except (ValueError, TypeError):
             return False
 
     @api.depends('move_lines')
@@ -146,11 +148,11 @@ class StockPicking(models.Model):
             current_package_carrier_type=self.carrier_id.delivery_type,
             default_picking_id=self.id
         )
-        # As we pass the `delivery_type` ('fixed' by default) in a key who correspond
-        # to the `package_carrier_type` ('none' to default), we make a conversion.
+        # As we pass the `delivery_type` ('fixed' or 'base_on_rule' by default) in a key who
+        # correspond to the `package_carrier_type` ('none' to default), we make a conversion.
         # No need conversion for other carriers as the `delivery_type` and
         #`package_carrier_type` will be the same in these cases.
-        if context['current_package_carrier_type'] == 'fixed':
+        if context['current_package_carrier_type'] in ['fixed', 'base_on_rule']:
             context['current_package_carrier_type'] = 'none'
         return {
             'name': _('Package Details'),
@@ -172,7 +174,13 @@ class StockPicking(models.Model):
         if res['tracking_number']:
             self.carrier_tracking_ref = res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
+        msg = _(
+            "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s",
+            carrier_name=self.carrier_id.name,
+            ref=self.carrier_tracking_ref,
+            price=self.carrier_price,
+            currency=order_currency.name
+        )
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
 
@@ -211,7 +219,7 @@ class StockPicking(models.Model):
             for tracker in carrier_trackers:
                 msg += '<a href=' + tracker[1] + '>' + tracker[0] + '</a><br/>'
             self.message_post(body=msg)
-            return self.env.ref('delivery.act_delivery_trackers_url').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("delivery.act_delivery_trackers_url")
 
         client_action = {
             'type': 'ir.actions.act_url',

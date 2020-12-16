@@ -11,11 +11,11 @@ odoo.define("website_forum.tour_forum", function (require) {
     }, [{
         trigger: ".o_forum_ask_btn",
         position: "left",
-        content: _t("Ask the question in this forum by clicking on the button."),
+        content: _t("Create a new post in this forum by clicking on the button."),
     }, {
         trigger: "input[name=post_name]",
         position: "top",
-        content: _t("Give your question title."),
+        content: _t("Give your post title."),
     }, {
         trigger: ".note-editable p",
         extra_trigger: "input[name=post_name]:not(:propValue(\"\"))",
@@ -31,7 +31,7 @@ odoo.define("website_forum.tour_forum", function (require) {
             actions.auto("input[id=s2id_autogen2]");
         },
     }, {
-        trigger: "button:contains(\"Post Your Question\")",
+        trigger: "button:contains(\"Post\")",
         extra_trigger: "input[id=s2id_autogen2]:not(:propValue(\"Tags\"))",
         content: _t("Click to post your question."),
         position: "bottom",
@@ -40,15 +40,32 @@ odoo.define("website_forum.tour_forum", function (require) {
         trigger: ".modal-header button.close",
         auto: true,
     }, {
+        trigger: "a:contains(\"Answer\").collapsed",
+        content: _t("Click to answer."),
+        position: "bottom",
+    }, {
         trigger: ".note-editable p",
         content: _t("Put your answer here."),
         position: "bottom",
-        run: "text",
+        run: async () => {
+            const wysiwyg = $('.note-editable').data('wysiwyg');
+            await wysiwyg.editorHelpers.insertHtml(wysiwyg.editor, 'Test', $('.note-editable p')[0], 'INSIDE');
+        },
     }, {
         trigger: "button:contains(\"Post Answer\")",
         extra_trigger: ".note-editable p:not(:containsExact(\"<br>\"))",
         content: _t("Click to post your answer."),
-        position: "bottom",
+        run: async (actions) => {
+            // There is a bug when simulating the event. As the value of the
+            // textarea of the form is contained in the wysiwyg editor, the
+            // textarea will be empty before clicking the first time. There is
+            // a handler on the form submission to fill the textarea but we need
+            // to wait for a microtask before we can get the value of the
+            // wysiwyg. Because of the microtask, the textarea will not be set
+            // on time. So we trigger another click on the next tick.
+            actions.auto();
+            setTimeout(actions.auto.bind(actions));
+        }
     }, {
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
@@ -57,5 +74,6 @@ odoo.define("website_forum.tour_forum", function (require) {
         trigger: ".o_wforum_validate_toggler[data-karma=\"20\"]:first",
         content: _t("Click here to accept this answer."),
         position: "right",
-    }]);
+    }
+    ]);
 });

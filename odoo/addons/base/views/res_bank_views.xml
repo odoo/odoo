@@ -81,6 +81,7 @@
             <field name="arch" type="xml">
                 <form string="Bank account">
                 <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group>
                             <field name="sequence" invisible="1"/>
@@ -93,6 +94,7 @@
                             <field name="bank_id"/>
                             <field name="currency_id" groups="base.group_multi_currency" options="{'no_create': True}"/>
                             <field name="acc_holder_name"/>
+                            <field name="active" invisible="1"/>
                         </group>
                     </group>
                 </sheet>
@@ -140,4 +142,3 @@
 
     </data>
 </odoo>
-

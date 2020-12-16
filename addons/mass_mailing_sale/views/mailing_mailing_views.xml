@@ -5,7 +5,7 @@
         <field name="model">mailing.mailing</field>
         <field name="inherit_id" ref="mass_mailing.view_mail_mass_mailing_form"/>
         <field name="arch" type="xml">
-    		<xpath expr="//button[@id='button_view_sent']" position="before">
+    		<xpath expr="//button[@id='button_view_delivered']" position="before">
                 <button name="action_redirect_to_quotations"
                     type="object"
                     icon="fa-pencil"

@@ -45,14 +45,14 @@
             </field>
         </record>
 
-        <act_window
-           id="act_view_currency_rates"
-           name="Currency Rates"
-           view_mode='tree,form'
-           view_id='view_currency_rate_tree'
-           domain="[('currency_id','=', active_id)]"
-           context="{'default_currency_id': active_id}"
-           res_model="res.currency.rate"/>
+        <record id="act_view_currency_rates" model="ir.actions.act_window">
+            <field name="name">Currency Rates</field>
+            <field name="res_model">res.currency.rate</field>
+            <field name='view_mode'>tree,form</field>
+            <field name='view_id' ref='view_currency_rate_tree'/>
+            <field name="domain">[('currency_id','=', active_id)]</field>
+            <field name="context">{'default_currency_id': active_id}</field>
+        </record>
 
         <record id="view_currency_search" model="ir.ui.view">
             <field name="name">res.currency.search</field>

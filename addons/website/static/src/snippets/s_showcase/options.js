@@ -1,9 +1,9 @@
 odoo.define('website.s_showcase_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-options.registry.Showcase = options.Class.extend({
+snippetOptions.registry.Showcase = snippetOptions.SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -12,7 +12,8 @@ options.registry.Showcase = options.Class.extend({
         const isLeftCol = $showcaseCol.index() <= 0;
         const $title = this.$target.children('.s_showcase_title');
         $title.toggleClass('flex-lg-row-reverse', isLeftCol);
-        $title.find('.s_showcase_icon').toggleClass('mr-lg-0 ml-3', isLeftCol);
+        $showcaseCol.find('.s_showcase_icon.ml-3').removeClass('ml-3').addClass('ml-lg-3'); // For compatibility with old version
+        $title.find('.s_showcase_icon').toggleClass('mr-lg-0 ml-lg-3', isLeftCol);
     },
 });
 });

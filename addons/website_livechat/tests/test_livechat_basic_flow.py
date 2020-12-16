@@ -20,19 +20,15 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
             'visitor_id': self.visitor.id,
             'visit_datetime': self.base_datetime - datetime.timedelta(minutes=10),
         }, {
-            'page_id': self.env.ref('website.aboutus_page').id,
+            'page_id': self.env.ref('website.homepage_page').id,
             'visitor_id': self.visitor.id,
             'visit_datetime': self.base_datetime - datetime.timedelta(minutes=20),
-        }, {
-            'page_id': self.env.ref('website.contactus_page').id,
-            'visitor_id': self.visitor.id,
-            'visit_datetime': self.base_datetime - datetime.timedelta(minutes=30),
         }])
 
         handmade_history = "%s (21:10) → %s (21:20) → %s (21:30)" % (
-            self.env.ref('website.aboutus_page').name,
+            self.env.ref('website.homepage_page').name,
             self.env.ref('website.contactus_page').name,
-            self.env.ref('website.homepage_page').name
+            self.env.ref('website.homepage_page').name,
         )
         history = self.env['mail.channel']._get_visitor_history(self.visitor)
 
@@ -45,7 +41,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         channel_1 = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
         # Check Channel naming
-        self.assertEqual(channel_1.name, "%s, %s" % (self.visitor.display_name, self.operator.livechat_username))
+        self.assertEqual(channel_1.name, "%s %s" % (self.visitor.display_name, self.operator.livechat_username))
         channel_1.unlink()
 
         # Remove livechat_username
@@ -57,7 +53,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         channel_2 = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
         # Check Channel naming
-        self.assertEqual(channel_2.name, "%s, %s" % (self.visitor.display_name, self.operator.name))
+        self.assertEqual(channel_2.name, "%s %s" % (self.visitor.display_name, self.operator.name))
 
     def test_basic_flow_with_rating(self):
         channel = self._common_basic_flow()
@@ -90,7 +86,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
 
         # Check Channel and Visitor naming
         self.assertEqual(self.visitor.display_name, "%s #%s" % (_("Website Visitor"), self.visitor.id))
-        self.assertEqual(channel.name, "%s, %s" % (self.visitor.display_name, self.operator.livechat_username))
+        self.assertEqual(channel.name, "%s %s" % (self.visitor.display_name, self.operator.livechat_username))
 
         # Post Message from visitor
         self._send_message(channel, self.visitor.display_name, "Message from Visitor")

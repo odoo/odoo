@@ -25,22 +25,35 @@ class AccountMove(models.Model):
             move_vals['line_ids'] = [vals for vals in move_vals['line_ids'] if not vals[2]['is_anglo_saxon_line']]
         return move_vals
 
-    def post(self):
+    def copy_data(self, default=None):
+        # OVERRIDE
+        # Don't keep anglo-saxon lines when copying a journal entry.
+        res = super().copy_data(default=default)
+
+        if not self._context.get('move_reverse_cancel'):
+            for copy_vals in res:
+                if 'line_ids' in copy_vals:
+                    copy_vals['line_ids'] = [line_vals for line_vals in copy_vals['line_ids']
+                                             if line_vals[0] != 0 or not line_vals[2]['is_anglo_saxon_line']]
+
+        return res
+
+    def _post(self, soft=True):
         # OVERRIDE
 
         # Don't change anything on moves used to cancel another ones.
         if self._context.get('move_reverse_cancel'):
-            return super(AccountMove, self).post()
+            return super()._post(soft)
 
         # Create additional COGS lines for customer invoices.
         self.env['account.move.line'].create(self._stock_account_prepare_anglo_saxon_out_lines_vals())
 
         # Post entries.
-        res = super(AccountMove, self).post()
+        posted = super()._post(soft)
 
         # Reconcile COGS lines in case of anglo-saxon accounting with perpetual valuation.
-        self._stock_account_anglo_saxon_reconcile_valuation()
-        return res
+        posted._stock_account_anglo_saxon_reconcile_valuation()
+        return posted
 
     def button_draft(self):
         res = super(AccountMove, self).button_draft()
@@ -99,13 +112,17 @@ class AccountMove(models.Model):
             for line in move.invoice_line_ids:
 
                 # Filter out lines being not eligible for COGS.
-                if line.product_id.type not in ('product', 'consu') or line.product_id.valuation != 'real_time':
+                if line.product_id.type != 'product' or line.product_id.valuation != 'real_time':
                     continue
 
                 # Retrieve accounts needed to generate the COGS.
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                accounts = (
+                    line.product_id.product_tmpl_id
+                    .with_company(line.company_id)
+                    .get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                )
                 debit_interim_account = accounts['stock_output']
-                credit_expense_account = accounts['expense']
+                credit_expense_account = accounts['expense'] or self.journal_id.default_account_id
                 if not debit_interim_account or not credit_expense_account:
                     continue
 
@@ -192,6 +209,9 @@ class AccountMove(models.Model):
 
                     # Reconcile.
                     product_account_moves.reconcile()
+
+    def _get_invoiced_lot_values(self):
+        return []
 
 
 class AccountMoveLine(models.Model):

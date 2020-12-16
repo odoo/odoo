@@ -7,7 +7,7 @@
     "version": "2.0",
     "author": "General Solutions",
     'website': 'http://gscom.vn',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     "description": """
 This is the module to manage the accounting chart for Vietnam in Odoo.
 =========================================================================
@@ -21,7 +21,8 @@ with Chart of account under Circular No. 200/2014/TT-BTC
 """,
     "depends": [
         "account",
-        "base_iban"
+        "base_iban",
+        "l10n_multilang"
     ],
     "data": [
          'data/l10n_vn_chart_data.xml',
@@ -32,8 +33,10 @@ with Chart of account under Circular No. 200/2014/TT-BTC
          'data/account_tax_data.xml',
          'data/account_chart_template_data.xml',
     ],
+
     'demo': [
         'demo/demo_company.xml',
     ],
-    'post_init_hook': '_preserve_tag_on_taxes',
+    'post_init_hook': '_post_init_hook',
+
 }

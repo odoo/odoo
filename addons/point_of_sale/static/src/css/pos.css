@@ -117,7 +117,14 @@ td {
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     color: #555555;
     font-size: 12px;
-    position: absolute;
+    /* Some elements inside .pos are allowed to be moved/resized. When
+     * this 'move/resize' event is performed in touch devices, .pos
+     * element also tries to scroll (as the default action of touchstart+
+     * touchmove events).
+     * Position is fixed to prevent the movement of .pos element during
+     * the described touch events.
+     */
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;
@@ -209,7 +216,7 @@ td {
 }
 /* firefox seems to ignore the relative positionning of the subwindow-container
  * putting this inside subwindow-container fixes it.
- */ 
+ */
 .pos .subwindow .subwindow-container-fix{
     height: 100%;
     position: relative;
@@ -312,31 +319,31 @@ td {
     margin:0;
     padding:0;
     color: gray;
-    background: #393939;
+    background: #875A7B;
+    display: flex;
 }
 
 /*  a) The left part of the top-bar */
 
 .pos .pos-branding{
-    position: absolute;
-    display: table-cell;
-    left:0;
-    top:0;
-    width:439px;
+    min-width: 503px;
+    max-width: 503px;
+    flex-grow: 1;
     height:100%;
     margin:0;
     padding:0;
-    border-right: 1px solid #373737;
     text-align:left;
     line-height:100%;
     vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
 }
 .pos .pos-logo {
     height: 35px;
     margin-left: 10px;
     margin-top: 5px;
     vertical-align:middle;
-} 
+}
 .pos .pos-branding .username{
     float:right;
     color:#DDD;
@@ -347,22 +354,31 @@ td {
     cursor: pointer;
 }
 
+.pos .ticket-button {
+    display: flex;
+}
+
 /*  b) The right part of the top-bar */
 
 .pos .pos-rightheader {
-    position: absolute;
-    left:440px;
-    right:0;
-    top:0;
+    flex-grow: 1;
     height:100%;
-    display: -webkit-flex;
     display: flex;
     overflow : hidden;
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 .pos .pos-rightheader > * {
-    border-right: 1px solid #292929;
+    border-right: 1px solid #875A7B;
+}
+
+.pos .status-buttons-portal {
+    flex: 1;
+}
+
+.pos .status-buttons {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
 }
 
 .pos .order-button{
@@ -456,8 +472,8 @@ td {
     height: 48px;
     padding-left: 16px;
     padding-right: 16px;
-    border-right: 1px solid #292929;
-    border-left: 1px solid #292929;
+    border-right: 1px solid #875A7B;
+    border-left: 1px solid #875A7B;
     color: #DDD;
     line-height: 48px;
     text-align: center;
@@ -468,7 +484,7 @@ td {
     -webkit-transition-timing-function: ease-out;
 }
 .pos .pos-rightheader .header-button:last-child{
-    border-left:  1px solid #3a3a3a;
+    border-left:  1px solid #875A7B;
 }
 .pos .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
@@ -483,7 +499,7 @@ td {
 /*  c) The notifications indicator */
 
 .pos .oe_status{
-    float:right; 
+    float:right;
     color: rgba(255,255,255,0.4);
     padding: 14px;
     line-height: 20px;
@@ -528,23 +544,63 @@ td {
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
+.pos .switchpane {
+    height: 100px;
+    flex-shrink: 0;
+    display: flex;
+}
+
+.pos .switchpane .order-info {
+    flex-grow: 1;
+    border-top: 1px solid #ebebeb;
+    padding: 8px 16px;
+    background-color: #FFFFFF;
+    color: #6ec89b;
+}
+.pos .switchpane .order-info h2 {
+    padding: 0px;
+    margin: 3px 0px;
+    font-weight: bold;
+}
+
+.pos .switchpane .btn-switchpane {
+    background-color: #6ec89b;
+    border-radius: 0px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    flex-grow: 1;
+    flex-basis: 50%;
+    padding-bottom: 20px;
+}
+.pos .switchpane .btn-switchpane h1 {
+    margin-bottom: 0px;
+}
+
+.pos .switchpane .btn-switchpane.secondary {
+    background-color: #FFFFFF;
+    color: #6ec89b;
+}
+
+
+
 .pos .leftpane {
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-            box-sizing: border-box;
-    position:absolute;
-    left:0;
-    width:440px;
-    top:0px;
-    bottom:0;
-    border-right: solid 1px #CECBCB;
     border-right: solid 3px #787878;
     background: #e2e2e2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 500px;
 }
 
 .pos .leftpane .pads {
     border-top: solid 3px rgb(110, 200, 155);
+}
+
+.pos .leftpane .pads .subpads {
+    display: flex;
+    flex-direction: row;
 }
 
 /*  ********* The control buttons ********* */
@@ -604,7 +660,7 @@ td {
 .pos .control-button.highlight,
 .pos .button.highlight {
     background: #6EC89B !important;
-    border: solid 1px #64AF8A !important; 
+    border: solid 1px #64AF8A !important;
     color: white !important;
 }
 .pos .control-button.altlight,
@@ -625,15 +681,12 @@ td {
 /*  ********* The actionpad (payment, set customer) ********* */
 
 .pos .actionpad {
-    display: inline-block;
-    float: left;
     padding: 0;
     margin: 16px;
     margin-top: 8px;
     margin-right: 0;
     text-align: center;
     vertical-align: top;
-    width: 186px;
     border: none;
     border-radius: 0;
     border-top: 1px solid;
@@ -641,6 +694,7 @@ td {
     border-color: #bfbfbf;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
+    flex-grow: 1;
 }
 .pos .actionpad .button {
     position: relative;
@@ -713,11 +767,20 @@ td {
     border-radius: 100%;
 }
 
+@media screen and (max-width: 768px) {
+    .pos .actionpad .button.set-customer{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .pos .actionpad .button.set-customer.decentered{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
 /*  ********* The Numpad ********* */
 
 .pos .numpad {
-    display: inline-block;
-    float: right;
     text-align: center;
     width: 216px;
     margin: 16px;
@@ -728,6 +791,7 @@ td {
     border-top: 1px solid;
     border-color: #bfbfbf;
     border-top-right-radius: 4px;
+    min-width: 216px;
 }
 .pos .numpad button {
     float: left/*rtl:ignore*/; /* rtlcss forced to keep ltr */
@@ -782,21 +846,40 @@ td {
 /*  ********* The right pane contains the screens and headers ********* */
 
 .pos .rightpane {
-    position: absolute;
-    top: 0;
-    bottom:0;
-    left: 440px;
-    right: 0;
-    vertical-align: top;
-    -webkit-transform: translate3d(0,0,0);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 25%;
+    flex-grow: 1;
+}
+
+.pos .products-widget {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.pos .product-list-container {
+    overflow: hidden;
+    overflow-y: auto;
+    flex-grow: 1;
 }
 
 .pos .rightpane-header {
     padding: 0;
-    height: 48px;
-    border-bottom: 1px solid #c7c7c7;
     background: #d3d3d3;
     text-align: center;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.pos .green-border-bottom {
+    border-bottom: solid 3px rgb(110, 200, 155);
+}
+
+.pos .grey-border-bottom {
+    border-bottom: 1px solid #c7c7c7;
 }
 
 /*  ********* The product list  ********* */
@@ -805,6 +888,8 @@ td {
     padding: 10px;
     text-align: left;
     -webkit-transform: translate3d(0,0,0);
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .pos .product-list-scroller{
@@ -820,21 +905,9 @@ td {
     -webkit-transform: translate3d(0,0,0);
 
 }
-.pos .product-list-container {
-    position:absolute;
-    top:0px;
-    bottom:0px;
-    left:0px;
-    right:0px;
-}
 
 /*  a) the product list navigation bar */
 
-.pos .breadcrumbs{
-    display: inline-block;
-    text-align: left;
-    float:left;
-}
 .pos .breadcrumb{
     float: left;
     display: inline-block;
@@ -856,8 +929,6 @@ td {
 }
 .pos .breadcrumb-button.breadcrumb-home {
     line-height: 50px;
-    padding: 0;
-    width: 50px;
     font-size: 25px;
     text-align: center;
 }
@@ -870,18 +941,24 @@ td {
     margin: 12px 6px;
 }
 
+@media screen and (max-width: 768px) {
+    .pos .breadcrumb-button.breadcrumb-home {
+        width: auto;
+        font-size: 13px;
+        margin-left: 3px;
+    }
+}
+
 /*  b) the search box */
 
 .pos .searchbox {
-    position: absolute;
-    right: 2px;
+    flex-grow: 1;
+    position: relative;
 }
 .pos .searchbox input {
-    width: 100px;
+    width: 150px;
     border: 1px solid #cecbcb;
     padding: 10px 20px;
-    padding-left: 38px;
-    padding-right: 33px;
     margin: 6px;
     background-color: white;
     border-radius: 20px;
@@ -895,7 +972,6 @@ td {
 }
 
 .pos .search-clear {
-    position: absolute;
     top: 9px;
     width: 30px;
     height: 30px;
@@ -907,12 +983,33 @@ td {
 .search-clear.left {
     left: 11px;
     color: #808080;
+    margin: 6px;
 }
 
 .search-clear.right {
-    left: 145px;
     color: #808080;
     cursor: pointer;
+    margin: 6px;
+}
+
+@media screen and (max-width: 768px) {
+  .search-clear.left {
+      position: relative;
+      top: -40px;
+      left: 5%;
+  }
+
+  .search-clear.right {
+      position: relative;
+      top: -70px;
+      left: 85%;
+  }
+  .pos .searchbox input {
+      width: 70%;
+  }
+  .pos .searchbox {
+      position: relative;
+  }
 }
 
 /*  c) the categories list */
@@ -920,6 +1017,7 @@ td {
 .pos .categories {
     position: relative;
     border-bottom: solid 3px rgb(110, 200, 155);
+    flex: 1;
 }
 .pos .categories h4 {
     display: inline-block;
@@ -932,7 +1030,7 @@ td {
             box-sizing: border-box;
     width:100%;
     height:100%;
-    max-height:60vh;
+    max-height:40vh;
     overflow: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -943,16 +1041,13 @@ td {
     text-align: left;
     padding: 10px;
     background: rgb(229, 229, 229);
-    border-bottom: 1px solid #cecece;
 }
 .pos .category-list.simple {
     padding: 0px;
     background: #cecece;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
-    border-bottom: none;
+    flex: 1;
 }
 
 
@@ -974,17 +1069,16 @@ td {
 }
 
 .pos .category-simple-button{
-    position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     font-size: 14px;
-    margin-right: 1px;
-    margin-bottom: 1px;
     padding: 5px 12px;
-    line-height: 32px;
-    flex-grow: 1;
-    -webkit-flex-grow: 1;
     cursor: pointer;
-    background: #e2e2e2;
+    flex: 1;
+    text-align: left;
+    background: rgb(229, 229, 229);
+    border-right: solid 1px #d3d3d3;
+    border-top: solid 1px #d3d3d3;
 }
 .pos .category-simple-button:active{
     color: white;
@@ -1022,7 +1116,7 @@ td {
     line-height: 14px;
     width: 100%;
     /* for some reason the -90deg orientation doesn't match the -webkit-linear-gradient. It should be 180deg here.
-     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh. 
+     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh.
     background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1)); */
     /*background:#FFF;*/
     padding: 3px;
@@ -1062,6 +1156,38 @@ td {
     max-width:  120px;
     vertical-align: middle;
 }
+
+@media screen and (max-width: 768px) {
+    .pos .product-list {
+        padding: 0px;
+    }
+    .pos .product {
+        width: 32%;
+        height: auto;
+        margin: 0px !important;
+    }
+    .pos .product:active {
+        border: solid 50px #6ec89b;
+        box-sizing: border-box;
+    }
+    .pos .product:after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+    }
+    .pos .product .product-img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    .pos .product .product-img img {
+        max-height: none;
+        max-width: none;
+    }
+
+}
+
+
 
 .pos .product .price-tag {
     position: absolute;
@@ -1133,12 +1259,22 @@ td {
 /* a) Generic Screen Layout Constructs */
 
 .screen .screen-content{
+    position: relative;
     margin: 0px auto;
     max-width: 1024px;
     text-align: left;
     height: 100%;
     overflow: hidden;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen .screen-full-width{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 @media screen and (min-width: 1024px) {
@@ -1149,20 +1285,22 @@ td {
 }
 
 .screen .top-content{
-    position: absolute;
-    left: 0px; top: 0px; right: 0px;
     height: 64px;
     border-bottom: dashed 1px rgb(215,215,215);
     text-align: center;
+    display: flex;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 .screen .top-content .button {
-    position: absolute;
-    top: 0px;
     line-height: 32px;
     padding: 3px 13px;
     font-size: 20px;
     background: rgb(230, 230, 230);
-    margin: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-left: 6px;
+    margin-right: 6px;
     border-radius: 3px;
     border: solid 1px rgb(209, 209, 209);
     cursor: pointer;
@@ -1184,43 +1322,50 @@ td {
 .screen .top-content .button.highlight:hover {
     background: rgb(120,210,165);
 }
-.screen .top-content .button.back {
-    left: 0px;
-    margin-left: 16px;
+
+.screen .top-content .top-content-center {
+    flex-grow: 1;
 }
-.screen .top-content .button.next{
-    right: 0px;
-    margin-right: 16px;
+
+.screen .main-content{
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    overflow-y: auto;
 }
 .screen .left-content{
-    position: absolute;
-    left:0px; top: 64px; bottom: 0px;
-    right:50%;
     overflow-x: hidden;
     overflow-y: auto;
     border-right: dashed 1px rgb(215,215,215);
+    flex-grow: 1;
+    min-width: 200px;
 }
-.screen .left-content.pc40{
-    right: 66%;
-}
+
 .screen .right-content{
-    position: absolute;
-    right:0px; top: 64px; bottom: 0px;
-    left:50%;
     overflow-x: hidden;
     overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
-.screen .right-content.pc60{
-    left:34%;
+
+.pos .btn-switch-payment {
+    background-color: #6ec89b;
+    border-radius: 0px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    height: 100px;
+    width: 100%;
 }
 .screen .centered-content{
-    position: absolute;
-    right:25%; top: 64px; bottom: 0px;
-    left:25%;
     border-right: dashed 1px rgb(215,215,215);
     border-left: dashed 1px rgb(215,215,215);
     overflow-x: hidden;
     overflow-y: auto;
+    max-width: 512px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .screen .full-content{
     position: absolute;
@@ -1233,13 +1378,8 @@ td {
 .pos .screen .layout-table {
     border:none;
     width:100%;
-    height:100%;
-}
-
-.pos .screen .header-row {
-    border:none;
-    width:100%;
-    height:0px;
+    display: flex;
+    flex-grow: 1;
 }
 
 .pos .screen .header-cell{
@@ -1262,23 +1402,26 @@ td {
 
 /* b) The payment screen */
 
+.pos .payment-buttons-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .pos .payment-numpad {
-    display: inline-block;
-    width: 50%;
     box-sizing: border-box;
-    padding: 16px;
+    margin: 16px;
     text-align: center;
-    float: left;
+    flex-grow: 1;
 }
 .pos .payment-numpad .numpad {
-    float: none;
     border-radius: 4px;
     border-top: 1px solid;
     border-left: 1px solid;
     border-color: #cacaca;
     width: 296px;
-    overflow: hidden;
-    margin: 0;
+    height: 100%;
+    margin: auto;
 }
 .pos .payment-numpad .numpad button {
     width: 74px;
@@ -1299,61 +1442,64 @@ td {
 }
 
 .pos .paymentlines {
-    width: 100%;
     border-spacing: 0px 10px;
     border-collapse: inherit;
+    margin: 16px;
 }
-.pos .paymentlines .controls {
-    width: 40px;
+
+.paymentlines .paymentline:first-child {
+    border-top-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
-.pos .paymentlines .body{
-    background: white;
-    border-radius: 3px;
+.paymentlines .paymentline:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
-.pos .paymentline{
-    display: grid;
-    grid-template-columns: 4fr 3fr 1fr;
-    font-size: 22px;
-    border-bottom: 10px solid #f0eeee;
-}
-.pos .paymentline.electronic_payment {
-    display: grid;
-    grid-template-columns: 7fr 1fr;
-}
-.pos .paymentline.heading {
+
+.pos  .paymentline {
+    background: #e2e2e2;
+    line-height: 74px;
     font-size: 16px;
-    font-weight: bold;
+    border: solid 1px rgb(202, 202, 202);
+    border-top-width: 0px;
+    cursor: pointer;
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+    flex-grow: 1;
+    flex-basis: 100%;
 }
-.pos .paymentline.selected {
-    font-size: 22px;
-    background: #6EC89B;
+.paymentline:active {
+    background: black;
+    border-color: black;
     color: white;
 }
-.pos .paymentline.selected.payment-terminal {
-    border-bottom: 0px;
+.paymentline .payment-name {
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-right: 10px;
 }
-.pos .paymentline > *{
-    padding: 8px 12px;
+.paymentline .payment-amount {
+    margin-left: 10px;
+    margin-right: 10px;
 }
-.pos .paymentline .col-tendered {
-    min-width: 90px;
+.paymentline .delete-button {
+  margin-left: 10px;
+  margin-right: 10px;
 }
-.pos .paymentline .col-name {
-    display: flex;
-    align-items: center;
-    font-size: 16px;
+.paymentline.selected{
+  background: white;
 }
-.pos .paymentline .delete-button{
-    cursor: pointer;
-    text-align: center;
-}
+
 .pos .payment-buttons {
-    display: inline-block;
-    width: 50%;
     box-sizing: border-box;
-    padding: 16px;
+    margin: 16px;
     padding-left: 0;
-    float: right;
+    flex-grow: 5;
+}
+.payment-screen .customer-button {
+    margin-bottom: 10px;
 }
 .payment-screen .payment-buttons .button {
     background: #e2e2e2;
@@ -1430,8 +1576,19 @@ td {
 .paymentlines .electronic_payment {
     background: #e2e2e2;
     border-collapse: unset;
-    text-align: center;
     font-size: 16px;
+    padding-right: 0;
+}
+
+.paymentlines .electronic_payment div:first-child {
+    flex-grow: 2;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.paymentlines .electronic_payment div:last-child {
+    flex-grow: 1;
+    text-align: center;
 }
 
 .payment-status-container {
@@ -1455,6 +1612,42 @@ td {
 
 .payment-status-container .label {
     padding-right: 7px;
+}
+
+@media screen and (max-width: 768px) {
+      .pos .paymentlines-container {
+          min-height: 0px;
+          border-bottom: none;
+          padding-bottom: 3px;
+      }
+      .pos .paymentlines {
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+      .payment-status-container {
+          font-size: 22px;
+      }
+      .payment-screen .payment-buttons {
+          display: flex;
+          flex-wrap: wrap;
+          flex-direction: column;
+      }
+      .payment-screen .payment-controls {
+          display: flex;
+          flex-wrap: wrap;
+      }
+      .payment-screen .payment-buttons .button {
+          flex-basis: 30%;
+          flex-grow: 1;
+          border: 1px solid rgba(0,0,0,0.2);
+          border-radius: 0px;
+          line-height: normal;
+          padding-top: 28px;
+          padding-bottom: 28px;
+      }
+      .payment-screen .payment-buttons .button .fa {
+          display: none;
+      }
 }
 
 /* c) The receipt screen */
@@ -1497,82 +1690,29 @@ td {
 }
 
 @media print {
-    * {
+    body * {
+        visibility: hidden;
+    }
+    .pos, .pos * {
+        position: static !important;
+    }
+    .pos .receipt-screen .pos-receipt-container {
+        position: absolute !important;
+        top: 0;
+        left: 0;
+    }
+    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  * {
+        visibility: visible;
+        background: white !important;
         color: black !important;
     }
-    body {
-        margin: 0;
-        color: white !important;
-        /* avoid black background if backgrounds are printed */
-        background: initial;
-    }
-    .o_notification_manager,
-    .oe_leftbar,
-    .oe_loading,
-    .pos .pos-topheader, 
-    .pos .pos-leftpane, 
-    .pos .keyboard_frame,
-    .pos .receipt-screen header,
-    .pos .receipt-screen .top-content,
-    .pos .receipt-screen .centered-content .button,
-    .pos .receipt-screen .centered-content .print_invoice {
-        display: none !important;
-    }
-    .pos,
-    .pos .pos-content,
-    .pos .rightpane,
-    .pos .screen, 
-    .pos .window, 
-    .pos .window .subwindow, 
-    .pos .subwindow .subwindow-container{
-        display: block;
-        position: static;
-        height: auto;
-    }
-    .pos{
-        background: white !important;
-    }
-    .pos .rightpane {
-        left: 0px !important;
-        background-color: white;
-    }
-    .pos .receipt-screen {
-        text-align: left;
-    }
-    .pos .receipt-screen .centered-content{
-        position: static;
-        border: none;
-    }
-    .pos .pos-receipt-container {
-        text-align: left;
-    }
-    .pos-actionbar {
-        display: none !important;
-    }
-    .debug-widget{
-        display: none !important;
-    }
-    .pos *{
-        text-shadow: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-    }
-    .pos .pos-receipt{
-        margin: 0;
+    .pos .pos-receipt {
+        margin: 0 !important;
         margin-left: auto !important;
         margin-right: auto !important;
         border: none !important;
         font-size: 13px !important;
         width: 266px !important;
-    }
-    .o_debug_manager {
-        display: none !important;
-    }
-    .o_chat_window {
-        display: none !important;
-    }
-    .blockUI {
-        display: none !important;
     }
 }
 
@@ -1583,7 +1723,7 @@ td {
     margin: 16px;
     text-align: center;
     display: inline-block;
-    width: 40%;
+    width: 35%;
 }
 .pos .scale-screen .computed-price{
     font-size: 25px;
@@ -1593,7 +1733,7 @@ td {
     margin-top: 0px;
     padding: 16px;
     background: white;
-    width: 40%;
+    width: 35%;
     border-radius: 3px;
     font-family: Inconsolata;
     font-weight: bold;
@@ -1628,14 +1768,17 @@ td {
 
 /* e) The Client List Screen */
 
+.pos .clientlist-screen .full-content{
+    overflow: auto;
+}
+
 .pos .clientlist-screen .client-list{
     font-size: 16px;
     width: 100%;
-    line-height: 40px;
 }
 .pos .clientlist-screen .client-list th,
 .pos .clientlist-screen .client-list td {
-    padding: 0px 8px;
+    padding: 12px 8px;
 }
 .pos .clientlist-screen .client-list tr{
     transition: all 150ms linear;
@@ -1657,6 +1800,13 @@ td {
 .pos .clientlist-screen .client-list tr.lowlight:nth-child(even){
     transition: all 150ms linear;
     background: rgb(227, 246, 237);
+}
+.pos .client-line {
+    vertical-align: text-top;
+}
+.pos .edit-client-button {
+    margin-top: 6px;
+    color: black;
 }
 .pos .clientlist-screen .client-details{
     padding: 16px;
@@ -1758,37 +1908,115 @@ td {
 .pos .clientlist-screen .client-detail > .empty{
     opacity: 0.3;
 }
-.pos .clientlist-screen .searchbox{
-    right: auto;
-    margin-left: -90px;
-    margin-top:8px;
-    left: 50%;
-}
-.pos .clientlist-screen .searchbox input{
-    width: 120px;
-}
+
 .pos .clientlist-screen .button.new-customer {
-    left: 50%;
-    margin-left: 120px;
+    min-width: 30px;
 }
+
+.pos .searchbox-client {
+    padding: 3px 13px;
+    margin-top: 12px;
+    margin-bottom : 12px;
+}
+
+.pos .searchbox-client input {
+    width: 120px;
+    border: 1px solid #cecbcb;
+    padding: 10px 20px;
+    padding-left: 38px;
+    padding-right: 33px;
+    background-color: white;
+    border-radius: 20px;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    font-size: 13px;
+}
+.pos .searchbox-client input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+
+.pos .search-clear-client {
+    position: absolute;
+    top: 9px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear-client.left {
+    left: 11px;
+    color: #808080;
+}
+
+.search-clear-client.right {
+    left: 145px;
+    color: #808080;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .searchbox-client.top-content-center {
+        display: flex
+    }
+    .pos .searchbox-client input {
+        width: auto;
+        flex-grow: 1;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .pos .clientlist-screen .client-details-box {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .pos .clientlist-screen .client-details-left{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .clientlist-screen .client-details-right{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .clientlist-screen .client-detail{
+        display: flex;
+        flex-direction: column;
+    }
+    .pos .clientlist-screen .client-details input,
+    .pos .clientlist-screen .client-details select
+    {
+        width: 100%;
+    }
+    .pos .clientlist-screen .client-details input.client-name {
+        width: 100%;
+    }
+    .pos .clientlist-screen .client-detail > .label{
+        width: auto;
+        text-align: left;
+    }
+    .pos .clientlist-screen .client-list td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+
+
+
 
 
 /*  ********* The OrderWidget  ********* */
 
 .pos .order-container{
-    position: absolute;
     top: 0px;
     width:100%;
     height: 100%;
     background: white;
-}
-
-.pos .order-scroller{
-    width:100%;
-    height:100%;
+    flex-grow: 1;
     overflow: hidden;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .pos .scrollable-y{
@@ -1930,7 +2158,6 @@ td {
 
 .splitbill-screen .order-info {
     text-align: center;
-    margin-bottom:20px;
     padding: 20px 0px;
     font-size: 64px;
     color: #43996E;
@@ -1951,6 +2178,8 @@ td {
     text-align: left;
     max-width: 500px;
     -webkit-transform: translate3d(0,0,0);
+    height: max-content;
+    width: 100%;
 }
 .splitbill-screen .order .orderline.selected{
     background: rgb(110,200,155);
@@ -1973,6 +2202,8 @@ td {
 }
 .paymentmethods {
     margin: 16px;
+    display: flex;
+    flex-wrap: wrap;
 }
 .paymentmethods .button {
     background: #e2e2e2;
@@ -1981,7 +2212,6 @@ td {
     border: solid 1px rgb(202, 202, 202);
     border-top-width: 0px;
     cursor: pointer;
-    text-align: center;
 }
 .paymentmethods .button:first-child {
     border-top-width: 1px;
@@ -2002,8 +2232,43 @@ td {
     color: white;
     border-color: #6EC89B;
 }
+.paymentmethod {
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+    flex-grow: 1;
+    flex-basis: 100%;
+}
+.paymentmethod .payment-name {
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.paymentmethod .payment-amount {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.paymentmethod .delete-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.paymentmethod.selected{
+  background: white;
+}
 
-
+@media screen and (max-width: 768px) {
+    .paymentmethods {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .paymentmethods .button {
+        border: solid 1px rgb(202, 202, 202);
+        border-radius: 3px;
+    }
+    .paymentmethod {
+        flex-basis: 30%;
+    }
+}
 
 /*  ********* The ActionBarWidget  ********* */
 
@@ -2083,7 +2348,7 @@ td {
     top: 10px;
     width: 200px;
     font-size: 10px;
-    
+
     background: rgba(0,0,0,0.82);
     color: white;
     padding-bottom: 10px;
@@ -2101,6 +2366,9 @@ td {
 }
 .pos .debug-widget .content{
     overflow: hidden;
+}
+.pos .debug-widget header {
+    position: relative;
 }
 .pos .debug-widget h1{
     background:black;
@@ -2164,12 +2432,14 @@ td {
     background-color: rgba(0,0,0,0.5);
     z-index:1000;
 }
+.pos .modal-dialog header{
+    position: relative;
+}
 .pos .modal-dialog .popup{
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
     margin: auto;
-    width:500px;
-    height:400px;
+    max-width:500px;
+    width: 100%;
     text-align:center;
     font-size:20px;
     font-weight:bold;
@@ -2179,14 +2449,18 @@ td {
     z-index:1200;
     font-family: 'Lato';
     font-family: Lato;
+    /* position the popup at center and and still making it draggable*/
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
-.pos .modal-dialog .popup-confirm{
-    height: 250px;
+
+.pos .modal-dialog .popup-lg{
+    max-width: 80%;
+    max-height: 600px;
+    height: auto;
 }
-.pos .popup-confirm .body {
-    overflow: auto;
-    height: 120px;
-}
+
 .pos .popup .title {
     background: rgba(255,255,255,0.5);
     margin: 0;
@@ -2198,8 +2472,13 @@ td {
     font-weight: normal;
     font-size: 18px;
     margin: 16px;
-    margin-top: 20px;
 }
+
+.pos .popup-lg .body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 .pos .popup .body.traceback {
     height: 238px;
     overflow: auto;
@@ -2212,9 +2491,6 @@ td {
             user-select: text;
 }
 .pos .popup .footer{
-    position:absolute;
-    bottom:0;
-    left:0;
     width:100%;
     height:60px;
     border-top: solid 1px rgba(60,60,60,0.1);
@@ -2238,6 +2514,11 @@ td {
 
     background: rgba(0,0,0,0.05);
 }
+
+.pos .popup .button.dont-show-again {
+    width: 130px;
+}
+
 .pos .popup .button.icon {
     width: 40px;
     font-size: 20px;
@@ -2287,12 +2568,12 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
-.pos .popup .packlot-lines{
+.pos .popup .list-lines{
     overflow: auto;
     height: 250px;
     margin: 10px;
 }
-.pos .popup .packlot-line-input {
+.pos .popup .list-line-input {
     margin: 3px;
 }
 
@@ -2321,7 +2602,7 @@ td {
     line-height: 50px;
     margin-top: -1px;
     border-top: solid 3px rgba(60,60,60,0.1);
-    
+
 }
 .pos .popup.popup-selection .selection-item {
     width: auto;
@@ -2387,7 +2668,6 @@ td {
 }
 .pos .popup-password .popup-numpad {
     width: 190px;
-    text-align: left;
 }
 .pos .popup-password .popup-input {
     width: 70%;
@@ -2473,4 +2753,843 @@ td {
 }
 .pos .not-supported-browser img{
     border-collapse: separate;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+.swing-enter-active, .swing-leave-active {
+    transition: opacity 0.8s;
+}
+
+.swing-enter, .swing-leave-to {
+    opacity: 0;
+}
+
+/*
+    We block the top-header when a temp screen is displayed.
+    Similar to blocking the whole ui when a popup is displayed.
+*/
+.pos .block-top-header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+
+.drag-handle {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
+
+
+/* Order Management */
+
+.order-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color:  rgb(230,230,230);
+}
+
+.order-list .order-row:hover {
+    color: white;
+    background-color:  rgb(110,200,155);
+    font-weight: bold;
+}
+
+.order-row.highlight {
+    color: white;
+    background-color:  rgb(110,200,155);
+    font-weight: bold;
+}
+
+.order-row.lighter {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.order-row .header {
+    font-size: medium;
+    font-weight: bolder;
+    flex-grow: 1;
+    flex-basis: 0;
+    text-align: left;
+    padding: 10px 10px;
+    background-color: #cecece;
+    border-bottom: solid 1px;
+    border-top: solid 1px
+}
+
+.order-row .header.total {
+    text-align: right;
+}
+
+.order-row .item {
+    font-size: medium;
+    flex-grow: 1;
+    flex-basis: 0;
+    text-align: left;
+    padding: 10px 10px;
+    border-bottom: solid rgb(150,150,150) 1px;
+}
+
+.order-row .item.total {
+    text-align: right;
+}
+
+.order-management-screen .flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.order-management-screen .orders {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-management-screen .order-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.order-management-screen .control-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+.order-management-screen .control-panel .item {
+    font-size: medium;
+}
+
+.order-management-screen .control-panel .item .page-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: x-large;
+}
+
+.order-management-screen .control-panel .page-controls > div {
+    border: darkgray solid 1px;
+    border-radius: 2px;
+}
+
+.order-management-screen .control-panel .page-controls > div:hover {
+    color: rgb(110,200,155);
+}
+
+.order-management-screen .control-panel .page-controls .previous {
+    margin-right: 0.2rem;
+}
+
+.order-management-screen .control-panel .page-controls .next {
+    margin-left: 0.2rem;
+}
+
+
+.order-management-screen .control-panel .search-box {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    margin: 0.2rem;
+}
+
+.order-management-screen .control-panel .search-box .clear {
+    position: relative;
+    right: 25px;
+    cursor: pointer;
+    color: #808080;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box .icon {
+    position: relative;
+    left: 25px;
+    color: #808080;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box input {
+    border: 1px solid #cecbcb;
+    padding: 10px 30px;
+    margin: auto;
+    background-color: white;
+    border-radius: 20px;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+
+.order-management-screen .control-panel .button {
+    line-height: 32px;
+    padding: 3px 13px;
+    font-size: 20px;
+    background: rgb(230, 230, 230);
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+    transition: all 150ms linear;
+}
+
+.order-management-screen .control-panel .button:hover {
+    background: #efefef;
+}
+
+.order-management-screen .back-to-list {
+    font-size: large;
+    padding: 10px;
+    background-color: #6EC89B;
+    color: white;
+}
+
+.order-receipt {
+    color: white;
+    font-size: medium;
+    text-align: center;
+}
+
+.order-receipt .title {
+    font-size: large;
+}
+
+/* ********* Product Configurator Popup ********* */
+
+.pos .product_configurator_attributes {
+    text-align: left;
+    margin: 1em;
+}
+
+.pos .product_configurator_attributes .attribute {
+    margin-bottom: 1em;
+    display: inline-block;
+    width: 45%;
+    padding-left: 0.5em;
+    vertical-align: top;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .product_configurator_attributes .attribute {
+        width: 95%;
+    }
+}
+
+.pos .product_configurator_attributes .attribute_name {
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+.pos .product_configurator_attributes input {
+    min-height: 0;
+    width: auto;
+}
+
+/** Radio attribute **/
+
+.pos .product_configurator_attributes .configurator_radio {
+    line-height: 1.5;
+}
+
+.pos .product_configurator_attributes .configurator_radio input[type='radio'] {
+    box-shadow: none;
+    margin-right: 0.5em;
+}
+
+.pos .product_configurator_attributes .configurator_radio .radio_attribute_label {
+    font-weight: normal;
+    display: inline-block;
+    width: 80%;
+}
+
+.pos .product_configurator_attributes .configurator_radio .price_extra {
+    margin-left: 0.5em;
+    padding: 0.2em 0.4em;
+    border-radius: 10rem;
+    color: #FFFFFF;
+    background-color: #6c757d;
+}
+
+.pos .product_configurator_attributes .configurator_radio .custom_value {
+    margin: 0.3em 1.3em;
+}
+
+/** Selector attribute **/
+
+.pos .product_configurator_attributes .configurator_select {
+    cursor: pointer;
+    background-color: transparent;
+    width: 90%;
+    padding: 0.5em;
+    color: #666666;
+    font-size: 18px;
+    margin-bottom: 0.5em;
+}
+
+/** Color attribute **/
+
+.pos .product_configurator_attributes ul.color_attribute_list {
+    margin-left: 0;
+}
+
+.pos .product_configurator_attributes li.color_attribute_list_item:before {
+    content: '';
+}
+
+.pos .product_configurator_attributes li.color_attribute_list_item {
+    margin-bottom: 0.5em;
+    text-indent: 0;
+    display: inline-block;
+}
+
+.pos .product_configurator_attributes .color_attribute_list_item:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.pos .product_configurator_attributes .configurator_color {
+    display: inline-block;
+    border: 1px solid #999999;
+}
+
+.pos .product_configurator_attributes .configurator_color.active {
+    border: 3px ridge #66ee66;
+}
+
+.pos .product_configurator_attributes .configurator_color input {
+    margin: 20px;
+    opacity: 0;
+}
+
+.pos .product_configurator_attributes .configurator_color.active input {
+    margin: 18px;
+}
+
+/* TICKET SCREEN */
+
+.ticket-screen {
+    font-size: medium;
+}
+
+.ticket-screen .orders {
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: hidden;
+    overflow-y: hidden;
+    overflow-y: auto;
+}
+
+.ticket-screen .orders .header-row{
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 1;
+    justify-content: space-evenly;
+    background: #868686;
+    color: white;
+}
+
+.ticket-screen .orders .order-row {
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 1;
+    justify-content: space-evenly;
+}
+
+.ticket-screen .orders .col {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+}
+
+.ticket-screen .orders .col.start {
+    justify-content: flex-start;
+}
+
+.ticket-screen .orders .col.center {
+    justify-content: center;
+}
+
+.ticket-screen .orders .col.end {
+    justify-content: flex-end;
+}
+
+.ticket-screen .orders .col.very-narrow {
+    flex: 0.2;
+}
+
+.ticket-screen .orders .col.narrow {
+    flex: 0.5;
+}
+
+.ticket-screen .orders .col.wide {
+    flex: 1.5;
+}
+
+.ticket-screen .order-row:nth-child(odd) {
+    background: #DDD;
+}
+
+.ticket-screen .order-row:nth-child(even) {
+    background: white;
+}
+
+.ticket-screen .order-row:hover {
+    background: rgb(110,200,155);
+    color: white;
+}
+
+.ticket-screen .pointer {
+    cursor: pointer;
+}
+
+.ticket-screen .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 20px;
+    border-bottom: dashed 1px rgb(215,215,215);
+    flex: 0 0 80px;
+}
+
+.ticket-screen .controls button {
+    font-size: medium;
+    padding: 12px;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.ticket-screen .controls button.discard {
+    background: rgb(230, 230, 230);
+    border: solid 1px rgb(209, 209, 209);
+}
+
+.ticket-screen .controls button.highlight {
+    background: #6EC89B;
+    border: solid 1px #64AF8A;
+    color: white;
+}
+
+.ticket-screen .pos-search-bar {
+    vertical-align: middle;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    max-width: 500px;
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .search {
+    display: flex;
+    position: relative;
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .search input {
+    height: 40px;
+    font-size: medium;
+    color: #63717f;
+    padding-left: 40px;
+    border: solid 1px rgb(209, 209, 209);
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .radius-right {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.ticket-screen .pos-search-bar .radius-left {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.ticket-screen .pos-search-bar .search input:focus {
+    outline: none;
+}
+
+.ticket-screen .pos-search-bar .search .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    z-index: 1;
+    color: #4f5b66;
+}
+
+.ticket-screen .pos-search-bar .search ul {
+    background: white;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 2px;
+    left: 2px;
+    box-shadow: 1px 1px 3px grey;
+    font-size: small;
+}
+
+.ticket-screen .pos-search-bar .search li {
+    color: rgb(1,160,157);
+    margin: 0.2em 0;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 35px;
+}
+
+.ticket-screen .pos-search-bar .search li:hover {
+    background: #DDD;
+}
+
+.ticket-screen .pos-search-bar .search li .field {
+    font-style: italic;
+}
+
+.ticket-screen .pos-search-bar .search li .term {
+    font-weight: bold;
+}
+
+.ticket-screen .pos-search-bar .search li.highlight {
+    background: #DDD;
+}
+
+.ticket-screen .pos-search-bar .filter .down-icon {
+    position: absolute;
+    right: 13px;
+    top: 10px;
+}
+
+.ticket-screen .pos-search-bar .filter {
+    height: 40px;
+    background: white;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 20px;
+    padding-right: 40px;
+    border: solid 1px rgb(209, 209, 209);
+    border-left: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 150px;
+    font-size: medium;
+}
+
+.ticket-screen .pos-search-bar .filter:hover {
+    color: #868686;
+}
+
+.ticket-screen .pos-search-bar .filter .options {
+    display: block;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    z-index: 1;
+    box-shadow: 1px 1px 5px grey;
+    padding: 0.5em 0;
+    background: white;
+    color: #555555;
+}
+
+.ticket-screen .pos-search-bar .filter ul.options li {
+    padding: 0.2em 1.2em;
+    border-top: none;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.ticket-screen .pos-search-bar .filter ul.options li:hover {
+    background-color: #DDD;
+}
+
+.ticket-screen .pos-search-bar .search {
+    display: flex;
+}
+
+.ticket-button {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: medium;
+    color: white;
+}
+
+.ticket-button.highlight {
+    background: rgb(104,69,95);
+}
+
+.ticket-button:hover {
+    background: rgb(104,69,95);
+    cursor: pointer;
+}
+
+.ticket-button .with-badge {
+    margin-right: 0.7em;
+    font-size: larger;
+}
+
+[badge] {
+    position: relative;
+}
+
+[badge]:after {
+    background: rgb(1,160,157);
+    border-radius: 10rem;
+    color: #fff;
+    content: attr(badge);
+    font-size: small;
+    min-width: 20px;
+    padding: 2px;
+    position: absolute;
+    text-align: center;
+    left: 0.6em;
+    bottom: 0.6em;
+}
+
+[badge^="-"]:after,
+[badge="0"]:after,
+[badge=""]:after {
+ display: none;
+}
+
+/* Product Screen Search Bar */
+
+.search-bar-portal {
+    display: flex;
+}
+
+.search-bar-portal .search-box {
+    font-size: medium;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 15px;
+}
+
+.search-bar-portal .search-box input {
+    font-size: medium;
+    height: 30px;
+    border: none;
+    color: #63717f;
+    padding-left: 38px;
+    padding-right: 38px;
+    border-radius: 5px;
+}
+
+.search-bar-portal .search-box input:focus {
+    outline: none;
+}
+
+.search-bar-portal .search-box .icon {
+    position: absolute;
+    left: 0;
+    margin-left: 12px;
+    z-index: 1;
+    color: #4f5b66;
+}
+
+.search-bar-portal .search-box .clear-icon {
+    position: absolute;
+    right: 0;
+    margin-right: 12px;
+    z-index: 1;
+    color: #4f5b66;
+    cursor: pointer;
+}
+
+.currencyCashBox {
+    font-size: 30px;
+}
+
+.receipt-screen .default-view {
+    display: flex;
+    overflow: hidden;
+}
+
+.receipt-screen .default-view .pos-receipt-container {
+    flex: 0 1 400px;
+    overflow: auto;
+}
+
+.receipt-screen .default-view .actions {
+    flex: 1;
+    margin: 0 1.5rem;
+}
+
+.receipt-screen .default-view .actions * {
+    font-size: 1rem;
+}
+
+.receipt-screen .default-view .actions h1 {
+    font-size: 1.5rem;
+    margin-bottom: 4rem;
+}
+
+.receipt-screen .default-view .actions .buttons {
+    display: flex;
+    margin: 1rem 0px;
+}
+
+.receipt-screen .default-view .actions .buttons .button {
+    flex: 1;
+    border: solid 1px rgb(209, 209, 209);
+    padding: 1rem;
+    text-align: center;
+    border-radius: 3px;
+    cursor: pointer;
+    background: rgb(230, 230, 230);
+}
+
+.receipt-screen .default-view .actions .send-email {
+    display: flex;
+}
+
+.receipt-screen .default-view .actions .send-email .email-icon {
+    padding: 1rem;
+    border: solid 1px rgb(209, 209, 209);
+    border-right: none;
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+.receipt-screen .default-view .actions .send-email .input-email {
+    display: flex;
+    flex: 1;
+    background: white;
+    border: solid 1px rgb(209, 209, 209);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.receipt-screen .default-view .actions .send-email input {
+    flex: 1;
+    padding-left: 1rem;
+    border: none;
+    color: #555555;
+}
+
+.receipt-screen .default-view .actions .send-email input:focus {
+    outline: none;
+}
+
+.receipt-screen .default-view .actions .send-email button.send {
+    padding: 1rem 40px;
+    margin: 2px;
+    border: none;
+    background: rgb(230, 230, 230);
+}
+
+.receipt-screen .default-view .actions .send-email button.send.highlight {
+    color: white;
+    background-color: #6EC89B;
+}
+
+.receipt-screen .notice {
+    margin-top: 6px;
+}
+
+.receipt-screen .notice.failed {
+    color: rgb(168, 89, 89);
+}
+
+.receipt-screen .notice.successful {
+    color: #6EC89B;
+}
+
+@media screen and (max-width: 768px) {
+    .receipt-screen .default-view {
+        flex-direction: column-reverse;
+        overflow: auto;
+    }
+    .receipt-screen .default-view .actions {
+        flex: 0;
+    }
+    .receipt-screen .default-view .actions h1 {
+        margin-bottom: 1.5rem;
+    }
+    .receipt-screen .default-view .pos-receipt-container {
+        flex: 1;
+        overflow: visible;
+    }
+}
+
+.pos .cashbox-button {
+    height: 54px;
+    width: 54px;
+    font-weight: bold;
+    vertical-align: middle;
+    color: #555555;
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid;
+    border-bottom: 1px solid;
+    border-color: #bfbfbf;
+    transition: all 150ms linear;
+}
+
+.pos  .cashbox-input {
+    line-height: 74px;
+    border: solid 1px rgb(202, 202, 202);
+    border-top-width: 0px;
+    cursor: pointer;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+}
+
+.cashbox-input .input-title {
+    margin-left: 10px;
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 19px;
+}
+
+.cashbox-input .input-amount {
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-right: 8px;
+}
+
+.cashbox-notes {
+    font-style: italic;
+    font-weight: 350;
+    width: 95%;
+}
+
+/**
+ * Notification
+ */
+
+ .pos .notification {
+    min-width: 250px;
+    max-width: 500px;
+    background-color: #333333AA;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 5%;
+    font-size: 17px;
 }

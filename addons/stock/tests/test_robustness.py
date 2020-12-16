@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestRobustness(SavepointCase):
+class TestRobustness(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(TestRobustness, cls).setUpClass()
@@ -140,9 +140,9 @@ class TestRobustness(SavepointCase):
         move1._action_confirm()
         move1._action_assign()
 
-        move1.result_package_id = False
-
+        self.assertEqual(move1.move_line_ids.package_id, package)
         package.unpack()
+        self.assertEqual(move1.move_line_ids.package_id, self.env['stock.quant.package'])
 
         # unreserve
         move1._do_unreserve()

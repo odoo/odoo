@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website.s_dynamic_snippet_template">
+        <section t-attf-class="#{snippet_name} s_dynamic d-none pt24 pb24">
+            <div class="container o_not_editable">
+                <div class="css_non_editable_mode_hidden">
+                    <div class="missing_option_warning alert alert-info rounded-0 fade show d-print-none">
+                        Your Dynamic Snippet will be displayed here... This message is displayed because you did not provided both a filter and a template to use.<br/>
+                    </div>
+                </div>
+                <div class="dynamic_snippet_template"/>
+            </div>
+        </section>
+    </template>
+    <template id="s_dynamic_snippet" name="Dynamic Snippet">
+        <t t-call="website.s_dynamic_snippet_template">
+            <t t-set="snippet_name" t-value="'s_dynamic_snippet'"/>
+        </t>
+    </template>
+    <template id="website.s_dynamic_snippet_options_template">
+        <div t-attf-data-js="#{snippet_name}" t-attf-data-selector="#{snippet_selector}" data-no-preview="true">
+            <we-select string="Filter" data-name="filter_opt" data-attribute-name="filterId">
+            </we-select>
+            <we-select string="Template" data-name="template_opt" data-attribute-name="templateKey" data-no-preview="true">
+            </we-select>
+            <we-select string="Fetched elements" data-name="number_of_records_opt" data-attribute-name="numberOfRecords" data-no-preview="true">
+                <we-button data-select-data-attribute="1">1</we-button>
+                <we-button data-select-data-attribute="2">2</we-button>
+                <we-button data-select-data-attribute="3">3</we-button>
+                <we-button data-select-data-attribute="4">4</we-button>
+                <we-button data-select-data-attribute="6">6</we-button>
+                <we-button data-select-data-attribute="7">7</we-button>
+                <we-button data-select-data-attribute="8">8</we-button>
+                <we-button data-select-data-attribute="9">9</we-button>
+                <we-button data-select-data-attribute="10">10</we-button>
+                <we-button data-select-data-attribute="11">11</we-button>
+                <we-button data-select-data-attribute="12">12</we-button>
+                <we-button data-select-data-attribute="13">13</we-button>
+                <we-button data-select-data-attribute="14">14</we-button>
+                <we-button data-select-data-attribute="15">15</we-button>
+                <we-button data-select-data-attribute="16">16</we-button>
+            </we-select>
+            <we-title class="mt-2"><t t-esc="grouping_message"/></we-title>
+            <we-select string="⌙ Normal devices" data-name="number_of_elements_opt" data-attribute-name="numberOfElements" data-no-preview="true"><!-- &emsp; -->
+                <we-button data-select-data-attribute="1">1</we-button>
+                <we-button data-select-data-attribute="2">2</we-button>
+                <we-button data-select-data-attribute="3">3</we-button>
+                <we-button data-select-data-attribute="4">4</we-button>
+                <we-button data-select-data-attribute="6">6</we-button>
+            </we-select>
+            <we-select string="⌙ Small devices" data-name="number_of_elements_small_devices_opt" data-attribute-name="numberOfElementsSmallDevices" data-no-preview="true"><!-- &emsp; -->
+                <we-button data-select-data-attribute="1">1</we-button>
+                <we-button data-select-data-attribute="2">2</we-button>
+                <we-button data-select-data-attribute="3">3</we-button>
+            </we-select>
+            <t t-raw="0"/>
+        </div>
+    </template>
+    <template id="s_dynamic_snippet_options" inherit_id="website.snippet_options">
+        <xpath expr="." position="inside">
+            <t t-call="website.s_dynamic_snippet_options_template">
+                <t t-set="snippet_name" t-value="'dynamic_snippet'"/>
+                <t t-set="snippet_selector" t-value="'.s_dynamic_snippet'"/>
+                <t t-set="grouping_message">Items per row</t>
+            </t>
+        </xpath>
+    </template>
+    <template id="assets_snippet_s_dynamic_snippet_css_000" inherit_id="website.assets_frontend">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_dynamic_snippet/000.scss"/>
+        </xpath>
+    </template>
+    <template id="assets_snippet_s_dynamic_snippet_js_000" inherit_id="website.assets_frontend">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website/static/src/snippets/s_dynamic_snippet/000.js"/>
+        </xpath>
+    </template>
+</odoo>

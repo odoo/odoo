@@ -2,7 +2,6 @@ odoo.define('pos_restaurant.multiprint', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');
-var screens = require('point_of_sale.screens');
 var core = require('web.core');
 var Printer = require('point_of_sale.Printer').Printer;
 
@@ -122,36 +121,6 @@ models.Orderline = models.Orderline.extend({
         } else {
             return '' + this.id;
         }
-    },
-});
-
-screens.OrderWidget.include({
-    render_orderline: function(orderline) {
-        var node = this._super(orderline);
-        if (this.pos.config.iface_printers) {
-            if (orderline.mp_skip) {
-                node.classList.add('skip');
-            } else if (orderline.mp_dirty) {
-                node.classList.add('dirty');
-            }
-        }
-        return node;
-    },
-    click_line: function(line, event) {
-        if (!this.pos.config.iface_printers) {
-            this._super(line, event);
-        } else if (this.pos.get_order().selected_orderline !== line) {
-            this.mp_dbclk_time = (new Date()).getTime();
-        } else if (!this.mp_dbclk_time) {
-            this.mp_dbclk_time = (new Date()).getTime();
-        } else if (this.mp_dbclk_time + 500 > (new Date()).getTime()) {
-            line.set_skip(!line.mp_skip);
-            this.mp_dbclk_time = 0;
-        } else {
-            this.mp_dbclk_time = (new Date()).getTime();
-        }
-
-        this._super(line, event);
     },
 });
 
@@ -299,13 +268,18 @@ models.Order = models.Order.extend({
     },
     printChanges: async function(){
         var printers = this.pos.printers;
+        let isPrintSuccessful = true;
         for(var i = 0; i < printers.length; i++){
             var changes = this.computeChanges(printers[i].config.product_categories_ids);
             if ( changes['new'].length > 0 || changes['cancelled'].length > 0){
                 var receipt = QWeb.render('OrderChangeReceipt',{changes:changes, widget:this});
-                await printers[i].print_receipt(receipt);
+                const result = await printers[i].print_receipt(receipt);
+                if (!result.successful) {
+                    isPrintSuccessful = false;
+                }
             }
         }
+        return isPrintSuccessful;
     },
     hasChangesToPrint: function(){
         var printers = this.pos.printers;
@@ -337,41 +311,5 @@ models.Order = models.Order.extend({
     },
 });
 
-var SubmitOrderButton = screens.ActionButtonWidget.extend({
-    'template': 'SubmitOrderButton',
-    button_click: async function(){
-        var order = this.pos.get_order();
-        if(order.hasChangesToPrint()){
-            await order.printChanges();
-            order.saveChanges();
-        }
-    },
-});
-
-screens.define_action_button({
-    'name': 'submit_order',
-    'widget': SubmitOrderButton,
-    'condition': function() {
-        return this.pos.printers.length;
-    },
-});
-
-screens.OrderWidget.include({
-    update_summary: function(){
-        this._super();
-        var changes = this.pos.get_order().hasChangesToPrint();
-        var skipped = changes ? false : this.pos.get_order().hasSkippedChanges();
-        var buttons = this.getParent().action_buttons;
-
-        if (buttons && buttons.submit_order) {
-            buttons.submit_order.highlight(changes);
-            buttons.submit_order.altlight(skipped);
-        }
-    },
-});
-
-return {
-    SubmitOrderButton: SubmitOrderButton,
-}
 
 });

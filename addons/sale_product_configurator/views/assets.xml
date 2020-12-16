@@ -20,8 +20,8 @@
             <script type="text/javascript" src="/sale_product_configurator/static/tests/tours/product_configurator_optional_products_ui.js"/>
         </xpath>
     </template>
-    <template id="qunit_suite" inherit_id="web.qunit_suite" name="sale_product_configurator_tests">
-        <xpath expr="//t[@t-set='head']" position="inside">
+    <template id="qunit_suite" inherit_id="web.qunit_suite_tests" name="sale_product_configurator_tests">
+        <xpath expr="." position="inside">
             <script type="text/javascript" src="/sale_product_configurator/static/tests/product_configurator.test.js"></script>
         </xpath>
     </template>

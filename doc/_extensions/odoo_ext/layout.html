@@ -12,17 +12,12 @@
 {%- block doctype -%}
   <!doctype html>
 {%- endblock -%}
-{%- block htmltitle -%}
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://fonts.googleapis.com/css?family=Work+Sans:500,600" rel="stylesheet">
-  {{ super() }}
-{%- endblock -%}
 
-{%- block linktags -%}
+{%- block linktags %}
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:500,600" rel="stylesheet">
     <link rel="canonical" href="{{ canonical }}" />
-  {{ super() }}
-{%- endblock -%}
+    {{- super() }}
+{%- endblock %}
 
 {%- block sidebar1 -%}{%- endblock -%}
 {%- block sidebar2 -%}{%- endblock -%}
@@ -277,7 +272,7 @@
                 <li><a href="https://github.com/odoo/odoo">Github</a></li>
                 <li><a href="http://www.odoo.com/page/download">Download</a></li>
                 <li class="divider"></li>
-                <li><a href="http://runbot.odoo.com/runbot/repo/git-github-com-odoo-enterprise-7">Runbot</a></li>
+                <li><a href="https://runbot.odoo.com">Runbot</a></li>
                 <li><a href="https://github.com/odoo/odoo/wiki/Translations">Translations</a></li>
                 <li class="divider"></li>
                 <li><a href="http://www.odoo.com/page/odoo-community">Mailing Lists</a></li>

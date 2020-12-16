@@ -59,13 +59,11 @@
             <field name="website_size_x">2</field>
             <field name="website_size_y">2</field>
             <field name="website_sequence">9950</field>
-            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
         </record>
 
         <record id="product.product_product_6" model="product.product">
             <field name="is_published" eval="True"/>
             <field name="website_sequence">10010</field>
-            <field name="website_style_ids" eval="[(6,0,[ref('website_sale.image_full')])]"/>
         </record>
 
         <record id="product.product_product_7" model="product.product">
@@ -97,46 +95,58 @@
 
     <!-- product.public.category -->
 
-        <record id="Components" model="product.public.category">
-          <field name="name">Components</field>
+        <record id="public_category_desks" model="product.public.category">
+          <field name="name">Desks</field>
           <field name="sequence">15</field>
+        </record>
+        <record id="public_category_furnitures" model="product.public.category">
+          <field name="name">Furnitures</field>
+          <field name="sequence">17</field>
         </record>
         <record id="public_category_boxes" model="product.public.category">
             <field name="name">Boxes</field>
-            <field name="sequence">16</field>
-        </record>
-        <record id="public_category_desks" model="product.public.category">
-          <field name="name">Desks</field>
-          <field name="sequence">17</field>
-        </record>
-        <record id="public_category_cabinets" model="product.public.category">
-          <field name="name">Cabinets</field>
-          <field name="sequence">18</field>
-        </record>
-        <record id="public_category_bins" model="product.public.category">
-          <field name="name">Bins</field>
-          <field name="sequence">19</field>
-        </record>
-        <record id="public_category_chairs" model="product.public.category">
-          <field name="name">Chairs</field>
-          <field name="sequence">20</field>
+            <field name="sequence">20</field>
         </record>
         <record id="public_category_drawers" model="product.public.category">
           <field name="name">Drawers</field>
           <field name="sequence">21</field>
         </record>
+        <record id="public_category_cabinets" model="product.public.category">
+          <field name="name">Cabinets</field>
+          <field name="sequence">22</field>
+        </record>
+        <record id="public_category_bins" model="product.public.category">
+          <field name="name">Bins</field>
+          <field name="sequence">23</field>
+        </record>
         <record id="public_category_lamps" model="product.public.category">
           <field name="name">Lamps</field>
-          <field name="sequence">22</field>
+          <field name="sequence">24</field>
+        </record>
+        <record id="services" model="product.public.category">
+          <field name="name">Services</field>
+          <field name="sequence">25</field>
         </record>
         <record id="public_category_multimedia" model="product.public.category">
           <field name="name">Multimedia</field>
-          <field name="sequence">24</field>
+          <field name="sequence">26</field>
         </record>
 
-        <record id="services" model="product.public.category">
-          <field name="name">Services</field>
+        <!-- subcategories -->
+        <record id="public_category_desks_components" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_desks')"/>
+          <field name="name">Components</field>
           <field name="sequence">16</field>
+        </record>
+        <record id="public_category_furnitures_chairs" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Chairs</field>
+          <field name="sequence">18</field>
+        </record>
+        <record id="public_category_furnitures_couches" model="product.public.category">
+          <field name="parent_id" eval="ref('public_category_furnitures')"/>
+          <field name="name">Couches</field>
+          <field name="sequence">19</field>
         </record>
 
         <record id="product.product_product_1_product_template" model="product.template">
@@ -146,7 +156,7 @@
             <field name="public_categ_ids" eval="[(6,0,[ref('services')])]"/>
         </record>
         <record id="product.product_product_3_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
         </record>
         <record id="product.consu_delivery_03_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
@@ -173,10 +183,10 @@
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_cabinets')])]"/>
         </record>
         <record id="product.product_product_11_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_chairs')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_chairs')])]"/>
         </record>
         <record id="product.product_product_12_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_chairs')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_chairs')])]"/>
         </record>
         <record id="product.product_product_13_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
@@ -185,13 +195,13 @@
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_drawers')])]"/>
         </record>
         <record id="product.product_product_20_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('Components')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
         </record>
         <record id="product.product_product_22_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
         </record>
         <record id="product.product_product_25_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks_components')])]"/>
         </record>
         <record id="product.product_product_27_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_drawers')])]"/>
@@ -200,19 +210,19 @@
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_multimedia')])]"/>
         </record>
         <record id="product.consu_delivery_01_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_chairs')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_couches')])]"/>
         </record>
         <record id="product.consu_delivery_02_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_lamps')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
         </record>
         <record id="product.consu_delivery_03_product_template" model="product.template">
             <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
         </record>
         <record id="product.product_delivery_01_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_chairs')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_furnitures_chairs')])]"/>
         </record>
         <record id="product.product_delivery_02_product_template" model="product.template">
-            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_desks')])]"/>
+            <field name="public_categ_ids" eval="[(6,0,[ref('public_category_lamps')])]"/>
         </record>
 
         <record model="product.pricelist" id="product.list0">
@@ -329,6 +339,7 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2'))]"/>
             <field name="state">sale</field>
         </record>
 
@@ -435,6 +446,7 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1'))]"/>
             <field name="state">sale</field>
         </record>
 
@@ -486,6 +498,7 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor5'))]"/>
         </record>
 
         <record id="website_sale_order_line_11" model="sale.order.line">
@@ -686,4 +699,41 @@
         <record id="website_sale.product_1_attribute_3_value_2" model="product.template.attribute.value">
             <field name="price_extra">18.00</field>
         </record>
+
+        <record id="website_sale_activity_1" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_3"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_2" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_8"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Follow-up on satisfaction</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_3" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_9"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Confirm quote</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_5" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_11"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Send updated pricelist</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
 </odoo>

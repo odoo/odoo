@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_base_document_layout" model="ir.ui.view">
+            <field name="name">Document Layout</field>
+            <field name="model">base.document.layout</field>
+            <field name="arch" type="xml">
+                <form class="o_document_layout">
+                    <group>
+                        <group class="o_document_layout_company">
+                            <field name="company_id" invisible="1"/>
+                            <field name="external_report_layout_id" invisible="1" />
+                            <field name="logo_primary_color" invisible="1" />
+                            <field name="logo_secondary_color" invisible="1" />
+                            <field name="report_layout_id" widget="radio" string="Layout"/>
+                            <field name="logo" widget="image"/>
+                            <label for="primary_color" string="Colors" />
+                            <div class="o_document_layout_colors">
+                                <field name="primary_color" widget="color"/>
+                                <field name="secondary_color" widget="color"/>
+                                <field name="custom_colors" class="d-none" />
+                                <button class="btn btn-link" title="Reset to logo colors" attrs="{'invisible': [('custom_colors', '=', False)]}">
+                                    <label for="custom_colors" class="fa fa-refresh" string="" />
+                                </button>
+                            </div>
+                            <field name="font" widget="font"/>
+                            <field name="report_header" widget="char" placeholder="e.g. Global Business Solutions" />
+                            <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
+                            <field name="paperformat_id" required="1" />
+                        </group>
+                        <div>
+                            <field name="preview" widget="iframe_wrapper" />
+                        </div>
+                    </group>
+                    <footer>
+                        <button string="Save" class="btn-primary" type="object" name="document_layout_save"/>
+                        <button special="cancel" string="Cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_base_document_layout_configurator" model="ir.actions.act_window">
+            <field name="type">ir.actions.act_window</field>
+            <field name="name">Configure your document layout</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="res_model">base.document.layout</field>
+            <field name="view_id" ref="web.view_base_document_layout"/>
+        </record>
+
+    </data>
+</odoo>
+

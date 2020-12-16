@@ -5,6 +5,7 @@
         <xpath expr="." position="inside">
             <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet.scss"/>
                 <script type="text/javascript" src="/sale_timesheet/static/src/js/project_overview.js"></script>
+                <script type="text/javascript" src="/sale_timesheet/static/src/js/sale_project_kanban_controller.js"/>
         </xpath>
     </template>
 
@@ -37,19 +38,35 @@
                                     >
                                         <div t-attf-class="fa fa-fw o_button_icon #{stat_button['icon']}" role="img" aria-label="Statistics" title="Statistics"></div>
                                         <div class="o_field_widget o_stat_info o_readonly_modifier" t-att-title="stat_button['name']">
-                                            <span class="o_stat_value" t-if="stat_button.get('count')">
-                                                <t t-esc="stat_button['count']"/>
-                                            </span>
-                                            <span class="o_stat_text">
-                                                <t t-esc="stat_button['name']"/>
-                                            </span>
+                                            <t t-if="not isinstance(stat_button['name'], list)">
+                                                <span class="o_stat_value" t-if="'count' in stat_button">
+                                                    <t t-esc="stat_button['count']"/>
+                                                </span>
+                                                <span class="o_stat_text">
+                                                    <t t-esc="stat_button['name']"/>
+                                                </span>
+                                            </t>
+                                            <t t-if="isinstance(stat_button['name'], list)">
+                                                <div class="oe_inline">
+                                                    <span class="o_stat_value mr-1">
+                                                        <t t-esc="stat_button.get('count')"/>
+                                                    </span>
+                                                    <span class="o_stat_value">
+                                                        <t t-esc="stat_button['name'][0]"/>
+                                                    </span>
+                                                </div>
+                                                <span class="o_stat_text">
+                                                    <t t-esc="stat_button['name'][1]"/>
+                                                </span>
+                                            </t>
                                         </div>
                                     </a>
                                 </t>
                             </div>
 
                             <div class="o_title">
-                                <h2>Hours recorded and Profitability</h2>
+                                <h2 t-if="is_uom_day">Recorded Days and Profitability</h2>
+                                <h2 t-else="">Recorded Hours and Profitability</h2>
                             </div>
 
                             <t t-set="display_cost" t-value="dashboard['profit']['expense_cost'] != 0.0"/>
@@ -59,11 +76,17 @@
                                         <table class="table">
                                             <tbody>
                                                 <th>
-                                                    <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain)" data-context='{"pivot_row_groupby": ["date:month"],"pivot_column_groupby": ["timesheet_invoice_type"], "pivot_measures": ["unit_amount"]}' data-views='[[0, "pivot"], [0, "list"]]' tabindex="-1">Hours</a>
+                                                    <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain)"
+                                                       data-context='{"pivot_row_groupby": ["date:month"],"pivot_column_groupby": ["timesheet_invoice_type"], "pivot_measures": ["unit_amount"]}'
+                                                       data-views='[[0, "pivot"], [0, "list"]]' tabindex="-1">
+                                                        <span t-if="is_uom_day">Days recorded</span>
+                                                        <span t-else="">Hours recorded</span>
+                                                    </a>
                                                 </th>
                                                 <tr>
                                                     <td class="o_timesheet_plan_dashboard_cell">
-                                                        <t t-esc="dashboard['hours']['billable_time']" t-options="{'widget': 'float_time'}"/>
+                                                        <t t-if="is_uom_day" t-esc="dashboard['time']['billable_time']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="dashboard['time']['billable_time']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         (<t t-esc="dashboard['rates']['billable_time']"/> %)
@@ -74,7 +97,8 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="o_timesheet_plan_dashboard_cell">
-                                                        <t t-esc="dashboard['hours']['billable_fixed']" t-options="{'widget': 'float_time'}"/>
+                                                        <t t-if="is_uom_day" t-esc="dashboard['time']['billable_fixed']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="dashboard['time']['billable_fixed']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         (<t t-esc="dashboard['rates']['billable_fixed']"/> %)
@@ -83,9 +107,10 @@
                                                         Billed at a Fixed price
                                                     </td>
                                                 </tr>
-                                                <tr t-if="dashboard['hours']['non_billable_project'] != 0">
+                                                <tr t-if="dashboard['time']['non_billable_project'] != 0">
                                                     <td class="o_timesheet_plan_dashboard_cell">
-                                                        <t t-esc="dashboard['hours']['non_billable_project']" t-options="{'widget': 'float_time'}"/>
+                                                        <t t-if="is_uom_day" t-esc="dashboard['time']['non_billable_project']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="dashboard['time']['non_billable_project']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         (<t t-esc="dashboard['rates']['non_billable_project']"/> %)
@@ -96,7 +121,8 @@
                                                 </tr>
                                                 <tr>
                                                     <td class="o_timesheet_plan_dashboard_cell">
-                                                        <t t-esc="dashboard['hours']['non_billable']" t-options="{'widget': 'float_time'}"/>
+                                                        <t t-if="is_uom_day" t-esc="dashboard['time']['non_billable']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="dashboard['time']['non_billable']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         (<t t-esc="dashboard['rates']['non_billable']"/> %)
@@ -115,9 +141,31 @@
                                                         </a>
                                                     </td>
                                                 </tr>
-                                                <tr t-if="dashboard['hours']['canceled'] > 0">
+                                                <tr t-if="dashboard['time']['non_billable_timesheet'] > 0">
                                                     <td class="o_timesheet_plan_dashboard_cell">
-                                                        <t t-esc="dashboard['hours']['canceled']" t-options="{'widget': 'float_time'}"/>
+                                                        <t t-if="is_uom_day" t-esc="dashboard['time']['non_billable_timesheet']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="dashboard['time']['non_billable_timesheet']" t-options="{'widget': 'float_time'}"/>
+                                                    </td>
+                                                    <td class="o_timesheet_plan_dashboard_cell">
+                                                        (<t t-esc="dashboard['rates']['non_billable_timesheet']"/> %)
+                                                    </td>
+                                                    <td>
+                                                        <a type="action"
+                                                            data-model="account.analytic.line"
+                                                            data-views='[[false, "list"], [false, "form"]]'
+                                                            t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_timesheet')])"
+                                                        >
+                                                            <span class="btn-link"
+                                                                  style="font-weight:normal;">
+                                                                Non Billable Timesheets
+                                                            </span>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                <tr t-if="dashboard['time']['canceled'] > 0">
+                                                    <td class="o_timesheet_plan_dashboard_cell">
+                                                        <t t-if="is_uom_day" t-esc="dashboard['time']['canceled']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="dashboard['time']['canceled']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
                                                     <td class="o_timesheet_plan_dashboard_cell">
                                                         (<t t-esc="dashboard['rates']['canceled']"/> %)
@@ -127,7 +175,12 @@
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="o_timesheet_plan_dashboard_total"><b><t t-esc="dashboard['hours']['total']" t-options="{'widget': 'float_time'}"/></b></td>
+                                                    <td class="o_timesheet_plan_dashboard_total">
+                                                        <b>
+                                                            <t t-if="is_uom_day" t-esc="dashboard['time']['total']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                            <t t-else="" t-esc="dashboard['time']['total']" t-options="{'widget': 'float_time'}"/>
+                                                        </b>
+                                                    </td>
                                                     <td><b>Total</b></td>
                                                     <td></td>
                                                 </tr>
@@ -212,64 +265,87 @@
                                 <p>There are no timesheets for now.</p>
                             </t>
                             <t t-if="repartition_employee">
-                                <div class="float-right o_timesheet_plan_badge">
-                                    <span class="badge badge-pill o_progress_billable_time">
-                                        <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_time')])" tabindex="-1">Billed on Timesheets</a>
-                                    </span>
-                                    <span class="badge badge-pill o_progress_billable_fixed">
-                                        <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])" tabindex="-1">Billed at a Fixed price</a>
-                                    </span>
-                                    <span t-if="dashboard['hours']['non_billable_project'] != 0" class="badge badge-pill o_progress_non_billable_project">
-                                        <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])" tabindex="-1">No task found</a>
-                                    </span>
-                                    <span class="badge badge-pill o_progress_non_billable">
-                                        <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])" tabindex="-1">Non billable tasks</a>
-                                    </span>
-                                    <!-- only show the canceled pill if there were timesheets on canceled so -->
-                                    <t t-if="sum([employee.get('canceled', 0.0) for employee in repartition_employee.values()]) > 0">
-                                        <span class="badge badge-pill o_progress_canceled">
-                                            <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('so_line.state', '=', 'cancel')])" tabindex="-1">Cancelled</a>
-                                        </span>
-                                    </t>
-                                </div>
                                 <div class="table-responsive">
                                     <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th></th>
+                                                <th>Employee</th>
+                                                <th t-if="is_uom_day" class="text-nowrap text-right pr-5">Days Spent</th>
+                                                <th t-else="" class="text-nowrap text-right pr-5">Hours Spent</th>
+                                                <td>
+                                                    <div class="float-right o_timesheet_plan_badge">
+                                                        <span class="badge badge-pill o_progress_billable_time">
+                                                            <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_time')])" tabindex="-1">Billed on Timesheets</a>
+                                                        </span>
+                                                        <span class="badge badge-pill o_progress_billable_fixed">
+                                                            <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','billable_fixed')])" tabindex="-1">Billed at a Fixed price</a>
+                                                        </span>
+                                                        <span t-if="dashboard['time']['non_billable_project'] != 0" class="badge badge-pill o_progress_non_billable_project">
+                                                            <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_project')])" tabindex="-1">No task found</a>
+                                                        </span>
+                                                        <span t-if="dashboard['time']['non_billable_timesheet'] != 0" class="badge badge-pill o_progress_non_billable_timesheet">
+                                                            <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable_timesheet')])" tabindex="-1">Non billable timesheets</a>
+                                                        </span>
+                                                        <span class="badge badge-pill o_progress_non_billable">
+                                                            <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('timesheet_invoice_type','=','non_billable')])" tabindex="-1">Non billable tasks</a>
+                                                        </span>
+                                                        <!-- only show the canceled pill if there were timesheets on canceled so -->
+                                                        <t t-if="sum([employee.get('canceled', 0.0) for employee in repartition_employee.values()]) > 0">
+                                                            <span class="badge badge-pill o_progress_canceled">
+                                                                <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain + [('so_line.state', '=', 'cancel')])" tabindex="-1">Cancelled</a>
+                                                            </span>
+                                                        </t>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </thead>
                                         <tbody>
                                             <t t-foreach="repartition_employee" t-as="employee_id">
                                                 <t t-set="employee" t-value="repartition_employee[employee_id]"/>
                                                 <tr>
-                                                    <td style="width: 15%">
+                                                    <td style="width: 3%; vertical-align: middle;">
+                                                        <img class="img rounded-circle mr-2 mb-2" t-attf-src="/web/image?model=hr.employee&amp;field=image_128&amp;id=#{employee['employee_id']}" t-att-title="employee['employee_name']" t-att-alt="employee['employee_name']" width="25" height="25"/>
+                                                    </td>
+                                                    <td style="width: 15%; vertical-align: middle;" >
                                                         <a type="action" data-model="account.analytic.line" t-att-data-domain="json.dumps(timesheet_domain)" t-att-data-context="json.dumps({'search_default_employee_id': employee_id})" data-views="[[0, &quot;list&quot;]]" tabindex="-1">
                                                             <t t-esc="employee['employee_name']"/>
                                                         </a>
                                                     </td>
-                                                    <td class="text-right pr-5" style="width: 10%">
-                                                        <t t-esc="employee['total']" t-options="{'widget': 'float_time'}"/>
+                                                    <td class="text-right pr-5" style="width: 10%; vertical-align: middle;">
+                                                        <t t-if="is_uom_day" t-esc="employee['total']" t-options="{'widget': 'timesheet_uom'}"/>
+                                                        <t t-else="" t-esc="employee['total']" t-options="{'widget': 'float_time'}"/>
                                                     </td>
-                                                    <td>
-                                                        <div t-if="repartition_employee_max" class="progress" t-attf-style="width: {{max(0, employee['total'] / repartition_employee_max * 100)}}%">
+                                                    <td style="vertical-align:middle">
+                                                        <div class="border rounded">
+                                                            <div t-if="repartition_employee_max" class="progress" t-attf-style="width: {{max(0, employee['total'] / repartition_employee_max * 100)}}%; margin-bottom: 0em;">
 
-                                                            <t t-set="total" t-value="employee['total'] or 1.0" />
-                                                            <t t-call="sale_timesheet.progressbar">
-                                                                <t t-set="label">Billed on Timesheets</t>
-                                                                <t t-set="key" t-translation="off">billable_time</t>
-                                                            </t>
-                                                            <t t-call="sale_timesheet.progressbar">
-                                                                <t t-set="label">Billed at a Fixed price</t>
-                                                                <t t-set="key" t-translation="off">billable_fixed</t>
-                                                            </t>
-                                                            <t t-call="sale_timesheet.progressbar">
-                                                                <t t-set="label">No task found</t>
-                                                                <t t-set="key" t-translation="off">non_billable_project</t>
-                                                            </t>
-                                                            <t t-call="sale_timesheet.progressbar">
-                                                                <t t-set="label">Non billable tasks</t>
-                                                                <t t-set="key" t-translation="off">non_billable</t>
-                                                            </t>
-                                                            <t t-call="sale_timesheet.progressbar">
-                                                                <t t-set="label">Cancelled</t>
-                                                                <t t-set="key" t-translation="off">canceled</t>
-                                                            </t>
+                                                                <t t-set="total" t-value="employee['total'] or 1.0" />
+                                                                <t t-call="sale_timesheet.progressbar">
+                                                                    <t t-set="label">Billed on Timesheets</t>
+                                                                    <t t-set="key" t-translation="off">billable_time</t>
+                                                                </t>
+                                                                <t t-call="sale_timesheet.progressbar">
+                                                                    <t t-set="label">Billed at a Fixed price</t>
+                                                                    <t t-set="key" t-translation="off">billable_fixed</t>
+                                                                </t>
+                                                                <t t-call="sale_timesheet.progressbar">
+                                                                    <t t-set="label">No task found</t>
+                                                                    <t t-set="key" t-translation="off">non_billable_project</t>
+                                                                </t>
+                                                                <t t-call="sale_timesheet.progressbar">
+                                                                    <t t-set="label">Non billable timesheets</t>
+                                                                    <t t-set="key" t-translation="off">non_billable_timesheet</t>
+                                                                </t>
+                                                                <t t-call="sale_timesheet.progressbar">
+                                                                    <t t-set="label">Non billable tasks</t>
+                                                                    <t t-set="key" t-translation="off">non_billable</t>
+                                                                </t>
+                                                                <t t-call="sale_timesheet.progressbar">
+                                                                    <t t-set="label">Cancelled</t>
+                                                                    <t t-set="key" t-translation="off">canceled</t>
+                                                                </t>
+                                                            </div>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -319,14 +395,14 @@
                                                 <t t-if="row_type == 'sale_order_line'">
                                                     <t t-set="current_order_line" t-value="False"/>
                                                 </t>
-                                                <t t-set="foldable" t-value="row_type in ('sale_order', 'sale_order_line')"/>
+                                                <t t-set="foldable" t-value="row[0].get('has_children')"/>
                                                 <tr t-att-class="'o_timesheet_forecast_' + row_type + ' sale_order_' + str(current_order) + ' sale_order_line_' + str(current_order_line)"
-                                                    t-att-style="'display: none;' if row_type != 'sale_order' else ''">
+                                                    t-att-style="'display: none;' if row_type not in ('sale_order', 'sale_order_line') else ''">
                                                     <t t-foreach="row" t-as="row_value">
                                                         <td t-att-class="'o_right_bordered' if row_value_index in [5,10] else '' + ' text-center' if row_value_index != 0 else ''">
                                                             <t t-if="row_value_index == 0">
-                                                                <span t-if="foldable" t-att-class="'fa fa-caret-right' + (' project_overview_foldable' if foldable else '')" style="cursor: pointer;"
-                                                                      t-att-data-model="row[0].get('res_model')" t-att-data-res-id="row[0].get('res_id')"/>
+                                                                <span t-if="foldable" t-att-class="('fa fa-caret-down' if row_type == 'sale_order' else 'fa fa-caret-right') + (' project_overview_foldable' if foldable else '')"
+                                                                      style="cursor: pointer;" t-att-data-model="row[0].get('res_model')" t-att-data-res-id="row[0].get('res_id')"/>
                                                                 <t t-if="row_type == 'sale_order'">
                                                                     <a type="action" t-att-data-model="row_value['res_model']" t-att-data-res-id="row_value['res_id']" t-att-class="'o_timesheet_plan_redirect' if row_value['res_id'] else ''">
                                                                         <t t-esc="row_value.get('label')"/>
@@ -347,15 +423,24 @@
                                                             <t t-if="row_value_index != 0">
                                                                 <t t-if="row_value_index &lt; len(row)-2">
                                                                     <t t-if="row_is_milestone">
-                                                                        <i t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></i>
+                                                                        <i t-att-class="'text-muted' if not row_value else ''">
+                                                                            <t t-if="is_uom_day" t-esc="row_value" t-options="{'widget': 'timesheet_uom'}"/>
+                                                                            <t t-else="" t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                                        </i>
                                                                     </t>
                                                                     <t t-else="">
-                                                                        <span t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></span>
+                                                                        <span t-att-class="'text-muted' if not row_value else ''">
+                                                                            <t t-if="is_uom_day" t-esc="row_value" t-options="{'widget': 'timesheet_uom'}"/>
+                                                                            <t t-else="" t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                                        </span>
                                                                     </t>
                                                                 </t>
                                                                 <t t-else="">
                                                                     <t t-if="not row_is_milestone and not row[0].get('type') == 'hr_employee'">
-                                                                        <span t-att-class="'text-muted' if not row_value else ''"><t t-esc="row_value" t-options="{'widget': 'float_time'}"/></span>
+                                                                        <span t-att-class="'text-muted' if not row_value else ''">
+                                                                            <t t-if="is_uom_day" t-esc="row_value" t-options="{'widget': 'timesheet_uom'}"/>
+                                                                            <t t-else="" t-esc="row_value" t-options="{'widget': 'float_time'}"/>
+                                                                        </span>
                                                                     </t>
                                                                 </t>
                                                             </t>
@@ -386,7 +471,9 @@
     <template id="progressbar" name="project overview progressbar segments">
         <t t-set="amount" t-value="employee[key]"/>
         <t t-if="amount &gt; 0">
-            <t t-set="title"><t t-esc="label"/>: <t t-esc="amount" t-options="{'widget': 'float_time'}"/></t>
+            <t t-set="title">
+                <t t-esc="label"/>: <t t-if="is_uom_day" t-esc="amount" t-options="{'widget': 'timesheet_uom'}"/><t t-else="" t-esc="amount" t-options="{'widget': 'float_time'}"/>
+            </t>
             <a t-attf-class="progress-bar o_progress_{{key}}"
                t-attf-style="width: {{amount / total * 100}}%"
                type="action" data-model="account.analytic.line"

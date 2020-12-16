@@ -23,6 +23,7 @@ class SeoMetadata(models.AbstractModel):
     website_meta_description = fields.Text("Website meta description", translate=True)
     website_meta_keywords = fields.Char("Website meta keywords", translate=True)
     website_meta_og_img = fields.Char("Website opengraph image")
+    seo_name = fields.Char("Seo name", translate=True)
 
     def _compute_is_seo_optimized(self):
         for record in self:
@@ -105,7 +106,7 @@ class WebsiteCoverPropertiesMixin(models.AbstractModel):
 
     def _default_cover_properties(self):
         return {
-            "background_color_class": "bg-secondary",
+            "background_color_class": "o_cc3",
             "background-image": "none",
             "opacity": "0.2",
             "resize_class": "o_half_screen_height",
@@ -122,6 +123,7 @@ class WebsiteMultiMixin(models.AbstractModel):
         string="Website",
         ondelete="restrict",
         help="Restrict publishing to this website.",
+        index=True,
     )
 
     def can_access_from_current_website(self, website_id=False):
@@ -139,10 +141,11 @@ class WebsitePublishedMixin(models.AbstractModel):
     _description = 'Website Published Mixin'
 
     website_published = fields.Boolean('Visible on current website', related='is_published', readonly=False)
-    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published())
+    is_published = fields.Boolean('Is Published', copy=False, default=lambda self: self._default_is_published(), index=True)
     can_publish = fields.Boolean('Can Publish', compute='_compute_can_publish')
     website_url = fields.Char('Website URL', compute='_compute_website_url', help='The full URL to access the document through the website.')
 
+    @api.depends_context('lang')
     def _compute_website_url(self):
         for record in self:
             record.website_url = '#'
@@ -167,13 +170,13 @@ class WebsitePublishedMixin(models.AbstractModel):
         is_publish_modified = any(
             [set(v.keys()) & {'is_published', 'website_published'} for v in vals_list]
         )
-        if is_publish_modified and not all(record.can_publish for record in records):
+        if is_publish_modified and any(not record.can_publish for record in records):
             raise AccessError(self._get_can_publish_error_message())
 
         return records
 
     def write(self, values):
-        if 'is_published' in values and not all(record.can_publish for record in self):
+        if 'is_published' in values and any(not record.can_publish for record in self):
             raise AccessError(self._get_can_publish_error_message())
 
         return super(WebsitePublishedMixin, self).write(values)

@@ -39,7 +39,7 @@ class ProductionLot(models.Model):
         for rec in records:
             if rec['__count'] != 1:
                 product_name = self.env['product.product'].browse(rec['product_id'][0]).display_name
-                error_message_lines.append(_(" - Product: %s, Serial Number: %s") % (product_name, rec['name']))
+                error_message_lines.append(_(" - Product: %s, Serial Number: %s", product_name, rec['name']))
         if error_message_lines:
             raise ValidationError(_('The combination of serial number and product must be unique across a company.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
 
@@ -84,16 +84,17 @@ class ProductionLot(models.Model):
             for lot in self:
                 if lot.company_id.id != vals['company_id']:
                     raise UserError(_("Changing the company of this record is forbidden at this point, you should rather archive it and create a new one."))
-        if 'product_id' in vals and any([vals['product_id'] != lot.product_id.id for lot in self]):
+        if 'product_id' in vals and any(vals['product_id'] != lot.product_id.id for lot in self):
             move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:
                 raise UserError(_(
-                    'You are not allowed to change the product linked to a serial or lot number ' +
-                    'if some stock moves have already been created with that number. ' +
+                    'You are not allowed to change the product linked to a serial or lot number '
+                    'if some stock moves have already been created with that number. '
                     'This would lead to inconsistencies in your stock.'
                 ))
         return super(ProductionLot, self).write(vals)
 
+    @api.depends('quant_ids', 'quant_ids.quantity')
     def _product_qty(self):
         for lot in self:
             # We only care for the quants in internal or transit locations.

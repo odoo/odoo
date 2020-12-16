@@ -65,19 +65,19 @@ class ImLivechatChannel(models.Model):
         }
         for record in self:
             values["channel_id"] = record.id
-            record.script_external = view.render(values)
+            record.script_external = view._render(values) if record.id else False
 
     def _compute_web_page_link(self):
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id)
+            record.web_page = "%s/im_livechat/support/%i" % (base_url, record.id) if record.id else False
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
-        channels = self.env['mail.channel'].search([('livechat_channel_id', 'in', self.ids)])
-        channel_count = dict.fromkeys(self.ids, 0)
-        for channel in channels.filtered(lambda c: c.channel_message_ids):
-            channel_count[channel.livechat_channel_id.id] += 1
+        data = self.env['mail.channel'].read_group([
+            ('livechat_channel_id', 'in', self._ids),
+            ('channel_message_ids', '!=', False)], ['__count'], ['livechat_channel_id'], lazy=False)
+        channel_count = {x['livechat_channel_id'][0]: x['__count'] for x in data}
         for record in self:
             record.nbr_channel = channel_count.get(record.id, 0)
 
@@ -98,7 +98,7 @@ class ImLivechatChannel(models.Model):
             :returns : the ir.action 'action_view_rating' with the correct domain
         """
         self.ensure_one()
-        action = self.env['ir.actions.act_window'].for_xml_id('im_livechat', 'rating_rating_action_view_livechat_rating')
+        action = self.env['ir.actions.act_window']._for_xml_id('im_livechat.rating_rating_action_view_livechat_rating')
         action['domain'] = [('parent_res_id', '=', self.id), ('parent_res_model', '=', 'im_livechat.channel')]
         return action
 
@@ -129,7 +129,7 @@ class ImLivechatChannel(models.Model):
             'anonymous_name': False if user_id else anonymous_name,
             'country_id': country_id,
             'channel_type': 'livechat',
-            'name': ', '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
+            'name': ' '.join([visitor_user.display_name if visitor_user else anonymous_name, operator.livechat_username if operator.livechat_username else operator.name]),
             'public': 'private',
             'email_send': False,
         }
@@ -230,6 +230,7 @@ class ImLivechatChannel(models.Model):
         info['server_url'] = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         if info['available']:
             info['options'] = self._get_channel_infos()
+            info['options']['current_partner_id'] = self.env.user.partner_id.id
             info['options']["default_username"] = username
         return info
 

@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+from random import randint
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
@@ -21,7 +22,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
+        default='/',
         copy=False, required=True,
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
@@ -38,7 +39,7 @@ class Repair(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        index=True, states={'confirmed': [('readonly', True)]}, check_company=True,
+        index=True, states={'confirmed': [('readonly', True)]}, check_company=True, change_default=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
@@ -76,8 +77,9 @@ class Repair(models.Model):
         copy=True, readonly=True, states={'draft': [('readonly', False)]})
     pricelist_id = fields.Many2one(
         'product.pricelist', 'Pricelist',
-        default=lambda self: self.env['product.pricelist'].search([], limit=1).id,
+        default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
         help='Pricelist of the selected partner.', check_company=True)
+    currency_id = fields.Many2one(related='pricelist_id.currency_id')
     partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address', check_company=True)
     invoice_method = fields.Selection([
         ("none", "No Invoice"),
@@ -177,7 +179,9 @@ class Repair(models.Model):
         if not self.partner_id:
             self.address_id = False
             self.partner_invoice_id = False
-            self.pricelist_id = self.env['product.pricelist'].search([], limit=1).id
+            self.pricelist_id = self.env['product.pricelist'].search([
+                ('company_id', 'in', [self.env.company.id, False]),
+            ], limit=1)
         else:
             addresses = self.partner_id.address_get(['delivery', 'invoice', 'contact'])
             self.address_id = addresses['delivery'] or addresses['contact']
@@ -192,13 +196,23 @@ class Repair(models.Model):
         else:
             self.location_id = False
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_confirmed(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
                 raise UserError(_('You can not delete a repair order once it has been confirmed. You must first cancel it.'))
             if order.state == 'cancel' and order.invoice_id and order.invoice_id.posted_before:
                 raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
-        return super().unlink()
+
+    @api.model
+    def create(self, vals):
+        # To avoid consuming a sequence number when clicking on 'Create', we preprend it if the
+        # the name starts with '/'.
+        vals['name'] = vals.get('name') or '/'
+        if vals['name'].startswith('/'):
+            vals['name'] = (self.env['ir.sequence'].next_by_code('repair.order') or '/') + vals['name']
+            vals['name'] = vals['name'][:-1] if vals['name'].endswith('/') and vals['name'] != '/' else vals['name']
+        return super(Repair, self).create(vals)
 
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
@@ -329,6 +343,7 @@ class Repair(models.Model):
                 invoice_vals = {
                     'move_type': 'out_invoice',
                     'partner_id': partner_invoice.id,
+                    'partner_shipping_id': repair.address_id.id,
                     'currency_id': currency.id,
                     'narration': narration,
                     'line_ids': [],
@@ -337,6 +352,8 @@ class Repair(models.Model):
                     'invoice_line_ids': [],
                     'fiscal_position_id': fpos.id
                 }
+                if partner_invoice.property_payment_term_id:
+                    invoice_vals['invoice_payment_term_id'] = partner_invoice.property_payment_term_id.id
                 current_invoices_list.append(invoice_vals)
             else:
                 # if group == True: concatenate invoices by partner and currency
@@ -357,7 +374,7 @@ class Repair(models.Model):
 
                 account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', operation.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,
@@ -399,7 +416,7 @@ class Repair(models.Model):
 
                 account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', fee.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,
@@ -543,6 +560,9 @@ class Repair(models.Model):
                 # quant is created in operation.location_id.
                 move._set_quantity_done(operation.product_uom_qty)
 
+                if operation.lot_id:
+                    move.move_line_ids.lot_id = operation.lot_id
+
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
             move = Move.create({
@@ -587,9 +607,11 @@ class RepairLine(models.Model):
         index=True, ondelete='cascade', check_company=True)
     company_id = fields.Many2one(
         related='repair_id.company_id', store=True, index=True)
+    currency_id = fields.Many2one(
+        related='repair_id.currency_id')
     type = fields.Selection([
         ('add', 'Add'),
-        ('remove', 'Remove')], 'Type', required=True)
+        ('remove', 'Remove')], 'Type', default='add', required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', required=True, check_company=True,
         domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
@@ -630,9 +652,14 @@ class RepairLine(models.Model):
         help='The status of a repair line is set automatically to the one of the linked repair order.')
 
     @api.constrains('lot_id', 'product_id')
-    def constrain_lot_id(self):
-        for line in self.filtered(lambda x: x.product_id.tracking != 'none' and not x.lot_id):
-            raise ValidationError(_("Serial number is required for operation line with product '%s'") % (line.product_id.name))
+    def _check_product_tracking(self):
+        invalid_lines = self.filtered(lambda x: x.product_id.tracking != 'none' and not x.lot_id)
+        if invalid_lines:
+            products = invalid_lines.product_id
+            raise ValidationError(_(
+                "Serial number is required for operation lines with products: %s",
+                ", ".join(products.mapped('name')),
+            ))
 
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'repair_id.invoice_method')
     def _compute_price_subtotal(self):
@@ -677,7 +704,10 @@ class RepairLine(models.Model):
         product = self.product_id
         self.name = product.display_name
         if product.description_sale:
-            self.name += '\n' + product.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
         self.product_uom = product.uom_id.id
         if self.type != 'remove':
             if partner:
@@ -719,6 +749,8 @@ class RepairFee(models.Model):
         index=True, ondelete='cascade', required=True)
     company_id = fields.Many2one(
         related="repair_id.company_id", index=True, store=True)
+    currency_id = fields.Many2one(
+        related="repair_id.currency_id")
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
@@ -756,10 +788,16 @@ class RepairFee(models.Model):
         if partner and self.product_id:
             fpos = self.env['account.fiscal.position'].get_fiscal_position(partner_invoice.id, delivery_id=self.repair_id.address_id.id)
             self.tax_id = fpos.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
-        self.name = self.product_id.display_name
+        if partner:
+            self.name = self.product_id.with_context(lang=partner.lang).display_name
+        else:
+            self.name = self.product_id.display_name
         self.product_uom = self.product_id.uom_id.id
         if self.product_id.description_sale:
-            self.name += '\n' + self.product_id.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:
@@ -792,8 +830,11 @@ class RepairTags(models.Model):
     _name = "repair.tags"
     _description = "Repair Tags"
 
+    def _get_default_color(self):
+        return randint(1, 11)
+
     name = fields.Char('Tag Name', required=True)
-    color = fields.Integer(string='Color Index')
+    color = fields.Integer(string='Color Index', default=_get_default_color)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists!"),

@@ -2,7 +2,6 @@ odoo.define('pos_epson_printer.pos_epson_printer', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');
-var PaymentScreenWidget = require('point_of_sale.screens').PaymentScreenWidget;
 var EpsonPrinter = require('pos_epson_printer.Printer');
 
 var posmodel_super = models.PosModel.prototype;

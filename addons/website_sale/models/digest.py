@@ -25,7 +25,7 @@ class Digest(models.Model):
             ])
             record.kpi_website_sale_total_value = sum(confirmed_website_sales.mapped('amount_total'))
 
-    def compute_kpis_actions(self, company, user):
-        res = super(Digest, self).compute_kpis_actions(company, user)
+    def _compute_kpis_actions(self, company, user):
+        res = super(Digest, self)._compute_kpis_actions(company, user)
         res['kpi_website_sale_total'] = 'website.backend_dashboard&menu_id=%s' % self.env.ref('website.menu_website_configuration').id
         return res

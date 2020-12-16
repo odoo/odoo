@@ -1,9 +1,10 @@
 odoo.define('web.FilterMenu', function (require) {
     "use strict";
 
-    const DropdownMenu = require('web.DropdownMenu');
     const CustomFilterItem = require('web.CustomFilterItem');
-    const { useModel } = require('web.model');
+    const DropdownMenu = require('web.DropdownMenu');
+    const { FACET_ICONS } = require("web.searchUtils");
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * 'Filters' menu
@@ -19,7 +20,7 @@ odoo.define('web.FilterMenu', function (require) {
         constructor() {
             super(...arguments);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
         }
 
         //---------------------------------------------------------------------
@@ -29,8 +30,15 @@ odoo.define('web.FilterMenu', function (require) {
         /**
          * @override
          */
+        get icon() {
+            return FACET_ICONS.filter;
+        }
+
+        /**
+         * @override
+         */
         get items() {
-            return this.model.getFiltersOfType('filter');
+            return this.model.get('filters', f => f.type === 'filter');
         }
 
         /**
@@ -61,9 +69,6 @@ odoo.define('web.FilterMenu', function (require) {
 
     FilterMenu.components = Object.assign({}, DropdownMenu.components, {
         CustomFilterItem,
-    });
-    FilterMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-filter',
     });
     FilterMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,

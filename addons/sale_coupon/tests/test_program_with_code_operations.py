@@ -18,7 +18,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         # In this case, it will generate the coupon for every partner.
         # Thus, we should ensure that if you leave the domain untouched, it generates a coupon for each partner
         # as hinted on the screen ('Match all records (X records)')
-        self.env['sale.coupon.generate'].with_context(active_id=self.code_promotion_program.id).create({
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program.id).create({
             'generation_type': 'nbr_customer',
         }).generate_coupon()
         self.assertEqual(len(self.code_promotion_program.coupon_ids), len(self.env['res.partner'].search([])), "It should have generated a coupon for every partner")
@@ -28,7 +28,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
 
         self.code_promotion_program.reward_type = 'discount'
 
-        self.env['sale.coupon.generate'].with_context(active_id=self.code_promotion_program.id).create({
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program.id).create({
             'generation_type': 'nbr_customer',
             'partners_domain': "[('id', 'in', [%s])]" % (self.steve.id),
         }).generate_coupon()
@@ -66,10 +66,69 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
         self.assertEqual(len(order.order_line.ids), 0)
         self.assertEqual(coupon.state, 'new')
 
+    def test_program_coupon_double_consuming(self):
+        # Test case:
+        # - Generate a coupon
+        # - add to a sale order A, cancel the sale order
+        # - add to a sale order B, confirm the order
+        # - go back to A, reset to draft and confirm
+
+        self.code_promotion_program.reward_type = 'discount'
+
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program.id).create({
+            'generation_type': 'nbr_coupon',
+            'nbr_coupons': 1,
+        }).generate_coupon()
+        coupon = self.code_promotion_program.coupon_ids
+
+        sale_order_a = self.empty_order.copy()
+        sale_order_b = self.empty_order.copy()
+
+        sale_order_a.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=sale_order_a.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        sale_order_a.recompute_coupon_lines()
+        self.assertEqual(len(sale_order_a.order_line.ids), 2)
+        self.assertEqual(coupon.state, 'used')
+        self.assertEqual(coupon.sales_order_id, sale_order_a)
+
+        sale_order_a.action_cancel()
+
+        sale_order_b.write({'order_line': [
+            (0, False, {
+                'product_id': self.product_A.id,
+                'name': '1 Product A',
+                'product_uom': self.uom_unit.id,
+                'product_uom_qty': 1.0,
+            })
+        ]})
+        self.env['sale.coupon.apply.code'].with_context(active_id=sale_order_b.id).create({
+            'coupon_code': coupon.code
+        }).process_coupon()
+        sale_order_b.recompute_coupon_lines()
+        self.assertEqual(len(sale_order_b.order_line.ids), 2)
+        self.assertEqual(coupon.state, 'used')
+        self.assertEqual(coupon.sales_order_id, sale_order_b)
+
+        sale_order_b.action_confirm()
+
+        sale_order_a.action_draft()
+        sale_order_a.action_confirm()
+        # reward line removed automatically
+        self.assertEqual(len(sale_order_a.order_line.ids), 1)
+
     def test_coupon_code_with_pricelist(self):
         # Test case: Generate a coupon (10% discount) and apply it on an order with a specific pricelist (10% discount)
 
-        self.env['sale.coupon.generate'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
+        self.env['coupon.generate.wizard'].with_context(active_id=self.code_promotion_program_with_discount.id).create({
             'generation_type': 'nbr_coupon',
             'nbr_coupons': 1,
         }).generate_coupon()
@@ -127,7 +186,7 @@ class TestProgramWithCodeOperations(TestSaleCouponCommon):
             'promo_code': 'free_B_on_next_order',
         })
         # 2.
-        self.p1 = self.env['sale.coupon.program'].create({
+        self.p1 = self.env['coupon.program'].create({
             'name': 'Code for 10% on next order',
             'discount_type': 'percentage',
             'discount_percentage': 10.0,

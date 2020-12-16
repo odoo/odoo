@@ -16,7 +16,7 @@ odoo.define('web.PivotModel', function (require) {
  * Basicaly the pivot table presents aggregated values for various groups of records
  * in one domain. If a comparison is asked for, two domains are considered.
  *
- * Let us consider a simple example and let us fix the vocabulary:
+ * Let us consider a simple example and let us fix the vocabulary (let us suppose we are in June 2020):
  * ___________________________________________________________________________________________________________________________________________
  * |                    |   Total                                                                                                             |
  * |                    |_____________________________________________________________________________________________________________________|
@@ -24,14 +24,14 @@ odoo.define('web.PivotModel', function (require) {
  * |                    |_______________________________________|______________________________________|______________________________________|
  * |                    |   Sales total                         |  Sales total                         |  Sales total                         |
  * |                    |_______________________________________|______________________________________|______________________________________|
- * |                    |   This Month | Last Month | Variation |  This Month | Last Month | Variation |  This Month | Last Month | Variation |
+ * |                    |   May 2020   | June 2020  | Variation |  May 2020   | June 2020  | Variation |  May 2020   | June 2020  | Variation |
  * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
- * | Total              |    110       |     85     |  29.4%    |     30      |    40      |   -25%    |    140      |    125     |     12%   |
- * |    Europe          |     35       |     25     |    40%    |     30      |    40      |   -25%    |     65      |     65     |      0%   |
- * |        Brussels    |     15       |      0     |   100%    |     30      |    30      |     0%    |     45      |     30     |     50%   |
- * |        Paris       |     20       |     25     |   -20%    |      0      |    10      |  -100%    |     20      |     35     |  -42.8%   |
- * |    North America   |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
- * |        Washington  |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
+ * | Total              |     85       |     110    |  29.4%    |     40      |    30      |   -25%    |    125      |    140     |     12%   |
+ * |    Europe          |     25       |     35     |    40%    |     40      |    30      |   -25%    |     65      |     65     |      0%   |
+ * |        Brussels    |      0       |     15     |   100%    |     30      |    30      |     0%    |     30      |     45     |     50%   |
+ * |        Paris       |     25       |     20     |   -20%    |     10      |     0      |  -100%    |     35      |     20     |  -42.8%   |
+ * |    North America   |     60       |     75     |    25%    |             |            |           |     60      |     75     |     25%   |
+ * |        Washington  |     60       |     75     |    25%    |             |            |           |     60      |     75     |     25%   |
  * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
  *
  *
@@ -49,7 +49,7 @@ odoo.define('web.PivotModel', function (require) {
  *
  * The measure is the field 'sales_total'.
  *
- * Two domains are considered: 'This Month' and 'Last Month'.
+ * Two domains are considered: 'May 2020' and 'June 2020'.
  *
  * In the model,
  *
@@ -57,9 +57,9 @@ odoo.define('web.PivotModel', function (require) {
  *      - colGroupBys is the list [sale_team_id]
  *      - measures is the list [sales_total]
  *      - domains is the list [d1, d2] with d1 and d2 domain expressions
- *          for say sale_date in this month and last month, for instance
- *          d1 = [['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31]]
- *      - origins is the list ['This Month', 'Last Month']
+ *          for say sale_date in May 2020 and June 2020, for instance
+ *          d1 = [['sale_date', >=, 2020-05-01], ['sale_date', '<=', 2020-05-31]]
+ *      - origins is the list ['May 2020', 'June 2020']
  *
  * DATA:
  *
@@ -116,7 +116,7 @@ odoo.define('web.PivotModel', function (require) {
  * A given list is thus of the form [f1,..., fi, g1,..., gj] or better [[f1,...,fi], [g1,...,gj]]
  *
  * For each list of fields possible and each domain considered, one read_group is done
- * and gives results of the form (an exceptions for list [])
+ * and gives results of the form (an exception for list [])
  *
  * g = {
  *  f1: v1, ..., fi: vi,
@@ -132,10 +132,10 @@ odoo.define('web.PivotModel', function (require) {
  * For example, g = {
  *      continent_id: [1, 'Europe']
  *      sale_team_id: [1, 'Sale Team 1']
- *      sales_count: 35,
+ *      sales_count: 25,
  *      __count: 4
  *      __domain: [
- *                  ['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31],
+ *                  ['sale_date', >=, 2020-05-01], ['sale_date', '<=', 2020-05-31],
  *                  ['continent_id', '=', 1],
  *                  ['sale_team_id', '=', 1]
  *                ]
@@ -169,17 +169,19 @@ odoo.define('web.PivotModel', function (require) {
  *                      labels: [la1,...,lal]
  *                  },
  *                  directSubTrees: {
- *                      JSON.stringify(v): {
+ *                      v => {
  *                              root: {
  *                                  values: [v1,...,vl,v]
  *                                  labels: [label1,...,labell,label]
  *                              },
  *                              directSubTrees: {...}
  *                          },
- *                      JSON.stringify(v'): {...},
+ *                      v' => {...},
  *                      ...
  *                  }
  *             }
+ *
+ *             (directSubTrees is a Map instance)
  *
  *             In the example, the rowGroupTree is:
  *
@@ -189,40 +191,40 @@ odoo.define('web.PivotModel', function (require) {
  *                      labels: []
  *                  },
  *                  directSubTrees: {
- *                      1: {
+ *                      1 => {
  *                              root: {
  *                                  values: [1],
  *                                  labels: ['Europe'],
  *                              },
  *                              directSubTrees: {
- *                                  1: {
+ *                                  1 => {
  *                                          root: {
  *                                              values: [1, 1],
  *                                              labels: ['Europe', 'Brussels'],
  *                                          },
- *                                          directSubTrees: {},
+ *                                          directSubTrees: new Map(),
  *                                  },
- *                                  2: {
+ *                                  2 => {
  *                                          root: {
  *                                              values: [1, 2],
  *                                              labels: ['Europe', 'Paris'],
  *                                          },
- *                                          directSubTrees: {},
+ *                                          directSubTrees: new Map(),
  *                                  },
  *                              },
  *                          },
- *                      2: {
+ *                      2 => {
  *                              root: {
  *                                  values: [2],
  *                                  labels: ['America'],
  *                              },
  *                              directSubTrees: {
- *                                  3: {
+ *                                  3 => {
  *                                          root: {
  *                                              values: [2, 3],
  *                                              labels: ['America', 'Washington'],
  *                                          }
- *                                          directSubTrees: {},
+ *                                          directSubTrees: new Map(),
  *                                  },
  *                              },
  *                      },
@@ -254,9 +256,9 @@ odoo.define('web.PivotModel', function (require) {
  *
  *              In the example:
  *                  {
- *                      "[[], []]": [{'sales_total': 110}, {'sales_total': 85}]                      (total/total)
+ *                      "[[], []]": [{'sales_total': 125}, {'sales_total': 140}]                      (total/total)
  *                      ...
- *                      "[[1, 2], [2]]": [{'sales_total': 0}, {'sales_total': 10}]                   (Europe/Paris/Sale Team 2)
+ *                      "[[1, 2], [2]]": [{'sales_total': 10}, {'sales_total': 0}]                   (Europe/Paris/Sale Team 2)
  *                      ...
  *                  }
  *
@@ -273,6 +275,7 @@ var AbstractModel = require('web.AbstractModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var dataComparisonUtils = require('web.dataComparisonUtils');
+const Domain = require('web.Domain');
 var mathUtils = require('web.mathUtils');
 var session = require('web.session');
 
@@ -322,6 +325,7 @@ var PivotModel = AbstractModel.extend({
     closeGroup: function (groupId, type) {
         var groupBys;
         var expandedGroupBys;
+        let keyPart;
         var group;
         var tree;
         if (type === 'row') {
@@ -329,13 +333,36 @@ var PivotModel = AbstractModel.extend({
             expandedGroupBys = this.data.expandedRowGroupBys;
             tree = this.rowGroupTree;
             group = this._findGroup(this.rowGroupTree, groupId[0]);
+            keyPart = 0;
         } else {
             groupBys = this.data.colGroupBys;
             expandedGroupBys = this.data.expandedColGroupBys;
             tree = this.colGroupTree;
             group = this._findGroup(this.colGroupTree, groupId[1]);
+            keyPart = 1;
         }
-        group.directSubTrees = {};
+
+        const groupIdPart = groupId[keyPart];
+        const range = groupIdPart.map((_, index) => index);
+        function keep(key) {
+            const idPart = JSON.parse(key)[keyPart];
+            return range.some(index => groupIdPart[index] !== idPart[index]) ||
+                    idPart.length ===  groupIdPart.length;
+        }
+        function omitKeys(object) {
+            const newObject = {};
+            for (const key in object) {
+                if (keep(key)) {
+                    newObject[key] = object[key];
+                }
+            }
+            return newObject;
+        }
+        this.measurements = omitKeys(this.measurements);
+        this.counts = omitKeys(this.counts);
+        this.groupDomains = omitKeys(this.groupDomains);
+
+        group.directSubTrees.clear();
         delete group.sortedKeys;
         var newGroupBysLength = this._getTreeHeight(tree) - 1;
         if (newGroupBysLength <= groupBys.length) {
@@ -494,7 +521,7 @@ var PivotModel = AbstractModel.extend({
      * @param {boolean} [options.raw=false]
      * @returns {Object}
      */
-    get: function (options) {
+    __get: function (options) {
         options = options || {};
         var raw = options.raw || false;
         var groupBys = this._getGroupBys();
@@ -504,13 +531,16 @@ var PivotModel = AbstractModel.extend({
             domain: this.data.domain,
             fields: this.fields,
             hasData: this._hasData(),
+            isSample: this.isSampleModel,
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
             selectionGroupBys: this._getSelectionGroupBy(groupBys),
+            modelName: this.modelName
         };
         if (!raw && state.hasData) {
             state.table = this._getTable();
+            state.tree = this.rowGroupTree;
         }
         return state;
     },
@@ -541,7 +571,7 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} params.timeRanges
      * @returns {Promise}
      */
-    load: function (params) {
+    __load: function (params) {
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
         this.defaultGroupedBy = params.groupedBy;
@@ -549,6 +579,8 @@ var PivotModel = AbstractModel.extend({
         this.fields = params.fields;
         this.modelName = params.modelName;
         this.groupableFields = params.groupableFields;
+        const measures = this._processMeasures(params.context.pivot_measures) ||
+                            params.measures.map(m => m);
         this.data = {
             expandedRowGroupBys: [],
             expandedColGroupBys: [],
@@ -556,7 +588,7 @@ var PivotModel = AbstractModel.extend({
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.context.pivot_row_groupby || params.groupedBy,
             colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
-            measures: this._processMeasures(params.context.pivot_measures) || params.measures,
+            measures,
             timeRanges: params.timeRanges,
         };
         this._computeDerivedParams();
@@ -587,7 +619,7 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} [params.timeRanges]
      * @returns {Promise}
      */
-    reload: function (handle, params) {
+    __reload: function (handle, params) {
         var self = this;
         var oldColGroupBys = this.data.colGroupBys;
         var oldRowGroupBys = this.data.rowGroupBys;
@@ -620,6 +652,11 @@ var PivotModel = AbstractModel.extend({
         if (!_.isEqual(oldColGroupBys, self.data.colGroupBys)) {
             this.data.expandedColGroupBys = [];
         }
+
+        if ('measure' in params) {
+            return this._toggleMeasure(params.measure);
+        }
+
         if (!this._hasData()) {
             return this._loadData();
         }
@@ -650,7 +687,7 @@ var PivotModel = AbstractModel.extend({
 
         var sortFunction = function (tree) {
             return function (subTreeKey) {
-                var subTree = tree.directSubTrees[subTreeKey];
+                var subTree = tree.directSubTrees.get(subTreeKey);
                 var groupIntersectionId = [subTree.root.values, colGroupValues];
                 var value = self._getCellValue(
                     groupIntersectionId,
@@ -662,25 +699,6 @@ var PivotModel = AbstractModel.extend({
         };
 
         this._sortTree(sortFunction, this.rowGroupTree);
-    },
-    /**
-     * Toggle the active state for a given measure, then reload the data
-     * if this turns out to be necessary.
-     *
-     * @param {string} fieldName
-     * @returns {Promise}
-     */
-    toggleMeasure: function (fieldName) {
-        var index = this.data.measures.indexOf(fieldName);
-        if (index !== -1) {
-            this.data.measures.splice(index, 1);
-            // in this case, we already have all data in memory, no need to
-            // actually reload a lesser amount of information
-            return Promise.resolve();
-        } else {
-            this.data.measures.push(fieldName);
-        }
-        return this._loadData();
     },
 
     //--------------------------------------------------------------------------
@@ -701,16 +719,15 @@ var PivotModel = AbstractModel.extend({
         var tree = groupTree;
         // we assume here that the group with value value.slice(value.length - 2) has already been added.
         values.slice(0, values.length - 1).forEach(function (value) {
-            var key = JSON.stringify(value);
-            tree = tree.directSubTrees[key];
+            tree = tree.directSubTrees.get(value);
         });
-        tree.directSubTrees[JSON.stringify(values[values.length - 1])] = {
+        tree.directSubTrees.set(values[values.length - 1], {
             root: {
                 labels: labels,
                 values: values,
             },
-            directSubTrees: {},
-        };
+            directSubTrees: new Map(),
+        });
     },
     /**
      * Compute what should be used as rowGroupBys by the pivot view
@@ -733,8 +750,7 @@ var PivotModel = AbstractModel.extend({
     _findGroup: function (groupTree, values) {
         var tree = groupTree;
         values.slice(0, values.length).forEach(function (value) {
-            var key = JSON.stringify(value);
-            tree = tree.directSubTrees[key];
+            tree = tree.directSubTrees.get(value);
         });
         return tree;
     },
@@ -762,7 +778,7 @@ var PivotModel = AbstractModel.extend({
             return self.measurements[key][originIndex][measure];
         });
         if (originIndexes.length > 1) {
-            return computeVariation(values[0], values[1]);
+            return computeVariation(values[1], values[0]);
         } else {
             return values[0];
         }
@@ -866,10 +882,10 @@ var PivotModel = AbstractModel.extend({
         var self = this;
         var leafCounts = {};
         var leafCount;
-        if (_.isEmpty(tree.directSubTrees)) {
+        if (!tree.directSubTrees.size) {
             leafCount = 1;
         } else {
-            leafCount = _.values(tree.directSubTrees).reduce(
+            leafCount = [...tree.directSubTrees.values()].reduce(
                 function (acc, subTree) {
                     var subLeafCounts = self._getLeafCounts(subTree);
                     _.extend(leafCounts, subLeafCounts);
@@ -1123,7 +1139,7 @@ var PivotModel = AbstractModel.extend({
             var rowIndex = group.values.length;
             var row = colGroupRows[rowIndex];
             var groupId = [[], group.values];
-            var isLeaf = _.isEmpty(tree.directSubTrees);
+            var isLeaf = !tree.directSubTrees.size;
             var leafCount = leafCounts[JSON.stringify(tree.root.values)];
             var cell = {
                 groupId: groupId,
@@ -1138,7 +1154,7 @@ var PivotModel = AbstractModel.extend({
                 measureColumns.push(cell);
             }
 
-            _.values(tree.directSubTrees).forEach(function (subTree) {
+            [...tree.directSubTrees.values()].forEach(function (subTree) {
                 generateTreeHeaders(subTree, fields);
             });
         }
@@ -1185,7 +1201,7 @@ var PivotModel = AbstractModel.extend({
         var rowGroupId = [group.values, []];
         var title = group.labels[group.labels.length - 1] || _t('Total');
         var indent = group.labels.length;
-        var isLeaf = _.isEmpty(tree.directSubTrees);
+        var isLeaf = !tree.directSubTrees.size;
         var rowGroupBys = this._getGroupBys().rowGroupBys;
 
         var subGroupMeasurements = columns.map(function (column) {
@@ -1215,9 +1231,9 @@ var PivotModel = AbstractModel.extend({
             subGroupMeasurements: subGroupMeasurements
         });
 
-        var subTreeKeys = tree.sortedKeys || Object.keys(tree.directSubTrees);
+        var subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
         subTreeKeys.forEach(function (subTreeKey) {
-            var subTree = tree.directSubTrees[subTreeKey];
+            var subTree = tree.directSubTrees.get(subTreeKey);
             rows = rows.concat(self._getTableRows(subTree, columns));
         });
 
@@ -1231,7 +1247,7 @@ var PivotModel = AbstractModel.extend({
      * @returns {number}
      */
     _getTreeHeight: function (tree) {
-        var subTreeHeights = _.values(tree.directSubTrees).map(this._getTreeHeight.bind(this));
+        var subTreeHeights = [...tree.directSubTrees.values()].map(this._getTreeHeight.bind(this));
         return Math.max(0, Math.max.apply(null, subTreeHeights)) + 1;
     },
     /**
@@ -1242,6 +1258,12 @@ var PivotModel = AbstractModel.extend({
         return (this.counts[JSON.stringify([[], []])] || []).some(function (count) {
             return count > 0;
         });
+    },
+    /**
+     * @override
+     */
+    _isEmpty() {
+        return !this._hasData();
     },
     /**
      * Initilize/Reinitialize this.rowGroupTree, colGroupTree, measurements,
@@ -1259,8 +1281,8 @@ var PivotModel = AbstractModel.extend({
     _loadData: function () {
         var self = this;
 
-        this.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: {} };
-        this.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: {} };
+        this.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
+        this.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
         this.measurements = {};
         this.counts = {};
 
@@ -1346,7 +1368,7 @@ var PivotModel = AbstractModel.extend({
 
                 if (!(key in self.groupDomains)) {
                     self.groupDomains[key] = self.data.origins.map(function () {
-                        return [[0, '=', 1]];
+                        return Domain.FALSE_DOMAIN;
                     });
                 }
                 // if __domain is not defined this means that we are in the
@@ -1395,12 +1417,8 @@ var PivotModel = AbstractModel.extend({
     _computeDerivedParams: function () {
         const { range, rangeDescription, comparisonRange, comparisonRangeDescription } = this.data.timeRanges;
         if (range) {
-            this.data.domains = [this.data.domain.concat(range)];
-            this.data.origins = [rangeDescription];
-            if (comparisonRange) {
-                this.data.domains.push(this.data.domain.concat(comparisonRange));
-                this.data.origins.push(comparisonRangeDescription);
-            }
+            this.data.domains = [this.data.domain.concat(comparisonRange), this.data.domain.concat(range)];
+            this.data.origins = [comparisonRangeDescription, rangeDescription];
         } else {
             this.data.domains = [this.data.domain];
             this.data.origins = [""];
@@ -1414,23 +1432,41 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} oldTree
      */
     _pruneTree: function (tree, oldTree) {
-        if (_.isEmpty(oldTree.directSubTrees)) {
-            tree.directSubTrees = {};
+        if (!oldTree.directSubTrees.size) {
+            tree.directSubTrees.clear();
             delete tree.sortedKeys;
             return;
         }
         var self = this;
-        Object.keys(tree.directSubTrees).forEach(function (subTreeKey) {
-            var index = Object.keys(oldTree.directSubTrees).indexOf(subTreeKey);
-            var subTree = tree.directSubTrees[subTreeKey];
-            if (index === -1) {
-                subTree.directSubTrees = {};
+        [...tree.directSubTrees.keys()].forEach(function (subTreeKey) {
+            var subTree = tree.directSubTrees.get(subTreeKey);
+            if (!oldTree.directSubTrees.has(subTreeKey)) {
+                subTree.directSubTrees.clear();
                 delete subTreeKey.sortedKeys;
             } else {
-                var oldSubTree = oldTree.directSubTrees[subTreeKey];
+                var oldSubTree = oldTree.directSubTrees.get(subTreeKey);
                 self._pruneTree(subTree, oldSubTree);
             }
         });
+    },
+    /**
+     * Toggle the active state for a given measure, then reload the data
+     * if this turns out to be necessary.
+     *
+     * @param {string} fieldName
+     * @returns {Promise}
+     */
+    _toggleMeasure: function (fieldName) {
+        var index = this.data.measures.indexOf(fieldName);
+        if (index !== -1) {
+            this.data.measures.splice(index, 1);
+            // in this case, we already have all data in memory, no need to
+            // actually reload a lesser amount of information
+            return Promise.resolve();
+        } else {
+            this.data.measures.push(fieldName);
+        }
+        return this._loadData();
     },
     /**
      * Extract from a groupBy value a label.
@@ -1519,8 +1555,8 @@ var PivotModel = AbstractModel.extend({
      */
     _sortTree: function (sortFunction, tree) {
         var self = this;
-        tree.sortedKeys = _.sortBy(Object.keys(tree.directSubTrees), sortFunction(tree));
-        _.values(tree.directSubTrees).forEach(function (subTree) {
+        tree.sortedKeys = _.sortBy([...tree.directSubTrees.keys()], sortFunction(tree));
+        [...tree.directSubTrees.values()].forEach(function (subTree) {
             self._sortTree(sortFunction, subTree);
         });
     },

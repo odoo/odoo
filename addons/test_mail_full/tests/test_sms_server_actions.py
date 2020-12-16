@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests import common as test_mail_full_common
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
 
 
-class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_common.TestRecipients):
+class TestServerAction(TestMailFullCommon, TestMailFullRecipients):
 
     @classmethod
     def setUpClass(cls):
@@ -25,6 +25,7 @@ class TestServerAction(test_mail_full_common.TestSMSCommon, test_mail_full_commo
             'model_id': cls.env['ir.model']._get('mail.test.sms').id,
             'state': 'sms',
             'sms_template_id': cls.sms_template.id,
+            'groups_id': cls.env.ref('base.group_user'),
         })
 
     def test_action_sms(self):

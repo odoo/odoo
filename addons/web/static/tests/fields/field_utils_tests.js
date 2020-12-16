@@ -166,6 +166,23 @@ QUnit.test('format percentage', function (assert) {
     core._t.database.parameters = originalParameters;
 });
 
+QUnit.test('format float time', function (assert) {
+    assert.expect(7);
+
+    assert.strictEqual(fieldUtils.format.float_time(2), '02:00');
+    assert.strictEqual(fieldUtils.format.float_time(3.5), '03:30');
+    assert.strictEqual(fieldUtils.format.float_time(0.25), '00:15');
+
+    assert.strictEqual(fieldUtils.format.float_time(-0.5), '-00:30');
+
+    const options = {
+        noLeadingZeroHour: true,
+    };
+    assert.strictEqual(fieldUtils.format.float_time(2, null, options), '2:00');
+    assert.strictEqual(fieldUtils.format.float_time(3.5, null, options), '3:30');
+    assert.strictEqual(fieldUtils.format.float_time(-0.5, null, options), '-0:30');
+});
+
 QUnit.test('parse float', function(assert) {
     assert.expect(10);
 
@@ -299,7 +316,7 @@ QUnit.test('parse percentage', function(assert) {
 });
 
 QUnit.test('parse datetime', function (assert) {
-    assert.expect(5);
+    assert.expect(7);
 
     var originalParameters = _.clone(core._t.database.parameters);
     var originalLocale = moment.locale();
@@ -326,8 +343,15 @@ QUnit.test('parse datetime', function (assert) {
 
     moment.locale('englishForTest');
     _.extend(core._t.database.parameters, {date_format: '%m/%d/%Y', time_format: '%H:%M:%S'});
-    assert.throws(function () {fieldUtils.parse.datetime("13/01/2019 12:00:00", {}, {})}, /is not a correct/, "Wrongly formated dates should be invalids");
-    assert.throws(function () {fieldUtils.parse.datetime("1899-01-01 12:00:00", {}, {})}, /is not a correct/, "Dates before 1900 should be invalids");
+    assert.throws(function () {
+        fieldUtils.parse.datetime("13/01/2019 12:00:00", {}, {});
+    }, /is not a correct/, "Wrongly formated dates should be invalid");
+    assert.throws(function () {
+        fieldUtils.parse.datetime("10000-01-01 12:00:00", {}, {});
+    }, /is not a correct/, "Dates after 9999 should be invalid");
+    assert.throws(function () {
+        fieldUtils.parse.datetime("999-01-01 12:00:00", {}, {});
+    }, /is not a correct/, "Dates before 1000 should be invalid");
 
     dateStr = '01/13/2019 10:05:45';
     date1 = fieldUtils.parse.datetime(dateStr);
@@ -338,6 +362,11 @@ QUnit.test('parse datetime', function (assert) {
     date1 = fieldUtils.parse.datetime(dateStr);
     date2 = moment.utc(dateStr, ['M/D/YYYY H:m:s'], true);
     assert.equal(date1.format(), date2.format(), "Date without leading 0");
+
+    dateStr = '01/01/1000 10:15:45';
+    date1 = fieldUtils.parse.datetime(dateStr);
+    date2 = moment.utc(dateStr, ['MM/DD/YYYY HH:mm:ss'], true);
+    assert.equal(date1.format(), date2.format(), "can parse dates of year 1");
 
     moment.locale('norvegianForTest');
     _.extend(core._t.database.parameters, {date_format: '%d. %b %Y', time_format: '%H:%M:%S'});
@@ -386,5 +415,23 @@ QUnit.test('parse datetime without separator', function (assert) {
 
     core._t.database.parameters = originalParameters;
 });
+});
+
+QUnit.test('parse smart date input', function (assert) {
+    assert.expect(10);
+
+    const format = "DD MM YYYY";
+    assert.strictEqual(fieldUtils.parse.date("+1d").format(format), moment().add(1, 'days').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("+2w").format(format), moment().add(2, 'weeks').format(format));
+    assert.strictEqual(fieldUtils.parse.date("+3m").format(format), moment().add(3, 'months').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("+4y").format(format), moment().add(4, 'years').format(format));
+
+    assert.strictEqual(fieldUtils.parse.date("+5").format(format), moment().add(5, 'days').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("-5").format(format), moment().subtract(5, 'days').format(format));
+
+    assert.strictEqual(fieldUtils.parse.date("-4y").format(format), moment().subtract(4, 'years').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("-3m").format(format), moment().subtract(3, 'months').format(format));
+    assert.strictEqual(fieldUtils.parse.date("-2w").format(format), moment().subtract(2, 'weeks').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("-1d").format(format), moment().subtract(1, 'days').format(format));
 });
 });

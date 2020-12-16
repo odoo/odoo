@@ -25,9 +25,10 @@
                     <field name="incoterm" widget="selection" groups="sale_stock.group_display_incoterm"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>
-                <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
-                    <field name="show_json_popover" invisible="1"/>
-                    <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                <xpath expr="//span[@name='expected_date_span']" position="attributes">
+                    <attribute name="attrs">
+                        {'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}
+                    </attribute>
                 </xpath>
                 <xpath expr="//div[@name='commitment_date_div']" position="replace">
                     <div class="o_row">
@@ -35,6 +36,10 @@
                         <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('commitment_date', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
                     </div>
                     <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
+                </xpath>
+                <xpath expr="//page[@name='other_information']//field[@name='expected_date']" position="after">
+                    <field name="show_json_popover" invisible="1"/>
+                    <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//page/field[@name='order_line']/form/group/group/field[@name='price_unit']" position="before">
                     <field name="product_packaging" attrs="{'invisible': [('product_id', '=', False)]}" context="{'default_product_id': product_id, 'tree_view_ref':'product.product_packaging_tree_view', 'form_view_ref':'product.product_packaging_form_view'}" domain="[('product_id','=',product_id)]" groups="product.group_stock_packaging" />
@@ -56,7 +61,7 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_quotation_tree"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='team_id']" position="after">
+                <xpath expr="//field[@name='tag_ids']" position="after">
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" optional="hide" />
                 </xpath>
             </field>
@@ -89,18 +94,33 @@
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <xpath expr="//page/field[@name='order_line']/tree/field[@name='product_uom_qty']" position="after">
+                <xpath expr="//page/field[@name='order_line']/form/group/group/div[@name='ordered_qty']/field[@name='product_uom']" position="after">
                     <!-- below fields are used in the widget qty_at_date_widget -->
                     <field name="product_type" invisible="1"/>
                     <field name="virtual_available_at_date" invisible="1"/>
                     <field name="qty_available_today" invisible="1"/>
                     <field name="free_qty_today" invisible="1"/>
                     <field name="scheduled_date" invisible="1"/>
+                    <field name="forecast_expected_date" invisible="1"/>
                     <field name="warehouse_id" invisible="1"/>
                     <field name="qty_to_deliver" invisible="1"/>
                     <field name="is_mto" invisible="1"/>
                     <field name="display_qty_widget" invisible="1"/>
                     <widget name="qty_at_date_widget" width="0.1"/>
+                </xpath>
+                <xpath expr="//page/field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
+                    <!-- below fields are used in the widget qty_at_date_widget -->
+                    <field name="product_type" invisible="1"/>
+                    <field name="virtual_available_at_date" invisible="1"/>
+                    <field name="qty_available_today" invisible="1"/>
+                    <field name="free_qty_today" invisible="1"/>
+                    <field name="scheduled_date" invisible="1"/>
+                    <field name="forecast_expected_date" invisible="1"/>
+                    <field name="warehouse_id" invisible="1"/>
+                    <field name="qty_to_deliver" invisible="1"/>
+                    <field name="is_mto" invisible="1"/>
+                    <field name="display_qty_widget" invisible="1"/>
+                    <widget name="qty_at_date_widget" width="20px"/>
                 </xpath>
             </field>
         </record>

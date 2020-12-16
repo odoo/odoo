@@ -19,6 +19,7 @@ var Widget = require('web.Widget');
 
 var createActionManager = testUtils.createActionManager;
 const cpHelpers = testUtils.controlPanel;
+const { xml } = owl.tags;
 
 QUnit.module('ActionManager', {
     beforeEach: function () {
@@ -112,6 +113,12 @@ QUnit.module('ActionManager', {
             report_type: 'qweb-pdf',
             type: 'ir.actions.report',
             close_on_report_download: true,
+        }, {
+            id: 12,
+            name: "Some HTML Report",
+            report_name: 'some_report',
+            report_type: 'qweb-html',
+            type: 'ir.actions.report',
         }];
 
         this.archs = {
@@ -832,7 +839,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             'load_views',
-            'default_get',
+            'onchange',
         ]);
 
         actionManager.destroy();
@@ -1570,6 +1577,16 @@ QUnit.module('ActionManager', {
     QUnit.test('execute a new action while switching to another controller', async function (assert) {
         assert.expect(15);
 
+        /*
+         * This test's bottom line is that a doAction always has priority
+         * over a switch controller (clicking on a record row to go to form view).
+         * In general, the last actionManager's operation has priority because we want
+         * to allow the user to make mistakes, or to rapidly reconsider her next action.
+         * Here we assert that the actionManager's RPC are in order, but a 'read' operation
+         * is expected, with the current implementation, to take place when switching to the form view.
+         * Ultimately the form view's 'read' is superfluous, but can happen at any point of the flow,
+         * except at the very end, which should always be the final action's list's 'search_read'.
+         */
         var def;
         var actionManager = await createActionManager({
             actions: this.actions,
@@ -1577,10 +1594,11 @@ QUnit.module('ActionManager', {
             data: this.data,
             mockRPC: function (route, args) {
                 var result = this._super.apply(this, arguments);
-                assert.step(args.method || route);
                 if (args.method === 'read') {
+                    assert.ok(true, "A 'read' should have been done. Check test's comment though.");
                     return Promise.resolve(def).then(_.constant(result));
                 }
+                assert.step(args.method || route);
                 return result;
             },
         });
@@ -1611,7 +1629,6 @@ QUnit.module('ActionManager', {
             'load_views', // action 3
             '/web/dataset/search_read', // search read of list view of action 3
             '/web/action/load', // action 4
-            'read', // read the opened record of action 3 (this request is blocked)
             'load_views', // action 4
             '/web/dataset/search_read', // search read action 4
         ]);
@@ -1882,6 +1899,29 @@ QUnit.module('ActionManager', {
         delete core.action_registry.map.HelloWorldTest;
     });
 
+    QUnit.test('action can use a custom control panel', async function (assert) {
+        assert.expect(1);
+
+        class CustomControlPanel extends owl.Component {}
+        CustomControlPanel.template = xml/* xml */`
+            <div class="custom-control-panel">My custom control panel</div>
+        `
+        const ClientAction = AbstractAction.extend({
+            hasControlPanel: true,
+            config: {
+                ControlPanel: CustomControlPanel
+            },
+        });
+        const actionManager = await createActionManager();
+        core.action_registry.add('HelloWorldTest', ClientAction);
+        await actionManager.doAction('HelloWorldTest');
+        assert.containsOnce(actionManager, '.custom-control-panel',
+            "should have a custom control panel");
+
+        actionManager.destroy();
+        delete core.action_registry.map.HelloWorldTest;
+    });
+
     QUnit.test('breadcrumb is updated on title change', async function (assert) {
         assert.expect(2);
 
@@ -2038,7 +2078,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load', // action 5
             'load_views',
-            'default_get',
+            'onchange',
             '/web/action/load', // action 2
             '/web/action/run',
             'close handler',
@@ -2228,7 +2268,7 @@ QUnit.module('ActionManager', {
                 if (route === '/report/check_wkhtmltopdf') {
                     return Promise.resolve('broken');
                 }
-                if (route === '/report/html/some_report') {
+                if (route.includes('/report/html/some_report')) {
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
@@ -2250,7 +2290,64 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             '/report/check_wkhtmltopdf',
             'warning',
-            '/report/html/some_report', // report client action's iframe
+            '/report/html/some_report?context=%7B%7D', // report client action's iframe
+        ]);
+
+        actionManager.destroy();
+        testUtils.mock.unpatch(ReportClientAction);
+    });
+
+    QUnit.test('send context in case of html report', async function (assert) {
+        assert.expect(4);
+
+        // patch the report client action to override its iframe's url so that
+        // it doesn't trigger an RPC when it is appended to the DOM (for this
+        // usecase, using removeSRCAttribute doesn't work as the RPC is
+        // triggered as soon as the iframe is in the DOM, even if its src
+        // attribute is removed right after)
+        testUtils.mock.patch(ReportClientAction, {
+            start: function () {
+                var self = this;
+                return this._super.apply(this, arguments).then(function () {
+                    self._rpc({route: self.iframe.getAttribute('src')});
+                    self.iframe.setAttribute('src', 'about:blank');
+                });
+            }
+        });
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            services: {
+                report: ReportService,
+                notification: NotificationService.extend({
+                    notify: function (params) {
+                        assert.step(params.type || 'notification');
+                    }
+                })
+            },
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                if (route.includes('/report/html/some_report')) {
+                    return Promise.resolve();
+                }
+                return this._super.apply(this, arguments);
+            },
+            session: {
+                user_context: {
+                    some_key: 2,
+                }
+            },
+        });
+        await actionManager.doAction(12);
+
+        assert.containsOnce(actionManager, '.o_report_iframe',
+            "should have opened the report client action");
+
+        assert.verifySteps([
+            '/web/action/load',
+            '/report/html/some_report?context=%7B%22some_key%22%3A2%7D', // report client action's iframe
         ]);
 
         actionManager.destroy();
@@ -2277,7 +2374,6 @@ QUnit.module('ActionManager', {
                     params.error({
                         data: {
                             name: 'error',
-                            exception_type: 'warning',
                             arguments: ['could not download file'],
                         }
                     });
@@ -2840,7 +2936,7 @@ QUnit.module('ActionManager', {
             '/web/action/load',
             'load_views',
             '/web/dataset/search_read', // list
-            'default_get', // form
+            'onchange', // form
             '/web/dataset/search_read', // list
         ]);
 
@@ -3107,7 +3203,7 @@ QUnit.module('ActionManager', {
             "list view is not grouped");
 
         // open group by dropdown
-        await testUtils.dom.click($('.o_control_panel .o_cp_right button:contains(Group By)'));
+        await testUtils.dom.click($('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
 
         // click on first link
         await testUtils.dom.click($('.o_control_panel .o_group_by_menu a:first'));
@@ -3330,7 +3426,7 @@ QUnit.module('ActionManager', {
             "should be grouped by 'bar' (two groups) at first load");
 
         // groupby 'bar' using the searchview
-        await testUtils.dom.click($('.o_control_panel .o_cp_right button:contains(Group By)'));
+        await testUtils.dom.click($('.o_control_panel .o_cp_bottom_right button:contains(Group By)'));
         await testUtils.dom.click($('.o_control_panel .o_group_by_menu a:first'));
 
         assert.containsN(actionManager, '.o_group_header', 5,
@@ -3459,7 +3555,7 @@ QUnit.module('ActionManager', {
         this.archs['partner,1,list'] = '<tree default_order="foo desc"><field name="foo"/></tree>';
 
         this.actions.push({
-            id: 12,
+            id: 100,
             name: 'Partners',
             res_model: 'partner',
             type: 'ir.actions.act_window',
@@ -3479,7 +3575,7 @@ QUnit.module('ActionManager', {
                 domain: '[("bar", "=", 1)]'
             }],
         });
-        await actionManager.doAction(12);
+        await actionManager.doAction(100);
 
         assert.strictEqual(actionManager.$('.o_list_view tr.o_data_row .o_data_cell').text(), 'zoupyopplopgnapblip',
             'record should be in descending order as default_order applies');
@@ -3568,9 +3664,6 @@ QUnit.module('ActionManager', {
                 active_id: 1,
                 active_ids: [1],
             },
-            flags: {
-                searchPanelDefaultNoFilter: true,
-            },
         });
         var checkSessionStorage = false;
         var actionManager = await createActionManager({
@@ -3629,7 +3722,7 @@ QUnit.module('ActionManager', {
     });
 
     QUnit.test('execute action from dirty, new record, and come back', async function (assert) {
-        assert.expect(19);
+        assert.expect(17);
 
         this.data.partner.fields.bar.default = 1;
         this.archs['partner,false,form'] = '<form>' +
@@ -3690,14 +3783,55 @@ QUnit.module('ActionManager', {
             '/web/action/load', // action 3
             'load_views', // views of action 3
             '/web/dataset/search_read', // list
-            'default_get', // form (create)
-            'name_get', // m2o in form
+            'onchange', // form (create)
             'get_formview_action', // click on m2o
             'load_views', // form view of dynamic action
             'read', // form
-            'default_get', // form (create)
-            'name_get', // m2o in form
+            'onchange', // form (create)
         ]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('execute a contextual action from a form view', async function (assert) {
+        assert.expect(4);
+
+        const contextualAction = this.actions.find(action => action.id === 8);
+        contextualAction.context = "{}"; // need a context to evaluate
+
+        const actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            mockRPC: async function (route, args) {
+                const res = await this._super(...arguments);
+                if (args.method === 'load_views' && args.model === 'partner') {
+                    assert.strictEqual(args.kwargs.options.toolbar, true,
+                        "should ask for toolbar information");
+                    res.form.toolbar = {
+                        action: [contextualAction],
+                        print: [],
+                    };
+                }
+                return res;
+            },
+            intercepts: {
+                do_action: function (ev) {
+                    actionManager.doAction(ev.data.action, {});
+                },
+            },
+        });
+
+        // execute an action and open a record
+        await actionManager.doAction(3);
+        assert.containsOnce(actionManager, '.o_list_view');
+        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
+        assert.containsOnce(actionManager, '.o_form_view');
+
+        // execute the custom action from the action menu
+        await cpHelpers.toggleActionMenu(actionManager);
+        await cpHelpers.toggleMenuItem(actionManager, "Favorite Ponies");
+        assert.containsOnce(actionManager, '.o_list_view');
 
         actionManager.destroy();
     });
@@ -3728,7 +3862,7 @@ QUnit.module('ActionManager', {
         assert.verifySteps([
             '/web/action/load',
             'load_views',
-            'default_get',
+            'onchange',
         ]);
 
         actionManager.destroy();
@@ -3783,6 +3917,68 @@ QUnit.module('ActionManager', {
         assert.containsOnce($('.o_technical_modal .modal-footer'), 'button',
             "the modal footer should only contain one button");
 
+        actionManager.destroy();
+    });
+
+    QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
+        assert.expect(2);
+        const actions = [
+            {
+                id: 4,
+                name: "Partners Action 4",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+            {
+                id: 5,
+                name: "Create a Partner",
+                res_model: "partner",
+                target: "new",
+                type: "ir.actions.act_window",
+                views: [["view_ref", "form"]],
+            },
+        ];
+
+        const actionManager = await createActionManager({
+            actions,
+            archs: {
+                "partner,false,form": `
+                    <form>
+                        <header>
+                            <button string="Open dialog" name="5" type="action"/>
+                        </header>
+                    </form>
+                `,
+                "partner,view_ref,form": `
+                    <form>
+                        <footer>
+                            <button string="I close the dialog" name="some_method" type="object" close="1"/>
+                        </footer>
+                    </form>
+                `,
+                "partner,false,search": "<search></search>",
+            },
+            data: this.data,
+            mockRPC: async function (route, args) {
+                if (
+                    route === "/web/dataset/call_button" &&
+                    args.method === "some_method"
+                ) {
+                    return {
+                        tag: "display_notification",
+                        type: "ir.actions.client"
+                    };
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await actionManager.doAction(4);
+        await testUtils.dom.click(`button[name="5"]`);
+        assert.strictEqual($(".modal").length, 1, "It should display a modal");
+        await testUtils.dom.click(`button[name="some_method"]`);
+        assert.strictEqual($(".modal").length, 0, "It should have closed the modal");
         actionManager.destroy();
     });
 

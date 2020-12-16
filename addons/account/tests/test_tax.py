@@ -7,8 +7,8 @@ from odoo.tests import tagged
 class TestTaxCommon(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestTaxCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Setup another company having a rounding of 1.0.
         cls.currency_data['currency'].rounding = 1.0
@@ -66,6 +66,16 @@ class TestTaxCommon(AccountTestInvoicingCommon):
                 (4, cls.percent_tax.id, 0)
             ]
         })
+        cls.group_tax_percent = cls.env['account.tax'].create({
+            'name': "Group tax percent",
+            'amount_type': 'group',
+            'amount': 0,
+            'sequence': 6,
+            'children_tax_ids': [
+                (4, cls.percent_tax.id, 0),
+                (4, cls.percent_tax_bis.id, 0)
+            ]
+        })
         cls.group_of_group_tax = cls.env['account.tax'].create({
             'name': "Group of group tax",
             'amount_type': 'group',
@@ -114,6 +124,23 @@ class TestTaxCommon(AccountTestInvoicingCommon):
             ],
         })
 
+        cls.tax_0_percent = cls.env['account.tax'].with_company(cls.company_data['company']).create({
+            'name': "test_0_percent",
+            'amount_type': 'percent',
+            'amount': 0,
+        })
+
+        cls.tax_5_percent = cls.env['account.tax'].with_company(cls.company_data['company']).create({
+            'name': "test_5_percent",
+            'amount_type': 'percent',
+            'amount': 5,
+        })
+
+        cls.tax_8_percent = cls.env['account.tax'].with_company(cls.company_data['company']).create({
+            'name': "test_8_percent",
+            'amount_type': 'percent',
+            'amount': 8,
+        })
         cls.tax_12_percent = cls.env['account.tax'].with_company(cls.company_data['company']).create({
             'name': "test_12_percent",
             'amount_type': 'percent',
@@ -139,7 +166,7 @@ class TestTaxCommon(AccountTestInvoicingCommon):
         })
 
         cls.bank_journal = cls.company_data['default_journal_bank']
-        cls.bank_account = cls.bank_journal.default_debit_account_id
+        cls.bank_account = cls.bank_journal.default_account_id
         cls.expense_account = cls.company_data['default_account_expense']
 
     def _check_compute_all_results(self, total_included, total_excluded, taxes, res):
@@ -185,6 +212,21 @@ class TestTax(TestTaxCommon):
                 # ---------------------------------------------------
                 (200.0, 10.0),    # |  1  |    10  |      |
                 (200.0, 20.0),    # |  3  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res
+        )
+
+    def test_tax_group_percent(self):
+        res = self.group_tax_percent.with_context({'force_price_include':True}).compute_all(100.0)
+        self._check_compute_all_results(
+            100,    # 'total_included'
+            83.33,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (83.33, 8.33),    # |  1  |    10% |      |
+                (83.33, 8.34),    # |  2  |    10% |      |
                 # ---------------------------------------------------
             ],
             res
@@ -803,6 +845,92 @@ class TestTax(TestTaxCommon):
             res1
         )
 
+    def test_rounding_tax_included_round_per_line_03(self):
+        ''' Test the rounding of a 8% and 0% price included tax in an invoice having 8 * 15.55 as line.
+        The decimal precision is set to 2.
+        '''
+        self.tax_0_percent.company_id.currency_id.rounding = 0.01
+        self.tax_0_percent.price_include = True
+        self.tax_8_percent.price_include = True
+
+        self.group_tax.children_tax_ids = [(6, 0, self.tax_0_percent.ids)]
+        self.group_tax_bis.children_tax_ids = [(6, 0, self.tax_8_percent.ids)]
+
+        res1 = (self.tax_8_percent | self.tax_0_percent).compute_all(15.55, quantity=8.0)
+        self._check_compute_all_results(
+            124.40,      # 'total_included'
+            115.19,      # 'total_excluded'
+            [
+                # base , amount
+                # -------------
+                (115.19, 9.21),
+                (115.19, 0.00),
+                # -------------
+            ],
+            res1
+        )
+
+        res2 = (self.tax_0_percent | self.tax_8_percent).compute_all(15.55, quantity=8.0)
+        self._check_compute_all_results(
+            124.40,      # 'total_included'
+            115.19,      # 'total_excluded'
+            [
+                # base , amount
+                # -------------
+                (115.19, 0.00),
+                (115.19, 9.21),
+                # -------------
+            ],
+            res2
+        )
+
+    def test_rounding_tax_included_round_per_line_04(self):
+        ''' Test the rounding of a 5% price included tax.
+        The decimal precision is set to 0.05.
+        '''
+        self.tax_5_percent.price_include = True
+        self.tax_5_percent.company_id.currency_id.rounding = 0.05
+        self.tax_5_percent.company_id.tax_calculation_rounding_method = 'round_per_line'
+
+        res1 = self.tax_5_percent.compute_all(5)
+        self._check_compute_all_results(
+            5,      # 'total_included'
+            4.75,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (4.75, 0.25),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_5_percent.compute_all(10)
+        self._check_compute_all_results(
+            10,      # 'total_included'
+            9.5,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9.5, 0.5),
+                # ---------------
+            ],
+            res2
+        )
+
+        res3 = self.tax_5_percent.compute_all(50)
+        self._check_compute_all_results(
+            50,      # 'total_included'
+            47.6,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (47.6, 2.4),
+                # ---------------
+            ],
+            res3
+        )
+
     def test_rounding_tax_included_round_globally_01(self):
         ''' Test the rounding of a 19% price included tax in an invoice having 27000 and 10920 as lines.
         The decimal precision is set to zero.
@@ -869,4 +997,51 @@ class TestTax(TestTaxCommon):
                 # ---------------
             ],
             res2
+        )
+
+    def test_rounding_tax_included_round_globally_03(self):
+        ''' Test the rounding of a 5% price included tax.
+        The decimal precision is set to 0.05.
+        '''
+        self.tax_5_percent.price_include = True
+        self.tax_5_percent.company_id.currency_id.rounding = 0.05
+        self.tax_5_percent.company_id.tax_calculation_rounding_method = 'round_globally'
+
+        res1 = self.tax_5_percent.compute_all(5)
+        self._check_compute_all_results(
+            5,      # 'total_included'
+            4.75,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (4.75, 0.25),
+                # ---------------
+            ],
+            res1
+        )
+
+        res2 = self.tax_5_percent.compute_all(10)
+        self._check_compute_all_results(
+            10,      # 'total_included'
+            9.5,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (9.50, 0.50),
+                # ---------------
+            ],
+            res2
+        )
+
+        res3 = self.tax_5_percent.compute_all(50)
+        self._check_compute_all_results(
+            50,      # 'total_included'
+            47.6,      # 'total_excluded'
+            [
+                # base , amount
+                # ---------------
+                (47.60, 2.40),
+                # ---------------
+            ],
+            res3
         )

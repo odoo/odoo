@@ -21,6 +21,13 @@
                     </a>
                 </li>
             </ul>
+            <!-- 'Search Box' -->
+            <form id="o_wblog_post_search" class="form-inline w-100 w-md-auto pt-2 pt-md-0 d-md-flex"
+                  role="search" t-att-action="blog_url(tag=tag,search=search)" method="get">
+                <t t-call="website.website_search_box">
+                    <t t-set="_classes" t-valuef="w-100"/>
+                </t>
+            </form>
         </div>
     </nav>
 </template>
@@ -35,9 +42,9 @@
                 <span t-if="dismissibleBtn and tag.id in active_tag_ids" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
                     <i class="fa fa-tag mr-2 text-muted"/>
                     <t t-esc="tag.name"/>
-                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1">&#215;</a>
+                    <a t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" class="btn border-0 py-1 post_link" t-att-rel="len(active_tag_ids) and 'nofollow'">&#215;</a>
                 </span>
-                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'}" t-esc="tag.name"/>
+                <a t-elif="showInactive" t-attf-href="#{blog_url(tag=tags_list(active_tag_ids, tag.id))}" t-attf-class="badge mb-2 mw-100 text-truncate #{tag.id in active_tag_ids and 'badge-primary' or 'border'} post_link" t-attf-rel="len(active_tag_ids) and 'nofollow'" t-esc="tag.name"/>
             </t>
         </t>
     </t>
@@ -72,7 +79,8 @@
              style="line-height:1"
              t-options='{"widget": "image", "class": "rounded-circle " + "o_wblog_author_avatar mr-1" if hide_date else  "o_wblog_author_avatar_date mr-2"}' />
         <div t-att-class="not hide_date and 'small font-weight-bold'" style="line-height:1">
-            <span t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
+            <span t-if="editable" t-field="blog_post.author_id" t-options='{ "widget": "contact", "fields": ["name"]}'/>
+            <span t-else="" t-esc="blog_post.author_name"/>
             <small t-if="not hide_date" t-field="blog_post.post_date" t-options='{"format": "d MMMM, yyyy"}'/>
         </div>
     </div>
@@ -223,25 +231,22 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: display tags -->
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="True" customize_show="True" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div t-if="blog_post.tag_ids" class="o_wblog_sidebar_block pb-5">
-            <div class="d-flex justify-content-between mb-4 border-bottom">
-                <h6 class="text-uppercase pb-2  font-weight-bold">Tags</h6>
-                <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
-                    title='Edit in backend' id="edit-in-backend">Edit</a>
-            </div>
-            <div class="h5">
-                <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                    <a class="badge border" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
-                </t>
-            </div>
-        </div>
-        <div t-else="" groups="website.group_website_designer" class="o_wblog_sidebar_block pb-5">
+        <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom font-weight-bold">Tags</h6>
-            <div class="mb-4 bg-100 py-2 px-3 border">
-                <h6 class="text-muted"><em>No tags definied</em></h6>
-                <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
-                    title='Edit in backend' id="edit-in-backend">Add some</a>
-            </div>
+            <t t-if="blog_post.tag_ids">
+                <div class="h5">
+                    <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                        <a class="badge border post_link" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="mb-4 bg-100 py-2 px-3 border" groups="website.group_website_designer">
+                    <h6 class="text-muted"><em>No tags defined</em></h6>
+                    <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
+                        title='Edit in backend' id="edit-in-backend">Add some</a>
+                </div>
+            </t>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_4"/>
     </xpath>

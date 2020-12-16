@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="SubmitOrderButton">
-        <span class="control-button order-submit">
-            <i class="fa fa-cutlery"></i>
-            Order
-        </span>
-    </t>
-
     <t t-name="NameWrapped">
         <t t-foreach="change.name_wrapped.slice(1)" t-as="wrapped_line">
-            <div>
-                <span class="pos-receipt-right-align" t-esc="wrapped_line"/>
+            <div style="text-align: right">
+                <span t-esc="wrapped_line"/>
             </div>
         </t>
     </t>

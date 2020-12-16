@@ -62,9 +62,9 @@ class PortalMixin(models.AbstractModel):
 
     def _notify_get_groups(self):
         access_token = self._portal_ensure_token()
-        customer = self['partner_id']
         groups = super(PortalMixin, self)._notify_get_groups()
-        if access_token and customer:
+        if access_token and 'partner_id' in self._fields and self['partner_id']:
+            customer = self['partner_id']
             additional_params = {
                 'access_token': self.access_token,
             }
@@ -122,7 +122,7 @@ class PortalMixin(models.AbstractModel):
 
     @api.model
     def action_share(self):
-        action = self.env.ref('portal.portal_share_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
         action['context'] = {'active_id': self.env.context['active_id'],
                              'active_model': self.env.context['active_model']}
         return action

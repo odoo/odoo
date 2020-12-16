@@ -40,6 +40,14 @@ USER odoo
 """ % {'group_id': os.getgid(), 'user_id': os.getuid()}
 
 
+class OdooTestTimeoutError(Exception):
+    pass
+
+
+class OdooTestError(Exception):
+    pass
+
+
 def run_cmd(cmd, chdir=None, timeout=None):
     logging.info("Running command %s", cmd)
     return subprocess.run(cmd, cwd=chdir, timeout=timeout)
@@ -60,12 +68,12 @@ def _rpc_count_modules(addr='http://127.0.0.1', port=8069, dbname='mycompany'):
         )
         if toinstallmodules:
             logging.error("Package test: FAILED. Not able to install dependencies of base.")
-            raise Exception("Installation of package failed")
+            raise OdooTestError("Installation of package failed")
         else:
             logging.info("Package test: successfuly installed %s modules" % len(modules))
     else:
         logging.error("Package test: FAILED. Not able to install base.")
-        raise Exception("Package test: FAILED. Not able to install base.")
+        raise OdooTestError("Package test: FAILED. Not able to install base.")
 
 
 def publish(args, pub_type, extensions):
@@ -88,7 +96,6 @@ def publish(args, pub_type, extensions):
 
         if os.path.islink(latest_abspath):
             os.unlink(latest_abspath)
-
         os.symlink(release_abspath, latest_abspath)
 
         return release_path
@@ -119,7 +126,7 @@ def gen_deb_package(args, published_files):
         shutil.copy(pub_file_path, temp_path)
 
     commands = [
-        (['dpkg-scanpackages', '.'], "Packages"),  # Generate Packages file
+        (['dpkg-scanpackages', '--multiversion', '.'], "Packages"),  # Generate Packages file
         (['dpkg-scansources', '.'], "Sources"),  # Generate Sources file
         (['apt-ftparchive', 'release', '.'], "Release")  # Generate Release file
     ]
@@ -161,7 +168,7 @@ def gen_rpm_repo(args, file_name):
     shutil.rmtree(temp_path)
 
 
-def _prepare_build_dir(args, win32=False):
+def _prepare_build_dir(args, win32=False, move_addons=True):
     """Copy files to the build directory"""
     logging.info('Preparing build dir "%s"', args.build_dir)
     cmd = ['rsync', '-a', '--delete', '--exclude', '.git', '--exclude', '*.pyc', '--exclude', '*.pyo']
@@ -169,6 +176,8 @@ def _prepare_build_dir(args, win32=False):
         cmd += ['--exclude', 'setup/win32']
 
     run_cmd(cmd + ['%s/' % args.odoo_dir, args.build_dir])
+    if not move_addons:
+        return
     for addon_path in glob(os.path.join(args.build_dir, 'addons/*')):
         if args.blacklist is None or os.path.basename(addon_path) not in args.blacklist:
             try:
@@ -184,14 +193,6 @@ def _prepare_build_dir(args, win32=False):
 
 
 #  Docker stuffs
-class OdooTestTimeoutError(Exception):
-    pass
-
-
-class OdooTestError(Exception):
-    pass
-
-
 class Docker():
     """Base Docker class. Must be inherited by specific Docker builder class"""
     arch = None
@@ -265,8 +266,10 @@ class Docker():
         while self.is_running() and (time.time() - start_time) < INSTALL_TIMEOUT:
             time.sleep(5)
             if os.path.exists(os.path.join(args.build_dir, 'odoo.pid')):
-                _rpc_count_modules(port=self.exposed_port)
-                self.stop()
+                try:
+                    _rpc_count_modules(port=self.exposed_port)
+                finally:
+                    self.stop()
                 return
         if self.is_running():
             self.stop()
@@ -386,20 +389,21 @@ class KVM(object):
     def start(self):
         kvm_cmd = [
             "kvm",
-            "-cpu", "core2duo",
+            "-cpu", "Skylake-Client,hypervisor=on,hle=off,rtm=off",
             "-smp", "2,sockets=2,cores=1,threads=1",
-            "-net", "nic,model=rtl8139",
+            "-net", "nic,model=e1000e,macaddr=52:54:00:d3:38:5e",
             "-net", "user,hostfwd=tcp:127.0.0.1:10022-:22,hostfwd=tcp:127.0.0.1:18069-:8069,hostfwd=tcp:127.0.0.1:15432-:5432",
-            "-m", "1024",
+            "-m", "2048",
             "-drive", "file=%s,snapshot=on" % self.image,
-            "-nographic"
+            "-nographic",
+            "-serial", "none",
         ]
         logging.info("Starting kvm: {}".format(" ".join(kvm_cmd)))
         self.kvm_proc = subprocess.Popen(kvm_cmd)
-        time.sleep(50)
-        signal.alarm(2400)
-        signal.signal(signal.SIGALRM, self.timeout)
         try:
+            self.wait_ssh(30)  # give some time to the VM to start, otherwise the SSH server may not be ready
+            signal.alarm(2400)
+            signal.signal(signal.SIGALRM, self.timeout)
             self.run()
         finally:
             signal.signal(signal.SIGALRM, signal.SIG_DFL)
@@ -411,6 +415,8 @@ class KVM(object):
             'ssh',
             '-o', 'UserKnownHostsFile=/dev/null',
             '-o', 'StrictHostKeyChecking=no',
+            '-o', 'BatchMode=yes',
+            '-o', 'ConnectTimeout=10',
             '-p', '10022',
             '-i', self.ssh_key,
             '%s@127.0.0.1' % self.login,
@@ -420,12 +426,21 @@ class KVM(object):
     def rsync(self, rsync_args, options=['--delete', '--exclude', '.git', '--exclude', '.tx', '--exclude', '__pycache__']):
         cmd = [
             'rsync',
-            '-rt',
+            '-a',
             '-e', 'ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 10022 -i %s' % self.ssh_key
         ]
         cmd.extend(options)
         cmd.extend(rsync_args)
         run_cmd(cmd).check_returncode()
+
+    def wait_ssh(self, n):
+        for i in range(n):
+            try:
+                self.ssh('exit')
+                return
+            except subprocess.CalledProcessError:
+                time.sleep(10)
+        raise Exception('Unable to conncect to the VM')
 
     def run(self):
         pass
@@ -435,7 +450,7 @@ class KVMWinBuildExe(KVM):
     def run(self):
         logging.info('Start building Windows package')
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.version'), 'w') as f:
-            f.write("VERSION=%s\n" % VERSION.replace('~', '_').replace('+', ''))
+            f.write("VERSION=%s.%s\n" % (VERSION.replace('~', '_').replace('+', ''), TSTAMP))
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.python'), 'w') as f:
             f.write("PYTHON_VERSION=%s\n" % self.args.vm_winxp_python_version)
         with open(os.path.join(self.args.build_dir, 'setup/win32/Makefile.servicename'), 'w') as f:
@@ -454,11 +469,11 @@ class KVMWinBuildExe(KVM):
 class KVMWinTestExe(KVM):
     def run(self):
         logging.info('Start testing Windows package')
-        setup_path = glob("%s/openerp-server-setup-*.exe" % self.args.build_dir)[0]
+        setup_path = glob("%s/odoo_setup_*.exe" % self.args.build_dir)[0]
         setupfile = setup_path.split('/')[-1]
-        setupversion = setupfile.split('openerp-server-setup-')[1].split('.exe')[0]
+        setupversion = setupfile.split('odoo_setup_')[1].split('.exe')[0]
 
-        self.rsync(['"%s"' % setup_path, '%s@127.0.0.1:' % self.login])
+        self.rsync(['%s' % setup_path, '%s@127.0.0.1:' % self.login])
         self.ssh("TEMP=/tmp ./%s /S" % setupfile)
         self.ssh('PGPASSWORD=openpgpwd /cygdrive/c/"Program Files"/"Odoo %s"/PostgreSQL/bin/createdb.exe -e -U openpg mycompany' % setupversion)
         self.ssh('netsh advfirewall set publicprofile state off')
@@ -469,8 +484,6 @@ class KVMWinTestExe(KVM):
 
 def build_exe(args):
     KVMWinBuildExe(args).start()
-    shutil.copy(glob('%s/openerp*.exe' % args.build_dir)[0], '%s/odoo_%s.%s.exe' % (args.build_dir, VERSION, TSTAMP))
-
 
 def test_exe(args):
     if args.test:
@@ -494,7 +507,7 @@ def parse_args():
     ap.add_argument("--vm-winxp-image", default='/home/odoo/vm/win1036/win10_winpy36.qcow2', help="%(default)s")
     ap.add_argument("--vm-winxp-ssh-key", default='/home/odoo/vm/win1036/id_rsa', help="%(default)s")
     ap.add_argument("--vm-winxp-login", default='Naresh', help="Windows login %(default)s")
-    ap.add_argument("--vm-winxp-python-version", default='3.7.4', help="Windows Python version installed in the VM (default: %(default)s)")
+    ap.add_argument("--vm-winxp-python-version", default='3.7.7', help="Windows Python version installed in the VM (default: %(default)s)")
 
     ap.add_argument("-t", "--test", action="store_true", default=False, help="Test built packages")
     ap.add_argument("-s", "--sign", action="store_true", default=False, help="Sign Debian package / generate Rpm repo")
@@ -530,7 +543,7 @@ def main(args):
             except Exception as e:
                 logging.error("Won't publish the rpm release.\n Exception: %s" % str(e))
         if args.build_deb:
-            _prepare_build_dir(args)
+            _prepare_build_dir(args, move_addons=False)
             docker_deb = DockerDeb(args)
             docker_deb.build()
             try:

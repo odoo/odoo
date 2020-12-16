@@ -9,7 +9,7 @@
     'version': '0.011',
     'author': 'ThinkOpen Solutions',
     'website': 'http://www.thinkopensolutions.com/',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': 'Plano de contas SNC para Portugal',
     'depends': ['base',
                 'account',

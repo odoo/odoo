@@ -24,7 +24,8 @@ The automatic assignment is figured from the weight of partner levels and the ge
     'depends': ['base_geolocalize', 'crm', 'account',
                 'website_partner', 'website_google_map', 'portal'],
     'data': [
-        'data/crm_partner_assign_data.xml',
+        'data/crm_tag_data.xml',
+        'data/mail_template_data.xml',
         'security/ir.model.access.csv',
         'security/ir_rule.xml',
         'wizard/crm_forward_to_partner_view.xml',

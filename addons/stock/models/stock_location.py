@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
@@ -60,8 +62,12 @@ class Location(models.Model):
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'location_in_id', 'Putaway Rules')
     barcode = fields.Char('Barcode', copy=False)
     quant_ids = fields.One2many('stock.quant', 'location_id')
+    cyclic_inventory_frequency = fields.Integer("Inventory Frequency (Days)", default=0, help=" When different than 0, inventory adjustments for products stored at this location will be created automatically at the defined frequency.")
+    last_inventory_date = fields.Datetime("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
+    next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
 
-    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !')]
+    _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !'),
+                        ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
 
     @api.depends('name', 'location_id.complete_name')
     def _compute_complete_name(self):
@@ -70,6 +76,24 @@ class Location(models.Model):
                 location.complete_name = '%s/%s' % (location.location_id.complete_name, location.name)
             else:
                 location.complete_name = location.name
+
+    @api.depends('cyclic_inventory_frequency', 'last_inventory_date', 'usage', 'company_id')
+    def _compute_next_inventory_date(self):
+        for location in self:
+            if location.company_id and location.usage in ['internal', 'transit'] and location.cyclic_inventory_frequency > 0:
+                try:
+                    if location.last_inventory_date:
+                        days_until_next_inventory = location.cyclic_inventory_frequency - (fields.Date.today() - location.last_inventory_date.date()).days
+                        if days_until_next_inventory <= 0:
+                            location.next_inventory_date = fields.Date.today() + timedelta(days=1)
+                        else:
+                            location.next_inventory_date = location.last_inventory_date + timedelta(days=days_until_next_inventory)
+                    else:
+                        location.next_inventory_date = fields.Date.today() + timedelta(days=location.cyclic_inventory_frequency)
+                except OverflowError:
+                    raise UserError(_("The selected Inventory Frequency (Days) creates a date too far into the future."))
+            else:
+                location.next_inventory_date = False
 
     @api.onchange('usage')
     def _onchange_usage(self):
@@ -109,10 +133,10 @@ class Location(models.Model):
             if not self.env.context.get('do_not_check_quant'):
                 children_location = self.env['stock.location'].with_context(active_test=False).search([('id', 'child_of', self.ids)])
                 internal_children_locations = children_location.filtered(lambda l: l.usage == 'internal')
-                children_quants = self.env['stock.quant'].search([('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
+                children_quants = self.env['stock.quant'].search(['&', '|', ('quantity', '!=', 0), ('reserved_quantity', '!=', 0), ('location_id', 'in', internal_children_locations.ids)])
                 if children_quants and values['active'] == False:
                     raise UserError(_('You still have some product in locations %s') %
-                        (','.join(children_quants.mapped('location_id.name'))))
+                        (', '.join(children_quants.mapped('location_id.name'))))
                 else:
                     super(Location, children_location - self).with_context(do_not_check_quant=True).write({
                         'active': values['active'],
@@ -126,10 +150,11 @@ class Location(models.Model):
         args = args or []
         if operator == 'ilike' and not (name or '').strip():
             domain = []
+        elif operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('barcode', operator, name), ('complete_name', operator, name)]
         else:
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
-        location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(location_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     def _get_putaway_strategy(self, product):
         ''' Returns the location where the product has to be put, if any compliant putaway strategy is found. Otherwise returns None.'''
@@ -173,9 +198,9 @@ class Route(models.Model):
     active = fields.Boolean('Active', default=True, help="If the active field is set to False, it will allow you to hide the route without removing it.")
     sequence = fields.Integer('Sequence', default=0)
     rule_ids = fields.One2many('stock.rule', 'route_id', 'Rules', copy=True)
-    product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.  It will take priority over the Warehouse route. ")
-    product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.  It will take priority over the Warehouse route. ")
-    warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.  This behaviour can be overridden by the routes on the Product/Product Categories or by the Preferred Routes on the Procurement")
+    product_selectable = fields.Boolean('Applicable on Product', default=True, help="When checked, the route will be selectable in the Inventory tab of the Product form.")
+    product_categ_selectable = fields.Boolean('Applicable on Product Category', help="When checked, the route will be selectable on the Product Category.")
+    warehouse_selectable = fields.Boolean('Applicable on Warehouse', help="When a warehouse is selected for this route, this route should be seen as the default route when products pass through this warehouse.")
     supplied_wh_id = fields.Many2one('stock.warehouse', 'Supplied Warehouse')
     supplier_wh_id = fields.Many2one('stock.warehouse', 'Supplying Warehouse')
     company_id = fields.Many2one(

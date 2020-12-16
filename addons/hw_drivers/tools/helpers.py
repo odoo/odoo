@@ -1,19 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import netifaces
-from pathlib import Path
 import datetime
-from OpenSSL import crypto
-import urllib3
+from importlib import util
 import io
 import json
 import logging
+import netifaces
+from OpenSSL import crypto
 import os
+from pathlib import Path
 import subprocess
+import urllib3
 import zipfile
+from threading import Thread
+import time
 
-from odoo import _
+from odoo import _, http
 from odoo.modules.module import get_resource_path
 
 _logger = logging.getLogger(__name__)
@@ -21,6 +24,18 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Helper
 #----------------------------------------------------------
+
+class IoTRestart(Thread):
+    """
+    Thread to restart odoo server in IoT Box when we must return a answer before
+    """
+    def __init__(self, delay):
+        Thread.__init__(self)
+        self.delay = delay
+
+    def run(self):
+        time.sleep(self.delay)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
 
 def access_point():
     return get_ip() == '10.11.12.1'
@@ -78,12 +93,14 @@ def check_git_branch():
                 local_branch = subprocess.check_output(git + ['symbolic-ref', '-q', '--short', 'HEAD']).decode('utf-8').rstrip()
 
                 if db_branch != local_branch:
-                    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
+                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/drivers/*"])
+                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/iot_handlers/interfaces/*"])
                     subprocess.check_call(git + ['branch', '-m', db_branch])
                     subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
                     os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
-                    subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
-                    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+                    subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
+                    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
 
         except Exception as e:
             _logger.error('Could not reach configured server')
@@ -93,7 +110,7 @@ def check_image():
     """
     Check if the current image of IoT Box is up to date
     """
-    url = 'http://nightly.odoo.com/master/posbox/iotbox/SHA1SUMS.txt'
+    url = 'https://nightly.odoo.com/master/iotbox/SHA1SUMS.txt'
     urllib3.disable_warnings()
     http = urllib3.PoolManager(cert_reqs='CERT_NONE')
     response = http.request('GET', url)
@@ -146,7 +163,7 @@ def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return subprocess.check_output(['cat', '/home/pi/iotbox_version']).decode().rstrip()
+    return subprocess.check_output(['cat', '/var/odoo/iotbox_version']).decode().rstrip()
 
 def get_wifi_essid():
     wifi_options = []
@@ -183,18 +200,18 @@ def load_certificate():
         result = json.loads(response.data.decode('utf8'))['result']
         if result:
             write_file('odoo-subject.conf', result['subject_cn'])
-            subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
-            subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"])
+            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
+            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/"])
             Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
             Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
             Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
             Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
-            subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
-            subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
-            subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
+            subprocess.call(["sudo", "mount", "-o", "remount,ro", "/root_bypass_ramdisks/"])
+            subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
             subprocess.check_call(["sudo", "service", "nginx", "restart"])
 
-def download_drivers(auto=True):
+def download_iot_handlers(auto=True):
     """
     Get the drivers from the configured Odoo server
     """
@@ -202,18 +219,41 @@ def download_drivers(auto=True):
     if server:
         urllib3.disable_warnings()
         pm = urllib3.PoolManager(cert_reqs='CERT_NONE')
-        server = server + '/iot/get_drivers'
+        server = server + '/iot/get_handlers'
         try:
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto})
             if resp.data:
-                subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
+                drivers_path = Path.home() / 'odoo/addons/hw_drivers/iot_handlers'
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
-                subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
-                subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+                zip_file.extractall(drivers_path)
+                subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
+                subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
+
+def load_iot_handlers():
+    """
+    This method loads local files: 'odoo/addons/hw_drivers/iot_handlers/drivers' and
+    'odoo/addons/hw_drivers/iot_handlers/interfaces'
+    And execute these python drivers and interfaces
+    """
+    for directory in ['interfaces', 'drivers']:
+        path = get_resource_path('hw_drivers', 'iot_handlers', directory)
+        filesList = os.listdir(path)
+        for file in filesList:
+            path_file = os.path.join(path, file)
+            spec = util.spec_from_file_location(file, path_file)
+            if spec:
+                module = util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+    http.addons_manifest = {}
+    http.root = http.Root()
+
+def odoo_restart(delay):
+    IR = IoTRestart(delay)
+    IR.start()
 
 def read_file_first_line(filename):
     path = Path.home() / filename
@@ -224,16 +264,16 @@ def read_file_first_line(filename):
     return ''
 
 def unlink_file(filename):
-    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
     path = Path.home() / filename
     if path.exists():
         path.unlink()
-    subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
-    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+    subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
+    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
 
 def write_file(filename, text):
-    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/"])
     path = Path.home() / filename
     path.write_text(text)
-    subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
-    subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
+    subprocess.call(["sudo", "mount", "-o", "remount,ro", "/"])
+    subprocess.call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])

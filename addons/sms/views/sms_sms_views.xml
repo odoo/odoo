@@ -12,17 +12,17 @@
                 </header>
                 <sheet>
                     <group>
-                        <field name="body"/>
+                        <group>
+                            <field name="partner_id" string="Contact"/>
+                            <field name="mail_message_id" readonly="1" attrs="{'invisible': [('mail_message_id', '=', False)]}"/>
+                        </group>
+                        <group>
+                            <field name="number" required="1"/>
+                            <field name="error_code" readonly="1" attrs="{'invisible': [('error_code', '=', False)]}"/>
+                        </group>
                     </group>
                     <group>
-                        <group>
-                            <field name="partner_id"/>
-                            <field name="number"/>
-                        </group>
-                        <group>
-                            <field name="error_code"/>
-                            <field name="mail_message_id"/>
-                        </group>
+                        <field name="body" widget="sms_widget" string="Message" required="1"/>
                     </group>
                 </sheet>
             </form>

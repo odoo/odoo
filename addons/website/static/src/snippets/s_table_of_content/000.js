@@ -2,6 +2,7 @@ odoo.define('website.s_table_of_content', function (require) {
 'use strict';
 
 const publicWidget = require('web.public.widget');
+const {extraMenuUpdateCallbacks} = require('website.content.menu');
 
 const TableOfContent = publicWidget.Widget.extend({
     selector: 'section .s_table_of_content_navbar_sticky',
@@ -10,21 +11,18 @@ const TableOfContent = publicWidget.Widget.extend({
     /**
      * @override
      */
-    start: function () {
-        const $menuLoading = $('.o_menu_loading');
-        if (!$menuLoading.length) {
-            this._initializeNavbarTopPosition();
-        } else {
-            $(document.body).one('menu_loaded', () => this._initializeNavbarTopPosition());
-        }
-        return this._super.apply(this, arguments);
+    async start() {
+        await this._super(...arguments);
+        this._updateTableOfContentNavbarPosition();
+        extraMenuUpdateCallbacks.push(this._updateTableOfContentNavbarPosition.bind(this));
     },
     /**
      * @override
      */
-    destroy: function () {
+    destroy() {
+        this.$target.css('top', '');
         this.$target.find('.s_table_of_content_navbar').css('top', '');
-        this._super.apply(this, arguments);
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -32,19 +30,19 @@ const TableOfContent = publicWidget.Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Initialize the top position of the snippet navbar according to the height
-     * of the headers of the page.
-     * 
      * @private
      */
-    _initializeNavbarTopPosition: function () {
-        let headerHeight = 0;
+    _updateTableOfContentNavbarPosition() {
+        let position = 0;
         const $fixedElements = $('.o_top_fixed_element');
+        _.each($fixedElements, el => position += $(el).outerHeight());
         const isHorizontalNavbar = this.$target.hasClass('s_table_of_content_horizontal_navbar');
-        _.each($fixedElements, el => headerHeight += $(el).outerHeight());
-        this.$target.css('top', isHorizontalNavbar ? headerHeight : '');
-        this.$target.find('.s_table_of_content_navbar').css('top', !isHorizontalNavbar ? headerHeight : '');
-        $('body').scrollspy({target: '.s_table_of_content_navbar', offset: headerHeight + 100});
+        this.$target.css('top', isHorizontalNavbar ? position : '');
+        this.$target.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
+        const $mainNavBar = $('#oe_main_menu_navbar');
+        position += $mainNavBar.length ? $mainNavBar.outerHeight() : 0;
+        position += isHorizontalNavbar ? this.$target.outerHeight() : 0;
+        $().getScrollingElement().scrollspy({target: '.s_table_of_content_navbar', method: 'offset', offset: position + 100});
     },
 });
 
@@ -57,19 +55,19 @@ publicWidget.registry.anchorSlide.include({
     /**
      * Overridden to add the height of the horizontal sticky navbar at the scroll value
      * when the link is from the table of content navbar
-     * 
+     *
      * @override
      * @private
      */
-    _computeHeaderHeight: function () {
-        let headerHeight = this._super(...arguments);
+    _computeExtraOffset() {
+        let extraOffset = this._super(...arguments);
         if (this.$el.hasClass('table_of_content_link')) {
             const tableOfContentNavbarEl = this.$el.closest('.s_table_of_content_navbar_sticky.s_table_of_content_horizontal_navbar');
             if (tableOfContentNavbarEl.length > 0) {
-                headerHeight += $(tableOfContentNavbarEl).outerHeight();
+                extraOffset += $(tableOfContentNavbarEl).outerHeight();
             }
         }
-        return headerHeight;
+        return extraOffset;
     },
 });
 

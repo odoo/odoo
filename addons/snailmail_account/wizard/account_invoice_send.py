@@ -11,7 +11,9 @@ class AccountInvoiceSend(models.TransientModel):
     _description = 'Account Invoice Send'
 
     partner_id = fields.Many2one('res.partner', compute='_get_partner', string='Partner')
-    snailmail_is_letter = fields.Boolean('Send by Post', help='Allows to send the document by Snailmail (coventional posting delivery service)', default=lambda self: self.env.company.invoice_is_snailmail)
+    snailmail_is_letter = fields.Boolean('Send by Post',
+        help='Allows to send the document by Snailmail (conventional posting delivery service)',
+        default=lambda self: self.env.company.invoice_is_snailmail)
     snailmail_cost = fields.Float(string='Stamp(s)', compute='_compute_snailmail_cost', readonly=True)
     invalid_addresses = fields.Integer('Invalid Addresses Count', compute='_compute_invalid_addresses')
     invalid_invoice_ids = fields.Many2many('account.move', string='Invalid Addresses', compute='_compute_invalid_addresses')
@@ -49,7 +51,7 @@ class AccountInvoiceSend(models.TransientModel):
             })
             letters |= letter
 
-        self.invoice_ids.filtered(lambda inv: not inv.invoice_sent).write({'invoice_sent': True})
+        self.invoice_ids.filtered(lambda inv: not inv.is_move_sent).write({'is_move_sent': True})
         if len(self.invoice_ids) == 1:
             letters._snailmail_print()
         else:
@@ -57,9 +59,21 @@ class AccountInvoiceSend(models.TransientModel):
 
     def send_and_print_action(self):
         if self.snailmail_is_letter:
-            if self.invalid_addresses and self.composition_mode == "mass_mail":
-                self.notify_invalid_addresses()
-            self.snailmail_print_action()
+            if self.env['snailmail.confirm.invoice'].show_warning():
+                wizard = self.env['snailmail.confirm.invoice'].create({'model_name': _('Invoice'), 'invoice_send_id': self.id})
+                return wizard.action_open()
+            self._print_action()
+        return self.send_and_print()
+    
+    def _print_action(self):
+        if not self.snailmail_is_letter:
+            return
+
+        if self.invalid_addresses and self.composition_mode == "mass_mail":
+            self.notify_invalid_addresses()
+        self.snailmail_print_action()
+
+    def send_and_print(self):
         res = super(AccountInvoiceSend, self).send_and_print_action()
         return res
 
@@ -68,7 +82,7 @@ class AccountInvoiceSend(models.TransientModel):
         self.env['bus.bus'].sendone(
             (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
             {'type': 'snailmail_invalid_address', 'title': _("Invalid Addresses"),
-            'message': _("%s of the selected invoice(s) had an invalid address and were not sent") % self.invalid_addresses}
+            'message': _("%s of the selected invoice(s) had an invalid address and were not sent", self.invalid_addresses)}
         )
 
     def invalid_addresses_action(self):

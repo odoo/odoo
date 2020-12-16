@@ -1,10 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <template>
-    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTag">
+    <t t-name="Many2ManyAttendeeTag" t-extend="FieldMany2ManyTagAvatar">
         <t t-jquery="span:first" t-operation="prepend">
-            <span t-if="attendeesData[el_index]" t-attf-class="o_calendar_invitation #{attendeesData[el_index].status}"/>
+            <span t-if="attendeesData[el_index] and attendeesData[el_index].status and attendeesData[el_index].status !== 'needsAction'"
+                t-attf-class="o_calendar_invitation #{attendeesData[el_index].status}"/>
         </t>
     </t>
+
+    <div t-name="calendar.RecurrentEventUpdate">
+        <div class="form-check o_radio_item">
+            <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" checked="true" value="self_only" id="self_only"/>
+            <label class="form-check-label o_form_label" for="self_only">This event</label>
+        </div>
+
+        <div class="form-check o_radio_item">
+            <input name="recurrence-update" type="radio" class="form-check-input o_radio_input" value="future_events" id="future_events"/>
+            <label class="form-check-label o_form_label" for="future_events">This and following events</label>
+        </div>
+    </div>
 
     <t t-extend="mail.systray.ActivityMenu.Previews">
         <t t-jquery="div.o_preview_title" t-operation="after">

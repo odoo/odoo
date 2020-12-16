@@ -4,17 +4,12 @@
 
     <template id="report_assets_common">
         <t t-call="web._assets_helpers">
-            <!-- FIXME web_editor ? -->
           <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_report.scss"/>
-          <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
         </t>
 
         <t t-call="web._assets_bootstrap"/>
 
         <link href="/base/static/src/css/description.css" rel="stylesheet" type="text/css"/>
-
-        <!-- FIXME web_editor ? -->
-        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/>
 
         <link href="/web/static/lib/fontawesome/css/font-awesome.css" rel="stylesheet" type="text/css"/>
 
@@ -66,10 +61,206 @@
         </html>
     </template>
 
+    <template id="report_preview_layout" name="Report layout">&lt;!DOCTYPE html&gt;
+        <html t-att-lang="lang and lang.replace('_', '-')"
+              t-att-data-report-margin-top="data_report_margin_top"
+              t-att-data-report-header-spacing="data_report_header_spacing"
+              t-att-data-report-dpi="data_report_dpi"
+              t-att-data-report-landscape="data_report_landscape"
+              t-att-web-base-url="web_base_url"
+        >
+            <head>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="initial-scale=1"/>
+                <title><t t-esc="title or 'Odoo Report'"/></title>
+                <t t-call-assets="web.report_assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <style>
+                    <t t-raw="preview_css"/>
+
+                    /**
+                        Some css is overridden as it doesn't work properly in the preview.
+                        Before generating 'real' reports, a lot of processing is applied. It is therefore quite
+                        complicated to have an almost exact replica of the pdf report.
+                        This changes down here are hacks to make the preview look as good as possible.
+                    **/
+
+                    /** The footers are not at the bottom of the page, so we push them down. **/
+                    .o_background_footer  {
+                        margin-top: 270px !important;
+                    }
+                    .o_standard_footer {
+                        margin-top: 190px !important;
+                    }
+                    .o_boxed_footer {
+                         margin-top: 270px !important;
+                    }
+                    .o_clean_footer {
+                         margin-top: 160px !important;
+                    }
+
+                    /** Avoid image overflowing and creating a scrollbar **/
+                    .o_background_header {
+                        min-width: initial !important;
+                    }
+
+                    /** This rule is overridden in web/report.scss to hack around whtml2pdf
+                        Simply set it to its default value so it works properly in preview **/
+                    .col-auto{
+                        -webkit-box-flex: 0 !important;
+                        -webkit-flex: 0 0 auto !important;
+                        flex: 0 0 auto !important;
+                        width: auto !important;
+                        max-width: 100% !important;
+                    }
+
+                </style>
+            </head>
+            <body t-att-class="'container' if not full_width else 'container-fluid'">
+                <div id="wrapwrap">
+                        <t t-raw="0"/>
+                </div>
+            </body>
+        </html>
+    </template>
+
     <template id="html_container">
         <t t-set="body_classname" t-value="'container'"/>
         <t t-call="web.report_layout">
             <t t-raw="0"/>
+        </t>
+    </template>
+
+    <template id="html_preview_container">
+        <t t-set="body_classname" t-value="'container'"/>
+        <t t-call="web.report_preview_layout">
+            <t t-raw="0"/>
+        </t>
+    </template>
+
+
+    <template id="report_invoice_wizard_preview">
+        <t t-call="web.html_preview_container">
+           <t t-call="web.external_layout">
+                   <div class="pt-5">
+                       <div class="address row">
+                           <div name="address" class="col-md-5 ml-auto">
+                               <address>
+                                   <address class="mb-0" itemscope="itemscope"
+                                            itemtype="http://schema.org/Organization">
+                                       <div>
+                                           <span itemprop="name">Deco Addict</span>
+                                       </div>
+                                       <div itemprop="address" itemscope="itemscope"
+                                            itemtype="http://schema.org/PostalAddress">
+                                           <div class="d-flex align-items-baseline">
+                                               <span class="w-100 o_force_ltr" itemprop="streetAddress">77 Santa Barbara
+                                                   Rd<br/>Pleasant Hill CA 94523<br/>United States</span>
+                                           </div>
+                                       </div>
+                                   </address>
+                               </address>
+                           </div>
+                       </div>
+                   </div>
+                   <div class="page">
+                       <h2>
+                           <span>Invoice</span>
+                           <span>INV/2020/07/0003</span>
+                       </h2>
+                       <div id="informations" class="row mt32 mb32">
+                           <div class="col-auto mw-100 mb-2" name="invoice_date">
+                               <strong>Invoice Date:</strong>
+                               <p class="m-0">07/08/2020</p>
+                           </div>
+                           <div class="col-auto mw-100 mb-2" name="due_date">
+                               <strong>Due Date:</strong>
+                               <p class="m-0">08/07/2020</p>
+                           </div>
+                       </div>
+                       <table class="table table-sm o_main_table" name="invoice_line_table">
+                           <thead>
+                               <tr>
+                                   <th name="th_description" class="text-left"><span>Description</span></th>
+                                   <th name="th_quantity" class="text-right"><span>Quantity</span></th>
+                                   <th name="th_priceunit" class="text-right d-none d-md-table-cell"><span>Unit Price</span></th>
+                                   <th name="th_taxes" class="text-left d-none d-md-table-cell"><span>Taxes</span></th>
+                                   <th name="th_subtotal" class="text-right">
+                                       <span>Amount</span>
+                                   </th>
+                               </tr>
+                           </thead>
+                           <tbody class="invoice_tbody">
+                               <tr>
+                                   <td name="account_invoice_line_name"><span>[FURN_8999] Three-Seat Sofa<br/>
+                                       Three Seater Sofa with Lounger in Steel Grey Colour</span></td>
+                                   <td class="text-right">
+                                       <span>5.000</span>
+                                   </td>
+                                   <td class="text-right d-none d-md-table-cell">
+                                       <span class="text-nowrap">1,500.00</span>
+                                   </td>
+                                   <td class="text-left d-none d-md-table-cell">
+                                       <span id="line_tax_ids">15.00%</span>
+                                   </td>
+                                   <td class="text-right o_price_total">
+                                       <span class="text-nowrap">$ <span class="oe_currency_value">7,500.00</span></span>
+                                   </td>
+                               </tr>
+                               <tr>
+                                   <td name="account_invoice_line_name"><span>[FURN_8220] Four Person Desk<br/>
+                                       Four person modern office workstation</span></td>
+                                   <td class="text-right">
+                                       <span>5.000</span>
+                                   </td>
+                                   <td class="text-right d-none d-md-table-cell">
+                                       <span class="text-nowrap">23,500.00</span>
+                                   </td>
+                                   <td class="text-left d-none d-md-table-cell">
+                                       <span id="line_tax_ids">15.00%</span>
+                                   </td>
+                                   <td class="text-right o_price_total">
+                                       <span class="text-nowrap">$ <span class="oe_currency_value">117,500.00</span></span>
+                                   </td>
+                               </tr>
+                           </tbody>
+                       </table>
+                       <div class="clearfix">
+                           <div id="total" class="row">
+                               <div class="col-sm-7 col-md-6 ml-auto">
+                                   <table class="table table-sm" style="page-break-inside: avoid;">
+                                       <tbody><tr class="border-black o_subtotal" style="">
+                                           <td><strong>Subtotal</strong></td>
+                                           <td class="text-right">
+                                               <span>$ <span class="oe_currency_value">125,000.00</span></span>
+                                           </td>
+                                       </tr>
+                                           <tr style="">
+                                               <td><span class="text-nowrap">Tax 15%</span></td>
+                                               <td class="text-right o_price_total">
+                                                   <span class="text-nowrap">$ 18,750.00</span>
+                                               </td>
+                                           </tr>
+                                           <tr class="border-black o_total">
+                                               <td><strong>Total</strong></td>
+                                               <td class="text-right">
+                                                   <span class="text-nowrap">$ <span class="oe_currency_value">
+                                                       143,750.00</span></span>
+                                               </td>
+                                           </tr>
+                                       </tbody></table>
+                               </div>
+                           </div>
+                       </div>
+                       <p>
+                           Please use the following communication for your payment : <b><span>
+                           INV/2020/07/0003</span></b>
+                       </p>
+                       <p name="payment_term">
+                           <span>Payment terms: 30 Days</span>
+                       </p>
+                   </div>
+           </t>
         </t>
     </template>
 
@@ -92,14 +283,15 @@
                                 var z = x[i].split('=', 2);
                                 vars[z[0]] = unescape(z[1]);
                             }
-                            var fromPage = document.getElementsByClassName('page');
-                            for(var j = 0; j&lt;fromPage.length; j++)
-                                fromPage[j].textContent = vars['sitepage'];
-                            var toPage = document.getElementsByClassName('topage');
-                            for(var j = 0; j&lt;toPage.length; j++)
-                                toPage[j].textContent = vars['sitepages'];
+                            var x = ['sitepage', 'sitepages', 'section', 'subsection', 'subsubsection'];
+                            var z = {'sitepage': 'page', 'sitepages': 'topage'};
+                            for (var i in x) {
+                                var y = document.getElementsByClassName(z[x[i]] || x[i])
+                                for (var j=0; j&lt;y.length; ++j)
+                                    y[j].textContent = vars[x[i]];
+                            }
 
-                            var index = vars['webpage'].split('.', 4)[3]
+                            var index = vars['webpage'].split('.', 4)[3];
                             var header = document.getElementById('minimal_layout_report_headers');
                             if(header !== null){
                                 var companyHeader = header.children[index];
@@ -142,7 +334,7 @@
     </template>
 
     <template id="external_layout_background">
-        <div t-attf-class="o_company_#{company.id}_layout header">
+        <div t-attf-class="o_company_#{company.id}_layout header" t-att-style="report_header_style">
             <div class="o_background_header">
             <div class="float-right">
                 <h3 class="mt0 text-right" t-field="company.report_header"/>
@@ -167,7 +359,7 @@
         <div t-attf-class="o_company_#{company.id}_layout footer o_background_footer">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span t-field="company.phone"/></li>
+                    <li t-if="company.phone" class="list-inline-item"><i class="fa fa-phone" role="img" aria-label="Phone" title="Phone"/> <span class="o_force_ltr" t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item"><i class="fa fa-at" role="img" aria-label="Email" title="Email"/> <span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item"><i class="fa fa-globe" role="img" aria-label="Website" title="Website"/> <span t-field="company.website"/></li>
                     <li t-if="company.vat" class="list-inline-item"><i class="fa fa-building-o" role="img" aria-label="Fiscal number"/><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
@@ -184,7 +376,7 @@
     </template>
 
     <template id="external_layout_boxed">
-        <div t-attf-class="header o_company_#{company.id}_layout">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="o_boxed_header">
             <div class="row mb8">
                 <div class="col-6">
@@ -192,7 +384,7 @@
                 </div>
                 <div class="col-6 text-right mb4">
                     <h4 class="mt0" t-field="company.report_header"/>
-                    <div name="company_address" class="mb4">
+                    <div name="company_address" class="float-right mb4">
                         <span class="company_address" t-field="company.partner_id"
                             t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true}'/>
                     </div>
@@ -202,14 +394,17 @@
         </div>
 
         <div t-attf-class="article o_report_layout_boxed o_company_#{company.id}_layout" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
             <t t-raw="0"/>
         </div>
 
         <div t-attf-class="footer o_boxed_footer o_company_#{company.id}_layout">
             <div class="text-center">
                 <ul class="list-inline">
-                    <li t-if="company.phone" class="list-inline-item"><span t-field="company.phone"/></li>
+                    <li t-if="company.phone" class="list-inline-item"><span class="o_force_ltr" t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item"><span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item"><span t-field="company.website"/></li>
                     <li t-if="company.vat" class="list-inline-item"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
@@ -223,7 +418,7 @@
     </template>
 
     <template id="external_layout_clean">
-        <div t-attf-class="header o_company_#{company.id}_layout">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="o_clean_header">
             <div class="row">
                 <div class="col-6">
@@ -233,7 +428,7 @@
                     <ul class="list-unstyled">
                         <strong><li t-if="company.name"><span t-field="company.name"/></li></strong>
                         <li t-if="company.vat"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
-                        <li t-if="company.phone">Tel: <span t-field="company.phone"/></li>
+                        <li t-if="company.phone">Tel: <span class="o_force_ltr" t-field="company.phone"/></li>
                         <li t-if="company.email"><span t-field="company.email"/></li>
                         <li t-if="company.website"><span t-field="company.website"/></li>
                     </ul>
@@ -269,7 +464,7 @@
     </template>
 
     <template id="external_layout_standard">
-        <div t-attf-class="header o_company_#{company.id}_layout">
+        <div t-attf-class="header o_company_#{company.id}_layout" t-att-style="report_header_style">
             <div class="row">
                 <div class="col-3 mb4">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
@@ -291,7 +486,10 @@
         </div>
 
         <div t-attf-class="article o_report_layout_standard o_company_#{company.id}_layout"  t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
-            <t t-call="web.address_layout"/>
+            <div class="pt-5">
+                <!-- This div ensures that the address is not cropped by the header. -->
+                <t t-call="web.address_layout"/>
+            </div>
             <t t-raw="0"/>
         </div>
 
@@ -300,7 +498,7 @@
                 <ul class="list-inline mb4">
                     <!-- using the list-inline-item class from bootstrap causes weird behaviours in pdf report
                          adding d-inline class fixes the problem-->
-                    <li t-if="company.phone" class="list-inline-item d-inline"><span t-field="company.phone"/></li>
+                    <li t-if="company.phone" class="list-inline-item d-inline"><span class="o_force_ltr" t-field="company.phone"/></li>
                     <li t-if="company.email" class="list-inline-item d-inline"><span t-field="company.email"/></li>
                     <li t-if="company.website" class="list-inline-item d-inline"><span t-field="company.website"/></li>
                     <li t-if="company.vat" class="list-inline-item d-inline"><t t-esc="company.country_id.vat_label or 'Tax ID'"/>: <span t-field="company.vat"/></li>
@@ -380,6 +578,7 @@
 
     <template id="basic_layout">
         <t t-call="web.html_container">
+            <t t-if="not o" t-set="o" t-value="doc"/>
             <div class="article" t-att-data-oe-model="o and o._name" t-att-data-oe-id="o and o.id" t-att-data-oe-lang="o and o.env.context.get('lang')">
                 <t t-raw="0"/>
             </div>
@@ -389,6 +588,7 @@
     <!-- Customize the company form view by adding paperformat field as well as demo reports -->
     <!-- Demo reports definition -->
     <template id="preview_internalreport">
+        <t t-set="company" t-value="env.company"/>
         <t t-call="web.html_container">
             <t t-set="o" t-value="res_company"/>
             <t t-call="web.internal_layout">
@@ -399,6 +599,7 @@
         </t>
     </template>
     <template id="preview_externalreport">
+        <t t-set="company" t-value="env.company"/>
         <t t-call="web.html_container">
             <t t-set="o" t-value="res_company"/>
             <t t-call="web.external_layout">
@@ -410,12 +611,12 @@
     </template>
 
     <template id="styles_company_report">
-        <t t-foreach="company_ids" t-as="company">
+        <t t-foreach="company_ids" t-as="company" t-translation="off">
             <t t-set="font" t-value="company.font or 'Lato'" />
             <t t-set="primary" t-value="company.primary_color or 'black'" />
             <t t-set="secondary" t-value="company.secondary_color or 'black'" />
             <t t-set="layout" t-value="company.external_report_layout_id.key or 'web.external_layout_standard'" />
-            .o_company_<t t-esc='company.id'/>_layout {
+                .o_company_<t t-esc='company.id'/>_layout {
                 font-family: '<t t-esc="font" />';
 
             <t t-if="layout == 'web.external_layout_background'">
@@ -551,16 +752,22 @@
         </t>
     </template>
 
-    <report id="action_report_internalpreview"
-        model="res.company"
-        name="web.preview_internalreport"
-        file="web.preview_internalreport"
-        string="Preview Internal Report"
-        report_type="qweb-pdf"/>
-    <report id="action_report_externalpreview"
-        model="res.company"
-        name="web.preview_externalreport"
-        file="web.preview_externalreport"
-        string="Preview External Report"
-        report_type="qweb-pdf"/>
+    <record id="action_report_internalpreview" model="ir.actions.report">
+        <field name="name">Preview Internal Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_internalreport</field>
+        <field name="report_file">web.preview_internalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_report_externalpreview" model="ir.actions.report">
+        <field name="name">Preview External Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_externalreport</field>
+        <field name="report_file">web.preview_externalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

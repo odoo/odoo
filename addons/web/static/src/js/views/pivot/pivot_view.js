@@ -30,7 +30,7 @@ odoo.define('web.PivotView', function (require) {
             Renderer: PivotRenderer,
         }),
         viewType: 'pivot',
-        searchMenuTypes: ['filter', 'groupBy', 'timeRange', 'favorite'],
+        searchMenuTypes: ['filter', 'groupBy', 'comparison', 'favorite'],
 
         /**
          * @override
@@ -67,11 +67,15 @@ odoo.define('web.PivotView', function (require) {
 
             this.arch.children.forEach(field => {
                 let name = field.attrs.name;
-
-                // Remove invisible fields from the measures
+                // Remove invisible fields from the measures if not in additionalMeasures
                 if (field.attrs.invisible && py.eval(field.attrs.invisible)) {
-                    delete measures[name];
-                    return;
+                    if (name in groupableFields) {
+                        delete groupableFields[name];
+                    }
+                    if (!additionalMeasures.includes(name)) {
+                        delete measures[name];
+                        return;
+                    }
                 }
                 if (field.attrs.interval) {
                     name += ':' + field.attrs.interval;
@@ -114,9 +118,13 @@ odoo.define('web.PivotView', function (require) {
             this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
             this.loadParams.groupableFields = groupableFields;
 
-            this.rendererParams.widgets = widgets;
-            this.rendererParams.disableLinking = this.arch.attrs.disable_linking;
+            const disableLinking = !!(this.arch.attrs.disable_linking &&
+                                        JSON.stringify(this.arch.attrs.disable_linking));
 
+            this.rendererParams.widgets = widgets;
+            this.rendererParams.disableLinking = disableLinking;
+
+            this.controllerParams.disableLinking = disableLinking;
             this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
             this.controllerParams.measures = measures;
 

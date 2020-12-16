@@ -10,9 +10,10 @@ var AjaxService = AbstractService.extend({
     /**
      * @param {Object} libs - @see ajax.loadLibs
      * @param {Object} [context] - @see ajax.loadLibs
+     * @param {Object} [tplRoute] - @see ajax.loadLibs
      */
-    loadLibs: function (libs, context) {
-        return ajax.loadLibs(libs, context);
+    loadLibs: function (libs, context, tplRoute) {
+        return ajax.loadLibs(libs, context, tplRoute);
     },
     rpc: function (route, args, options, target) {
         var rpcPromise;

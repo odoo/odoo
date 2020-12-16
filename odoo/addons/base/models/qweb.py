@@ -18,6 +18,7 @@ import werkzeug
 from werkzeug.utils import escape as _escape
 
 from odoo.tools import pycompat, freehash
+from odoo.tools.safe_eval import check_values
 
 import builtins
 builtin_defaults = {name: getattr(builtins, name) for name in dir(builtins)}
@@ -234,13 +235,15 @@ class frozendict(dict):
 
 
 class QWeb(object):
+    _empty_line = re.compile(r'\n\s*\n')
+    __slots__ = ()
 
     _void_elements = frozenset([
         'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'keygen',
         'link', 'menuitem', 'meta', 'param', 'source', 'track', 'wbr'])
     _name_gen = count()
 
-    def render(self, template, values=None, **options):
+    def _render(self, template, values=None, **options):
         """ render(template, values, **options)
 
         Render the template specified by the given name.
@@ -252,9 +255,13 @@ class QWeb(object):
             * ``profile`` (float) profile the rendering (use astor lib) (filter
               profile line with time ms >= profile)
         """
+        values = values or {}
         body = []
-        self.compile(template, options)(self, body.append, values or {})
-        return u''.join(body).encode('utf8')
+        self.compile(template, options)(self, body.append, values)
+        joined = u''.join(body)
+        if not values.get('__keep_empty_lines'):
+            joined = QWeb._empty_line.sub('\n', joined.strip())
+        return joined.encode('utf8')
 
     def compile(self, template, options):
         """ Compile the given template into a rendering function::
@@ -324,6 +331,7 @@ class QWeb(object):
             log = {'last_path_node': None}
             new = self.default_values()
             new.update(values)
+            check_values(new)
             try:
                 return compiled(self, append, new, options, log)
             except (QWebException, TransactionRollbackError) as e:
@@ -351,7 +359,7 @@ class QWeb(object):
             return (document, template)
         else:
             try:
-                document = options.get('load', self.load)(template, options)
+                document = options.get('load', self._load)(template, options)
             except QWebException as e:
                 raise e
             except Exception as e:
@@ -375,7 +383,7 @@ class QWeb(object):
                 return (node, document)
         return (element, document)
 
-    def load(self, template, options):
+    def _load(self, template, options):
         """ Load a given template. """
         return template
 
@@ -596,12 +604,12 @@ class QWeb(object):
                         ast.Compare(
                             left=ast.Name(id='content', ctx=ast.Load()),
                             ops=[ast.IsNot()],
-                            comparators=[ast.Name(id='None', ctx=ast.Load())]
+                            comparators=[ast.Constant(None)]
                         ),
                         ast.Compare(
                             left=ast.Name(id='content', ctx=ast.Load()),
                             ops=[ast.IsNot()],
-                            comparators=[ast.Name(id='False', ctx=ast.Load())]
+                            comparators=[ast.Constant(False)]
                         )
                     ]
                 ),
@@ -1237,7 +1245,7 @@ class QWeb(object):
                         keywords=[], starargs=None, kwargs=None
                     ),
                     self._compile_expr0(expression),
-                    ast.Name(id='None', ctx=ast.Load()),
+                    ast.Constant(None),
                 ], ctx=ast.Load())
             )
         ]
@@ -1554,7 +1562,7 @@ class QWeb(object):
                     if isinstance(key, str):
                         keys.append(ast.Str(s=key))
                     elif key is None:
-                        keys.append(ast.Name(id='None', ctx=ast.Load()))
+                        keys.append(ast.Constant(None))
                     values.append(ast.Str(s=value))
 
                 # {'nsmap': {None: 'xmlns def'}}

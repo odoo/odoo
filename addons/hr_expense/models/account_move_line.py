@@ -2,7 +2,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import float_compare
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def action_invoice_paid(self):
+        # OVERRIDE to mark as paid the expense sheets.
+        res = super().action_invoice_paid()
+
+        if self:
+            expense_sheets = self.env['hr.expense.sheet'].search([
+                ('account_move_id', 'in', self.ids),
+                ('state', '!=', 'done'),
+            ])
+            expense_sheets.set_to_paid()
+
+        return res
 
 
 class AccountMoveLine(models.Model):
@@ -15,13 +31,3 @@ class AccountMoveLine(models.Model):
         if self.expense_id:
             attachment_domains.append([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expense_id.id)])
         return attachment_domains
-
-    def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
-        res = super(AccountMoveLine, self).reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_journal_id=writeoff_journal_id)
-        account_move_ids = [l.move_id.id for l in self if float_compare(l.move_id._get_cash_basis_matched_percentage(), 1, precision_digits=5) == 0]
-        if account_move_ids:
-            expense_sheets = self.env['hr.expense.sheet'].search([
-                ('account_move_id', 'in', account_move_ids), ('state', '!=', 'done')
-            ])
-            expense_sheets.set_to_paid()
-        return res

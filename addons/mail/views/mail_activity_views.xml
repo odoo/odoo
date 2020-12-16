@@ -15,7 +15,7 @@
                         <group name="activity_details">
                             <field name="active" invisible="1"/>
                             <field name="category"/>
-                            <field name="default_user_id" widget="selection" domain="[('share', '=', False)]"/>
+                            <field name="default_user_id" options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]"/>
                             <field name="res_model_id" groups="base.group_no_one"/>
                             <field name="res_model_change" invisible="1"/>
                             <field name="initial_res_model_id" invisible="1"/>
@@ -38,6 +38,7 @@
                                     <field name="delay_count"/>
                                     <field name="delay_unit"/>
                                 </div>
+                                <span class="oe_read_only">&amp;nbsp;</span>
                                 <field name="delay_from"/>
                             </div>
                         </group>
@@ -66,12 +67,11 @@
         <field name="name">mail.activity.type.view.tree</field>
         <field name="model">mail.activity.type</field>
         <field name="arch" type="xml">
-            <tree string="Activities">
+            <tree string="Activities" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="summary"/>
-                <field name="delay_count" string="Planned in"/>
-                <field name="delay_unit" string="Unit"/>
+                <field name="delay_label" string="Planned in" class="text-right"/>
                 <field name="delay_from" string="Type"/>
                 <field name="res_model_id" groups="base.group_no_one"/>
                 <field name="icon" groups="base.group_no_one"/>

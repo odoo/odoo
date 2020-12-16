@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Activity" owl="1">
+        <div class="o_Activity" t-on-click="_onClick">
+            <t t-if="activity">
+                <div class="o_Activity_sidebar">
+                    <div class="o_Activity_user">
+                        <t t-if="activity.assignee">
+                            <img class="o_Activity_userAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-alt="activity.assignee.nameOrDisplayName"/>
+                        </t>
+                        <div class="o_Activity_iconContainer"
+                            t-att-class="{
+                                'bg-success-full': activity.state === 'planned',
+                                'bg-warning-full': activity.state === 'today',
+                                'bg-danger-full': activity.state === 'overdue',
+                            }"
+                        >
+                            <i class="o_Activity_icon fa" t-attf-class="{{ activity.icon }}"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="o_Activity_core">
+                    <div class="o_Activity_info">
+                        <div class="o_Activity_dueDateText"
+                            t-att-class="{
+                                'o-default': activity.state === 'default',
+                                'o-overdue': activity.state === 'overdue',
+                                'o-planned': activity.state === 'planned',
+                                'o-today': activity.state === 'today',
+                            }"
+                        >
+                            <t t-esc="delayLabel"/>
+                        </div>
+                        <t t-if="activity.summary">
+                            <div class="o_Activity_summary">
+                                <t t-esc="summary"/>
+                            </div>
+                        </t>
+                        <t t-elif="activity.type">
+                            <div class="o_Activity_summary o_Activity_type">
+                                <t t-esc="activity.type.displayName"/>
+                            </div>
+                        </t>
+                        <t t-if="activity.assignee">
+                            <div class="o_Activity_userName">
+                                <t t-esc="assignedUserText"/>
+                            </div>
+                        </t>
+                        <a class="o_Activity_detailsButton btn btn-link" t-on-click="_onClickDetailsButton" role="button">
+                            <i class="fa fa-info-circle" role="img" title="Info"/>
+                        </a>
+                    </div>
+
+                    <t t-if="state.areDetailsVisible">
+                        <div class="o_Activity_details">
+                            <dl class="dl-horizontal">
+                                <t t-if="activity.type">
+                                    <dt>Activity type</dt>
+                                    <dd class="o_Activity_type">
+                                        <t t-esc="activity.type.displayName"/>
+                                    </dd>
+                                </t>
+                                <t t-if="activity.creator">
+                                    <dt>Created</dt>
+                                    <dd class="o_Activity_detailsCreation">
+                                        <t t-esc="formattedCreateDatetime"/>
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activity.creator.id }}/image_128" t-att-title="activity.creator.nameOrDisplayName" t-att-alt="activity.creator.nameOrDisplayName"/>
+                                        <span class="o_Activity_detailsCreator">
+                                            <t t-esc="activity.creator.nameOrDisplayName"/>
+                                        </span>
+                                    </dd>
+                                </t>
+                                <t t-if="activity.assignee">
+                                    <dt>Assigned to</dt>
+                                    <dd class="o_Activity_detailsAssignation">
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-title="activity.assignee.nameOrDisplayName" t-att-alt="activity.assignee.nameOrDisplayName"/>
+                                        <t t-esc="activity.assignee.nameOrDisplayName"/>
+                                    </dd>
+                                </t>
+                                <dt>Due on</dt>
+                                <dd class="o_Activity_detailsDueDate">
+                                    <span class="o_Activity_deadlineDateText"
+                                        t-att-class="{
+                                            'o-default': activity.state === 'default',
+                                            'o-overdue': activity.state === 'overdue',
+                                            'o-planned': activity.state === 'planned',
+                                            'o-today': activity.state === 'today',
+                                        }"
+                                    >
+                                        <t t-esc="formattedDeadlineDate"/>
+                                    </span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </t>
+
+                    <t t-if="activity.note">
+                        <div class="o_Activity_note">
+                            <t t-raw="activity.note"/>
+                        </div>
+                    </t>
+
+                    <t t-if="activity.mailTemplates.length > 0">
+                        <div class="o_Activity_mailTemplates">
+                            <t t-foreach="activity.mailTemplates" t-as="mailTemplate" t-key="mailTemplate.localId">
+                                <MailTemplate
+                                    class="o_Activity_mailTemplate"
+                                    activityLocalId="activity.localId"
+                                    mailTemplateLocalId="mailTemplate.localId"
+                                />
+                            </t>
+                        </div>
+                    </t>
+
+                    <t t-if="activity.canWrite">
+                        <div name="tools" class="o_Activity_tools">
+                            <t t-if="activity.category !== 'upload_file'">
+                                <Popover position="'right'" title="MARK_DONE">
+                                    <button class="o_Activity_toolButton o_Activity_markDoneButton btn btn-link" t-att-title="MARK_DONE">
+                                        <i class="fa fa-check"/> Mark Done
+                                    </button>
+                                    <t t-set="opened">
+                                        <ActivityMarkDonePopover activityLocalId="props.activityLocalId"/>
+                                    </t>
+                                </Popover>
+                            </t>
+                            <t t-else="">
+                                <button class="o_Activity_toolButton o_Activity_uploadButton btn btn-link" t-on-click="_onClickUploadDocument">
+                                    <i class="fa fa-upload"/> Upload Document
+                                </button>
+                                <FileUploader
+                                    attachmentLocalIds="activity.attachments.map(attachment => attachment.localId)"
+                                    uploadId="activity.thread.id"
+                                    uploadModel="activity.thread.model"
+                                    t-on-o-attachment-created="_onAttachmentCreated"
+                                    t-ref="fileUploader"
+                                />
+                            </t>
+                            <button class="o_Activity_toolButton o_Activity_editButton btn btn-link" t-on-click="_onClickEdit">
+                                <i class="fa fa-pencil"/> Edit
+                            </button>
+                            <button class="o_Activity_toolButton o_Activity_cancelButton btn btn-link" t-on-click="_onClickCancel" >
+                                <i class="fa fa-times"/> Cancel
+                            </button>
+                        </div>
+                    </t>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>

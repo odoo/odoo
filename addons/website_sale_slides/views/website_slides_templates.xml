@@ -32,6 +32,20 @@
     </xpath>
 </template>
 
+<!-- Tweak "preview" badge: display Free Preview if payment-based course -->
+<template id="course_slides_list_slide"
+    name="Slide template for a training channel (Sale)"
+    inherit_id="website_slides.course_slides_list_slide">
+    <xpath expr="//a[@t-if='channel.can_upload']/span/span" position="replace">
+        <span t-if="channel.enroll == 'payment'">Free Preview</span>
+        <span t-else="">Preview</span>
+    </xpath>
+    <xpath expr="//t[@t-elif='slide.is_preview and not channel.is_member']/span/span" position="replace">
+        <span t-if="channel.enroll == 'payment'">Free Preview</span>
+        <span t-else="">Preview</span>
+    </xpath>
+</template>
+
 <!-- FULLSCREEN -->
 <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
     <xpath expr="//div[hasclass('o_wslides_fs_main')]" position="attributes">
@@ -142,7 +156,7 @@
 <template name="Allow Buy Now" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False" customize_show="True">
     <xpath expr="//div[hasclass('buy_now_button')]" position="inside">
         <div style="margin-top:5px;">
-            <a role="button" class="btn btn-outline-primary btn-block" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
+            <a role="button" class="btn btn-outline-primary btn-block post_link" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
                 <i class="fa fa-bolt"></i> Buy Now
             </a>
         </div>

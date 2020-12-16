@@ -18,22 +18,28 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
                         </div>
-                        <group>
-                            <group name="recruitment">
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="department_id"/>
-                            </group>
-                            <group>
-                                <field name="no_of_recruitment"/>
-                            </group>
-                        </group>
-                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
-                            <label for="description"/>
-                            <field name="description"/>
-                        </div>
+                        <notebook> 
+                            <page string="Job Description">
+                                <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
+                                    <label for="description"/>
+                                    <field name="description"/>
+                                </div>
+                            </page>
+                            <page string="Recruitment">
+                                <group>
+                                    <group name="recruitment">
+                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                        <field name="department_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="no_of_recruitment"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
                     </div>
                 </form>
             </field>
@@ -43,7 +49,7 @@
             <field name="name">hr.job.tree</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <tree string="Job" decoration-bf="message_needaction==True">
+                <tree string="Job" sample="1">
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="no_of_employee"/>
@@ -61,7 +67,7 @@
             <field name="name">hr.job.kanban</field>
             <field name="model">hr.job</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">

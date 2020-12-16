@@ -12,12 +12,16 @@ var createActionManager = testUtils.createActionManager;
 QUnit.module('base_settings_tests', {
     beforeEach: function () {
         this.data = {
-            project: {
+            'res.config.settings': {
                 fields: {
                     foo: {string: "Foo", type: "boolean"},
                     bar: {string: "Bar", type: "boolean"},
+                    tasks: {string: "one2many field", type: "one2many", relation: 'task'},
                 },
             },
+            'task': {
+                fields: {}
+            }
         };
     }
 }, function () {
@@ -29,7 +33,7 @@ QUnit.module('base_settings_tests', {
 
         var form = await createView({
             View: BaseSettingsView,
-            model: 'project',
+            model: 'res.config.settings',
             data: this.data,
             arch: '<form string="Settings" class="oe_form_configuration o_base_settings">' +
                     '<div class="o_panel">' +
@@ -77,7 +81,7 @@ QUnit.module('base_settings_tests', {
         });
 
         assert.hasAttrValue(form.$('.selected'), 'data-key',"crm","crm setting selected");
-        assert.isVisible(form.$(".settings .app_settings_block"), "project settings show");
+        assert.isVisible(form.$(".settings .app_settings_block"), "res.config.settings settings show");
         await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'b', 'keyup');
         assert.strictEqual(form.$('.highlighter').html(), "B", "b word highlighted");
         await testUtils.fields.editAndTrigger(form.$('.searchInput'), 'bx', 'keyup');
@@ -93,24 +97,25 @@ QUnit.module('base_settings_tests', {
         var actions = [{
             id: 1,
             name: 'Settings view',
-            res_model: 'project',
+            res_model: 'res.config.settings',
             type: 'ir.actions.act_window',
             views: [[1, 'form']],
         }, {
             id: 4,
             name: 'Other action',
-            res_model: 'project',
+            res_model: 'task',
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
         }];
         var archs = {
-            'project,1,form': '<form string="Settings" js_class="base_settings">' +
+            'res.config.settings,1,form': '<form string="Settings" js_class="base_settings">' +
                     '<div class="app_settings_block" string="CRM" data-key="crm">' +
                         '<button name="4" string="Execute action" type="action"/>' +
                     '</div>' +
                 '</form>',
-            'project,2,list': '<tree><field name="foo"/></tree>',
-            'project,false,search': '<search></search>',
+            'task,2,list': '<tree><field name="display_name"/></tree>',
+            'res.config.settings,false,search': '<search></search>',
+            'task,false,search': '<search></search>',
         };
 
         var actionManager = await createActionManager({
@@ -132,12 +137,12 @@ QUnit.module('base_settings_tests', {
         assert.hasClass(actionManager.$('.o_form_view'), 'o_form_editable');
         assert.verifySteps([
             'load_views', // initial setting action
-            'default_get', // this is a setting view => create new record
+            'onchange', // this is a setting view => create new record
             'create', // when we click on action button => save
             'read', // with save, we have a reload... (not necessary actually)
             'load_views', // for other action in breadcrumb,
                     // with a searchread (not shown here since it is a route)
-            'default_get', // when we come back, we want to restart from scratch
+            'onchange', // when we come back, we want to restart from scratch
         ]);
 
         actionManager.destroy();
@@ -149,18 +154,18 @@ QUnit.module('base_settings_tests', {
         var actions = [{
             id: 1,
             name: 'Settings view',
-            res_model: 'project',
+            res_model: 'res.config.settings',
             type: 'ir.actions.act_window',
             views: [[1, 'form']],
         }, {
             id: 4,
             name: 'Other action',
-            res_model: 'project',
+            res_model: 'task',
             type: 'ir.actions.act_window',
             views: [[2, 'list']],
         }];
         var archs = {
-            'project,1,form': '<form string="Settings" js_class="base_settings">' +
+            'res.config.settings,1,form': '<form string="Settings" js_class="base_settings">' +
                     '<header>' +
                         '<button string="Save" type="object" name="execute" class="oe_highlight" />' +
                         '<button string="Cancel" type="object" name="cancel" class="oe_link" />' +
@@ -182,8 +187,9 @@ QUnit.module('base_settings_tests', {
                         '<button name="4" string="Execute action" type="action"/>' +
                     '</div>' +
                 '</form>',
-            'project,2,list': '<tree><field name="foo"/></tree>',
-            'project,false,search': '<search></search>',
+            'task,2,list': '<tree><field name="display_name"/></tree>',
+            'res.config.settings,false,search': '<search></search>',
+            'task,false,search': '<search></search>',
         };
 
         var actionManager = await createActionManager({
@@ -245,7 +251,7 @@ QUnit.module('base_settings_tests', {
 
         var form = await createView({
             View: BaseSettingsView,
-            model: 'project',
+            model: 'res.config.settings',
             data: this.data,
             arch: '<form string="Settings" class="oe_form_configuration o_base_settings">' +
                     '<div class="o_panel">' +
@@ -283,7 +289,7 @@ QUnit.module('base_settings_tests', {
 
         var form = await createView({
             View: BaseSettingsView,
-            model: 'project',
+            model: 'res.config.settings',
             data: this.data,
             arch: '<form string="Settings" class="oe_form_configuration o_base_settings">' +
                     '<header>' +
@@ -321,7 +327,7 @@ QUnit.module('base_settings_tests', {
 
         var form = await createView({
             View: BaseSettingsView,
-            model: 'project',
+            model: 'res.config.settings',
             data: this.data,
             mockRPC: function (route, args) {
                 if (args.method === "create" && !self.alreadySavedOnce) {
@@ -355,6 +361,118 @@ QUnit.module('base_settings_tests', {
         assert.containsOnce(form, ".o_dirty_warning", "warning message should be shown");
         await testUtils.form.clickSave(form);
         assert.containsNone(form, ".o_dirty_warning", "warning message should be shown");
+
+        form.destroy();
+    });
+
+    QUnit.test('execute action from settings view with several actions in the breadcrumb', async function (assert) {
+        // This commit fixes a race condition, that's why we artificially slow down a read rpc
+        assert.expect(4);
+
+        const actions = [{
+            id: 1,
+            name: 'First action',
+            res_model: 'task',
+            type: 'ir.actions.act_window',
+            views: [[1, 'list']],
+        }, {
+            id: 2,
+            name: 'Settings view',
+            res_model: 'res.config.settings',
+            type: 'ir.actions.act_window',
+            views: [[2, 'form']],
+        }, {
+            id: 3,
+            name: 'Other action',
+            res_model: 'task',
+            type: 'ir.actions.act_window',
+            views: [[3, 'list']],
+        }];
+        const archs = {
+            'task,1,list': '<tree><field name="display_name"/></tree>',
+            'res.config.settings,2,form': `
+                <form string="Settings" js_class="base_settings">
+                    <div class="app_settings_block" string="CRM" data-key="crm">
+                        <button name="3" string="Execute action" type="action"/>
+                    </div>
+                </form>`,
+            'task,3,list': '<tree><field name="display_name"/></tree>',
+            'res.config.settings,false,search': '<search></search>',
+            'task,false,search': '<search></search>',
+        };
+
+        let loadViewsDef;
+        const actionManager = await createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            async mockRPC(route, args) {
+                const _super = this._super.bind(this);
+                if (args.method === 'read') {
+                    await Promise.resolve(loadViewsDef); // slow down reload of settings view
+                }
+                return _super(route, args);
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First action');
+
+        await actionManager.doAction(2);
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First actionNew');
+
+        loadViewsDef = testUtils.makeTestPromise();
+        await testUtils.dom.click(actionManager.$('button[name="3"]'));
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First actionNew');
+
+        loadViewsDef.resolve();
+        await testUtils.nextTick();
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First actionNewOther action');
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('settings can contain one2many fields', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: BaseSettingsView,
+            model: 'res.config.settings',
+            data: this.data,
+            arch: `
+                   <form string="Settings" class="oe_form_configuration o_base_settings">
+                       <header>
+                           <button string="Save" type="object" name="execute" class="oe_highlight" />
+                           <button string="Discard" type="object" name="cancel" special="cancel" />
+                       </header>
+                       <div class="o_setting_container">
+                           <div class="settings_tab"/>
+                           <div class="settings">
+                               <div class="notFound o_hidden">No Record Found</div>
+                               <div class="app_settings_block" string="Base Setting" data-key="base-setting">
+                                   <field name="tasks">
+                                       <tree><field name="display_name"/></tree>
+                                       <form><field name="display_name"/></form>
+                                   </field>
+                               </div>
+                           </div>
+                       </div>
+                   </form>`,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.fields.editInput($('.modal-body input[name=display_name]'), 'Added Task');
+        await testUtils.dom.click($('.modal-dialog footer button:first-child'));
+
+        assert.strictEqual(form.$('table.o_list_table:eq(0) tr.o_data_row td.o_data_cell:eq(0)').text(),
+            'Added Task',
+            'The one2many relation item should have been added');
+
+        await testUtils.form.clickSave(form);
+
+        assert.strictEqual(form.$('table.o_list_table:eq(0) tr.o_data_row td.o_data_cell:eq(0)').text(),
+            'Added Task',
+            'The one2many relation item should still be present');
 
         form.destroy();
     });

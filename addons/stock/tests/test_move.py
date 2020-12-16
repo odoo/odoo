@@ -3,10 +3,10 @@
 
 from odoo.exceptions import UserError
 from odoo.tests import Form
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class StockMove(SavepointCase):
+class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockMove, cls).setUpClass()
@@ -3841,7 +3841,7 @@ class StockMove(SavepointCase):
         })
         move1._action_confirm()
 
-        self.assertEqual(move1.state, 'confirmed')
+        self.assertEqual(move1.state, 'assigned')
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
             'product_uom_id': self.product.uom_id.id,
@@ -4270,8 +4270,9 @@ class StockMove(SavepointCase):
         self.assertEqual(move1.state, 'assigned')
 
     def test_change_product_type(self):
-        """ Changing type of an existing product will raise a user error if some move
-        are reserved.
+        """ Changing type of an existing product will raise a user error if
+            - some move are reserved
+            - switching from a stockable product when qty_available is not zero
         """
         self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10)
         move1 = self.env['stock.move'].create({
@@ -4289,6 +4290,11 @@ class StockMove(SavepointCase):
         with self.assertRaises(UserError):
             self.product.type = 'consu'
         move1._action_cancel()
+
+        with self.assertRaises(UserError):
+            self.product.type = 'consu'
+
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, -self.product.qty_available)
         self.product.type = 'consu'
 
         move2 = self.env['stock.move'].create({
@@ -4369,18 +4375,19 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         picking.action_confirm()
         picking.action_assign()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         move1.quantity_done = 1
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(len(picking.move_line_ids), 2)
         unpacked_ml = picking.move_line_ids.filtered(lambda ml: not ml.result_package_id)
         self.assertEqual(unpacked_ml.product_qty, 1)
         unpacked_ml.qty_done = 1
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(len(picking.move_line_ids), 2)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         picking.button_validate()
@@ -4425,7 +4432,7 @@ class StockMove(SavepointCase):
         picking.action_assign()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, self.stock_location), 0)
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(len(picking.move_line_ids), 2)
         self.assertEqual(picking.move_line_ids[0].qty_done, 1, "Stock move line should have 1 quantity as a done quantity.")
         self.assertEqual(picking.move_line_ids[1].qty_done, 2, "Stock move line should have 2 quantity as a done quantity.")
@@ -4458,6 +4465,7 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         move2 = self.env['stock.move'].create({
             'name': 'test_transit_2',
@@ -4467,15 +4475,16 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         picking.action_confirm()
         picking.action_assign()
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.product, self.stock_location), 0)
         self.assertEqual(self.env['stock.quant']._get_available_quantity(product1, self.stock_location), 0)
         move1.quantity_done = 1
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         move2.quantity_done = 2
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         self.assertEqual(len(picking.move_line_ids), 2)
         line1_result_package = picking.move_line_ids[0].result_package_id
         line2_result_package = picking.move_line_ids[1].result_package_id

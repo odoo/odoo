@@ -10,8 +10,9 @@ odoo.define("website_blog.tour", function (require) {
         url: "/",
     }, [{
         trigger: '#new-content-menu > a',
-        auto: true,
+        content: _t("Click here to add new content to your website."),
         position: 'bottom',
+
     }, {
         trigger: "a[data-action=new_blog_post]",
         content: _t("Select this menu item to create a new blog post."),
@@ -27,13 +28,17 @@ odoo.define("website_blog.tour", function (require) {
         position: "top",
         run: "text",
     }, {
-        trigger: "we-button.o_we_edit_image",
+        trigger: ".snippet-option-CoverProperties we-button[data-background]:nth(0)",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
         position: "right",
     }, {
-        trigger: ".o_select_media_dialog .o_existing_attachment_cell:nth(1) img",
-        extra_trigger: '.modal:has(.o_existing_attachment_cell:nth(1))',
+        trigger: ".o_select_media_dialog .o_we_search",
+        content: _t("Search for an image. (eg: type \"business\")"),
+        position: "top",
+    }, {
+        trigger: ".o_select_media_dialog .o_existing_attachment_cell:first img",
+        extra_trigger: '.modal:has(.o_existing_attachment_cell:first)',
         content: _t("Choose an image from the library."),
         position: "top",
     }, {
@@ -45,7 +50,7 @@ odoo.define("website_blog.tour", function (require) {
             actions.text("Blog content", this.$anchor.find("p"));
         },
     }, {
-        trigger: "button[data-action=save]",
+        trigger: "button[name=save]",
         extra_trigger: "#o_wblog_post_content .o_wblog_post_content_field p:first:not(:containsExact(" + _t("Start writing here...") + "))",
         content: _t("<b>Click on Save</b> to record your changes."),
         position: "bottom",

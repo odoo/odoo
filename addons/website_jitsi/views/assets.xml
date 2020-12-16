@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Event Chat Room Assets Frontend">
+        <xpath expr="//link[last()]" position="after">
+            <link href="/website_jitsi/static/src/css/chat_room.css" rel="stylesheet" type="text/css"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script src="/website_jitsi/static/src/js/chat_room.js" type="text/javascript"/>
+        </xpath>
+    </template>
+</odoo>

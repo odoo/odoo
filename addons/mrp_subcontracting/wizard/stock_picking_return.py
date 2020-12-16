@@ -19,7 +19,7 @@ class ReturnPicking(models.TransientModel):
     @api.onchange('picking_id')
     def _onchange_picking_id(self):
         res = super(ReturnPicking, self)._onchange_picking_id()
-        if any(self.product_return_moves.filtered(lambda r: r.quantity > 0).move_id.mapped('is_subcontract')):
+        if any(return_line.quantity > 0 and return_line.move_id.is_subcontract for return_line in self.product_return_moves):
             self.location_id = self.picking_id.partner_id.with_company(self.picking_id.company_id).property_stock_subcontractor
         return res
 

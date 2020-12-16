@@ -45,7 +45,7 @@
                     <page string="Products" name="products">
                         <field name="lines" colspan="4" nolabel="1">
                             <tree string="Order lines" editable="bottom">
-                                <field name="product_id"/>
+                                <field name="full_product_name"/>
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
@@ -55,10 +55,11 @@
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                                <field name="currency_id" invisible="1"/>
                             </tree>
                             <form string="Order lines">
                                 <group col="4">
-                                    <field name="product_id"/>
+                                    <field name="full_product_name"/>
                                     <field name="qty"/>
                                     <field name="discount" widget="monetary"/>
                                     <field name="price_unit" widget="monetary"/>
@@ -68,6 +69,7 @@
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                     <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                     <field name="notice"/>
+                                    <field name="currency_id" invisible="1"/>
                                 </group>
                             </form>
                         </field>
@@ -90,6 +92,7 @@
                                 class="oe_subtotal_footer_separator"
                                 widget="monetary"
                                 attrs="{'invisible': [('amount_paid','=', 'amount_total')]}"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                         <div class="oe_clear"/>
                     </page>
@@ -132,26 +135,30 @@
         <field name="name">pos.order.kanban</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="name"/>
-                <field name="user_id"/>
+                <field name="partner_id"/>
                 <field name="amount_total"/>
                 <field name="date_order"/>
                 <field name="state"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
+                <field name="currency_id"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                             <div class="o_kanban_record_top">
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title">
-                                        <span>
-                                            <t t-esc="record.user_id"/>
+                                        <span t-if="record.partner_id.value">
+                                            <t t-esc="record.partner_id.value"/>
+                                        </span>
+                                        <span t-else="">
+                                            <t t-esc="record.name.value"/>
                                         </span>
                                     </strong>
                                 </div>
-                                <strong><span class="badge badge-pill"><i class="fa fa-money" role="img" aria-label="Amount" title="Amount"/> <field name="amount_total"/></span></strong>
+                                <strong><field name="amount_total" widget="monetary"/></strong>
                             </div>
                             <div class="row">
                                 <div class="col-12">
@@ -179,7 +186,7 @@
         <field name="name">pos.order.pivot</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <pivot string="PoS Orders">
+            <pivot string="PoS Orders" sample="1">
                 <field name="date_order" type="row"/>
                 <field name="amount_total" type="measure"/>
             </pivot>
@@ -208,22 +215,29 @@
         <field name="res_model">pos.order</field>
         <field name="view_mode">graph,tree,form,kanban,pivot</field>
         <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Create a new POS order
+            </p>
+        </field>
     </record>
 
     <record id="view_pos_order_tree" model="ir.ui.view">
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" decoration-info="state == 'draft'" decoration-muted="state in ('done','cancel')" create="0">
+            <tree string="POS Orders" create="0" sample="1">
                 <field name="currency_id" invisible="1"/>
-                <field name="state" invisible="1"/>
-                <field name="name"/>
+                <field name="name" decoration-bf="1"/>
                 <field name="session_id" />
                 <field name="date_order"/>
                 <field name="pos_reference"/>
                 <field name="partner_id"/>
-                <field string="Cashier" name="user_id"/>
-                <field name="amount_total" sum="Amount total" widget="monetary"/>
+                <field string="Cashier" name="user_id" widget="many2one_avatar_user"/>
+                <field name="amount_total" sum="Amount total" widget="monetary" decoration-bf="1"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state not in ('draft','cancel')"/>
             </tree>
         </field>
     </record>
@@ -263,6 +277,7 @@
                 <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="create_date" readonly="1"/>
+                <field name="currency_id" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -278,6 +293,7 @@
                     <field name="discount" widget="monetary"/>
                     <field name="price_unit" widget="monetary"/>
                     <field name="create_date" />
+                    <field name="currency_id"/>
                 </group>
             </form>
         </field>
@@ -318,6 +334,7 @@
                 <field name="product_id" />
                 <field name="qty" />
                 <field name="price_unit" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -361,7 +378,7 @@
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_title')]" position="before">
                 <div class="o_notification_alert alert alert-warning" role="alert">
-                  The Point of Sale only support the "add a rounding line" rounding strategy.
+                  The Point of Sale only supports the "add a rounding line" rounding strategy.
                 </div>
             </xpath>
         </field>

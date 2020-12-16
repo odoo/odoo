@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-extend="WebClient.DebugManager.Backend">
+    <t t-jquery="a[data-action='perform_click_everywhere_test']" t-operation="after">
+        <a role="menuitem" href="#" data-action="perform_pos_js_tests" class="dropdown-item">Run Point of Sale JS Tests</a>
+    </t>
+</t>
+
+</templates>

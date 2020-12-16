@@ -72,7 +72,7 @@ class Survey(models.Model):
         ('all', 'All questions'),
         ('random', 'Randomized per section')],
         string="Selection", required=True, default='all',
-        help="If randomized is selected, add the number of random questions next to the section.")
+        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.")
     progression_mode = fields.Selection([
         ('percent', 'Percentage'),
         ('number', 'Number')], string='Progression Mode', default='percent',
@@ -106,9 +106,10 @@ class Survey(models.Model):
                                          compute="_compute_is_attempts_limited", store=True, readonly=False)
     attempts_limit = fields.Integer('Number of attempts', default=1)
     is_time_limited = fields.Boolean('The survey is limited in time')
-    time_limit = fields.Float("Time limit (minutes)")
+    time_limit = fields.Float("Time limit (minutes)", default=10)
     # certification
-    certification = fields.Boolean('Is a Certification')
+    certification = fields.Boolean('Is a Certification', compute='_compute_certification',
+                                   readonly=False, store=True)
     certification_mail_template_id = fields.Many2one(
         'mail.template', 'Email Template',
         domain="[('model', '=', 'survey.user_input')]",
@@ -126,7 +127,8 @@ class Survey(models.Model):
     #   - If the certification badge is not set, show certification_badge_id and only display create option in the m2o
     #   - If the certification badge is set, show certification_badge_id_dummy in 'no create' mode.
     #       So it can be edited but not removed or replaced.
-    certification_give_badge = fields.Boolean('Give Badge')
+    certification_give_badge = fields.Boolean('Give Badge', compute='_compute_certification_give_badge',
+                                              readonly=False, store=True)
     certification_badge_id = fields.Many2one('gamification.badge', 'Certification Badge')
     certification_badge_id_dummy = fields.Many2one(related='certification_badge_id', string='Certification Badge ')
     # live sessions
@@ -157,6 +159,8 @@ class Survey(models.Model):
         ('session_code_unique', 'unique(session_code)', 'Session code should be unique'),
         ('certification_check', "CHECK( scoring_type!='no_scoring' OR certification=False )",
             'You can only create certifications for surveys that have a scoring mechanism.'),
+        ('scoring_success_min_check', "CHECK( scoring_success_min IS NULL OR (scoring_success_min>=0 AND scoring_success_min<=100) )",
+            'The percentage of success has to be defined between 0 and 100.'),
         ('time_limit_check', "CHECK( (is_time_limited=False) OR (time_limit is not null AND time_limit > 0) )",
             'The time limit needs to be a positive number if the survey is time limited.'),
         ('attempts_limit_check', "CHECK( (is_attempts_limited=False) OR (attempts_limit is not null AND attempts_limit > 0) )",
@@ -207,9 +211,9 @@ class Survey(models.Model):
     @api.depends('question_and_page_ids.is_conditional', 'users_login_required', 'access_mode')
     def _compute_is_attempts_limited(self):
         for survey in self:
-            if any(question.is_conditional for question in survey.question_and_page_ids)\
-                    or (survey.access_mode == 'public' and not survey.users_login_required)\
-                    or survey.is_attempts_limited is None:
+            if not survey.is_attempts_limited or \
+               (survey.access_mode == 'public' and not survey.users_login_required) or \
+               any(question.is_conditional for question in survey.question_and_page_ids):
                 survey.is_attempts_limited = False
 
     @api.depends('session_start_time', 'user_input_ids')
@@ -276,35 +280,23 @@ class Survey(models.Model):
         for survey in self:
             survey.has_conditional_questions = any(question.is_conditional for question in survey.question_and_page_ids)
 
-    @api.onchange('scoring_success_min')
-    def _onchange_scoring_success_min(self):
-        if self.scoring_success_min < 0 or self.scoring_success_min > 100:
-            self.scoring_success_min = 80.0
+    @api.depends('scoring_type')
+    def _compute_certification(self):
+        for survey in self:
+            if not survey.certification or survey.scoring_type == 'no_scoring':
+                survey.certification = False
 
-    @api.onchange('scoring_type')
-    def _onchange_scoring_type(self):
-        if self.scoring_type == 'no_scoring':
-            self.certification = False
-            self.is_time_limited = False
-
-    @api.onchange('attempts_limit')
-    def _onchange_attempts_limit(self):
-        if self.attempts_limit <= 0:
-            self.attempts_limit = 1
-
-    @api.onchange('is_time_limited', 'time_limit')
-    def _onchange_time_limit(self):
-        if self.is_time_limited and (not self.time_limit or self.time_limit <= 0):
-            self.time_limit = 10
+    @api.depends('users_login_required', 'certification')
+    def _compute_certification_give_badge(self):
+        for survey in self:
+            if not survey.certification_give_badge or \
+               not survey.users_login_required or \
+               not survey.certification:
+                survey.certification_give_badge = False
 
     def _read_group_states(self, values, domain, order):
         selection = self.env['survey.survey'].fields_get(allfields=['state'])['state']['selection']
         return [s[0] for s in selection]
-
-    @api.onchange('users_login_required', 'certification')
-    def _onchange_set_certification_give_badge(self):
-        if not self.users_login_required or not self.certification:
-            self.certification_give_badge = False
 
     # ------------------------------------------------------------
     # CRUD
@@ -327,6 +319,12 @@ class Survey(models.Model):
         title = _("%s (copy)") % (self.title)
         default = dict(default or {}, title=title)
         return super(Survey, self).copy_data(default)
+
+    def toggle_active(self):
+        super(Survey, self).toggle_active()
+        activated = self.filtered(lambda survey: survey.active)
+        activated.mapped('certification_badge_id').action_unarchive()
+        (self - activated).mapped('certification_badge_id').action_archive()
 
     # ------------------------------------------------------------
     # ANSWER MANAGEMENT
@@ -511,7 +509,7 @@ class Survey(models.Model):
         if self.questions_layout == 'page_per_section':
             result = self.page_ids
         elif self.questions_layout == 'page_per_question':
-            if self.questions_selection == 'random':
+            if self.questions_selection == 'random' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
                 result = self.question_and_page_ids.filtered(
@@ -530,6 +528,9 @@ class Survey(models.Model):
           (all section questions could be disabled based on previously selected answers)
 
         The whole logic is inverted if "go_back" is passed as True.
+
+        As pages with description are considered as potential question to display, we show the page
+        if it contains at least one active question or a description.
 
         :param user_input: user's answers
         :param page_or_question_id: current page or question id
@@ -557,36 +558,38 @@ class Survey(models.Model):
 
         # Conditional Questions Management
         triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
-        if survey.has_conditional_questions and triggered_questions_by_answer:
-            if survey.questions_layout == 'page_per_question':
-                question_candidates = pages_or_questions[0:current_page_index] if go_back \
-                    else pages_or_questions[current_page_index + 1:]
-                for question in question_candidates.sorted(reverse=go_back):
+        inactive_questions = user_input._get_inactive_conditional_questions()
+        if survey.questions_layout == 'page_per_question':
+            question_candidates = pages_or_questions[0:current_page_index] if go_back \
+                else pages_or_questions[current_page_index + 1:]
+            for question in question_candidates.sorted(reverse=go_back):
+                # pages with description are potential questions to display (are part of question_candidates)
+                if question.is_page:
+                    contains_active_question = any(sub_question not in inactive_questions for sub_question in question.question_ids)
+                    is_description_section = not question.question_ids and not is_html_empty(question.description)
+                    if contains_active_question or is_description_section:
+                        return question
+                else:
                     triggering_answer = triggering_answer_by_question.get(question)
                     if not triggering_answer or triggering_answer in selected_answers:
                         # question is visible because not conditioned or conditioned by a selected answer
-                        # -> return it
                         return question
-            elif survey.questions_layout == 'page_per_section':
-                inactive_questions = user_input._get_inactive_conditional_questions()
-                section_candidates = pages_or_questions[0:current_page_index] if go_back \
-                    else pages_or_questions[current_page_index + 1:]
-                for section in section_candidates.sorted(reverse=go_back):
-                    if any(question not in inactive_questions for question in section.question_ids):
-                        # section contains at least one active question
-                        # -> return it
-                        return section
-                return Question
-        else:
-            return pages_or_questions[current_page_index + (1 if not go_back else -1)]
-
-        return Question
+        elif survey.questions_layout == 'page_per_section':
+            section_candidates = pages_or_questions[0:current_page_index] if go_back \
+                else pages_or_questions[current_page_index + 1:]
+            for section in section_candidates.sorted(reverse=go_back):
+                contains_active_question = any(question not in inactive_questions for question in section.question_ids)
+                is_description_section = not section.question_ids and not is_html_empty(section.description)
+                if contains_active_question or is_description_section:
+                    return section
+            return Question
 
     def _is_last_page_or_question(self, user_input, page_or_question):
         """ This method checks if the given question or page is the last one.
         This includes conditional questions configuration. If the given question is normally not the last one but
         every following questions are inactive due to conditional questions configurations (and user choices),
-        the given question will be the last one.
+        the given question will be the last one, except if the given question is conditioning at least
+        one of the following questions.
         For section, we check in each following section if there is an active question.
         If yes, the given page is not the last one.
         """
@@ -595,11 +598,24 @@ class Survey(models.Model):
         next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
         if next_page_or_question_candidates:
             inactive_questions = user_input._get_inactive_conditional_questions()
+            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
             if self.questions_layout == 'page_per_question':
-                return not any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                next_active_question = any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                is_triggering_question = any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in page_or_question.suggested_answer_ids)
+                return not(next_active_question or is_triggering_question)
             elif self.questions_layout == 'page_per_section':
+                is_triggering_section = False
+                for question in page_or_question.question_ids:
+                    if any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in
+                           question.suggested_answer_ids):
+                        is_triggering_section = True
+                        break
+                next_active_question = False
                 for section in next_page_or_question_candidates:
-                    return not any(next_question not in inactive_questions for next_question in section.question_ids)
+                    next_active_question = any(next_question not in inactive_questions for next_question in section.question_ids)
+                    if next_active_question:
+                        break
+                return not(next_active_question or is_triggering_section)
 
         return True
 
@@ -710,9 +726,10 @@ class Survey(models.Model):
                 if not most_voted_answer or votes_by_answer[most_voted_answer] < votes_by_answer[answer]:
                     most_voted_answer_by_questions[question] = answer
 
-        # return a fake 'audiance' user_input
+        # return a fake 'audience' user_input
         fake_user_input = self.env['survey.user_input'].new({
             'survey_id': self.id,
+            'predefined_question_ids': [(6, 0, self._prepare_user_input_predefined_questions().ids)]
         })
 
         fake_user_input_lines = self.env['survey.user_input.line']
@@ -727,13 +744,58 @@ class Survey(models.Model):
         return fake_user_input
 
     def _prepare_leaderboard_values(self):
-        """" The leaderboard is descending and takes the total of the attendee points up to the current question. """
+        """" The leaderboard is descending and takes the total of the attendee points minus the
+        current question score.
+        We need both the total and the current question points to be able to show the attendees
+        leaderboard and shift their position based on the score they have on the current question.
+        This prepares a structure containing all the necessary data for the animations done on
+        the frontend side.
+        The leaderboard is sorted based on attendees score *before* the current question.
+        The frontend will shift positions around accordingly. """
+
         self.ensure_one()
 
-        return self.env['survey.user_input'].search([
+        leaderboard = self.env['survey.user_input'].search_read([
             ('survey_id', '=', self.id),
             ('create_date', '>=', self.session_start_time)
-        ], limit=25, order="scoring_total desc")
+        ], [
+            'id',
+            'nickname',
+            'scoring_total',
+        ], limit=15, order="scoring_total desc")
+
+        if leaderboard and self.session_state == 'in_progress' and \
+           any(answer.answer_score for answer in self.session_question_id.suggested_answer_ids):
+            question_scores = {}
+            input_lines = self.env['survey.user_input.line'].search_read(
+                    [('user_input_id', 'in', [score['id'] for score in leaderboard]),
+                        ('question_id', '=', self.session_question_id.id)],
+                    ['user_input_id', 'answer_score'])
+            for input_line in input_lines:
+                question_scores[input_line['user_input_id'][0]] = \
+                    question_scores.get(input_line['user_input_id'][0], 0) + input_line['answer_score']
+
+            score_position = 0
+            for leaderboard_item in leaderboard:
+                question_score = question_scores.get(leaderboard_item['id'], 0)
+                leaderboard_item.update({
+                    'updated_score': leaderboard_item['scoring_total'],
+                    'scoring_total': leaderboard_item['scoring_total'] - question_score,
+                    'leaderboard_position': score_position,
+                    'max_question_score': sum(
+                        score for score in self.session_question_id.suggested_answer_ids.mapped('answer_score')
+                        if score > 0
+                    ) or 1,
+                    'question_score': question_score
+                })
+                score_position += 1
+            leaderboard = sorted(
+                leaderboard,
+                key=lambda score: score['scoring_total'],
+                reverse=True)
+
+        return leaderboard
+
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -817,8 +879,7 @@ class Survey(models.Model):
         }
 
     def action_survey_user_input_completed(self):
-        action_rec = self.env.ref('survey.action_survey_user_input')
-        action = action_rec.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_completed': 1,
@@ -827,8 +888,7 @@ class Survey(models.Model):
         return action
 
     def action_survey_user_input_certified(self):
-        action_rec = self.env.ref('survey.action_survey_user_input')
-        action = action_rec.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_scoring_success': 1,
@@ -837,8 +897,7 @@ class Survey(models.Model):
         return action
 
     def action_survey_user_input(self):
-        action_rec = self.env.ref('survey.action_survey_user_input')
-        action = action_rec.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('survey.action_survey_user_input')
         ctx = dict(self.env.context)
         ctx.update({'search_default_survey_id': self.ids[0],
                     'search_default_not_test': 1})
@@ -892,14 +951,14 @@ class Survey(models.Model):
         self.env['bus.bus'].sendone(self.access_token, {'type': 'end_session'})
 
     def get_start_url(self):
-        return 'survey/start/%s' % self.access_token
+        return '/survey/start/%s' % self.access_token
 
     def get_start_short_url(self):
         """ See controller method docstring for more details. """
         return '/s/%s' % self.access_token[:6]
 
     def get_print_url(self):
-        return 'survey/print/%s' % self.access_token
+        return '/survey/print/%s' % self.access_token
 
     # ------------------------------------------------------------
     # GRAPH / RESULTS
@@ -946,6 +1005,7 @@ class Survey(models.Model):
     # ------------------------------------------------------------
     # GAMIFICATION / BADGES
     # ------------------------------------------------------------
+
     def _prepare_challenge_category(self):
         return 'certification'
 
@@ -953,7 +1013,7 @@ class Survey(models.Model):
         self.ensure_one()
         goal = self.env['gamification.goal.definition'].create({
             'name': self.title,
-            'description': "%s certification passed" % self.title,
+            'description': _("%s certification passed", self.title),
             'domain': "['&', ('survey_id', '=', %s), ('scoring_success', '=', True)]" % self.id,
             'computation_mode': 'count',
             'display_mode': 'boolean',
@@ -964,7 +1024,7 @@ class Survey(models.Model):
             'batch_user_expression': 'user.partner_id.id'
         })
         challenge = self.env['gamification.challenge'].create({
-            'name': _('%s challenge certification' % self.title),
+            'name': _('%s challenge certification', self.title),
             'reward_id': self.certification_badge_id.id,
             'state': 'inprogress',
             'period': 'once',
@@ -983,9 +1043,8 @@ class Survey(models.Model):
     def _handle_certification_badges(self, vals):
         if vals.get('certification_give_badge'):
             # If badge already set on records, reactivate the ones that are not active.
-            surveys_with_badge = self.filtered(lambda survey: survey.certification_badge_id
-                                                                 and not survey.certification_badge_id.active)
-            surveys_with_badge.mapped('certification_badge_id').write({'active': True})
+            surveys_with_badge = self.filtered(lambda survey: survey.certification_badge_id and not survey.certification_badge_id.active)
+            surveys_with_badge.mapped('certification_badge_id').action_unarchive()
             # (re-)create challenge and goal
             for survey in self:
                 survey._create_certification_badge_trigger()
@@ -994,7 +1053,7 @@ class Survey(models.Model):
             badges = self.mapped('certification_badge_id')
             challenges_to_delete = self.env['gamification.challenge'].search([('reward_id', 'in', badges.ids)])
             goals_to_delete = challenges_to_delete.mapped('line_ids').mapped('definition_id')
-            badges.write({'active': False})
+            badges.action_archive()
             # delete all challenges and goals because not needed anymore (challenge lines are deleted in cascade)
             challenges_to_delete.unlink()
             goals_to_delete.unlink()

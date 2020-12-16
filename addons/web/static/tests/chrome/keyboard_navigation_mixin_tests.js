@@ -15,13 +15,18 @@ QUnit.module('KeyboardNavigationMixin', function () {
                 KeyboardNavigationMixin.init.call(this);
             },
             start: function () {
+                KeyboardNavigationMixin.start.call(this);
                 var $button = $('<button>').text('Click Me!').attr('accesskey', 'o');
                 // we need to define the accesskey because it will not be assigned on invisible buttons
                 this.$el.append($button);
                 return this._super.apply(this, arguments);
             },
+            destroy: function () {
+                KeyboardNavigationMixin.destroy.call(this);
+                return this._super(...arguments);
+            },
         });
-        var parent = testUtils.createParent({});
+        var parent = await testUtils.createParent({});
         var w = new KeyboardWidget(parent);
         await w.appendTo($target);
 
@@ -51,13 +56,18 @@ QUnit.module('KeyboardNavigationMixin', function () {
                 KeyboardNavigationMixin.init.call(this);
             },
             start: function () {
+                KeyboardNavigationMixin.start.call(this);
                 $button = $('<button>').text('Click Me!').attr('accesskey', 'o');
                 // we need to define the accesskey because it will not be assigned on invisible buttons
                 this.$el.append($button);
                 return this._super.apply(this, arguments);
             },
+            destroy: function () {
+                KeyboardNavigationMixin.destroy.call(this);
+                return this._super(...arguments);
+            },
         });
-        var parent = testUtils.createParent({});
+        var parent = await testUtils.createParent({});
         var w = new KeyboardWidget(parent);
         await w.appendTo($target);
 

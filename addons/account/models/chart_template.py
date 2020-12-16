@@ -5,7 +5,7 @@ from odoo import api, fields, models, _
 from odoo import SUPERUSER_ID
 from odoo.exceptions import UserError, ValidationError
 from odoo.http import request
-from odoo.addons.account.models.account import TYPE_TAX_USE
+from odoo.addons.account.models.account_tax import TYPE_TAX_USE
 
 import logging
 
@@ -105,6 +105,7 @@ class AccountChartTemplate(models.Model):
         string="Gain Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
     expense_currency_exchange_account_id = fields.Many2one('account.account.template',
         string="Loss Exchange Rate Account", domain=[('internal_type', '=', 'other'), ('deprecated', '=', False)])
+    account_journal_suspense_account_id = fields.Many2one('account.account.template', string='Journal Suspense Account')
     default_cash_difference_income_account_id = fields.Many2one('account.account.template', string="Cash Difference Income Account")
     default_cash_difference_expense_account_id = fields.Many2one('account.account.template', string="Cash Difference Expense Account")
     default_pos_receivable_account_id = fields.Many2one('account.account.template', string="PoS receivable account")
@@ -120,16 +121,22 @@ class AccountChartTemplate(models.Model):
     property_tax_payable_account_id = fields.Many2one('account.account.template', string="Tax current account (payable)")
     property_tax_receivable_account_id = fields.Many2one('account.account.template', string="Tax current account (receivable)")
     property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
+    property_cash_basis_base_account_id = fields.Many2one(
+        comodel_name='account.account.template',
+        domain=[('deprecated', '=', False)],
+        string="Base Tax Received Account",
+        help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
+             "tax base amount.")
 
     @api.model
-    def _prepare_transfer_account_template(self):
+    def _prepare_transfer_account_template(self, prefix=None):
         ''' Prepare values to create the transfer account that is an intermediary account used when moving money
         from a liquidity account to another.
 
         :return:    A dictionary of values to create a new account.account.
         '''
         digits = self.code_digits
-        prefix = self.transfer_account_code_prefix or ''
+        prefix = prefix or self.transfer_account_code_prefix or ''
         # Flatten the hierarchy of chart templates.
         chart_template = self
         chart_templates = self
@@ -154,6 +161,15 @@ class AccountChartTemplate(models.Model):
             'chart_template_id': self.id,
         }
 
+    @api.model
+    def _create_liquidity_journal_suspense_account(self, company, code_digits):
+        return self.env['account.account'].create({
+            'name': _("Bank Suspense Account"),
+            'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
+            'user_type_id': self.env.ref('account.data_account_type_current_liabilities').id,
+            'company_id': company.id,
+        })
+
     def try_loading(self, company=False):
         """ Installs this chart of accounts for the current company if not chart
         of accounts had been created for it yet.
@@ -169,7 +185,6 @@ class AccountChartTemplate(models.Model):
             for template in self:
                 template.with_context(default_company_id=company.id)._load(15.0, 15.0, company)
 
-    try_loading_for_current_company = try_loading
 
     def _load(self, sale_tax_rate, purchase_tax_rate, company):
         """ Installs this chart of accounts on the current company, replacing
@@ -198,9 +213,9 @@ class AccountChartTemplate(models.Model):
             existing_journals = self.env['account.journal'].search([('company_id', '=', company.id)])
             if existing_journals:
                 prop_values.extend(['account.journal,%s' % (journal_id,) for journal_id in existing_journals.ids])
-            accounting_props = self.env['ir.property'].search([('value_reference', 'in', prop_values)])
-            if accounting_props:
-                accounting_props.sudo().unlink()
+            self.env['ir.property'].sudo().search(
+                [('value_reference', 'in', prop_values)]
+            ).unlink()
 
             # delete account, journal, tax, fiscal position and reconciliation model
             models_to_delete = ['account.reconcile.model', 'account.fiscal.position', 'account.tax', 'account.move', 'account.journal', 'account.group']
@@ -236,18 +251,25 @@ class AccountChartTemplate(models.Model):
         acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits)
 
         # Set default cash difference account on company
-        company.write({
-            'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
-            'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
-        })
+        if not company.account_journal_suspense_account_id:
+            company.account_journal_suspense_account_id = self._create_liquidity_journal_suspense_account(company, self.code_digits)
 
-        # Set default PoS receivable account in company
-        default_pos_receivable = self.default_pos_receivable_account_id.id
-        if not default_pos_receivable and self.parent_id:
-            default_pos_receivable = self.parent_id.default_pos_receivable_account_id.id
-        if acc_template_ref.get(default_pos_receivable):
-            company.write({
-                'account_default_pos_receivable_account_id': acc_template_ref[default_pos_receivable]
+        if not company.default_cash_difference_expense_account_id:
+            company.default_cash_difference_expense_account_id = self.env['account.account'].create({
+                'name': _('Cash Difference Loss'),
+                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'user_type_id': self.env.ref('account.data_account_type_expenses').id,
+                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+                'company_id': company.id,
+            })
+
+        if not company.default_cash_difference_income_account_id:
+            company.default_cash_difference_income_account_id = self.env['account.account'].create({
+                'name': _('Cash Difference Gain'),
+                'code': self.env['account.account']._search_new_account_code(company, self.code_digits, '999'),
+                'user_type_id': self.env.ref('account.data_account_type_revenue').id,
+                'tag_ids': [(6, 0, self.env.ref('account.account_tag_investing').ids)],
+                'company_id': company.id,
             })
 
         # Set the transfer account on the company
@@ -333,18 +355,10 @@ class AccountChartTemplate(models.Model):
                 'type': acc['account_type'],
                 'company_id': company.id,
                 'currency_id': acc.get('currency_id', self.env['res.currency']).id,
-                'sequence': 10
+                'sequence': 10,
             })
 
         return bank_journals
-
-    def get_countries_posting_at_bank_rec(self):
-        """ Returns the list of the country codes of the countries for which, by default,
-        payments made on bank journals should be creating draft account.move objects,
-        which get in turn posted when their payment gets reconciled with a bank statement line.
-        This function is an extension hook for localization modules.
-        """
-        return []
 
     @api.model
     def _get_default_bank_journals_data(self):
@@ -415,11 +429,7 @@ class AccountChartTemplate(models.Model):
                 default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
             elif journal['type'] == 'purchase':
                 default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
-            elif journal['type'] == 'general' and journal['code'] == _('EXCH'):
-                if type=='credit':
-                    default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
-                else:
-                    default_account = acc_template_ref.get(self.expense_currency_exchange_account_id.id)
+
             return default_account
 
         journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'color': 11, 'sequence': 5},
@@ -438,8 +448,7 @@ class AccountChartTemplate(models.Model):
                 'name': journal['name'],
                 'code': journal['code'],
                 'company_id': company.id,
-                'default_credit_account_id': _get_default_account(journal, 'credit'),
-                'default_debit_account_id': _get_default_account(journal, 'debit'),
+                'default_account_id': _get_default_account(journal),
                 'show_on_dashboard': journal['favorite'],
                 'color': journal.get('color', False),
                 'sequence': journal['sequence']
@@ -458,34 +467,22 @@ class AccountChartTemplate(models.Model):
         self.ensure_one()
         PropertyObj = self.env['ir.property']
         todo_list = [
-            ('property_account_receivable_id', 'res.partner', 'account.account'),
-            ('property_account_payable_id', 'res.partner', 'account.account'),
-            ('property_account_expense_categ_id', 'product.category', 'account.account'),
-            ('property_account_income_categ_id', 'product.category', 'account.account'),
-            ('property_account_expense_id', 'product.template', 'account.account'),
-            ('property_account_income_id', 'product.template', 'account.account'),
-            ('property_tax_payable_account_id', 'account.tax.group', 'account.account'),
-            ('property_tax_receivable_account_id', 'account.tax.group', 'account.account'),
-            ('property_advance_tax_payment_account_id', 'account.tax.group', 'account.account'),
+            ('property_account_receivable_id', 'res.partner'),
+            ('property_account_payable_id', 'res.partner'),
+            ('property_account_expense_categ_id', 'product.category'),
+            ('property_account_income_categ_id', 'product.category'),
+            ('property_account_expense_id', 'product.template'),
+            ('property_account_income_id', 'product.template'),
+            ('property_tax_payable_account_id', 'account.tax.group'),
+            ('property_tax_receivable_account_id', 'account.tax.group'),
+            ('property_advance_tax_payment_account_id', 'account.tax.group'),
         ]
-        for record in todo_list:
-            account = getattr(self, record[0])
-            value = account and 'account.account,' + str(acc_template_ref[account.id]) or False
+        for field, model in todo_list:
+            account = self[field]
+            value = acc_template_ref[account.id] if account else False
             if value:
-                field = self.env['ir.model.fields'].search([('name', '=', record[0]), ('model', '=', record[1]), ('relation', '=', record[2])], limit=1)
-                vals = {
-                    'name': record[0],
-                    'company_id': company.id,
-                    'fields_id': field.id,
-                    'value': value,
-                }
-                properties = PropertyObj.search([('name', '=', record[0]), ('company_id', '=', company.id)])
-                if properties:
-                    #the property exist: modify it
-                    properties.write(vals)
-                else:
-                    #create the property
-                    PropertyObj.create(vals)
+                PropertyObj._set_default(field, model, value, company=company)
+
         stock_properties = [
             'property_stock_account_input_categ_id',
             'property_stock_account_output_categ_id',
@@ -562,10 +559,9 @@ class AccountChartTemplate(models.Model):
 
         # writing account values after creation of accounts
         for key, value in generated_tax_res['account_dict']['account.tax'].items():
-            if value['cash_basis_transition_account_id'] or value['cash_basis_base_account_id']:
+            if value['cash_basis_transition_account_id']:
                 AccountTaxObj.browse(key).write({
                     'cash_basis_transition_account_id': account_ref.get(value['cash_basis_transition_account_id'], False),
-                    'cash_basis_base_account_id': account_ref.get(value['cash_basis_base_account_id'], False),
                 })
 
         AccountTaxRepartitionLineObj = self.env['account.tax.repartition.line']
@@ -574,6 +570,9 @@ class AccountChartTemplate(models.Model):
                 AccountTaxRepartitionLineObj.browse(key).write({
                     'account_id': account_ref.get(value['account_id']),
                 })
+
+        # Set the company accounts
+        self._load_company_accounts(account_ref, company)
 
         # Create Journals - Only done for root chart template
         if not self.parent_id:
@@ -589,6 +588,27 @@ class AccountChartTemplate(models.Model):
         self.generate_account_reconcile_model(taxes_ref, account_ref, company)
 
         return account_ref, taxes_ref
+
+    def _load_company_accounts(self, account_ref, company):
+        # Set the default accounts on the company
+        accounts = {
+            'default_cash_difference_income_account_id': self.default_cash_difference_income_account_id.id,
+            'default_cash_difference_expense_account_id': self.default_cash_difference_expense_account_id.id,
+            'account_journal_suspense_account_id': self.account_journal_suspense_account_id.id,
+            'account_cash_basis_base_account_id': self.property_cash_basis_base_account_id.id,
+            'account_default_pos_receivable_account_id': self.default_pos_receivable_account_id.id,
+            'income_currency_exchange_account_id': self.income_currency_exchange_account_id.id,
+            'expense_currency_exchange_account_id': self.expense_currency_exchange_account_id.id,
+        }
+
+        values = {}
+
+        # The loop is to avoid writing when we have no values, thus avoiding erasing the account from the parent
+        for key, account in accounts.items():
+            if account_ref.get(account):
+                values[key] = account_ref.get(account)
+
+        company.write(values)
 
     def create_record_with_xmlid(self, company, template, model, vals):
         return self._create_records_with_xmlid(model, [(template, vals)], company).id
@@ -833,8 +853,9 @@ class AccountTaxTemplate(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
 
     name = fields.Char(string='Tax Name', required=True)
-    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
+    tax_scope = fields.Selection([('service', 'Service'), ('consu', 'Consumable')], help="Restrict the use of taxes to a type of product.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
@@ -862,14 +883,9 @@ class AccountTaxTemplate(models.Model):
         string="Cash Basis Transition Account",
         domain=[('deprecated', '=', False)],
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
-    cash_basis_base_account_id = fields.Many2one(
-        'account.account.template',
-        domain=[('deprecated', '=', False)],
-        string='Base Tax Received Account',
-        help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, type_tax_use, chart_template_id)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, type_tax_use, tax_scope, chart_template_id)', 'Tax names must be unique !'),
     ]
 
     @api.depends('name', 'description')
@@ -892,6 +908,7 @@ class AccountTaxTemplate(models.Model):
         val = {
             'name': self.name,
             'type_tax_use': self.type_tax_use,
+            'tax_scope': self.tax_scope,
             'amount_type': self.amount_type,
             'active': self.active,
             'company_id': company.id,
@@ -953,7 +970,6 @@ class AccountTaxTemplate(models.Model):
                 # Since the accounts have not been created yet, we have to wait before filling these fields
                 todo_dict['account.tax'][tax.id] = {
                     'cash_basis_transition_account_id': template.cash_basis_transition_account_id.id,
-                    'cash_basis_base_account_id': template.cash_basis_base_account_id.id,
                 }
 
                 # We also have to delay the assignation of accounts to repartition lines
@@ -988,11 +1004,11 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     _name = "account.tax.repartition.line.template"
     _description = "Tax Repartition Line Template"
 
-    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this repartition line, in percents")
+    factor_percent = fields.Float(string="%", required=True, help="Factor to apply on the account move lines generated from this distribution line, in percents")
     repartition_type = fields.Selection(string="Based On", selection=[('base', 'Base'), ('tax', 'of tax')], required=True, default='tax', help="Base on which the factor will be applied.")
     account_id = fields.Many2one(string="Account", comodel_name='account.account.template', help="Account on which to post the tax amount")
-    invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on invoices. Mutually exclusive with refund_tax_id")
-    refund_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
+    invoice_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this distribution on invoices. Mutually exclusive with refund_tax_id")
+    refund_tax_id = fields.Many2one(comodel_name='account.tax.template', help="The tax set to apply this distribution on refund invoices. Mutually exclusive with invoice_tax_id")
     tag_ids = fields.Many2many(string="Financial Tags", relation='account_tax_repartition_financial_tags', comodel_name='account.account.tag', copy=True, help="Additional tags that will be assigned by this repartition line for use in financial reports")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
@@ -1038,14 +1054,14 @@ class AccountTaxRepartitionLineTemplate(models.Model):
     def validate_tax_template_link(self):
         for record in self:
             if record.invoice_tax_id and record.refund_tax_id:
-                raise ValidationError(_("Tax repartition line templates should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
+                raise ValidationError(_("Tax distribution line templates should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
 
     @api.constrains('plus_report_line_ids', 'minus_report_line_ids')
     def validate_tags(self):
         all_tax_rep_lines = self.mapped('plus_report_line_ids') + self.mapped('minus_report_line_ids')
         lines_without_tag = all_tax_rep_lines.filtered(lambda x: not x.tag_name)
         if lines_without_tag:
-            raise ValidationError(_("The following tax report lines are used in some tax repartition template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.") % str(lines_without_tag.mapped('name')))
+            raise ValidationError(_("The following tax report lines are used in some tax distribution template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.", str(lines_without_tag.mapped('name'))))
 
     def get_repartition_line_create_vals(self, company):
         rslt = [(5, 0, 0)]
@@ -1079,9 +1095,9 @@ class AccountFiscalPositionTemplate(models.Model):
     auto_apply = fields.Boolean(string='Detect Automatically', help="Apply automatically this fiscal position.")
     vat_required = fields.Boolean(string='VAT required', help="Apply only if partner has a VAT number.")
     country_id = fields.Many2one('res.country', string='Country',
-        help="Apply only if delivery or invoicing country match.")
+        help="Apply only if delivery country matches.")
     country_group_id = fields.Many2one('res.country.group', string='Country Group',
-        help="Apply only if delivery or invoicing country match the group.")
+        help="Apply only if delivery country matches the group.")
     state_ids = fields.Many2many('res.country.state', string='Federal States')
     zip_from = fields.Char(string='Zip Range From')
     zip_to = fields.Char(string='Zip Range To')
@@ -1117,15 +1133,33 @@ class AccountReconcileModelTemplate(models.Model):
     sequence = fields.Integer(required=True, default=10)
 
     rule_type = fields.Selection(selection=[
-        ('writeoff_button', 'Manually create a write-off on clicked button.'),
-        ('writeoff_suggestion', 'Suggest a write-off.'),
-        ('invoice_matching', 'Match existing invoices/bills.')
+        ('writeoff_button', 'Manually create a write-off on clicked button'),
+        ('writeoff_suggestion', 'Suggest a write-off'),
+        ('invoice_matching', 'Match existing invoices/bills')
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
-    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
+    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the information of the counterpart.')
+    matching_order = fields.Selection(
+        selection=[
+            ('old_first', 'Oldest first'),
+            ('new_first', 'Newest first'),
+        ]
+    )
 
     # ===== Conditions =====
+    match_text_location_label = fields.Boolean(
+        default=True,
+        help="Search in the Statement's Label to find the Invoice/Payment's reference",
+    )
+    match_text_location_note = fields.Boolean(
+        default=False,
+        help="Search in the Statement's Note to find the Invoice/Payment's reference",
+    )
+    match_text_location_reference = fields.Boolean(
+        default=False,
+        help="Search in the Statement's Reference to find the Invoice/Payment's reference",
+    )
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
         domain="[('type', 'in', ('bank', 'cash'))]",
         help='The reconciliation model will only be available from the selected journals.')

@@ -5,7 +5,7 @@
          <field name="name">sale.report.pivot</field>
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
-             <pivot string="Sales Analysis" disable_linking="True">
+             <pivot string="Sales Analysis" disable_linking="True" sample="1">
                  <field name="team_id" type="col"/>
                  <field name="date" interval="month" type="row"/>
                  <field name="price_subtotal" type="measure"/>
@@ -17,7 +17,7 @@
          <field name="name">sale.report.graph</field>
          <field name="model">sale.report</field>
          <field name="arch" type="xml">
-             <graph string="Sales Analysis" type="line">
+             <graph string="Sales Analysis" type="line" sample="1" disable_linking="1">
                  <field name="date" type="row" interval="day"/>
                  <field name="price_subtotal" type="measure"/>
              </graph>
@@ -33,6 +33,8 @@
                 <filter string="Date" name="year" invisible="1" date="date" default_period="this_year"/>
                 <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
                 <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
+                <separator/>
+                <filter name="filter_date" date="date" default_period="this_month"/>
                 <separator/>
                 <field name="user_id"/>
                 <field name="team_id"/>

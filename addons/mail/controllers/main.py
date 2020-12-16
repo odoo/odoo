@@ -37,7 +37,7 @@ class MailController(http.Controller):
     def _check_token_and_record_or_redirect(cls, model, res_id, token):
         comparison = cls._check_token(token)
         if not comparison:
-            _logger.warning(_('Invalid token in route %s') % request.httprequest.url)
+            _logger.warning('Invalid token in route %s', request.httprequest.url)
             return comparison, None, cls._redirect_to_messaging()
         try:
             record = request.env[model].browse(res_id).exists()
@@ -126,32 +126,12 @@ class MailController(http.Controller):
         url = '/web?#%s' % url_encode(url_params)
         return werkzeug.utils.redirect(url)
 
-    @http.route('/mail/receive', type='json', auth='none')
-    def receive(self, req):
-        """ End-point to receive mail from an external SMTP server. """
-        dbs = req.jsonrequest.get('databases')
-        for db in dbs:
-            message = base64.b64decode(dbs[db])
-            try:
-                db_registry = registry(db)
-                with db_registry.cursor() as cr:
-                    env = api.Environment(cr, SUPERUSER_ID, {})
-                    env['mail.thread'].message_process(None, message)
-            except psycopg2.Error:
-                pass
-        return True
-
     @http.route('/mail/read_followers', type='json', auth='user')
-    def read_followers(self, follower_ids):
+    def read_followers(self, res_model, res_id):
         request.env['mail.followers'].check_access_rights("read")
-        follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
-        res_ids = follower_recs.mapped('res_id')
-        res_models = set(follower_recs.mapped('res_model'))
-        if len(res_models) > 1:
-            raise AccessError(_("Can't read followers with different targeted model"))
-        res_model = res_models.pop()
         request.env[res_model].check_access_rights("read")
-        request.env[res_model].browse(res_ids).check_access_rule("read")
+        request.env[res_model].browse(res_id).check_access_rule("read")
+        follower_recs = request.env['mail.followers'].search([('res_model', '=', res_model), ('res_id', '=', res_id)])
 
         followers = []
         follower_id = None
@@ -284,9 +264,12 @@ class MailController(http.Controller):
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
             'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
-            'is_moderator': request.env.user.is_moderator,
             'moderation_counter': request.env.user.moderation_counter,
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
+            'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
+            'public_partners': [partner.mail_partner_format() for partner in request.env.ref('base.group_public').sudo().with_context(active_test=False).users.partner_id],
+            'current_partner': request.env.user.partner_id.mail_partner_format(),
+            'current_user_id': request.env.user.id,
         }
         return values
 

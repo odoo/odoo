@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data noupdate="1">
+    <data>
         <record id="no_chart_template" model="account.chart.template">
             <field name="property_account_receivable_id" ref="chart1500"/>
             <field name="property_account_payable_id" ref="chart2400"/>
@@ -12,7 +12,9 @@
             <field name="expense_currency_exchange_account_id" ref="chart8160"/>
             <field name="default_pos_receivable_account_id" ref="chart1501" />
         </record>
+    </data>
 
+    <data noupdate="1">
         <function model="account.chart.template" name="try_loading">
             <value eval="[ref('l10n_no.no_chart_template')]"/>
         </function>

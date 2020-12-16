@@ -24,14 +24,6 @@
             <field name="type">private</field>
         </record>
 
-        <record id="hr.employee_admin" model="hr.employee">
-            <field name="address_home_id" ref="res_partner_address_fp"/>
-        </record>
-
-        <record id="hr.employee_qdp" model="hr.employee">
-            <field name="address_home_id" ref="res_partner_address_fp"/>
-        </record>
-
         <record id="hr.employee_fme" model="hr.employee">
             <field name="address_home_id" ref="res_partner_address_fp"/>
         </record>
@@ -77,16 +69,6 @@
         </record>
 
         <!-- ++++++++++++++ Expense sheet for Admin ++++++++++++++-->
-
-        <record id="product_product_fixed_cost" model="product.product">
-            <field name="name">Expenses</field>
-            <field name="list_price">0.0</field>
-            <field name="standard_price">1.0</field>
-            <field name="type">service</field>
-            <field name="default_code">EXP_GEN</field>
-            <field name="categ_id" ref="product.cat_expense"/>
-            <field name="can_be_expensed" eval="True"/>
-        </record>
 
         <record id="screen_expense" model="hr.expense">
             <field name="name">Screen</field>
@@ -175,7 +157,7 @@
             <field name="analytic_account_id" ref="analytic.analytic_our_super_product"/>
             <field name="product_id" ref="car_travel"/>
             <field eval="0.52" name="unit_amount"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_uom_id" ref="uom.product_uom_km"/>
             <field name="date" eval="time.strftime('%Y')+'-01-15'"/>
             <field eval="152.0" name="quantity"/>
             <field name="sheet_id" ref="customer_meeting_sheet"/>

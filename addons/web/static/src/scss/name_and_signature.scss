@@ -26,6 +26,9 @@
     .o_signature {
         outline: 1px solid rgba(theme-color('secondary'), 0.3);
         position: relative;
+        &.o_signature_empty {
+            display: flex;
+        }
         > p {
             position: absolute;
             top: 50%;
@@ -46,4 +49,12 @@
         outline: 3px solid $o-enterprise-primary-color;
         cursor: pointer;
     }
+}
+
+.o_signature_stroke {
+    position: absolute;
+    border-top: #D1D0CE solid 2px;
+    bottom: 16%;
+    width: 72%;
+    left: 14%;
 }

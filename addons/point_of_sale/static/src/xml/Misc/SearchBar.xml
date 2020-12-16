@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="point_of_sale.SearchBar" owl="1">
+        <div class="pos-search-bar">
+            <div class="search">
+                <span class="search-icon"><i class="fa fa-search"></i></span>
+                <input class="radius-left" t-att-class="{ 'radius-right': !props.config.filter.show }"
+                    t-model="state.searchInput" t-on-keydown="onKeydown" type="text" t-att-placeholder="placeholder" />
+                <ul t-if="state.showSearchFields and state.searchInput" class="fields">
+                    <t t-foreach="config.searchFields" t-as="value" t-key="value_index">
+                        <li t-att-class="{ highlight: value_index == state.selectedFieldId }"
+                            t-on-click="onClickSearchField(value_index)">
+                            <span class="field">
+                                <t t-esc="value"></t>
+                            </span>
+                            <span>: </span>
+                            <span class="term">
+                                <t t-esc="state.searchInput"></t>
+                            </span>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+            <div t-if="props.config.filter.show" class="filter radius-right"
+                t-on-click.stop="state.showFilterOptions = !state.showFilterOptions">
+                <span class="down-icon">
+                    <i class="fa fa-chevron-down" aria-hidden="true"></i>
+                </span>
+                <span>
+                    <t t-esc="state.selectedFilter" />
+                </span>
+                <ul t-if="state.showFilterOptions" class="options">
+                    <t t-foreach="config.filter.options" t-as="option" t-key="option">
+                        <li t-on-click="selectFilter(option)">
+                            <t t-esc="option"></t>
+                        </li>
+                    </t>
+                </ul>
+            </div>
+        </div>
+    </t>
+
+</templates>

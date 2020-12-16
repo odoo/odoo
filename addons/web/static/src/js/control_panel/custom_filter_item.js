@@ -6,7 +6,8 @@ odoo.define('web.CustomFilterItem', function (require) {
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
     const field_utils = require('web.field_utils');
-    const { useModel } = require('web.model');
+    const patchMixin = require('web.patchMixin');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * Filter generator menu
@@ -45,7 +46,7 @@ odoo.define('web.CustomFilterItem', function (require) {
         constructor() {
             super(...arguments);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
 
             this.canBeOpened = true;
             this.state.conditions = [];
@@ -60,8 +61,8 @@ odoo.define('web.CustomFilterItem', function (require) {
             this.OPERATORS = FIELD_OPERATORS;
             this.FIELD_TYPES = FIELD_TYPES;
 
-            // Add default empty condition
-            this._addDefaultCondition();
+            // Add first condition
+            this._addNewCondition();
         }
 
         //---------------------------------------------------------------------
@@ -69,17 +70,20 @@ odoo.define('web.CustomFilterItem', function (require) {
         //---------------------------------------------------------------------
 
         /**
-         * Populate the conditions list with a default condition having as properties:
-         * - the first available field
-         * - the first available operator
+         * Populate the conditions list with a new condition having as properties:
+         * - the last condition or the first available field
+         * - the last condition or the first available operator
          * - a null or empty array value
          * @private
          */
-        _addDefaultCondition() {
-            const condition = {
-                field: 0,
-                operator: 0,
-            };
+        _addNewCondition() {
+            const lastCondition = [...this.state.conditions].pop();
+            const condition = lastCondition
+                ? Object.assign({}, lastCondition)
+                : {
+                    field: 0,
+                    operator: 0,
+                };
             this._setDefaultValue(condition);
             this.state.conditions.push(condition);
         }
@@ -120,6 +124,10 @@ odoo.define('web.CustomFilterItem', function (require) {
                     if (operator.symbol === 'between') {
                         condition.value.push(moment('23:59:59', 'hh:mm:ss'));
                     }
+                    break;
+                case 'selection':
+                    const [firstValue] = this.fields[condition.field].selection[0];
+                    condition.value = firstValue;
                     break;
                 default:
                     condition.value = "";
@@ -180,7 +188,7 @@ odoo.define('web.CustomFilterItem', function (require) {
             // Reset state
             this.state.open = false;
             this.state.conditions = [];
-            this._addDefaultCondition();
+            this._addNewCondition();
         }
 
         /**
@@ -254,5 +262,5 @@ odoo.define('web.CustomFilterItem', function (require) {
     };
     CustomFilterItem.template = 'web.CustomFilterItem';
 
-    return CustomFilterItem;
+    return patchMixin(CustomFilterItem);
 });

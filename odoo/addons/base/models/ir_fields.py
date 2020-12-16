@@ -7,7 +7,7 @@ import itertools
 import psycopg2
 import pytz
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.tools import ustr
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
@@ -16,13 +16,6 @@ def only_ref_fields(record):
 def exclude_ref_fields(record):
     return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
-CREATE = lambda values: (0, False, values)
-UPDATE = lambda id, values: (1, id, values)
-DELETE = lambda id: (2, id, False)
-FORGET = lambda id: (3, id, False)
-LINK_TO = lambda id: (4, id, False)
-DELETE_ALL = lambda: (5, False, False)
-REPLACE_WITH = lambda ids: (6, False, ids)
 
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
@@ -207,7 +200,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ValueError,
                 _(u"'%s' does not seem to be a valid date for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'") % u"2012-12-31"}
+                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31")}
             )
 
     @api.model
@@ -239,7 +232,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ValueError,
                 _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'") % u"2012-12-31 23:59:59"}
+                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31 23:59:59")}
             )
 
         input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
@@ -300,7 +293,7 @@ class IrFieldsConverter(models.AbstractModel):
         """
         # the function 'flush' comes from BaseModel.load(), and forces the
         # creation/update of former records (batch creation)
-        flush = self._context.get('import_flush', lambda arg=None: None)
+        flush = self._context.get('import_flush', lambda **kw: None)
 
         id = None
         warnings = []
@@ -343,13 +336,13 @@ class IrFieldsConverter(models.AbstractModel):
                 xmlid = value
             else:
                 xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
-            flush(xmlid)
-            id = self.env['ir.model.data'].xmlid_to_res_id(xmlid, raise_if_not_found=False) or None
+            flush(xml_id=xmlid)
+            id = self._xmlid_to_record_id(xmlid, RelatedModel)
         elif subfield is None:
             field_type = _(u"name")
             if value == '':
                 return False, field_type, warnings
-            flush()
+            flush(model=field.comodel_name)
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
@@ -363,7 +356,7 @@ class IrFieldsConverter(models.AbstractModel):
                     try:
                         id, _name = RelatedModel.name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
-                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.") % RelatedModel._description
+                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:
             raise self._format_import_error(
                 Exception,
@@ -382,6 +375,31 @@ class IrFieldsConverter(models.AbstractModel):
                 {'field_type': field_type, 'value': value, 'error_message': error_msg},
                 {'moreinfo': action})
         return id, field_type, warnings
+
+    def _xmlid_to_record_id(self, xmlid, model):
+        """ Return the record id corresponding to the given external id,
+        provided that the record actually exists; otherwise return ``None``.
+        """
+        import_cache = self.env.context.get('import_cache', {})
+        result = import_cache.get(xmlid)
+
+        if not result:
+            module, name = xmlid.split('.', 1)
+            query = """
+                SELECT d.model, d.res_id
+                FROM ir_model_data d
+                JOIN "{}" r ON d.res_id = r.id
+                WHERE d.module = %s AND d.name = %s
+            """.format(model._table)
+            self.env.cr.execute(query, [module, name])
+            result = self.env.cr.fetchone()
+
+        if result:
+            res_model, res_id = import_cache[xmlid] = result
+            if res_model != model._name:
+                MSG = "Invalid external ID %s: expected model %r, found %r"
+                raise ValueError(MSG % (xmlid, model._name, res_model))
+            return res_id
 
     def _referencing_subfield(self, record):
         """ Checks the record for the subfields allowing referencing (an
@@ -433,12 +451,19 @@ class IrFieldsConverter(models.AbstractModel):
             warnings.extend(ws)
 
         if self._context.get('update_many2many'):
-            return [LINK_TO(id) for id in ids], warnings
+            return [Command.link(id) for id in ids], warnings
         else:
-            return [REPLACE_WITH(ids)], warnings
+            return [Command.set(ids)], warnings
 
     @api.model
     def _str_to_one2many(self, model, field, records):
+        name_create_enabled_fields = self._context.get('name_create_enabled_fields') or {}
+        prefix = field.name + '/'
+        relative_name_create_enabled_fields = {
+            k[len(prefix):]: v
+            for k, v in name_create_enabled_fields.items()
+            if k.startswith(prefix)
+        }
         commands = []
         warnings = []
 
@@ -460,7 +485,7 @@ class IrFieldsConverter(models.AbstractModel):
                 raise exception
             warnings.append(exception)
 
-        convert = self.for_model(self.env[field.comodel_name])
+        convert = self.with_context(name_create_enabled_fields=relative_name_create_enabled_fields).for_model(self.env[field.comodel_name])
 
         for record in records:
             id = None
@@ -478,10 +503,10 @@ class IrFieldsConverter(models.AbstractModel):
                     writable['id'] = record['id']
 
             if id:
-                commands.append(LINK_TO(id))
-                commands.append(UPDATE(id, writable))
+                commands.append(Command.link(id))
+                commands.append(Command.update(id, writable))
             else:
-                commands.append(CREATE(writable))
+                commands.append(Command.create(writable))
 
         return commands, warnings
 

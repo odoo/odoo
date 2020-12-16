@@ -161,6 +161,7 @@ class TxAuthorize(models.Model):
     _authorize_valid_tx_status = 1
     _authorize_pending_tx_status = 4
     _authorize_cancel_tx_status = 2
+    _authorize_error_tx_status = 3
 
     # --------------------------------------------------
     # FORM RELATED METHODS
@@ -170,14 +171,14 @@ class TxAuthorize(models.Model):
     def _authorize_form_get_tx_from_data(self, data):
         """ Given a data dict coming from authorize, verify it and find the related
         transaction record. """
-        reference, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_trans_id'), data.get('x_SHA2_Hash') or data.get('x_MD5_Hash')
+        reference, description, trans_id, fingerprint = data.get('x_invoice_num'), data.get('x_description'), data.get('x_trans_id'), data.get('x_SHA2_Hash') or data.get('x_MD5_Hash')
         if not reference or not trans_id or not fingerprint:
             error_msg = _('Authorize: received data with missing reference (%s) or trans_id (%s) or fingerprint (%s)') % (reference, trans_id, fingerprint)
             _logger.info(error_msg)
             raise ValidationError(error_msg)
-        tx = self.search([('reference', '=', reference)])
+        tx = self.search(['|', ('reference', '=', reference), ('reference', '=', description)])
         if not tx or len(tx) > 1:
-            error_msg = 'Authorize: received data for reference %s' % (reference)
+            error_msg = 'Authorize: received data for x_invoice_num %s and x_description %s' % (reference, description)
             if not tx:
                 error_msg += '; no order found'
             else:
@@ -228,13 +229,6 @@ class TxAuthorize(models.Model):
         elif status_code == self._authorize_pending_tx_status:
             self.write({'acquirer_reference': data.get('x_trans_id')})
             self._set_transaction_pending()
-            return True
-        elif status_code == self._authorize_cancel_tx_status:
-            self.write({
-                'acquirer_reference': data.get('x_trans_id'),
-                'state_message': data.get('x_response_reason_text'),
-            })
-            self._set_transaction_cancel()
             return True
         else:
             error = data.get('x_response_reason_text')
@@ -303,18 +297,13 @@ class TxAuthorize(models.Model):
             self.write({'acquirer_reference': tree.get('x_trans_id')})
             self._set_transaction_pending()
             return True
-        elif status_code == self._authorize_cancel_tx_status:
-            self.write({'acquirer_reference': tree.get('x_trans_id')})
-            self._set_transaction_cancel()
-            return True
         else:
             error = tree.get('x_response_reason_text')
             _logger.info(error)
             self.write({
-                'state_message': error,
                 'acquirer_reference': tree.get('x_trans_id'),
             })
-            self._set_transaction_cancel()
+            self._set_transaction_error(msg=error)
             return False
 
 

@@ -25,9 +25,8 @@ Here is how it works:
     - Printing the invoice will trigger the download of two files: the invoice, and its ISR
     - Clicking the 'Send by mail' button will attach two files to your draft mail : the invoice, and the corresponding ISR.
     """,
-    'version': '10.0',
-    'author': 'Odoo S.A',
-    'category': 'Accounting/Localizations',
+    'version': '11.0',
+    'category': 'Accounting/Localizations/Account Charts',
 
     'depends': ['account', 'l10n_multilang', 'base_iban'],
 

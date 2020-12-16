@@ -19,6 +19,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="website_id" groups="website.group_multi_website" optional="show"/>
+                <field name="is_published" string="Is Published" optional="hide"/>
             </field>
         </field>
     </record>
@@ -29,8 +30,8 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="product.product_template_tree_view"/>
         <field name="arch" type="xml">
-            <field name="name" position="after">
-                <field name="website_id" groups="website.group_multi_website" optional="show"/>
+            <field name="default_code" position="after">
+                <field name="website_id" groups="website.group_multi_website" optional="hide"/>
             </field>
         </field>
     </record>
@@ -45,16 +46,19 @@
             <field name="sequence" position="replace">
                 <field name="website_sequence" widget="handle"/>
             </field>
+            <field name="website_id" position="after">
+                <field name="is_published" string="Is Published" optional="hide"/>
+            </field>
         </field>
     </record>
 
     <record id="product_template_action_website" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">product.template</field>
-        <field name="view_mode">kanban,tree,form,activity</field>
-        <field name="view_id" ref="product_template_view_tree_website_sale"/>
+        <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="view_id"/>
         <field name="search_view_id" ref="product_template_search_view_website"/>
-        <field name="context">{'search_default_published': 1}</field>
+        <field name="context">{'search_default_published': 1, 'tree_view_ref':'website_sale.product_template_view_tree_website_sale'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new product
@@ -94,7 +98,7 @@
                             <field name="public_categ_ids" widget="many2many_tags" string="Categories"/>
                             <field name="alternative_product_ids" widget="many2many_tags" domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
                             <field name="accessory_product_ids" widget="many2many_tags"/>
-                            <field name="website_style_ids" widget="many2many_tags" groups="base.group_no_one"/>
+                            <field name="website_ribbon_id" groups="base.group_no_one"/>
                         </group>
                     </group>
                     <group name="product_template_images" string="Extra Product Media">
@@ -240,7 +244,7 @@
                     <t t-name="kanban-box">
                         <div class="card oe_kanban_global_click p-0">
                             <div class="o_squared_image">
-                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_1920', record.id.value)" t-att-alt="record.name.value"/>
+                                <img class="card-img-top" t-att-src="kanban_image('product.image', 'image_1920', record.id.raw_value)" t-att-alt="record.name.value"/>
                             </div>
                             <div class="card-body p-0">
                                 <h4 class="card-title p-2 m-0 bg-200">

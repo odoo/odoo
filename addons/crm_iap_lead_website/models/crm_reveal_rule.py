@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 
 import odoo
 from odoo import api, fields, models, tools, _
-from odoo.addons.iap import jsonrpc
+from odoo.addons.iap.tools import iap_tools
 from odoo.addons.crm.models import crm_stage
 from odoo.exceptions import ValidationError
 
@@ -57,8 +57,8 @@ class CRMRevealRule(models.Model):
     user_id = fields.Many2one('res.users', string='Salesperson')
     priority = fields.Selection(crm_stage.AVAILABLE_PRIORITIES, string='Priority')
     lead_ids = fields.One2many('crm.lead', 'reveal_rule_id', string='Generated Lead / Opportunity')
-    leads_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Leads')
-    opportunity_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Opportunity')
+    lead_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Leads')
+    opportunity_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Opportunity')
 
     # This limits the number of extra contact.
     # Even if more than 5 extra contacts provided service will return only 5 contacts (see service module for more)
@@ -82,11 +82,11 @@ class CRMRevealRule(models.Model):
                 (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
                 {'type': 'simple_notification', 'title': _('Missing Library'), 'message': message, 'sticky': True, 'warning': True})
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         self._assert_geoip()
-        return super(CRMRevealRule, self).create(vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         fields_set = {
@@ -101,23 +101,23 @@ class CRMRevealRule(models.Model):
         self.clear_caches() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).unlink()
 
-    def _compute_leads_count(self):
+    def _compute_lead_count(self):
         leads = self.env['crm.lead'].read_group([
             ('reveal_rule_id', 'in', self.ids)
         ], fields=['reveal_rule_id', 'type'], groupby=['reveal_rule_id', 'type'], lazy=False)
         mapping = {(lead['reveal_rule_id'][0], lead['type']): lead['__count'] for lead in leads}
         for rule in self:
-            rule.leads_count = mapping.get((rule.id, 'lead'), 0)
+            rule.lead_count = mapping.get((rule.id, 'lead'), 0)
             rule.opportunity_count = mapping.get((rule.id, 'opportunity'), 0)
 
     def action_get_lead_tree_view(self):
-        action = self.env.ref('crm.crm_lead_all_leads').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
         action['context'] = dict(self._context, create=False)
         return action
 
     def action_get_opportunity_tree_view(self):
-        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
         action['context'] = dict(self._context, create=False)
         return action
@@ -262,10 +262,10 @@ class CRMRevealRule(models.Model):
             ON v.reveal_rule_id = r.id
             WHERE v.reveal_state='to_process'
             GROUP BY v.reveal_ip
-            LIMIT %d
-            """ % batch_limit
+            LIMIT %s
+            """
 
-        self.env.cr.execute(query)
+        self.env.cr.execute(query, [batch_limit])
         return self.env.cr.fetchall()
 
     def _prepare_iap_payload(self, pgv):
@@ -323,7 +323,7 @@ class CRMRevealRule(models.Model):
             'account_token': account_token.account_token,
             'data': server_payload
         }
-        result = jsonrpc(endpoint, params=params, timeout=300)
+        result = iap_tools.iap_jsonrpc(endpoint, params=params, timeout=300)
         for res in result.get('reveal_data', []):
             if not res.get('not_found'):
                 lead = self._create_lead_from_response(res)
@@ -356,12 +356,20 @@ class CRMRevealRule(models.Model):
             # Does not create a lead if the reveal_id is already known
             return False
         lead_vals = rule._lead_vals_from_response(result)
+
         lead = self.env['crm.lead'].create(lead_vals)
+
+        template_values = result['reveal_data']
+        template_values.update({
+            'flavor_text': _("Opportunity created by Odoo Lead Generation"),
+            'people_data': result.get('people_data'),
+        })
         lead.message_post_with_view(
-            'crm_iap_lead.lead_message_template',
-            values=self.env['crm.iap.lead.helpers'].format_data_for_message_post(result['reveal_data'], result.get('people_data')),
+            'iap_mail.enrich_company',
+            values=template_values,
             subtype_id=self.env.ref('mail.mt_note').id
         )
+
         return lead
 
     # Methods responsible for format response data in to valid odoo lead data

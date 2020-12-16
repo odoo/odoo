@@ -141,7 +141,7 @@
           <field name="open"/>
           <field name="stage_id"/>
           <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-          <field name="activity_exception_decoration" widget="activity_exception"/>
+          <field name="activity_ids" widget="list_activity" optional="show"/>
         </tree>
       </field>
     </record>
@@ -157,12 +157,12 @@
                     <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                  <field name="memo" type="html" class="oe_memo"/>
+                  <field name="memo" type="html" class="oe_memo" resizer="false"/>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -215,26 +215,22 @@
       name="Notes"
       sequence="3"
       action="note.action_note_note"
-      web_icon="note,static/description/icon.png"/>
-
-    <menuitem
-      id="menu_note_configuration"
-      name="Configuration"
-      sequence="100"
-      parent="menu_note_notes"
-      groups="base.group_no_one"/>
-
-    <menuitem
-      id="menu_notes_stage"
-      name="Stages"
-      parent="menu_note_configuration"
-      action="note.action_note_stage"
-      sequence="21"/>
-
-    <menuitem
-      id="notes_tag_menu"
-      parent="menu_note_configuration"
-      action="note_tag_action"
-      sequence="22"/>
+      web_icon="note,static/description/icon.png">
+        <menuitem
+          id="menu_note_configuration"
+          name="Configuration"
+          sequence="100"
+          groups="base.group_no_one">
+            <menuitem
+              id="menu_notes_stage"
+              name="Stages"
+              action="note.action_note_stage"
+              sequence="21"/>
+            <menuitem
+              id="notes_tag_menu"
+              action="note_tag_action"
+              sequence="22"/>
+        </menuitem>
+    </menuitem>
 
 </odoo>

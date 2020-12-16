@@ -3,6 +3,7 @@ odoo.define('web.PivotRenderer', function (require) {
 
     const OwlAbstractRenderer = require('web.AbstractRendererOwl');
     const field_utils = require('web.field_utils');
+    const patchMixin = require('web.patchMixin');
 
     const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
 
@@ -31,9 +32,9 @@ odoo.define('web.PivotRenderer', function (require) {
          * @param {boolean} props.disableLinking Disallow opening records by clicking on a cell
          * @param {Object} props.widgets Widgets defined in the arch
          */
-        constructor(parent, props) {
+        constructor() {
             super(...arguments);
-
+            this.sampleDataTargets = ['table'];
             this.state = useState({
                 activeNodeHeader: {
                     groupId: false,
@@ -198,6 +199,6 @@ odoo.define('web.PivotRenderer', function (require) {
 
     PivotRenderer.template = 'web.PivotRenderer';
 
-    return PivotRenderer;
+    return patchMixin(PivotRenderer);
 
 });

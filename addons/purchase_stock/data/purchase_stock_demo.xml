@@ -2,7 +2,7 @@
 <odoo>
     <data noupdate="1">
 
-    	<record id="stock.res_company_1" model="res.company">
+        <record id="stock.res_company_1" model="res.company">
             <field eval="1.0" name="po_lead"/>
         </record>
 
@@ -33,7 +33,27 @@
         <record id="product.product_product_20" model="product.product">
             <field name="route_ids" eval="[(4,ref('route_warehouse0_buy'))]"></field>
         </record>
-	  </data>
+
+        <record id="purchase_order_8" model="purchase.order">
+            <field name="partner_id" ref="base.res_partner_4"/>
+            <field name="user_id" ref="base.user_admin"/>
+            <field name="state">draft</field>
+            <field name="date_order" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="date_planned" eval="(datetime.now() + relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="order_line" model="purchase.order.line" eval="[(5, 0, 0),
+                (0, 0, {
+                    'product_id': ref('product.product_product_25'),
+                    'name': obj().env.ref('product.product_product_25').partner_ref,
+                    'price_unit': 2864.80,
+                    'product_qty': 20.0,
+                    'product_uom': ref('uom.product_uom_unit'),
+                    'date_planned': DateTime.today()}),
+            ]"/>
+        </record>
+
+        <function model="purchase.order" name="button_confirm" eval="[[ref('purchase_order_8')]]"/>
+
+    </data>
 
     <data noupdate="0">
 
@@ -46,6 +66,6 @@
           <value eval="{'buy_to_resupply': True}"/>
         </function>
 
-	</data>
+    </data>
 
 </odoo>

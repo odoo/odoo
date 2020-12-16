@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+from itertools import chain
 
 import psutil
 import werkzeug.serving
@@ -53,11 +54,11 @@ except ImportError:
 
 import odoo
 from odoo.modules import get_modules
-from odoo.modules.module import run_unit_tests, get_test_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from ..tests import loader, runner
 
 _logger = logging.getLogger(__name__)
 
@@ -390,7 +391,7 @@ class ThreadedServer(CommonServer):
         # e.g. threads that exceeded their real time,
         # but which finished before the server could restart.
         for thread in list(self.limits_reached_threads):
-            if not thread.isAlive():
+            if not thread.is_alive():
                 self.limits_reached_threads.remove(thread)
         if self.limits_reached_threads:
             self.limit_reached_time = self.limit_reached_time or time.time()
@@ -398,20 +399,41 @@ class ThreadedServer(CommonServer):
             self.limit_reached_time = None
 
     def cron_thread(self, number):
+        # Steve Reich timing style with thundering herd mitigation.
+        #
+        # On startup, all workers bind on a notification channel in
+        # postgres so they can be woken up at will. At worst they wake
+        # up every SLEEP_INTERVAL with a jitter. The jitter creates a
+        # chorus effect that helps distribute on the timeline the moment
+        # when individual worker wake up.
+        #
+        # On NOTIFY, all workers are awaken at the same time, sleeping
+        # just a bit prevents they all poll the database at the exact
+        # same time. This is known as the thundering herd effect.
+
         from odoo.addons.base.models.ir_cron import ir_cron
-        while True:
-            time.sleep(SLEEP_INTERVAL + number)     # Steve Reich timing style
-            registries = odoo.modules.registry.Registry.registries
-            _logger.debug('cron%d polling for jobs', number)
-            for db_name, registry in registries.items():
-                if registry.ready:
-                    thread = threading.currentThread()
-                    thread.start_time = time.time()
-                    try:
-                        ir_cron._acquire_job(db_name)
-                    except Exception:
-                        _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
-                    thread.start_time = None
+        conn = odoo.sql_db.db_connect('postgres')
+        with conn.cursor() as cr:
+            pg_conn = cr._cnx
+            cr.execute("LISTEN cron_trigger")
+            cr.commit()
+
+            while True:
+                select.select([pg_conn], [], [], SLEEP_INTERVAL + number)
+                time.sleep(number / 100)
+                pg_conn.poll()
+
+                registries = odoo.modules.registry.Registry.registries
+                _logger.debug('cron%d polling for jobs', number)
+                for db_name, registry in registries.d.items():
+                    if registry.ready:
+                        thread = threading.currentThread()
+                        thread.start_time = time.time()
+                        try:
+                            ir_cron._process_jobs(db_name)
+                        except Exception:
+                            _logger.warning('cron%d encountered an Exception:', number, exc_info=True)
+                        thread.start_time = None
 
     def cron_spawn(self):
         """ Start the above runner function in a daemon thread.
@@ -488,7 +510,7 @@ class ThreadedServer(CommonServer):
             _logger.debug('process %r (%r)', thread, thread.isDaemon())
             if (thread != me and not thread.isDaemon() and thread.ident != self.main_thread_id and
                     thread not in self.limits_reached_threads):
-                while thread.isAlive() and (time.time() - stop_time) < 1:
+                while thread.is_alive() and (time.time() - stop_time) < 1:
                     # We wait for requests to finish, up to 1 second.
                     _logger.debug('join and sleep')
                     # Need a busyloop here as thread.join() masks signals
@@ -510,6 +532,15 @@ class ThreadedServer(CommonServer):
         rc = preload_registries(preload)
 
         if stop:
+            if config['test_enable']:
+                logger = odoo.tests.runner._logger
+                with Registry.registries._lock:
+                    for db, registry in Registry.registries.d.items():
+                        report = registry._assertion_report
+                        log = logger.error if not report.wasSuccessful() \
+                         else logger.warning if not report.testsRun \
+                         else logger.info
+                        log("%s when loading database %r", report, db)
             self.stop()
             return rc
 
@@ -944,7 +975,7 @@ class Worker(object):
         r = resource.getrusage(resource.RUSAGE_SELF)
         cpu_time = r.ru_utime + r.ru_stime
         soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
-        resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['limit_time_cpu'], hard))
+        resource.setrlimit(resource.RLIMIT_CPU, (int(cpu_time + config['limit_time_cpu']), hard))
 
     def process_work(self):
         pass
@@ -1011,9 +1042,20 @@ class Worker(object):
 
 class WorkerHTTP(Worker):
     """ HTTP Request workers """
+    def __init__(self, multi):
+        super(WorkerHTTP, self).__init__(multi)
+
+        # The ODOO_HTTP_SOCKET_TIMEOUT environment variable allows to control socket timeout for
+        # extreme latency situations. It's generally better to use a good buffering reverse proxy
+        # to quickly free workers rather than increasing this timeout to accomodate high network
+        # latencies & b/w saturation. This timeout is also essential to protect against accidental
+        # DoS due to idle HTTP connections.
+        sock_timeout = os.environ.get("ODOO_HTTP_SOCKET_TIMEOUT")
+        self.sock_timeout = float(sock_timeout) if sock_timeout else 2
+
     def process_request(self, client, addr):
         client.setblocking(1)
-        client.settimeout(2)
+        client.settimeout(self.sock_timeout)
         client.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         # Prevent fd inherientence close_on_exec
         flags = fcntl.fcntl(client, fcntl.F_GETFD) | fcntl.FD_CLOEXEC
@@ -1059,8 +1101,10 @@ class WorkerCron(Worker):
 
             # simulate interruptible sleep with select(wakeup_fd, timeout)
             try:
-                select.select([self.wakeup_fd_r], [], [], interval)
-                # clear wakeup pipe if we were interrupted
+                select.select([self.wakeup_fd_r, self.dbcursor._cnx], [], [], interval)
+                # clear pg_conn/wakeup pipe if we were interrupted
+                time.sleep(self.pid / 100 % .1)
+                self.dbcursor._cnx.poll()
                 empty_pipe(self.wakeup_fd_r)
             except select.error as e:
                 if e.args[0] != errno.EINTR:
@@ -1087,7 +1131,7 @@ class WorkerCron(Worker):
                 start_memory = memory_info(psutil.Process(os.getpid()))
 
             from odoo.addons import base
-            base.models.ir_cron.ir_cron._acquire_job(db_name)
+            base.models.ir_cron.ir_cron._process_jobs(db_name)
 
             # dont keep cursors in multi database mode
             if len(db_names) > 1:
@@ -1113,6 +1157,15 @@ class WorkerCron(Worker):
         Worker.start(self)
         if self.multi.socket:
             self.multi.socket.close()
+
+        dbconn = odoo.sql_db.db_connect('postgres')
+        self.dbcursor = dbconn.cursor()
+        self.dbcursor.execute("LISTEN cron_trigger")
+        self.dbcursor.commit()
+
+    def stop(self):
+        super().stop()
+        self.dbcursor.close()
 
 #----------------------------------------------------------
 # start/stop public api
@@ -1152,18 +1205,15 @@ def load_test_file_py(registry, test_file):
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
         for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
-            for mod_mod in get_test_modules(mod):
+            for mod_mod in loader.get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
-                if test_path == mod_path:
-                    tests = odoo.modules.module.unwrap_suite(
+                if test_path == config._normalize(mod_path):
+                    tests = loader.unwrap_suite(
                         unittest.TestLoader().loadTestsFromModule(mod_mod))
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    result = odoo.modules.module.OdooTestRunner().run(suite)
-                    success = result.wasSuccessful()
-                    if hasattr(registry._assertion_report,'report_result'):
-                        registry._assertion_report.report_result(success)
-                    if not success:
+                    suite(registry._assertion_report)
+                    if not registry._assertion_report.wasSuccessful():
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
@@ -1196,16 +1246,19 @@ def preload_registries(dbnames):
                 t0 = time.time()
                 t0_sql = odoo.sql_db.sql_counter
                 module_names = (registry.updated_modules if update_module else
-                                registry._init_modules)
+                                sorted(registry._init_modules))
                 _logger.info("Starting post tests")
+                tests_before = registry._assertion_report.testsRun
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
-                        result = run_unit_tests(module_name, position='post_install')
-                        registry._assertion_report.record_result(result)
-                _logger.info("All post-tested in %.2fs, %s queries",
-                             time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+                        result = loader.run_suite(loader.make_suite(module_name, 'post_install'), module_name)
+                        registry._assertion_report.update(result)
+                _logger.info("%d post-tests in %.2fs, %s queries",
+                             registry._assertion_report.testsRun - tests_before,
+                             time.time() - t0,
+                             odoo.sql_db.sql_counter - t0_sql)
 
-            if registry._assertion_report.failures:
+            if not registry._assertion_report.wasSuccessful():
                 rc += 1
         except Exception:
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)

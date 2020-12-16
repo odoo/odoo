@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_payment_register_form" model="ir.ui.view">
+            <field name="name">account.payment.register.form</field>
+            <field name="model">account.payment.register</field>
+            <field name="arch" type="xml">
+                <form string="Register Payment">
+                    <!-- Invisible fields -->
+                    <field name="line_ids" invisible="1"/>
+                    <field name="can_edit_wizard" invisible="1" force_save="1"/>
+                    <field name="can_group_payments" invisible="1" force_save="1"/>
+                    <field name="payment_type" invisible="1" force_save="1"/>
+                    <field name="partner_type" invisible="1" force_save="1"/>
+                    <field name="source_amount" invisible="1" force_save="1"/>
+                    <field name="source_amount_currency" invisible="1" force_save="1"/>
+                    <field name="source_currency_id" invisible="1" force_save="1"/>
+                    <field name="company_id" invisible="1" force_save="1"/>
+                    <field name="partner_id" invisible="1" force_save="1"/>
+                    <field name="country_code" invisible="1" force_save="1"/>
+
+                    <field name="show_partner_bank_account" invisible="1"/>
+                    <field name="require_partner_bank_account" invisible="1"/>
+                    <field name="hide_payment_method" invisible="1"/>
+                    <field name="available_payment_method_ids" invisible="1"/>
+                    <field name="company_currency_id" invisible="1"/>
+
+                    <group>
+                        <group name="group1">
+                            <field name="journal_id" widget="selection" required="1"/>
+                            <field name="payment_method_id" widget="radio"
+                                   required="1"
+                                   attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>
+                            <field name="partner_bank_id"
+                                   attrs="{'invisible': ['|', ('show_partner_bank_account', '=', False), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)],
+                                           'required': [('require_partner_bank_account', '=', True), ('can_edit_wizard', '=', True), '|', ('can_group_payments', '=', False), ('group_payment', '=', False)]}"/>
+                            <field name="group_payment"
+                                   attrs="{'invisible': [('can_group_payments', '=', False)]}"/>
+                        </group>
+                        <group name="group2">
+                            <label for="amount"
+                                   attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"/>
+                            <div name="amount_div" class="o_row"
+                                 attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}">
+                                <field name="amount"/>
+                                <field name="currency_id"
+                                       options="{'no_create': True, 'no_open': True}"
+                                       groups="base.group_multi_currency"/>
+                            </div>
+                            <field name="payment_date"/>
+                            <field name="communication"
+                                   attrs="{'invisible': ['|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"/>
+                        </group>
+                        <group name="group3"
+                               attrs="{'invisible': ['|', ('payment_difference', '=', 0.0), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"
+                               groups="account.group_account_readonly">
+                            <label for="payment_difference"/>
+                            <div>
+                                <field name="payment_difference"/>
+                                <field name="payment_difference_handling" widget="radio" nolabel="1"/>
+                                <div attrs="{'invisible': [('payment_difference_handling','=','open')]}">
+                                    <label for="writeoff_account_id" string="Post Difference In" class="oe_edit_only"/>
+                                    <field name="writeoff_account_id"
+                                           string="Post Difference In"
+                                           options="{'no_create': True}"
+                                           attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                    <label for="writeoff_label" class="oe_edit_only" string="Label"/>
+                                    <field name="writeoff_label" attrs="{'required': [('payment_difference_handling', '=', 'reconcile')]}"/>
+                                </div>
+                            </div>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Create Payment" name="action_create_payments" type="object" class="oe_highlight"/>
+                        <button string="Cancel" class="btn btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

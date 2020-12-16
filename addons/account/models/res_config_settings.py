@@ -11,11 +11,26 @@ class ResConfigSettings(models.TransientModel):
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", required=True, readonly=False,
         string='Currency', help="Main currency of the company.")
     currency_exchange_journal_id = fields.Many2one(
-        'account.journal',
+        comodel_name='account.journal',
         related='company_id.currency_exchange_journal_id', readonly=False,
-        string="Exchange Gain or Loss Journal",
+        string="Currency Exchange Journal",
         domain="[('company_id', '=', company_id), ('type', '=', 'general')]",
         help='The accounting journal where automatic exchange differences will be registered')
+    income_currency_exchange_account_id = fields.Many2one(
+        comodel_name="account.account",
+        related="company_id.income_currency_exchange_account_id",
+        string="Gain Account",
+        readonly=False,
+        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
+                             ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_revenue').id,
+                                                             self.env.ref('account.data_account_type_other_income').id])
+    expense_currency_exchange_account_id = fields.Many2one(
+        comodel_name="account.account",
+        related="company_id.expense_currency_exchange_account_id",
+        string="Loss Account",
+        readonly=False,
+        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', company_id),\
+                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
     has_chart_of_accounts = fields.Boolean(compute='_compute_has_chart_of_accounts', string='Company has a chart of accounts')
     chart_template_id = fields.Many2one('account.chart.template', string='Template', default=lambda self: self.env.company.chart_template_id,
         domain="[('visible','=', True)]")
@@ -29,7 +44,6 @@ class ResConfigSettings(models.TransientModel):
     group_analytic_tags = fields.Boolean(string='Analytic Tags', implied_group='analytic.group_analytic_tags')
     group_warning_account = fields.Boolean(string="Warnings in Invoices", implied_group='account.group_warning_account')
     group_cash_rounding = fields.Boolean(string="Cash Rounding", implied_group='account.group_cash_rounding')
-    group_fiscal_year = fields.Boolean(string='Fiscal Years', implied_group='account.group_fiscal_year')
     # group_show_line_subtotals_tax_excluded and group_show_line_subtotals_tax_included are opposite,
     # so we can assume exactly one of them will be set, and not the other.
     # We need both of them to coexist so we can take advantage of automatic group assignation.
@@ -59,8 +73,6 @@ class ResConfigSettings(models.TransientModel):
              '-This installs the account_batch_payment module.')
     module_account_sepa = fields.Boolean(string='SEPA Credit Transfer (SCT)')
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
-    module_account_plaid = fields.Boolean(string="Plaid Connector")
-    module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically")
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
@@ -74,17 +86,24 @@ class ResConfigSettings(models.TransientModel):
     module_snailmail_account = fields.Boolean(string="Snailmail")
     tax_exigibility = fields.Boolean(string='Cash Basis', related='company_id.tax_exigibility', readonly=False)
     tax_cash_basis_journal_id = fields.Many2one('account.journal', related='company_id.tax_cash_basis_journal_id', string="Tax Cash Basis Journal", readonly=False)
-    account_bank_reconciliation_start = fields.Date(string="Bank Reconciliation Threshold",
-        related='company_id.account_bank_reconciliation_start', readonly=False,
-        help="""The bank reconciliation widget won't ask to reconcile payments older than this date.
-               This is useful if you install accounting after having used invoicing for some time and
-               don't want to reconcile all the past payments with bank statements.""")
+    account_cash_basis_base_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Base Tax Received Account",
+        readonly=False,
+        related='company_id.account_cash_basis_base_account_id',
+        domain=[('deprecated', '=', False)])
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
     invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
     invoice_terms = fields.Text(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
+    invoice_terms_html = fields.Html(related='company_id.invoice_terms_html', string="Terms & Conditions as a Web page",
+                                     readonly=False)
+    terms_type = fields.Selection(
+        related='company_id.terms_type', readonly=False)
+    preview_ready = fields.Boolean(string="Display preview button", compute='_compute_terms_preview')
+
     use_invoice_terms = fields.Boolean(
         string='Default Terms & Conditions',
         config_parameter='account.use_invoice_terms')
@@ -128,11 +147,6 @@ class ResConfigSettings(models.TransientModel):
         if self.module_account_budget:
             self.group_analytic_accounting = True
 
-    @api.onchange('module_account_yodlee')
-    def onchange_account_yodlee(self):
-        if self.module_account_yodlee:
-            self.module_account_plaid = True
-
     @api.onchange('tax_exigibility')
     def _onchange_tax_exigibility(self):
         res = {}
@@ -147,6 +161,13 @@ class ResConfigSettings(models.TransientModel):
                              'Modify your taxes first before disabling this setting.')
             }
         return res
+
+    @api.depends('terms_type')
+    def _compute_terms_preview(self):
+        for setting in self:
+            # We display the preview button only if the terms_type is html in the setting but also on the company
+            # to avoid landing on an error page (see terms.py controller)
+            setting.preview_ready = self.env.company.terms_type == 'html' and setting.terms_type == 'html'
 
     @api.model
     def create(self, values):

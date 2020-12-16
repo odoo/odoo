@@ -9,7 +9,7 @@ from dateutil.relativedelta import relativedelta
 class FleetVehicleLogContract(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _name = 'fleet.vehicle.log.contract'
-    _description = 'Contract information on a vehicle'
+    _description = 'Vehicle Contract'
     _order = 'state desc,expiration_date'
 
     def compute_next_year_date(self, strdate):
@@ -17,9 +17,9 @@ class FleetVehicleLogContract(models.Model):
         start_date = fields.Date.from_string(strdate)
         return fields.Date.to_string(start_date + oneyear)
 
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', default=1, required=True, help='Vehicle concerned by this log')
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
     cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost', domain=[('category', '=', 'contract')])
-    amount = fields.Float('Cost')
+    amount = fields.Monetary('Cost')
     date = fields.Date(help='Date when the cost has been executed')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
@@ -33,7 +33,7 @@ class FleetVehicleLogContract(models.Model):
         help='Date when the coverage of the contract expirates (by default, one year after begin date)')
     days_left = fields.Integer(compute='_compute_days_left', string='Warning Date')
     insurer_id = fields.Many2one('res.partner', 'Vendor')
-    purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string='Driver')
+    purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string='Current Driver')
     ins_ref = fields.Char('Reference', size=64, copy=False)
     state = fields.Selection([
         ('futur', 'Incoming'),
@@ -45,7 +45,7 @@ class FleetVehicleLogContract(models.Model):
         tracking=True,
         copy=False)
     notes = fields.Text('Terms and Conditions', help='Write here all supplementary information relative to this contract', copy=False)
-    cost_generated = fields.Float('Recurring Cost')
+    cost_generated = fields.Monetary('Recurring Cost')
     cost_frequency = fields.Selection([
         ('no', 'No'),
         ('daily', 'Daily'),
@@ -55,7 +55,7 @@ class FleetVehicleLogContract(models.Model):
         ], 'Recurring Cost Frequency', default='monthly', help='Frequency of the recuring cost', required=True)
     service_ids = fields.Many2many('fleet.service.type', string="Included Services")
 
-    @api.depends('vehicle_id', 'cost_subtype_id')
+    @api.depends('vehicle_id.name', 'cost_subtype_id')
     def _compute_contract_name(self):
         for record in self:
             name = record.vehicle_id.name
@@ -130,30 +130,31 @@ class FleetVehicleLogServices(models.Model):
     _rec_name = 'service_type_id'
     _description = 'Services for vehicles'
 
-    @api.model
-    def default_get(self, default_fields):
-        res = super(FleetVehicleLogServices, self).default_get(default_fields)
-        service = self.env.ref('fleet.type_service_service_8', raise_if_not_found=False)
-        res.update({
-            'date': fields.Date.context_today(self),
-            'service_type_id': service.id if service else None,
-        })
-        return res
-
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', default=1, required=True, help='Vehicle concerned by this log')
-    amount = fields.Float('Cost')
+    active = fields.Boolean(default=True)
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
+    amount = fields.Monetary('Cost')
+    description = fields.Char('Description')
     odometer_id = fields.Many2one('fleet.vehicle.odometer', 'Odometer', help='Odometer measure of the vehicle at the moment of this log')
     odometer = fields.Float(compute="_get_odometer", inverse='_set_odometer', string='Odometer Value',
         help='Odometer measure of the vehicle at the moment of this log')
     odometer_unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    date = fields.Date(help='Date when the cost has been executed')
+    date = fields.Date(help='Date when the cost has been executed', default=fields.Date.context_today)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string="Driver")
+    purchaser_id = fields.Many2one('res.partner', string="Driver", compute='_compute_purchaser_id', readonly=False, store=True)
     inv_ref = fields.Char('Vendor Reference')
     vendor_id = fields.Many2one('res.partner', 'Vendor')
     notes = fields.Text()
-    service_type_id = fields.Many2one('fleet.service.type', 'Service Type', required=True)
+    service_type_id = fields.Many2one(
+        'fleet.service.type', 'Service Type', required=True,
+        default=lambda self: self.env.ref('fleet.type_service_service_8', raise_if_not_found=False),
+    )
+    state = fields.Selection([
+        ('todo', 'To Do'),
+        ('running', 'Running'),
+        ('done', 'Done'),
+        ('cancelled', 'Cancelled'),
+    ], default='todo', string='Stage')
 
     def _get_odometer(self):
         self.odometer = 0
@@ -181,3 +182,8 @@ class FleetVehicleLogServices(models.Model):
                 # odometer log with 0, which is to be avoided
                 del data['odometer']
         return super(FleetVehicleLogServices, self).create(vals_list)
+
+    @api.depends('vehicle_id')
+    def _compute_purchaser_id(self):
+        for service in self:
+            service.purchaser_id = service.vehicle_id.driver_id

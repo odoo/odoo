@@ -2,7 +2,6 @@ odoo.define('pos_hr.employees', function (require) {
     "use strict";
 
 var models = require('point_of_sale.models');
-var rpc = require('web.rpc');
 
 models.load_models([{
     model:  'hr.employee',
@@ -39,7 +38,7 @@ models.PosModel = models.PosModel.extend({
         var self = this;
         return posmodel_super.load_server_data.apply(this, arguments).then(function () {
             var employee_ids = _.map(self.employees, function(employee){return employee.id;});
-            var records = rpc.query({
+            var records = self.rpc({
                 model: 'hr.employee',
                 method: 'get_barcodes_and_pin_hashed',
                 args: [employee_ids],

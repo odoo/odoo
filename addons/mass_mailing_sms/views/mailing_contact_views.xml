@@ -9,12 +9,17 @@
                 <field name="mobile"/>
                 <field name="phone_sanitized" invisible="1"/>
             </xpath>
-            <xpath expr="//filter[@name='filter_not_optout']" position="after">
+            <xpath expr="//filter[@name='filter_blacklisted']" position="attributes">
+                <attribute name="domain">['|', ('is_blacklisted','=',True), ('phone_sanitized_blacklisted','=',True)]</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='filter_valid_email_recipient']" position="after">
                 <separator/>
                 <filter string="Valid SMS Recipients"
                     name="filter_valid_sms_recipient"
                     domain="[('opt_out', '=', False), ('phone_sanitized_blacklisted', '=', False), ('phone_sanitized', '!=', False)]"
                     invisible="not context.get('default_list_ids')"/>
+            </xpath>
+            <xpath expr="//filter[@name='filter_not_email_bl']" position="after">
                 <separator/>
                 <filter string="Exclude Blacklisted Phone"
                     name="filter_not_phone_bl"

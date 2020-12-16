@@ -4,9 +4,9 @@
 import logging
 import json
 from odoo import api, fields, models, exceptions, _
-from odoo.addons.iap import jsonrpc
+from odoo.addons.iap.tools import iap_tools
+# TDE FIXME: check those errors at iap level ?
 from requests.exceptions import ConnectionError, HTTPError
-from odoo.addons.iap.models.iap import InsufficientCreditError
 
 _logger = logging.getLogger(__name__)
 
@@ -96,11 +96,11 @@ class ResPartner(models.Model):
             'zip': self.env.company.zip,
         })
         try:
-            return jsonrpc(url=url, params=params, timeout=timeout), False
+            return iap_tools.iap_jsonrpc(url=url, params=params, timeout=timeout), False
         except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
             _logger.error('Autocomplete API error: %s' % str(exception))
             return False, str(exception)
-        except InsufficientCreditError as exception:
+        except iap_tools.InsufficientCreditError as exception:
             _logger.warning('Insufficient Credits for Autocomplete Service: %s' % str(exception))
             return False, 'Insufficient Credit'
 
@@ -166,7 +166,7 @@ class ResPartner(models.Model):
 
     def _is_vat_syncable(self, vat):
         vat_country_code = vat[:2]
-        partner_country_code = self.country_id and self.country_id.code
+        partner_country_code = self.country_id.code if self.country_id else ''
         return self._is_company_in_europe(vat_country_code) and (partner_country_code == vat_country_code or not partner_country_code)
 
     def _is_synchable(self):
@@ -184,9 +184,11 @@ class ResPartner(models.Model):
         if len(vals_list) == 1:
             partners._update_autocomplete_data(vals_list[0].get('vat', False))
             if partners.additional_info:
+                template_values = json.loads(partners.additional_info)
+                template_values['flavor_text'] = _("Partner created by Odoo Partner Autocomplete Service")
                 partners.message_post_with_view(
-                    'partner_autocomplete.additional_info_template',
-                    values=json.loads(partners.additional_info),
+                    'iap_mail.enrich_company',
+                    values=template_values,
                     subtype_id=self.env.ref('mail.mt_note').id,
                 )
                 partners.write({'additional_info': False})

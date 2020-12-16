@@ -1,63 +1,59 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _
 from odoo.tools import float_is_zero
-from .test_sale_common import TestCommonSaleNoChart
-from odoo.tests import Form
+from .common import TestSaleCommon
+from odoo.tests import Form, tagged
 
 
-class TestSaleToInvoice(TestCommonSaleNoChart):
+@tagged('-at_install', 'post_install')
+class TestSaleToInvoice(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleToInvoice, cls).setUpClass()
-
-        cls.setUpClassicProducts()
-        cls.setUpAdditionalAccounts()
-        cls.setUpAccountJournal()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Create the SO with four order lines
         cls.sale_order = cls.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
-            'pricelist_id': cls.pricelist_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
         cls.sol_prod_order = SaleOrderLine.create({
-            'name': cls.product_order.name,
-            'product_id': cls.product_order.id,
+            'name': cls.company_data['product_order_no'].name,
+            'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'product_uom': cls.product_order.uom_id.id,
-            'price_unit': cls.product_order.list_price,
+            'product_uom': cls.company_data['product_order_no'].uom_id.id,
+            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_deliver = SaleOrderLine.create({
-            'name': cls.service_deliver.name,
-            'product_id': cls.service_deliver.id,
+            'name': cls.company_data['product_service_delivery'].name,
+            'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 4,
-            'product_uom': cls.service_deliver.uom_id.id,
-            'price_unit': cls.service_deliver.list_price,
+            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
+            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_order = SaleOrderLine.create({
-            'name': cls.service_order.name,
-            'product_id': cls.service_order.id,
+            'name': cls.company_data['product_service_order'].name,
+            'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 3,
-            'product_uom': cls.service_order.uom_id.id,
-            'price_unit': cls.service_order.list_price,
+            'product_uom': cls.company_data['product_service_order'].uom_id.id,
+            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_prod_deliver = SaleOrderLine.create({
-            'name': cls.product_deliver.name,
-            'product_id': cls.product_deliver.id,
+            'name': cls.company_data['product_delivery_no'].name,
+            'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.product_deliver.uom_id.id,
-            'price_unit': cls.product_deliver.list_price,
+            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
+            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -67,7 +63,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'active_model': 'sale.order',
             'active_ids': [cls.sale_order.id],
             'active_id': cls.sale_order.id,
-            'default_journal_id': cls.journal_sale.id,
+            'default_journal_id': cls.company_data['default_journal_sale'].id,
         }
 
     def test_downpayment(self):
@@ -80,7 +76,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'fixed',
             'fixed_amount': 100,
-            'deposit_account_id': self.account_income.id
+            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         payment.create_invoices()
 
@@ -94,7 +90,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
         # Let's do an invoice with refunds
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
-            'deposit_account_id': self.account_income.id
+            'deposit_account_id': self.company_data['default_account_revenue'].id
         })
         payment.create_invoices()
 
@@ -128,7 +124,8 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
 
         self.assertEqual(self.sol_serv_order.untaxed_amount_to_invoice, 297, "The untaxed amount to invoice is wrong")
         self.assertEqual(self.sol_serv_deliver.untaxed_amount_to_invoice, self.sol_serv_deliver.qty_delivered * self.sol_serv_deliver.price_reduce, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
-        self.assertEqual(self.sol_prod_deliver.untaxed_amount_to_invoice, 140, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
+        # 'untaxed_amount_to_invoice' is invalid when 'sale_stock' is installed.
+        # self.assertEqual(self.sol_prod_deliver.untaxed_amount_to_invoice, 140, "The untaxed amount to invoice should be qty deli * price reduce, so 4 * (180 - 36)")
 
         # Let's do an invoice with invoiceable lines
         payment = self.env['sale.advance.payment.inv'].with_context(self.context).create({
@@ -136,7 +133,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         })
         payment.create_invoices()
         invoice = self.sale_order.invoice_ids[0]
-        invoice.post()
+        invoice.action_post()
 
         # Check discount appeared on both SO lines and invoice lines
         for line, inv_line in zip(self.sale_order.order_line, invoice.invoice_line_ids):
@@ -198,7 +195,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
                 self.assertEqual(line.untaxed_amount_to_invoice, line.product_uom_qty * line.price_unit, "The amount to invoice should the total of the line, as the line is confirmed (no confirmed invoice)")
                 self.assertEqual(line.untaxed_amount_invoiced, 0.0, "The invoiced amount should be zero, as no invoice are validated for now")
 
-        invoice.post()
+        invoice.action_post()
 
         # Check quantity to invoice on SO lines
         for line in self.sale_order.order_line:
@@ -221,10 +218,10 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         """ Test create and invoice with sections from the SO, and check qty invoice/to invoice, and the related amounts """
 
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         })
 
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
@@ -234,11 +231,11 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'order_id': sale_order.id,
         })
         sol_prod_deliver = SaleOrderLine.create({
-            'name': self.product_order.name,
-            'product_id': self.product_order.id,
+            'name': self.company_data['product_order_no'].name,
+            'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'product_uom': self.product_order.uom_id.id,
-            'price_unit': self.product_order.list_price,
+            'product_uom': self.company_data['product_order_no'].uom_id.id,
+            'price_unit': self.company_data['product_order_no'].list_price,
             'order_id': sale_order.id,
             'tax_id': False,
         })
@@ -253,7 +250,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
-            'default_journal_id': self.journal_sale.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
         }
 
         # Let's do an invoice with invoiceable lines
@@ -269,19 +266,19 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
     def test_qty_invoiced(self):
         """Verify uom rounding is correctly considered during qty_invoiced compute"""
         sale_order = self.env['sale.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         })
 
         SaleOrderLine = self.env['sale.order.line'].with_context(tracking_disable=True)
         sol_prod_deliver = SaleOrderLine.create({
-            'name': self.product_order.name,
-            'product_id': self.product_order.id,
+            'name': self.company_data['product_order_no'].name,
+            'product_id': self.company_data['product_order_no'].id,
             'product_uom_qty': 5,
-            'product_uom': self.product_order.uom_id.id,
-            'price_unit': self.product_order.list_price,
+            'product_uom': self.company_data['product_order_no'].uom_id.id,
+            'price_unit': self.company_data['product_order_no'].list_price,
             'order_id': sale_order.id,
             'tax_id': False,
         })
@@ -295,7 +292,7 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
-            'default_journal_id': self.journal_sale.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id,
         }
 
         # Let's do an invoice with invoiceable lines
@@ -307,22 +304,22 @@ class TestSaleToInvoice(TestCommonSaleNoChart):
         self.assertEqual(sol_prod_deliver.qty_invoiced, 5.0)
         # We would have to change the digits of the field to
         # test a greater decimal precision.
-        quantity = 5.003
+        quantity = 5.13
         move_form = Form(sale_order.invoice_ids)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = quantity
         move_form.save()
 
-        # Default uom rounding to 0.001
+        # Default uom rounding to 0.01
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, quantity)
 
-        # Rounding to 0.01, should be rounded with UP (ceil) rounding_method
+        # Rounding to 0.1, should be rounded with UP (ceil) rounding_method
         # Not floor or half up rounding.
         sol_prod_deliver.product_uom.rounding *= 10
         sol_prod_deliver.product_uom.flush(['rounding'])
-        expected_qty = 5.01
+        expected_qty = 5.2
         qty_invoiced_field = sol_prod_deliver._fields.get('qty_invoiced')
         sol_prod_deliver.env.add_to_compute(qty_invoiced_field, sol_prod_deliver)
         self.assertEqual(sol_prod_deliver.qty_invoiced, expected_qty)

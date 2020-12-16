@@ -4,16 +4,22 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 08:34+0000\n"
-"PO-Revision-Date: 2020-02-13 08:34+0000\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2020-12-11 07:28+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: website_blog
+#: code:addons/website_blog/models/website_blog.py:0
+#, python-format
+msgid "%s (copy)"
+msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
@@ -75,7 +81,7 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
-msgid "<em>No tags definied</em>"
+msgid "<em>No tags defined</em>"
 msgstr ""
 
 #. module: website_blog
@@ -131,7 +137,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_read_next
 msgid ""
-"<span class=\"bg-gamma h6 d-inline-block py-1 px-2 rounded-sm\">Read "
+"<span class=\"bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm\">Read "
 "Next</span>"
 msgstr ""
 
@@ -201,6 +207,22 @@ msgid "All blogs"
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website_blog.js:0
+#, python-format
+msgid "Amazing blog article: %s! Check it live: %s"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid ""
+"An error occured with this latest posts block. If the problem persists, "
+"please consider deleting it and adding a new one"
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_archive_display
 msgid "Archive"
 msgstr ""
@@ -246,6 +268,11 @@ msgid "Author"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__author_name
+msgid "Author Name"
+msgstr ""
+
+#. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__author_avatar
 msgid "Avatar"
 msgstr ""
@@ -256,12 +283,14 @@ msgid "Big Pictures"
 msgstr ""
 
 #. module: website_blog
+#: code:addons/website_blog/models/website.py:0
 #: model:ir.model,name:website_blog.model_blog_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__blog_id
 #: model:website.menu,name:website_blog.menu_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
+#, python-format
 msgid "Blog"
 msgstr ""
 
@@ -310,6 +339,7 @@ msgstr ""
 #: code:addons/website_blog/models/website.py:0
 #: code:addons/website_blog/models/website.py:0
 #: model:ir.actions.act_window,name:website_blog.action_blog_post
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_ids
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_list
 #, python-format
 msgid "Blog Posts"
@@ -384,17 +414,17 @@ msgid "Choose an image from the library."
 msgstr ""
 
 #. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#, python-format
+msgid "Click here to add new content to your website."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid ""
 "Click on \"<b>New</b>\" in the top-right corner to write your first blog "
 "post."
-msgstr ""
-
-#. module: website_blog
-#. openerp-web
-#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
-#, python-format
-msgid "Click on <b>Save</b> to set the picture as cover."
 msgstr ""
 
 #. module: website_blog
@@ -409,7 +439,13 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
+#: model_terms:ir.ui.view,arch_db:website_blog.post_info
 msgid "Comments"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
+msgid "Confirm"
 msgstr ""
 
 #. module: website_blog
@@ -456,6 +492,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
+#: model:ir.model.fields,field_description:website_blog.field_website__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -465,7 +502,7 @@ msgid "Duplicate"
 msgstr ""
 
 #. module: website_blog
-#: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Edit"
 msgstr ""
 
@@ -487,6 +524,11 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the 'Filter Results' page header."
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
+msgid "Existing"
 msgstr ""
 
 #. module: website_blog
@@ -538,6 +580,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__id
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__id
+#: model:ir.model.fields,field_description:website_blog.field_website__id
 msgid "ID"
 msgstr ""
 
@@ -570,6 +613,7 @@ msgstr ""
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__is_published
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_list
 msgid "Is Published"
 msgstr ""
 
@@ -591,6 +635,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post____last_update
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag____last_update
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category____last_update
+#: model:ir.model.fields,field_description:website_blog.field_website____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -684,6 +729,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Name"
 msgstr ""
 
@@ -695,6 +741,18 @@ msgid "New Blog Post"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
+msgid "New tag"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/snippets/s_latest_posts/000.js:0
+#, python-format
+msgid "No blog post was found. Make sure your posts are published."
+msgstr ""
+
+#. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
 msgid "No blog post yet."
 msgstr ""
@@ -702,6 +760,11 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__visits
 msgid "No of Views"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
+msgid "No results for \"%s\"."
 msgstr ""
 
 #. module: website_blog
@@ -767,6 +830,7 @@ msgid "Our blogs"
 msgstr ""
 
 #. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__blog_post_count
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__post_ids
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Posts"
@@ -833,6 +897,18 @@ msgid "SMS Delivery error"
 msgstr ""
 
 #. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
+msgid "Save"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/tours/website_blog.js:0
+#, python-format
+msgid "Search for an image. (eg: type \"business\")"
+msgstr ""
+
+#. module: website_blog
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
@@ -851,6 +927,13 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
 msgid "Select this menu item to create a new blog post."
+msgstr ""
+
+#. module: website_blog
+#: model:ir.model.fields,field_description:website_blog.field_blog_blog__seo_name
+#: model:ir.model.fields,field_description:website_blog.field_blog_post__seo_name
+#: model:ir.model.fields,field_description:website_blog.field_blog_tag__seo_name
+msgid "Seo name"
 msgstr ""
 
 #. module: website_blog
@@ -935,6 +1018,7 @@ msgstr ""
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_tree
+#: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
 msgid "Tag List"
 msgstr ""
 
@@ -988,6 +1072,13 @@ msgstr ""
 #. openerp-web
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
+msgid "This tag already exists"
+msgstr ""
+
+#. module: website_blog
+#. openerp-web
+#: code:addons/website_blog/static/src/js/website_blog.editor.js:0
+#, python-format
 msgid "Tiny"
 msgstr ""
 
@@ -1034,6 +1125,11 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_form
 msgid "Used in:"
+msgstr ""
+
+#. module: website_blog
+#: model_terms:ir.ui.view,arch_db:website_blog.post_info
+msgid "Views"
 msgstr ""
 
 #. module: website_blog

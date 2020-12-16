@@ -172,7 +172,7 @@ class TestUiCertification(HttpCaseWithUserDemo):
                         })
                     ]
                 }), (0, 0, {
-                    'title': 'Select all the the products that sell for $100 or more',
+                    'title': 'Select all the products that sell for $100 or more',
                     'sequence': 9,
                     'question_type': 'multiple_choice',
                     'column_nb': '2',

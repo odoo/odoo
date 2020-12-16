@@ -15,6 +15,7 @@ class User(models.Model):
     is_absent = fields.Boolean(related='employee_id.is_absent')
     allocation_used_display = fields.Char(related='employee_id.allocation_used_display')
     allocation_display = fields.Char(related='employee_id.allocation_display')
+    hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -31,6 +32,7 @@ class User(models.Model):
             'is_absent',
             'allocation_used_display',
             'allocation_display',
+            'hr_icon_display',
         ]
         init_res = super(User, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
@@ -57,3 +59,19 @@ class User(models.Model):
                             AND res_users.active = 't'
                             AND date_from <= %%s AND date_to >= %%s''' % field, (now, now))
         return [r[0] for r in self.env.cr.fetchall()]
+
+    def _clean_leave_responsible_users(self):
+        # self = old bunch of leave responsibles
+        # This method compares the current leave managers
+        # and remove the access rights to those who don't
+        # need them anymore
+        approver_group = self.env.ref('hr_holidays.group_hr_holidays_responsible', raise_if_not_found=False)
+        if not self or not approver_group:
+            return
+        res = self.env['hr.employee'].read_group(
+            [('leave_manager_id', 'in', self.ids)],
+            ['leave_manager_id'],
+            ['leave_manager_id'])
+        responsibles_to_remove_ids = set(self.ids) - {x['leave_manager_id'][0] for x in res}
+        approver_group.sudo().write({
+            'users': [(3, manager_id) for manager_id in responsibles_to_remove_ids]})

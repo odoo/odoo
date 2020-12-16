@@ -3,6 +3,7 @@
 
 from itertools import groupby
 from operator import itemgetter
+from collections import defaultdict
 
 from odoo import _, api, fields, models
 
@@ -51,10 +52,11 @@ class StockPackageLevel(models.Model):
         for package_level in self:
             if package_level.is_done:
                 if not package_level.is_fresh_package:
+                    ml_update_dict = defaultdict(float)
                     for quant in package_level.package_id.quant_ids:
                         corresponding_ml = package_level.move_line_ids.filtered(lambda ml: ml.product_id == quant.product_id and ml.lot_id == quant.lot_id)
                         if corresponding_ml:
-                            corresponding_ml[0].qty_done = corresponding_ml[0].qty_done + quant.quantity
+                            ml_update_dict[corresponding_ml[0]] += quant.quantity
                         else:
                             corresponding_move = package_level.move_ids.filtered(lambda m: m.product_id == quant.product_id)[:1]
                             self.env['stock.move.line'].create({
@@ -69,7 +71,10 @@ class StockPackageLevel(models.Model):
                                 'result_package_id': package_level.package_id.id,
                                 'package_level_id': package_level.id,
                                 'move_id': corresponding_move.id,
+                                'owner_id': quant.owner_id.id,
                             })
+                    for rec, quant in ml_update_dict.items():
+                        rec.qty_done = quant
             else:
                 package_level.move_line_ids.filtered(lambda ml: ml.product_qty == 0).unlink()
                 package_level.move_line_ids.filtered(lambda ml: ml.product_qty != 0).write({'qty_done': 0})
@@ -100,6 +105,8 @@ class StockPackageLevel(models.Model):
                 package_level.state = 'done'
             elif package_level.move_line_ids.filtered(lambda ml: ml.state == 'cancel') or package_level.move_ids.filtered(lambda m: m.state == 'cancel'):
                 package_level.state = 'cancel'
+            else:
+                package_level.state = 'draft'
 
     def _compute_show_lot(self):
         for package_level in self:
@@ -140,8 +147,6 @@ class StockPackageLevel(models.Model):
         if vals.get('location_dest_id'):
             result.mapped('move_line_ids').write({'location_dest_id': vals['location_dest_id']})
             result.mapped('move_ids').write({'location_dest_id': vals['location_dest_id']})
-        if result.picking_id.state != 'draft' and result.location_id and result.location_dest_id and not result.move_ids and not result.move_line_ids:
-            result._generate_moves()
         return result
 
     def write(self, vals):
@@ -178,11 +183,13 @@ class StockPackageLevel(models.Model):
             all_in = False
         return all_in
 
-    @api.depends('state', 'is_fresh_package', 'move_ids', 'move_line_ids')
+    @api.depends('package_id', 'state', 'is_fresh_package', 'move_ids', 'move_line_ids')
     def _compute_location_id(self):
         for pl in self:
             if pl.state == 'new' or pl.is_fresh_package:
                 pl.location_id = False
+            elif pl.package_id:
+                pl.location_id = pl.package_id.location_id
             elif pl.state == 'confirmed' and pl.move_ids:
                 pl.location_id = pl.move_ids[0].location_id
             elif pl.state in ('assigned', 'done') and pl.move_line_ids:
@@ -192,7 +199,7 @@ class StockPackageLevel(models.Model):
 
     def action_show_package_details(self):
         self.ensure_one()
-        view = self.env.ref('stock.package_level_form_view')
+        view = self.env.ref('stock.package_level_form_edit_view')
 
         return {
             'name': _('Package Content'),

@@ -5,7 +5,7 @@ import base64
 import logging
 
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
@@ -61,7 +61,7 @@ class MailTemplate(models.Model):
     scheduled_date = fields.Char('Scheduled Date', help="If set, the queue manager will send the email after the date. If not set, the email will be send as soon as possible. Jinja2 placeholders may be used.")
     auto_delete = fields.Boolean(
         'Auto Delete', default=True,
-        help="This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
+        help="This option permanently removes any track of email after it's been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.")
     # contextual action
     ref_ir_act_window = fields.Many2one('ir.actions.act_window', 'Sidebar action', readonly=True, copy=False,
                                         help="Sidebar action to make this template available on records "
@@ -74,7 +74,7 @@ class MailTemplate(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
-                       name=_("%s (copy)") % self.name)
+                       name=_("%s (copy)", self.name))
         return super(MailTemplate, self).copy(default=default)
 
     def unlink_action(self):
@@ -88,7 +88,7 @@ class MailTemplate(models.Model):
         view = self.env.ref('mail.email_compose_message_wizard_form')
 
         for template in self:
-            button_name = _('Send Mail (%s)') % template.name
+            button_name = _('Send Mail (%s)', template.name)
             action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
@@ -116,7 +116,7 @@ class MailTemplate(models.Model):
 
         if self.use_default_to or self._context.get('tpl_force_default_to'):
             records = self.env[self.model].browse(res_ids).sudo()
-            default_recipients = self.env['mail.thread']._message_get_default_recipients_on_records(records)
+            default_recipients = records._message_get_default_recipients()
             for res_id, recipients in default_recipients.items():
                 results[res_id].pop('partner_to', None)
                 results[res_id].update(recipients)
@@ -196,11 +196,11 @@ class MailTemplate(models.Model):
                     report_service = report.report_name
 
                     if report.report_type in ['qweb-html', 'qweb-pdf']:
-                        result, format = report.render_qweb_pdf([res_id])
+                        result, format = report._render_qweb_pdf([res_id])
                     else:
-                        res = report.render([res_id])
+                        res = report._render([res_id])
                         if not res:
-                            raise UserError(_('Unsupported report type %s found.') % report.report_type)
+                            raise UserError(_('Unsupported report type %s found.', report.report_type))
                         result, format = res
 
                     # TODO in trunk, change return format to binary to match message_post expected format
@@ -245,8 +245,8 @@ class MailTemplate(models.Model):
 
         # create a mail_mail based on values, without attachments
         values = self.generate_email(res_id, ['subject', 'body_html', 'email_from', 'email_to', 'partner_to', 'email_cc', 'reply_to', 'scheduled_date'])
-        values['recipient_ids'] = [(4, pid) for pid in values.get('partner_ids', list())]
-        values['attachment_ids'] = [(4, aid) for aid in values.get('attachment_ids', list())]
+        values['recipient_ids'] = [Command.link(pid) for pid in values.get('partner_ids', list())]
+        values['attachment_ids'] = [Command.link(aid) for aid in values.get('attachment_ids', list())]
         values.update(email_values or {})
         attachment_ids = values.pop('attachment_ids', [])
         attachments = values.pop('attachments', [])
@@ -267,7 +267,7 @@ class MailTemplate(models.Model):
                     'company': 'company_id' in record and record['company_id'] or self.env.company,
                     'record': record,
                 }
-                body = template.render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
         mail = self.env['mail.mail'].sudo().create(values)
 

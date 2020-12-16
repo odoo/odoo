@@ -79,7 +79,7 @@
        <record id="action_report_crm_lead_salesteam" model="ir.actions.act_window">
            <field name="name">Leads Analysis</field>
            <field name="res_model">crm.lead</field>
-           <field name="context">{'search_default_team_id': [active_id], 'time_ranges': {'field':'create_date', 'range':'last_30_days'}}</field>
+           <field name="context">{'search_default_team_id': [active_id], 'search_default_filter_create_date': 1}}</field>
            <field name="domain">[]</field>
            <field name="view_mode">graph,pivot,tree,form</field>
            <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
@@ -91,7 +91,11 @@
             <field name="res_model">crm.lead</field>
             <field name="view_mode">graph,pivot,tree,form</field>
             <field name="search_view_id" ref="crm.crm_opportunity_report_view_search"/>
-            <field name="context">{'search_default_team_id': [active_id], 'tree_view_ref': 'crm.crm_case_tree_view_oppor','search_default_opportunity': True, 'time_ranges': {'field':'create_date', 'range':'last_365_days'}}</field>
+            <field name="context">{
+                'search_default_team_id': [active_id],
+                'tree_view_ref': 'crm.crm_case_tree_view_oppor',
+                'search_default_opportunity': True,
+                'search_default_filter_create_date': 1}</field>
             <field name="domain">[]</field>
             <field name="help">Opportunities Analysis gives you an instant access to your opportunities with information such as the expected revenue, planned cost, missed deadlines or the number of interactions per opportunity. This report is mainly used by the sales manager in order to do the periodic review with the channels of the sales pipeline.</field>
         </record>
@@ -122,14 +126,15 @@
                         <field name="alias_id" class="oe_read_only oe_inline"
                             string="Email Alias" required="0"/>
                         <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            <button  icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
+                            <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
+                            <button icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
                         </div>
                     </div>
                     <field name="alias_contact"
                         string="Accept Emails From"
                         attrs="{'invisible': [('use_leads', '=', False), ('use_opportunities', '=', False)]}"/>
-                    <field name="alias_user_id" string="Assign to"/>
                 </xpath>
             </field>
         </record>
@@ -209,7 +214,7 @@
                                 </a>
                             </div>
                             <div class="col-4 text-right text-truncate">
-                                <field name="opportunities_amount" widget="monetary"/>
+                                <field name="opportunities_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </div>
                         </div>
                         <div class="row" t-if="record.opportunities_overdue_count.raw_value">
@@ -221,7 +226,7 @@
                                 </a>
                             </div>
                              <div class="col-4 text-right text-truncate">
-                                <field name="opportunities_overdue_amount" widget="monetary"/>
+                                <field name="opportunities_overdue_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </div>
                         </div>
                     </xpath>
@@ -266,11 +271,6 @@
                     </xpath>
                 </data>
             </field>
-        </record>
-
-        <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
-            <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['crm.lead', 'res.partner'])]</field>
-            <field name="context">{'default_res_model': 'crm.lead'}</field>
         </record>
 
 </odoo>

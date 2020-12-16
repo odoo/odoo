@@ -1,0 +1,103 @@
+# Doc: https://help.github.com/en/github/creating-cloning-and-archiving-repositories/about-code-owners
+# Order is important; the last matching pattern takes the most precedence.
+
+# Please apply the following guidelines when updating this file.
+
+# Paths and patterns
+# ==================
+
+# Paths should be ordered alphabetically (when precedence is not an issue).
+# Avoid complex patterns, prefer full path targeting files or directories.
+
+# When creating a more specific pattern of an existing more generic pattern:
+# - The specific pattern must be listed below.
+# - Teams and users of the generic pattern have to be copied to the specific
+#   pattern, unless they approve to lose their ownership for the paths matched
+#   by the specific pattern.
+
+# Teams and users
+# ===============
+
+# Prefer using teams whenever possible, as members of teams and review
+# assignation rules can be dynamically managed outside of this file without
+# requiring a new commit.
+# Only define users for specific cases.
+# For each pattern: list teams first, then users, both alphabetically.
+
+# Listed teams and users must have write permissions on the repository for the
+# feature to work.
+
+
+# Generic fallback rules
+
+/addons/*/models/ir_http.py @odoo/rd-website
+/addons/*/models/ir_qweb.py @odoo/rd-website
+/addons/*/models/ir_qweb_fields.py @odoo/rd-website
+/addons/website*/ @odoo/rd-website
+
+
+# Specific rules
+
+/.github/CODEOWNERS @odoo/rd-code-owners
+
+/addons/account/tests/test_portal_attachment.py @odoo/rd-images
+
+/addons/http_routing/ @odoo/rd-website
+
+/addons/im_livechat/ @odoo/rd-discuss
+
+/addons/mail/ @odoo/rd-discuss
+/addons/mail/**/*.py @odoo/rd-discuss @odoo/rd-sm
+/addons/mail/models/ir_http.py @odoo/rd-discuss @odoo/rd-website
+
+/addons/mail_bot/ @odoo/rd-discuss
+/addons/mail_bot/models/ir_http.py @odoo/rd-discuss @odoo/rd-website
+
+/addons/mass_mailing/**/*.py @odoo/rd-sm
+
+/addons/portal/models/ir_http.py @odoo/rd-website
+
+/addons/sms/ @odoo/rd-discuss
+/addons/sms/**/*.py @odoo/rd-discuss @odoo/rd-sm
+
+/addons/snailmail/ @odoo/rd-discuss
+/addons/snailmail/models/ir_qweb_fields.py @odoo/rd-discuss @odoo/rd-website
+
+/addons/test_mail/ @odoo/rd-discuss @odoo/rd-sm
+/addons/test_mail_full/ @odoo/rd-discuss @odoo/rd-sm
+/addons/test_mass_mailing/ @odoo/rd-sm
+/addons/test_website/ @odoo/rd-website
+
+/addons/web/controllers/main.py @odoo/rd-images @odoo/rd-security
+/addons/web/models/ir_qweb.py @odoo/rd-images @odoo/rd-website
+/addons/web/tests/test_image.py @odoo/rd-images
+
+/addons/web_editor/models/ir_qweb.py @odoo/rd-website
+/addons/web_unsplash/models/ir_qweb.py @odoo/rd-website
+
+/addons/website/models/ir_qweb.py @odoo/rd-website
+/addons/website/models/ir_qweb_fields.py @odoo/rd-website
+
+/addons/website_livechat/ @odoo/rd-discuss @odoo/rd-website
+/addons/website_sale/tests/test_website_sale_image.py @odoo/rd-images @odoo/rd-website
+
+/odoo/addons/base/models/ir_attachment.py @odoo/rd-images
+/odoo/addons/base/models/ir_qweb.py @odoo/rd-website
+/odoo/addons/base/models/ir_qweb_fields.py @odoo/rd-website
+/odoo/addons/base/models/qweb.py @odoo/rd-website
+
+/odoo/addons/base/tests/test_image.py @odoo/rd-images
+/odoo/addons/base/tests/test_ir_http.py @odoo/rd-website
+
+/odoo/modules/migration.py @odoo/upgrade
+
+# expression, query
+/odoo/osv/ @odoo/rd-security
+
+# safe_eval, mimetypes, float_utils, mail sanitizer, image utils, ..
+/odoo/tools/ @odoo/rd-security
+/odoo/tools/image.py @odoo/rd-images @odoo/rd-security
+/odoo/tools/mimetypes.py @odoo/rd-images @odoo/rd-security
+
+/odoo/http.py @odoo/rd-security @odoo/rd-website
+/odoo/sql_db.py @odoo/rd-security

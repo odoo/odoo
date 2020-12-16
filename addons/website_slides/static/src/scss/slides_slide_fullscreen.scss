@@ -1,7 +1,7 @@
 
 .o_wslides_fs_main {
     @include o-position-absolute(0,0,0,0);
-    z-index: $zindex-dropdown;
+    z-index: $zindex-website-header + 1;
     background-image: linear-gradient(120deg, $o-wslides-color-dark2, $o-wslides-color-dark3);
 
     .o_wslides_slide_fs_header {
@@ -119,6 +119,6 @@
 
 .modal-open {
     > .modal-backdrop {
-        z-index: $zindex-dropdown - 1;
+        z-index: $zindex-modal-backdrop;
     }
 }

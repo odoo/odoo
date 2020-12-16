@@ -9,7 +9,7 @@ from lxml import etree
 from lxml.builder import E
 from psycopg2 import IntegrityError
 
-from odoo.exceptions import ValidationError
+from odoo.exceptions import AccessError, ValidationError
 from odoo.tests import common
 from odoo.tools import mute_logger, view_validation
 from odoo.addons.base.models.ir_ui_view import (
@@ -808,6 +808,79 @@ class TestTemplating(ViewCase):
             initial.get('data-oe-xpath'),
             "The node's xpath position should be correct")
 
+    def test_branding_inherit_top_t_field(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """
+                <hello>
+                    <world></world>
+                    <world t-field="a"/>
+                    <world></world>
+                    <world></world>
+                </hello>
+            """
+        })
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <xpath expr="/hello/world[3]" position="after">
+                    <world t-field="b"/>
+                </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        # First t-field should have an indication of xpath
+        [node] = arch.xpath('//*[@t-field="a"]')
+        self.assertEqual(
+            node.get('data-oe-xpath'),
+            '/hello[1]/world[2]',
+            'First t-field has indication of xpath')
+
+        # Second t-field, from inheritance, should also have an indication of xpath
+        [node] = arch.xpath('//*[@t-field="b"]')
+        self.assertEqual(
+            node.get('data-oe-xpath'),
+            '/xpath/world',
+            'Inherited t-field has indication of xpath')
+
+        # The most important assert
+        # The last world xpath should not have been impacted by the t-field from inheritance
+        [node] = arch.xpath('//world[last()]')
+        self.assertEqual(
+            node.get('data-oe-xpath'),
+            '/hello[1]/world[4]',
+            "The node's xpath position should be correct")
+
+        # Also test inherit via non-xpath t-field node, direct children of data,
+        # is not impacted by the feature
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <data>
+                    <world t-field="a" position="replace">
+                        <world t-field="z"/>
+                    </world>
+                </data>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        node = arch.xpath('//world')[1]
+        self.assertEqual(
+            node.get('t-field'),
+            'z',
+            "The node has properly been replaced")
+
     def test_branding_primary_inherit(self):
         view1 = self.View.create({
             'name': "Base view",
@@ -902,6 +975,27 @@ class TestTemplating(ViewCase):
                 })
             )
         )
+
+    def test_branding_attribute_groups(self):
+        view = self.View.create({
+            'name': "Base View",
+            'type': 'qweb',
+            'arch': """<root>
+                <item groups="base.group_no_one"/>
+            </root>""",
+        })
+
+        arch_string = view.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        self.assertEqual(arch, E.root(E.item({
+            'groups': 'base.group_no_one',
+            'data-oe-model': 'ir.ui.view',
+            'data-oe-id': str(view.id),
+            'data-oe-field': 'arch',
+            'data-oe-xpath': '/root[1]/item[1]',
+        })))
 
     def test_call_no_branding(self):
         view = self.View.create({
@@ -1492,7 +1586,7 @@ class TestViews(ViewCase):
                     <field name="inherit_id" domain="[('invalid_field', '=', 'res.users')]"/>
                 </form>
             """,
-            '''Unknow field "ir.ui.view.invalid_field" in domain of <field name="inherit_id"> "[('invalid_field', '=', 'res.users')]"''',
+            '''Unknown field "ir.ui.view.invalid_field" in domain of <field name="inherit_id"> "[('invalid_field', '=', 'res.users')]"''',
         )
 
     def test_domain_field_searchable(self):
@@ -1516,7 +1610,7 @@ class TestViews(ViewCase):
             <form string="View">
                 <field name="name" domain="[('test', '=', 'test')]"/>
             </form>
-        """, "Domain on field without comodel makes no sense for \"name\" (domain:[('test', '=', 'test')])")
+        """, "Domain on non-relational field \"name\" makes no sense (domain:[('test', '=', 'test')])")
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_domain_in_subview(self):
@@ -1774,7 +1868,7 @@ class TestViews(ViewCase):
         self.assertValid(arch % 'True')
         self.assertInvalid(
             arch % "[('model', '=', '1')]",
-            "Attribute readonly evaluation must give a boolean, got [('model', '=', '1')]",
+            "Attribute readonly evaluation expects a boolean, got [('model', '=', '1')]",
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
@@ -1793,11 +1887,11 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             arch % ('name', 'invalid_field'),
-            """Unknow field "ir.ui.view.invalid_field" in domain of <filter name="draft"> "[('invalid_field', '=', 'dummy')]""",
+            """Unknown field "ir.ui.view.invalid_field" in domain of <filter name="draft"> "[('invalid_field', '=', 'dummy')]""",
         )
         self.assertInvalid(
             arch % ('name', 'inherit_children_ids.invalid_field'),
-            """Unknow field "ir.ui.view.invalid_field" in domain of <filter name="draft"> "[('inherit_children_ids.invalid_field', '=', 'dummy')]""",
+            """Unknown field "ir.ui.view.invalid_field" in domain of <filter name="draft"> "[('inherit_children_ids.invalid_field', '=', 'dummy')]""",
         )
         # todo add check for non searchable fields and group by
 
@@ -1811,7 +1905,7 @@ class TestViews(ViewCase):
         self.assertValid(arch % 'name')
         self.assertInvalid(
             arch % 'invalid_field',
-            """Unknow field "invalid_field" in "group_by" value in context="{'group_by':'invalid_field'}""",
+            """Unknown field "invalid_field" in "group_by" value in context="{'group_by':'invalid_field'}""",
         )
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
@@ -1832,7 +1926,7 @@ class TestViews(ViewCase):
                 %s
                 <searchpanel>
                     %s
-                    <field select="multi" name="groups_id" domain="[['%s', '=', %s]]"/>
+                    <field name="groups_id" select="multi" domain="[['%s', '=', %s]]" enable_counters="1"/>
                 </searchpanel>
             </search>
         """
@@ -1847,7 +1941,7 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id"/>', 'inherit_id', 'inherit_id'),
-            """Unknow field "res.groups.inherit_id" in domain of <field name="groups_id"> "[['inherit_id', '=', inherit_id]]""",
+            """Unknown field "res.groups.inherit_id" in domain of <field name="groups_id"> "[['inherit_id', '=', inherit_id]]""",
         )
         self.assertInvalid(
             arch % ('', '<field name="inherit_id" select="multi"/>', 'view_access', 'inherit_id'),
@@ -1857,14 +1951,14 @@ class TestViews(ViewCase):
         arch = """
             <search>
                 <searchpanel>
-                    <field name="inherit_id"/>
+                    <field name="inherit_id" enable_counters="1"/>
                 </searchpanel>
                 <searchpanel>
-                    <field name="inherit_id"/>
+                    <field name="inherit_id" enable_counters="1"/>
                 </searchpanel>
             </search>
         """
-        self.assertInvalid(arch, "Search tag can only contains one search panel")
+        self.assertInvalid(arch, "Search tag can only contain one search panel")
 
     def test_groups_field(self):
         arch = """
@@ -2014,7 +2108,7 @@ class TestViews(ViewCase):
             </tree>
         """
         self.assertValid(arch % '')
-        self.assertInvalid(arch % '<group/>', "Tree child can only be have one of field, button, control, groupby, widget tag (not group)")
+        self.assertInvalid(arch % '<group/>', "Tree child can only have one of field, button, control, groupby, widget, header tag (not group)")
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_tree_groupby(self):
@@ -2027,8 +2121,8 @@ class TestViews(ViewCase):
             </tree>
         """
         self.assertValid(arch % ('model_data_id'))
-        self.assertInvalid(arch % ('type'), "field 'type' found in 'groupby' node can only be of type many2one, found selection")
-        self.assertInvalid(arch % ('dummy'), "field 'dummy' found in 'groupby' node does not exist in model ir.ui.view")
+        self.assertInvalid(arch % ('type'), "Field 'type' found in 'groupby' node can only be of type many2one, found selection")
+        self.assertInvalid(arch % ('dummy'), "Field 'dummy' found in 'groupby' node does not exist in model ir.ui.view")
 
     @mute_logger('odoo.addons.base.models.ir_ui_view')
     def test_tree_groupby_many2one(self):
@@ -2109,7 +2203,7 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             '<form><label for="model"/></form>',
-            "Name 'model' used in 'label for' must be present in view but is missing.",
+            "Name or id 'model' used in 'label for' must be present in view but is missing.",
         )
 
     def test_col_colspan_numerical(self):
@@ -2259,7 +2353,7 @@ class TestViews(ViewCase):
                 'arch': arch,
             })
         message = str(catcher.exception.args[0])
-        self.assertIn('\nView name: %s\nError context:\n' % name, message)
+        self.assertEqual(catcher.exception.context['name'], name)
         if expected_message:
             self.assertIn(expected_message, message)
         else:
@@ -2274,9 +2368,135 @@ class TestViews(ViewCase):
             })
         self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
         message = log_catcher.output[0]
-        self.assertIn('\nView name: %s\nError context:\n' % name, message)
+        self.assertIn('View error context', message)
+        self.assertIn("'name': '%s'" % name, message)
         if expected_message:
             self.assertIn(expected_message, message)
+
+
+class TestViewTranslations(common.TransactionCase):
+    # these tests are essentially the same as in test_translate.py, but they use
+    # the computed field 'arch' instead of the translated field 'arch_db'
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('nl_NL')
+        cls.env['ir.translation']._load_module_terms(['base'], ['fr_FR', 'nl_NL'])
+
+    def create_view(self, archf, terms, **kwargs):
+        view = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'model': 'res.partner',
+            'arch': archf % terms,
+        })
+        # DLE P70: `_sync_terms_translations`, which delete translations for which there is no value, is called sooner than before
+        # because it's called in `_write`, which is called by `flush`, which is called by the `search`.
+        # `arch_db` is in `_write` instead of `create` because `arch_db` is the inverse of `arch`.
+        # We need to flush `arch_db` before creating the translations otherwise the translation for which there is no value will be deleted,
+        # while the `test_sync_update` specifically needs empty translations
+        view.flush()
+        self.env['ir.translation'].create([
+            {
+                'type': 'model_terms',
+                'name': 'ir.ui.view,arch_db',
+                'lang': lang,
+                'res_id': view.id,
+                'src': src,
+                'value': val,
+                'state': 'translated',
+            }
+            for lang, trans_terms in kwargs.items()
+            for src, val in zip(terms, trans_terms)
+        ])
+        return view
+
+    def test_sync(self):
+        """ Check translations of 'arch' after minor change in source terms. """
+        archf = '<form string="X">%s</form>'
+        terms_en = ('Bread and cheeze',)
+        terms_fr = ('Pain et fromage',)
+        terms_nl = ('Brood and kaas',)
+        view = self.create_view(archf, terms_en, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+
+        env_nolang = self.env(context={})
+        env_en = self.env(context={'lang': 'en_US'})
+        env_fr = self.env(context={'lang': 'fr_FR'})
+        env_nl = self.env(context={'lang': 'nl_NL'})
+
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+        # modify source term in view (fixed type in 'cheeze')
+        terms_en = ('Bread and cheese',)
+        view.with_env(env_en).write({'arch': archf % terms_en})
+
+        # check whether translations have been synchronized
+        self.assertEqual(view.with_env(env_nolang).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+        view = self.create_view(archf, terms_fr, en_US=terms_en, fr_FR=terms_fr, nl_NL=terms_nl)
+        # modify source term in view in another language with close term
+        new_terms_fr = ('Pains et fromage',)
+        view.with_env(env_fr).write({'arch': archf % new_terms_fr})
+
+        # check whether translations have been synchronized
+        self.assertEqual(view.with_env(env_nolang).arch, archf % new_terms_fr)
+        self.assertEqual(view.with_env(env_en).arch, archf % terms_en)
+        self.assertEqual(view.with_env(env_fr).arch, archf % new_terms_fr)
+        self.assertEqual(view.with_env(env_nl).arch, archf % terms_nl)
+
+    def test_sync_update(self):
+        """ Check translations after major changes in source terms. """
+        archf = '<form string="X"><div>%s</div><div>%s</div></form>'
+        terms_src = ('Subtotal', 'Subtotal:')
+        terms_en = ('', 'Sub total:')
+        view = self.create_view(archf, terms_src, en_US=terms_en)
+
+        translations = self.env['ir.translation'].search([
+            ('type', '=', 'model_terms'),
+            ('name', '=', "ir.ui.view,arch_db"),
+            ('res_id', '=', view.id),
+        ])
+        self.assertEqual(len(translations), 2)
+
+        # modifying the arch should sync existing translations without errors
+        new_arch = archf % ('Subtotal', 'Subtotal:<br/>')
+        view.write({"arch": new_arch})
+        self.assertEqual(view.arch, new_arch)
+
+        translations = self.env['ir.translation'].search([
+            ('type', '=', 'model_terms'),
+            ('name', '=', "ir.ui.view,arch_db"),
+            ('res_id', '=', view.id),
+        ])
+        # 'Subtotal' being src==value, it will be discared
+        # 'Subtotal:' will be discarded as it match 'Subtotal' instead of 'Subtotal:<br/>'
+        self.assertEqual(len(translations), 0)
+
+    def test_cache_consistency(self):
+        view = self.env["ir.ui.view"].create({
+            "name": "test_translate_xml_cache_invalidation",
+            "model": "res.partner",
+            "arch": "<form><b>content</b></form>",
+        })
+        view_fr = view.with_context({"lang": "fr_FR"})
+        self.assertIn("<b>", view.arch_db)
+        self.assertIn("<b>", view.arch)
+        self.assertIn("<b>", view_fr.arch_db)
+        self.assertIn("<b>", view_fr.arch)
+
+        # write with no lang, and check consistency in other languages
+        view.write({"arch": "<form><i>content</i></form>"})
+        self.assertIn("<i>", view.arch_db)
+        self.assertIn("<i>", view.arch)
+        self.assertIn("<i>", view_fr.arch_db)
+        self.assertIn("<i>", view_fr.arch)
 
 
 class ViewModeField(ViewCase):
@@ -2634,7 +2854,7 @@ class TestOptionalViews(ViewCase):
         """ Change active states of v2 and v3, check that the results
         are as expected
         """
-        self.v2.toggle()
+        self.v2.toggle_active()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).read_combined(['arch'])['arch']
         self.assertEqual(
@@ -2645,7 +2865,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.v3.toggle()
+        self.v3.toggle_active()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).read_combined(['arch'])['arch']
         self.assertEqual(
@@ -2657,7 +2877,7 @@ class TestOptionalViews(ViewCase):
             )
         )
 
-        self.v2.toggle()
+        self.v2.toggle_active()
         context = {'check_view_ids': self.View.search([]).ids}
         arch = self.v0.with_context(context).read_combined(['arch'])['arch']
         self.assertEqual(
@@ -2730,8 +2950,8 @@ class TestQWebRender(ViewCase):
         })
 
         # render view and child view with an id
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render(view1.id)
-        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render(view2.id)
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render(view1.id)
+        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render(view2.id)
 
         self.assertEqual(content1, content2)
 
@@ -2741,14 +2961,14 @@ class TestQWebRender(ViewCase):
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
                             "VALUES ('dummy_ext', 'ir.ui.view', %s, 'base')" % view2.id)
 
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render('base.dummy')
-        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id]).render('base.dummy_ext')
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render('base.dummy')
+        content2 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id])._render('base.dummy_ext')
 
         self.assertEqual(content1, content2)
 
         # render view and primary extension with an id
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render(view1.id)
-        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render(view3.id)
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render(view1.id)
+        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render(view3.id)
 
         self.assertNotEqual(content1, content3)
 
@@ -2756,8 +2976,8 @@ class TestQWebRender(ViewCase):
         self.env.cr.execute("INSERT INTO ir_model_data(name, model, res_id, module)"
                             "VALUES ('dummy_primary_ext', 'ir.ui.view', %s, 'base')" % view3.id)
 
-        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy')
-        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id]).render('base.dummy_primary_ext')
+        content1 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render('base.dummy')
+        content3 = self.env['ir.qweb'].with_context(check_view_ids=[view1.id, view2.id, view3.id])._render('base.dummy_primary_ext')
 
         self.assertNotEqual(content1, content3)
 
@@ -2798,6 +3018,20 @@ class TestValidationTools(common.BaseCase):
             {'x', 'y', 'z'},
         )
 
+class TestAccessRights(common.TransactionCase):
+
+    @common.users('demo')
+    def test_access(self):
+        # a user can not access directly a view
+        with self.assertRaises(AccessError):
+            self.env['ir.ui.view'].search([("model", '=', "res.partner"), ('type', '=', 'form')])
+
+        # but can call fields_view_get
+        self.env['res.partner'].fields_view_get(view_type='form')
+
+        # unless he does not have access to the model
+        with self.assertRaises(AccessError):
+            self.env['ir.ui.view'].fields_view_get(view_type='form')
 
 @common.tagged('post_install', '-at_install', '-standard', 'migration')
 class TestAllViews(common.TransactionCase):

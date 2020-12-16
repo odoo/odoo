@@ -58,6 +58,19 @@ odoo.define('web.FieldWrapper', function (require) {
             }
         }
 
+        /**
+         * Renderers set the '__node' attribute on fields they instantiate. It
+         * is used for instance to evaluate modifiers on multi-edition. In this
+         * case, the controller reads this property on the target of the event.
+         * However, with Owl field Components, it is set on the FieldWrapper,
+         * not the real field Component, which triggers the 'field-changed'
+         * event. This function writes the attribute on that field Component.
+         */
+        mounted() {
+            super.mounted(...arguments);
+            this.componentRef.comp.__node = this.__node;
+        }
+
         //----------------------------------------------------------------------
         // Getters
         //----------------------------------------------------------------------

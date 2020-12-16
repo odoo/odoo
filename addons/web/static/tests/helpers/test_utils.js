@@ -97,6 +97,25 @@ odoo.define('web.test_utils', async function (require) {
         return testUtilsDom.returnAfterNextAnimationFrame();
     }
 
+    /**
+     * Awaits for an additionnal rendering frame initiated by the Owl
+     * compatibility layer processing.
+     *
+     * By default a simple "nextTick" will handle the rendering of any widget/
+     * component stuctures having at most 1 switch between the type of
+     * entities (Component > Widget or Widget > Component). However more time
+     * must be spent rendering in case we have additionnal switches. In such
+     * cases this function must be used (1 call for each additionnal switch)
+     * since it will be removed along with the compatiblity layer once the
+     * framework has been entirely converted, and using this helper will make
+     * it easier to wipe it from the code base.
+     *
+     * @returns {Promise}
+     */
+    async function owlCompatibilityExtraNextTick() {
+        return testUtilsDom.returnAfterNextAnimationFrame();
+    }
+
     // Loading static files cannot be properly simulated when their real content is
     // really needed. This is the case for static XML files so we load them here,
     // before starting the qunit test suite.
@@ -121,7 +140,7 @@ odoo.define('web.test_utils', async function (require) {
     return {
         mock: {
             addMockEnvironment: testUtilsMock.addMockEnvironment,
-            getMockedOwlEnv: testUtilsMock.getMockedOwlEnv,
+            addMockEnvironmentOwl: testUtilsMock.addMockEnvironmentOwl,
             intercept: testUtilsMock.intercept,
             patch: testUtilsMock.patch,
             patchDate: testUtilsMock.patchDate,
@@ -143,6 +162,7 @@ odoo.define('web.test_utils', async function (require) {
             toggleFilterMenu: testUtilsControlPanel.toggleFilterMenu,
             toggleAddCustomFilter: testUtilsControlPanel.toggleAddCustomFilter,
             applyFilter: testUtilsControlPanel.applyFilter,
+            addCondition: testUtilsControlPanel.addCondition,
             // GroupByMenu interactions
             toggleGroupByMenu: testUtilsControlPanel.toggleGroupByMenu,
             toggleAddCustomGroup: testUtilsControlPanel.toggleAddCustomGroup,
@@ -154,13 +174,8 @@ odoo.define('web.test_utils', async function (require) {
             editFavoriteName: testUtilsControlPanel.editFavoriteName,
             saveFavorite: testUtilsControlPanel.saveFavorite,
             deleteFavorite: testUtilsControlPanel.deleteFavorite,
-            // TimeRangeMenu interactions
-            toggleTimeRangeMenu: testUtilsControlPanel.toggleTimeRangeMenu,
-            selectField: testUtilsControlPanel.selectField,
-            selectRange: testUtilsControlPanel.selectRange,
-            selectComparisonRange: testUtilsControlPanel.selectComparisonRange,
-            toggleTimeRangeMenuBox: testUtilsControlPanel.toggleTimeRangeMenuBox,
-            applyTimeRange: testUtilsControlPanel.applyTimeRange,
+            // ComparisonMenu interactions
+            toggleComparisonMenu: testUtilsControlPanel.toggleComparisonMenu,
             // SearchBar interactions
             getFacetTexts: testUtilsControlPanel.getFacetTexts,
             removeFacet: testUtilsControlPanel.removeFacet,
@@ -182,6 +197,7 @@ odoo.define('web.test_utils', async function (require) {
             triggerMouseEvent: testUtilsDom.triggerMouseEvent,
             triggerPositionalMouseEvent: testUtilsDom.triggerPositionalMouseEvent,
             dragAndDrop: testUtilsDom.dragAndDrop,
+            find: testUtilsDom.findItem,
             getNode: testUtilsDom.getNode,
             openDatepicker: testUtilsDom.openDatepicker,
             click: testUtilsDom.click,
@@ -217,6 +233,7 @@ odoo.define('web.test_utils', async function (require) {
         },
         fields: {
             many2one: {
+                createAndEdit: testUtilsFields.clickM2OCreateAndEdit,
                 clickOpenDropdown: testUtilsFields.clickOpenM2ODropdown,
                 clickHighlightedItem: testUtilsFields.clickM2OHighlightedItem,
                 clickItem: testUtilsFields.clickM2OItem,
@@ -234,6 +251,7 @@ odoo.define('web.test_utils', async function (require) {
             dragoverFile: testUtilsFile.dragoverFile,
             dropFile: testUtilsFile.dropFile,
             dropFiles: testUtilsFile.dropFiles,
+            inputFiles: testUtilsFile.inputFiles,
         },
 
         createActionManager: testUtilsCreate.createActionManager,
@@ -249,6 +267,7 @@ odoo.define('web.test_utils', async function (require) {
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,
         nextMicrotaskTick: nextMicrotaskTick,
         nextTick: nextTick,
+        owlCompatibilityExtraNextTick,
         prepareTarget: testUtilsCreate.prepareTarget,
         returnAfterNextAnimationFrame: testUtilsDom.returnAfterNextAnimationFrame,
 

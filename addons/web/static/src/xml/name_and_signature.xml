@@ -49,7 +49,7 @@
                 border, but we remove the padding from the body, so the canvas
                 will overflow on the corners without this rule.
             -->
-            <div class="o_web_sign_signature_group card mt-3" style="overflow: hidden;">
+            <div class="o_web_sign_signature_group bg-white card mt-3" style="overflow: hidden;">
                 <div class="card-header">
                     <div class="row no-gutters">
                         <div class="col-auto">
@@ -83,7 +83,9 @@
                     </div>
                 </div>
 
-                <div class="o_web_sign_signature card-body p-0"/>
+                <div class="o_signature_stroke position-absolute"/>
+
+                <div class="o_web_sign_signature p-0 bg-transparent position-relative"/>
 
                 <div t-attf-class="o_web_sign_load_invalid card-footer d-none">
                     <div class="alert alert-danger mb-0" role="alert">

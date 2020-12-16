@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from odoo import tools
 from odoo import models, fields, api
 
 from functools import lru_cache
@@ -55,7 +54,7 @@ class AccountInvoiceReport(models.Model):
     _depends = {
         'account.move': [
             'name', 'state', 'move_type', 'partner_id', 'invoice_user_id', 'fiscal_position_id',
-            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'invoice_partner_bank_id',
+            'invoice_date', 'invoice_date_due', 'invoice_payment_term_id', 'partner_bank_id',
         ],
         'account.move.line': [
             'quantity', 'price_subtotal', 'amount_residual', 'balance', 'amount_currency',
@@ -68,6 +67,10 @@ class AccountInvoiceReport(models.Model):
         'res.currency.rate': ['currency_id', 'name'],
         'res.partner': ['country_id'],
     }
+
+    @property
+    def _table_query(self):
+        return '%s %s %s' % (self._select(), self._from(), self._where())
 
     @api.model
     def _select(self):
@@ -92,10 +95,10 @@ class AccountInvoiceReport(models.Model):
                 move.invoice_date_due,
                 uom_template.id                                             AS product_uom_id,
                 template.categ_id                                           AS product_categ_id,
-                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
+                line.quantity / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * (CASE WHEN move.move_type IN ('in_invoice','out_refund','in_receipt') THEN -1 ELSE 1 END)
                                                                             AS quantity,
-                -line.balance                                               AS price_subtotal,
-                -line.balance / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0)
+                -line.balance * currency_table.rate                         AS price_subtotal,
+                -line.balance / NULLIF(COALESCE(uom_line.factor, 1) / COALESCE(uom_template.factor, 1), 0.0) * currency_table.rate
                                                                             AS price_average,
                 COALESCE(partner.country_id, commercial_partner.country_id) AS country_id
         '''
@@ -113,7 +116,10 @@ class AccountInvoiceReport(models.Model):
                 LEFT JOIN uom_uom uom_template ON uom_template.id = template.uom_id
                 INNER JOIN account_move move ON move.id = line.move_id
                 LEFT JOIN res_partner commercial_partner ON commercial_partner.id = move.commercial_partner_id
-        '''
+                JOIN {currency_table} ON currency_table.company_id = line.company_id
+        '''.format(
+            currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
+        )
 
     @api.model
     def _where(self):
@@ -122,33 +128,6 @@ class AccountInvoiceReport(models.Model):
                 AND line.account_id IS NOT NULL
                 AND NOT line.exclude_from_invoice_tab
         '''
-
-    def init(self):
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute('''
-            CREATE OR REPLACE VIEW %s AS (
-                %s %s %s
-            )
-        ''' % (
-            self._table, self._select(), self._from(), self._where()
-        ))
-
-    @api.model
-    def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        @lru_cache(maxsize=32)  # cache to prevent a SQL query for each data point
-        def get_rate(currency_id):
-            return self.env['res.currency']._get_conversion_rate(
-                self.env['res.currency'].browse(currency_id),
-                self.env.company.currency_id,
-                self.env.company,
-                self._fields['invoice_date'].today()
-            )
-        result = super(AccountInvoiceReport, self).read_group(domain, fields, set(groupby) | {'company_currency_id'}, offset, limit, orderby, False)
-        for res in result:
-            if self.env.company.currency_id.id != res['company_currency_id'][0]:
-                for field in {'price_average', 'price_subtotal'} & set(res):
-                    res[field] = self.env.company.currency_id.round(res[field] * get_rate(res['company_currency_id'][0]))
-        return result
 
 
 class ReportInvoiceWithoutPayment(models.AbstractModel):

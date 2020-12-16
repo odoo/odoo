@@ -49,15 +49,15 @@ tour.register('test_certification_success', {
     }, { // Page-2 Question: How much do we sell our Cable Management Box?
         content: "Selecting answer '$80' (wrong one)",
         trigger: 'div.js_question-wrapper:contains("How much do we sell our Cable Management Box") label:contains("$80")',
-    }, { // Question: Select all the the products that sell for $100 or more
+    }, { // Question: Select all the products that sell for $100 or more
         content: "Ticking answer 'Corner Desk Right Sit'",
-        trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for $100 or more") label:contains("Corner Desk Right Sit")'
+        trigger: 'div.js_question-wrapper:contains("Select all the products that sell for $100 or more") label:contains("Corner Desk Right Sit")'
     }, {
         content: "Ticking answer 'Desk Combination'",
-        trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for $100 or more") label:contains("Desk Combination")'
+        trigger: 'div.js_question-wrapper:contains("Select all the products that sell for $100 or more") label:contains("Desk Combination")'
     }, {
         content: "Ticking answer 'Large Desk'",
-        trigger: 'div.js_question-wrapper:contains("Select all the the products that sell for $100 or more") label:contains("Large Desk")'
+        trigger: 'div.js_question-wrapper:contains("Select all the products that sell for $100 or more") label:contains("Large Desk")'
     }, { // Question: What do you think about our prices (not rated)?
         content: "Selecting answer 'Underpriced'",
         trigger: 'div.js_question-wrapper:contains("What do you think about our prices") label:contains("Underpriced")',

@@ -12,8 +12,8 @@ _logger = logging.getLogger(__name__)
 class AccountChartTemplate(models.Model):
     _inherit = 'account.chart.template'
 
-    def load_for_current_company(self, sale_tax_rate, purchase_tax_rate):
-        res = super(AccountChartTemplate, self).load_for_current_company(sale_tax_rate, purchase_tax_rate)
+    def _load(self, sale_tax_rate, purchase_tax_rate, company):
+        res = super(AccountChartTemplate, self)._load(sale_tax_rate, purchase_tax_rate, company)
         # Copy chart of account translations when loading chart of account
         for chart_template in self.filtered('spoken_languages'):
             external_id = self.env['ir.model.data'].search([

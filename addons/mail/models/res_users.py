@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import _, api, exceptions, fields, models, modules
+from odoo import _, api, exceptions, fields, models, modules, Command
 from odoo.addons.base.models.res_users import is_selection_groups
 
 
@@ -18,11 +18,6 @@ class Users(models.Model):
     _inherit = ['res.users']
     _description = 'Users'
 
-    alias_id = fields.Many2one('mail.alias', 'Alias', ondelete="set null", required=False,
-            help="Email address internally associated with this user. Incoming "\
-                 "emails will appear in the user's notifications.", copy=False, auto_join=True)
-    alias_contact = fields.Selection(
-        string='Alias Contact Security', related='alias_id.alias_contact', readonly=False)
     notification_type = fields.Selection([
         ('email', 'Handle by Emails'),
         ('inbox', 'Handle in Odoo')],
@@ -64,8 +59,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_send
-            and alias fields. Access rights are disabled by default, but allowed
-            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
+            fields. Access rights are disabled by default, but allowed on some
+            specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
         """
         init_res = super(Users, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference
@@ -76,20 +71,23 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         type(self).SELF_READABLE_FIELDS.extend(['notification_type'])
         return init_res
 
-    @api.model
-    def create(self, values):
-        if not values.get('login', False):
-            action = self.env.ref('base.action_res_users')
-            msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
-            raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if not values.get('login', False):
+                action = self.env.ref('base.action_res_users')
+                msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
+                raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
-        user = super(Users, self).create(values)
+        users = super(Users, self).create(vals_list)
         # Auto-subscribe to channels
-        self.env['mail.channel'].search([('group_ids', 'in', user.groups_id.ids)])._subscribe_users()
-        return user
+        self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users()
+        return users
 
     def write(self, vals):
         write_res = super(Users, self).write(vals)
+        if 'active' in vals and not vals['active']:
+            self._unsubscribe_from_channels()
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
@@ -99,6 +97,21 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         elif sel_groups:
             self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
         return write_res
+
+    def unlink(self):
+        self._unsubscribe_from_channels()
+        return super().unlink()
+
+    def _unsubscribe_from_channels(self):
+        """ This method un-subscribes users from private mail channels. Main purpose of this
+            method is to prevent sending internal communication to archived / deleted users.
+            We do not un-subscribes users from public channels because in most common cases,
+            public channels are mailing list (e-mail based) and so users should always receive
+            updates from public channels until they manually un-subscribe themselves.
+        """
+        self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public').write({
+            'channel_partner_ids': [Command.unlink(pid) for pid in self.mapped('partner_id').ids]
+        })
 
     @api.model
     def systray_get_activities(self):

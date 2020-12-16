@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 07:25+0000\n"
-"PO-Revision-Date: 2020-02-13 07:25+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-01 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -88,13 +88,6 @@ msgid "<small class=\"font-weight-bold\">Joined</small>"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid ""
-"<span class=\"badge badge-danger font-weight-normal px-2 py-1 "
-"m-1\">Unpublished</span>"
-msgstr ""
-
-#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "<span class=\"font-weight-bold\">Biography</span>"
 msgstr ""
@@ -116,12 +109,12 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Public profile</span>"
+msgid "<span class=\"font-weight-bold\">Name</span>"
 msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
-msgid "<span class=\"font-weight-bold\">Real name</span>"
+msgid "<span class=\"font-weight-bold\">Public profile</span>"
 msgstr ""
 
 #. module: website_profile
@@ -274,6 +267,7 @@ msgstr ""
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
 msgstr ""
@@ -289,6 +283,11 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Biography"
+msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__can_publish
+msgid "Can Publish"
 msgstr ""
 
 #. module: website_profile
@@ -309,6 +308,13 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Country..."
+msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__display_name
+#: model:ir.model.fields,field_description:website_profile.field_res_users__display_name
+#: model:ir.model.fields,field_description:website_profile.field_website__display_name
+msgid "Display Name"
 msgstr ""
 
 #. module: website_profile
@@ -342,6 +348,18 @@ msgid "How do I score more points?"
 msgstr ""
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__id
+#: model:ir.model.fields,field_description:website_profile.field_res_users__id
+#: model:ir.model.fields,field_description:website_profile.field_website__id
+msgid "ID"
+msgstr ""
+
+#. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__is_published
+msgid "Is Published"
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "It appears your email has not been verified.<br/>"
 msgstr ""
@@ -352,6 +370,13 @@ msgid "Keep learning with"
 msgstr ""
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge____last_update
+#: model:ir.model.fields,field_description:website_profile.field_res_users____last_update
+#: model:ir.model.fields,field_description:website_profile.field_website____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: website_profile
 #: model:ir.model.fields,field_description:website_profile.field_website__karma_profile_min
 msgid "Minimal karma to see other user's profile"
 msgstr ""
@@ -359,11 +384,6 @@ msgstr ""
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "Mobile sub-nav"
-msgstr ""
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid "Monthly"
 msgstr ""
 
 #. module: website_profile
@@ -429,6 +449,11 @@ msgid "Search users"
 msgstr ""
 
 #. module: website_profile
+#: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
+msgid "The full URL to access the document through the website."
+msgstr ""
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
 msgid "This month"
 msgstr ""
@@ -444,6 +469,7 @@ msgid "This week"
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
 msgid "Unpublished"
 msgstr ""
@@ -465,13 +491,18 @@ msgid "Users"
 msgstr ""
 
 #. module: website_profile
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_published
+msgid "Visible on current website"
+msgstr ""
+
+#. module: website_profile
 #: model:ir.model,name:website_profile.model_website
 msgid "Website"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid "Weekly"
+#: model:ir.model.fields,field_description:website_profile.field_gamification_badge__website_url
+msgid "Website URL"
 msgstr ""
 
 #. module: website_profile
@@ -494,18 +525,24 @@ msgid ""
 msgstr ""
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
-msgid "gain"
+#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
+msgid "point"
 msgstr ""
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
-msgid "point"
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this month"
+msgstr ""
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "this week"
 msgstr ""
 
 #. module: website_profile

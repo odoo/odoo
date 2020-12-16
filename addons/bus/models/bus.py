@@ -37,8 +37,8 @@ class ImBus(models.Model):
     channel = fields.Char('Channel')
     message = fields.Char('Message')
 
-    @api.model
-    def gc(self):
+    @api.autovacuum
+    def _gc_messages(self):
         timeout_ago = datetime.datetime.utcnow()-datetime.timedelta(seconds=TIMEOUT*2)
         domain = [('create_date', '<', timeout_ago.strftime(DEFAULT_SERVER_DATETIME_FORMAT))]
         return self.sudo().search(domain).unlink()
@@ -59,10 +59,10 @@ class ImBus(models.Model):
             # awakened and will fetch the notification in the bus table. If the
             # transaction is not commited yet, there will be nothing to fetch,
             # and the longpolling will return no notification.
+            @self.env.cr.postcommit.add
             def notify():
                 with odoo.sql_db.db_connect('postgres').cursor() as cr:
                     cr.execute("notify imbus, %s", (json_dump(list(channels)),))
-            self._cr.after('commit', notify)
 
     @api.model
     def sendone(self, channel, message):

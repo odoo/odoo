@@ -11,6 +11,8 @@
                     <field name="user_id"/>
                     <field name="grade_id"/>
                     <field name="activation"/>
+                    <filter name="filter_date_partnership" date="date_partnership"/>
+                    <filter name="filter_date_review" date="date_review"/>
                     <group  expand="1" string="Group By">
                         <filter string="Salesperson" name="user"
                             context="{'group_by':'user_id'}" />
@@ -32,7 +34,7 @@
             <field name="name">crm.partner.assign.report.graph</field>
             <field name="model">crm.partner.report.assign</field>
             <field name="arch" type="xml">
-                <graph string="Opportunities Assignment Analysis" stacked="True">
+                <graph string="Opportunities Assignment Analysis" stacked="True" sample="1">
                     <field name="grade_id" type="row"/>
                     <field name="nbr_opportunities" type="measure"/>
                     <field name="turnover" type="measure"/>
@@ -48,6 +50,11 @@
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
             <field name="view_mode">graph</field>
             <field name="domain">[('grade_id', '!=', False)]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
         </record>
 
        <menuitem name="Partnerships" id="menu_report_crm_partner_assign_tree"

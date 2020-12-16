@@ -15,8 +15,8 @@ class LeaveReport(models.Model):
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
     leave_type = fields.Selection([
-        ('allocation', 'Allocation Request'),
-        ('request', 'Time Off Request')
+        ('allocation', 'Allocation'),
+        ('request', 'Time Off')
         ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
@@ -80,24 +80,6 @@ class LeaveReport(models.Model):
             );
         """)
 
-    def _read_from_database(self, field_names, inherited_field_names=[]):
-        if 'name' in field_names and 'employee_id' not in field_names:
-            field_names.append('employee_id')
-        super(LeaveReport, self)._read_from_database(field_names, inherited_field_names)
-        if 'name' in field_names:
-            if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-                return
-            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
-            for record in self:
-                emp_id = record._cache.get('employee_id', [False])[0]
-                if emp_id != current_employee.id:
-                    try:
-                        record._cache['name']
-                        record._cache['name'] = '*****'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
-
     @api.model
     def action_time_off_analysis(self):
         domain = [('holiday_type', '=', 'employee')]
@@ -112,17 +94,18 @@ class LeaveReport(models.Model):
             'name': _('Time Off Analysis'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.report',
-            'view_mode': 'tree,form,pivot',
+            'view_mode': 'tree,pivot,form',
             'search_view_id': self.env.ref('hr_holidays.view_hr_holidays_filter_report').id,
             'domain': domain,
             'context': {
                 'search_default_group_type': True,
-                'search_default_year': True
+                'search_default_year': True,
+                'search_default_validated': True,
             }
         }
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'private_name' in groupby:
+        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'name' in groupby:
             raise exceptions.UserError(_('Such grouping is not allowed.'))
         return super(LeaveReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)

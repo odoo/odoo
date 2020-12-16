@@ -1,5 +1,6 @@
 .o_list_view {
     position: relative;
+    height: 100%;
 
     .o_list_table {
         position: relative;
@@ -27,8 +28,11 @@
             }
         }
         tbody > tr > td:not(.o_list_record_selector) {
-            &:not(.o_handle_cell) {
+            &:not(.o_handle_cell):not(.o_list_button) {
                 @include o-text-overflow(table-cell);
+                &.o_list_text {
+                    white-space: pre-wrap;
+                }
             }
 
             &.o_list_number {
@@ -36,11 +40,27 @@
             }
             &.o_list_text {
                 word-break: break-word;
-                white-space: pre-wrap;
             }
             &.o_list_char.o_color_cell .o_field_color {
                 width: 17px;
                 height: 17px;
+            }
+            &.o_list_button {
+                white-space: nowrap;
+                > button {
+                    padding: 0 5px;
+                    &:not(:last-child) {
+                        margin-right: 3px;
+                    }
+                }
+            }
+        }
+        &.o_list_computing_widths {
+            > tbody > tr > td {
+                &.o_list_text, // text field, className on the td
+                > .o_field_text { // text field with widget, className inside the td
+                    white-space: pre !important;
+                }
             }
         }
 
@@ -98,6 +118,9 @@
         .o_list_record_selector {
             width: 40px;
             padding-left: $o-horizontal-padding;
+            .custom-control-label {
+                cursor: pointer;
+            }
         }
         .o_list_record_remove, .o_handle_cell {
             width: 1px;  // to prevent the column to expand
@@ -121,8 +144,8 @@
         tbody > tr.o_group_header {
             > th, > td {
                 vertical-align: middle;
-                padding-top: ($table-cell-padding-sm*2);
-                padding-bottom: ($table-cell-padding-sm*2);
+                padding-top: 5px;
+                padding-bottom: 5px;
             }
             .o_group_name {
                 @include o-text-overflow(table-cell);
@@ -206,6 +229,10 @@
             width: 32px;
         }
 
+        .o_data_row.o_list_no_open {
+            cursor: default;
+        }
+
         .o_data_row:not(.o_selected_row) .o_data_cell {
 
             // Boolean fields in non-selected rows completely disabled.
@@ -286,6 +313,9 @@
             }
             > .o_row_handle {
                 visibility: hidden; // hide sequence when editing
+            }
+            > .o_field_badge {
+                width: auto; // override width: 100% to keep the optimal badge width
             }
         }
 

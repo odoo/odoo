@@ -75,27 +75,17 @@ class SetupBarBankConfigWizard(models.TransientModel):
         comodel_name='account.journal', inverse='set_linked_journal_id',
         compute="_compute_linked_journal_id", check_company=True,
         domain="[('type','=','bank'), ('bank_account_id', '=', False), ('company_id', '=', company_id)]")
-    new_journal_code = fields.Char(string="Code", required=True, default=lambda self: self._onchange_new_journal_code())
+    bank_bic = fields.Char(related='bank_id.bic', readonly=False, string="Bic")
     num_journals_without_account = fields.Integer(default=lambda self: self._number_unlinked_journal())
-    # field computing the type of the res.patrner.bank. It's behaves the same as a related res_part_bank_id.acc_type
-    # except we want to display  this information while the record isn't yet saved.
-    related_acc_type = fields.Selection(string="Account Type", selection=lambda x: x.env['res.partner.bank'].get_supported_account_types(), compute='_compute_related_acc_type')
-
-    @api.depends('acc_number')
-    def _compute_related_acc_type(self):
-        for record in self:
-            record.related_acc_type = self.env['res.partner.bank'].retrieve_acc_type(record.acc_number)
 
     def _number_unlinked_journal(self):
-        return self.env['account.journal'].search([('type', '=', 'bank'), ('bank_account_id', '=', False)], count=True)
+        return self.env['account.journal'].search([('type', '=', 'bank'), ('bank_account_id', '=', False),
+                                                   ('id', '!=', self.default_linked_journal_id())], count=True)
 
-    @api.onchange('linked_journal_id')
-    def _onchange_new_journal_code(self):
+    @api.onchange('acc_number')
+    def _onchange_acc_number(self):
         for record in self:
-            if not record.linked_journal_id:
-                record.new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company.id)
-            else:
-                record.new_journal_code = self.linked_journal_id.code
+            record.new_journal_name = record.acc_number
 
     @api.model
     def create(self, vals):
@@ -104,6 +94,13 @@ class SetupBarBankConfigWizard(models.TransientModel):
         the model.
         """
         vals['partner_id'] = self.env.company.partner_id.id
+        vals['new_journal_name'] = vals['acc_number']
+
+        # If no bank has been selected, but we have a bic, we are using it to find or create the bank
+        if not vals['bank_id'] and vals['bank_bic']:
+            vals['bank_id'] = self.env['res.bank'].search([('bic', '=', vals['bank_bic'])], limit=1).id \
+                              or self.env['res.bank'].create({'name': vals['bank_bic'], 'bic': vals['bank_bic']}).id
+
         return super(SetupBarBankConfigWizard, self).create(vals)
 
     @api.onchange('linked_journal_id')
@@ -119,18 +116,19 @@ class SetupBarBankConfigWizard(models.TransientModel):
 
     def default_linked_journal_id(self):
         default = self.env['account.journal'].search([('type', '=', 'bank'), ('bank_account_id', '=', False)], limit=1)
-        return default and default[0].id
+        return default[:1].id
 
     def set_linked_journal_id(self):
         """ Called when saving the wizard.
         """
         for record in self:
             selected_journal = record.linked_journal_id
-            if record.num_journals_without_account == 0:
+            if not selected_journal:
+                new_journal_code = self.env['account.journal'].get_next_bank_cash_default_code('bank', self.env.company)
                 company = self.env.company
                 selected_journal = self.env['account.journal'].create({
                     'name': record.new_journal_name,
-                    'code': record.new_journal_code,
+                    'code': new_journal_code,
                     'type': 'bank',
                     'company_id': company.id,
                     'bank_account_id': record.res_partner_bank_id.id,
@@ -138,7 +136,6 @@ class SetupBarBankConfigWizard(models.TransientModel):
             else:
                 selected_journal.bank_account_id = record.res_partner_bank_id.id
                 selected_journal.name = record.new_journal_name
-                selected_journal.code = record.new_journal_code
 
     def validate(self):
         """ Called by the validation button of this wizard. Serves as an

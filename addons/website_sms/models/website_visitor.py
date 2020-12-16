@@ -25,7 +25,7 @@ class WebsiteVisitor(models.Model):
     def action_send_sms(self):
         self.ensure_one()
         if not self._check_for_sms_composer():
-            raise UserError(_("There is no contact and/or no phone or mobile numbers linked this visitor."))
+            raise UserError(_("There are no contact and/or no phone or mobile numbers linked to this visitor."))
         visitor_composer_ctx = self._prepare_sms_composer_context()
 
         compose_ctx = dict(self.env.context)

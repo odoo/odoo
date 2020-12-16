@@ -5,13 +5,15 @@
 from unittest.mock import patch
 import email.policy
 import email.message
+import re
 import threading
 
-from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
     email_split,
     misc, formataddr,
+    prepend_html_content,
 )
 
 from . import test_mail_examples
@@ -313,6 +315,8 @@ class TestHtmlTools(BaseCase):
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<pre>--\nYours truly</pre>\n</html>'),
             ('<!DOCTYPE...><HTML encoding="blah">some <b>content</b></HtMl>', '--\nYours truly', True, False, False,
              '<!DOCTYPE...><html encoding="blah">some <b>content</b>\n<p>--<br/>Yours truly</p>\n</html>'),
+            ('<html><body>some <b>content</b></body></html>', '--\nYours & <truly>', True, True, False,
+             '<html><body>some <b>content</b>\n<pre>--\nYours &amp; &lt;truly&gt;</pre>\n</body></html>'),
             ('<html><body>some <b>content</b></body></html>', '<!DOCTYPE...>\n<html><body>\n<p>--</p>\n<p>Yours truly</p>\n</body>\n</html>', False, False, False,
              '<html><body>some <b>content</b>\n\n\n<p>--</p>\n<p>Yours truly</p>\n\n\n</body></html>'),
         ]
@@ -324,13 +328,64 @@ class TestHtmlTools(BaseCase):
         for content in void_strings_samples:
             self.assertTrue(is_html_empty(content))
 
-        void_html_samples = ['<p><br></p>', '<p><br> </p>']
+        void_html_samples = ['<p><br></p>', '<p><br> </p>', '<p><br /></p >']
         for content in void_html_samples:
             self.assertTrue(is_html_empty(content), 'Failed with %s' % content)
 
         valid_html_samples = ['<p><br>1</p>', '<p>1<br > </p>']
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
+
+    def test_prepend_html_content(self):
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><span>content</span><div>test</div></body></html>")
+
+        body = "<div>test</div>"
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<span>content</span><div>test</div>")
+
+        body = """
+            <body>
+                <div>test</div>
+            </body>
+        """
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<body><span>content</span><div>test</div></body>")
+
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><div>test</div><div>test</div></body></html>")
 
 
 class TestEmailTools(BaseCase):
@@ -349,6 +404,7 @@ class TestEmailTools(BaseCase):
 
     def test_email_formataddr(self):
         email = 'joe@example.com'
+        email_idna = 'joe@examplé.com'
         cases = [
             # (name, address),          charsets            expected
             (('', email),               ['ascii', 'utf-8'], 'joe@example.com'),
@@ -357,20 +413,20 @@ class TestEmailTools(BaseCase):
             (('joe"doe', email),        ['ascii', 'utf-8'], '"joe\\"doe" <joe@example.com>'),
             (('joé', email),            ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@example.com>'),
             (('joé', email),            ['utf-8'],          '"joé" <joe@example.com>'),
-            (('', 'joé@example.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need SMTPUTF8 support
-            (('', 'joe@examplé.com'),   ['ascii', 'utf-8'], UnicodeEncodeError),  # need IDNA support
+            (('', email_idna),          ['ascii'],          'joe@xn--exampl-gva.com'),
+            (('', email_idna),          ['utf-8'],          'joe@examplé.com'),
+            (('joé', email_idna),       ['ascii'],          '=?utf-8?b?am/DqQ==?= <joe@xn--exampl-gva.com>'),
+            (('joé', email_idna),       ['utf-8'],          '"joé" <joe@examplé.com>'),
+            (('', 'joé@example.com'),   ['ascii', 'utf-8'], 'joé@example.com'),
         ]
 
         for pair, charsets, expected in cases:
             for charset in charsets:
                 with self.subTest(pair=pair, charset=charset):
-                    if isinstance(expected, str):
-                        self.assertEqual(formataddr(pair, charset), expected)
-                    else:
-                        self.assertRaises(expected, formataddr, pair, charset)
+                    self.assertEqual(formataddr(pair, charset), expected)
 
 
-class EmailConfigCase(SavepointCase):
+class EmailConfigCase(TransactionCase):
     @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
     def test_default_email_from(self, *args):
         """Email from setting is respected."""
@@ -394,25 +450,41 @@ class EmailConfigCase(SavepointCase):
 
 class TestEmailMessage(TransactionCase):
     def test_as_string(self):
-        """Ensure all email sent are bpo-34424 free"""
+        """Ensure all email sent are bpo-34424 and bpo-35805 free"""
+
+        message_truth = (
+            r'From: .+? <joe@example\.com>\r\n'
+            r'To: .+? <joe@example\.com>\r\n'
+            r'Message-Id: <[0-9a-z.-]+@[0-9a-z.-]+>\r\n'
+            r'References: (<[0-9a-z.-]+@[0-9a-z.-]+>\s*)+\r\n'
+            r'\r\n'
+        )
 
         class FakeSMTP:
             """SMTP stub"""
             def __init__(this):
                 this.email_sent = False
 
-            def sendmail(this, smtp_from, smtp_to_list, message_str):
+            # Python 3 before 3.7.4
+            def sendmail(this, smtp_from, smtp_to_list, message_str,
+                         mail_options=(), rcpt_options=()):
                 this.email_sent = True
-                message_truth = (
-                    r'From: .+? <joe@example\.com>\r\n'
-                    r'To: .+? <joe@example\.com>\r\n'
-                    r'\r\n'
-                )
+                self.assertRegex(message_str, message_truth)
+
+            # Python 3.7.4+
+            def send_message(this, message, smtp_from, smtp_to_list,
+                             mail_options=(), rcpt_options=()):
+                message_str = message.as_string()
+                this.email_sent = True
                 self.assertRegex(message_str, message_truth)
 
         msg = email.message.EmailMessage(policy=email.policy.SMTP)
         msg['From'] = '"Joé Doe" <joe@example.com>'
         msg['To'] = '"Joé Doe" <joe@example.com>'
+
+        # Message-Id & References fields longer than 77 chars (bpo-35805)
+        msg['Message-Id'] = '<929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>'
+        msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
 
         smtp = FakeSMTP()
         self.patch(threading.currentThread(), 'testing', False)

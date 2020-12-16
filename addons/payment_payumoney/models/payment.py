@@ -92,7 +92,7 @@ class PaymentTransactionPayumoney(models.Model):
         pay_id = data.get('mihpayid')
         shasign = data.get('hash')
         if not reference or not pay_id or not shasign:
-            raise ValidationError(_('PayUmoney: received data with missing reference (%s) or pay_id (%s) or shashign (%s)') % (reference, pay_id, shasign))
+            raise ValidationError(_('PayUmoney: received data with missing reference (%s) or pay_id (%s) or shasign (%s)') % (reference, pay_id, shasign))
 
         transaction = self.search([('reference', '=', reference)])
 

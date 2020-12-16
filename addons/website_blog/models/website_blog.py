@@ -125,7 +125,7 @@ class BlogPost(models.Model):
     def _compute_website_url(self):
         super(BlogPost, self)._compute_website_url()
         for blog_post in self:
-            blog_post.website_url = "/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post))
+            blog_post.website_url = "/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post))
 
     def _default_content(self):
         return '''
@@ -134,6 +134,8 @@ class BlogPost(models.Model):
     name = fields.Char('Title', required=True, translate=True, default='')
     subtitle = fields.Char('Sub Title', translate=True)
     author_id = fields.Many2one('res.partner', 'Author', default=lambda self: self.env.user.partner_id)
+    author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
+    author_name = fields.Char(related='author_id.display_name', string="Author Name", readonly=False, store=True)
     active = fields.Boolean('Active', default=True)
     blog_id = fields.Many2one('blog.blog', 'Blog', required=True, ondelete='cascade')
     tag_ids = fields.Many2many('blog.tag', string='Tags')
@@ -151,9 +153,8 @@ class BlogPost(models.Model):
     create_uid = fields.Many2one('res.users', 'Created by', index=True, readonly=True)
     write_date = fields.Datetime('Last Updated on', index=True, readonly=True)
     write_uid = fields.Many2one('res.users', 'Last Contributor', index=True, readonly=True)
-    author_avatar = fields.Binary(related='author_id.image_128', string="Avatar", readonly=False)
     visits = fields.Integer('No of Views', copy=False, default=0)
-    website_id = fields.Many2one(related='blog_id.website_id', readonly=True)
+    website_id = fields.Many2one(related='blog_id.website_id', readonly=True, store=True)
 
     @api.depends('content', 'teaser_manual')
     def _compute_teaser(self):
@@ -214,7 +215,7 @@ class BlogPost(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy_data(self, default=None):
         self.ensure_one()
-        name = _("%s (copy)") % self.name
+        name = _("%s (copy)", self.name)
         default = dict(default or {}, name=name)
         return super(BlogPost, self).copy_data(default)
 

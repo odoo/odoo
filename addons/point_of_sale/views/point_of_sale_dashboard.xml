@@ -34,6 +34,13 @@
             'search_default_config_id': [active_id],
             'default_config_id': active_id}
         </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Create a new POS order
+            </p>
+        </field>
     </record>
 
     <!-- Dashboard -->
@@ -61,9 +68,6 @@
                                     <div class="o_primary">
                                         <t t-esc="record.name.value"/>
                                     </div>
-                                    <t t-if="record.pos_session_state.raw_value == 'new_session'">
-                                        <div class="badge badge-info o_kanban_inline_block">New session</div>
-                                    </t>
                                     <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
                                         <div class="badge badge-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
                                     </t>
@@ -117,13 +121,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div style="text-align:right;" t-if="record.current_user_id.value">
-                                    <img
-                                        class="oe_kanban_avatar o_image_24_cover"
-                                        t-att-src="kanban_image('res.users', 'image_128', record.current_user_id.raw_value)"
-                                        t-att-title="record.current_user_id.value"
-                                        t-att-alt="record.current_user_id.value"
-                                    />
+                                <div style="text-align:right;">
+                                    <field name="current_user_id" widget="many2one_avatar_user"/>
                                 </div>
                             </div><div class="container o_kanban_card_manage_pane dropdown-menu" role="menu">
                                 <div class="row">

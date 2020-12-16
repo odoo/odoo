@@ -204,7 +204,7 @@ class TestViewSaving(common.TransactionCase):
         )
         self.assertIn(
             replacement,
-            view.render().decode('utf-8'),
+            view._render().decode('utf-8'),
             'inline script should not be escaped when rendering'
         )
         # common text nodes should be be escaped client side
@@ -213,8 +213,23 @@ class TestViewSaving(common.TransactionCase):
         self.assertIn(replacement, view.arch, 'common text node should not be escaped server side')
         self.assertIn(
             replacement,
-            view.render().decode('utf-8').replace(u'&', u'&amp;'),
+            view._render().decode('utf-8').replace(u'&', u'&amp;'),
             'text node characters wrongly unescaped when rendering'
+        )
+
+    def test_save_oe_structure_with_attr(self):
+        """ Test saving oe_structure with attributes """
+        view = self.env['ir.ui.view'].create({
+            'arch': u'<t t-name="dummy"><div class="oe_structure" t-att-test="1" data-test="1" id="oe_structure_test"/></t>',
+            'type': 'qweb'
+        }).with_context(website_id=1, load_all_views=True)
+        replacement = u'<div class="oe_structure" data-test="1" id="oe_structure_test" data-oe-id="55" test="2">hello</div>'
+        view.save(replacement, xpath='/t/div')
+        # branding data-oe-* should be stripped
+        self.assertIn(
+            '<div class="oe_structure" data-test="1" id="oe_structure_test" test="2">hello</div>',
+            view.read_combined(['arch'])['arch'],
+            'saved element attributes are saved excluding branding ones'
         )
 
     def test_save_only_embedded(self):
@@ -752,6 +767,10 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': '<div position="replace"><p>COMPARE</p></div>',
             'key': '_website_sale_comparison.product_add_to_compare',
         })])
+        Website.with_context(load_all_views=True).viewref('_website_sale_comparison.product_add_to_compare').invalidate_cache()
+
+        # Simulate end of installation/update
+        View._create_all_specific_views(['_website_sale_comparison'])
 
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
         specific_view_arch = specific_view.read_combined(['arch'])['arch']
@@ -762,7 +781,6 @@ class TestCowViewSaving(common.TransactionCase):
         View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'arch': '<div position="replace"><p>COMPARE EDITED</p></div>',
         })])
-
         specific_view_arch = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product').read_combined(['arch'])['arch']
         self.assertEqual(specific_view_arch, '<p>COMPARE EDITED</p>', "When a module updates an inherited view (on a generic tree), it should also update the copies of that view (COW).")
 
@@ -801,6 +819,7 @@ class TestCowViewSaving(common.TransactionCase):
             'model': self.base_view._name,
             'res_id': self.base_view.id,
         })
+        self.base_view.invalidate_cache()
         View._load_records([dict(xml_id='_website_sale.product', values={
             'website_meta_title': 'A bug got fixed by updating this field',
         })])
@@ -941,6 +960,33 @@ class TestCowViewSaving(common.TransactionCase):
         finally:
             View.pool._init = original_pool_init
 
+    def test_specific_view_translation(self):
+        Translation = self.env['ir.translation']
+
+        Translation.insert_missing(self.base_view._fields['arch_db'],  self.base_view)
+        translation = Translation.search([
+            ('res_id', '=', self.base_view.id), ('name', '=', 'ir.ui.view,arch_db')
+        ])
+        translation.value = 'hello'
+        translation.module = 'website'
+
+        self.base_view.with_context(website_id=1).write({'active': True})
+        specific_view = self.base_view._get_specific_views() - self.base_view
+
+        self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hello</div>',
+            "copy on write (COW) also copy existing translations")
+
+        translation.value = 'hi'
+        self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hello</div>',
+            "updating translation of base view doesn't update specific view")
+
+        Translation._load_module_terms(['website'], ['en_US'], overwrite=True)
+
+        specific_view.invalidate_cache(['arch_db', 'arch'])
+        self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hi</div>',
+            "loading module translation copy translation from base to specific view")
+
+
 @tagged('-at_install', 'post_install')
 class Crawler(HttpCase):
     def setUp(self):
@@ -978,7 +1024,7 @@ class Crawler(HttpCase):
         })
         self.inherit_view.write({'name': 'Main layout', 'key': '_website.layout'})
 
-        self.inherit_view.copy({'name': 'Show Sign In', 'customize_show': True, 'key': '_portal.portal_show_sign_in'})
+        self.inherit_view.copy({'name': 'Sign In', 'customize_show': True, 'key': '_portal.user_sign_in'})
         view_logo = self.inherit_view.copy({
             'name': 'Show Logo',
             'inherit_id': self.inherit_view.id,
@@ -1032,7 +1078,7 @@ class Crawler(HttpCase):
 
         self.assertEqual(
             [v['name'] for v in res],
-            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
             "Sequence should not be taken into account for customize menu",
         )
         self.assertEqual(
@@ -1071,7 +1117,7 @@ class Crawler(HttpCase):
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
-            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
             "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last)",
         )
         self.assertEqual(
@@ -1106,7 +1152,7 @@ class Crawler(HttpCase):
         res = response.json()['result']
         self.assertEqual(
             [v['name'] for v in res],
-            ['Show Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
+            ['Sign In', 'Affix Top Menu', 'Show Logo', 'Filters', 'Photos', 'Quotes', 'Filter by Category', 'Filter by Country'],
             "multi-website COW should not impact customize views order (COW view will have a bigger ID and should not be last) (2)",
         )
         self.assertEqual(
@@ -1309,3 +1355,22 @@ class TestThemeViews(common.TransactionCase):
         specific_main_view_children = specific_main_view.inherit_children_ids
         self.assertEqual(specific_main_view_children.name, 'Test Child View', "Ensure theme.ir.ui.view has been loaded as an ir.ui.view into the website..")
         self.assertEqual(specific_main_view_children.website_id, website_1, "..and the website is the correct one.")
+
+        # 4. Simulate theme update. Do it 2 time to make sure it was not interpreted as a user change the first time.
+        new_arch = '<xpath expr="//body" position="replace"><span>Odoo Change01</span></xpath>'
+        theme_view.arch = new_arch
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        self.assertEqual(specific_main_view_children.arch, new_arch, "First time: View arch should receive theme updates.")
+        self.assertFalse(specific_main_view_children.arch_updated)
+        new_arch = '<xpath expr="//body" position="replace"><span>Odoo Change02</span></xpath>'
+        theme_view.arch = new_arch
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        self.assertEqual(specific_main_view_children.arch, new_arch, "Second time: View arch should still receive theme updates.")
+
+        # 5. Keep User arch changes
+        new_arch = '<xpath expr="//body" position="replace"><span>Odoo</span></xpath>'
+        specific_main_view_children.arch = new_arch
+        theme_view.name = 'Test Child View modified'
+        test_theme_module.with_context(load_all_views=True)._theme_load(website_1)
+        self.assertEqual(specific_main_view_children.arch, new_arch, "View arch shouldn't have been overrided on theme update as it was modified by user.")
+        self.assertEqual(specific_main_view_children.name, 'Test Child View modified', "View should receive modification on theme update.")

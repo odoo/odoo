@@ -65,8 +65,7 @@ class IrAttachment(models.Model):
         }[self._storage()]
 
         for attach in self.search(domain):
-            # pass mimetype, to avoid recomputation
-            attach.write({'datas': attach.datas, 'mimetype': attach.mimetype})
+            attach.write({'raw': attach.raw, 'mimetype': attach.mimetype})
         return True
 
     @api.model
@@ -97,22 +96,17 @@ class IrAttachment(models.Model):
         return fname, full_path
 
     @api.model
-    def _file_read(self, fname, bin_size=False):
+    def _file_read(self, fname):
         full_path = self._full_path(fname)
-        r = ''
         try:
-            if bin_size:
-                r = human_size(os.path.getsize(full_path))
-            else:
-                with open(full_path,'rb') as fd:
-                    r = base64.b64encode(fd.read())
+            with open(full_path, 'rb') as f:
+                return f.read()
         except (IOError, OSError):
             _logger.info("_read_file reading %s", full_path, exc_info=True)
-        return r
+        return b''
 
     @api.model
-    def _file_write(self, value, checksum):
-        bin_value = base64.b64decode(value)
+    def _file_write(self, bin_value, checksum):
         fname, full_path = self._get_path(bin_value, checksum)
         if not os.path.exists(full_path):
             try:
@@ -140,8 +134,8 @@ class IrAttachment(models.Model):
                     os.makedirs(dirname)
             open(full_path, 'ab').close()
 
-    @api.model
-    def _file_gc(self):
+    @api.autovacuum
+    def _gc_file_store(self):
         """ Perform the garbage collection of the filestore. """
         if self._storage() != 'file':
             return
@@ -192,18 +186,37 @@ class IrAttachment(models.Model):
         cr.commit()
         _logger.info("filestore gc %d checked, %d removed", len(checklist), removed)
 
-    @api.depends('store_fname', 'db_datas')
+    @api.depends('store_fname', 'db_datas', 'file_size')
+    @api.depends_context('bin_size')
     def _compute_datas(self):
-        bin_size = self._context.get('bin_size')
+        if self._context.get('bin_size'):
+            for attach in self:
+                attach.datas = human_size(attach.file_size)
+            return
+
+        for attach in self:
+            attach.datas = base64.b64encode(attach.raw or b'')
+
+    @api.depends('store_fname', 'db_datas')
+    def _compute_raw(self):
         for attach in self:
             if attach.store_fname:
-                attach.datas = self._file_read(attach.store_fname, bin_size)
+                attach.raw = attach._file_read(attach.store_fname)
             else:
-                attach.datas = attach.db_datas
+                attach.raw = attach.db_datas
+
+    def _inverse_raw(self):
+        self._set_attachment_data(lambda a: a.raw or b'')
 
     def _inverse_datas(self):
+        self._set_attachment_data(lambda attach: base64.b64decode(attach.datas or b''))
+
+    def _set_attachment_data(self, asbytes):
         for attach in self:
-            vals = self._get_datas_related_values(attach.datas, attach.mimetype)
+            # compute the fields that depend on datas
+            bin_data = asbytes(attach)
+            vals = self._get_datas_related_values(bin_data, attach.mimetype)
+
             # take current location in filestore to possibly garbage-collect it
             fname = attach.store_fname
             # write as superuser, as user probably does not have write access
@@ -212,12 +225,10 @@ class IrAttachment(models.Model):
                 self._file_delete(fname)
 
     def _get_datas_related_values(self, data, mimetype):
-        # compute the fields that depend on datas
-        bin_data = base64.b64decode(data) if data else b''
         values = {
-            'file_size': len(bin_data),
-            'checksum': self._compute_checksum(bin_data),
-            'index_content': self._index(bin_data, mimetype),
+            'file_size': len(data),
+            'checksum': self._compute_checksum(data),
+            'index_content': self._index(data, mimetype),
             'store_fname': False,
             'db_datas': data,
         }
@@ -259,13 +270,21 @@ class IrAttachment(models.Model):
             mimetype = mimetypes.guess_type(values['name'])[0]
         if not mimetype and values.get('url'):
             mimetype = mimetypes.guess_type(values['url'])[0]
-        if values.get('datas') and (not mimetype or mimetype == 'application/octet-stream'):
-            mimetype = guess_mimetype(base64.b64decode(values['datas']))
+        if not mimetype or mimetype == 'application/octet-stream':
+            raw = None
+            if values.get('raw'):
+                raw = values['raw']
+            elif values.get('datas'):
+                raw = base64.b64decode(values['datas'])
+            if raw:
+                mimetype = guess_mimetype(raw)
         return mimetype or 'application/octet-stream'
 
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
+                'xml' in mimetype and    # other xml (svg, text/xml, etc)
+                not 'openxmlformats' in mimetype)  # exception for Office formats
         user = self.env.context.get('binary_field_real_user', self.env.user)
         force_text = (xml_like and (not user._is_system() or
             self.env.context.get('attachments_mime_plainxml')))
@@ -316,7 +335,8 @@ class IrAttachment(models.Model):
     access_token = fields.Char('Access Token', groups="base.group_user")
 
     # the field 'datas' is computed and may use the other fields below
-    datas = fields.Binary(string='File Content', compute='_compute_datas', inverse='_inverse_datas')
+    raw = fields.Binary(string="File Content (raw)", compute='_compute_raw', inverse='_inverse_raw')
+    datas = fields.Binary(string='File Content (base64)', compute='_compute_datas', inverse='_inverse_datas')
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename')
     file_size = fields.Integer('File Size', readonly=True)
@@ -341,7 +361,7 @@ class IrAttachment(models.Model):
             # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
-                if not any([has_group(g) for g in attachment.get_serving_groups()]):
+                if not any(has_group(g) for g in attachment.get_serving_groups()):
                     raise ValidationError("Sorry, you are not allowed to write on this document")
 
     @api.model
@@ -418,7 +438,7 @@ class IrAttachment(models.Model):
         ids = super(IrAttachment, self)._search(args, offset=offset, limit=limit, order=order,
                                                 count=False, access_rights_uid=access_rights_uid)
 
-        if self.env.is_system():
+        if self.env.is_superuser():
             # rules do not apply for the superuser
             return len(ids) if count else ids
 
@@ -469,11 +489,14 @@ class IrAttachment(models.Model):
         result = [id for id in orig_ids if id in ids]
 
         # If the original search reached the limit, it is important the
-        # filtered record set does so too. When a JS view recieve a
-        # record set whose length is bellow the limit, it thinks it
-        # reached the last page.
-        if len(orig_ids) == limit and len(result) < len(orig_ids):
-            result.extend(self._search(args, offset=offset + len(orig_ids),
+        # filtered record set does so too. When a JS view receive a
+        # record set whose length is below the limit, it thinks it
+        # reached the last page. To avoid an infinite recursion due to the
+        # permission checks the sub-call need to be aware of the number of
+        # expected records to retrieve
+        if len(orig_ids) == limit and len(result) < self._context.get('need', limit):
+            need = self._context.get('need', limit) - len(result)
+            result.extend(self.with_context(need=need)._search(args, offset=offset + len(orig_ids),
                                        limit=limit, order=order, count=count,
                                        access_rights_uid=access_rights_uid)[:limit - len(result)])
 
@@ -521,7 +544,8 @@ class IrAttachment(models.Model):
                 values.pop(field, False)
             values = self._check_contents(values)
             if 'datas' in values:
-                values.update(self._get_datas_related_values(values.pop('datas'), values['mimetype']))
+                data = values.pop('datas')
+                values.update(self._get_datas_related_values(base64.b64decode(data or b''), values['mimetype']))
             # 'check()' only uses res_model and res_id from values, and make an exists.
             # We can group the values by model, res_id to make only one query when 
             # creating multiple attachments on a single record.
@@ -551,15 +575,10 @@ class IrAttachment(models.Model):
 
     @api.model
     def action_get(self):
-        return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        return self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
 
     @api.model
     def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):
         domain = [('type', '=', 'binary'), ('url', '=', url)] + (extra_domain or [])
         fieldNames = ['__last_update', 'datas', 'mimetype'] + (extra_fields or [])
         return self.search_read(domain, fieldNames, order=order, limit=1)
-
-    @api.model
-    def get_attachment_by_key(self, key, extra_domain=None, order=None):
-        domain = [('key', '=', key)] + (extra_domain or [])
-        return self.search(domain, order=order, limit=1)

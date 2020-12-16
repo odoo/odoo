@@ -19,7 +19,7 @@ var LunchKanbanRenderer = KanbanRenderer.extend({
      * @override
      */
     start: function () {
-        this.$el.addClass('o_lunch_kanban_view position-relative align-content-start flex-grow-1 flex-shrink-1');
+        this.$el.addClass('o_lunch_view o_lunch_kanban_view position-relative align-content-start flex-grow-1 flex-shrink-1');
         return this._super.apply(this, arguments);
     },
 });

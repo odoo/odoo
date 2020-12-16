@@ -8,10 +8,9 @@
             <field name="arch" type="xml">
                 <t name="Debug" t-name="website.bs_debug_page_view">
                     <t t-call="website.layout">
-                        <t t-set="odoo_theme_colors" t-value="[['alpha', 'Alpha'], ['beta', 'Beta'], ['gamma', 'Gamma'], ['delta', 'Delta'], ['epsilon', 'Epsilon']]"/>
+                        <t t-set="odoo_theme_colors" t-value="[['o-color-1', 'Color 1'], ['o-color-2', 'Color 2'], ['o-color-3', 'Color 3'], ['o-color-4', 'Color 4'], ['o-color-5', 'Color 5']]"/>
                         <t t-set="bs_theme_colors" t-value="[['primary', 'Primary'], ['secondary', 'Secondary'], ['success', 'Success'], ['info', 'Info'], ['warning', 'Warning'], ['danger', 'Danger'], ['light', 'Light'], ['dark', 'Dark']]"/>
                         <t t-set="bs_gray_colors" t-value="[['white', 'White'], ['100', '100'], ['200', '200'], ['300', '300'], ['400', '400'], ['500', '500'], ['600', '600'], ['700', '700'], ['800', '800'], ['900', '900'], ['black', 'Black']]"/>
-                        <t t-set="all_theme_colors" t-value="odoo_theme_colors + bs_theme_colors"/>
                         <div id="wrap" class="oe_structure">
                             <section class="py-2">
                                 <div class="container">
@@ -19,69 +18,37 @@
                                     <div class="row">
                                         <div class="col-md">
                                             <h2>Badge</h2>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Pill</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 badge-pill badge-#{color[0]}"><t t-esc="color[1]"/></span>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <span t-attf-class="badge mb-1 badge-pill badge-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Link</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <a href="#" t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></a>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <a href="#" t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></a>
                                             </t>
                                             <h3 class="mt-2 h6">Autosizing</h3>
                                             <div class="h3">
-                                                <t t-foreach="odoo_theme_colors" t-as="color">
-                                                    <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
-                                                </t>
-                                                <br/>
                                                 <t t-foreach="bs_theme_colors" t-as="color">
                                                     <span t-attf-class="badge mb-1 badge-#{color[0]}"><t t-esc="color[1]"/></span>
                                                 </t>
                                             </div>
 
                                             <h2 class="mt-4">Button</h2>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
                                             <h3 class="mt-2 h6">Outline</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-outline-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-outline-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
                                             <h3 class="mt-2 h6">Small</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
                                             <h3 class="mt-2 h6">Large</h3>
-                                            <t t-foreach="odoo_theme_colors" t-as="color">
-                                                <button type="button" t-attf-class="btn mb-1 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
-                                            </t>
-                                            <br/>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
@@ -156,7 +123,7 @@
                                         </div>
                                         <div class="col-md-auto">
                                             <h2>Alert</h2>
-                                            <t t-foreach="all_theme_colors" t-as="color">
+                                            <t t-foreach="bs_theme_colors" t-as="color">
                                                 <div t-attf-class="alert alert-#{color[0]}">
                                                     This is a "<t t-esc="color[1]"/>" alert with a <a href="#" class="alert-link">link</a>.
                                                 </div>
@@ -259,6 +226,127 @@
             </field>
         </record>
 
+        <record id="color_combinations_debug_view" model="ir.ui.view">
+            <field name="name">Color Combinations Debug</field>
+            <field name="type">qweb</field>
+            <field name="key">website.color_combinations_debug_page_view</field>
+            <field name="arch" type="xml">
+                <t name="Debug" t-name="website.color_combinations_debug_page_view">
+                    <t t-call="website.layout">
+                        <div id="#wrap" class="oe_structure" style="background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAH0lEQVQYV2NkQAL/GRikGGF8KOcZWADGAbEZkTkgAQDXKwcebKRDwQAAAABJRU5ErkJggg==) repeat;">
+                            <section class="py-1">
+                                <div class="container">
+                                    <div class="d-flex mb-3">
+                                        <div class="card w-100">
+                                            <div class="card-body">
+                                                <table class="table table-borderless">
+                                                    <tr>
+                                                        <th colspan="2" class="align-middle">Theme Colors</th>
+                                                        <td t-foreach="[1, 2, 3, 4, 5]" t-as="i">
+                                                            <div class="media">
+                                                                <span t-attf-class="border p-3 mr-1 bg-o-color-#{i}"></span>
+                                                                <div class="media-body align-self-center">
+                                                                    <h5 class="m-0">o-color-<t t-esc="i"/></h5>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th colspan="2" class="align-middle">BTS Base Colors</th>
+                                                        <td t-foreach="['primary', 'secondary', 'light', 'dark']" t-as="i">
+                                                            <div class="media">
+                                                                <span t-attf-class="border p-3 mr-1 bg-#{i}"></span>
+                                                                <div class="media-body align-self-center">
+                                                                    <h5 class="m-0" t-esc="i"></h5>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 mt-3" t-foreach="[1, 2, 3, 4, 5]" t-as="i">
+                                            <div t-attf-class="o_cc o_cc#{i} p-3 border">
+                                                <div class="row">
+                                                    <div class="col-7">
+                                                        <h2>
+                                                            Preset <t t-esc="i"/>
+                                                        </h2>
+                                                        <p>Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>. <a href="#">Link text</a></p>
+                                                        <p class="text-muted">Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur.</p>
+                                                        <p class="small">Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. <i>Integer posuere erat a ante</i>.</p>
+                                                    </div>
+                                                    <div class="col-5 border-left">
+                                                        <a href="#" class="mb-3 btn-block btn btn-primary">btn-primary</a>
+                                                        <a href="#" class="mb-3 btn-block btn btn-secondary">btn-secondary</a>
+                                                        <a href="#" class="mb-3 btn-block btn btn-outline-primary">btn-outline-primary</a>
+                                                        <a href="#" class="mb-3 btn-block btn btn-outline-secondary">btn-outline-secondary</a>
+                                                    </div>
+                                                </div>
+                                                <hr class="my-4"/>
+                                                <div class="row">
+                                                    <div class="col-7">
+                                                        <div class="form-group row">
+                                                            <label class="col-2 col-form-label">Label</label>
+                                                            <div class="col-10">
+                                                                <input type="email" class="form-control" placeholder="placeholder"/>
+                                                                <small id="emailHelp" class="form-text text-muted">Form field help text</small>
+                                                            </div>
+                                                        </div>
+                                                        <div class="card w-100 mb-3">
+                                                        <div class="card-body">
+                                                                <h4 class="card-title">H4 Card title</h4>
+                                                                <h5 class="card-subtitle mb-2 text-muted">H5 Card subtitle</h5>
+                                                                <p class="card-text">Paragraph. <a href="#">text link</a></p>
+
+                                                                <t t-foreach="['primary','secondary', 'info', 'warning', 'danger', 'success']" t-as="btn">
+                                                                    <a href="#" t-attf-class="mb-2 btn-sm btn btn-#{btn}" t-esc="'btn-' + btn"/>
+                                                                </t>
+                                                            </div>
+                                                        </div>
+                                                        <nav aria-label="breadcrumb">
+                                                            <ol class="breadcrumb">
+                                                                <li class="breadcrumb-item"><a href="#">Breadcrumb</a></li>
+                                                                <li class="breadcrumb-item"><a href="#">Library</a></li>
+                                                                <li class="breadcrumb-item active">Data</li>
+                                                            </ol>
+                                                        </nav>
+                                                        <small>TABS</small>
+                                                        <ul class="nav nav-tabs mb-3">
+                                                            <li class="nav-item">
+                                                                <a class="nav-link active" href="#">Active</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link" href="#">Link</a>
+                                                            </li>
+                                                            <li class="nav-item">
+                                                                <a class="nav-link disabled" href="#">Disabled</a>
+                                                            </li>
+                                                        </ul>
+                                                        <div class="progress">
+                                                            <div class="progress-bar" style="width: 25%;">25%</div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-5 border-left">
+                                                        <div t-foreach="['info', 'warning', 'danger', 'success']" t-as="btn">
+                                                            <a href="#" t-attf-class="mb-2 btn-block btn btn-#{btn}" t-esc="'btn-' + btn"/>
+                                                            <a href="#" t-attf-class="mb-3 btn-block btn btn-outline-#{btn}" t-esc="'btn-outline-' + btn"/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </t>
+                </t>
+            </field>
+        </record>
+
         <record id="snippets_debug_view" model="ir.ui.view">
             <field name="name">Snippet Debug</field>
             <field name="type">qweb</field>
@@ -305,6 +393,13 @@
             <field name="url">/website/demo/bootstrap</field>
             <field name="is_published">False</field>
             <field name="view_id" ref="bs_debug_view"/>
+        </record>
+
+        <!-- Presets Debug Page -->
+        <record id="color_combinations_debug_page" model="website.page">
+            <field name="url">/website/demo/color-combinations</field>
+            <field name="is_published">False</field>
+            <field name="view_id" ref="color_combinations_debug_view"/>
         </record>
 
         <!-- Snippet Debug Page -->

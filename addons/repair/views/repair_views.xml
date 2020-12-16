@@ -6,19 +6,18 @@
         <field name="name">repair.tree</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <tree string="Repairs order" multi_edit="1"
-                  decoration-muted="state in ('done','cancel')" decoration-info="state=='draft'">
-                <field name="name" />
+            <tree string="Repairs order" multi_edit="1" sample="1">
+                <field name="name"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="product_qty" optional="hide" string="Quantity"/>
                 <field name="product_uom" string="Unit of Measure" readonly="1" optional="hide"/>
-                <field name="user_id" optional="hide"/>
+                <field name="user_id" optional="hide" widget='many2one_avatar_user'/>
                 <field name="partner_id" readonly="1" optional="show"/>
                 <field name="address_id" optional="show"/>
                 <field name="guarantee_limit" optional="show"/>
                 <field name="location_id" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
-                <field name="state" optional="show"/>
+                <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -85,6 +84,7 @@
                             <field name="partner_invoice_id" attrs="{'invisible':[('invoice_method','=', 'none')],'required':[('invoice_method','!=','none')]}" groups="sale.group_delivery_invoice_address"/>
                             <field name="pricelist_id" groups="product.group_product_pricelist" context="{'product_id':product_id}" attrs="{'invisible':[('invoice_method','=', 'none')]}"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                     </group>
                 <notebook>
@@ -107,6 +107,7 @@
                                         <field name="tax_id" widget="many2many_tags"/>
                                         <field name="invoiced" invisible="1"/>
                                         <field name="price_subtotal" widget="monetary" invisible="1"/>
+                                        <field name="currency_id" invisible="1"/>
                                     </group>
                                     <group>
                                         <field name="lot_id" context="{'default_product_id': product_id, 'default_company_id': company_id}" groups="stock.group_production_lot"/>
@@ -133,6 +134,7 @@
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
                                 <field name="price_subtotal" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>
                         <group class="oe_subtotal_footer oe_right">
@@ -163,6 +165,7 @@
                                     <field name="price_unit"/>
                                     <field widget="many2many_tags" name="tax_id"/>
                                     <field name="price_subtotal" widget="monetary" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
                                 </group>
                             </form>
                             <tree string="Fees" editable="bottom">
@@ -175,6 +178,7 @@
                                 <field name="price_unit"/>
                                 <field name="tax_id" widget="many2many_tags" optional="show"/>
                                 <field name="price_subtotal" widget="monetary"/>
+                                <field name="currency_id" invisible="1"/>
                             </tree>
                         </field>
                     </page>
@@ -190,15 +194,15 @@
                         </group>
                     </page>
                     <page string="Notes" name="notes">
-                        <field name="internal_notes" placeholder="Add internal notes..."/>
-                        <field name="quotation_notes" placeholder="Add quotation notes..."/>
+                        <field name="internal_notes" placeholder="Add internal notes."/>
+                        <field name="quotation_notes" placeholder="Add quotation notes."/>
                     </page>
                 </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -209,7 +213,7 @@
         <field name="name">repair.kanban</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="company_id" invisible="1"/>
                 <field name="name" />
                 <field name="product_id" />
@@ -262,6 +266,8 @@
                 <separator/>
                 <filter string="Invoiced" name="invoiced" domain="[('invoiced', '=', True)]"/>
                 <separator/>
+                <filter name="filter_create_date" date="create_date"/>
+                <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
                     domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                     help="Show all records which has next action date is before today"/>
@@ -284,7 +290,7 @@
         <field name="name">repair.graph</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <graph string="Repair Orders">
+            <graph string="Repair Orders" sample="1">
                 <field name="create_date"/>
                 <field name="product_id"/>
             </graph>
@@ -295,7 +301,7 @@
         <field name="name">repair.pivot</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <pivot string="Repair Orders">
+            <pivot string="Repair Orders" sample="1">
                 <field name="create_date" type="row"/>
                 <field name="product_id" type="col"/>
             </pivot>
@@ -310,15 +316,11 @@
             <field name="search_view_id" ref="view_repair_order_form_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new reparation order
+                No repair order found. Let's create one!
               </p><p>
                 In a repair order, you can detail the components you remove,
                 add or replace and record the time you spent on the different
                 operations.
-              </p><p>
-                The repair order uses the warranty date on the Serial Number in
-                order to know if whether the repair should be invoiced to the
-                customer or not.
               </p>
             </field>
         </record>

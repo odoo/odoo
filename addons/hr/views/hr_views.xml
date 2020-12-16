@@ -79,9 +79,15 @@
 
             <menuitem
                 id="menu_hr_department_tree"
-                action="open_module_tree_department"
+                action="hr_department_tree_action"
                 parent="menu_human_resources_configuration"
                 sequence="2"
+                groups="group_hr_user"/>
+
+            <menuitem
+                id="menu_hr_department_kanban"
+                action="hr_department_kanban_action"
+                parent="menu_hr_root"
                 groups="group_hr_user"/>
 
             <menuitem

@@ -65,7 +65,7 @@
                             </page>
                             <page string="Advanced Settings" name="advanced_settings">
                                 <group>
-                                    <field name="lang"/>
+                                    <field name="lang" placeholder="${object.partner_id.lang}"/>
                                     <field name="mail_server_id"/>
                                     <field name="auto_delete"/>
                                     <field name="report_template" domain="[('model','=',model)]"/>

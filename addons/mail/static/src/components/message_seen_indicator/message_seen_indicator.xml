@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageSeenIndicator" owl="1">
+        <span class="o_MessageSeenIndicator" t-att-class="{ 'o-all-seen': messageSeenIndicator and messageSeenIndicator.hasEveryoneSeen }" t-att-title="indicatorTitle">
+            <t t-if="messageSeenIndicator and !messageSeenIndicator.isMessagePreviousToLastCurrentPartnerMessageSeenByEveryone">
+                <t t-if="messageSeenIndicator.hasSomeoneFetched or messageSeenIndicator.hasSomeoneSeen">
+                    <i class="o_MessageSeenIndicator_icon o-first fa fa-check"/>
+                </t>
+                <t t-if="messageSeenIndicator.hasSomeoneSeen">
+                    <i class="o_MessageSeenIndicator_icon o-second fa fa-check"/>
+                </t>
+            </t>
+        </span>
+    </t>
+</templates>

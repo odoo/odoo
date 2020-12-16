@@ -14,11 +14,13 @@ import logging
 import os
 import threading
 
+import psycopg2
+
 import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
-from odoo.tools import (assertion_report, config, existing_tables, ignore,
-                        lazy_classproperty, lazy_property, OrderedSet)
+from odoo.tools import (config, existing_tables, ignore,
+                        lazy_classproperty, lazy_property, sql, OrderedSet)
 from odoo.tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -108,11 +110,11 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
-        self._assertion_report = assertion_report.assertion_report()
+        self._assertion_report = odoo.tests.runner.OdooTestResult()
         self._fields_by_model = None
         self._ordinary_tables = None
-        self._post_init_queue = deque()
         self._constraint_queue = deque()
+        self.__cache = LRU(8192)
 
         # modules fully loaded (maintained during init phase by `loading` module)
         self._init_modules = set()
@@ -150,14 +152,13 @@ class Registry(Mapping):
         """ Delete the registry linked to a given database. """
         with cls._lock:
             if db_name in cls.registries:
-                cls.registries.pop(db_name)
+                del cls.registries[db_name]
 
     @classmethod
     def delete_all(cls):
         """ Delete all the registries. """
         with cls._lock:
-            for db_name in list(cls.registries.keys()):
-                cls.delete(db_name)
+            cls.registries.clear()
 
     #
     # Mapping abstract methods implementation
@@ -218,6 +219,7 @@ class Registry(Mapping):
         """
         from .. import models
 
+        self.clear_caches()
         lazy_property.reset_all(self)
 
         # Instantiate registered classes (via the MetaModel automatic discovery
@@ -234,9 +236,17 @@ class Registry(Mapping):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
+        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+
+        # Uninstall registry hooks. Because of the condition, this only happens
+        # on a fully loaded registry, and not on a registry being loaded.
+        if self.ready:
+            for model in env.values():
+                model._unregister_hook()
+
+        self.clear_caches()
         lazy_property.reset_all(self)
         self.registry_invalidated = True
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
         if env.all.tocompute:
             _logger.error(
@@ -261,22 +271,50 @@ class Registry(Mapping):
         for model in models:
             model._setup_fields()
 
+        for model in models:
+            model._setup_complete()
+
+        # Reinstall registry hooks. Because of the condition, this only happens
+        # on a fully loaded registry, and not on a registry being loaded.
+        if self.ready:
+            for model in env.values():
+                model._register_hook()
+            env['base'].flush()
+
+    @lazy_property
+    def field_computed(self):
+        """ Return a dict mapping each field to the fields computed by the same method. """
+        computed = {}
+        for model_name, Model in self.models.items():
+            groups = defaultdict(list)
+            for field in Model._fields.values():
+                if field.compute:
+                    computed[field] = group = groups[field.compute]
+                    group.append(field)
+            for fields in groups.values():
+                if len({field.compute_sudo for field in fields}) > 1:
+                    _logger.warning("%s: inconsistent 'compute_sudo' for computed fields: %s",
+                                    model_name, ", ".join(field.name for field in fields))
+        return computed
+
+    @lazy_property
+    def field_triggers(self):
         # determine field dependencies
         dependencies = {}
-        for model in models:
-            if model._abstract:
+        for Model in self.models.values():
+            if Model._abstract:
                 continue
-            for field in model._fields.values():
+            for field in Model._fields.values():
                 # dependencies of custom fields may not exist; ignore that case
                 exceptions = (Exception,) if field.base_field.manual else ()
                 with ignore(*exceptions):
-                    dependencies[field] = set(field.resolve_depends(model))
+                    dependencies[field] = set(field.resolve_depends(self))
 
         # determine transitive dependencies
         def transitive_dependencies(field, seen=[]):
             if field in seen:
                 return
-            for seq1 in dependencies[field]:
+            for seq1 in dependencies.get(field, ()):
                 yield seq1
                 for seq2 in transitive_dependencies(seq1[-1], seen + [field]):
                     yield concat(seq1[:-1], seq2)
@@ -299,10 +337,7 @@ class Registry(Mapping):
                         tree = tree.setdefault(label, {})
                     tree.setdefault(None, set()).add(field)
 
-        self.field_triggers = triggers
-
-        for model in models:
-            model._setup_complete()
+        return triggers
 
     def post_init(self, func, *args, **kwargs):
         """ Register a function to call at the end of :meth:`~.init_models`. """
@@ -311,20 +346,27 @@ class Registry(Mapping):
     def post_constraint(self, func, *args, **kwargs):
         """ Call the given function, and delay it if it fails during an upgrade. """
         try:
-            func(*args, **kwargs)
+            if (func, args, kwargs) not in self._constraint_queue:
+                # Module A may try to apply a constraint and fail but another module B inheriting
+                # from Module A may try to reapply the same constraint and succeed, however the
+                # constraint would already be in the _constraint_queue and would be executed again
+                # at the end of the registry cycle, this would fail (already-existing constraint)
+                # and generate an error, therefore a constraint should only be applied if it's
+                # not already marked as "to be applied".
+                func(*args, **kwargs)
         except Exception as e:
             if self._is_install:
                 _schema.error(*e.args)
             else:
                 _schema.info(*e.args)
-                self._constraint_queue.append(partial(func, *args, **kwargs))
+                self._constraint_queue.append((func, args, kwargs))
 
     def finalize_constraints(self):
         """ Call the delayed functions from above. """
         while self._constraint_queue:
-            func = self._constraint_queue.popleft()
+            func, args, kwargs = self._constraint_queue.popleft()
             try:
-                func()
+                func(*args, **kwargs)
             except Exception as e:
                 _schema.error(*e.args)
 
@@ -337,6 +379,9 @@ class Registry(Mapping):
              - ``module``: the name of the module being installed/updated, if any;
              - ``update_custom_fields``: whether custom fields should be updated.
         """
+        if not model_names:
+            return
+
         if 'module' in context:
             _logger.info('module %s: creating or updating database tables', context['module'])
         elif context.get('models_to_check', False):
@@ -345,31 +390,122 @@ class Registry(Mapping):
         env = odoo.api.Environment(cr, SUPERUSER_ID, context)
         models = [env[model_name] for model_name in model_names]
 
-        # make sure the queue does not contain some leftover from a former call
-        self._post_init_queue.clear()
-        self._is_install = install
+        try:
+            self._post_init_queue = deque()
+            self._foreign_keys = {}
+            self._is_install = install
 
-        for model in models:
-            model._auto_init()
-            model.init()
+            for model in models:
+                model._auto_init()
+                model.init()
 
-        self._ordinary_tables = None
+            env['ir.model']._reflect_models(model_names)
+            env['ir.model.fields']._reflect_fields(model_names)
+            env['ir.model.fields.selection']._reflect_selections(model_names)
+            env['ir.model.constraint']._reflect_constraints(model_names)
 
-        while self._post_init_queue:
-            func = self._post_init_queue.popleft()
-            func()
+            self._ordinary_tables = None
 
-        env['base'].flush()
+            while self._post_init_queue:
+                func = self._post_init_queue.popleft()
+                func()
 
-        # make sure all tables are present
-        self.check_tables_exist(cr)
+            self.check_indexes(cr, model_names)
+            self.check_foreign_keys(cr)
+
+            env['base'].flush()
+
+            # make sure all tables are present
+            self.check_tables_exist(cr)
+
+        finally:
+            del self._post_init_queue
+            del self._foreign_keys
+            del self._is_install
+
+    def check_indexes(self, cr, model_names):
+        """ Create or drop column indexes for the given models. """
+        expected = [
+            ("%s_%s_index" % (Model._table, field.name), Model._table, field.name, field.index)
+            for model_name in model_names
+            for Model in [self.models[model_name]]
+            if Model._auto and not Model._abstract
+            for field in Model._fields.values()
+            if field.column_type and field.store
+        ]
+        if not expected:
+            return
+
+        cr.execute("SELECT indexname FROM pg_indexes WHERE indexname IN %s",
+                   [tuple(row[0] for row in expected)])
+        existing = {row[0] for row in cr.fetchall()}
+
+        for indexname, tablename, columnname, index in expected:
+            if index and indexname not in existing:
+                try:
+                    with cr.savepoint(flush=False):
+                        sql.create_index(cr, indexname, tablename, ['"%s"' % columnname])
+                except psycopg2.OperationalError:
+                    _schema.error("Unable to add index for %s", self)
+            elif not index and indexname in existing:
+                sql.drop_index(cr, indexname, tablename)
+
+    def add_foreign_key(self, table1, column1, table2, column2, ondelete,
+                        model, module, force=True):
+        """ Specify an expected foreign key. """
+        key = (table1, column1)
+        val = (table2, column2, ondelete, model, module)
+        if force:
+            self._foreign_keys[key] = val
+        else:
+            self._foreign_keys.setdefault(key, val)
+
+    def check_foreign_keys(self, cr):
+        """ Create or update the expected foreign keys. """
+        if not self._foreign_keys:
+            return
+
+        # determine existing foreign keys on the tables
+        query = """
+            SELECT fk.conname, c1.relname, a1.attname, c2.relname, a2.attname, fk.confdeltype
+            FROM pg_constraint AS fk
+            JOIN pg_class AS c1 ON fk.conrelid = c1.oid
+            JOIN pg_class AS c2 ON fk.confrelid = c2.oid
+            JOIN pg_attribute AS a1 ON a1.attrelid = c1.oid AND fk.conkey[1] = a1.attnum
+            JOIN pg_attribute AS a2 ON a2.attrelid = c2.oid AND fk.confkey[1] = a2.attnum
+            WHERE fk.contype = 'f' AND c1.relname IN %s
+        """
+        cr.execute(query, [tuple({table for table, column in self._foreign_keys})])
+        existing = {
+            (table1, column1): (name, table2, column2, deltype)
+            for name, table1, column1, table2, column2, deltype in cr.fetchall()
+        }
+
+        # create or update foreign keys
+        for key, val in self._foreign_keys.items():
+            table1, column1 = key
+            table2, column2, ondelete, model, module = val
+            conname = '%s_%s_fkey' % key
+            deltype = sql._CONFDELTYPES[ondelete.upper()]
+            spec = existing.get(key)
+            if spec is None:
+                sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
+                model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
+            elif spec != (conname, table2, column2, deltype):
+                sql.drop_constraint(cr, table1, spec[0])
+                sql.add_foreign_key(cr, table1, column1, table2, column2, ondelete)
+                model.env['ir.model.constraint']._reflect_constraint(model, conname, 'f', None, module)
 
     def check_tables_exist(self, cr):
         """
         Verify that all tables are present and try to initialize those that are missing.
         """
         env = odoo.api.Environment(cr, SUPERUSER_ID, {})
-        table2model = {model._table: name for name, model in env.items() if not model._abstract}
+        table2model = {
+            model._table: name
+            for name, model in env.items()
+            if not model._abstract and model.__class__._table_query is None
+        }
         missing_tables = set(table2model).difference(existing_tables(cr, table2model))
 
         if missing_tables:
@@ -385,15 +521,9 @@ class Registry(Mapping):
             for table in missing_tables:
                 _logger.error("Model %s has no table.", table2model[table])
 
-    @lazy_property
-    def cache(self):
-        """ A cache for model methods. """
-        # this lazy_property is automatically reset by lazy_property.reset_all()
-        return LRU(8192)
-
     def _clear_cache(self):
         """ Clear the cache and mark it as invalidated. """
-        self.cache.clear()
+        self.__cache.clear()
         self.cache_invalidated = True
 
     def clear_caches(self):
@@ -499,7 +629,7 @@ class Registry(Mapping):
                 self.setup_models(cr)
                 self.registry_invalidated = False
         if self.cache_invalidated:
-            self.cache.clear()
+            self.__cache.clear()
             self.cache_invalidated = False
 
     @contextmanager

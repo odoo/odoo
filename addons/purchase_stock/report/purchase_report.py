@@ -16,15 +16,16 @@ class PurchaseReport(models.Model):
         'Average Receipt Delay', digits=(16, 2), readonly=True, store=False,  # needs store=False to prevent showing up as a 'measure' option
         help="Amount of time between expected and effective receipt date. Due to a hack needed to calculate this, \
               every record will show the same average value, therefore only use this as an aggregated value with group_operator=avg")
+    effective_date = fields.Datetime(string="Effective Date")
 
     def _select(self):
-        return super(PurchaseReport, self)._select() + ", spt.warehouse_id as picking_type_id"
+        return super(PurchaseReport, self)._select() + ", spt.warehouse_id as picking_type_id, po.effective_date as effective_date"
 
     def _from(self):
         return super(PurchaseReport, self)._from() + " left join stock_picking_type spt on (spt.id=po.picking_type_id)"
 
     def _group_by(self):
-        return super(PurchaseReport, self)._group_by() + ", spt.warehouse_id"
+        return super(PurchaseReport, self)._group_by() + ", spt.warehouse_id, effective_date"
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
@@ -51,18 +52,17 @@ class PurchaseReport(models.Model):
         if avg_receipt_delay:
             query = """ SELECT AVG(receipt_delay.po_receipt_delay)::decimal(16,2) AS avg_receipt_delay
                           FROM (
-                              SELECT extract(epoch from age(po.effective_date,COALESCE(po.date_planned, po.expected_date)))/(24*60*60) AS po_receipt_delay
+                              SELECT extract(epoch from age(po.effective_date, po.date_planned))/(24*60*60) AS po_receipt_delay
                               FROM purchase_order po
                               WHERE po.id IN (
-                                  SELECT order_id
-                                  FROM purchase_report
-                                  WHERE effective_date IS NOT NULL
-                                    AND %s )
+                                  SELECT "purchase_report"."order_id" FROM %s WHERE %s)
                               ) AS receipt_delay
                     """
 
-            where, args = expression(domain + [('company_id', '=', self.env.company.id)], self).to_sql()
-            self.env.cr.execute(query % where, args)
+            subdomain = domain + [('company_id', '=', self.env.company.id), ('effective_date', '!=', False)]
+            subtables, subwhere, subparams = expression(subdomain, self).query.get_sql()
+
+            self.env.cr.execute(query % (subtables, subwhere), subparams)
             res[0].update({
                 '__count': 1,
                 avg_receipt_delay.split(':')[0]: self.env.cr.fetchall()[0][0],

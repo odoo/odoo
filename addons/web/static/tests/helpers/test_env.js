@@ -1,11 +1,11 @@
 odoo.define('web.test_env', async function (require) {
     "use strict";
 
-    const AbstractStorageService = require('web.AbstractStorageService');
-    const Bus = require("web.Bus");
-    const RamStorage = require('web.RamStorage');
-    const { buildQuery } = require("web.rpc");
+    const Bus = require('web.Bus');
+    const { buildQuery } = require('web.rpc');
     const session = require('web.session');
+
+    let qweb;
 
     /**
      * Creates a test environment with the given environment object.
@@ -17,9 +17,11 @@ odoo.define('web.test_env', async function (require) {
      * @returns {Proxy}
      */
     function makeTestEnvironment(env = {}, providedRPC = null) {
-        const RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
+        if (!qweb) {
+            // avoid parsing templates at every test because it takes a lot of
+            // time and they never change
+            qweb = new owl.QWeb({ templates: session.owlTemplates });
+        }
         const database = {
             parameters: {
                 code: "en_US",
@@ -31,31 +33,35 @@ odoo.define('web.test_env', async function (require) {
                 time_format: '%H:%M:%S',
             },
         };
-        let testEnv = {};
         const defaultEnv = {
             _t: env._t || Object.assign((s => s), { database }),
-            _lt: env._lt || Object.assign((s => s), { database }),
-            bus: new Bus(),
+            browser: Object.assign({
+                setTimeout: window.setTimeout.bind(window),
+                clearTimeout: window.clearTimeout.bind(window),
+                setInterval: window.setInterval.bind(window),
+                clearInterval: window.clearInterval.bind(window),
+                requestAnimationFrame: window.requestAnimationFrame.bind(window),
+                Date: window.Date,
+                fetch: (window.fetch || (() => { })).bind(window),
+            }, env.browser),
+            bus: env.bus || new Bus(),
             device: Object.assign({ isMobile: false }, env.device),
             isDebug: env.isDebug || (() => false),
-            qweb: new owl.QWeb({ templates: session.owlTemplates }),
+            qweb,
             services: Object.assign({
-                ajax: { // for legacy subwidgets
+                ajax: {
                     rpc() {
-                        const prom = testEnv.session.rpc(...arguments);
-                        prom.abort = function () {
-                            throw new Error("Can't abort this request");
-                        };
-                        return prom;
-                    },
+                      return env.session.rpc(...arguments); // Compatibility Legacy Widgets
+                    }
                 },
-                getCookie() { },
+                getCookie() {},
+                httpRequest(/* route, params = {}, readMethod = 'json' */) {
+                    return Promise.resolve('');
+                },
                 rpc(params, options) {
                     const query = buildQuery(params);
-                    return testEnv.session.rpc(query.route, query.params, options);
+                    return env.session.rpc(query.route, query.params, options);
                 },
-                local_storage: new RamStorageService(),
-                session_storage: new RamStorageService(),
                 notification: { notify() { } },
             }, env.services),
             session: Object.assign({
@@ -65,10 +71,10 @@ odoo.define('web.test_env', async function (require) {
                     }
                     throw new Error(`No method to perform RPC`);
                 },
+                url: session.url,
             }, env.session),
         };
-        testEnv = Object.assign(env, defaultEnv);
-        return testEnv;
+        return Object.assign(env, defaultEnv);
     }
 
     /**

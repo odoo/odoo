@@ -132,7 +132,9 @@
                                     <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_green" role="img" aria-label="Available" title="Available"></span>
                                 </div>
                                 <div class="float-right" t-if="record.attendance_state.raw_value == 'checked_out'">
-                                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_red" role="img" aria-label="Not available" title="Not available"></span>
+                                    <span id="oe_hr_attendance_status" class="fa fa-circle oe_hr_attendance_status_orange"
+                                          role="img" aria-label="Not available" title="Not available">
+                                    </span>
                                 </div>
                                 <strong>
                                     <field name="name"/>
@@ -152,8 +154,8 @@
 
     <record id="hr_employee_attendance_action_kanban" model="ir.actions.act_window">
         <field name="name">Employees</field>
-        <field name="res_model">hr.employee</field>
-        <field name="view_mode">kanban,tree,activity</field>
+        <field name="res_model">hr.employee.public</field>
+        <field name="view_mode">kanban</field>
         <field name="view_id" ref="hr_employees_view_kanban"/>
         <field name="target">fullscreen</field>
         <field name="help" type="html">

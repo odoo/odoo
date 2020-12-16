@@ -1,0 +1,93 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatWindow {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-flow: column;
+
+    &:not(.o-mobile) {
+        max-width: 100%;
+        max-height: 100%;
+        width: 325px;
+
+        &.o-folded {
+            height: $o-mail-chat-window-header-height;
+        }
+
+        &:not(.o-folded) {
+            height: 400px;
+        }
+    }
+
+    &.o-mobile {
+        position: fixed;
+    }
+
+    &.o-fullscreen {
+        height: 100%;
+        width: 100%;
+    }
+}
+
+.o_ChatWindow_header {
+    flex: 0 0 auto;
+}
+
+.o_ChatWindow_newMessageForm {
+    padding: 3px;
+    margin-top: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.o_ChatWindow_newMessageFormInput {
+    flex: 1 1 auto;
+}
+
+.o_ChatWindow_newMessageFormLabel {
+    margin-right: 5px;
+    flex: 0 0 auto;
+}
+
+.o_ChatWindow_thread {
+    flex: 1 1 auto;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatWindow {
+    background-color: $o-mail-thread-window-bg;
+    border-radius: 6px 6px 0 0;
+    box-shadow: -5px -5px 10px rgba(black, 0.09);
+    outline: none;
+
+    &:not(.o-mobile) {
+
+        &.o-focused {
+            box-shadow: -5px -5px 10px rgba(black, 0.18);
+        }
+    }
+
+
+    .o_Composer {
+        border: 0;
+    }
+}
+
+.o_ChatWindow_header {
+    border-radius: 3px 3px 0 0;
+}
+
+.o_ChatWindow_newMessageFormInput {
+    outline: none;
+    border: 1px solid gray('300'); // cancel firefox border on input focus
+}
+
+.o_ChatWindow_thread .o_ThreadView_messageList {
+    font-size: 1rem;
+}

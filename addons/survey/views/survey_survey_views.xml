@@ -75,8 +75,8 @@
                                     <button icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
                                         title="This question depends on another question's answer." class="icon_rotates"/>
                                     <control>
-                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
                                         <create name="add_question_control" string="Add a question"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
                                     </control>
                                 </tree>
                             </field>
@@ -124,7 +124,7 @@
                                     <field name="certification_badge_id" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)]}"
                                            domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
                                            context="{'default_name': title,
-                                                   'default_description': 'Congratulation, you succeeded this certification',
+                                                   'default_description': 'Congratulations, you have succeeded this certification',
                                                    'default_rule_auth': 'nobody',
                                                    'default_level': None,
                                                    'form_view_ref': 'survey.gamification_badge_form_view_simplified',
@@ -149,9 +149,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -160,11 +160,11 @@
         <field name="name">Tree view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <tree string="Survey">
+            <tree string="Survey" sample="1">
                 <field name="active" invisible="1"/>
                 <field name="certification" invisible="1"/>
                 <field name="title"/>
-                <field name="state"/>
+                <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'open'"/>
                 <field name="answer_count"/>
                 <field name="answer_done_count"/>
                 <field name="success_count"/>
@@ -179,7 +179,7 @@
         <field name="name">Kanban view for survey</field>
         <field name="model">survey.survey</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <field name="state" />
                 <field name="title" />
                 <field name="answer_done_count" />

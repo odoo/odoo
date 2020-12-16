@@ -2,7 +2,7 @@
     <t t-name="GoogleDriveMenu" owl="1">
         <li>
             <ul class="o_embed_menu">
-                <li t-foreach="gdriveItems" t-as="gdriveItem" t-key="gdriveItem.id"
+                <li t-foreach="props.items" t-as="gdriveItem" t-key="gdriveItem.id"
                     role="menuitem"
                     class="o_menu_item oe_share_gdoc_item dropdown-item"
                     >

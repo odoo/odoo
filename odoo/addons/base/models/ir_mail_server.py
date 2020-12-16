@@ -9,14 +9,17 @@ import email.policy
 import logging
 import re
 import smtplib
+from socket import gaierror, timeout
+from ssl import SSLError
 import sys
 import threading
 
 import html2text
+import idna
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import except_orm, UserError
-from odoo.tools import ustr, pycompat
+from odoo.exceptions import UserError
+from odoo.tools import ustr, pycompat, formataddr
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -24,15 +27,29 @@ _test_logger = logging.getLogger('odoo.tests')
 SMTP_TIMEOUT = 60
 
 
-class MailDeliveryException(except_orm):
+class MailDeliveryException(Exception):
     """Specific exception subclass for mail delivery errors"""
-    def __init__(self, name, value):
-        super(MailDeliveryException, self).__init__(name, value)
+
 
 # Python 3: patch SMTP's internal printer/debugger
 def _print_debug(self, *args):
     _logger.debug(' '.join(str(a) for a in args))
 smtplib.SMTP._print_debug = _print_debug
+
+# Python 3: workaround for bpo-35805, only partially fixed in Python 3.8.
+RFC5322_IDENTIFICATION_HEADERS = {'message-id', 'in-reply-to', 'references', 'resent-msg-id'}
+_noFoldPolicy = email.policy.SMTP.clone(max_line_length=None)
+class IdentificationFieldsNoFoldPolicy(email.policy.EmailPolicy):
+    # Override _fold() to avoid folding identification fields, excluded by RFC2047 section 5
+    # These are particularly important to preserve, as MTAs will often rewrite non-conformant
+    # Message-ID headers, causing a loss of thread information (replies are lost)
+    def _fold(self, name, value, *args, **kwargs):
+        if name.lower() in RFC5322_IDENTIFICATION_HEADERS:
+            return _noFoldPolicy._fold(name, value, *args, **kwargs)
+        return super()._fold(name, value, *args, **kwargs)
+
+# Global monkey-patch for our preferred SMTP policy, preserving the non-default linesep
+email.policy.SMTP = IdentificationFieldsNoFoldPolicy(linesep=email.policy.SMTP.linesep)
 
 # Python 2: replace smtplib's stderr
 class WriteToLogger(object):
@@ -53,7 +70,7 @@ def extract_rfc2822_addresses(text):
     if not text:
         return []
     candidates = address_pattern.findall(ustr(text))
-    return [c for c in candidates if is_ascii(c)]
+    return [formataddr(('', c), charset='ascii') for c in candidates]
 
 
 class IrMailServer(models.Model):
@@ -115,8 +132,20 @@ class IrMailServer(models.Model):
             except UserError as e:
                 # let UserErrors (messages) bubble up
                 raise e
+            except (UnicodeError, idna.core.InvalidCodepoint) as e:
+                raise UserError(_("Invalid server name !\n %s", ustr(e)))
+            except (gaierror, timeout) as e:
+                raise UserError(_("No response received. Check server address and port number.\n %s", ustr(e)))
+            except smtplib.SMTPServerDisconnected as e:
+                raise UserError(_("The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s", ustr(e.strerror)))
+            except smtplib.SMTPResponseException as e:
+                raise UserError(_("Server replied with following exception:\n %s", ustr(e.smtp_error)))
+            except smtplib.SMTPException as e:
+                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e.smtp_error)))
+            except SSLError as e:
+                raise UserError(_("An SSL exception occurred. Check connection security type.\n %s", ustr(e)))
             except Exception as e:
-                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s") % ustr(e))
+                raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s", ustr(e)))
             finally:
                 try:
                     if smtp:
@@ -125,14 +154,13 @@ class IrMailServer(models.Model):
                     # ignored, just a consequence of the previous exception
                     pass
 
-        title = _("Connection Test Succeeded!")
-        message = _("Everything seems properly set up!")
+        message = _("Connection Test Successful!")
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': title,
                 'message': message,
+                'type': 'success',
                 'sticky': False,
             }
         }
@@ -206,12 +234,9 @@ class IrMailServer(models.Model):
 
         if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
-            # The user/password must be converted to bytestrings in order to be usable for
-            # certain hashing schemes, like HMAC.
-            # See also bug #597143 and python issue #5285
-            smtp_user = pycompat.to_text(ustr(smtp_user))
-            smtp_password = pycompat.to_text(ustr(smtp_password))
-            connection.login(smtp_user, smtp_password)
+            local, at, domain = smtp_user.rpartition('@')
+            domain = idna.encode(domain).decode('ascii')
+            connection.login(f"{local}{at}{domain}", smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
@@ -416,13 +441,21 @@ class IrMailServer(models.Model):
                 smtp_server, smtp_port, smtp_user, smtp_password,
                 smtp_encryption, smtp_debug, mail_server_id=mail_server_id)
 
-            message_str = message.as_string()
-            # header folding code is buggy and adds redundant carriage
-            # returns, it got fixed in 3.7.4 thanks to bpo-34424
             if sys.version_info < (3, 7, 4):
-                message_str = re.sub('\r+', '\r', message_str)
+                # header folding code is buggy and adds redundant carriage
+                # returns, it got fixed in 3.7.4 thanks to bpo-34424
+                message_str = message.as_string()
+                message_str = re.sub('\r+(?!\n)', '', message_str)
 
-            smtp.sendmail(smtp_from, smtp_to_list, message_str)
+                mail_options = []
+                if any((not is_ascii(addr) for addr in smtp_to_list + [smtp_from])):
+                    # non ascii email found, require SMTPUTF8 extension,
+                    # the relay may reject it
+                    mail_options.append("SMTPUTF8")
+                smtp.sendmail(smtp_from, smtp_to_list, message_str, mail_options=mail_options)
+            else:
+                smtp.send_message(message, smtp_from, smtp_to_list)
+
             # do not quit() a pre-established smtp_session
             if not smtp_session:
                 smtp.quit()
@@ -430,7 +463,7 @@ class IrMailServer(models.Model):
             raise
         except Exception as e:
             params = (ustr(smtp_server), e.__class__.__name__, ustr(e))
-            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s") % params
+            msg = _("Mail delivery failed via SMTP server '%s'.\n%s: %s", *params)
             _logger.info(msg)
             raise MailDeliveryException(_("Mail Delivery Failed"), msg)
         return message_id

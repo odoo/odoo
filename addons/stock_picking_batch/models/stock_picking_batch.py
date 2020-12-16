@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 class StockPickingBatch(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -47,6 +47,13 @@ class StockPickingBatch(models.Model):
     picking_type_id = fields.Many2one(
         'stock.picking.type', 'Operation Type', check_company=True, copy=False,
         readonly=True, states={'draft': [('readonly', False)]})
+    scheduled_date = fields.Datetime(
+        'Scheduled Date', copy=False, store=True, readonly=False, compute="_compute_scheduled_date",
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        help="""Scheduled date for the transfers to be processed.
+              - If manually set then scheduled date for all transfers in batch will automatically update to this date.
+              - If not manually changed and transfers are added/removed/updated then this will be their earliest scheduled date
+                but this scheduled date will not be set for all transfers in batch.""")
 
     @api.depends('company_id', 'picking_type_id', 'state')
     def _compute_allowed_picking_ids(self):
@@ -80,7 +87,7 @@ class StockPickingBatch(models.Model):
         for batch in self:
             batch.move_ids = batch.picking_ids.move_lines
             batch.move_line_ids = batch.picking_ids.move_line_ids
-            batch.show_check_availability = any(m.state != 'assigned' for m in batch.move_ids)
+            batch.show_check_availability = any(m.state not in ['assigned', 'done'] for m in batch.move_ids)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_state(self):
@@ -94,6 +101,15 @@ class StockPickingBatch(models.Model):
             # Batch picking is marked as done if all its not canceled transfers are done.
             elif all(picking.state in ['cancel', 'done'] for picking in batch.picking_ids):
                 batch.state = 'done'
+
+    @api.depends('picking_ids', 'picking_ids.scheduled_date')
+    def _compute_scheduled_date(self):
+        self.scheduled_date = min(self.picking_ids.filtered('scheduled_date').mapped('scheduled_date'), default=False)
+
+    @api.onchange('scheduled_date')
+    def onchange_scheduled_date(self):
+        if self.scheduled_date:
+            self.picking_ids.scheduled_date = self.scheduled_date
 
     def _set_move_line_ids(self):
         new_move_lines = self[0].move_line_ids
@@ -124,10 +140,21 @@ class StockPickingBatch(models.Model):
                 batch_without_picking_type.picking_type_id = picking.picking_type_id.id
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft(self):
         if any(batch.state != 'draft' for batch in self):
             raise UserError(_("You can only delete draft batch transfers."))
-        return super().unlink()
+
+    def onchange(self, values, field_name, field_onchange):
+        """Override onchange to NOT to update all scheduled_date on pickings when
+        scheduled_date on batch is updated by the change of scheduled_date on pickings.
+        """
+        result = super().onchange(values, field_name, field_onchange)
+        if field_name == 'picking_ids' and 'value' in result:
+            for line in result['value'].get('picking_ids', []):
+                if line[0] < 2 and 'scheduled_date' in line[2]:
+                    del line[2]['scheduled_date']
+        return result
 
     # -------------------------------------------------------------------------
     # Action methods
@@ -165,11 +192,35 @@ class StockPickingBatch(models.Model):
                     _("Batch Transfer"),
                     picking.batch_id.id,
                     picking.batch_id.name))
-        return self.picking_ids.button_validate()
+        return pickings.button_validate()
 
     def action_assign(self):
         self.ensure_one()
         self.picking_ids.action_assign()
+
+    def action_put_in_pack(self):
+        """ Action to put move lines with 'Done' quantities into a new pack
+        This method follows same logic to stock.picking.
+        """
+        self.ensure_one()
+        if self.state not in ('done', 'cancel'):
+            picking_move_lines = self.move_line_ids
+
+            move_line_ids = picking_move_lines.filtered(lambda ml:
+                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+                and not ml.result_package_id
+            )
+            if not move_line_ids:
+                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+            if move_line_ids:
+                res = self.picking_ids[0]._pre_put_in_pack_hook(move_line_ids)
+                if not res:
+                    res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
+                return res
+            else:
+                raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
 
     # -------------------------------------------------------------------------
     # Miscellaneous
@@ -180,9 +231,9 @@ class StockPickingBatch(models.Model):
                 erroneous_pickings = batch.picking_ids - batch.allowed_picking_ids
                 raise UserError(_(
                     "The following transfers cannot be added to batch transfer %s. "
-                    "Please check their states and operation types, if they aren't immediate " +
+                    "Please check their states and operation types, if they aren't immediate "
                     "transfers or if they're not already part of another batch transfer.\n\n"
-                    "Incompatibilities: %s") % (batch.name, ', '.join(erroneous_pickings.mapped('name'))))
+                    "Incompatibilities: %s", batch.name, ', '.join(erroneous_pickings.mapped('name'))))
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:

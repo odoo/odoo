@@ -4,9 +4,9 @@
 {
     'name': 'Forum',
     'category': 'Website/Website',
-    'sequence': 150,
+    'sequence': 265,
     'summary': 'Manage a forum with FAQ and Q&A',
-    'version': '1.0',
+    'version': '1.1',
     'description': """
 Ask questions, get answers, no distractions
         """,
@@ -17,7 +17,10 @@ Ask questions, get answers, no distractions
         'website_profile',
     ],
     'data': [
+        'data/forum_default_faq.xml',
         'data/forum_data.xml',
+        'data/mail_data.xml',
+        'data/mail_templates.xml',
         'views/forum.xml',
         'views/res_users_views.xml',
         'views/website_forum.xml',

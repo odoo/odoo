@@ -6,9 +6,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-02-12 05:39+0000\n"
-"PO-Revision-Date: 2019-02-12 12:06+0530\n"
-"Last-Translator: didier.donze@camptocamp.com\n"
+"POT-Creation-Date: 2020-07-09 16:03+0000\n"
+"PO-Revision-Date: 2020-06-17 10:00+0000\n"
+"Last-Translator: yannick.vaucher@camptocamp.com\n"
 "Language-Team: \n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -16,6 +16,21 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: \n"
 "X-Generator: Poedit 2.2.1\n"
+
+#. module: l10n_ch
+#: model:ir.actions.report,print_report_name:l10n_ch.l10n_ch_isr_report
+msgid "'ISR-%s' % object.name"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.actions.report,print_report_name:l10n_ch.l10n_ch_qr_report
+msgid "'QR-bill-%s' % object.name"
+msgstr "'QR-Rechnung-%s' % object.name"
+
+#. module: l10n_ch
+#: model:account.tax.template,description:l10n_ch.vat_other_movements_910
+msgid "0% dons"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.tax.template,description:l10n_ch.vat_O_exclude
@@ -26,6 +41,11 @@ msgstr "0% Exkl."
 #: model:account.tax.template,description:l10n_ch.vat_O_import
 msgid "0% import."
 msgstr "0% Import."
+
+#. module: l10n_ch
+#: model:account.tax.template,description:l10n_ch.vat_other_movements_900
+msgid "0% subventions"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.tax.template,name:l10n_ch.vat_100_import
@@ -68,6 +88,57 @@ msgid "2.5% invest. Incl."
 msgstr "2.5% Invest. Inkl."
 
 #. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_200
+msgid "200 Chiffre d'affaires"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_220_289
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_220_289
+msgid "220 Chiffre d'affaires imposable a 0% (export)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_221
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_221
+msgid "221 Prestations fournies à l'étranger"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_225
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_225
+msgid "225 Transfer avec la procédure de déclaration"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_230
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_230
+msgid "230 Chiffre d'affaires non-imposable a 0% (exclu)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_235
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_235
+msgid "235 Diminution de la contre-prestation"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_280
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_280
+msgid "280 Divers (p.ex valeur du terrain)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_289
+msgid "289 Déductions (ch.220 à ch.280)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_299
+msgid "299 Chiffre d'affaires imposable (ch.200 moins ch.289)"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.tax.template,description:l10n_ch.vat_37
 msgid "3.7%"
 msgstr "3.7%"
@@ -96,6 +167,116 @@ msgstr "3.7% Invest."
 #: model:account.tax.template,description:l10n_ch.vat_37_invest_incl
 msgid "3.7% invest Incl."
 msgstr "3.7% Invest. Inkl."
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_302a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_302a
+msgid "302a Chiffre d'affaires imposable a 7.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_302b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_302b
+msgid "302b TVA due a 7.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_312a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_312a
+msgid "312a Chiffre d'affaires imposable a 2.5% (TR)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_312b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_312b
+msgid "312b TVA due a 2.5% (TR)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_342a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_342a
+msgid "342a Chiffre d'affaires imposable a 3.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_342b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_342b
+msgid "342b TVA due a 3.7% (TS)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_381a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_381a
+msgid "381a Impots sur les acquisitions"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_381b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_381b
+msgid "381b Impots sur les acquisitions "
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_382a
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_382a
+msgid "382a Impots sur les acquisitions"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_382b
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_382b
+msgid "382b Impots sur les acquisitions "
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_399
+msgid "399 TVA Due "
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_400
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_400
+msgid "400 TVA préalable sur biens et services"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_405
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_405
+msgid "405 TVA préalable sur invest. et autres ch."
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_410
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_410
+msgid "410 Dégrèvement ultérieur de l'impot préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_415
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_415
+msgid "415 Correction de l'impot préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_420
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_420
+msgid "420 Réduction de la déduction de l'impot préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_479
+msgid "479 TVA préalable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_500
+msgid "500 Solde de TVA a payer a l'AFC"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_510
+msgid "510 Solde de TVA a recevoir de l'AFC"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.tax.template,description:l10n_ch.vat_77
@@ -132,6 +313,68 @@ msgstr "7.7% Invest."
 #: model:account.tax.template,description:l10n_ch.vat_77_invest_incl
 msgid "7.7% invest. Incl."
 msgstr "7.7% Invest. Inkl."
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_900
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_900
+msgid "900 Subventions, taxes touristiques"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_910
+#: model:account.tax.report.line,tag_name:l10n_ch.account_tax_report_line_chtax_910
+msgid "910 Les dons, les dividendes, les dédommagements, ..."
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Acceptance point</span>"
+msgstr "<span class=\"title\">Annahmestelle</span>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Account / Payable to</span><br/>"
+msgstr "<span class=\"title\">Konto / Zahlbar an</span><br/>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Additional information</span><br/>"
+msgstr "<span class=\"title\">Zusätzliche Informationen</span><br/>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Amount</span><br/>"
+msgstr "<span class=\"title\">Betrag</span><br/>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Currency</span><br/>"
+msgstr "<span class=\"title\">Währung</span><br/>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Payable by</span><br/>"
+msgstr "<span class=\"title\">Zahlbar durch</span><br/>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span class=\"title\">Reference</span><br/>"
+msgstr "<span class=\"title\">Referenz</span><br/>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Payment Part</span>"
+msgstr "<span>Zahlteil</span>"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "<span>Receipt</span>"
+msgstr "<span>Empfangsschein</span>"
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_autres_mouv
+msgid "AUTRES MOUVEMENTS DE FONDS"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_4200
@@ -245,6 +488,12 @@ msgstr ""
 "Abschreibungen und Wertberichtigungen feste Einrichtungen und Installationen"
 
 #. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid ""
+"Append the QR Code ISR at the end of customer invoices for Swiss customers"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_2270
 msgid "Assurances sociales et institutions de prévoyance"
 msgstr "Sozialversicherungen und Vorsorgeeinrichtungen"
@@ -300,6 +549,42 @@ msgid "Avances et prêts"
 msgstr "Vorschüsse und Darlehen"
 
 #. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_partner_bank
+msgid "Bank Accounts"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_account_bank_statement_line
+msgid "Bank Statement Line"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_calc_impot_base
+msgid "Base Impôt sur acquisitions de services"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
+#: model:ir.model.fields,help:l10n_ch.field_res_config_settings__l10n_ch_isr_print_bank_location
+msgid ""
+"Boolean option field indicating whether or not the alternate layout (the one "
+"printing bank name and address) must be used when generating an ISR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_sent
+msgid ""
+"Boolean value telling whether or not the ISR corresponding to this invoice "
+"has already been printed or sent by mail."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_valid
+msgid ""
+"Boolean value. True iff all the data required to generate the ISR are present"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1700
 msgid "Brevets, know-how, licences, droits, développement"
 msgstr "Patente, Know-how, Lizenzen, Rechte, Entwicklungen"
@@ -313,6 +598,21 @@ msgstr "Jahresgewinn oder Jahresverlust"
 #: model:account.account.template,name:l10n_ch.ch_coa_2970
 msgid "Bénéfice / perte reporté"
 msgstr "Gewinnvortrag oder Verlustvortrag"
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_chf
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_chf
+msgid "CHF ISR Subscription Number"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/account_invoice.py:0
+#, python-format
+msgid ""
+"Cannot generate the QR-bill. Please check you have configured the address of "
+"your company and debtor. If you are using a QR-IBAN, also check the "
+"invoice's payment reference is a QR reference."
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1850
@@ -407,6 +707,21 @@ msgid "Charges à payer"
 msgstr "Noch nicht bezahlter Aufwand"
 
 #. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_calc_impot_chiffre
+msgid "Chiffre d'affaires imposable"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__l10n_ch_postal
+msgid "Client Number"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.cash.rounding,name:l10n_ch.cash_rounding_5_centime
+msgid "Coinage 0.05"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_3803
 msgid "Commissions de tiers"
 msgstr "Provisionen an Dritte"
@@ -415,6 +730,11 @@ msgstr "Provisionen an Dritte"
 #: model:account.account.template,name:l10n_ch.ch_coa_4903
 msgid "Commissions obtenues sur achats"
 msgstr "Einkaufsprovisionen"
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_journal__invoice_reference_model
+msgid "Communication Standard"
+msgstr ""
 
 #. module: l10n_ch
 #: model:ir.model,name:l10n_ch.model_res_company
@@ -430,6 +750,11 @@ msgstr "Unklare Beträge"
 #: model:account.account.template,name:l10n_ch.ch_coa_1091
 msgid "Compte d'attente pour salaires"
 msgstr "Lohndurchlaufkonto"
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_3710
@@ -472,6 +797,11 @@ msgid "Créanciers"
 msgstr "Verbindlichkeiten aus Lieferungen und Leistungen (Kreditoren)"
 
 #. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_currency_name
+msgid "Currency Name"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_2100
 #: model:account.account.template,name:l10n_ch.ch_coa_2400
 msgid "Dettes bancaires"
@@ -494,6 +824,11 @@ msgid "Dividendes"
 msgstr "Beschlossene Ausschüttungen"
 
 #. module: l10n_ch
+#: model:account.tax.template,name:l10n_ch.vat_other_movements_910
+msgid "Dons, dividendes, dédommagements à 0%"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_4071
 msgid "Droits de douanes à l'importation"
 msgstr "Einfuhrzölle"
@@ -509,6 +844,11 @@ msgid "Débiteurs"
 msgstr "Forderungen aus Lieferungen und Leistungen (Debitoren)"
 
 #. module: l10n_ch
+#: model:account.account.template,name:l10n_ch.ch_coa_1101
+msgid "Débiteurs (PoS)"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_2201
 msgid "Décompte TVA"
 msgstr "Abrechnungskonto MWST"
@@ -522,6 +862,12 @@ msgstr "Einkaufsrabatte"
 #: model:account.account.template,name:l10n_ch.ch_coa_3009
 msgid "Déductions sur ventes"
 msgstr "Erlösminderungen"
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_eur
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_eur
+msgid "EUR ISR Subscription Number"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_4540
@@ -607,20 +953,72 @@ msgid "Goodwill"
 msgstr "Goodwill"
 
 #. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_scan_line_left
+msgid "Horizontal offset"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1441
 #: model:account.account.template,name:l10n_ch.ch_coa_2451
 msgid "Hypothèques"
 msgstr "Hypotheken"
 
 #. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chiffre_af
+msgid "I - CHIFFRE D'AFFAIRES"
+msgstr ""
+
+#. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_calc_impot
+msgid "II - CALCUL DE L'IMPOT"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.actions.report,name:l10n_ch.l10n_ch_isr_report
+msgid "ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_partner_bank_form
+#: model_terms:ir.ui.view,arch_db:l10n_ch.setup_bank_account_wizard_inherit
+msgid "ISR Client Identification Number"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_isr_report_template
+msgid "ISR for invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_number_spaced
+msgid ""
+"ISR number split in blocks of 5 characters (right-justified), to generate "
+"ISR report."
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_invoice_search_view
+msgid "ISR reference number"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_subscription
+msgid ""
+"ISR subscription number identifying your company or your bank to generate "
+"ISR."
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_subscription_formatted
+msgid ""
+"ISR subscription number your company or your bank, formated with '-' and "
+"without the padding zeros, to generate ISR report."
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1600
 msgid "Immeubles d’exploitation"
 msgstr "Geschäftsliegenschaften"
-
-#. module: l10n_ch
-#: model:account.fiscal.position.template,name:l10n_ch.fiscal_position_template_1
-msgid "Suisse national"
-msgstr "Schweiz national"
 
 #. module: l10n_ch
 #: model:account.fiscal.position.template,name:l10n_ch.fiscal_position_template_import
@@ -663,6 +1061,57 @@ msgstr "Direkte Steuern"
 #: model:account.account.template,name:l10n_ch.ch_coa_1550
 msgid "Installations de stockage"
 msgstr "Installations de stockage"
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_account_journal
+msgid "Journal"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model,name:l10n_ch.model_account_move
+msgid "Journal Entries"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_number
+msgid "L10N Ch Isr Number"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_number_spaced
+msgid "L10N Ch Isr Number Spaced"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_optical_line
+msgid "L10N Ch Isr Optical Line"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_sent
+msgid "L10N Ch Isr Sent"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_subscription
+msgid "L10N Ch Isr Subscription"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_subscription_formatted
+msgid "L10N Ch Isr Subscription Formatted"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_move__l10n_ch_isr_valid
+msgid "L10N Ch Isr Valid"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_show_subscription
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_show_subscription
+msgid "L10N Ch Show Subscription"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_6260
@@ -725,6 +1174,16 @@ msgid "Mobilier et installations"
 msgstr "Mobiliar und Einrichtungen"
 
 #. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid "Offset to move the the scan line in mm"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_optical_line
+msgid "Optical reading line, as it will be printed on ISR"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1540
 msgid "Outillages et appareils"
 msgstr "Werkzeuge und Geräte"
@@ -746,8 +1205,26 @@ msgstr "Verluste Forderungen (Debitoren), Veränderung Delkredere"
 
 #. module: l10n_ch
 #: model:account.chart.template,name:l10n_ch.l10nch_chart_template
-msgid "Plan comptable 2015"
-msgstr "Kontenrahmen 2015"
+msgid "Plan comptable 2015 (Suisse)"
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/res_bank.py:0
+#, python-format
+msgid "Postal"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_preprinted_account
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_preprinted_account
+msgid "Preprinted account"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_preprinted_bank
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_preprinted_bank
+msgid "Preprinted bank"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_4400
@@ -758,6 +1235,40 @@ msgstr "Aufwand für bezogene Dienstleistungen"
 #: model:account.account.template,name:l10n_ch.ch_coa_3700
 msgid "Prestations propres"
 msgstr "Eigenleistungen"
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_invoice_form
+msgid "Print ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.isr_invoice_form
+msgid "Print QR-bill"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_print_qrcode
+msgid "Print Swiss QR Code"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_print_bank_location
+msgid "Print bank location"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_print_bank_location
+msgid "Print bank on ISR"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.res_config_settings_view_form
+msgid ""
+"Print the coordinates of your bank under the 'Payment for' title of the "
+"ISR.\n"
+"                                Your address will be moved to the 'in favour "
+"of' section."
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_7000
@@ -821,6 +1332,16 @@ msgid "Publicité"
 msgstr "Werbeaufwand"
 
 #. module: l10n_ch
+#: model:ir.actions.report,name:l10n_ch.l10n_ch_qr_report
+msgid "QR-bill"
+msgstr ""
+
+#. module: l10n_ch
+#: model_terms:ir.ui.view,arch_db:l10n_ch.l10n_ch_swissqr_template
+msgid "QR-bill for invoice"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_3801
 msgid "Rabais et réduction de prix"
 msgstr "Rabatte und Preisreduktionen"
@@ -857,9 +1378,24 @@ msgid "Réserves légales issues du capital"
 msgstr "Gesetzliche Kapitalreserve"
 
 #. module: l10n_ch
+#: model:account.tax.report.line,name:l10n_ch.account_tax_report_line_chtax_solde
+msgid "SOLDE"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_5000
 msgid "Salaires"
 msgstr "Lohnaufwand"
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_scan_line_left
+msgid "Scan line horizontal offset (mm)"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_company__l10n_ch_isr_scan_line_top
+msgid "Scan line vertical offset (mm)"
+msgstr ""
 
 #. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1260
@@ -872,118 +1408,25 @@ msgid "Stocks de produits semi-ouvrés"
 msgstr ""
 
 #. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_dedouanement
-msgid "Switzerland VAT Form: 100% dédouanement (base in grid 400)"
+#: model:account.tax.template,name:l10n_ch.vat_other_movements_900
+msgid "Subventions, taxes touristiques à 0%"
 msgstr ""
 
 #. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_200
-msgid "Switzerland VAT Form: grid 200"
+#: model:account.fiscal.position.template,name:l10n_ch.fiscal_position_template_1
+msgid "Suisse national"
+msgstr "Schweiz national"
+
+#. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_postal
+#: model:ir.model.fields,field_description:l10n_ch.field_res_partner_bank__l10n_ch_postal
+msgid "Swiss Postal Account"
 msgstr ""
 
 #. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_220
-msgid "Switzerland VAT Form: grid 220"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_221
-msgid "Switzerland VAT Form: grid 221"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_225
-msgid "Switzerland VAT Form: grid 225"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_230
-msgid "Switzerland VAT Form: grid 230"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_235
-msgid "Switzerland VAT Form: grid 235"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_280
-msgid "Switzerland VAT Form: grid 280"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_302_a
-msgid "Switzerland VAT Form: grid 302 base"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_302_b
-msgid "Switzerland VAT Form: grid 302 tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_311_a
-msgid "Switzerland VAT Form: grid 311 base"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_311_b
-msgid "Switzerland VAT Form: grid 311 tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_342_a
-msgid "Switzerland VAT Form: grid 342 base"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_342_b
-msgid "Switzerland VAT Form: grid 342 tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_381_a
-msgid "Switzerland VAT Form: grid 381 base"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_381_b
-msgid "Switzerland VAT Form: grid 381 tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_382_a
-msgid "Switzerland VAT Form: grid 382 base"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_382_b
-msgid "Switzerland VAT Form: grid 382 tax"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_400
-msgid "Switzerland VAT Form: grid 400"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_405
-msgid "Switzerland VAT Form: grid 405"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_410
-msgid "Switzerland VAT Form: grid 410"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_415
-msgid "Switzerland VAT Form: grid 415"
-msgstr ""
-
-#. module: l10n_ch
-#: model:account.account.tag,name:l10n_ch.vat_tag_420
-msgid "Switzerland VAT Form: grid 420"
+#: model:ir.model.fields.selection,name:l10n_ch.selection__account_journal__invoice_reference_model__ch
+#: model:ir.ui.menu,name:l10n_ch.account_reports_ch_statements_menu
+msgid "Switzerland"
 msgstr ""
 
 #. module: l10n_ch
@@ -1127,6 +1570,42 @@ msgid "TVA due à 7.7% (Incl. TN)"
 msgstr "Zu zahlende MwSt. bei 7,7% (inkl. NRZ)"
 
 #. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_currency_name
+msgid "The name of this invoice's currency"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_move__l10n_ch_isr_number
+msgid "The reference number associated with this invoice"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_chf
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_chf
+msgid ""
+"The subscription number provided by the bank or Postfinance to identify the "
+"bank, used to generate ISR in CHF. eg. 01-162-8"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_isr_subscription_eur
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_isr_subscription_eur
+msgid ""
+"The subscription number provided by the bank or Postfinance to identify the "
+"bank, used to generate ISR in EUR. eg. 03-162-5"
+msgstr ""
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_journal__l10n_ch_postal
+#: model:ir.model.fields,help:l10n_ch.field_account_setup_bank_manual_config__l10n_ch_postal
+#: model:ir.model.fields,help:l10n_ch.field_res_partner_bank__l10n_ch_postal
+msgid ""
+"This field is used for the Swiss postal account number on a vendor account "
+"and for the client number on your own account.  The client number is mostly "
+"6 numbers without -, while the postal account number can be e.g. 01-162-8"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1060
 msgid "Titres"
 msgstr "Wertschriften"
@@ -1209,6 +1688,40 @@ msgid "Ventes de produits fabriqués"
 msgstr "Produktionserlöse"
 
 #. module: l10n_ch
+#: model:ir.model.fields,field_description:l10n_ch.field_res_config_settings__l10n_ch_isr_scan_line_top
+msgid "Vertical offset"
+msgstr ""
+
+#. module: l10n_ch
 #: model:account.account.template,name:l10n_ch.ch_coa_1530
 msgid "Véhicules"
 msgstr "Fahrzeuge"
+
+#. module: l10n_ch
+#: model:ir.model.fields,help:l10n_ch.field_account_journal__invoice_reference_model
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
+msgstr ""
+
+#. module: l10n_ch
+#: code:addons/l10n_ch/models/account_invoice.py:0
+#, python-format
+msgid ""
+"You cannot generate an ISR yet.\n"
+"\n"
+"                                   For this, you need to :\n"
+"\n"
+"                                   - set a valid postal account number (or "
+"an IBAN referencing one) for your company\n"
+"\n"
+"                                   - define its bank\n"
+"\n"
+"                                   - associate this bank with a postal "
+"reference for the currency used in this invoice\n"
+"\n"
+"                                   - fill the 'bank account' field of the "
+"invoice with the postal to be used to receive the related payment. A default "
+"account will be automatically set for all invoices created after you defined "
+"a postal account for your company."
+msgstr ""

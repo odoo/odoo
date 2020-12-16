@@ -9,13 +9,15 @@ const PopupWidget = publicWidget.Widget.extend({
     selector: '.s_popup',
     events: {
         'click .js_close_popup': '_onCloseClick',
+        'hide.bs.modal': '_onHideModal',
     },
 
     /**
      * @override
      */
     start: function () {
-        if (!utils.get_cookie(this.$el.attr('id'))) {
+        this._popupAlreadyShown = !!utils.get_cookie(this.$el.attr('id'));
+        if (!this._popupAlreadyShown) {
             this._bindPopup();
         }
         return this._super(...arguments);
@@ -37,7 +39,7 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _bindPopup: function () {
-        const $main = this.$target.find('.s_popup_main');
+        const $main = this.$target.find('.modal');
 
         let display = $main.data('display');
         let delay = $main.data('showAfter');
@@ -47,7 +49,7 @@ const PopupWidget = publicWidget.Widget.extend({
                 display = 'afterDelay';
                 delay = 5000;
             }
-            this.$('.s_popup_main').removeClass('s_popup_center').addClass('s_popup_bottom');
+            this.$('.modal').removeClass('s_popup_middle').addClass('s_popup_bottom');
         }
 
         if (display === 'afterDelay') {
@@ -60,13 +62,16 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _hidePopup: function () {
-        this.$target.find('.s_popup_main').addClass('d-none');
+        this.$target.find('.modal').modal('hide');
     },
     /**
      * @private
      */
     _showPopup: function () {
-        this.$target.find('.s_popup_main').removeClass('d-none');
+        if (this._popupAlreadyShown) {
+            return;
+        }
+        this.$target.find('.modal').modal('show');
     },
 
     //--------------------------------------------------------------------------
@@ -77,13 +82,37 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _onCloseClick: function () {
-        const nbDays = this.$el.find('.s_popup_main').data('consentsDuration');
-        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
         this._hidePopup();
+    },
+    /**
+     * @private
+     */
+    _onHideModal: function () {
+        const nbDays = this.$el.find('.modal').data('consentsDuration');
+        utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
+        this._popupAlreadyShown = true;
     },
 });
 
 publicWidget.registry.popup = PopupWidget;
+
+// Prevent bootstrap to prevent scrolling and to add the strange body
+// padding-right they add if the popup does not use a backdrop (especially
+// important for default cookie bar).
+const _baseSetScrollbar = $.fn.modal.Constructor.prototype._setScrollbar;
+$.fn.modal.Constructor.prototype._setScrollbar = function () {
+    if (this._element.classList.contains('s_popup_no_backdrop')) {
+        return;
+    }
+    return _baseSetScrollbar.apply(this, ...arguments);
+};
+const _baseGetScrollbarWidth = $.fn.modal.Constructor.prototype._getScrollbarWidth;
+$.fn.modal.Constructor.prototype._getScrollbarWidth = function () {
+    if (this._element.classList.contains('s_popup_no_backdrop')) {
+        return 0;
+    }
+    return _baseGetScrollbarWidth.apply(this, ...arguments);
+};
 
 return PopupWidget;
 });

@@ -18,18 +18,86 @@ odoo.define('web.control_panel_tests', function (require) {
         }
     }, function () {
 
+        QUnit.test('default field operator', async function (assert) {
+            assert.expect(2);
+
+            const fields = {
+                foo_op: { string: "Foo Op", type: "char", store: true, sortable: true, searchable: true },
+                foo: { string: "Foo", type: "char", store: true, sortable: true, searchable: true },
+                bar_op: { string: "Bar Op", type: "many2one", relation: 'partner', searchable: true },
+                bar: { string: "Bar", type: "many2one", relation: 'partner', searchable: true },
+                selec: { string: "Selec", type: "selection", selection: [['red', "Red"], ['black', "Black"]] },
+            };
+            const arch = `
+                <search>
+                    <field name="bar"/>
+                    <field name="bar_op" operator="child_of"/>
+                    <field name="foo"/>
+                    <field name="foo_op" operator="="/>
+                    <field name="selec"/>
+                </search>`;
+            const searchMenuTypes = [];
+            const params = {
+                cpModelConfig: {
+                    arch,
+                    fields,
+                    context: {
+                        show_filterC: true,
+                        search_default_bar: 10,
+                        search_default_bar_op: 10,
+                        search_default_foo: "foo",
+                        search_default_foo_op: "foo_op",
+                        search_default_selec: 'red',
+                    },
+                    searchMenuTypes,
+                },
+                cpProps: { fields, searchMenuTypes },
+                env: {
+                    session: {
+                        async rpc() {
+                            return [[10, "Deco Addict"]];
+                        },
+                    },
+                },
+            };
+            const controlPanel = await createControlPanel(params);
+
+            assert.deepEqual(
+                cpHelpers.getFacetTexts(controlPanel).map(t => t.replace(/\s/g, "")),
+                [
+                    "BarDecoAddict",
+                    "BarOpDecoAddict",
+                    "Foofoo",
+                    "FooOpfoo_op",
+                    "SelecRed"
+                ]
+            );
+            assert.deepEqual(
+                controlPanel.getQuery().domain,
+                [
+                    "&", "&", "&", "&",
+                    ["bar", "=", 10],
+                    ["bar_op", "child_of", 10],
+                    ["foo", "ilike", "foo"],
+                    ["foo_op", "=", "foo_op"],
+                    ["selec", "=", "red"],
+                ]
+            );
+
+            controlPanel.destroy();
+        });
+
         QUnit.module('Keyboard navigation');
 
         QUnit.test('remove a facet with backspace', async function (assert) {
             assert.expect(2);
 
             const params = {
-                cpStoreConfig: {
-                    viewInfo: {
-                        arch: `<search> <field name="foo"/></search>`,
-                        fields: this.fields,
-                    },
-                    actionContext: { search_default_foo: "a" },
+                cpModelConfig: {
+                    arch: `<search> <field name="foo"/></search>`,
+                    fields: this.fields,
+                    context: { search_default_foo: "a" },
+                    searchMenuTypes: ['filter'],
                 },
                 cpProps: { fields: this.fields },
             };
@@ -53,7 +121,7 @@ odoo.define('web.control_panel_tests', function (require) {
         QUnit.test('fields and filters with groups/invisible attribute', async function (assert) {
             // navigation and automatic menu closure don't work here (i don't know why yet) -->
             // should be tested separatly
-            assert.expect(14);
+            assert.expect(16);
 
             const arch = `
                 <search>
@@ -61,14 +129,17 @@ odoo.define('web.control_panel_tests', function (require) {
                     <field name="foo" string="Foo A"/>
                     <filter name="filterA" string="FA" domain="[]"/>
                     <filter name="filterB" string="FB" invisible="1" domain="[]"/>
+                    <filter name="filterC" string="FC" invisible="not context.get('show_filterC')" domain="[]"/>
                     <filter name="groupByA" string="GA" context="{ 'group_by': 'date_field:day' }"/>
                     <filter name="groupByB" string="GB" context="{ 'group_by': 'date_field:day' }" invisible="1"/>
                 </search>`;
             const searchMenuTypes = ['filter', 'groupBy'];
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
-                    actionContext: {
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
+                    context: {
+                        show_filterC: true,
                         search_default_display_name: 'value',
                         search_default_filterB: true,
                         search_default_groupByB: true
@@ -98,6 +169,7 @@ odoo.define('web.control_panel_tests', function (require) {
 
             selectorContainsValue('.o_menu_item a', "FA", true);
             selectorContainsValue('.o_menu_item a', "FB", false);
+            selectorContainsValue('.o_menu_item a', "FC", true);
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
 
@@ -117,11 +189,66 @@ odoo.define('web.control_panel_tests', function (require) {
 
             selectorContainsValue('.o_menu_item a', "FA", true);
             selectorContainsValue('.o_menu_item a', "FB", false);
+            selectorContainsValue('.o_menu_item a', "FC", true);
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
 
             selectorContainsValue('.o_menu_item a', "GA", true);
             selectorContainsValue('.o_menu_item a', "GB", false);
+
+            controlPanel.destroy();
+        });
+
+        QUnit.test('invisible fields and filters with unknown related fields should not be rendered', async function (assert) {
+            assert.expect(2);
+
+            // This test case considers that the current user is not a member of
+            // the "base.group_system" group and both "bar" and "date_field" fields
+            // have field-level access control that limit access to them only from
+            // that group.
+            //
+            // As MockServer currently does not support "groups" access control, we:
+            //
+            // - emulate field-level access control of fields_get() by removing
+            //   "bar" and "date_field" from the model fields
+            // - set filters with groups="base.group_system" as `invisible=1` in
+            //   view to emulate the behavior of fields_view_get()
+            //   [see ir.ui.view `_apply_group()`]
+
+            delete this.fields.bar;
+            delete this.fields.date_field;
+
+            const searchMenuTypes = [];
+            const params = {
+                cpProps: { fields: this.fields, searchMenuTypes },
+            };
+            const controlPanel = await createControlPanel(params);
+
+            assert.containsNone(controlPanel.el, 'div.o_search_options div.o_filter_menu',
+                "there should not be filter dropdown");
+            assert.containsNone(controlPanel.el, 'div.o_search_options div.o_group_by_menu',
+                "there should not be groupby dropdown");
+
+            controlPanel.destroy();
+        });
+
+        QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
+            assert.expect(2);
+
+            const arch = `<search/>`;
+            const searchMenuTypes = ['filter'];
+            const params = {
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
+                    searchMenuTypes,
+                },
+                cpProps: { fields: this.fields, searchMenuTypes },
+            };
+            const controlPanel = await createControlPanel(params);
+
+            assert.containsOnce(controlPanel.el, 'div.o_search_options div.o_filter_menu');
+            assert.containsNone(controlPanel.el, 'div.o_search_options div.o_group_by_menu');
 
             controlPanel.destroy();
         });

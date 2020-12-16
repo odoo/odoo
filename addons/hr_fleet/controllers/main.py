@@ -52,7 +52,12 @@ class HrFleet(Controller):
             date_start = car_line_doc.date_start
             date_end = car_line_doc.date_end or '...'
 
-            text_to_print = _("%s (driven from: %s to %s)") % (car_name, date_start, date_end)
+            text_to_print = _(
+                "%(car_name)s (driven from: %(date_start)s to %(date_end)s)",
+                car_name=car_name,
+                date_start=date_start,
+                date_end=date_end
+            )
             can.drawCentredString(width / 2, height - normal_font_size, text_to_print)
             can.save()
             header_pdf = PdfFileReader(header, overwriteWarnings=False)

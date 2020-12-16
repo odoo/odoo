@@ -5,7 +5,7 @@
             <field name="model">product.product</field>
             <field name="priority" eval="50"/>
             <field name="arch" type="xml">
-                <graph string="Product Margins" type="bar">
+                <graph string="Product Margins" type="bar" sample="1">
                     <field name="product_tmpl_id"/>
                     <field name="total_margin" type="measure" operator="+"/>
                 </graph>

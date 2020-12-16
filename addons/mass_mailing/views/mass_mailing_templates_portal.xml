@@ -97,6 +97,11 @@
         </div>
     </template>
 
+    <template id="view" name="Browser View">
+        <!-- Raw body inserted here because it is a rendered mailing, therefore internal content -->
+        <t t-raw="body"/>
+    </template>
+
     <template id="page_unsubscribe" name="Unsubscribe">
         <t t-call="mass_mailing.layout">
             <t t-call="mass_mailing.unsubscribe"/>
@@ -115,7 +120,6 @@
             <t t-set="head">
                 <t t-call-assets="web.assets_common"/>
                 <t t-call-assets="mass_mailing.assets_backend"/>
-                <script type="text/javascript" src="/mass_mailing/static/src/js/unsubscribe.js"></script>
             </t>
             <body class="o_white_body">
                 <header>

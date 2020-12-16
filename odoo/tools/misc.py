@@ -8,6 +8,8 @@ Miscellaneous tools used by OpenERP.
 import cProfile
 import collections
 import datetime
+import hmac as hmac_lib
+import hashlib
 import io
 import os
 import pickle as pickle_
@@ -21,7 +23,7 @@ import traceback
 import types
 import unicodedata
 import zipfile
-from collections import defaultdict, OrderedDict
+from collections import OrderedDict
 from collections.abc import Iterable, Mapping, MutableMapping, MutableSet
 from contextlib import contextmanager
 from difflib import HtmlDiff
@@ -752,6 +754,8 @@ def remove_accents(input_str):
     """Suboptimal-but-better-than-nothing way to replace accented
     latin letters by an ASCII equivalent. Will obviously change the
     meaning of input_str and work only for some cases"""
+    if not input_str:
+        return input_str
     input_str = ustr(input_str)
     nkfd_form = unicodedata.normalize('NFKD', input_str)
     return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
@@ -1080,54 +1084,74 @@ class LastOrderedSet(OrderedSet):
         OrderedSet.add(self, elem)
 
 
-class GroupCalls:
-    """ A collection of callbacks with support for aggregated arguments.  Upon
-    call, every registered function is called once with positional arguments.
-    When registering a function, a tuple of positional arguments is returned, so
-    that the caller can modify the arguments in place.  This allows to
-    accumulate some data to process once::
+class Callbacks:
+    """ A simple queue of callback functions.  Upon run, every function is
+    called (in addition order), and the queue is emptied.
 
-        callbacks = GroupCalls()
+        callbacks = Callbacks()
 
-        # register print (by default with a list)
-        [args] = callbacks.register(print, list)
-        args.append(42)
+        # add foo
+        def foo():
+            print("foo")
 
-        # add an element to the list to print
-        [args] = callbacks.register(print, list)
-        args.append(43)
+        callbacks.add(foo)
 
-        # print "[42, 43]"
-        callbacks()
+        # add bar
+        callbacks.add
+        def bar():
+            print("bar")
+
+        # add foo again
+        callbacks.add(foo)
+
+        # call foo(), bar(), foo(), then clear the callback queue
+        callbacks.run()
+
+    The queue also provides a ``data`` dictionary, that may be freely used to
+    store anything, but is mostly aimed at aggregating data for callbacks.  The
+    dictionary is automatically cleared by ``run()`` once all callback functions
+    have been called.
+
+        # register foo to process aggregated data
+        @callbacks.add
+        def foo():
+            print(sum(callbacks.data['foo']))
+
+        callbacks.data.setdefault('foo', []).append(1)
+        ...
+        callbacks.data.setdefault('foo', []).append(2)
+        ...
+        callbacks.data.setdefault('foo', []).append(3)
+
+        # call foo(), which prints 6
+        callbacks.run()
+
+    Given the global nature of ``data``, the keys should identify in a unique
+    way the data being stored.  It is recommended to use strings with a
+    structure like ``"{module}.{feature}"``.
     """
+    __slots__ = ['_funcs', 'data']
+
     def __init__(self):
-        self._func_args = {}            # {func: args}
+        self._funcs = collections.deque()
+        self.data = {}
 
-    def __call__(self):
-        """ Call all the registered functions (in first addition order) with
-        their respective arguments.  Only recurrent functions remain registered
-        after the call.
-        """
-        func_args = self._func_args
-        while func_args:
-            func = next(iter(func_args))
-            args = func_args.pop(func)
-            func(*args)
+    def add(self, func):
+        """ Add the given function. """
+        self._funcs.append(func)
 
-    def add(self, func, *types):
-        """ Register the given function, and return the tuple of positional
-        arguments to call the function with.  If the function is not registered
-        yet, the list of arguments is made up by invoking the given types.
+    def run(self):
+        """ Call all the functions (in addition order), then clear associated data.
         """
-        try:
-            return self._func_args[func]
-        except KeyError:
-            args = self._func_args[func] = [type_() for type_ in types]
-            return args
+        while self._funcs:
+            func = self._funcs.popleft()
+            func()
+        self.clear()
 
     def clear(self):
-        """ Remove all callbacks from self. """
-        self._func_args.clear()
+        """ Remove all callbacks and data from self. """
+        self._funcs.clear()
+        self.data.clear()
 
 
 class IterableGenerator:
@@ -1215,9 +1239,14 @@ def get_lang(env, lang_code=False):
     :return res.lang: the first lang found that is installed on the system.
     """
     langs = [code for code, _ in env['res.lang'].get_installed()]
-    for code in [lang_code, env.context.get('lang'), env.user.company_id.partner_id.lang, langs[0]]:
-        if code in langs:
-            return env['res.lang']._lang_get(code)
+    lang = langs[0]
+    if lang_code and lang_code in langs:
+        lang = lang_code
+    elif env.context.get('lang') in langs:
+        lang = env.context.get('lang')
+    elif env.user.company_id.partner_id.lang in langs:
+        lang = env.user.company_id.partner_id.lang
+    return env['res.lang']._lang_get(lang)
 
 
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
@@ -1373,6 +1402,46 @@ def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):
     return babel.dates.format_timedelta(-time_delta, add_direction=add_direction, locale=locale)
 
 
+def format_decimalized_number(number, decimal=1):
+    """Format a number to display to nearest metrics unit next to it.
+
+    Do not display digits if all visible digits are null.
+    Do not display units higher then "Tera" because most of people don't know what
+    a "Yotta" is.
+
+    >>> format_decimalized_number(123_456.789)
+    123.5k
+    >>> format_decimalized_number(123_000.789)
+    123k
+    >>> format_decimalized_number(-123_456.789)
+    -123.5k
+    >>> format_decimalized_number(0.789)
+    0.8
+    """
+    for unit in ['', 'k', 'M', 'G']:
+        if abs(number) < 1000.0:
+            return "%g%s" % (round(number, decimal), unit)
+        number /= 1000.0
+    return "%g%s" % (round(number, decimal), 'T')
+
+
+def format_decimalized_amount(amount, currency=None):
+    """Format a amount to display the currency and also display the metric unit of the amount.
+
+    >>> format_decimalized_amount(123_456.789, res.currency("$"))
+    $123.5k
+    """
+    formated_amount = format_decimalized_number(amount)
+
+    if not currency:
+        return formated_amount
+
+    if currency.position == 'before':
+        return "%s%s" % (currency.symbol or '', formated_amount)
+
+    return "%s %s" % (formated_amount, currency.symbol or '')
+
+
 def format_amount(env, amount, currency, lang_code=False):
     fmt = "%.{0}f".format(currency.decimal_places)
     lang = get_lang(env, lang_code)
@@ -1431,26 +1500,6 @@ pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), enc
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
 
-def wrap_module(module, attr_list):
-    """Helper for wrapping a package/module to expose selected attributes
-
-       :param Module module: the actual package/module to wrap, as returned by ``import <module>``
-       :param iterable attr_list: a global list of attributes to expose, usually the top-level
-            attributes and their own main attributes. No support for hiding attributes in case
-            of name collision at different levels.
-    """
-    attr_list = set(attr_list)
-    class WrappedModule(object):
-        def __getattr__(self, attrib):
-            if attrib in attr_list:
-                target = getattr(module, attrib)
-                if isinstance(target, types.ModuleType):
-                    return wrap_module(target, attr_list)
-                return target
-            raise AttributeError(attrib)
-    # module and attr_list are in the closure
-    return WrappedModule()
-
 
 class DotDict(dict):
     """Helper for dot.notation access to dictionary attributes
@@ -1507,3 +1556,43 @@ def get_diff(data_from, data_to, custom_style=False):
         numlines=3,
     )
     return handle_style(diff, custom_style)
+
+
+def traverse_containers(val, type_):
+    """ Yields atoms filtered by specified type_ (or type tuple), traverses
+    through standard containers (non-string mappings or sequences) *unless*
+    they're selected by the type filter
+    """
+    from odoo.models import BaseModel
+    if isinstance(val, type_):
+        yield val
+    elif isinstance(val, (str, bytes, BaseModel)):
+        return
+    elif isinstance(val, Mapping):
+        for k, v in val.items():
+            yield from traverse_containers(k, type_)
+            yield from traverse_containers(v, type_)
+    elif isinstance(val, collections.abc.Sequence):
+        for v in val:
+            yield from traverse_containers(v, type_)
+
+
+def hmac(env, scope, message, hash_function=hashlib.sha256):
+    """Compute HMAC with `database.secret` config parameter as key.
+
+    :param env: sudo environment to use for retrieving config parameter
+    :param message: message to authenticate
+    :param scope: scope of the authentication, to have different signature for the same
+        message in different usage
+    :param hash_function: hash function to use for HMAC (default: SHA-256)
+    """
+    if not scope:
+        raise ValueError('Non-empty scope required')
+
+    secret = env['ir.config_parameter'].get_param('database.secret')
+    message = repr((scope, message))
+    return hmac_lib.new(
+        secret.encode(),
+        message.encode(),
+        hash_function,
+    ).hexdigest()

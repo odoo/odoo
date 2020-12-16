@@ -92,14 +92,6 @@ class IrTranslationImport(object):
         # referencing non-existent data.
         cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % self._table)
 
-        # detect the xml_translate fields, where the src must be the same
-        env = api.Environment(cr, SUPERUSER_ID, {})
-        src_relevant_fields = []
-        for model in env:
-            for field_name, field in env[model]._fields.items():
-                if hasattr(field, 'translate') and callable(field.translate):
-                    src_relevant_fields.append("%s,%s" % (model, field_name))
-
         count = 0
         # Step 2: insert new or upsert non-noupdate translations
         if self._overwrite:
@@ -137,9 +129,9 @@ class IrTranslationImport(object):
         cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                        SELECT name, lang, res_id, src, type, value, module, state, comments
                        FROM %s
-                       WHERE %s
+                       WHERE %%s OR noupdate is true
                        ON CONFLICT DO NOTHING;
-                   """ % (self._model_table, self._table, 'noupdate IS TRUE' if self._overwrite else 'TRUE'))
+                   """ % (self._model_table, self._table), [not self._overwrite])
         count += cr.rowcount
 
         if self._debug:
@@ -547,7 +539,7 @@ class IrTranslation(models.Model):
                         continue
                     value2 = field.translate({val: src}.get, value1)
                     if value2 != value0:
-                        raise ValidationError(_("Translation is not valid:\n%s") % val)
+                        raise ValidationError(_("Translation is not valid:\n%s", val))
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -598,7 +590,7 @@ class IrTranslation(models.Model):
         if callable(field.translate):
             # insert missing translations for each term in src
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
-                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
+                        SELECT l.code, 'model_terms', %(name)s, %(res_id)s, %(src)s, '', %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -619,7 +611,7 @@ class IrTranslation(models.Model):
         else:
             # insert missing translations for src
             query = """ INSERT INTO ir_translation (lang, type, name, res_id, src, value, module, state)
-                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, %(src)s, %(module)s, 'to_translate'
+                        SELECT l.code, 'model', %(name)s, %(res_id)s, %(src)s, '', %(module)s, 'to_translate'
                         FROM res_lang l
                         WHERE l.active AND NOT EXISTS (
                             SELECT 1 FROM ir_translation
@@ -751,7 +743,7 @@ class IrTranslation(models.Model):
             self.insert_missing(fld, rec)
 
         action = {
-            'name': 'Translate',
+            'name': _('Translate'),
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
             'view_mode': 'tree',

@@ -3,16 +3,16 @@
 
 import babel
 import copy
-import datetime
-import dateutil.relativedelta as relativedelta
 import functools
 import logging
 import re
 
+import dateutil.relativedelta as relativedelta
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ try:
         'str': str,
         'quote': urls.url_quote,
         'urlencode': urls.url_encode,
-        'datetime': datetime,
+        'datetime': safe_eval.datetime,
         'len': len,
         'abs': abs,
         'min': min,
@@ -83,7 +83,7 @@ class MailRenderMixin(models.AbstractModel):
 
     # language for rendering
     lang = fields.Char(
-        'Language', placeholder="${object.partner_id.lang}",
+        'Language',
         help="Optional translation language (ISO code) to select when sending out an email. "
              "If not set, the english version will be used. This should usually be a placeholder expression "
              "that provides the appropriate language, e.g. ${object.partner_id.lang}.")
@@ -183,9 +183,95 @@ class MailRenderMixin(models.AbstractModel):
 
         return html
 
+    @api.model
+    def _render_encapsulate(self, layout_xmlid, html, add_context=None, context_record=None):
+        try:
+            template = self.env.ref(layout_xmlid, raise_if_not_found=True)
+        except ValueError:
+            _logger.warning('QWeb template %s not found when rendering encapsulation template.' % (layout_xmlid))
+        else:
+            record_name = context_record.display_name if context_record else ''
+            model_description = self.env['ir.model']._get(context_record._name).display_name if context_record else False
+            template_ctx = {
+                'body': html,
+                'record_name': record_name,
+                'model_description': model_description,
+                'company': context_record['company_id'] if (context_record and 'company_id' in context_record) else self.env.company,
+                'record': context_record,
+            }
+            if add_context:
+                template_ctx.update(**add_context)
+
+            html = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+            html = self.env['mail.render.mixin']._replace_local_links(html)
+        return html
+
+    @api.model
+    def _prepend_preview(self, html, preview):
+        """ Prepare the email body before sending. Add the text preview at the
+        beginning of the mail. The preview text is displayed bellow the mail
+        subject of most mail client (gmail, outlook...).
+
+        :param html: html content for which we want to prepend a preview
+        :param preview: the preview to add before the html content
+        :return: html with preprended preview
+        """
+        if preview:
+            preview = preview.strip()
+
+        if preview:
+            html_preview = f"""
+                <div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
+                  {tools.html_escape(preview)}
+                </div>
+            """
+            return tools.prepend_html_content(html, html_preview)
+        return html
+
     # ------------------------------------------------------------
     # RENDERING
     # ------------------------------------------------------------
+
+    @api.model
+    def _render_qweb_eval_context(self):
+        """ Prepare qweb evaluation context, containing for all rendering
+
+          * ``user``: current user browse record;
+          * ``ctx```: current context;
+          * various formatting tools;
+        """
+        render_context = {
+            'format_date': lambda date, date_format=False, lang_code=False: format_date(self.env, date, date_format, lang_code),
+            'format_datetime': lambda dt, tz=False, dt_format=False, lang_code=False: format_datetime(self.env, dt, tz, dt_format, lang_code),
+            'format_amount': lambda amount, currency, lang_code=False: tools.format_amount(self.env, amount, currency, lang_code),
+            'format_duration': lambda value: tools.format_duration(value),
+            'user': self.env.user,
+            'ctx': self._context,
+        }
+        return render_context
+
+    @api.model
+    def _render_template_qweb(self, template_src, model, res_ids, add_context=None):
+        view = self.env.ref(template_src, raise_if_not_found=False) or self.env['ir.ui.view']
+        results = dict.fromkeys(res_ids, u"")
+        if not view:
+            return results
+
+        # prepare template variables
+        variables = self._render_qweb_eval_context()
+        if add_context:
+            variables.update(**add_context)
+
+        for record in self.env[model].browse(res_ids):
+            variables['object'] = record
+            try:
+                render_result = view._render(variables, engine='ir.qweb', minimal_qcontext=True)
+            except Exception as e:
+                _logger.info("Failed to render template : %s (%d)" % (template_src, view.id), exc_info=True)
+                raise UserError(_("Failed to render template : %s (%d)") % (template_src, view.id))
+            results[record.id] = render_result
+
+        return results
 
     @api.model
     def _render_jinja_eval_context(self):
@@ -207,7 +293,7 @@ class MailRenderMixin(models.AbstractModel):
         return render_context
 
     @api.model
-    def _render_template_jinja(self, template_txt, model, res_ids):
+    def _render_template_jinja(self, template_txt, model, res_ids, add_context=None):
         """ Render a string-based template on records given by a model and a list
         of IDs, using jinja.
 
@@ -238,6 +324,10 @@ class MailRenderMixin(models.AbstractModel):
 
         # prepare template variables
         variables = self._render_jinja_eval_context()
+        if add_context:
+            variables.update(**add_context)
+        safe_eval.check_values(variables)
+
         # TDE CHECKME
         # records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]
         if any(r is None for r in res_ids):
@@ -249,7 +339,7 @@ class MailRenderMixin(models.AbstractModel):
                 render_result = template.render(variables)
             except Exception as e:
                 _logger.info("Failed to render template : %s" % e, exc_info=True)
-                raise UserError(_("Failed to render template : %s") % e)
+                raise UserError(_("Failed to render template : %s", e))
             if render_result == u"False":
                 render_result = u""
             results[record.id] = render_result
@@ -271,11 +361,12 @@ class MailRenderMixin(models.AbstractModel):
         return rendered
 
     @api.model
-    def _render_template(self, template_txt, model, res_ids, engine='jinja', post_process=False):
+    def _render_template(self, template_src, model, res_ids, engine='jinja', add_context=None, post_process=False):
         """ Render the given string on records designed by model / res_ids using
         the given rendering engine. Currently only jinja is supported.
 
-        :param str template_txt: template text to render
+        :param str template_src: template text to render (jinja) or xml id of view (qweb)
+          this could be cleaned but hey, we are in a rush
         :param str model: model name of records on which we want to perform rendering
         :param list res_ids: list of ids of records (all belonging to same model)
         :param string engine: jinja
@@ -286,10 +377,13 @@ class MailRenderMixin(models.AbstractModel):
         """
         if not isinstance(res_ids, (list, tuple)):
             raise ValueError(_('Template rendering should be called only using on a list of IDs.'))
-        if engine != 'jinja':
-            raise ValueError(_('Template rendering supports only jinja.'))
+        if engine not in ('jinja', 'qweb'):
+            raise ValueError(_('Template rendering supports only jinja or qweb.'))
 
-        rendered = self._render_template_jinja(template_txt, model, res_ids)
+        if engine == 'qweb':
+            rendered = self._render_template_qweb(template_src, model, res_ids, add_context=add_context)
+        else:
+            rendered = self._render_template_jinja(template_src, model, res_ids, add_context=add_context)
         if post_process:
             rendered = self._render_template_postprocess(rendered)
 

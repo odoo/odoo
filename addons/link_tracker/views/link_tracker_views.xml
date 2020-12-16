@@ -9,6 +9,7 @@
                 <search string="Links">
                     <field name="url" string="Title and URL" filter_domain="['|', ('title', 'ilike', self), ('url', 'ilike', self)]"/>
                     <field name="title"/>
+                    <field name="label"/>
                     <field name="campaign_id"/>
                     <field name="medium_id"/>
                     <field name="source_id"/>
@@ -25,7 +26,7 @@
             <field name="name">link.tracker.view.form</field>
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
-                <form string="Website Link">
+                <form string="Website Link" duplicate="0">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" icon="fa-sign-out" name="action_visit_page"
@@ -38,6 +39,7 @@
                         <group>
                             <group name="url" string="URL">
                                 <field name="title"/>
+                                <field name="label"/>
                                 <field name="url"/>
                                 <field name="short_url"/>
                             </group>
@@ -56,13 +58,14 @@
             <field name="name">link.tracker.view.tree</field>
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
-                <tree string="Links">
+                <tree string="Links" sample="1">
                     <field name="create_date"/>
                     <field name="title"/>
+                    <field name="label"/>
                     <field name="url"/>
-                    <field name="short_url"/>
+                    <field name="short_url" optional="hide"/>
                     <field name="count"/>
-                    <button name="action_visit_page" class="btn btn-secondary border ml-5" type="object" string="Visit Page"/>
+                    <button name="action_visit_page" type="object" string="Visit Page" icon="fa-external-link"/>
                 </tree>
             </field>
         </record>
@@ -71,7 +74,7 @@
             <field name="name">link.tracker.view.graph</field>
             <field name="model">link.tracker</field>
             <field name="arch" type="xml">
-                <graph string="Links" type="bar">
+                <graph string="Links" type="bar" sample="1">
                     <field name="url" type="row"/>
                     <field name="count" type="measure"/>
                 </graph>
@@ -140,7 +143,7 @@
             <field name="name">link.tracker.click.view.graph</field>
             <field name="model">link.tracker.click</field>
             <field name="arch" type="xml">
-                <graph string="Link Clicks" type="pie">
+                <graph string="Link Clicks" type="pie" sample="1">
                     <field name="link_id"/>
                     <field name="ip"/>
                     <field name="country_id"/>
@@ -154,6 +157,11 @@
             <field name="view_mode">graph,tree,form</field>
             <field name="domain">[]</field>
             <field name="context">{'search_default_groupby_country_id': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
         </record>
 
         <record id="link_tracker_action_campaign" model="ir.actions.act_window">

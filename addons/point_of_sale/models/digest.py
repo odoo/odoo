@@ -23,7 +23,7 @@ class Digest(models.Model):
                 ('company_id', '=', company.id)
             ]).mapped('amount_total'))
 
-    def compute_kpis_actions(self, company, user):
-        res = super(Digest, self).compute_kpis_actions(company, user)
+    def _compute_kpis_actions(self, company, user):
+        res = super(Digest, self)._compute_kpis_actions(company, user)
         res['kpi_pos_total'] = 'point_of_sale.action_pos_sale_graph&menu_id=%s' % self.env.ref('point_of_sale.menu_point_root').id
         return res

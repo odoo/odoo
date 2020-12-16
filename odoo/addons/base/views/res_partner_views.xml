@@ -37,26 +37,34 @@
             <field name="help">Manage the contact titles you want to have available in your system and the way you want to print them in letters and other documents. Some example: Mr., Mrs. </field>
         </record>
 
+        <!-- PARTNER TREE VIEW + MUTI_EDIT: VISIBLE FIELDS WITH ONCHANGE ON BASE/PARTNER
+             VIEW WON'T BE EDITABLE ON "MULTI_EDIT" MODE:
+                - parent_id
+                - country_id
+                - state_id
+                - company_type
+                - company_id
+        -->
         <!-- Partner -->
         <record id="view_partner_tree" model="ir.ui.view">
             <field name="name">res.partner.tree</field>
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Contacts">
+                <tree string="Contacts" sample="1" multi_edit="1">
                     <field name="display_name" string="Name"/>
                     <field name="function" invisible="1"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="email" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="city" optional="hide"/>
-                    <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="hide"/>
-                    <field name="vat" optional="hide"/>
-                    <field name="category_id" optional="hide" widget="many2many_tags"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
+                    <field name="city" optional="show"/>
+                    <field name="state_id" optional="hide" readonly="1"/>
+                    <field name="country_id" optional="show" readonly="1"/>
+                    <field name="vat" optional="hide" readonly="1"/>
+                    <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
                     <field name="is_company" invisible="1"/>
-                    <field name="parent_id" invisible="1"/>
+                    <field name="parent_id" invisible="1" readonly="1"/>
                     <field name="active" invisible="1"/>
                 </tree>
             </field>
@@ -151,7 +159,7 @@
                             class="oe_edit_only"
                             options="{'horizontal': true}"/>
                         <h1>
-                            <field name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
+                            <field class="o_text_overflow" name="name" default_focus="1" placeholder="Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
                         </h1>
                         <div class="o_row">
                             <field name="parent_id"
@@ -168,7 +176,7 @@
 
                     <group>
                         <group>
-                            <field name="type" groups="base.group_no_one"/>
+                            <field name="type" groups="base.group_no_one" attrs="{'invisible': [('is_company','=', True)], 'readonly': [('user_ids', '!=', [])]}"/>
                             <span class="o_form_label o_td_label" name="address_name">
                                 <b attrs="{'invisible': [('type', '!=', 'contact')]}">Company Address</b>
                                 <b attrs="{'invisible': [('type', '!=', 'invoice')]}">Invoice Address</b>
@@ -378,6 +386,7 @@
                                 <field name="phone" widget="phone" options="{'enable_sms': false}"/>
                                 <field name="mobile" widget="phone" options="{'enable_sms': false}"/>
                                 <field name="email"/>
+                                <field name="lang"/>
                             </group>
                         </group>
                         <group string="Bank Accounts">
@@ -425,7 +434,7 @@
             <field name="name">res.partner.kanban</field>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
-                <kanban class="o_res_partner_kanban">
+                <kanban class="o_res_partner_kanban" sample="1">
                     <field name="id"/>
                     <field name="color"/>
                     <field name="display_name"/>
@@ -463,19 +472,22 @@
                                     <t t-set="placeholder" t-value="'/base/static/img/company_image.png'"/>
                                     <div class="o_kanban_image_fill_left o_kanban_image_full" t-attf-style="background-image: url(#{kanban_image('res.partner', 'image_128', record.id.raw_value, placeholder)})" role="img"/>
                                 </t>
-                                <div class="oe_kanban_details">
+                                <div class="oe_kanban_details d-flex flex-column">
                                     <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
                                     <div class="o_kanban_tags_section oe_kanban_partner_categories"/>
                                     <ul>
                                         <li t-if="record.parent_id.raw_value and !record.function.raw_value"><field name="parent_id"/></li>
                                         <li t-if="!record.parent_id.raw_value and record.function.raw_value"><field name="function"/></li>
                                         <li t-if="record.parent_id.raw_value and record.function.raw_value"><field name="function"/> at <field name="parent_id"/></li>
-                                        <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
-                                        <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
-                                        <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
+                                        <li t-if="record.city.raw_value or record.country_id.raw_value">
+                                            <t t-if="record.city.raw_value"><field name="city"/><t t-if="record.country_id.raw_value">, </t></t>
+                                            <t t-if="record.country_id.raw_value"><field name="country_id"/></t>
+                                        </li>
                                         <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
                                     </ul>
-                                    <div class="oe_kanban_partner_links"/>
+                                    <div class="o_row">
+                                        <span class="oe_kanban_partner_links"/>
+                                    </div>
                                 </div>
                             </div>
                         </t>

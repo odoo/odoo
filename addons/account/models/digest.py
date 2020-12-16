@@ -21,13 +21,13 @@ class Digest(models.Model):
                 FROM account_move_line line
                 JOIN account_move move ON move.id = line.move_id
                 JOIN account_journal journal ON journal.id = move.journal_id
-                WHERE line.company_id = %s AND line.date >= %s AND line.date < %s
+                WHERE line.company_id = %s AND line.date > %s::DATE AND line.date <= %s::DATE
                 AND journal.type = 'sale'
             ''', [company.id, start, end])
             query_res = self._cr.fetchone()
             record.kpi_account_total_revenue_value = query_res and query_res[0] or 0.0
 
-    def compute_kpis_actions(self, company, user):
-        res = super(Digest, self).compute_kpis_actions(company, user)
+    def _compute_kpis_actions(self, company, user):
+        res = super(Digest, self)._compute_kpis_actions(company, user)
         res['kpi_account_total_revenue'] = 'account.action_move_out_invoice_type&menu_id=%s' % self.env.ref('account.menu_finance').id
         return res

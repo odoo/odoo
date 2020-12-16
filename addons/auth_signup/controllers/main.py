@@ -37,13 +37,16 @@ class AuthSignupHome(Home):
                 self.do_signup(qcontext)
                 # Send an account creation confirmation email
                 if qcontext.get('token'):
-                    user_sudo = request.env['res.users'].sudo().search([('login', '=', qcontext.get('login'))])
+                    User = request.env['res.users']
+                    user_sudo = User.sudo().search(
+                        User._get_login_domain(qcontext.get('login')), order=User._get_login_order(), limit=1
+                    )
                     template = request.env.ref('auth_signup.mail_template_user_signup_account_created', raise_if_not_found=False)
                     if user_sudo and template:
                         template.sudo().send_mail(user_sudo.id, force_send=True)
                 return self.web_login(*args, **kw)
             except UserError as e:
-                qcontext['error'] = e.name or e.value
+                qcontext['error'] = e.args[0]
             except (SignupError, AssertionError) as e:
                 if request.env["res.users"].sudo().search([("login", "=", qcontext.get("login"))]):
                     qcontext["error"] = _("Another user is already registered using this email address.")
@@ -76,7 +79,7 @@ class AuthSignupHome(Home):
                     request.env['res.users'].sudo().reset_password(login)
                     qcontext['message'] = _("An email has been sent with credentials to reset your password")
             except UserError as e:
-                qcontext['error'] = e.name or e.value
+                qcontext['error'] = e.args[0]
             except SignupError:
                 qcontext['error'] = _("Could not reset your password")
                 _logger.exception('error when resetting password')

@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="website_event_meet.event_meeting_room_action" model="ir.actions.act_window">
+        <field name="name">Meeting Room</field>
+        <field name="res_model">event.meeting.room</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="event_meeting_room_view_search" model="ir.ui.view">
+        <field name="name">event.meeting.room.search</field>
+        <field name="model">event.meeting.room</field>
+        <field name="arch" type="xml">
+            <search string="Meeting Room">
+                <field name="event_id"/>
+            </search>
+        </field>
+    </record>
+    <record id="event_meeting_room_view_form" model="ir.ui.view">
+        <field name="name">event.meeting.room.form</field>
+        <field name="model">event.meeting.room</field>
+        <field name="arch" type="xml">
+            <form string="Meeting Room">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <field name="website_url" invisible="1"/>
+                        <field name="is_published" widget="website_redirect_button"/>
+                    </div>
+                    <label for="name"/>
+                    <h1>
+                        <field name="name" placeholder="e.g. Finance"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="event_id"/>
+                            <field name="summary" placeholder="e.g. Let's talk about Corporate Finance"/>
+                            <field name="target_audience" placeholder="e.g. Accountants"/>
+                            <field name="is_pinned"/>
+                        </group>
+                        <group>
+                            <field name="chat_room_id" required="0"/>
+                            <field name="room_participant_count" readonly="1"/>
+                            <field name="room_max_capacity" widget="radio" options="{'horizontal': true}"/>
+                            <field name="room_lang_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="Reporting" string="Reporting">
+                            <group>
+                                <field name="room_last_activity"/>
+                                <field name="room_max_participant_reached"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="event_meeting_room_view_tree" model="ir.ui.view">
+        <field name="name">event.meeting.room.tree</field>
+        <field name="model">event.meeting.room</field>
+        <field name="arch" type="xml">
+            <tree string="Meeting Room" multi_edit="1">
+                <field name="name"/>
+                <field name="summary"/>
+                <field name="target_audience"/>
+                <field name="is_published"/>
+                <field name="is_pinned"/>
+                <field name="room_is_full" readonly="1"/>
+                <field name="room_participant_count" readonly="1"/>
+                <field name="room_max_capacity"/>
+                <field name="room_lang_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="event_meeting_room_view_search" model="ir.ui.view">
+        <field name="name">event.meeting.room.search</field>
+        <field name="model">event.meeting.room</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name" string="Topic"/>
+                <field name="summary" string="Summary"/>
+                <field name="target_audience" string="Audience"/>
+                <field name="event_id" string="Event"/>
+                <filter domain="[('is_published', '=', False)]" name="filter_unpublished" string="Unpublished"/>
+                <group expand="0" string="Group By">
+                    <filter string="Event" name="groupby_event" domain="[]" context="{'group_by': 'event_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

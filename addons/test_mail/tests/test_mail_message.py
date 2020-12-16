@@ -7,7 +7,7 @@ from unittest.mock import patch
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestSimple
-from odoo.exceptions import AccessError, except_orm
+from odoo.exceptions import AccessError
 from odoo.tools import mute_logger, formataddr
 from odoo.tests import tagged
 
@@ -19,7 +19,7 @@ class TestMessageValues(TestMailCommon):
         super(TestMessageValues, cls).setUpClass()
 
         cls._init_mail_gateway()
-        cls.alias_record = cls.env['mail.test'].with_context(cls._test_context).create({
+        cls.alias_record = cls.env['mail.test.container'].with_context(cls._test_context).create({
             'name': 'Pigs',
             'alias_name': 'pigs',
             'alias_contact': 'followers',
@@ -65,7 +65,7 @@ class TestMessageValues(TestMailCommon):
     @mute_logger('odoo.models.unlink')
     def test_mail_message_values_document_alias(self):
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
@@ -78,7 +78,7 @@ class TestMessageValues(TestMailCommon):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.domain')]).unlink()
 
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
@@ -90,7 +90,7 @@ class TestMessageValues(TestMailCommon):
         self.env['ir.config_parameter'].search([('key', '=', 'mail.catchall.alias')]).unlink()
 
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id
         })
         self.assertIn('-openerp-%d-mail.test' % self.alias_record.id, msg.message_id.split('@')[0])
@@ -137,12 +137,12 @@ class TestMessageValues(TestMailCommon):
 
     def test_mail_message_values_no_auto_thread(self):
         msg = self.Message.create({
-            'model': 'mail.test',
+            'model': 'mail.test.container',
             'res_id': self.alias_record.id,
             'no_auto_thread': True,
         })
         self.assertIn('reply_to', msg.message_id.split('@')[0])
-        self.assertNotIn('mail.test', msg.message_id.split('@')[0])
+        self.assertNotIn('mail.test.container', msg.message_id.split('@')[0])
         self.assertNotIn('-%d-' % self.alias_record.id, msg.message_id.split('@')[0])
 
     def test_mail_message_base64_image(self):
@@ -244,15 +244,12 @@ class TestMessageAccess(TestMailCommon):
 
     @mute_logger('odoo.addons.base.models.ir_model', 'odoo.models')
     def test_mail_message_access_read_crash(self):
-        # TODO: Change the except_orm to Warning ( Because here it's call check_access_rule
-        # which still generate exception in except_orm.So we need to change all
-        # except_orm to warning in mail module.)
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.message.with_user(self.user_employee).read()
 
     @mute_logger('odoo.models')
     def test_mail_message_access_read_crash_portal(self):
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.message.with_user(self.user_portal).read(['body', 'message_type', 'subtype_id'])
 
     def test_mail_message_access_read_ok_portal(self):
@@ -302,17 +299,16 @@ class TestMessageAccess(TestMailCommon):
     @mute_logger('odoo.models')
     def test_mail_message_access_create_crash(self):
         # Do: Bert create a private message -> ko, no creation rights
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
 
     @mute_logger('odoo.models')
     def test_mail_message_access_create_doc(self):
-        # TODO Change the except_orm to Warning
         Message = self.env['mail.message'].with_user(self.user_employee)
         # Do: Raoul creates a message on Jobs -> ok, write access to the related document
         Message.create({'model': 'mail.channel', 'res_id': self.group_public.id, 'body': 'Test'})
         # Do: Raoul creates a message on Priv -> ko, no write access to the related document
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             Message.create({'model': 'mail.channel', 'res_id': self.group_private.id, 'body': 'Test'})
 
     def test_mail_message_access_create_private(self):
@@ -338,11 +334,11 @@ class TestMessageAccess(TestMailCommon):
             body='<p>This is First Message</p>', subject='Subject',
             message_type='comment', subtype_xmlid='mail.mt_note')
         # portal user have no rights to read the message
-        with self.assertRaises(except_orm):
+        with self.assertRaises(AccessError):
             message.with_user(self.user_portal).read(['subject, body'])
 
         with patch.object(MailTestSimple, 'check_access_rights', return_value=True):
-            with self.assertRaises(except_orm):
+            with self.assertRaises(AccessError):
                 message.with_user(self.user_portal).read(['subject, body'])
 
             # parent message is accessible to references notification mail values

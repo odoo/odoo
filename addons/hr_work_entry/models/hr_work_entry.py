@@ -3,6 +3,7 @@
 
 from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
+from psycopg2 import OperationalError
 
 from odoo import api, fields, models
 
@@ -16,8 +17,8 @@ class HrWorkEntry(models.Model):
     active = fields.Boolean(default=True)
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     date_start = fields.Datetime(required=True, string='From')
-    date_stop = fields.Datetime(string='To')
-    duration = fields.Float(compute='_compute_duration', inverse='_inverse_duration', store=True, string="Period")
+    date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
+    duration = fields.Float(compute='_compute_duration', store=True, string="Period")
     work_entry_type_id = fields.Many2one('hr.work.entry.type')
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
     state = fields.Selection([
@@ -29,6 +30,7 @@ class HrWorkEntry(models.Model):
     company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
         default=lambda self: self.env.company)
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
+    department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
 
     _sql_constraints = [
         ('_work_entry_has_end', 'check (date_stop IS NOT NULL)', 'Work entry must end. Please define an end date or a duration.'),
@@ -40,19 +42,15 @@ class HrWorkEntry(models.Model):
         for rec in self:
             rec.conflict = rec.state == 'conflict'
 
-    @api.onchange('duration')
-    def _onchange_duration(self):
-        self._inverse_duration()
-
     @api.depends('date_stop', 'date_start')
     def _compute_duration(self):
         for work_entry in self:
             work_entry.duration = work_entry._get_duration(work_entry.date_start, work_entry.date_stop)
 
-    def _inverse_duration(self):
-        for work_entry in self:
-            if work_entry.date_start and work_entry.duration:
-                work_entry.date_stop = work_entry.date_start + relativedelta(hours=work_entry.duration)
+    @api.depends('date_start', 'duration')
+    def _compute_date_stop(self):
+        for work_entry in self.filtered(lambda w: w.date_start and w.duration):
+            work_entry.date_stop = work_entry.date_start + relativedelta(hours=work_entry.duration)
 
     def _get_duration(self, date_start, date_stop):
         if not date_start or not date_stop:
@@ -172,6 +170,11 @@ class HrWorkEntry(models.Model):
                 ])
                 work_entries._reset_conflicting_state()
             yield
+        except OperationalError:
+            # the cursor is dead, do not attempt to use it or we will shadow the root exception
+            # with a "psycopg2.InternalError: current transaction is aborted, ..."
+            skip = True
+            raise
         finally:
             if not skip and start and stop:
                 # New work entries are handled in the create method,
@@ -183,7 +186,7 @@ class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
     _description = 'HR Work Entry Type'
 
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)
     color = fields.Integer(default=0)
     sequence = fields.Integer(default=25)

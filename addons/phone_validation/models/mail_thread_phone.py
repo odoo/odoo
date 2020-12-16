@@ -63,15 +63,18 @@ class PhoneMixin(models.AbstractModel):
         number_fields = self._phone_get_number_fields()
         for record in self:
             record.phone_sanitized_blacklisted = record.phone_sanitized in blacklist
+            mobile_blacklisted = phone_blacklisted = False
             # This is a bit of a hack. Assume that any "mobile" numbers will have the word 'mobile'
             # in them due to varying field names and assume all others are just "phone" numbers.
             # Note that the limitation of only having 1 phone_sanitized value means that a phone/mobile number
             # may not be calculated as blacklisted even though it is if both field values exist in a model.
             for number_field in number_fields:
                 if 'mobile' in number_field:
-                    record.mobile_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
+                    mobile_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
                 else:
-                    record.phone_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
+                    phone_blacklisted = record.phone_sanitized_blacklisted and record.phone_get_sanitized_number(number_fname=number_field) == record.phone_sanitized
+            record.mobile_blacklisted = mobile_blacklisted
+            record.phone_blacklisted = phone_blacklisted
 
     @api.model
     def _search_phone_sanitized_blacklisted(self, operator, value):
@@ -106,9 +109,9 @@ class PhoneMixin(models.AbstractModel):
 
     def _assert_phone_field(self):
         if not hasattr(self, "_phone_get_number_fields"):
-            raise UserError(_('Invalid primary phone field on model %s') % self._name)
+            raise UserError(_('Invalid primary phone field on model %s', self._name))
         if not any(fname in self and self._fields[fname].type == 'char' for fname in self._phone_get_number_fields()):
-            raise UserError(_('Invalid primary phone field on model %s') % self._name)
+            raise UserError(_('Invalid primary phone field on model %s', self._name))
 
     def _phone_get_number_fields(self):
         """ This method returns the fields to use to find the number to use to

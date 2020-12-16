@@ -14,26 +14,27 @@ from lxml import objectify
 
 class PaypalCommon(PaymentAcquirerCommon):
 
-    def setUp(self):
-        super(PaypalCommon, self).setUp()
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        self.paypal = self.env.ref('payment.payment_acquirer_paypal')
-        self.paypal.write({
+        cls.paypal = cls.env.ref('payment.payment_acquirer_paypal')
+        cls.paypal.write({
             'paypal_email_account': 'dummy',
             'state': 'test',
         })
 
         # some CC
-        self.amex = (('378282246310005', '123'), ('371449635398431', '123'))
-        self.amex_corporate = (('378734493671000', '123'))
-        self.autralian_bankcard = (('5610591081018250', '123'))
-        self.dinersclub = (('30569309025904', '123'), ('38520000023237', '123'))
-        self.discover = (('6011111111111117', '123'), ('6011000990139424', '123'))
-        self.jcb = (('3530111333300000', '123'), ('3566002020360505', '123'))
-        self.mastercard = (('5555555555554444', '123'), ('5105105105105100', '123'))
-        self.visa = (('4111111111111111', '123'), ('4012888888881881', '123'), ('4222222222222', '123'))
-        self.dankord_pbs = (('76009244561', '123'), ('5019717010103742', '123'))
-        self.switch_polo = (('6331101999990016', '123'))
+        cls.amex = (('378282246310005', '123'), ('371449635398431', '123'))
+        cls.amex_corporate = (('378734493671000', '123'))
+        cls.autralian_bankcard = (('5610591081018250', '123'))
+        cls.dinersclub = (('30569309025904', '123'), ('38520000023237', '123'))
+        cls.discover = (('6011111111111117', '123'), ('6011000990139424', '123'))
+        cls.jcb = (('3530111333300000', '123'), ('3566002020360505', '123'))
+        cls.mastercard = (('5555555555554444', '123'), ('5105105105105100', '123'))
+        cls.visa = (('4111111111111111', '123'), ('4012888888881881', '123'), ('4222222222222', '123'))
+        cls.dankord_pbs = (('76009244561', '123'), ('5019717010103742', '123'))
+        cls.switch_polo = (('6331101999990016', '123'))
 
 
 @tagged('post_install', '-at_install', 'external', '-standard')
@@ -204,3 +205,15 @@ class PaypalForm(PaypalCommon):
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
         self.assertEqual(fields.Datetime.to_string(tx.date), '2013-11-18 11:21:19', 'paypal: wrong validation date')
+
+    def test_21_paypal_compute_fees(self):
+        #If the merchant needs to keep 100€, the transaction will be equal to 103.30€.
+        #In this way, Paypal will take 103.30 * 2.9% + 0.30 = 3.30€
+        #And the merchant will take 103.30 - 3.30 = 100€
+        self.paypal.write({
+            'fees_active': True,
+            'fees_int_fixed': 0.30,
+            'fees_int_var': 2.90,
+        })
+        total_fee = self.paypal.paypal_compute_fees(100, False, False)
+        self.assertEqual(round(total_fee, 2), 3.3, 'Wrong computation of the Paypal fees')

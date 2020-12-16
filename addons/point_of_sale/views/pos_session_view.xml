@@ -9,20 +9,17 @@
                     <button name="open_cashbox_pos" type="object" string="Open Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'new_session')]}" class="oe_highlight"
                          context="{'balance': 'start'}"/>
-                    <button name="action_pos_session_open" type="object" string="Start Session"
-                        attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}" class="oe_highlight"/>
-                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
-                        class="oe_highlight"/>
+                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opening_control,opened"/>
                     <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Validate Closing &amp; Post Entries"
+                    <button id="validate_opened" name="action_pos_session_closing_control" type="object" string="Close Session &amp; Post Entries"
                         attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
-                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Validate Closing &amp; Post Entries" states="closing_control"
+                    <button id="validate_closing_control" name="action_pos_session_validate" type="object" string="Close Session &amp; Post Entries" states="closing_control"
                         class="oe_highlight"/>
 
-                    <field name="state" widget="statusbar" statusbar_visible="new_session,opening_control,opened,closing_control,closed" nolabel="1" />
+                    <field name="state" widget="statusbar" statusbar_visible="opened,closing_control,closed" nolabel="1" />
                 </header>
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
@@ -74,35 +71,29 @@
                             <group class="col-md-12" style="margin-left: 140px;">
                                 <group class="col-md-7">
                                     <div style="margin:0;padding:0;">
-                                        <group style="margin:0;padding:0;">
-                                            <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_start" readonly="1" widget="monetary" options="{'currency_field': 'currency_id'}" string="Starting Cash"/>
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control', 'closed'])]}">
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control', 'closed'])]}">
                                             <field style="text-align:right;margin:0;padding:0;" name="cash_register_total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
                                         </group>
                                         <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '!=', 'closed')]}">
                                             <field style="text-align:right;margin:0;padding:0;" name="cash_real_transaction" widget="monetary" options="{'currency_field': 'currency_id'}" string="+ Transactions"/>
                                         </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control', 'closed'])]}">
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control', 'closed'])]}">
                                             <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected in Cash"/>
                                         </group>
                                         <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '!=', 'closed')]}">
                                             <field style="text-align:right;margin:0;padding:0;" name="cash_real_expected" widget="monetary" options="{'currency_field': 'currency_id'}" string="= Expected"/>
                                         </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control'])]}">
                                             <field style="text-align:right;margin:0;padding:0;" name="cash_register_balance_end_real" widget="monetary" options="{'currency_field': 'currency_id'}" string="Actual in Cash"/>
                                         </group>
                                     </div>
                                     <div style="margin:0;padding:0;">
-                                        <group style="margin:0;padding:0;">
-                                            <button class="oe_inline oe_link" name="open_cashbox_pos" type="object" context="{'balance': 'start'}" attrs="{'invisible':['|', ('cash_control', '=', False), ('state', '!=', 'opening_control')]}">Set Starting Cash</button>
-                                        </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['opening_control'])]}">
                                             <button class="oe_inline oe_link" name="%(action_pos_box_out)d" type="action" attrs="{'invisible' : [('state', '=', 'closed')]}">Cash In/Out</button>
                                         </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
                                         </group>
-                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', 'in', ['new_session', 'opening_control'])]}">
+                                        <group style="margin:0;padding:0;" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
                                             <button class="oe_inline oe_link" name="open_cashbox_pos" type="object" attrs="{'invisible': [('state', '!=', 'closing_control')]}" context="{'balance': 'close'}">Set Closing Cash</button>
                                         </group>
                                     </div>
@@ -123,9 +114,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="activity_ids"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -135,13 +126,13 @@
         <field name="name">pos.session.tree.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <tree string="Point of Sale Session" create="0">
+            <tree string="Point of Sale Session" create="0" sample="1">
+                <field name="name" decoration-bf="1"/>
                 <field name="config_id" />
-                <field name="name" />
-                <field name="user_id" />
+                <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="start_at" />
                 <field name="stop_at" />
-                <field name="state" />
+                <field name="state" widget="badge" decoration-info="state in ('opening_control')" decoration-success="state in ('opened', 'closed')" decoration-warning="state == 'closing_control'" />
             </tree>
         </field>
     </record>
@@ -150,7 +141,7 @@
         <field name="name">pos.session.kanban</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="config_id" />
                 <field name="name" />
                 <field name="user_id" />
@@ -174,7 +165,7 @@
                                     <span><field name="start_at" /></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
+                                    <field name="user_id" widget="many2one_avatar_user"/>
                                 </div>
                             </div>
                         </div>
@@ -198,8 +189,11 @@
                 <separator/>
                 <filter string="Opening Date" name="start_date" date="start_at" />
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
+                    <filter string="Opened By" name="user" domain="[]" context="{'group_by' : 'user_id'}"/>
                     <filter string="Point of Sale" name="point_of_sale" domain="[]" context="{'group_by': 'config_id'}"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Opening Date" name="opening_date" domain="[]" context="{'group_by': 'start_at'}"/>
+                    <filter string="Closing Date" name="closing_date" domain="[]" context="{'group_by': 'stop_at'}"/>
                 </group>
             </search>
         </field>

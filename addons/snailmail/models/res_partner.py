@@ -10,16 +10,18 @@ class ResPartner(models.Model):
     _inherit = "res.partner"
 
     def write(self, vals):
-        for id in self.ids:
-            letter_address_vals = {}
-            address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
-            for field in address_fields:
-                if field in vals:
-                    letter_address_vals[field] = vals[field]
+        letter_address_vals = {}
+        address_fields = ['street', 'street2', 'city', 'zip', 'state_id', 'country_id']
+        for field in address_fields:
+            if field in vals:
+                letter_address_vals[field] = vals[field]
 
-            if len(letter_address_vals):
-                letter_ids = self.env['snailmail.letter'].search([('state', 'not in', ['sent', 'canceled']), ('partner_id', '=', id)])
-                letter_ids.write(letter_address_vals)
+        if letter_address_vals:
+            letters = self.env['snailmail.letter'].search([
+                ('state', 'not in', ['sent', 'canceled']),
+                ('partner_id', 'in', self.ids),
+            ])
+            letters.write(letter_address_vals)
 
         return super(ResPartner, self).write(vals)
 

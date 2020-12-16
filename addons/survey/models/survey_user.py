@@ -16,8 +16,9 @@ _logger = logging.getLogger(__name__)
 class SurveyUserInput(models.Model):
     """ Metadata for a set of one user's answers to a particular survey """
     _name = "survey.user_input"
-    _rec_name = 'survey_id'
-    _description = 'Survey User Input'
+    _description = "Survey User Input"
+    _rec_name = "survey_id"
+    _order = "create_date desc"
 
     # answer description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
@@ -91,7 +92,7 @@ class SurveyUserInput(models.Model):
                 start_time = user_input.start_datetime
                 time_limit = user_input.survey_id.time_limit
                 user_input.survey_time_limit_reached = user_input.survey_id.is_time_limited and \
-                    fields.Datetime.now() > start_time + relativedelta(minutes=time_limit)
+                    fields.Datetime.now() >= start_time + relativedelta(minutes=time_limit)
             else:
                 user_input.survey_time_limit_reached = False
 
@@ -107,7 +108,7 @@ class SurveyUserInput(models.Model):
                 start_time = user_input.survey_id.session_question_start_time
                 time_limit = user_input.survey_id.session_question_id.time_limit
                 user_input.question_time_limit_reached = user_input.survey_id.session_question_id.is_time_limited and \
-                    fields.Datetime.now() > start_time + relativedelta(seconds=time_limit)
+                    fields.Datetime.now() >= start_time + relativedelta(seconds=time_limit)
             else:
                 user_input.question_time_limit_reached = False
 
@@ -126,7 +127,7 @@ class SurveyUserInput(models.Model):
                 LEFT OUTER JOIN survey_user_input previous_user_input
                 ON user_input.survey_id = previous_user_input.survey_id
                 AND previous_user_input.state = 'done'
-                AND previous_user_input.test_entry = False
+                AND previous_user_input.test_entry IS NOT TRUE
                 AND previous_user_input.id < user_input.id
                 AND (user_input.invite_token IS NULL OR user_input.invite_token = previous_user_input.invite_token)
                 AND (user_input.partner_id = previous_user_input.partner_id OR user_input.email = previous_user_input.email)
@@ -360,7 +361,7 @@ class SurveyUserInput(models.Model):
     def _choice_question_answer_result(self, user_input_lines, question_correct_suggested_answers):
         correct_user_input_lines = user_input_lines.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('suggested_answer_id')
         incorrect_user_input_lines = user_input_lines.filtered(lambda line: not line.answer_is_correct and not line.skipped)
-        if correct_user_input_lines == question_correct_suggested_answers:
+        if question_correct_suggested_answers and correct_user_input_lines == question_correct_suggested_answers:
             return 'correct'
         elif correct_user_input_lines and correct_user_input_lines < question_correct_suggested_answers:
             return 'partial'
@@ -461,6 +462,19 @@ class SurveyUserInput(models.Model):
                     inactive_questions |= question
         return inactive_questions
 
+    def _get_print_questions(self):
+        """ Get the questions to display : the ones that should have been answered = active questions
+            In case of session, active questions are based on most voted answers
+        :return: active survey.question browse records
+        """
+        survey = self.survey_id
+        if self.is_session_answer:
+            most_voted_answers = survey._get_session_most_voted_answers()
+            inactive_questions = most_voted_answers._get_inactive_conditional_questions()
+        else:
+            inactive_questions = self._get_inactive_conditional_questions()
+        return survey.question_ids - inactive_questions
+
 
 class SurveyUserInputLine(models.Model):
     _name = 'survey.user_input.line'
@@ -498,7 +512,7 @@ class SurveyUserInputLine(models.Model):
     def _check_answer_type_skipped(self):
         for line in self:
             if (line.skipped == bool(line.answer_type)):
-                raise ValidationError(_('A question is either skipped, either answered. Not both.'))
+                raise ValidationError(_('A question can either be skipped or answered, not both.'))
 
             # allow 0 for numerical box
             if line.answer_type == 'numerical_box' and float_is_zero(line['value_numerical_box'], precision_digits=6):

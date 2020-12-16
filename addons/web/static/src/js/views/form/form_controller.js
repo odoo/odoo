@@ -11,7 +11,6 @@ var qweb = core.qweb;
 
 var FormController = BasicController.extend({
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
-        bounce_edit: '_onBounceEdit',
         button_clicked: '_onButtonClicked',
         edited_list: '_onEditedList',
         open_one2many_record: '_onOpenOne2ManyRecord',
@@ -142,7 +141,11 @@ var FormController = BasicController.extend({
      * @param {jQuery} [$node]
      */
     renderButtons: function ($node) {
-        var $footer = this.footerToButtons ? this.renderer.$el && this.renderer.$('footer') : null;
+        var $footer = this.footerToButtons
+            ? this.renderer.$el && this.renderer.$('footer').filter(function () {
+                return !this.closest('.o_field_widget');
+            })
+            : null;
         var mustRenderFooterButtons = $footer && $footer.length;
         if ((this.defaultButtons && !this.$buttons) || mustRenderFooterButtons) {
             this.$buttons = $('<div/>');
@@ -189,15 +192,15 @@ var FormController = BasicController.extend({
      * @override
      * @private
      **/
-    _getActionMenuItems: function () {
+    _getActionMenuItems: function (state) {
         if (!this.hasActionMenus || this.mode === 'edit') {
             return null;
         }
         const props = this._super(...arguments);
-        const activeField = this.model.getActiveField(this.initialState);
+        const activeField = this.model.getActiveField(state);
         const otherActionItems = [];
-        if (this.archiveEnabled && activeField) {
-            if (this.initialState.data[activeField]) {
+        if (this.archiveEnabled && activeField in state.data) {
+            if (state.data[activeField]) {
                 otherActionItems.push({
                     description: _t("Archive"),
                     callback: () => {
@@ -249,7 +252,7 @@ var FormController = BasicController.extend({
             for (var k = 0; k < changedFields.length; k++) {
                 var field = fields[changedFields[k]];
                 var fieldData = data[changedFields[k]];
-                if (field.translate && fieldData) {
+                if (field.translate && fieldData && fieldData !== '<p><br></p>') {
                     alertFields[changedFields[k]] = field;
                 }
             }
@@ -281,7 +284,9 @@ var FormController = BasicController.extend({
             return;
         }
         if (this.footerToButtons) {
-            var $footer = this.renderer.$el && this.renderer.$('footer');
+            var $footer = this.renderer.$el && this.renderer.$('footer').filter(function () {
+                return !this.closest('.o_field_widget');
+            });
             if ($footer && $footer.length) {
                 this.$buttons.empty().append($footer);
             }
@@ -431,21 +436,17 @@ var FormController = BasicController.extend({
         }
         return this._super.apply(this, arguments);
     },
+    /**
+     * @override
+     */
+    _shouldBounceOnClick(element) {
+        return this.mode === 'readonly' && !!element.closest('.oe_title, .o_inner_group');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
-    /**
-     * Bounce the 'Edit' button.
-     *
-     * @private
-     */
-    _onBounceEdit: function () {
-        if (this.$buttons) {
-            this.$buttons.find('.o_form_button_edit').odooBounce();
-        }
-    },
     /**
      * @private
      * @param {OdooEvent} ev
@@ -519,7 +520,10 @@ var FormController = BasicController.extend({
      * @private
      */
     _onDiscard: function () {
-        this._discardChanges();
+        this._disableButtons();
+        this._discardChanges()
+            .then(this._enableButtons.bind(this))
+            .guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the action menus
@@ -538,9 +542,13 @@ var FormController = BasicController.extend({
      * @private
      */
     _onEdit: function () {
+        this._disableButtons();
         // wait for potential pending changes to be saved (done with widgets
         // allowing to edit in readonly)
-        this.mutex.getUnlockedDef().then(this._setMode.bind(this, 'edit'));
+        this.mutex.getUnlockedDef()
+            .then(this._setMode.bind(this, 'edit'))
+            .then(this._enableButtons.bind(this))
+            .guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * This method is called when someone tries to freeze the order, most likely
@@ -615,6 +623,7 @@ var FormController = BasicController.extend({
             parentID: data.parentID,
             readonly: data.readonly,
             deletable: record ? data.deletable : false,
+            disable_multiple_selection: data.disable_multiple_selection,
             recordID: record && record.id,
             res_id: record && record.res_id,
             res_model: data.field.relation,

@@ -35,6 +35,7 @@ var FIELD_CLASSES = {
 };
 
 var ListRenderer = BasicRenderer.extend({
+    className: 'o_list_view',
     events: {
         "mousedown": "_onMouseDown",
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
@@ -42,12 +43,19 @@ var ListRenderer = BasicRenderer.extend({
         'click tbody tr': '_onRowClicked',
         'change tbody .o_list_record_selector': '_onSelectRecord',
         'click thead th.o_column_sortable': '_onSortColumn',
+        'click .o_list_record_selector': '_onToggleCheckbox',
         'click .o_group_header': '_onToggleGroup',
         'change thead .o_list_record_selector input': '_onToggleSelection',
         'keypress thead tr td': '_onKeyPress',
         'keydown td': '_onKeyDown',
         'keydown th': '_onKeyDown',
     },
+    sampleDataTargets: [
+        '.o_data_row',
+        '.o_group_header',
+        '.o_list_table > tfoot',
+        '.o_list_table > thead .o_list_record_selector',
+    ],
     /**
      * @constructor
      * @param {Widget} parent
@@ -57,18 +65,20 @@ var ListRenderer = BasicRenderer.extend({
      */
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
-        this.columnInvisibleFields = params.columnInvisibleFields;
-        this.rowDecorations = _.chain(this.arch.attrs)
-            .pick(function (value, key) {
-                return DECORATIONS.indexOf(key) >= 0;
-            }).mapObject(function (value) {
-                return py.parse(py.tokenize(value));
-            }).value();
+        this._preprocessColumns();
+        this.columnInvisibleFields = params.columnInvisibleFields || {};
+        this.rowDecorations = this._extractDecorationAttrs(this.arch);
+        this.fieldDecorations = {};
+        for (const field of this.arch.children.filter(c => c.tag === 'field')) {
+            const decorations = this._extractDecorationAttrs(field);
+            this.fieldDecorations[field.attrs.name] = decorations;
+        }
         this.hasSelectors = params.hasSelectors;
         this.selection = params.selectedRecords || [];
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+        this.no_open = params.no_open;
     },
     /**
      * Compute columns visilibity. This can't be done earlier as we need the
@@ -77,7 +87,7 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      */
     willStart: function () {
-        this._processColumns(this.columnInvisibleFields || {});
+        this._processColumns(this.columnInvisibleFields);
         return this._super.apply(this, arguments);
     },
 
@@ -87,8 +97,8 @@ var ListRenderer = BasicRenderer.extend({
 
     /**
      * Order to focus to be given to the content of the current view
+     *
      * @override
-     * @public
      */
     giveFocus: function () {
         this.$('th:eq(0) input, th:eq(1)').first().focus();
@@ -97,8 +107,10 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      */
     updateState: function (state, params) {
-        this.isGrouped = state.groupedBy.length > 0;
-        this._processColumns(params.columnInvisibleFields || {});
+        this._setState(state);
+        this.isGrouped = this.state.groupedBy.length > 0;
+        this.columnInvisibleFields = params.columnInvisibleFields || {};
+        this._processColumns(this.columnInvisibleFields);
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
@@ -187,6 +199,24 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
+     * Extract the decoration attributes (e.g. decoration-danger) of a node. The
+     * condition is processed such that it is ready to be evaluated.
+     *
+     * @private
+     * @param {Object} node the <tree> or a <field> node
+     * @returns {Object}
+     */
+    _extractDecorationAttrs: function (node) {
+        const decorations = {};
+        for (const [key, expr] of Object.entries(node.attrs)) {
+            if (DECORATIONS.includes(key)) {
+                const cssClass = key.replace('decoration', 'text');
+                decorations[cssClass] = py.parse(py.tokenize(expr));
+            }
+        }
+        return decorations;
+    },
+    /**
      *
      * @private
      * @param {jQuery} $cell
@@ -264,7 +294,71 @@ var ListRenderer = BasicRenderer.extend({
         };
     },
     /**
-     * Removes the columns which should be invisible.
+     * Returns the jQuery node used to update the selection
+     *
+     * @private
+     * @return {jQuery}
+     */
+    _getSelectableRecordCheckboxes: function () {
+        return this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+    },
+    /**
+     * Adjacent buttons (in the arch) are displayed in a single column. This
+     * function iterates over the arch's nodes and replaces "button" nodes by
+     * "button_group" nodes, with a single "button_group" node for adjacent
+     * "button" nodes. A "button_group" node has a "children" attribute
+     * containing all "button" nodes in the group.
+     *
+     * @private
+     */
+    _groupAdjacentButtons: function () {
+        const children = [];
+        let groupId = 0;
+        let buttonGroupNode = null;
+        for (const c of this.arch.children) {
+            if (c.tag === 'button') {
+                if (!buttonGroupNode) {
+                    buttonGroupNode = {
+                        tag: 'button_group',
+                        children: [c],
+                        attrs: {
+                            name: `button_group_${groupId++}`,
+                            modifiers: {},
+                        },
+                    };
+                    children.push(buttonGroupNode);
+                } else {
+                    buttonGroupNode.children.push(c);
+                }
+            } else {
+                buttonGroupNode = null;
+                children.push(c);
+            }
+        }
+        this.arch.children = children;
+    },
+    /**
+     * Processes arch's child nodes for the needs of the list view:
+     *   - detects oe_read_only/oe_edit_only classnames
+     *   - groups adjacent buttons in a single column.
+     * This function is executed only once, at initialization.
+     *
+     * @private
+     */
+    _preprocessColumns: function () {
+        this._processModeClassNames();
+        this._groupAdjacentButtons();
+
+        // set as readOnly (resp. editOnly) button groups containing only
+        // readOnly (resp. editOnly) buttons, s.t. no column is rendered
+        this.arch.children.filter(c => c.tag === 'button_group').forEach(c => {
+            c.attrs.editOnly = c.children.every(n => n.attrs.editOnly);
+            c.attrs.readOnly = c.children.every(n => n.attrs.readOnly);
+        });
+    },
+    /**
+     * Removes the columns which should be invisible. This function is executed
+     * at each (re-)rendering of the list.
      *
      * @param  {Object} columnInvisibleFields contains the column invisible modifier values
      */
@@ -282,20 +376,16 @@ var ListRenderer = BasicRenderer.extend({
             },
         });
         _.each(this.arch.children, function (c) {
-            if (c.tag !== 'control' && c.tag !== 'groupby') {
+            if (c.tag !== 'control' && c.tag !== 'groupby' && c.tag !== 'header') {
                 var reject = c.attrs.modifiers.column_invisible;
                 // If there is an evaluated domain for the field we override the node
                 // attribute to have the evaluated modifier value.
-                if (c.attrs.name in columnInvisibleFields) {
+                if (c.tag === "button_group") {
+                    // FIXME: 'column_invisible' attribute is available for fields *and* buttons,
+                    // so 'columnInvisibleFields' variable name is misleading, it should be renamed
+                    reject = c.children.every(child => columnInvisibleFields[child.attrs.name]);
+                } else if (c.attrs.name in columnInvisibleFields) {
                     reject = columnInvisibleFields[c.attrs.name];
-                }
-               if (c.attrs.class) {
-                    if (c.attrs.class.match(/\boe_edit_only\b/)) {
-                        c.attrs.editOnly = true;
-                    }
-                    if (c.attrs.class.match(/\boe_read_only\b/)) {
-                        c.attrs.readOnly = true;
-                    }
                 }
                 if (!reject && c.attrs.widget === 'handle') {
                     self.handleField = c.attrs.name;
@@ -321,6 +411,22 @@ var ListRenderer = BasicRenderer.extend({
                 if (!reject) {
                     self.columns.push(c);
                 }
+            }
+        });
+    },
+    /**
+     * Classnames "oe_edit_only" and "oe_read_only" aim to only display the cell
+     * in the corresponding mode. This only concerns lists inside form views
+     * (for x2many fields). This function detects the className and stores a
+     * flag on the node's attrs accordingly, to ease further computations.
+     *
+     * @private
+     */
+    _processModeClassNames: function () {
+        this.arch.children.forEach(c => {
+            if (c.attrs.class) {
+                c.attrs.editOnly = /\boe_edit_only\b/.test(c.attrs.class);
+                c.attrs.readOnly = /\boe_read_only\b/.test(c.attrs.class);
             }
         });
     },
@@ -400,7 +506,7 @@ var ListRenderer = BasicRenderer.extend({
      */
     _renderBodyCell: function (record, node, colIndex, options) {
         var tdClassName = 'o_data_cell';
-        if (node.tag === 'button') {
+        if (node.tag === 'button_group') {
             tdClassName += ' o_list_button';
         } else if (node.tag === 'field') {
             tdClassName += ' o_field_cell';
@@ -430,8 +536,13 @@ var ListRenderer = BasicRenderer.extend({
             return $td;
         }
 
-        if (node.tag === 'button') {
-            return $td.append(this._renderButton(record, node));
+        if (node.tag === 'button_group') {
+            for (const buttonNode of node.children) {
+                if (!this.columnInvisibleFields[buttonNode.attrs.name]) {
+                    $td.append(this._renderButton(record, buttonNode));
+                }
+            }
+            return $td;
         } else if (node.tag === 'widget') {
             return $td.append(this._renderWidget(record, node));
         }
@@ -440,6 +551,8 @@ var ListRenderer = BasicRenderer.extend({
             return $td.append($el);
         }
         this._handleAttributes($td, node);
+        this._setDecorationClasses($td, this.fieldDecorations[node.attrs.name], record);
+
         var name = node.attrs.name;
         var field = this.state.fields[name];
         var value = record.data[name];
@@ -469,9 +582,18 @@ var ListRenderer = BasicRenderer.extend({
         var self = this;
         var nodeWithoutWidth = Object.assign({}, node);
         delete nodeWithoutWidth.attrs.width;
+
+        let extraClass = '';
+        if (node.attrs.icon) {
+            // if there is an icon, we force the btn-link style, unless a btn-xxx
+            // style class is explicitely provided
+            const btnStyleRegex = /\bbtn-[a-z]+\b/;
+            if (!btnStyleRegex.test(nodeWithoutWidth.attrs.class)) {
+                extraClass = 'btn-link o_icon_button';
+            }
+        }
         var $button = viewUtils.renderButtonFromNode(nodeWithoutWidth, {
-            extraClass: node.attrs.icon ? 'o_icon_button' : undefined,
-            textAsTitle: !!node.attrs.icon,
+            extraClass: extraClass,
         });
         this._handleAttributes($button, node);
         this._registerModifiers(node, record, $button);
@@ -489,7 +611,7 @@ var ListRenderer = BasicRenderer.extend({
             if (node.attrs.options.warn) {
                 $button.on("click", function (e) {
                     e.stopPropagation();
-                    self.do_warn(_t("Warning"), _t('Please click on the "save" button first.'));
+                    self.do_warn(false, _t('Please click on the "save" button first'));
                 });
             } else {
                 $button.prop('disabled', true);
@@ -593,7 +715,7 @@ var ListRenderer = BasicRenderer.extend({
             .attr('tabindex', -1)
             .text(name + ' (' + group.count + ')');
         var $arrow = $('<span>')
-            .css('padding-left', (groupLevel * 20) + 'px')
+            .css('padding-left', 2 + (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
             .addClass('fa');
         if (group.count > 0) {
@@ -751,8 +873,8 @@ var ListRenderer = BasicRenderer.extend({
     },
     /**
      * Render a single <th> with the informations for a column. If it is not a
-     * field, the th will be empty. Otherwise, it will contains all relevant
-     * information for the field.
+     * field or nolabel attribute is set to "1", the th will be empty.
+     * Otherwise, it will contains all relevant information for the field.
      *
      * @private
      * @param {Object} node
@@ -777,21 +899,27 @@ var ListRenderer = BasicRenderer.extend({
         if (node.attrs.readOnly) {
             $th.addClass('oe_read_only');
         }
-        if (!field) {
+        if (node.tag === 'button_group') {
+            $th.addClass('o_list_button');
+        }
+        if (!field || node.attrs.nolabel === '1') {
             return $th;
         }
         var description = string || field.string;
         if (node.attrs.widget) {
             $th.addClass(' o_' + node.attrs.widget + '_cell');
-            if (this.state.fieldsInfo.list[name].Widget.prototype.noLabel) {
+            const FieldWidget = this.state.fieldsInfo.list[name].Widget;
+            if (FieldWidget.prototype.noLabel) {
                 description = '';
+            } else if (FieldWidget.prototype.label) {
+                description = FieldWidget.prototype.label;
             }
         }
         $th.text(description)
             .attr('tabindex', -1)
             .toggleClass('o-sort-down', isNodeSorted ? !order[0].asc : false)
             .toggleClass('o-sort-up', isNodeSorted ? order[0].asc : false)
-            .addClass(field.sortable && 'o_column_sortable');
+            .addClass((field.sortable || this.state.fieldsInfo.list[name].options.allow_order || false) && 'o_column_sortable');
 
         if (isNodeSorted) {
             $th.attr('aria-sort', order[0].asc ? 'ascending' : 'descending');
@@ -834,7 +962,10 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
-        this._setDecorationClasses(record, $tr);
+        if (this.no_open && this.mode === "readonly") {
+            $tr.addClass('o_list_no_open');
+        }
+        this._setDecorationClasses($tr, this.rowDecorations, record);
         return $tr;
     },
     /**
@@ -863,6 +994,7 @@ var ListRenderer = BasicRenderer.extend({
             'href': "#",
             'role': "button",
             'data-toggle': "dropdown",
+            'data-display': "static",
             'aria-expanded': false,
         });
         $a.appendTo($optionalColumnsDropdown);
@@ -921,98 +1053,102 @@ var ListRenderer = BasicRenderer.extend({
      * this method does not wait for the field widgets to be ready.
      *
      * @override
-     * @private
      * @returns {Promise} resolved when the view has been rendered
      */
-    _renderView: function () {
-        var self = this;
-
+    async _renderView() {
         const oldPagers = this.pagers;
-        this.pagers = [];
+        let prom;
+        let tableWrapper;
+        if (this.state.count > 0 || !this.noContentHelp) {
+            // render a table if there are records, or if there is no no content
+            // helper (empty table in this case)
+            this.pagers = [];
 
-        // display the no content helper if there is no data to display
-        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
-        this.$el.toggleClass('o_list_view', !displayNoContentHelper);
-        if (displayNoContentHelper) {
-            // destroy the previously instantiated pagers, if any
-            oldPagers.forEach(pager => pager.destroy());
+            const orderedBy = this.state.orderedBy;
+            this.hasHandle = orderedBy.length === 0 || orderedBy[0].name === this.handleField;
+            this._computeAggregates();
 
-            this.$el.removeClass('table-responsive');
-            this.$el.html(this._renderNoContentHelper());
-            return this._super.apply(this, arguments);
-        }
+            const $table = $(
+                '<table class="o_list_table table table-sm table-hover table-striped"/>'
+            );
+            $table.toggleClass('o_list_table_grouped', this.isGrouped);
+            $table.toggleClass('o_list_table_ungrouped', !this.isGrouped);
+            const defs = [];
+            this.defs = defs;
+            if (this.isGrouped) {
+                $table.append(this._renderHeader());
+                $table.append(this._renderGroups(this.state.data));
+                $table.append(this._renderFooter());
 
-        var orderedBy = this.state.orderedBy;
-        this.hasHandle = orderedBy.length === 0 || orderedBy[0].name === this.handleField;
-        this._computeAggregates();
-
-        var $table = $('<table>').addClass('o_list_table table table-sm table-hover table-striped');
-        $table.toggleClass('o_list_table_grouped', this.isGrouped);
-        $table.toggleClass('o_list_table_ungrouped', !this.isGrouped);
-        var defs = [];
-        this.defs = defs;
-        if (this.isGrouped) {
-            $table.append(this._renderHeader());
-            $table.append(this._renderGroups(this.state.data));
-            $table.append(this._renderFooter());
-
-        } else {
-            $table.append(this._renderHeader());
-            $table.append(this._renderBody());
-            $table.append(this._renderFooter());
-        }
-        const tableWrapper = Object.assign(document.createElement('div'), {
-            className: 'table-responsive',
-        });
-        tableWrapper.appendChild($table[0]);
-        delete this.defs;
-
-        var prom = Promise.all(defs).then(() => {
-            // destroy the previously instantiated pagers, if any
-            oldPagers.forEach(pager => pager.destroy());
-
-            // Append the table to the main element
-            self.el.innerHTML = "";
-            dom.append(self.el, tableWrapper, {
-                callbacks: [{ widget: this }],
-                in_DOM: document.body.contains(self.el),
-            });
-
-            if (self.optionalColumns.length) {
-                self.$el.addClass('o_list_optional_columns');
-                self.$('table').append($('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>'));
-                self.$el.append(self._renderOptionalColumnsDropdown());
+            } else {
+                $table.append(this._renderHeader());
+                $table.append(this._renderBody());
+                $table.append(this._renderFooter());
             }
+            tableWrapper = Object.assign(document.createElement('div'), {
+                className: 'table-responsive',
+            });
+            tableWrapper.appendChild($table[0]);
+            delete this.defs;
+            prom = Promise.all(defs);
+        }
 
-            if (self.selection.length) {
-                var $checked_rows = self.$('tr').filter(function (index, el) {
-                    return _.contains(self.selection, $(el).data('id'));
-                });
+        await Promise.all([this._super.apply(this, arguments), prom]);
+
+        this.el.innerHTML = "";
+        this.el.classList.remove('o_list_optional_columns');
+
+        // destroy the previously instantiated pagers, if any
+        oldPagers.forEach(pager => pager.destroy());
+
+        // append the table (if any) to the main element
+        if (tableWrapper) {
+            this.el.appendChild(tableWrapper);
+            if (document.body.contains(this.el)) {
+                this.pagers.forEach(pager => pager.on_attach_callback());
+            }
+            if (this.optionalColumns.length) {
+                this.el.classList.add('o_list_optional_columns');
+                this.$('table').append(
+                    $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
+                );
+                this.$('table').append(this._renderOptionalColumnsDropdown());
+            }
+            if (this.selection.length) {
+                const $checked_rows = this.$('tr').filter(
+                    (i, el) => this.selection.includes(el.dataset.id)
+                );
                 $checked_rows.find('.o_list_record_selector input').prop('checked', true);
-                if ($checked_rows.length === self.$('.o_data_row').length) { // all rows are checked
-                    self.$('thead .o_list_record_selector input').prop('checked', true);
+                if ($checked_rows.length === this.$('.o_data_row').length) { // all rows are checked
+                    this.$('thead .o_list_record_selector input').prop('checked', true);
                 }
             }
-        });
-        return Promise.all([this._super.apply(this, arguments), prom]);
+        }
+
+        // display the no content helper if necessary
+        if (!this._hasContent() && !!this.noContentHelp) {
+            this._renderNoContentHelper();
+        }
     },
     /**
-     * Each line can be decorated according to a few simple rules. The arch
-     * description of the list may have one of the decoration-X attribute with
-     * a domain as value.  Then, for each record, we check if the domain matches
-     * the record, and add the text-X css class to the element.  This method is
-     * concerned with the computation of the list of css classes for a given
-     * record.
+     * Each line or cell can be decorated according to a few simple rules. The
+     * arch description of the list or the field nodes may have one of the
+     * decoration-X attributes with a python expression as value. Then, for each
+     * record, we evaluate the python expression, and conditionnaly add the
+     * text-X css class to the element.  This method is concerned with the
+     * computation of the list of css classes for a given record.
      *
      * @private
+     * @param {jQueryElement} $el the element to which to add the classes (a tr
+     *   or td)
+     * @param {Object} decorations keys are the decoration classes (e.g.
+     *   'text-bf') and values are the python expressions to evaluate
      * @param {Object} record a basic model record
-     * @param {jQueryElement} $tr a jquery <tr> element (the row to add decoration)
      */
-    _setDecorationClasses: function (record, $tr) {
-        _.each(this.rowDecorations, function (expr, decoration) {
-            var cssClass = decoration.replace('decoration', 'text');
-            $tr.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
-        });
+    _setDecorationClasses: function ($el, decorations, record) {
+        for (const [cssClass, expr] of Object.entries(decorations)) {
+            $el.toggleClass(cssClass, py.PY_isTrue(py.evaluate(expr, record.evalContext)));
+        }
     },
     /**
      * @private
@@ -1045,9 +1181,10 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _updateSelection: function () {
+        const previousSelection = JSON.stringify(this.selection);
         this.selection = [];
         var self = this;
-        var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+        var $inputs = this._getSelectableRecordCheckboxes();
         var allChecked = $inputs.length > 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
@@ -1057,7 +1194,9 @@ var ListRenderer = BasicRenderer.extend({
             }
         });
         this.$('thead .o_list_record_selector input').prop('checked', allChecked);
-        this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        if (JSON.stringify(this.selection) !== previousSelection) {
+            this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        }
         this._updateFooter();
     },
 
@@ -1109,6 +1248,11 @@ var ListRenderer = BasicRenderer.extend({
     _onToggleOptionalColumn: function (ev) {
         var self = this;
         ev.stopPropagation();
+        // when the input's label is clicked, the click event is also raised on the
+        // input itself (https://developer.mozilla.org/en-US/docs/Web/HTML/Element/label),
+        // so this handler is executed twice (except if the rendering is quick enough,
+        // as when we render, we empty the HTML)
+        ev.preventDefault();
         var input = ev.currentTarget.querySelector('input');
         var fieldIndex = this.optionalColumnsEnabled.indexOf(input.name);
         if (fieldIndex >= 0) {
@@ -1120,8 +1264,8 @@ var ListRenderer = BasicRenderer.extend({
             keyParts: this._getOptionalColumnsStorageKeyParts(),
             optionalColumnsEnabled: this.optionalColumnsEnabled,
         });
-        this._processColumns(this.columnInvisibleFields || {});
-        this._renderView().then(function () {
+        this._processColumns(this.columnInvisibleFields);
+        this._render().then(function () {
             self._onToggleOptionalColumnDropdown(ev);
         });
     },
@@ -1153,6 +1297,9 @@ var ListRenderer = BasicRenderer.extend({
         var $tr;
         var $futureCell;
         var colIndex;
+        if (this.state.isSample) {
+            return; // we disable keyboard navigation inside the table in "sample" mode
+        }
         switch (ev.keyCode) {
             case $.ui.keyCode.LEFT:
                 ev.preventDefault();
@@ -1235,7 +1382,7 @@ var ListRenderer = BasicRenderer.extend({
             offset: currentMinimum - 1,
             on_success: reloadedGroup => {
                 Object.assign(group, reloadedGroup);
-                this._renderView();
+                this._render();
             },
         });
     },
@@ -1246,7 +1393,7 @@ var ListRenderer = BasicRenderer.extend({
     _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click')) {
+        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click') && !this.no_open) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
                 this.trigger_up('open_record', { id: id, target: ev.target });
@@ -1268,6 +1415,18 @@ var ListRenderer = BasicRenderer.extend({
     _onSortColumn: function (ev) {
         var name = $(ev.currentTarget).data('name');
         this.trigger_up('toggle_column_order', { id: this.state.id, name: name });
+    },
+    /**
+     * When the user clicks on the whole record selector cell, we want to toggle
+     * the checkbox, to make record selection smooth.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onToggleCheckbox: function (ev) {
+        const $recordSelector = $(ev.target).find('input[type=checkbox]:not(":disabled")');
+        $recordSelector.prop('checked', !$recordSelector.prop("checked"));
+        $recordSelector.change(); // s.t. th and td checkbox cases are handled by their own handler
     },
     /**
      * @private
@@ -1295,8 +1454,8 @@ var ListRenderer = BasicRenderer.extend({
         }
     },
     /**
-     * When the user clicks on the 'checkbox' on the left of a record, we need
-     * to toggle its status.
+     * When the user clicks on the row selection checkbox in the header, we
+     * need to update the checkbox of the row selection checkboxes in the body.
      *
      * @private
      * @param {MouseEvent} ev

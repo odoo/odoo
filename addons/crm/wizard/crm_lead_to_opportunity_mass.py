@@ -9,18 +9,13 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     _description = 'Convert Lead to Opportunity (in mass)'
     _inherit = 'crm.lead2opportunity.partner'
 
-    @api.model
-    def default_get(self, fields):
-        res = super(Lead2OpportunityMassConvert, self).default_get(fields)
-        if 'lead_tomerge_ids' in fields and not res.get('lead_tomerge_ids'):
-            res['lead_tomerge_ids'] = self.env.context.get('active_ids', [])
-        return res
-
     lead_id = fields.Many2one(required=False)
     lead_tomerge_ids = fields.Many2many(
         'crm.lead', 'crm_convert_lead_mass_lead_rel',
-        string='Active Leads', context={'active_test': False})
-    user_ids = fields.Many2many('res.users', string='Salesmen')
+        string='Active Leads', context={'active_test': False},
+        default=lambda self: self.env.context.get('active_ids', []),
+    )
+    user_ids = fields.Many2many('res.users', string='Salespersons')
     deduplicate = fields.Boolean('Apply deduplication', default=True, help='Merge with existing leads/opportunities of each partner')
     action = fields.Selection(selection_add=[
         ('each_exist_or_create', 'Use existing partner or create'),
@@ -86,6 +81,8 @@ class Lead2OpportunityMassConvert(models.TransientModel):
     def action_mass_convert(self):
         self.ensure_one()
         if self.name == 'convert' and self.deduplicate:
+            # TDE CLEANME: still using active_ids from context
+            active_ids = self._context.get('active_ids', [])
             merged_lead_ids = set()
             remaining_lead_ids = set()
             for lead in self.lead_tomerge_ids:
@@ -99,14 +96,15 @@ class Lead2OpportunityMassConvert(models.TransientModel):
                         lead = duplicated_leads.merge_opportunity()
                         merged_lead_ids.update(duplicated_leads.ids)
                         remaining_lead_ids.add(lead.id)
-            active_ids = set(self._context.get('active_ids', {}))
-            active_ids = (active_ids - merged_lead_ids) | remaining_lead_ids
+            # rebuild list of lead IDS to convert, following given order
+            final_ids = [lead_id for lead_id in active_ids if lead_id not in merged_lead_ids]
+            final_ids += [lead_id for lead_id in remaining_lead_ids if lead_id not in final_ids]
 
-            self = self.with_context(active_ids=list(active_ids))  # only update active_ids when there are set
+            self = self.with_context(active_ids=final_ids)  # only update active_ids when there are set
         return self.action_apply()
 
     def _convert_handle_partner(self, lead, action, partner_id):
         if self.action == 'each_exist_or_create':
-            partner_id = lead._find_matching_partner().id
+            partner_id = lead._find_matching_partner(email_only=True).id
             action = 'create'
         return super(Lead2OpportunityMassConvert, self)._convert_handle_partner(lead, action, partner_id)

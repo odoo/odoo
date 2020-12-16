@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import hmac
-
 from werkzeug import urls
 
-from odoo import models
+from odoo import models, tools
 from odoo.addons.http_routing.models.ir_http import slug
 
 
@@ -21,7 +19,9 @@ class MailGroup(models.Model):
         return headers
 
     def _send_confirmation_email(self, partner_ids, unsubscribe=False):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        website = self.env['website'].get_current_website()
+        base_url = website.get_base_url()
+
         route = "/groups/%(action)s/%(channel)s/%(partner)s/%(token)s"
         if unsubscribe:
             template = self.env.ref('website_mail_channel.mail_template_list_unsubscribe')
@@ -40,18 +40,21 @@ class MailGroup(models.Model):
                 'partner': partner_id,
                 'token': token,
             })
-            template.with_context(token_url=token_url).send_mail(self.id,
+            template.with_context(token_url=token_url).send_mail(
+                self.id,
                 force_send=True,
-                email_values={'recipient_ids': [(4, partner_id)]}
+                email_values={
+                    'recipient_ids': [(4, partner_id)],
+                    'email_from': website.company_id.email,
+                }
             )
 
         return True
 
     def _generate_action_token(self, partner_id, action='unsubscribe'):
         self.ensure_one()
-        secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         data = '$'.join([
                 str(self.id),
                 str(partner_id),
                 action])
-        return hmac.new(secret.encode('utf-8'), data.encode('utf-8')).hexdigest()
+        return tools.hmac(self.env(su=True), 'website_mail_channel-email-subscription', data)

@@ -11,4 +11,4 @@ class ApplicantGetRefuseReason(models.TransientModel):
     applicant_ids = fields.Many2many('hr.applicant')
 
     def action_refuse_reason_apply(self):
-        return self.applicant_ids.write({'refuse_reason_id': self.refuse_reason_id.id})
+        return self.applicant_ids.write({'refuse_reason_id': self.refuse_reason_id.id, 'active': False})

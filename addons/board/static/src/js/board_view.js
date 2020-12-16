@@ -249,8 +249,14 @@ var BoardRenderer = FormRenderer.extend({
 
                 action.context = context;
                 action.domain = domain;
-                var viewType = params.viewType || action.views[0][1];
-                var view = _.find(action.views, function (descr) {
+
+                // When creating a view, `action.views` is expected to be an array of dicts, while
+                // '/web/action/load' returns an array of arrays.
+                action._views = action.views;
+                action.views = $.map(action.views, function (view) { return {viewID: view[0], type: view[1]}});
+
+                var viewType = params.viewType || action._views[0][1];
+                var view = _.find(action._views, function (descr) {
                     return descr[1] === viewType;
                 }) || [false, viewType];
                 return self.loadViews(action.res_model, context, [view])
@@ -267,13 +273,8 @@ var BoardRenderer = FormRenderer.extend({
                         orderedBy: context.orderedBy || [],
                     };
 
-                    if (['pivot', 'dashboard', 'graph', 'cohort'].includes(viewType)) {
-                        if (context.time_ranges) {
-                            const { field: fieldName, range, comparisonRange } = context.time_ranges;
-                            searchQuery.timeRanges = { fieldName, range, comparisonRange };
-                        } else {
-                            searchQuery.timeRanges = {};
-                        }
+                    if (View.prototype.searchMenuTypes.includes('comparison')) {
+                        searchQuery.timeRanges = context.comparison || {};
                     }
 
                     var view = new View(viewInfo, {
@@ -286,7 +287,7 @@ var BoardRenderer = FormRenderer.extend({
                     });
                     return view.getController(self).then(function (controller) {
                         self._boardFormViewIDs[controller.handle] = _.first(
-                            _.find(action.views, function (descr) {
+                            _.find(action._views, function (descr) {
                                 return descr[1] === 'form';
                             })
                         );
@@ -341,6 +342,7 @@ var BoardRenderer = FormRenderer.extend({
         });
 
         var $html = $('<div>').append($(QWeb.render('DashBoard', {node: node, isMobile: config.device.isMobile})));
+        this._boardSubcontrollers = []; // dashboard controllers are reset on re-render
 
         // render each view
         _.each(this.actionsDescr, function (action) {

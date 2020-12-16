@@ -47,8 +47,23 @@
             <div t-if="!widget.isMember">
                 <div class="o_wslides_join_course alert alert-info d-flex align-items-center justify-content-between">
                     <div t-if="widget.channel.channelEnroll == 'invite'">
-                        <b class="h5 mb-0">
-                            <b>This course is private. <a href="/contactus" class="font-weight-bold">Contact the website administrator</a>  to enroll.</b>
+                        <b>This course is private.
+                            <span t-if="widget.publicUser">
+                                Please
+                                <a t-att-href="'/web/login?redirect=' + widget.redirectURL" class="font-weight-bold">
+                                    sign in
+                                </a>
+                                to enroll.
+                            </span>
+                            <a t-else="" href="#" class="font-weight-bold o_wslides_js_channel_enroll"
+                               t-att-data-channel-id="widget.channel.channelId">
+                                <span t-if="widget.channel.channelRequestedAccess" class="text-success">
+                                    Responsible already contacted.
+                                </span>
+                                <span t-else="">
+                                    Contact the responsible to enroll.
+                                </span>
+                            </a>
                         </b>
                         <span class="my-0 h4">
                             <span title="Succeed and gain karma" aria-label="Succeed and gain karma" class="badge badge-pill badge-warning text-white font-weight-bold ml-3 px-2 py-1">

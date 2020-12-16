@@ -30,7 +30,7 @@
                         <page string="Architecture" name="architecture">
                             <button type="object" name="open_translations"
                                 string="Edit Translations" class="oe_link oe_right"/>
-                            <field name="arch_base" string="View Architecture" widget="ace" options="{'mode': 'xml'}"/>
+                            <field name="arch_base" string="View Architecture" widget="ace" options="{'mode': 'xml'}" required="1"/>
                         </page>
                         <page string="Access Rights" name="access_rights">
                             <field name="groups_id"/>
@@ -84,7 +84,7 @@
                     <filter string="Active" name="active" domain="[('active', '=',True)]"/>
                     <filter string="Inactive" name="inactive" domain="[('active', '=',False)]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Object" name="object" domain="[]" context="{'group_by':'model'}"/>
+                        <filter string="Model" name="object" domain="[]" context="{'group_by':'model'}"/>
                         <filter string="Type" name="type" domain="[]" context="{'group_by':'type'}"/>
                         <filter string="Inherit" name="inherit" domain="[]" context="{'group_by':'inherit_id'}"/>
                     </group>
@@ -134,12 +134,14 @@
             </field>
         </record>
 
-        <act_window id="reset_view_arch_wizard_action"
-            name="Compare/Reset"
-            binding_model="ir.ui.view" binding_views="form,list"
-            res_model="reset.view.arch.wizard"
-            view_mode="form"
-            target="new"/>
+        <record id="reset_view_arch_wizard_action" model="ir.actions.act_window">
+            <field name="name">Compare/Reset</field>
+            <field name="res_model">reset.view.arch.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_ir_ui_view"/>
+            <field name="binding_view_types">form,list</field>
+        </record>
 
         <!-- View customizations -->
         <record id="view_view_custom_form" model="ir.ui.view">

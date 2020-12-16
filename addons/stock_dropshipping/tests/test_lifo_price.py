@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, tools
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
-from odoo.modules.module import get_module_resource
-from odoo.tests import common, Form
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.tests import tagged, common, Form
 
 
-class TestLifoPrice(StockAccountTestCommon):
+@tagged('-at_install', 'post_install')
+class TestLifoPrice(ValuationReconciliationTestCommon):
 
     def test_lifoprice(self):
 
@@ -19,6 +19,7 @@ class TestLifoPrice(StockAccountTestCommon):
             'property_cost_method': 'fifo',
         })
         res_partner_3 = self.env['res.partner'].create({'name': 'My Test Partner'})
+        self.company_data['default_warehouse'].out_type_id.show_operations = False
 
         # Set a product as using lifo price
         product_form = Form(self.env['product.product'])
@@ -34,8 +35,8 @@ class TestLifoPrice(StockAccountTestCommon):
         # category (or hand-assign the property_* version which seems...)
         # product_form.categ_id.valuation = 'real_time'
         # product_form.categ_id.property_cost_method = 'fifo'
-        product_form.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_form.categ_id.property_stock_account_output_categ_id = self.o_income
+        product_form.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_stock_in']
+        product_form.categ_id.property_stock_account_output_categ_id = self.company_data['default_account_stock_out']
         product_lifo_icecream = product_form.save()
 
         product_lifo_icecream.standard_price = 70.0
@@ -76,13 +77,14 @@ class TestLifoPrice(StockAccountTestCommon):
         purchase_order_lifo2.picking_ids[0].button_validate()
 
         # Let us send some goods
+        self.company_data['default_warehouse'].out_type_id.show_operations = False
         out_form = Form(self.env['stock.picking'])
-        out_form.picking_type_id = self.env.ref('stock.picking_type_out')
+        out_form.picking_type_id = self.company_data['default_warehouse'].out_type_id
         out_form.immediate_transfer = True
         with out_form.move_ids_without_package.new() as move:
             move.product_id = product_lifo_icecream
             move.quantity_done = 20.0
-            move.date_expected = fields.Datetime.now()
+            move.date = fields.Datetime.now()
         outgoing_lifo_shipment = out_form.save()
 
         # I assign this outgoing shipment

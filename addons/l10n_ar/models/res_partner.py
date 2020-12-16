@@ -41,7 +41,7 @@ class ResPartner(models.Model):
                 rec.l10n_ar_formatted_vat = stdnum.ar.cuit.format(rec.l10n_ar_vat)
             except Exception as error:
                 rec.l10n_ar_formatted_vat = rec.l10n_ar_vat
-                _logger.runbot("Argentinian VAT was not formatted: %s", repr(error))
+                _logger.runbot("Argentinean VAT was not formatted: %s", repr(error))
         remaining = self - recs_ar_vat
         remaining.l10n_ar_formatted_vat = False
 
@@ -50,15 +50,15 @@ class ResPartner(models.Model):
         """ We add this computed field that returns cuit (VAT AR) or nothing if this one is not set for the partner.
         This Validation can be also done by calling ensure_vat() method that returns the cuit (VAT AR) or error if this
         one is not found """
-        recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80')
+        recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80' and x.vat)
         for rec in recs_ar_vat:
-            rec.l10n_ar_vat = rec.vat
+            rec.l10n_ar_vat = stdnum.ar.cuit.compact(rec.vat)
         remaining = self - recs_ar_vat
         remaining.l10n_ar_vat = False
 
     @api.constrains('vat', 'l10n_latam_identification_type_id')
     def check_vat(self):
-        """ Since we validate more documents than the vat for Argentinian partners (CUIT - VAT AR, CUIL, DNI) we
+        """ Since we validate more documents than the vat for Argentinean partners (CUIT - VAT AR, CUIL, DNI) we
         extend this method in order to process it. """
         # NOTE by the moment we include the CUIT (VAT AR) validation also here because we extend the messages
         # errors to be more friendly to the user. In a future when Odoo improve the base_vat message errors
@@ -74,7 +74,7 @@ class ResPartner(models.Model):
     def ensure_vat(self):
         """ This method is a helper that returns the VAT number is this one is defined if not raise an UserError.
 
-        VAT is not mandatory field but for some Argentinian operations the VAT is required, for eg  validate an
+        VAT is not mandatory field but for some Argentinean operations the VAT is required, for eg  validate an
         electronic invoice, build a report, etc.
 
         This method can be used to validate is the VAT is proper defined in the partner """
@@ -96,17 +96,17 @@ class ResPartner(models.Model):
                 module = rec._get_validation_module()
             except Exception as error:
                 module = False
-                _logger.runbot("Argentinian document was not validated: %s", repr(error))
+                _logger.runbot("Argentinean document was not validated: %s", repr(error))
 
             if not module:
                 continue
             try:
                 module.validate(rec.vat)
             except module.InvalidChecksum:
-                raise ValidationError(_('The validation digit is not valid for "%s"') % rec.l10n_latam_identification_type_id.name)
+                raise ValidationError(_('The validation digit is not valid for "%s"', rec.l10n_latam_identification_type_id.name))
             except module.InvalidLength:
-                raise ValidationError(_('Invalid length for "%s"') % rec.l10n_latam_identification_type_id.name)
+                raise ValidationError(_('Invalid length for "%s"', rec.l10n_latam_identification_type_id.name))
             except module.InvalidFormat:
-                raise ValidationError(_('Only numbers allowed for "%s"') % rec.l10n_latam_identification_type_id.name)
+                raise ValidationError(_('Only numbers allowed for "%s"', rec.l10n_latam_identification_type_id.name))
             except Exception as error:
                 raise ValidationError(repr(error))

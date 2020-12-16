@@ -12,6 +12,35 @@
         <input type="hidden" name="currency" t-att-value="currency.name"/>
     </template>
 
+    <record id="payment_acquirer_odoo_by_adyen" model="payment.acquirer">
+        <field name="name">Odoo Payments by Adyen</field>
+        <field name="display_as">Credit Card (powered by Odoo Payments)</field>
+        <field name="view_template_id" ref="default_acquirer_button"/>
+        <field name="image_128" type="base64" file="payment_odoo_by_adyen/static/src/img/odoo_icon.png"/>
+        <field name="module_id" ref="base.module_payment_odoo_by_adyen"/>
+        <field name="sequence">1</field>
+        <field name="description" type="html">
+            <p>
+                A payment gateway to accept online payments via credit cards, debit cards and bank transfers.
+            </p>
+            <ul class="list-inline">
+                <li class="list-inline-item"><i class="fa fa-check"/>Online Payment</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Subscriptions</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Save Cards</li>
+                <li class="list-inline-item"><i class="fa fa-check"/>Payment Status Tracking</li>
+            </ul>
+        </field>
+        <!-- https://www.adyen.com/payment-methods -->
+        <field name="payment_icon_ids" eval='[(6, 0, [ref("payment.payment_icon_cc_bancontact"),
+                                                        ref("payment.payment_icon_cc_maestro"),
+                                                        ref("payment.payment_icon_cc_mastercard"),
+                                                        ref("payment.payment_icon_cc_visa"),
+                                                        ref("payment.payment_icon_cc_discover"),
+                                                        ref("payment.payment_icon_cc_diners_club_intl"),
+                                                        ref("payment.payment_icon_cc_jcb"),
+                                                        ref("payment.payment_icon_cc_unionpay")])]'/>
+    </record>
+
     <record id="payment_acquirer_buckaroo" model="payment.acquirer">
         <field name="name">Buckaroo</field>
         <field name="display_as">Credit Card (powered by Buckaroo)</field>

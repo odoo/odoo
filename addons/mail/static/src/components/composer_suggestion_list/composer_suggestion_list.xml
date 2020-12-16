@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ComposerSuggestionList" owl="1">
+        <div class="o_ComposerSuggestionList" t-att-class="{ 'o-lowPosition': props.isBelow }">
+            <div class="o_ComposerSuggestionList_drop" t-att-class="{ 'dropdown': props.isBelow, 'dropup': !props.isBelow }">
+                <div class="o_ComposerSuggestionList_list dropdown-menu show">
+                    <t t-foreach="composer.mainSuggestedRecordsList" t-as="record" t-key="record.localId">
+                        <ComposerSuggestion
+                            composerLocalId="props.composerLocalId"
+                            isActive="record === composer.activeSuggestedRecord"
+                            modelName="composer.suggestionModelName"
+                            recordLocalId="record.localId"
+                        />
+                    </t>
+                    <t t-if="composer.mainSuggestedRecordsList.length > 0 and composer.extraSuggestedRecordsList.length > 0">
+                        <div role="separator" class="dropdown-divider"/>
+                    </t>
+                    <t t-foreach="composer.extraSuggestedRecordsList" t-as="record" t-key="record.localId">
+                        <ComposerSuggestion
+                            composerLocalId="props.composerLocalId"
+                            isActive="record === composer.activeSuggestedRecord"
+                            modelName="composer.suggestionModelName"
+                            recordLocalId="record.localId"
+                        />
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

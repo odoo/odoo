@@ -7,6 +7,7 @@ const ActivityRecord = require('mail.ActivityRecord');
 const { ComponentAdapter } = require('web.OwlCompatibility');
 const core = require('web.core');
 const KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
+const patchMixin = require('web.patchMixin');
 const QWeb = require('web.QWeb');
 const session = require('web.session');
 const utils = require('web.utils');
@@ -20,12 +21,12 @@ const { useState } = owl.hooks;
  * TODO: Remove this adapter when ActivityRecord is a Component
  */
 class ActivityRecordAdapter extends ComponentAdapter {
-    render() {
+    renderWidget() {
         _.invoke(_.pluck(this.widget.subWidgets, '$el'), 'detach');
         this.widget._render();
     }
 
-    update(nextProps) {
+    updateWidget(nextProps) {
         const state = nextProps.widgetArgs[0];
         this.widget._setState(state);
     }
@@ -36,11 +37,11 @@ class ActivityRecordAdapter extends ComponentAdapter {
  * TODO: Remove this adapter when ActivityCell is a Component
  */
 class ActivityCellAdapter extends ComponentAdapter {
-    render() {
+    renderWidget() {
         this.widget._render();
     }
 
-    update(nextProps) {
+    updateWidget(nextProps) {
         const record = nextProps.widgetArgs[1];
         this.widget._reset(record);
     }
@@ -51,11 +52,11 @@ class ActivityCellAdapter extends ComponentAdapter {
  * TODO: Remove this adapter when KanbanColumnProgressBar is a Component
  */
 class KanbanColumnProgressBarAdapter extends ComponentAdapter {
-    render() {
+    renderWidget() {
         this.widget._render();
     }
 
-    update(nextProps) {
+    updateWidget(nextProps) {
         const options = nextProps.widgetArgs[0];
         const columnState = nextProps.widgetArgs[1];
         
@@ -204,6 +205,6 @@ ActivityRenderer.components = {
 };
 ActivityRenderer.template = 'mail.ActivityRenderer';
 
-return ActivityRenderer;
+return patchMixin(ActivityRenderer);
 
 });

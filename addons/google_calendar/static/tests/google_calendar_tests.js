@@ -1,7 +1,7 @@
 odoo.define('google_calendar.calendar_tests', function (require) {
 "use strict";
 
-var CalendarView = require('web.CalendarView');
+var GoogleCalendarView = require('calendar.CalendarView');
 var testUtils = require('web.test_utils');
 
 var createCalendarView = testUtils.createCalendarView;
@@ -70,14 +70,15 @@ QUnit.module('Google Calendar', {
 }, function () {
 
     QUnit.test('sync google calendar', async function (assert) {
-        assert.expect(6);
+        assert.expect(9);
 
         var calendar = await createCalendarView({
-            View: CalendarView,
+            View: GoogleCalendarView,
             model: 'calendar.event',
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
+                'js_class="attendee_calendar" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'mode="month">'+
@@ -95,22 +96,28 @@ QUnit.module('Google Calendar', {
                     return Promise.resolve({status: 'need_refresh'});
                 } else if (route === '/web/dataset/call_kw/calendar.event/search_read') {
                     assert.step(route);
+                } else if (route === '/microsoft_calendar/sync_data') {
+                    return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
             },
         });
 
-        assert.containsN(calendar, '.fc-event', 2, "should display 2 events on the month");
+        assert.containsN(calendar, '.fc-event', 3, "should display 3 events on the month");
 
-        await testUtils.dom.click(calendar.$('.o_google_sync_button'));
+        await testUtils.dom.click(calendar.$('.o_calendar_button_next'));
+        await testUtils.dom.click(calendar.$('.o_calendar_button_prev'));
 
         assert.verifySteps([
+            '/google_calendar/sync_data',
+            '/web/dataset/call_kw/calendar.event/search_read',
+            '/google_calendar/sync_data',
             '/web/dataset/call_kw/calendar.event/search_read',
             '/google_calendar/sync_data',
             '/web/dataset/call_kw/calendar.event/search_read',
         ], 'should do a search_read before and after the call to sync_data');
 
-        assert.containsN(calendar, '.fc-event', 3, "should now display 3 events on the month");
+        assert.containsN(calendar, '.fc-event', 5, "should now display 4 events on the month");
 
         calendar.destroy();
     });

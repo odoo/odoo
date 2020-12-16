@@ -41,6 +41,7 @@ odoo.define('web.PivotController', function (require) {
         init: function (parent, model, renderer, params) {
             this._super(...arguments);
 
+            this.disableLinking = params.disableLinking;
             this.measures = params.measures;
             this.title = params.title;
             // views to use in the action triggered when a data cell is clicked
@@ -91,11 +92,7 @@ odoo.define('web.PivotController', function (require) {
          *   does nothing
          */
         renderButtons: function ($node) {
-            const context = {
-                measures: Object.entries(this.measures)
-                    .filter(x => x[0] !== '__count')
-                    .sort((a, b) => a[1].string.toLowerCase() > b[1].string.toLowerCase() ? 1 : -1),
-            };
+            const context = this._getRenderButtonContext();
             this.$buttons = $(QWeb.render('PivotView.buttons', context));
             this.$buttons.click(this._onButtonClick.bind(this));
             this.$buttons.find('button').tooltip();
@@ -173,16 +170,41 @@ odoo.define('web.PivotController', function (require) {
                 await this.model.expandAll();
                 this.update({}, { reload: false });
             }
-            if ($target.parents('.o_pivot_measures_list').length) {
+            if (ev.target.closest('.o_pivot_measures_list')) {
                 ev.preventDefault();
                 ev.stopPropagation();
-                const field = $target.data('field');
-                await this.model.toggleMeasure(field);
-                this.update({}, { reload: false });
+                const field = ev.target.dataset.field;
+                if (field) {
+                    this.update({ measure: field });
+                }
             }
             if ($target.hasClass('o_pivot_download')) {
                 this._downloadTable();
             }
+
+            await this._addIncludedButtons(ev);
+        },
+
+        /**
+         * Declared to be overwritten in includes of pivot controller
+         *
+         * @param {MouseEvent} ev
+         * @returns {Promise<void>}
+         * @private
+         */
+        _addIncludedButtons: async function(ev) {},
+        /**
+         * Get the context of rendering of the buttons
+         *
+         * @returns {Object}
+         * @private
+         */
+        _getRenderButtonContext: function () {
+            return {
+                measures: Object.entries(this.measures)
+                .filter(x => x[0] !== '__count')
+                .sort((a, b) => a[1].string.toLowerCase() > b[1].string.toLowerCase() ? 1 : -1),
+            };
         },
         /**
          *
@@ -253,7 +275,7 @@ odoo.define('web.PivotController', function (require) {
         _onOpenView: function (ev) {
             ev.stopPropagation();
             const cell = ev.data;
-            if (cell.value === undefined || this.initialState.disableLinking) {
+            if (cell.value === undefined || this.disableLinking) {
                 return;
             }
 

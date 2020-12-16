@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import time
+import warnings
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, ValidationError
 from odoo.osv import expression
 from odoo.tools import config
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, time
 
 _logger = logging.getLogger(__name__)
 class IrRule(models.Model):
@@ -18,8 +18,8 @@ class IrRule(models.Model):
 
     name = fields.Char(index=True)
     active = fields.Boolean(default=True, help="If you uncheck the active field, it will disable the record rule without deleting it (if you delete a native record rule, it may be re-created when you reload the module).")
-    model_id = fields.Many2one('ir.model', string='Object', index=True, required=True, ondelete="cascade")
-    groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id')
+    model_id = fields.Many2one('ir.model', string='Model', index=True, required=True, ondelete="cascade")
+    groups = fields.Many2many('res.groups', 'rule_group_rel', 'rule_group_id', 'group_id', ondelete='restrict')
     domain_force = fields.Text(string='Domain')
     perm_read = fields.Boolean(string='Apply for Read', default=True)
     perm_write = fields.Boolean(string='Apply for Write', default=True)
@@ -174,6 +174,13 @@ class IrRule(models.Model):
 
     @api.model
     def domain_get(self, model_name, mode='read'):
+        # this method is now unsafe, since it returns a list of tables which
+        # does not contain the joins present in the generated Query object
+        warnings.warn(
+            "Unsafe and deprecated IrRule.domain_get(), "
+            "use IrRule._compute_domain() and expression().query instead",
+            DeprecationWarning,
+        )
         dom = self._compute_domain(model_name, mode)
         if dom:
             # _where_calc is called as superuser. This means that rules can
@@ -212,36 +219,61 @@ class IrRule(models.Model):
 
         model = records._name
         description = self.env['ir.model']._get(model).name or model
-        if not self.env.user.has_group('base.group_no_one'):
-            return AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: "%(document_kind)s" (%(document_model)s), Operation: %(operation)s)') % {
-                'document_kind': description,
-                'document_model': model,
-                'operation': operation,
-            })
+        msg_heads = {
+            # Messages are declared in extenso so they are properly exported in translation terms
+            'read':   _("Due to security restrictions, you are not allowed to access '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
+            'write':  _("Due to security restrictions, you are not allowed to modify '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
+            'create': _("Due to security restrictions, you are not allowed to create '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
+            'unlink': _("Due to security restrictions, you are not allowed to delete '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model)
+        }
+        operation_error = msg_heads[operation]
+        resolution_info = _("Contact your administrator to request access if necessary.")
+
+        if not self.env.user.has_group('base.group_no_one') or not self.env.user.has_group('base.group_user'):
+            msg = """{operation_error}
+
+{resolution_info}""".format(
+                operation_error=operation_error,
+                resolution_info=resolution_info)
+            return AccessError(msg)
 
         # This extended AccessError is only displayed in debug mode.
         # Note that by default, public and portal users do not have
         # the group "base.group_no_one", even if debug mode is enabled,
-        # so it is relatively safe here to include the list of rules and
-        # record names.
+        # so it is relatively safe here to include the list of rules and record names.
         rules = self._get_failing(records, mode=operation).sudo()
-        error = AccessError(_("""The requested operation ("%(operation)s" on "%(document_kind)s" (%(document_model)s)) was rejected because of the following rules:
-%(rules_list)s
-%(multi_company_warning)s
-(Records: %(example_records)s, User: %(user_id)s)""") % {
-            'operation': operation,
-            'document_kind': description,
-            'document_model': model,
-            'rules_list': '\n'.join('- %s' % rule.name for rule in rules),
-            'multi_company_warning': ('\n' + _('Note: this might be a multi-company issue.') + '\n') if any(
-                'company_id' in (r.domain_force or []) for r in rules) else '',
-            'example_records': ' - '.join(['%s (id=%s)' % (rec.display_name, rec.id) for rec in records[:6].sudo()]),
-            'user_id': '%s (id=%s)' % (self.env.user.name, self.env.user.id),
-        })
+
+        records_description = ', '.join(['%s (id=%s)' % (rec.display_name, rec.id) for rec in records[:6].sudo()])
+        failing_records = _("Records: %s", records_description)
+
+        user_description = '%s (id=%s)' % (self.env.user.name, self.env.user.id)
+        failing_user = _("User: %s", user_description)
+
+        rules_description = '\n'.join('- %s' % rule.name for rule in rules)
+        failing_rules = _("This restriction is due to the following rules:\n%s", rules_description)
+        if any('company_id' in (r.domain_force or []) for r in rules):
+            failing_rules += "\n\n" + _('Note: this might be a multi-company issue.')
+
+        msg = """{operation_error}
+
+{failing_records}
+{failing_user}
+
+{failing_rules}
+
+{resolution_info}""".format(
+                operation_error=operation_error,
+                failing_records=failing_records,
+                failing_user=failing_user,
+                failing_rules=failing_rules,
+                resolution_info=resolution_info)
+
         # clean up the cache of records prefetched with display_name above
         for record in records[:6]:
             record._cache.clear()
-        return error
+
+        return AccessError(msg)
+
 
 #
 # Hack for field 'global': this field cannot be defined like others, because

@@ -3,8 +3,9 @@
 
 from datetime import datetime, timedelta
 import uuid
+import pytz
 
-from odoo import fields, models, api, registry, _
+from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools.misc import _format_time_ago
@@ -30,22 +31,22 @@ class WebsiteVisitor(models.Model):
     _order = 'last_connection_datetime DESC'
 
     name = fields.Char('Name')
-    access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=True, copy=False, groups='base.group_website_publisher')
+    access_token = fields.Char(required=True, default=lambda x: uuid.uuid4().hex, index=False, copy=False, groups='base.group_website_publisher')
     active = fields.Boolean('Active', default=True)
     website_id = fields.Many2one('website', "Website", readonly=True)
-    partner_id = fields.Many2one('res.partner', string="Linked Partner", help="Partner of the last logged in user.")
+    partner_id = fields.Many2one('res.partner', string="Contact", help="Partner of the last logged in user.")
     partner_image = fields.Binary(related='partner_id.image_1920')
 
     # localisation and info
     country_id = fields.Many2one('res.country', 'Country', readonly=True)
-    country_flag = fields.Binary(related="country_id.image", string="Country Flag")
+    country_flag = fields.Char(related="country_id.image_url", string="Country Flag")
     lang_id = fields.Many2one('res.lang', string='Language', help="Language from the website when visitor has been created")
     timezone = fields.Selection(_tz_get, string='Timezone')
     email = fields.Char(string='Email', compute='_compute_email_phone')
-    mobile = fields.Char(string='Mobile Phone', compute='_compute_email_phone')
+    mobile = fields.Char(string='Mobile', compute='_compute_email_phone')
 
     # Visit fields
-    visit_count = fields.Integer('Number of visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
+    visit_count = fields.Integer('# Visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
     page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
@@ -53,7 +54,7 @@ class WebsiteVisitor(models.Model):
     last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
 
     # Time fields
-    create_date = fields.Datetime('First connection date', readonly=True)
+    create_date = fields.Datetime('First Connection', readonly=True)
     last_connection_datetime = fields.Datetime('Last Connection', default=fields.Datetime.now, help="Last page view date", readonly=True)
     time_since_last_action = fields.Char('Last action', compute="_compute_time_statistics", help='Time since last page view. E.g.: 2 minutes ago')
     is_connected = fields.Boolean('Is connected ?', compute='_compute_time_statistics', help='A visitor is considered as connected if his last page view was within the last 5 minutes.')
@@ -67,7 +68,7 @@ class WebsiteVisitor(models.Model):
     def name_get(self):
         return [(
             record.id,
-            (record.name or _('Website Visitor #%s') % record.id)
+            (record.name or _('Website Visitor #%s', record.id))
         ) for record in self]
 
     @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')
@@ -137,7 +138,7 @@ class WebsiteVisitor(models.Model):
     def action_send_mail(self):
         self.ensure_one()
         if not self._check_for_message_composer():
-            raise UserError(_("There is no contact and/or no email linked this visitor."))
+            raise UserError(_("There are no contact and/or no email linked to this visitor."))
         visitor_composer_ctx = self._prepare_message_composer_context()
         compose_form = self.env.ref('mail.email_compose_message_wizard_form', False)
         compose_ctx = dict(
@@ -185,7 +186,11 @@ class WebsiteVisitor(models.Model):
             # Cookie associated to a Partner
             visitor = Visitor
 
-        if force_create and not visitor:
+        if visitor and not visitor.timezone:
+            tz = self._get_visitor_timezone()
+            if tz:
+                visitor.timezone = tz
+        if not visitor and force_create:
             visitor = self._create_visitor()
 
         return visitor
@@ -235,14 +240,53 @@ class WebsiteVisitor(models.Model):
             'country_id': country_id,
             'website_id': request.website.id,
         }
+
+        tz = self._get_visitor_timezone()
+        if tz:
+            vals['timezone'] = tz
+
         if not self.env.user._is_public():
             vals['partner_id'] = self.env.user.partner_id.id
             vals['name'] = self.env.user.partner_id.name
         return self.sudo().create(vals)
 
+    def _link_to_partner(self, partner, update_values=None):
+        """ Link visitors to a partner. This method is meant to be overridden in
+        order to propagate, if necessary, partner information to sub records.
+
+        :param partner: partner used to link sub records;
+        :param update_values: optional values to update visitors to link;
+        """
+        vals = {'name': partner.name}
+        if update_values:
+            vals.update(update_values)
+        self.write(vals)
+
+    def _link_to_visitor(self, target, keep_unique=True):
+        """ Link visitors to target visitors, because they are linked to the
+        same identity. Purpose is mainly to propagate partner identity to sub
+        records to ease database update and decide what to do with "duplicated".
+        THis method is meant to be overridden in order to implement some specific
+        behavior linked to sub records of duplicate management.
+
+        :param target: main visitor, target of link process;
+        :param keep_unique: if True, find a way to make target unique;
+        """
+        # Link sub records of self to target partner
+        if target.partner_id:
+            self._link_to_partner(target.partner_id)
+        # Link sub records of self to target visitor
+        self.website_track_ids.write({'visitor_id': target.id})
+
+        if keep_unique:
+            self.unlink()
+
+        return target
+
     def _cron_archive_visitors(self):
-        one_week_ago = datetime.now() - timedelta(days=7)
-        visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', one_week_ago)])
+        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 30))
+        deadline = datetime.now() - timedelta(days=delay_days)
+        visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', deadline)])
         visitors_to_archive.write({'active': False})
 
     def _update_visitor_last_visit(self):
@@ -264,3 +308,12 @@ class WebsiteVisitor(models.Model):
                 self.env.cr.execute(query, (date_now, self.id), log_exceptions=False)
         except Exception:
             pass
+
+    def _get_visitor_timezone(self):
+        tz = request.httprequest.cookies.get('tz') if request else None
+        if tz in pytz.all_timezones:
+            return tz
+        elif not self.env.user._is_public():
+            return self.env.user.tz
+        else:
+            return None

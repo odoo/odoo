@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.PartnerImStatusIcon" t-inherit-mode="extension">
+        <xpath expr="//*[@name='rootCondition']" position="inside">
+            <t t-if="partner.im_status === 'leave_online'">
+                <i class="o_PartnerImStatusIcon_icon o-leave-online fa fa-plane fa-stack-1x" title="Online" role="img" aria-label="User is online"/>
+            </t>
+            <t t-if="partner.im_status === 'leave_offline'">
+                <i class="o_PartnerImStatusIcon_icon o-leave-offline fa fa-plane fa-stack-1x" title="Out of office" role="img" aria-label="User is out of office"/>
+            </t>
+        </xpath>
+    </t>
+</templates>

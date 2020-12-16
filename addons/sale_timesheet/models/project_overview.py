@@ -27,11 +27,24 @@ class Project(models.Model):
 
         return values
 
+    def _plan_get_employee_ids(self):
+        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
+        user_ids = [user_id['user_id'][0] for user_id in user_ids]
+        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
+        # flatten the list of list
+        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
+
+        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
+        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
+        return employee_ids
+
     def _plan_prepare_values(self):
         currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
+        company_uom = self.env.company.timesheet_encode_uom_id
+        is_uom_day = company_uom == self.env.ref('uom.product_uom_day')
         hour_rounding = uom_hour.rounding
-        billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
+        billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'non_billable_timesheet', 'billable_fixed']
 
         values = {
             'projects': self,
@@ -39,13 +52,14 @@ class Project(models.Model):
             'timesheet_domain': [('project_id', 'in', self.ids)],
             'profitability_domain': [('project_id', 'in', self.ids)],
             'stat_buttons': self._plan_get_stat_button(),
+            'is_uom_day': is_uom_day,
         }
 
         #
         # Hours, Rates and Profitability
         #
         dashboard_values = {
-            'hours': dict.fromkeys(billable_types + ['total'], 0.0),
+            'time': dict.fromkeys(billable_types + ['total'], 0.0),
             'rates': dict.fromkeys(billable_types + ['total'], 0.0),
             'profit': {
                 'invoiced': 0.0,
@@ -58,8 +72,12 @@ class Project(models.Model):
         # hours from non-invoiced timesheets that are linked to canceled so
         canceled_hours_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), ('so_line.state', '=', 'cancel')]
         total_canceled_hours = sum(self.env['account.analytic.line'].search(canceled_hours_domain).mapped('unit_amount'))
-        dashboard_values['hours']['canceled'] = float_round(total_canceled_hours, precision_rounding=hour_rounding)
-        dashboard_values['hours']['total'] += float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        canceled_hours = float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        if is_uom_day:
+            # convert time from hours to days
+            canceled_hours = round(uom_hour._compute_quantity(canceled_hours, company_uom, raise_if_failure=False), 2)
+        dashboard_values['time']['canceled'] = canceled_hours
+        dashboard_values['time']['total'] += canceled_hours
 
         # hours (from timesheet) and rates (by billable type)
         dashboard_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), '|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')]  # force billable type
@@ -67,12 +85,17 @@ class Project(models.Model):
         dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data]) + total_canceled_hours
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']
-            dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
-            dashboard_values['hours']['total'] += float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
+            amount = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
+            if is_uom_day:
+                # convert time from hours to days
+                amount = round(uom_hour._compute_quantity(amount, company_uom, raise_if_failure=False), 2)
+            dashboard_values['time'][billable_type] = amount
+            dashboard_values['time']['total'] += amount
             # rates
             rate = round(data.get('unit_amount') / dashboard_total_hours * 100, 2) if dashboard_total_hours else 0.0
             dashboard_values['rates'][billable_type] = rate
             dashboard_values['rates']['total'] += rate
+        dashboard_values['time']['total'] = round(dashboard_values['time']['total'], 2)
 
         # rates from non-invoiced timesheets that are linked to canceled so
         dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
@@ -91,7 +114,7 @@ class Project(models.Model):
             profit['cost'] += data.get('timesheet_cost', 0.0)
             profit['expense_cost'] += data.get('expense_cost', 0.0)
             profit['expense_amount_untaxed_invoiced'] += data.get('expense_amount_untaxed_invoiced', 0.0)
-        profit['other_revenues'] = other_revenues or 0
+        profit['other_revenues'] = other_revenues - data.get('amount_untaxed_invoiced', 0.0) if other_revenues else 0.0
         profit['total'] = sum([profit[item] for item in profit.keys()])
         dashboard_values['profit'] = profit
 
@@ -100,15 +123,8 @@ class Project(models.Model):
         #
         # Time Repartition (per employee per billable types)
         #
-        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
-        user_ids = [user_id['user_id'][0] for user_id in user_ids]
-        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
-        # flatten the list of list
-        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
-
-        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
-        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
-
+        employee_ids = self._plan_get_employee_ids()
+        employee_ids = list(set(employee_ids))
         # Retrieve the employees for which the current user can see theirs timesheets
         employee_domain = expression.AND([[('company_id', 'in', self.env.companies.ids)], self.env['account.analytic.line']._domain_employee_id()])
         employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(employee_domain)
@@ -128,6 +144,7 @@ class Project(models.Model):
                 non_billable_project=0.0,
                 non_billable=0.0,
                 billable_time=0.0,
+                non_billable_timesheet=0.0,
                 billable_fixed=0.0,
                 canceled=0.0,
                 total=0.0,
@@ -140,6 +157,7 @@ class Project(models.Model):
                 non_billable_project=0.0,
                 non_billable=0.0,
                 billable_time=0.0,
+                non_billable_timesheet=0.0,
                 billable_fixed=0.0,
                 canceled=0.0,
                 total=0.0,
@@ -148,6 +166,11 @@ class Project(models.Model):
         # compute total
         for employee_id, vals in repartition_employee.items():
             repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in [*billable_types, 'canceled']])
+            if is_uom_day:
+                # convert all times from hours to days
+                for time_type in ['non_billable_project', 'non_billable', 'billable_time', 'non_billable_timesheet', 'billable_fixed', 'canceled', 'total']:
+                    if repartition_employee[employee_id][time_type]:
+                        repartition_employee[employee_id][time_type] = round(uom_hour._compute_quantity(repartition_employee[employee_id][time_type], company_uom, raise_if_failure=False), 2)
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
         values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
@@ -166,6 +189,8 @@ class Project(models.Model):
             return False
 
         uom_hour = self.env.ref('uom.product_uom_hour')
+        company_uom = self.env.company.timesheet_encode_uom_id
+        is_uom_day = company_uom and company_uom == self.env.ref('uom.product_uom_day')
 
         # build SQL query and fetch raw data
         query, query_params = self._table_rows_sql_query()
@@ -243,11 +268,18 @@ class Project(models.Model):
             timesheet_forecast_table_rows.append(sale_order_row)
             for sale_line_row_key, sale_line_row in rows_sale_line.items():
                 if sale_order_id == sale_line_row_key[0]:
+                    sale_order_row[0]['has_children'] = True
                     timesheet_forecast_table_rows.append(sale_line_row)
                     for employee_row_key, employee_row in rows_employee.items():
                         if sale_order_id == employee_row_key[0] and sale_line_row_key[1] == employee_row_key[1] and employee_row_key[2] in employees.ids:
+                            sale_line_row[0]['has_children'] = True
                             timesheet_forecast_table_rows.append(employee_row)
 
+        if is_uom_day:
+            # convert all values from hours to days
+            for row in timesheet_forecast_table_rows:
+                for index in range(1, len(row)):
+                    row[index] = round(uom_hour._compute_quantity(row[index], company_uom, raise_if_failure=False), 2)
         # complete table data
         return {
             'header': self._table_header(),
@@ -362,7 +394,7 @@ class Project(models.Model):
                 task_order_line_ids = [ol['sale_line_id'][0] for ol in task_order_line_ids]
 
             if self.env.user.has_group('sales_team.group_sale_salesman'):
-                if not self.sale_line_id and not task_order_line_ids:
+                if self.bill_type == 'customer_project' and self.allow_billable and not self.sale_order_id:
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',
@@ -396,64 +428,62 @@ class Project(models.Model):
 
     def _plan_get_stat_button(self):
         stat_buttons = []
-        if len(self) == 1:
-            edit_project = self.env.ref('project.edit_project')
-            stat_buttons.append({
-                'name': _('Project'),
-                'icon': 'fa fa-puzzle-piece',
-                'action': _to_action_data('project.project', res_id=self.id,
-                    views=[[edit_project.id, 'form']])
-            })
-        ts_tree = self.env.ref('hr_timesheet.hr_timesheet_line_tree')
-        ts_form = self.env.ref('hr_timesheet.hr_timesheet_line_form')
+        num_projects = len(self)
+        if num_projects == 1:
+            action_data = _to_action_data('project.project', res_id=self.id,
+                                          views=[[self.env.ref('project.edit_project').id, 'form']])
+        else:
+            action_data = _to_action_data(action=self.env.ref('project.open_view_project_all_config').sudo(),
+                                          domain=[('id', 'in', self.ids)])
+
         stat_buttons.append({
-            'name': _('Timesheets'),
-            'icon': 'fa fa-calendar',
-            'action': _to_action_data(
-                'account.analytic.line',
-                domain=[('project_id', 'in', self.ids)],
-                views=[(ts_tree.id, 'list'), (ts_form.id, 'form')],
-            )
+            'name': _('Project') if num_projects == 1 else _('Projects'),
+            'count': num_projects,
+            'icon': 'fa fa-puzzle-piece',
+            'action': action_data
         })
 
         # if only one project, add it in the context as default value
         tasks_domain = [('project_id', 'in', self.ids)]
-        tasks_context = self.env.context
+        tasks_context = self.env.context.copy()
+        tasks_context.pop('search_default_name', False)
         late_tasks_domain = [('project_id', 'in', self.ids), ('date_deadline', '<', fields.Date.to_string(fields.Date.today())), ('date_end', '=', False)]
         overtime_tasks_domain = [('project_id', 'in', self.ids), ('overtime', '>', 0), ('planned_hours', '>', 0)]
 
-        # filter out all the projects that have no tasks
-        task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
-        task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
+        if len(self) == 1:
+            tasks_context = {**tasks_context, 'default_project_id': self.id}
+        elif len(self):
+            task_projects_ids = self.env['project.task'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
+            task_projects_ids = [p['project_id'][0] for p in task_projects_ids]
+            if len(task_projects_ids) == 1:
+                tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
 
-        if len(task_projects_ids) == 1:
-            tasks_context = {**tasks_context, 'default_project_id': task_projects_ids[0]}
         stat_buttons.append({
             'name': _('Tasks'),
             'count': sum(self.mapped('task_count')),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
-                action=self.env.ref('project.action_view_task'),
+                action=self.env.ref('project.action_view_task').sudo(),
                 domain=tasks_domain,
                 context=tasks_context
             )
         })
         stat_buttons.append({
-            'name': _("Late Tasks"),
+            'name': [_("Tasks"), _("Late")],
             'count': self.env['project.task'].search_count(late_tasks_domain),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
-                action=self.env.ref('project.action_view_task'),
+                action=self.env.ref('project.action_view_task').sudo(),
                 domain=late_tasks_domain,
                 context=tasks_context,
             ),
         })
         stat_buttons.append({
-            'name': _("Tasks in Overtime"),
+            'name': [_("Tasks"), _("in Overtime")],
             'count': self.env['project.task'].search_count(overtime_tasks_domain),
             'icon': 'fa fa-tasks',
             'action': _to_action_data(
-                action=self.env.ref('project.action_view_task'),
+                action=self.env.ref('project.action_view_task').sudo(),
                 domain=overtime_tasks_domain,
                 context=tasks_context,
             ),
@@ -468,15 +498,24 @@ class Project(models.Model):
 
             sale_orders = self.mapped('sale_line_id.order_id') | self.env['sale.order'].browse(task_so_ids)
             if sale_orders:
+                so_action = dict(
+                    context={'create': False, 'edit': False, 'delete': False},
+                    domain=[('id', 'in', sale_orders.ids)],
+                )
+
+                if len(sale_orders) == 1:
+                    so_action.update({
+                        'action': self.env.ref('sale.action_sale_order_form_view').sudo(),
+                        'res_id': sale_orders.id,
+                    })
+                else:
+                    so_action['action'] = self.env.ref('sale.action_orders').sudo()
+
                 stat_buttons.append({
                     'name': _('Sales Orders'),
                     'count': len(sale_orders),
                     'icon': 'fa fa-dollar',
-                    'action': _to_action_data(
-                        action=self.env.ref('sale.action_orders'),
-                        domain=[('id', 'in', sale_orders.ids)],
-                        context={'create': False, 'edit': False, 'delete': False}
-                    )
+                    'action': _to_action_data(**so_action),
                 })
 
                 invoice_ids = self.env['sale.order'].search_read([('id', 'in', sale_orders.ids)], ['invoice_ids'])
@@ -490,11 +529,35 @@ class Project(models.Model):
                         'count': len(invoice_ids),
                         'icon': 'fa fa-pencil-square-o',
                         'action': _to_action_data(
-                            action=self.env.ref('account.action_move_out_invoice_type'),
+                            action=self.env.ref('account.action_move_out_invoice_type').sudo(),
                             domain=[('id', 'in', invoice_ids), ('move_type', '=', 'out_invoice')],
                             context={'create': False, 'delete': False}
                         )
                     })
+
+        ts_tree = self.env.ref('hr_timesheet.hr_timesheet_line_tree')
+        ts_form = self.env.ref('hr_timesheet.hr_timesheet_line_form')
+        if self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+            timesheet_label = [_('Days'), _('Recorded')]
+        else:
+            timesheet_label = [_('Hours'), _('Recorded')]
+
+        default_project_ctx = {}
+        if len(self) == 1:
+            default_project_ctx = {'default_project_id': self.id}
+
+        stat_buttons.append({
+            'name': timesheet_label,
+            'count': sum(self.mapped('total_timesheet_time')),
+            'icon': 'fa fa-calendar',
+            'action': _to_action_data(
+                'account.analytic.line',
+                domain=[('project_id', 'in', self.ids)],
+                views=[(ts_tree.id, 'list'), (ts_form.id, 'form')],
+                context=default_project_ctx,
+            )
+        })
+
         return stat_buttons
 
 
@@ -502,7 +565,7 @@ def _to_action_data(model=None, *, action=None, views=None, res_id=None, domain=
     # pass in either action or (model, views)
     if action:
         assert model is None and views is None
-        act = clean_action(action.read()[0])
+        act = clean_action(action.read()[0], env=action.env)
         model = act['res_model']
         views = act['views']
     # FIXME: search-view-id, possibly help?

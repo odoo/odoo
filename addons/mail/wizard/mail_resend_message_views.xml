@@ -4,7 +4,7 @@
         <record id="mail_resend_message_view_form" model="ir.ui.view">
             <field name="name">mail.resend.message.view.form</field>
             <field name="model">mail.resend.message</field>
-            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="arch" type="xml">
                 <form string="Edit Partners">
                     <field name="mail_message_id" invisible="1"/>
@@ -17,6 +17,7 @@
                             <field name="name" readonly="1"/>
                             <field name="email" attrs="{'readonly': [('parent.partner_readonly', '=', True)]}"/>
                             <field name="message" readonly="1"/>
+                            <field name="partner_id" invisible="1"/>
                             <field name="resend" widget="boolean_toggle"/>
                         </tree>
                     </field>

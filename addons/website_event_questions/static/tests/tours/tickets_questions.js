@@ -44,11 +44,16 @@ tour.register('test_tickets_questions', {
     trigger: 'div:contains("Ticket #2").modal-body select[name*="question_answer"]',
     run: 'text Pastafarian'
 }, {
-    trigger: 'div:contains("General questions").modal-body select[name*="question_answer"]',
+    trigger: 'div.o_wevent_registration_question_global select[name*="question_answer"]',
     run: 'text A friend'
 }, {
     trigger: 'button:contains("Continue")',
     run: 'click'
+}, {
+    // The tour stops too early and the registration fails if we don't wait the confirmation.
+    content: 'Wait for confirmation',
+    trigger: '.o_wereg_confirmed, .oe_cart',
+    auto: true
 }]);
 
 });

@@ -14,7 +14,7 @@ class SMSCancel(models.TransientModel):
     @api.depends('model')
     def _compute_help_message(self):
         for wizard in self:
-            wizard.help_message = _("Are you sure you want to discard %s SMS delivery failures. You won't be able to re-send these SMS later!") % (wizard._context.get('unread_counter'))
+            wizard.help_message = _("Are you sure you want to discard %s SMS delivery failures? You won't be able to re-send these SMS later!") % (wizard._context.get('unread_counter'))
 
     def action_cancel(self):
         # TDE CHECK: delete pending SMS
@@ -34,5 +34,5 @@ WHERE notif.notification_type = 'sms' IS TRUE AND notif.notification_status IN (
             if notif_ids:
                 self.env['mail.notification'].browse(notif_ids).sudo().write({'notification_status': 'canceled'})
             if message_ids:
-                self.env['mail.message'].browse(message_ids)._notify_sms_update()
+                self.env['mail.message'].browse(message_ids)._notify_message_notification_update()
         return {'type': 'ir.actions.act_window_close'}

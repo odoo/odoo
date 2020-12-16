@@ -1,0 +1,14 @@
+/**
+* This file allows introducing new styles without contaminating other files.
+* This is useful when bug fixing requires adding new components for instance in
+* stable versions of Odoo. Any style that is defined in this file should be isolated
+* in its own file in master.
+*/
+
+.editor_has_snippets {
+    .o_livechat_button, .o_thread_window {
+        // TODO add this in an edit-mode only file in master (in 14.0 that asset
+        // would be website.assets_wysiwyg...)
+        right: $o-we-sidebar-width !important;
+    }
+}

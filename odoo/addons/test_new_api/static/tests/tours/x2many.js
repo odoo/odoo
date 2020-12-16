@@ -26,6 +26,10 @@ odoo.define('web.test.x2many', function (require) {
         trigger: 'tr:contains(Moderator) .o_input_dropdown > input',
         run: 'click',
     }, {
+        content: "insert value in moderator",
+        trigger: 'input.ui-autocomplete-input',
+        run: 'text test',
+    }, {
         content: "click on 'Create and Edit...'",
         trigger: '.ui-autocomplete .o_m2o_dropdown_option:last',
     }, {

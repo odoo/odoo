@@ -121,7 +121,7 @@ class MrpStockReport(models.TransientModel):
         data = [{
             'level': level,
             'unfoldable': unfoldable,
-            'date': format_datetime(self.env, move_line.move_id.date, tz=False, dt_format=False),
+            'date': move_line.move_id.date,
             'parent_id': parent_id,
             'is_used': bool(is_used),
             'usage': self._get_usage(move_line),
@@ -156,7 +156,7 @@ class MrpStockReport(models.TransientModel):
                 'res_model': data.get('res_model', False),
                 'columns': [data.get('reference_id', False),
                             data.get('product_id', False),
-                            data.get('date', False),
+                            format_datetime(self.env, data.get('date', False), tz=False, dt_format=False),
                             data.get('lot_name', False),
                             data.get('location_source', False),
                             data.get('location_destination', False),
@@ -212,13 +212,13 @@ class MrpStockReport(models.TransientModel):
         if not config['test_enable']:
             context['commit_assetsbundle'] = True
 
-        body = self.env['ir.ui.view'].with_context(context).render_template(
+        body = self.env['ir.ui.view'].with_context(context)._render_template(
             "stock.report_stock_inventory_print",
             values=dict(rcontext, lines=lines, report=self, context=self),
         )
 
-        header = self.env['ir.actions.report'].render_template("web.internal_layout", values=rcontext)
-        header = self.env['ir.actions.report'].render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=header))
+        header = self.env['ir.actions.report']._render_template("web.internal_layout", values=rcontext)
+        header = self.env['ir.actions.report']._render_template("web.minimal_layout", values=dict(rcontext, subst=True, body=header))
 
         return self.env['ir.actions.report']._run_wkhtmltopdf(
             [body],
@@ -232,7 +232,7 @@ class MrpStockReport(models.TransientModel):
         rcontext = {}
         context = dict(self.env.context)
         rcontext['lines'] = self.with_context(context).get_lines()
-        result['html'] = self.env.ref('stock.report_stock_inventory').render(rcontext)
+        result['html'] = self.env.ref('stock.report_stock_inventory')._render(rcontext)
         return result
 
     @api.model

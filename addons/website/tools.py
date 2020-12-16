@@ -100,6 +100,9 @@ class MockRequest(object):
             'httprequest': {
                 'path': '/hello/',
                 'app': app,
+                'environ': {
+                    'REMOTE_ADDR': '127.0.0.1',
+                },
                 'cookies': kw.get('cookies', {}),
             },
             'lang': lang,
@@ -113,9 +116,9 @@ class MockRequest(object):
             },
             'website': kw.get('website'),
         })
-        odoo.http._request_stack.push(self.request)
 
     def __enter__(self):
+        odoo.http._request_stack.push(self.request)
         return self.request
 
     def __exit__(self, exc_type, exc_value, traceback):

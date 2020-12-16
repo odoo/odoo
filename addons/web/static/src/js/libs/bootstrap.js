@@ -82,6 +82,38 @@ $.fn.tooltip.Constructor.prototype.show = function () {
     return bootstrapShowFunction.call(this);
 };
 
+/* Bootstrap scrollspy fix for non-body to spy */
+
+const bootstrapSpyRefreshFunction = $.fn.scrollspy.Constructor.prototype.refresh;
+$.fn.scrollspy.Constructor.prototype.refresh = function () {
+    bootstrapSpyRefreshFunction.apply(this, arguments);
+    if (this._scrollElement === window || this._config.method !== 'offset') {
+        return;
+    }
+    const baseScrollTop = this._getScrollTop();
+    for (let i = 0; i < this._offsets.length; i++) {
+        this._offsets[i] += baseScrollTop;
+    }
+};
+
+/* Bootstrap modal scrollbar compensation on non-body */
+const bsSetScrollbarFunction = $.fn.modal.Constructor.prototype._setScrollbar;
+$.fn.modal.Constructor.prototype._setScrollbar = function () {
+    const $scrollable = $().getScrollingElement();
+    if (document.body.contains($scrollable[0])) {
+        $scrollable.compensateScrollbar(true);
+    }
+    return bsSetScrollbarFunction.apply(this, arguments);
+};
+const bsResetScrollbarFunction = $.fn.modal.Constructor.prototype._resetScrollbar;
+$.fn.modal.Constructor.prototype._resetScrollbar = function () {
+    const $scrollable = $().getScrollingElement();
+    if (document.body.contains($scrollable[0])) {
+        $scrollable.compensateScrollbar(false);
+    }
+    return bsResetScrollbarFunction.apply(this, arguments);
+};
+
 return {
     makeExtendedSanitizeWhiteList: makeExtendedSanitizeWhiteList,
 };

@@ -18,6 +18,12 @@ nav#oe_main_menu_navbar {
     min-height: 100%;
 }
 
+// Safari(v 7.1+) specific fix (min-height given above doesn't work with safari)
+// see https://stackoverflow.com/a/25975282 for info on safari specific css
+_::-webkit-full-page-media, _:future, :root .o_survey_wrap {
+    min-height: 90vh;
+}
+
 .o_survey_progress_wrapper {
     min-width: 11rem;
     max-width: 15rem;
@@ -29,6 +35,10 @@ nav#oe_main_menu_navbar {
 
 .o_survey_navigation_wrapper .o_survey_navigation_submit {
     cursor: pointer;
+}
+
+.o_survey_timer {
+    min-height: 1.2rem;
 }
 
 .o_survey_brand_message {
@@ -165,6 +175,15 @@ nav#oe_main_menu_navbar {
     }
 }
 
+.o_survey_quick_access {
+    .o_survey_error {
+        min-height: 2rem;
+    }
+    #session_code {
+        font-size: 4rem;
+    }
+}
+
 .o_survey_form, .o_survey_session_manage {
     .o_survey_question_matrix {
         th {
@@ -208,8 +227,7 @@ nav#oe_main_menu_navbar {
             font-size: smaller;
             top: -1px;
             &.o_survey_key {
-                width: inherit;
-                right: 10px;
+                right: 21px;
                 border: 1px solid $primary;
                 border-right: 0px;
                 height: 25px;
@@ -238,11 +256,11 @@ nav#oe_main_menu_navbar {
 
 .o_survey_session_manage {
     h1 {
-        font-size: 4rem;
+        font-size: 3rem;
     }
 
     h2 {
-        font-size: 3.2rem;
+        font-size: 2.5rem;
     }
 
     .o_survey_session_navigation {
@@ -260,20 +278,28 @@ nav#oe_main_menu_navbar {
         }
     }
 
-    .o_survey_session_link_reminder {
-        position: absolute;
-        right: 2rem;
-        top: 2rem;
-    }
-
     .o_survey_manage_fontsize_14 {
         font-size: 1.4rem;
     }
 
-    .o_survey_session_manage_container {
-        height: 100vh;
-        width: 85vw;
+    .o_survey_question_header {
+        top: 1em;
+        > div {
+            width: 400px;
+        }
+        .progress {
+            height: 2rem;
+            border-radius: 0.6rem;
+            font-size: 1.2rem;
+            background-color: #cfcfcf;
+            .progress-bar {
+                width: 0%;
+                transition: width 1s ease;
+            }
+        }
+    }
 
+    .o_survey_session_manage_container {
         .o_survey_choice_key {
             display: none;
         }
@@ -287,17 +313,6 @@ nav#oe_main_menu_navbar {
 
             .mb-6 {
                 margin-bottom: 6rem;
-            }
-
-            .progress {
-                height: 2rem;
-                border-radius: 0.6rem;
-                font-size: 1.2rem;
-                background-color: #cfcfcf;
-                .progress-bar {
-                    width: 0%;
-                    transition: width 1s ease;
-                }
             }
 
             .o_survey_session_text_answer {
@@ -339,19 +354,36 @@ nav#oe_main_menu_navbar {
 .o_survey_session_leaderboard {
     font-size: 1.4rem;
 
-    .o_survey_session_leaderboard_item {
-        line-height: 1.8rem;
+    .o_survey_session_leaderboard_container {
+        height: calc(2.8rem * 15);
+    }
 
-        .o_survey_session_leaderboard_index {
-            width: 9.5rem;
+    .o_survey_session_leaderboard_item {
+        line-height: 2.4rem;
+        width: 100%;
+        transition: top ease-in-out .3s;
+
+        .o_survey_session_leaderboard_score {
+            width: 6.5rem;
             padding-top: .2rem;
+            height: 2.8rem;
+        }
+
+        .o_survey_session_leaderboard_bar, .o_survey_session_leaderboard_bar_question {
+            height: 2.8rem;
         }
 
         .o_survey_session_leaderboard_bar {
-            min-width: 90px;
-            height: 2.2rem;
+            min-width: 3rem;
             background-color: #007A77;
-            transition: width ease 1.5s;
+            z-index: 2;
+        }
+
+        .o_survey_session_leaderboard_bar_question_score {
+            top: .2rem;
+            right: .5rem;
+            width: 20rem;
+            z-index: 1;
         }
 
         .o_survey_session_leaderboard_name {

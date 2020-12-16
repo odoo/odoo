@@ -37,6 +37,7 @@ _logger = logging.getLogger(__name__)
 #  - method._returns: set by @returns, specifies return model
 #  - method._onchange: set by @onchange, specifies onchange fields
 #  - method.clear_cache: set by @ormcache, used to clear the cache
+#  - method._ondelete: set by @ondelete, used to raise errors for unlink operations
 #
 # On wrapping method only:
 #  - method._api: decorator function, used for re-applying decorator
@@ -128,6 +129,65 @@ def constrains(*args):
 
     """
     return attrsetter('_constrains', args)
+
+
+def ondelete(*, at_uninstall):
+    """
+    Mark a method to be executed during :meth:`~odoo.models.BaseModel.unlink`.
+
+    The goal of this decorator is to allow client-side errors when unlinking
+    records if, from a business point of view, it does not make sense to delete
+    such records. For instance, a user should not be able to delete a validated
+    sales order.
+
+    While this could be implemented by simply overriding the method ``unlink``
+    on the model, it has the drawback of not being compatible with module
+    uninstallation. When uninstalling the module, the override could raise user
+    errors, but we shouldn't care because the module is being uninstalled, and
+    thus **all** records related to the module should be removed anyway.
+
+    This means that by overriding ``unlink``, there is a big chance that some
+    tables/records may remain as leftover data from the uninstalled module. This
+    leaves the database in an inconsistent state. Moreover, there is a risk of
+    conflicts if the module is ever reinstalled on that database.
+
+    Methods decorated with ``@ondelete`` should raise an error following some
+    conditions, and by convention, the method should be named either
+    ``_unlink_if_<condition>`` or ``_unlink_except_<not_condition>``.
+
+    .. code-block:: python
+
+        @api.ondelete(at_uninstall=False)
+        def _unlink_if_user_inactive(self):
+            if any(user.active for user in self):
+                raise UserError("Can't delete an active user!")
+
+        # same as above but with _unlink_except_* as method name
+        @api.ondelete(at_uninstall=False)
+        def _unlink_except_active_user(self):
+            if any(user.active for user in self):
+                raise UserError("Can't delete an active user!")
+
+    :param bool at_uninstall: Whether the decorated method should be called if
+        the module that implements said method is being uninstalled. Should
+        almost always be ``False``, so that module uninstallation does not
+        trigger those errors.
+
+    .. danger::
+        The parameter ``at_uninstall`` should only be set to ``True`` if the
+        check you are implementing also applies when uninstalling the module.
+
+        For instance, it doesn't matter if when uninstalling ``sale``, validated
+        sales orders are being deleted because all data pertaining to ``sale``
+        should be deleted anyway, in that case ``at_uninstall`` should be set to
+        ``False``.
+
+        However, it makes sense to prevent the removal of the default language
+        if no other languages are installed, since deleting the default language
+        will break a lot of basic behavior. In this case, ``at_uninstall``
+        should be set to ``True``.
+    """
+    return attrsetter('_ondelete', at_uninstall)
 
 
 def onchange(*args):
@@ -286,6 +346,17 @@ def split_context(method, args, kwargs):
         Return a triple ``context, args, kwargs``.
     """
     return kwargs.pop('context', None), args, kwargs
+
+
+def autovacuum(method):
+    """
+    Decorate a method so that it is called by the daily vacuum cron job (model
+    ``ir.autovacuum``).  This is typically used for garbage-collection-like
+    tasks that do not deserve a specific cron job.
+    """
+    assert method.__name__.startswith('_'), "%s: autovacuum methods must be private" % method.__name__
+    method._autovacuum = True
+    return method
 
 
 def model(method):
@@ -517,6 +588,7 @@ class Environment(Mapping):
     def user(self):
         """Return the current user (as an instance).
 
+        :returns: current user - sudoed
         :rtype: :class:`~odoo.addons.base.models.res_users`"""
         return self(su=True)['res.users'].browse(self.uid)
 
@@ -528,7 +600,7 @@ class Environment(Mapping):
         fallback on current user main company.
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
-        :return: current company (default=`self.user.company_id`)
+        :return: current company (default=`self.user.company_id`), with the current environment
         :rtype: res.company
 
         .. warning::
@@ -548,7 +620,7 @@ class Environment(Mapping):
                 if any(cid not in user_company_ids for cid in company_ids):
                     raise AccessError(_("Access to unauthorized or invalid companies."))
             return self['res.company'].browse(company_ids[0])
-        return self.user.company_id
+        return self.user.company_id.with_env(self)
 
     @lazy_property
     def companies(self):
@@ -558,7 +630,7 @@ class Environment(Mapping):
         fallback on current user companies.
 
         :raise AccessError: invalid or unauthorized `allowed_company_ids` context key content.
-        :return: current companies (default=`self.user.company_ids`)
+        :return: current companies (default=`self.user.company_ids`), with the current environment
         :rtype: res.company
 
         .. warning::
@@ -588,7 +660,7 @@ class Environment(Mapping):
         #   - when printing a report for several records from several companies
         #   - when accessing to a record from the notification email template
         #   - when loading an binary image on a template
-        return self.user.company_ids
+        return self.user.company_ids.with_env(self)
 
     @property
     def lang(self):
@@ -602,6 +674,7 @@ class Environment(Mapping):
         """ Clear all record caches, and discard all fields to recompute.
             This may be useful when recovering from a failed ORM operation.
         """
+        lazy_property.reset_all(self)
         self.cache.invalidate()
         self.all.tocompute.clear()
         self.all.towrite.clear()
@@ -760,23 +833,23 @@ NOTHING = object()
 class Cache(object):
     """ Implementation of the cache of records. """
     def __init__(self):
-        # {field: {record_id: value}}
+        # {field: {record_id: value}, field: {context_key: {record_id: value}}}
         self._data = defaultdict(dict)
 
     def contains(self, record, field):
         """ Return whether ``record`` has a value for ``field``. """
-        if field.depends_context:
-            key = record.env.cache_key(field)
-            return key in self._data.get(field, {}).get(record.id, {})
-        return record.id in self._data.get(field, ())
+        field_cache = self._data.get(field, ())
+        if field_cache and field.depends_context:
+            field_cache = field_cache.get(record.env.cache_key(field), ())
+        return record.id in field_cache
 
     def get(self, record, field, default=NOTHING):
         """ Return the value of ``field`` for ``record``. """
         try:
-            value = self._data[field][record._ids[0]]
+            field_cache = self._data[field]
             if field.depends_context:
-                value = value[record.env.cache_key(field)]
-            return value
+                field_cache = field_cache[record.env.cache_key(field)]
+            return field_cache[record._ids[0]]
         except KeyError:
             if default is NOTHING:
                 raise CacheMiss(record, field)
@@ -784,53 +857,48 @@ class Cache(object):
 
     def set(self, record, field, value):
         """ Set the value of ``field`` for ``record``. """
+        field_cache = self._data[field]
         if field.depends_context:
-            key = record.env.cache_key(field)
-            self._data[field].setdefault(record._ids[0], {})[key] = value
-        else:
-            self._data[field][record._ids[0]] = value
+            field_cache = field_cache.setdefault(record.env.cache_key(field), {})
+        field_cache[record._ids[0]] = value
 
     def update(self, records, field, values):
         """ Set the values of ``field`` for several ``records``. """
+        field_cache = self._data[field]
         if field.depends_context:
-            key = records.env.cache_key(field)
-            field_cache = self._data[field]
-            for record_id, value in zip(records._ids, values):
-                field_cache.setdefault(record_id, {})[key] = value
-        else:
-            self._data[field].update(zip(records._ids, values))
+            field_cache = field_cache.setdefault(records.env.cache_key(field), {})
+        field_cache.update(zip(records._ids, values))
 
     def remove(self, record, field):
         """ Remove the value of ``field`` for ``record``. """
         try:
-            del self._data[field][record.id]
+            field_cache = self._data[field]
+            if field.depends_context:
+                field_cache = field_cache[record.env.cache_key(field)]
+            del field_cache[record._ids[0]]
         except KeyError:
             pass
 
     def get_values(self, records, field):
         """ Return the cached values of ``field`` for ``records``. """
         field_cache = self._data[field]
-        key = records.env.cache_key(field) if field.depends_context else None
+        if field.depends_context:
+            field_cache = field_cache.get(records.env.cache_key(field), {})
         for record_id in records._ids:
             try:
-                if key is not None:
-                    yield field_cache[record_id][key]
-                else:
-                    yield field_cache[record_id]
+                yield field_cache[record_id]
             except KeyError:
                 pass
 
     def get_until_miss(self, records, field):
         """ Return the cached values of ``field`` for ``records`` until a value is not found. """
         field_cache = self._data[field]
-        key = records.env.cache_key(field) if field.depends_context else None
+        if field.depends_context:
+            field_cache = field_cache.get(records.env.cache_key(field), {})
         vals = []
         for record_id in records._ids:
             try:
-                if key is not None:
-                    vals.append(field_cache[record_id][key])
-                else:
-                    vals.append(field_cache[record_id])
+                vals.append(field_cache[record_id])
             except KeyError:
                 break
         return vals
@@ -838,14 +906,12 @@ class Cache(object):
     def get_records_different_from(self, records, field, value):
         """ Return the subset of ``records`` that has not ``value`` for ``field``. """
         field_cache = self._data[field]
-        key = records.env.cache_key(field) if field.depends_context else None
+        if field.depends_context:
+            field_cache = field_cache.get(records.env.cache_key(field), {})
         ids = []
         for record_id in records._ids:
             try:
-                if key is not None:
-                    val = field_cache[record_id][key]
-                else:
-                    val = field_cache[record_id]
+                val = field_cache[record_id]
             except KeyError:
                 ids.append(record_id)
             else:
@@ -858,21 +924,24 @@ class Cache(object):
         for name, field in record._fields.items():
             if name == 'id':
                 continue
-            values = self._data.get(field, {})
-            if record.id not in values:
-                continue
-            if field.depends_context and record.env.cache_key(field) not in values[record.id]:
-                continue
-            yield field
+            field_cache = self._data.get(field, {})
+            if field.depends_context:
+                field_cache = field_cache.get(record.env.cache_key(field), ())
+            if record.id in field_cache:
+                yield field
 
     def get_records(self, model, field):
         """ Return the records of ``model`` that have a value for ``field``. """
-        ids = list(self._data[field])
-        return model.browse(ids)
+        field_cache = self._data[field]
+        if field.depends_context:
+            field_cache = field_cache.get(model.env.cache_key(field), ())
+        return model.browse(field_cache)
 
     def get_missing_ids(self, records, field):
         """ Return the ids of ``records`` that have no value for ``field``. """
         field_cache = self._data[field]
+        if field.depends_context:
+            field_cache = field_cache.get(records.env.cache_key(field), ())
         for record_id in records._ids:
             if record_id not in field_cache:
                 yield record_id
@@ -886,8 +955,9 @@ class Cache(object):
                 if ids is None:
                     self._data.pop(field, None)
                 else:
-                    field_cache = self._data.get(field)
-                    if field_cache:
+                    field_cache = self._data.get(field, {})
+                    field_caches = field_cache.values() if field.depends_context else [field_cache]
+                    for field_cache in field_caches:
                         for id in ids:
                             field_cache.pop(id, None)
 
@@ -896,40 +966,36 @@ class Cache(object):
         # flush fields to be recomputed before evaluating the cache
         env['res.partner'].recompute()
 
-        # make a full copy of the cache, and invalidate it
-        dump = defaultdict(dict)
-        key_cache = self._data
-        for field, field_cache in key_cache.items():
-            for record_id, value in field_cache.items():
-                if record_id:
-                    dump[field][record_id] = value
-
+        # make a copy of the cache, and invalidate it
+        dump = dict(self._data)
         self.invalidate()
 
         # re-fetch the records, and compare with their former cache
         invalids = []
-        for field, field_dump in dump.items():
+
+        def check(model, field, field_dump):
             records = env[field.model_name].browse(field_dump)
             for record in records:
+                if not record.id:
+                    continue
                 try:
                     cached = field_dump[record.id]
-                    if field.depends_context:
-                        for context_keys, value in cached.items():
-                            context = dict(zip(field.depends_context, context_keys))
-                            value = field.convert_to_record(value, record)
-                            fetched = record.with_context(context)[field.name]
-                            if fetched != value:
-                                info = {'cached': value, 'fetched': fetched}
-                                invalids.append((record, field, info))
-                    else:
-                        cached = field_dump[record.id]
-                        fetched = record[field.name]
-                        value = field.convert_to_record(cached, record)
-                        if fetched != value:
-                            info = {'cached': value, 'fetched': fetched}
-                            invalids.append((record, field, info))
+                    value = field.convert_to_record(cached, record)
+                    fetched = record[field.name]
+                    if fetched != value:
+                        info = {'cached': value, 'fetched': fetched}
+                        invalids.append((record, field, info))
                 except (AccessError, MissingError):
                     pass
+
+        for field, field_dump in dump.items():
+            model = env[field.model_name]
+            if field.depends_context:
+                for context_keys, field_cache in field_dump.items():
+                    context = dict(zip(field.depends_context, context_keys))
+                    check(model.with_context(context), field, field_cache)
+            else:
+                check(model, field, field_dump)
 
         if invalids:
             raise UserError('Invalid cache for fields\n' + pformat(invalids))

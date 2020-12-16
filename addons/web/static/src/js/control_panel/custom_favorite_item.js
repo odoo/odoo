@@ -4,7 +4,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
     const { useAutofocus } = require('web.custom_hooks');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     const { useRef } = owl.hooks;
 
@@ -39,7 +39,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
             this.shareAllUsersId = `o_favorite_share_all_users_${favId}`;
 
             this.descriptionRef = useRef('description');
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
             this.interactive = true;
             Object.assign(this.state, {
                 description: this.env.action.name || "",
@@ -60,16 +60,14 @@ odoo.define('web.CustomFavoriteItem', function (require) {
         _saveFavorite() {
             if (!this.state.description.length) {
                 this.env.services.notification.notify({
-                    title: this.env._t("Error"),
                     message: this.env._t("A name for your favorite filter is required."),
                     type: 'danger',
                 });
                 return this.descriptionRef.el.focus();
             }
-            const favorites = this.model.getFiltersOfType('favorite');
+            const favorites = this.model.get('filters', f => f.type === 'favorite');
             if (favorites.some(f => f.description === this.state.description)) {
                 this.env.services.notification.notify({
-                    title: this.env._t("Error"),
                     message: this.env._t("Filter with same name already exists."),
                     type: 'danger',
                 });
@@ -146,6 +144,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
 
     CustomFavoriteItem.props = {};
     CustomFavoriteItem.template = 'web.CustomFavoriteItem';
+    CustomFavoriteItem.groupNumber = 3; // have 'Save Current Search' in its own group
 
     FavoriteMenu.registry.add('favorite-generator-menu', CustomFavoriteItem, 0);
 

@@ -1,6 +1,7 @@
 odoo.define('web.KeyboardNavigationMixin', function (require) {
     "use strict";
     var BrowserDetection = require('web.BrowserDetection');
+    const core = require('web.core');
 
     /**
      * list of the key that should not be used as accesskeys. Either because we want to reserve them for a specific behavior in Odoo or
@@ -30,9 +31,35 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             'keyup': '_onKeyUp',
         },
 
-        init: function () {
+        /**
+         * @constructor
+         * @param {object} [options]
+         * @param {boolean} [options.autoAccessKeys=true]
+         *      Whether accesskeys should be created automatically for buttons
+         *      without them in the page.
+         */
+        init: function (options) {
+            this.options = Object.assign({
+                autoAccessKeys: true,
+            }, options);
             this._areAccessKeyVisible = false;
             this.BrowserDetection = new BrowserDetection();
+        },
+        /**
+         * @override
+         */
+        start: function () {
+            const temp = this._hideAccessKeyOverlay.bind(this);
+            this._hideAccessKeyOverlay = () => temp();
+            window.addEventListener('blur', this._hideAccessKeyOverlay);
+            core.bus.on('click', null, this._hideAccessKeyOverlay);
+        },
+        /**
+         * @destructor
+         */
+        destroy: function () {
+            window.removeEventListener('blur', this._hideAccessKeyOverlay);
+            core.bus.off('click', null, this._hideAccessKeyOverlay);
         },
 
         //--------------------------------------------------------------------------
@@ -130,22 +157,24 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
 
                 var usedAccessKey = this._getAllUsedAccessKeys();
 
-                var buttonsWithoutAccessKey = this.$el.find('button.btn:visible')
-                    .not('[accesskey]')
-                    .not('[disabled]')
-                    .not('[tabindex="-1"]');
-                _.each(buttonsWithoutAccessKey, function (elem) {
-                    var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
-                    for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
-                        var candidateAccessKey = buttonString[letterIndex].toUpperCase();
-                        if (candidateAccessKey >= 'A' && candidateAccessKey <= 'Z' &&
-                            !_.includes(usedAccessKey, candidateAccessKey)) {
-                            elem.accessKey = candidateAccessKey;
-                            usedAccessKey.push(candidateAccessKey);
-                            break;
+                if (this.options.autoAccessKeys) {
+                    var buttonsWithoutAccessKey = this.$el.find('button.btn:visible')
+                        .not('[accesskey]')
+                        .not('[disabled]')
+                        .not('[tabindex="-1"]');
+                    _.each(buttonsWithoutAccessKey, function (elem) {
+                        var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
+                        for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
+                            var candidateAccessKey = buttonString[letterIndex].toUpperCase();
+                            if (candidateAccessKey >= 'A' && candidateAccessKey <= 'Z' &&
+                                !_.includes(usedAccessKey, candidateAccessKey)) {
+                                elem.accessKey = candidateAccessKey;
+                                usedAccessKey.push(candidateAccessKey);
+                                break;
+                            }
                         }
-                    }
-                });
+                    });
+                }
 
                 var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
                 _.each(elementsWithoutAriaKeyshortcut, function (elem) {
@@ -230,4 +259,3 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
     return KeyboardNavigationMixin;
 
 });
-

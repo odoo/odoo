@@ -443,8 +443,18 @@ class GettextAlias(object):
                     lang = env['res.users'].context_get()['lang']
         return lang
 
-    def __call__(self, source):
-        return self._get_translation(source)
+    def __call__(self, source, *args, **kwargs):
+        translation = self._get_translation(source)
+        assert not (args and kwargs)
+        if args or kwargs:
+            try:
+                return translation % (args or kwargs)
+            except (TypeError, ValueError, KeyError):
+                bad = translation
+                # fallback: apply to source before logging exception (in case source fails)
+                translation = source % (args or kwargs)
+                _logger.exception('Bad translation %r for string %r', bad, source)
+        return translation
 
     def _get_translation(self, source):
         res = source
@@ -477,7 +487,7 @@ class GettextAlias(object):
         finally:
             if cr and is_new_cr:
                 cr.close()
-        return res
+        return res or ''
 
 
 @functools.total_ordering
@@ -498,14 +508,25 @@ class _lt:
     works as expected (unlike the classic GettextAlias implementation).
     """
 
-    __slots__ = ['_source']
-    def __init__(self, source):
+    __slots__ = ['_source', '_args']
+    def __init__(self, source, *args, **kwargs):
         self._source = source
+        assert not (args and kwargs)
+        self._args = args or kwargs
 
     def __str__(self):
         # Call _._get_translation() like _() does, so that we have the same number
         # of stack frames calling _get_translation()
-        return _._get_translation(self._source)
+        translation = _._get_translation(self._source)
+        if self._args:
+            try:
+                return translation % self._args
+            except (TypeError, ValueError, KeyError):
+                bad = translation
+                # fallback: apply to source before logging exception (in case source fails)
+                translation = self._source % self._args
+                _logger.exception('Bad translation %r for string %r', bad, self._source)
+        return translation
 
     def __eq__(self, other):
         """ Prevent using equal operators
@@ -517,6 +538,22 @@ class _lt:
 
     def __lt__(self, other):
         raise NotImplementedError()
+
+    def __add__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return _._get_translation(self._source) + other
+        elif isinstance(other, _lt):
+            return _._get_translation(self._source) + _._get_translation(other._source)
+        return NotImplemented
+
+    def __radd__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return other + _._get_translation(self._source)
+        return NotImplemented
 
 _ = GettextAlias()
 
@@ -545,17 +582,34 @@ def TranslationFileReader(source, fileformat='po'):
     if fileformat == 'po':
         return PoFileReader(source)
     _logger.info('Bad file format: %s', fileformat)
-    raise Exception(_('Bad file format: %s') % fileformat)
+    raise Exception(_('Bad file format: %s', fileformat))
 
 class CSVFileReader:
     def __init__(self, source):
-        self.source = pycompat.csv_reader(source, quotechar='"', delimiter=',')
-        # read the first line of the file (it contains columns titles)
-        self.fields = next(self.source)
+        _reader = codecs.getreader('utf-8')
+        self.source = csv.DictReader(_reader(source), quotechar='"', delimiter=',')
+        self.prev_code_src = ""
 
     def __iter__(self):
         for entry in self.source:
-            yield zip(self.fields, entry)
+
+            # determine <module>.<imd_name> from res_id
+            if entry["res_id"] and entry["res_id"].isnumeric():
+                # res_id is an id or line number
+                entry["res_id"] = int(entry["res_id"])
+            elif not entry.get("imd_name"):
+                # res_id is an external id and must follow <module>.<name>
+                entry["module"], entry["imd_name"] = entry["res_id"].split(".")
+                entry["res_id"] = None
+            entry["imd_model"] = entry["name"].split(":")[0]
+
+            if entry["type"] == "code":
+                if entry["src"] == self.prev_code_src:
+                    # skip entry due to unicity constrain on code translations
+                    continue
+                self.prev_code_src = entry["src"]
+
+            yield entry
 
 class PoFileReader:
     """ Iterate over po file to return Odoo translation entries """
@@ -602,7 +656,7 @@ class PoFileReader:
             translation = entry.msgstr
             found_code_occurrence = False
             for occurrence, line_number in entry.occurrences:
-                match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([\w-]+)', occurrence)
+                match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([^ ]+)', occurrence)
                 if match:
                     type, model_name, field_name, module, xmlid = match.groups()
                     yield {
@@ -842,10 +896,20 @@ def _extract_translatable_qweb_terms(element, callback):
                 and "t-js" not in el.attrib
                 and not ("t-jquery" in el.attrib and "t-operation" not in el.attrib)
                 and el.get("t-translation", '').strip() != "off"):
+
             _push(callback, el.text, el.sourceline)
-            for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
-                if att in el.attrib:
-                    _push(callback, el.attrib[att], el.sourceline)
+            # Do not export terms contained on the Component directive of OWL
+            # attributes in this context are most of the time variables,
+            # not real HTML attributes.
+            # Node tags starting with a capital letter are considered OWL Components
+            # and a widespread convention and good practice for DOM tags is to write
+            # them all lower case.
+            # https://www.w3schools.com/html/html5_syntax.asp
+            # https://github.com/odoo/owl/blob/master/doc/reference/component.md#composition
+            if not el.tag[0].isupper() and 't-component' not in el.attrib:
+                for att in ('title', 'alt', 'label', 'placeholder', 'aria-label'):
+                    if att in el.attrib:
+                        _push(callback, el.attrib[att], el.sourceline)
             _extract_translatable_qweb_terms(el, callback)
         _push(callback, el.tail, el.sourceline)
 
@@ -942,7 +1006,7 @@ class TranslationModuleReader:
         model = next(iter(records)).model
         if model not in self.env:
             _logger.error("Unable to find object %r", model)
-            return self.browse()
+            return self.env["_unknown"].browse()
 
         if not self.env[model]._translate:
             return self.env[model].browse()
@@ -1082,17 +1146,17 @@ class TranslationModuleReader:
                 for fname in fnmatch.filter(files, '*.py'):
                     self._babel_extract_terms(fname, path, root,
                                               extract_keywords={'_': None, '_lt': None})
-                # Javascript source files in the static/src/js directory, rest is ignored (libs)
-                if fnmatch.fnmatch(root, '*/static/src/js*'):
+                if fnmatch.fnmatch(root, '*/static/src*'):
+                    # Javascript source files
                     for fname in fnmatch.filter(files, '*.js'):
                         self._babel_extract_terms(fname, path, root, 'javascript',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT],
                                                   extract_keywords={'_t': None, '_lt': None})
-                # QWeb template files
-                if fnmatch.fnmatch(root, '*/static/src/xml*'):
+                    # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT])
+
                 if not recursive:
                     # due to topdown, first iteration is in first level
                     break

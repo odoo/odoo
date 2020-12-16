@@ -18,9 +18,18 @@ var KanbanController = require('web.KanbanController');
 var KanbanModel = require('web.KanbanModel');
 var KanbanRenderer = require('web.KanbanRenderer');
 var KanbanView = require('web.KanbanView');
+var SampleServer = require('web.SampleServer');
 var view_registry = require('web.view_registry');
 
 var QWeb = core.qweb;
+
+// Add mock of method 'retrieve_dashboard' in SampleServer, so that we can have
+// the sample data in empty purchase kanban and list view
+let dashboardValues;
+SampleServer.mockRegistry.add('purchase.order/retrieve_dashboard', () => {
+    return Object.assign({}, dashboardValues);
+});
+
 
 //--------------------------------------------------------------------------
 // List View
@@ -54,7 +63,7 @@ var PurchaseListDashboardRenderer = ListRenderer.extend({
         e.preventDefault();
         var $action = $(e.currentTarget);
         this.trigger_up('dashboard_open_action', {
-            action_name: $action.attr('name')+"_list",
+            action_name: "purchase.purchase_action_dashboard_list",
             action_context: $action.attr('context'),
         });
     },
@@ -72,7 +81,7 @@ var PurchaseListDashboardModel = ListModel.extend({
     /**
      * @override
      */
-    get: function (localID) {
+    __get: function (localID) {
         var result = this._super.apply(this, arguments);
         if (_.isObject(result)) {
             result.dashboardValues = this.dashboardValues[localID];
@@ -83,14 +92,14 @@ var PurchaseListDashboardModel = ListModel.extend({
      * @override
      * @returns {Promise}
      */
-    load: function () {
+    __load: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
     /**
      * @override
      * @returns {Promise}
      */
-    reload: function () {
+    __reload: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
 
@@ -107,7 +116,7 @@ var PurchaseListDashboardModel = ListModel.extend({
         });
         return Promise.all([super_def, dashboard_def]).then(function(results) {
             var id = results[0];
-            var dashboardValues = results[1];
+            dashboardValues = results[1];
             self.dashboardValues[id] = dashboardValues;
             return id;
         });
@@ -169,7 +178,7 @@ var PurchaseKanbanDashboardRenderer = KanbanRenderer.extend({
         e.preventDefault();
         var $action = $(e.currentTarget);
         this.trigger_up('dashboard_open_action', {
-            action_name: $action.attr('name')+"_kanban",
+            action_name: "purchase.purchase_action_dashboard_kanban",
             action_context: $action.attr('context'),
         });
     },
@@ -187,7 +196,7 @@ var PurchaseKanbanDashboardModel = KanbanModel.extend({
     /**
      * @override
      */
-    get: function (localID) {
+    __get: function (localID) {
         var result = this._super.apply(this, arguments);
         if (_.isObject(result)) {
             result.dashboardValues = this.dashboardValues[localID];
@@ -198,14 +207,14 @@ var PurchaseKanbanDashboardModel = KanbanModel.extend({
      * @override
      * @returns {Promise}
      */
-    load: function () {
+    __load: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
     /**
      * @override
      * @returns {Promise}
      */
-    reload: function () {
+    __reload: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
 
@@ -222,7 +231,7 @@ var PurchaseKanbanDashboardModel = KanbanModel.extend({
         });
         return Promise.all([super_def, dashboard_def]).then(function(results) {
             var id = results[0];
-            var dashboardValues = results[1];
+            dashboardValues = results[1];
             self.dashboardValues[id] = dashboardValues;
             return id;
         });

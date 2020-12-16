@@ -1,8 +1,8 @@
 odoo.define('website_forum.website_forum', function (require) {
 'use strict';
 
+const dom = require('web.dom');
 var core = require('web.core');
-var weDefaultOptions = require('web_editor.wysiwyg.default_options');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
@@ -27,6 +27,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         'click .o_wforum_favourite_toggle': '_onFavoriteQuestionClick',
         'click .comment_delete': '_onDeleteCommentClick',
         'click .js_close_intro': '_onCloseIntroClick',
+        'submit .js_wforum_submit_form:has(:not(.karma_required).o_wforum_submit_post)': '_onSubmitForm',
     },
 
     /**
@@ -112,47 +113,75 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
         });
 
-        _.each($('textarea.o_wysiwyg_loader'), function (textarea) {
-            var $textarea = $(textarea);
-            var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
-            var $form = $textarea.closest('form');
-            var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
-            var toolbar = [
-                ['style', ['style']],
-                ['font', ['bold', 'italic', 'underline', 'clear']],
-                ['para', ['ul', 'ol', 'paragraph']],
-                ['table', ['table']],
-            ];
+        _.each($('textarea.o_wysiwyg_loader'), async function (textarea) {
+            const $textarea = $(textarea);
+            const editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
+            const hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
+            let toolbar = {
+                textSize: [
+                    [
+                        'ParagraphButton',
+                        'Heading1Button',
+                        'Heading2Button',
+                        'Heading3Button',
+                        'Heading4Button',
+                        'Heading5Button',
+                        'Heading6Button',
+                        'PreButton',
+                    ],
+                ],
+                textStyle: [
+                    'BoldButton',
+                    'ItalicButton',
+                    'UnderlineButton',
+                    'RemoveFormatButton'
+                ],
+                list: [
+                    'OrderedListButton',
+                    'UnorderedListButton',
+                ],
+                align: [
+                    [
+                        'AlignLeftButton',
+                        'AlignCenterButton',
+                        'AlignRightButton',
+                        'AlignJustifyButton',
+                    ],
+                ],
+                table: ['TableButton'],
+            };
             if (hasFullEdit) {
-                toolbar.push(['insert', ['linkPlugin', 'mediaPlugin']]);
+                toolbar.link = ['OdooLinkToggleButton'];
+                toolbar.media = ['OdooMediaButton'];
             }
-            toolbar.push(['history', ['undo', 'redo']]);
-
-            var options = {
-                height: 200,
-                minHeight: 80,
-                toolbar: toolbar,
-                styleWithSpan: false,
-                styleTags: _.without(weDefaultOptions.styleTags, 'h1', 'h2', 'h3'),
+            toolbar.history = ['UndoButton', 'RedoButton'];
+            const options = {
+                toolbarLayout: toolbar,
+                height: '100%',
+                wrapperClass: 'note-editable o_editable flex-grow-1 ',
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
+                enableResizer: false,
+                value: textarea.value.trim() ? textarea.value : '<p><br/></p>',
+                interface: `
+                    <t-dialog><t t-zone="default"/></t-dialog>
+                    <t-range><t t-zone="tools"/></t-range>
+                    <div class="d-flex flex-column flex-grow-1 o_forum_editor">
+                        <t t-zone="container">
+                            <div class="d-flex overflow-auto note-editing-area d-flex flex-grow-1" style="height: 200px; min-height: 80px;">
+                                <t t-zone="main"/>
+                            </div>
+                        </t>
+                        <div class="o_debug_zone">
+                            <t t-zone="debug"/>
+                        </div>
+                    </div>`,
             };
-            if (!hasFullEdit) {
-                options.plugins = {
-                    LinkPlugin: false,
-                    MediaPlugin: false,
-                };
-            }
-            wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
-                // float-left class messes up the post layout OPW 769721
-                $form.find('.note-editable').find('img.float-left').removeClass('float-left');
-                $form.on('click', 'button .a-submit', () => {
-                    wysiwyg.save();
-                });
-            });
+
+            await wysiwygLoader.loadFromTextarea(self, $textarea, options);
         });
 
         _.each(this.$('.o_wforum_bio_popover'), authorBox => {
@@ -164,6 +193,14 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             });
         });
 
+        this.$('#post_reply').on('shown.bs.collapse', function (e) {
+            const replyEl = document.querySelector('#post_reply');
+            const scrollingElement = dom.closestScrollable(replyEl.parentNode);
+            dom.scrollTo(replyEl, {
+                forcedOffset: $(scrollingElement).innerHeight() - $(replyEl).innerHeight(),
+            });
+        });
+
         return this._super.apply(this, arguments);
     },
 
@@ -171,6 +208,59 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     *
+     * @override
+     * @param {Event} ev
+     */
+    _onSubmitForm: function (ev) {
+        let validForm = true;
+
+        let $form = $(ev.currentTarget);
+        let $title = $form.find('input[name=post_name]');
+        let $textarea = $form.find('textarea[name=content]');
+        // It's not really in the textarea that the user write at first
+        let textareaContent = $form.find('.note-editable').text().trim();
+
+        if ($title.length && $title[0].required) {
+            if ($title.val()) {
+                $title.removeClass('is-invalid');
+            } else {
+                $title.addClass('is-invalid');
+                validForm = false;
+            }
+        }
+
+        // Because the textarea is hidden, we add the red or green border to its container
+        if ($textarea[0] && $textarea[0].required) {
+            let $textareaContainer = $form.find('.note-editable');
+            if (!textareaContent.length) {
+                $textareaContainer.addClass('border border-danger rounded-top');
+                validForm = false;
+            } else {
+                $textareaContainer.removeClass('border border-danger rounded-top');
+            }
+        }
+
+        if (validForm) {
+            // Stores social share data to display modal on next page.
+            if ($form.has('.oe_social_share_call').length) {
+                sessionStorage.setItem('social_share', JSON.stringify({
+                    targetType: $(ev.currentTarget).find('.o_wforum_submit_post').data('social-target-type'),
+                }));
+            }
+        } else {
+            ev.preventDefault();
+            setTimeout(function() {
+                var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
+                _.each($buttons, function (btn) {
+                    let $btn = $(btn);
+                    $btn.find('i').remove();
+                    $btn.prop('disabled', false);
+                });
+            }, 0);
+        }
+    },
     /**
      * @private
      * @param {Event} ev
@@ -317,10 +407,20 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 if (userVote === 1) {
                     $voteUp.addClass('text-success');
                     $voteCount.addClass('text-success');
+                    $voteDown.removeClass('karma_required');
                 }
                 if (userVote === -1) {
                     $voteDown.addClass('text-danger');
                     $voteCount.addClass('text-danger');
+                    $voteUp.removeClass('karma_required');
+                }
+                if (userVote === 0) {
+                    if (!$voteDown.data('can-downvote')) {
+                        $voteDown.addClass('karma_required');
+                    }
+                    if (!$voteUp.data('can-upvote')) {
+                        $voteUp.addClass('karma_required');
+                    }
                 }
                 $voteCount.html(data['vote_count']).addClass('o_forum_vote_animate');
             }

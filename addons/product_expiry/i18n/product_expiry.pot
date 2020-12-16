@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.2\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-13 07:24+0000\n"
-"PO-Revision-Date: 2020-02-13 07:24+0000\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-01 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -57,6 +57,11 @@ msgstr ""
 #. module: product_expiry
 #: model_terms:ir.ui.view,arch_db:product_expiry.report_lot_label_expiry
 msgid "Best before:"
+msgstr ""
+
+#. module: product_expiry
+#: model:ir.model,name:product_expiry.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: product_expiry
@@ -110,7 +115,21 @@ msgid "Discard"
 msgstr ""
 
 #. module: product_expiry
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__group_expiry_date_on_delivery_slip
+msgid "Display Expiration Dates on Delivery Slips"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__display_name
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -125,6 +144,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__use_expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__expiration_date
 #: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__expiration_date
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__use_expiration_date
+#: model_terms:ir.ui.view,arch_db:product_expiry.stock_report_delivery_document_inherit_product_expiry
 msgid "Expiration Date"
 msgstr ""
 
@@ -132,6 +153,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:product_expiry.field_product_product__expiration_time
 #: model:ir.model.fields,field_description:product_expiry.field_product_template__expiration_time
 msgid "Expiration Time"
+msgstr ""
+
+#. module: product_expiry
+#: model_terms:ir.ui.view,arch_db:product_expiry.res_config_settings_view_form_stock
+msgid "Expiration dates will appear on the delivery slip"
 msgstr ""
 
 #. module: product_expiry
@@ -146,11 +172,34 @@ msgstr ""
 
 #. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation__id
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_product__id
+#: model:ir.model.fields,field_description:product_expiry.field_product_template__id
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot__id
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant__id
 msgid "ID"
 msgstr ""
 
 #. module: product_expiry
+#: model:res.groups,name:product_expiry.group_expiry_date_on_delivery_slip
+msgid "Include expiration dates on delivery slip"
+msgstr ""
+
+#. module: product_expiry
 #: model:ir.model.fields,field_description:product_expiry.field_expiry_picking_confirmation____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_procurement_group____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_product_product____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_product_template____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_move_line____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_picking____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_production_lot____last_update
+#: model:ir.model.fields,field_description:product_expiry.field_stock_quant____last_update
 msgid "Last Modified on"
 msgstr ""
 
@@ -326,6 +375,7 @@ msgstr ""
 #: model:ir.model.fields,help:product_expiry.field_product_template__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_move__use_expiration_date
 #: model:ir.model.fields,help:product_expiry.field_stock_production_lot__use_expiration_date
+#: model:ir.model.fields,help:product_expiry.field_stock_quant__use_expiration_date
 msgid ""
 "When this box is ticked, you have the possibility to specify dates to manage"
 " product expiration, on the product and on the corresponding lot/serial "
@@ -344,6 +394,6 @@ msgstr ""
 #: code:addons/product_expiry/wizard/confirm_expiry.py:0
 #, python-format
 msgid ""
-"You are going to deliver the product %s, %s which is expired.\n"
+"You are going to deliver the product %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""

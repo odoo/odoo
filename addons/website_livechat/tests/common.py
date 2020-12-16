@@ -69,7 +69,7 @@ class TestLivechatCommon(tests.TransactionCase):
     def _send_rating(self, channel, visitor, rating_value, reason=False):
         channel_messages_count = len(channel.message_ids)
 
-        rating_to_emoji = {1: "😞", 5: "😐", 10: "😊"}
+        rating_to_emoji = {1: "😞", 3: "😐", 5: "😊"}
         self.opener.post(url=self.send_feedback_url, json={'params': {
             'uuid': channel.uuid,
             'rate': rating_value,

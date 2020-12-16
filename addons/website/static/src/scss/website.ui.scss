@@ -11,6 +11,16 @@ body {
 }
 body.o_connected_user {
     padding-top: $o-navbar-height!important;
+
+    &.o_fullscreen {
+        #oe_snippets {
+            transform: translateX(100%);
+        }
+        .o_main_sidebar {
+            transition: width 400ms ease 0s !important;
+            width: 0;
+        }
+    }
 }
 
 // MAIN MENU STYLE (added above navbar.scss)
@@ -19,9 +29,9 @@ body.o_connected_user {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $zindex-modal - 10;
-
     font-family: $o-we-font-family;
     font-size: 14px;
+
     a:hover, a:focus {
         text-decoration: none;
     }
@@ -47,6 +57,10 @@ body.o_connected_user {
 
             &[data-action="edit"], &[data-action="translate"], &.css_edit_dynamic {
                 @include button-variant($o-brand-primary, $o-brand-primary);
+            }
+
+            &, &:hover, &:focus {
+                text-decoration: none;
             }
         }
 
@@ -91,6 +105,18 @@ body.o_connected_user {
 
     &:after {
         transform: rotate(-45deg);
+    }
+}
+
+// ANIMATIONS
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        transform: translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
     }
 }
 
@@ -140,7 +166,7 @@ body .modal {
                         }
                     }
                     .close {
-                        color: $o-we-color-light;
+                        color: #4e525b;
                     }
                 }
 
@@ -325,10 +351,21 @@ body .modal {
         opacity: 0;
         animation: fadeInDownSmall 1s forwards;
 
+        .o_uninstalled_module {
+            filter: brightness(70%) contrast(60%);
+
+        }
+
+        .module_icon {
+            display: block;
+            margin: auto;
+        }
+
         a {
             display: block;
             font-size: 34px;
             text-align: center;
+            text-decoration: none;
 
             i {
                 width: 110px;

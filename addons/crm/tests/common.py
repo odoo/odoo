@@ -4,8 +4,9 @@
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
+from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
-from odoo.tests.common import SavepointCase
+from odoo import tools
 
 INCOMING_EMAIL = """Return-Path: {return_path}
 X-Original-To: {to}
@@ -39,43 +40,21 @@ Cheers,
 Somebody."""
 
 
-class TestCrmCommon(SavepointCase, MailCase):
+class TestCrmCommon(TestSalesCommon, MailCase):
 
     @classmethod
     def setUpClass(cls):
         super(TestCrmCommon, cls).setUpClass()
         cls._init_mail_gateway()
 
-        cls.user_sales_manager = mail_new_test_user(
-            cls.env, login='user_sales_manager',
-            name='Martin Sales Manager', email='crm_manager@test.example.com',
-            company_id=cls.env.ref("base.main_company").id,
-            notification_type='inbox',
-            groups='sales_team.group_sale_manager,base.group_partner_manager,crm.group_use_lead',
-        )
-        cls.user_sales_leads = mail_new_test_user(
-            cls.env, login='user_sales_leads',
-            name='Laetitia Sales Leads', email='crm_leads@test.example.com',
-            company_id=cls.env.ref("base.main_company").id,
-            notification_type='inbox',
-            groups='sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead',
-        )
-        cls.user_sales_salesman = mail_new_test_user(
-            cls.env, login='user_sales_salesman',
-            name='Orteil Sales Own', email='crm_salesman@test.example.com',
-            company_id=cls.env.ref("base.main_company").id,
-            notification_type='inbox',
-            groups='sales_team.group_sale_salesman,crm.group_use_lead',
-        )
-
-        cls.sales_team_1 = cls.env['crm.team'].create({
-            'name': 'Test Sales Team',
+        cls.sales_team_1.write({
             'alias_name': 'sales.test',
             'use_leads': True,
             'use_opportunities': True,
-            'company_id': False,
-            'user_id': cls.user_sales_manager.id,
-            'member_ids': [(4, cls.user_sales_leads.id), (4, cls.env.ref('base.user_admin').id)],
+        })
+
+        (cls.user_sales_manager | cls.user_sales_leads | cls.user_sales_salesman).write({
+            'groups_id': [(4, cls.env.ref('crm.group_use_lead').id)]
         })
 
         cls.env['crm.stage'].search([]).write({'sequence': 9999})  # ensure search will find test data first
@@ -115,6 +94,7 @@ class TestCrmCommon(SavepointCase, MailCase):
             'partner_id': False,
             'contact_name': 'Amy Wong',
             'email_from': 'amy.wong@test.example.com',
+            'country_id': cls.env.ref('base.us').id,
         })
         # update lead_1: stage_id is not computed anymore by default for leads
         cls.lead_1.write({
@@ -167,8 +147,41 @@ class TestCrmCommon(SavepointCase, MailCase):
             'street': 'Cookieville Minimum-Security Orphanarium',
             'city': 'New New York',
             'country_id': cls.env.ref('base.us').id,
+            'mobile': '+1 202 555 0999',
             'zip': '97648',
         })
+
+    def _create_leads_batch(self, lead_type='lead', count=10, partner_ids=None, user_ids=None):
+        """ Helper tool method creating a batch of leads, useful when dealing
+        with batch processes. Please update me.
+
+        :param string type: 'lead', 'opportunity', 'mixed' (lead then opp),
+          None (depends on configuration);
+        """
+        types = ['lead', 'opportunity']
+        leads_data = [{
+            'name': 'TestLead_%02d' % (x),
+            'type': lead_type if lead_type else types[x % 2],
+            'priority': '%s' % (x % 3),
+        } for x in range(count)]
+
+        # customer information
+        if partner_ids:
+            for idx, lead_data in enumerate(leads_data):
+                lead_data['partner_id'] = partner_ids[idx % len(partner_ids)]
+        else:
+            for idx, lead_data in enumerate(leads_data):
+                lead_data['email_from'] = tools.formataddr((
+                    'TestCustomer_%02d' % (idx),
+                    'customer_email_%02d@example.com' % (idx)
+                ))
+
+        # salesteam information
+        if user_ids:
+            for idx, lead_data in enumerate(leads_data):
+                lead_data['user_id'] = user_ids[idx % len(user_ids)]
+
+        return self.env['crm.lead'].create(leads_data)
 
     def _create_duplicates(self, lead, create_opp=True):
         """ Helper tool method creating, based on a given lead
@@ -202,7 +215,6 @@ class TestCrmCommon(SavepointCase, MailCase):
             'type': 'lead',
             'team_id': lead.team_id.id,
             'partner_id': self.customer.id,
-            'email_from': 'another.email@test.example.com',
         })
         if create_opp:
             self.opp_lost = self.env['crm.lead'].create({
@@ -250,6 +262,7 @@ class TestLeadConvertCommon(TestCrmCommon):
 
         cls.sales_team_convert = cls.env['crm.team'].create({
             'name': 'Convert Sales Team',
+            'sequence': 10,
             'alias_name': False,
             'use_leads': True,
             'use_opportunities': True,

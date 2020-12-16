@@ -40,7 +40,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
     reason = fields.Char("Reason", help="Reason of the revaluation")
 
     account_journal_id = fields.Many2one('account.journal', "Journal", required=True, check_company=True)
-    account_id = fields.Many2one('account.account', "Counterpart Account", domain=[('deprecated', '=', False)], required=True, check_company=True)
+    account_id = fields.Many2one('account.account', "Counterpart Account", domain=[('deprecated', '=', False)], check_company=True)
     date = fields.Date("Accounting Date")
 
     @api.depends('current_value_svl', 'current_quantity_svl', 'added_value')
@@ -57,7 +57,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         - Change the stardard price with the new valuation by product unit.
         - Create a manual stock valuation layer with the `added_value` of `self`.
-        - Distribute the `added_value` on the the remaining_value of layers still in stock (with a remaining quantity)
+        - Distribute the `added_value` on the remaining_value of layers still in stock (with a remaining quantity)
         - If the Inventory Valuation of the product category is automated, create
         related account move.
         """
@@ -74,12 +74,20 @@ class StockValuationLayerRevaluation(models.TransientModel):
         ])
 
         # Create a manual stock valuation layer
+        if self.reason:
+            description = _("Manual Stock Valuation: %s.", self.reason)
+        else:
+            description = _("Manual Stock Valuation: No Reason Given.")
+        if product_id.categ_id.property_cost_method == 'average':
+            description += _(
+                " Product cost updated from %(previous)s to %(new_cost)s.",
+                previous=product_id.standard_price,
+                new_cost=product_id.standard_price + self.added_value / self.current_quantity_svl
+            )
         revaluation_svl_vals = {
             'company_id': self.company_id.id,
             'product_id': product_id.id,
-            'description': _("Manual Stock Valuation: %s.%s") % (
-                self.reason or _("No Reason Given"),
-                product_id.categ_id.property_cost_method == 'average' and (_(" Product cost updated from %s to %s.") % (product_id.standard_price, product_id.standard_price + self.added_value / self.current_quantity_svl)) or ''),
+            'description': description,
             'value': self.added_value,
             'quantity': 0,
         }
@@ -118,20 +126,28 @@ class StockValuationLayerRevaluation(models.TransientModel):
         move_vals = {
             'journal_id': self.account_journal_id.id or accounts['stock_journal'].id,
             'company_id': self.company_id.id,
-            'ref': _("Revaluation of %s") % product_id.display_name,
+            'ref': _("Revaluation of %s", product_id.display_name),
             'stock_valuation_layer_ids': [(6, None, [revaluation_svl.id])],
             'date': self.date or fields.Date.today(),
             'move_type': 'entry',
             'line_ids': [(0, 0, {
-                'name': _('%s changed stock valuation from %s to %s of %s') % (
-                    self.env.user.name, self.current_value_svl, self.current_value_svl + self.added_value, product_id.display_name),
+                'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
+                    user=self.env.user.name,
+                    previous=self.current_value_svl,
+                    new_value=self.current_value_svl + self.added_value,
+                    product=product_id.display_name,
+                ),
                 'account_id': debit_account_id,
                 'debit': abs(self.added_value),
                 'credit': 0,
                 'product_id': product_id.id,
             }), (0, 0, {
-                'name': _('%s changed stock valuation from %s to %s of %s') % (
-                    self.env.user.name, self.current_value_svl, self.current_value_svl + self.added_value, product_id.display_name),
+                'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
+                    user=self.env.user.name,
+                    previous=self.current_value_svl,
+                    new_value=self.current_value_svl + self.added_value,
+                    product=product_id.display_name,
+                ),
                 'account_id': credit_account_id,
                 'debit': 0,
                 'credit': abs(self.added_value),
@@ -139,6 +155,6 @@ class StockValuationLayerRevaluation(models.TransientModel):
             })],
         }
         account_move = self.env['account.move'].create(move_vals)
-        account_move.post()
+        account_move._post()
 
         return True

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <!--
+        ========================================================================
+        Gallery Slideshow
+
+        This template is used to display a slideshow of images inside a
+        bootstrap carousel.
+
+        ========================================================================
+    -->
+    <t t-name="website.gallery.slideshow">
+        <div t-attf-id="#{id}" class="carousel slide" data-ride="carousel" t-attf-data-interval="#{interval}" style="margin: 0 12px;">
+            <div class="carousel-inner" style="padding: 0;">
+                 <t t-foreach="images" t-as="image">
+                    <div t-attf-class="carousel-item #{image_index == index and 'active' or None}">
+                        <img t-attf-class="#{attrClass || 'img img-fluid d-block'}" t-att-src="image.src" t-att-style="attrStyle" t-att-alt="image.alt" data-name="Image"/>
+                    </div>
+                 </t>
+            </div>
+
+            <ul class="carousel-indicators">
+                <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
+                    <i class="fa fa-chevron-left"/>
+                </li>
+                <t t-foreach="images" t-as="image">
+                    <li t-attf-data-target="##{id}" t-att-data-slide-to="image_index" t-att-class="image_index == index and 'active' or None" t-attf-style="background-image: url(#{image.src})"></li>
+                </t>
+                <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
+                    <i class="fa fa-chevron-right"/>
+                </li>
+            </ul>
+
+            <a class="carousel-control-prev o_we_no_overlay" t-attf-href="##{id}" data-slide="prev" aria-label="Previous" title="Previous">
+                <span class="fa fa-chevron-left fa-2x text-white"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next o_we_no_overlay" t-attf-href="##{id}" data-slide="next" aria-label="Next" title="Next">
+                <span class="fa fa-chevron-right fa-2x text-white"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </t>
+
+    <!--
+        ========================================================================
+        Gallery Slideshow LightBox
+
+        This template is used to display a lightbox with a slideshow.
+
+        This template wraps website.gallery.slideshow in a bootstrap modal
+        dialog.
+        ========================================================================
+    -->
+    <t t-name="website.gallery.slideshow.lightbox">
+        <div role="dialog" class="modal o_technical_modal fade s_gallery_lightbox p-0" aria-labbelledby="Image Gallery Dialog">
+            <div class="modal-dialog m-0" role="Picture Gallery"
+                t-attf-style="">
+                <div class="modal-content bg-transparent">
+                    <main class="modal-body o_slideshow bg-transparent">
+                        <button type="button" class="close text-white" data-dismiss="modal" style="position: absolute; right: 10px; top: 10px;"><span role="img" aria-label="Close">×</span><span class="sr-only">Close</span></button>
+                        <t t-call="website.gallery.slideshow"></t>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

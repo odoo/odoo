@@ -2,16 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import ast
-import collections
+import collections.abc
 import importlib
-import inspect
-import itertools
 import logging
 import os
+import pkg_resources
+import re
 import sys
-import time
-import unittest
-import threading
+import warnings
 from os.path import join as opj
 
 import odoo
@@ -24,18 +22,77 @@ README = ['README.rst', 'README.md', 'README.txt']
 
 _logger = logging.getLogger(__name__)
 
+# addons path as a list
+# ad_paths is a deprecated alias, please use odoo.addons.__path__
+@tools.lazy
+def ad_paths():
+    warnings.warn(
+        '"odoo.modules.module.ad_paths" is a deprecated proxy to '
+        '"odoo.addons.__path__".', DeprecationWarning, stacklevel=2)
+    return odoo.addons.__path__
+
 # Modules already loaded
 loaded = []
+
+class AddonsHook(object):
+    """ Makes modules accessible through openerp.addons.* """
+
+    def find_module(self, name, path=None):
+        if name.startswith('openerp.addons.') and name.count('.') == 2:
+            warnings.warn(
+                '"openerp.addons" is a deprecated alias to "odoo.addons".',
+                DeprecationWarning, stacklevel=2)
+            return self
+
+    def load_module(self, name):
+        assert name not in sys.modules
+
+        odoo_name = re.sub(r'^openerp.addons.(\w+)$', r'odoo.addons.\g<1>', name)
+
+        odoo_module = sys.modules.get(odoo_name)
+        if not odoo_module:
+            odoo_module = importlib.import_module(odoo_name)
+
+        sys.modules[name] = odoo_module
+
+        return odoo_module
+
+class OdooHook(object):
+    """ Makes odoo package also available as openerp """
+
+    def find_module(self, name, path=None):
+        # openerp.addons.<identifier> should already be matched by AddonsHook,
+        # only framework and subdirectories of modules should match
+        if re.match(r'^openerp\b', name):
+            warnings.warn(
+                'openerp is a deprecated alias to odoo.',
+                DeprecationWarning, stacklevel=2)
+            return self
+
+    def load_module(self, name):
+        assert name not in sys.modules
+
+        canonical = re.sub(r'^openerp(.*)', r'odoo\g<1>', name)
+
+        if canonical in sys.modules:
+            mod = sys.modules[canonical]
+        else:
+            # probable failure: canonical execution calling old naming -> corecursion
+            mod = importlib.import_module(canonical)
+
+        # just set the original module at the new location. Don't proxy,
+        # it breaks *-import (unless you can find how `from a import *` lists
+        # what's supposed to be imported by `*`, and manage to override it)
+        sys.modules[name] = mod
+
+        return sys.modules[name]
+
 
 def initialize_sys_path():
     """
     Setup the addons path ``odoo.addons.__path__`` with various defaults
     and explicit directories.
     """
-    # if getattr(initialize_sys_path, 'called', False): # only initialize once
-    #    return
-    initialize_sys_path.called = True
-
     # hook odoo.addons on data dir
     dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
@@ -67,6 +124,13 @@ def initialize_sys_path():
     sys.modules["odoo.addons.base.maintenance"] = maintenance_pkg
     sys.modules["odoo.addons.base.maintenance.migrations"] = upgrade
 
+    # hook deprecated module alias from openerp to odoo and "crm"-like to odoo.addons
+    if not getattr(initialize_sys_path, 'called', False): # only initialize once
+        sys.meta_path.insert(0, OdooHook())
+        sys.meta_path.insert(0, AddonsHook())
+        initialize_sys_path.called = True
+
+
 def get_module_path(module, downloaded=False, display_warning=True):
     """Return the path of the given module.
 
@@ -75,7 +139,6 @@ def get_module_path(module, downloaded=False, display_warning=True):
     path if nothing else is found.
 
     """
-    initialize_sys_path()
     for adp in odoo.addons.__path__:
         files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
                 [opj(adp, module + '.zip')]
@@ -128,12 +191,14 @@ def get_resource_path(module, *args):
     TODO make it available inside on osv object (self.get_resource_path)
     """
     mod_path = get_module_path(module)
-    if not mod_path: return False
+    if not mod_path:
+        return False
+    return check_resource_path(mod_path, *args)
+
+def check_resource_path(mod_path, *args):
     resource_path = opj(mod_path, *args)
-    if os.path.isdir(mod_path):
-        # the module is a directory - ignore zip behavior
-        if os.path.exists(resource_path):
-            return resource_path
+    if os.path.exists(resource_path):
+        return resource_path
     return False
 
 # backwards compatibility
@@ -255,23 +320,22 @@ def load_information_from_description_file(module, mod_path=None):
                 with tools.file_open(readme_path[0]) as fd:
                     info['description'] = fd.read()
 
-        # auto_install is set to `False` if disabled, and a set of
-        # auto_install dependencies otherwise. That way, we can set
-        # auto_install: [] to always auto_install a module regardless of its
-        # dependencies
-        auto_install = info.get('auto_install', info.get('active', False))
-        if isinstance(auto_install, collections.Iterable):
-            info['auto_install'] = set(auto_install)
+
+        # auto_install is either `False` (by default) in which case the module
+        # is opt-in, either a list of dependencies in which case the module is
+        # automatically installed if all dependencies are (special case: [] to
+        # always install the module), either `True` to auto-install the module
+        # in case all dependencies declared in `depends` are installed.
+        if isinstance(info['auto_install'], collections.abc.Iterable):
+            info['auto_install'] = set(info['auto_install'])
             non_dependencies = info['auto_install'].difference(info['depends'])
             assert not non_dependencies,\
                 "auto_install triggers must be dependencies, found " \
                 "non-dependencies [%s] for module %s" % (
                     ', '.join(non_dependencies), module
                 )
-        elif auto_install:
+        elif info['auto_install']:
             info['auto_install'] = set(info['depends'])
-        else:
-            info['auto_install'] = False
 
         info['version'] = adapt_version(info['version'])
         return info
@@ -291,7 +355,6 @@ def load_openerp_module(module_name):
     if module_name in loaded:
         return
 
-    initialize_sys_path()
     try:
         __import__('odoo.addons.' + module_name)
 
@@ -331,7 +394,6 @@ def get_modules():
         ]
 
     plist = []
-    initialize_sys_path()
     for ad in odoo.addons.__path__:
         plist.extend(listdir(ad))
     return list(set(plist))
@@ -353,217 +415,4 @@ def adapt_version(version):
         version = '%s.%s' % (serie, version)
     return version
 
-def get_test_modules(module):
-    """ Return a list of module for the addons potentially containing tests to
-    feed unittest.TestLoader.loadTestsFromModule() """
-    # Try to import the module
-    results = _get_tests_modules('odoo.addons', module)
-
-    try:
-        importlib.import_module('odoo.upgrade.%s' % module)
-    except ImportError:
-        pass
-    else:
-        results += _get_tests_modules('odoo.upgrade', module)
-
-    return results
-
-def _get_tests_modules(path, module):
-    modpath = '%s.%s' % (path, module)
-    try:
-        mod = importlib.import_module('.tests', modpath)
-    except ImportError as e:  # will also catch subclass ModuleNotFoundError of P3.6
-        # Hide ImportErrors on `tests` sub-module, but display other exceptions
-        if e.name == modpath + '.tests' and e.msg.startswith('No module named'):
-            return []
-        _logger.exception('Can not `import %s`.', module)
-        return []
-    except Exception as e:
-        _logger.exception('Can not `import %s`.', module)
-        return []
-    if hasattr(mod, 'fast_suite') or hasattr(mod, 'checks'):
-        _logger.warning(
-            "Found deprecated fast_suite or checks attribute in test module "
-            "%s. These have no effect in or after version 8.0.",
-            mod.__name__)
-
-    result = [mod_obj for name, mod_obj in inspect.getmembers(mod, inspect.ismodule)
-              if name.startswith('test_')]
-    return result
-
-
-class OdooTestResult(unittest.result.TestResult):
-    """
-    This class in inspired from TextTestResult (https://github.com/python/cpython/blob/master/Lib/unittest/runner.py)
-    Instead of using a stream, we are using the logger,
-    but replacing the "findCaller" in order to give the information we
-    have based on the test object that is running.
-    """
-
-    def log(self, level, msg, *args, test=None, exc_info=None, extra=None, stack_info=False, caller_infos=None):
-        """
-        ``test`` is the running test case, ``caller_infos`` is
-        (fn, lno, func, sinfo) (logger.findCaller format), see logger.log for
-        the other parameters.
-        """
-        test = test or self
-        if isinstance(test, unittest.case._SubTest) and test.test_case:
-            test = test.test_case
-        logger = logging.getLogger(test.__module__)
-        try:
-            caller_infos = caller_infos or logger.findCaller(stack_info)
-        except ValueError:
-            caller_infos = "(unknown file)", 0, "(unknown function)", None
-        (fn, lno, func, sinfo) = caller_infos
-        # using logger.log makes it difficult to spot-replace findCaller in
-        # order to provide useful location information (the problematic spot
-        # inside the test function), so use lower-level functions instead
-        if logger.isEnabledFor(level):
-            record = logger.makeRecord(logger.name, level, fn, lno, msg, args, exc_info, func, extra, sinfo)
-            logger.handle(record)
-
-    def getDescription(self, test):
-        if isinstance(test, unittest.case._SubTest):
-            return 'Subtest %s' % test._subDescription()
-        if isinstance(test, unittest.TestCase):
-            # since we have the module name in the logger, this will avoid to duplicate module info in log line
-            # we only apply this for TestCase since we can receive error handler or other special case
-            return "%s.%s" % (test.__class__.__qualname__, test._testMethodName)
-        return str(test)
-
-    def startTest(self, test):
-        super().startTest(test)
-        self.log(logging.INFO, 'Starting %s ...', self.getDescription(test), test=test)
-
-    def addError(self, test, err):
-        super().addError(test, err)
-        self.logError("ERROR", test, err)
-
-    def addFailure(self, test, err):
-        super().addFailure(test, err)
-        self.logError("FAIL", test, err)
-
-    def addSubTest(self, test, subtest, err):
-        # since addSubTest is not making a call to addFailure or addError we need to manage it too
-        # https://github.com/python/cpython/blob/3.7/Lib/unittest/result.py#L136
-        if err is not None:
-            if issubclass(err[0], test.failureException):
-                flavour = "FAIL"
-            else:
-                flavour = "ERROR"
-            self.logError(flavour, subtest, err)
-        super().addSubTest(test, subtest, err)
-
-    def addSkip(self, test, reason):
-        super().addSkip(test, reason)
-        self.log(logging.INFO, 'skipped %s', self.getDescription(test), test=test)
-
-    def addUnexpectedSuccess(self, test):
-        super().addUnexpectedSuccess(test)
-        self.log(logging.ERROR, 'unexpected success for %s', self.getDescription(test), test=test)
-
-    def logError(self, flavour, test, error):
-        err = self._exc_info_to_string(error, test)
-        caller_infos = self.getErrorCallerInfo(error, test)
-        self.log(logging.INFO, '=' * 70, test=test, caller_infos=caller_infos)  # keep this as info !!!!!!
-        self.log(logging.ERROR, "%s: %s\n%s", flavour, self.getDescription(test), err, test=test, caller_infos=caller_infos)
-
-    def getErrorCallerInfo(self, error, test):
-        """
-        :param error: A tuple (exctype, value, tb) as returned by sys.exc_info().
-        :param test: A TestCase that created this error.
-        :returns: a tuple (fn, lno, func, sinfo) matching the logger findCaller format or None
-        """
-
-        # only test case should be executed in odoo, this is only a safe guard
-        if isinstance(test, unittest.suite._ErrorHolder):
-            return
-        if not isinstance(test, unittest.TestCase):
-            _logger.warning('%r is not a TestCase' % test)
-            return
-        _, _, error_traceback = error
-
-        while error_traceback:
-            code = error_traceback.tb_frame.f_code
-            if code.co_name == test._testMethodName:
-                lineno = error_traceback.tb_lineno
-                filename = code.co_filename
-                method = test._testMethodName
-                infos = (filename, lineno, method, None)
-                return infos
-            error_traceback = error_traceback.tb_next
-
-
-class OdooTestRunner(object):
-    """A test runner class that displays results in in logger using OdooTestResult.
-    Simplified verison of TextTestRunner
-    """
-
-    def run(self, test):
-        result = OdooTestResult()
-        test(result)
-        return result
-
 current_test = None
-
-def run_unit_tests(module_name, position='at_install'):
-    """
-    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
-              if any of them failed.
-    :rtype: bool
-    """
-    global current_test
-    # avoid dependency hell
-    from odoo.tests.common import TagsSelector, OdooSuite
-    current_test = module_name
-    mods = get_test_modules(module_name)
-    threading.currentThread().testing = True
-    config_tags = TagsSelector(tools.config['test_tags'])
-    position_tag = TagsSelector(position)
-    r = True
-    for m in mods:
-        tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = OdooSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
-
-        if suite.countTestCases():
-            t0 = time.time()
-            t0_sql = odoo.sql_db.sql_counter
-            _logger.info('%s running tests.', m.__name__)
-            result = OdooTestRunner().run(suite)
-            log_level = logging.INFO
-            if time.time() - t0 > 5:
-                log_level = logging.RUNBOT
-            _logger.log(log_level, "%s ran %s tests in %.2fs, %s queries", m.__name__, result.testsRun, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
-            if not result.wasSuccessful():
-                r = False
-                _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
-
-    current_test = None
-    threading.currentThread().testing = False
-    return r
-
-def unwrap_suite(test):
-    """
-    Attempts to unpack testsuites (holding suites or cases) in order to
-    generate a single stream of terminals (either test cases or customized
-    test suites). These can then be checked for run/skip attributes
-    individually.
-
-    An alternative would be to use a variant of @unittest.skipIf with a state
-    flag of some sort e.g. @unittest.skipIf(common.runstate != 'at_install'),
-    but then things become weird with post_install as tests should *not* run
-    by default there
-    """
-    if isinstance(test, unittest.TestCase):
-        yield test
-        return
-
-    subtests = list(test)
-    # custom test suite (no test cases)
-    if not len(subtests):
-        yield test
-        return
-
-    for item in itertools.chain.from_iterable(
-            unwrap_suite(t) for t in subtests):
-        yield item

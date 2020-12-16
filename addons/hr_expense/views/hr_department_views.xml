@@ -12,38 +12,23 @@
                 </xpath>
 
                 <xpath expr="//div[hasclass('o_kanban_primary_right')]" position="inside">
-                    <div t-if="record.expense_sheets_to_approve_count.raw_value > 0" class="row">
+                    <div t-if="record.expense_sheets_to_approve_count.raw_value > 0" class="row ml16">
                         <div class="col-9">
                             <a name="%(action_hr_expense_sheet_department_to_approve)d" type="action">
                                 Expense Reports
                             </a>
                         </div>
-                        <div class="col-3">
+                        <div class="col-3 text-right">
                             <t t-esc="record.expense_sheets_to_approve_count.raw_value"/>
                         </div>
                     </div>
                 </xpath>
 
-                <xpath expr="//div[hasclass('o_kanban_manage_to_approve')]" position="inside">
-                    <div class="row">
-                        <div class="col-12 text-left">
-                            <a name="%(action_hr_expense_sheet_department_to_approve)d" type="action">
-                                <t t-esc="record.expense_sheets_to_approve_count.raw_value or 0"/> Expense Reports
-                            </a>
-                        </div>
-                    </div>
-                </xpath>
-
                 <xpath expr="//div[hasclass('o_kanban_manage_reports')]" position="inside">
-                    <div class="row">
-                        <div class="col-12 text-left">
-                            <a name="%(action_hr_expense_sheet_department_filtered)d" type="action">
-                                Expense Reports
-                            </a>
-                        </div>
-                    </div>
+                    <a role="menuitem" class="dropdown-item" name="%(action_hr_expense_sheet_department_filtered)d" type="action">
+                        Expenses
+                    </a>
                 </xpath>
-
             </data>
         </field>
     </record>

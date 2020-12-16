@@ -51,7 +51,7 @@ class EventTicket(models.Model):
     def default_get(self, fields):
         res = super(EventTicket, self).default_get(fields)
         if 'name' in fields and (not res.get('name') or res['name'] == _('Registration')) and self.env.context.get('default_event_name'):
-            res['name'] = _('Registration for %s') % self.env.context['default_event_name']
+            res['name'] = _('Registration for %s', self.env.context['default_event_name'])
         return res
 
     # description
@@ -75,19 +75,17 @@ class EventTicket(models.Model):
     @api.depends('end_sale_date', 'event_id.date_tz')
     def _compute_is_expired(self):
         for ticket in self:
+            ticket = ticket._set_tz_context()
+            current_date = fields.Date.context_today(ticket)
             if ticket.end_sale_date:
-                current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
                 ticket.is_expired = ticket.end_sale_date < current_date
             else:
                 ticket.is_expired = False
 
-    @api.depends('start_sale_date', 'end_sale_date', 'event_id.date_tz', 'seats_available', 'seats_max')
+    @api.depends('is_expired', 'start_sale_date', 'event_id.date_tz', 'seats_available', 'seats_max')
     def _compute_sale_available(self):
         for ticket in self:
-            current_date = fields.Date.context_today(ticket.with_context(tz=ticket._get_ticket_tz()))
-            if (ticket.start_sale_date and ticket.start_sale_date > current_date) or \
-                    ticket.end_sale_date and ticket.end_sale_date < current_date or \
-                    ticket.seats_available <= 0 and ticket.seats_max > 0:
+            if not ticket.is_launched() or ticket.is_expired or (ticket.seats_max and ticket.seats_available <= 0):
                 ticket.sale_available = False
             else:
                 ticket.sale_available = True
@@ -137,5 +135,16 @@ class EventTicket(models.Model):
         information. """
         return '%s\n%s' % (self.display_name, self.event_id.display_name)
 
-    def _get_ticket_tz(self):
-        return self.event_id.date_tz or self.env.user.tz
+    def _set_tz_context(self):
+        self.ensure_one()
+        return self.with_context(tz=self.event_id.date_tz or 'UTC')
+
+    def is_launched(self):
+        # TDE FIXME: in master, make a computed field, easier to use
+        self.ensure_one()
+        if self.start_sale_date:
+            ticket = self._set_tz_context()
+            current_date = fields.Date.context_today(ticket)
+            return ticket.start_sale_date < current_date
+        else:
+            return True

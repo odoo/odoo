@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="barcode_rule_coupon" model="barcode.rule">
+        <field name="name">Coupon Barcodes</field>
+        <field name="barcode_nomenclature_id" ref="barcodes.default_barcode_nomenclature"/>
+        <field name="sequence">50</field>
+        <field name="type">coupon</field>
+        <field name="encoding">any</field>
+        <field name="pattern">043</field>
+    </record>
+</odoo>

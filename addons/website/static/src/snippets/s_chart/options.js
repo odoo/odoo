@@ -2,16 +2,17 @@ odoo.define('website.s_chart_options', function (require) {
 'use strict';
 
 var core = require('web.core');
-const ColorpickerDialog = require('web.ColorpickerDialog');
-var options = require('web_editor.snippets.options');
+const {ColorpickerWidget} = require('web.Colorpicker');
+var snippetOptions = require('web_editor.snippets.options');
+const weUtils = require('web_editor.utils');
 
 var _t = core._t;
 
-options.registry.InnerChart = options.Class.extend({
-    custom_events: _.extend({}, options.Class.prototype.custom_events, {
+snippetOptions.registry.InnerChart = snippetOptions.SnippetOptionWidget.extend({
+    custom_events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.custom_events, {
         'get_custom_colors': '_onGetCustomColors',
     }),
-    events: _.extend({}, options.Class.prototype.events, {
+    events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.events, {
         'click we-button.add_column': '_onAddColumnClick',
         'click we-button.add_row': '_onAddRowClick',
         'click we-button.o_we_matrix_remove_col': '_onRemoveColumnClick',
@@ -25,7 +26,7 @@ options.registry.InnerChart = options.Class.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.themeArray = ['alpha', 'beta', 'gamma', 'delta', 'epsilon'];
+        this.themeArray = ['o-color-1', 'o-color-2', 'o-color-3', 'o-color-4', 'o-color-5'];
         this.style = window.getComputedStyle(document.documentElement);
     },
     /**
@@ -71,8 +72,8 @@ options.registry.InnerChart = options.Class.extend({
         // prevent the columns from becoming too small.
         this.tableEl.classList.toggle('o_we_matrix_five_col', this.tableEl.querySelectorAll('tr:first-child th').length > 5);
 
-        this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Background Color") : _t("Dataset Background Color");
-        this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border Color") : _t("Dataset Border Color");
+        this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Color") : _t("Dataset Color");
+        this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border") : _t("Dataset Border");
 
         // Dataset/Cell color
         this.tableEl.querySelectorAll('input').forEach(el => el.style.border = '');
@@ -81,7 +82,7 @@ options.registry.InnerChart = options.Class.extend({
             const color = el.dataset.backgroundColor || el.dataset.borderColor;
             if (color) {
                 el.style.border = '2px solid';
-                el.style.borderColor = ColorpickerDialog.isCSSColor(color) ? color : this.style.getPropertyValue(`--${color}`).trim();
+                el.style.borderColor = ColorpickerWidget.isCSSColor(color) ? color : weUtils.getCSSVariableValue(color, this.style);
             }
         });
     },
@@ -156,7 +157,7 @@ options.registry.InnerChart = options.Class.extend({
     _reloadGraph: async function () {
         const jsonValue = this._matrixToChartData();
         if (this.$target[0].dataset.data !== jsonValue) {
-            this.$target[0].dataset.data = jsonValue;
+            await this.wysiwyg.withDomMutations(this.$target, () => this.$target[0].dataset.data = jsonValue);
             await this._refreshPublicWidgets();
         }
     },
@@ -199,8 +200,8 @@ options.registry.InnerChart = options.Class.extend({
      * @returns {HTMLElement}
      */
     _makeDeleteButton: function (...classes) {
-        const rmbuttonEl = options.buildElement('we-button', null, {
-            classes: ['fa', 'fa-fw', 'fa-minus', ...classes],
+        const rmbuttonEl = snippetOptions.buildElement('we-button', null, {
+            classes: ['o_we_text_danger', 'o_we_link', 'fa', 'fa-fw', 'fa-minus', ...classes],
         });
         const newEl = document.createElement('td');
         newEl.appendChild(rmbuttonEl);
@@ -368,7 +369,7 @@ options.registry.InnerChart = options.Class.extend({
             }
         });
         customColors = customColors.filter((el, i, array) => {
-            return !this.style.getPropertyValue(`--${el}`) && array.indexOf(el) === i && el !== ''; // unique non class not transparent
+            return !weUtils.getCSSVariableValue(el, this.style) && array.indexOf(el) === i && el !== ''; // unique non class not transparent
         });
         ev.data.onSuccess(customColors);
     },

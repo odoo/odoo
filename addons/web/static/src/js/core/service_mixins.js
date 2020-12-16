@@ -3,6 +3,8 @@ odoo.define('web.ServiceProviderMixin', function (require) {
 
 var core = require('web.core');
 
+// ServiceProviderMixin is deprecated. It is only used by the ProjectTimesheet
+// app. As soon as it no longer uses it, we can remove it.
 var ServiceProviderMixin = {
     services: {}, // dict containing deployed service instances
     UndeployedServices: {}, // dict containing classes of undeployed services
@@ -127,10 +129,11 @@ var ServicesMixin = {
      * @private
      * @param {Object} libs - @see ajax.loadLibs
      * @param {Object} [context] - @see ajax.loadLibs
+     * @param {Object} [tplRoute=this._loadLibsTplRoute] - @see ajax.loadLibs
      * @returns {Promise}
      */
-    _loadLibs: function (libs, context) {
-        return this.call('ajax', 'loadLibs', libs, context);
+    _loadLibs: function (libs, context, tplRoute) {
+        return this.call('ajax', 'loadLibs', libs, context, tplRoute || this._loadLibsTplRoute);
     },
     /**
      * Builds and executes RPC query. Returns a promise resolved with
@@ -249,7 +252,7 @@ var ServicesMixin = {
      * @deprecated will be removed as soon as the notification system is reviewed
      * @see displayNotification
      */
-    do_notify: function (title, message, sticky, className) {
+    do_notify: function (title = false, message, sticky, className) {
         return this.displayNotification({
             type: 'warning',
             title: title,
@@ -262,7 +265,7 @@ var ServicesMixin = {
      * @deprecated will be removed as soon as the notification system is reviewed
      * @see displayNotification
      */
-    do_warn: function (title, message, sticky, className) {
+    do_warn: function (title = false, message, sticky, className) {
         console.warn(title, message);
         return this.displayNotification({
             type: 'danger',

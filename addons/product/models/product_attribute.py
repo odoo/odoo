@@ -30,6 +30,10 @@ class ProductAttribute(models.Model):
         required=True)
     is_used_on_products = fields.Boolean('Used on Products', compute='_compute_is_used_on_products')
     product_tmpl_ids = fields.Many2many('product.template', string="Related Products", compute='_compute_products', store=True)
+    display_type = fields.Selection([
+        ('radio', 'Radio'),
+        ('select', 'Select'),
+        ('color', 'Color')], default='radio', required=True, help="The display type used in the Product Configurator.")
 
     @api.depends('product_tmpl_ids')
     def _compute_is_used_on_products(self):
@@ -68,14 +72,14 @@ class ProductAttribute(models.Model):
             self.invalidate_cache()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_on_product(self):
         for pa in self:
             if pa.is_used_on_products:
                 raise UserError(
                     _("You cannot delete the attribute %s because it is used on the following products:\n%s") %
                     (pa.display_name, ", ".join(pa.product_tmpl_ids.mapped('display_name')))
                 )
-        return super(ProductAttribute, self).unlink()
 
 
 class ProductAttributeValue(models.Model):
@@ -93,6 +97,12 @@ class ProductAttributeValue(models.Model):
     pav_attribute_line_ids = fields.Many2many('product.template.attribute.line', string="Lines",
         relation='product_attribute_value_product_template_attribute_line_rel', copy=False)
     is_used_on_products = fields.Boolean('Used on Products', compute='_compute_is_used_on_products')
+
+    is_custom = fields.Boolean('Is custom value', help="Allow users to input custom values for this attribute value")
+    html_color = fields.Char(
+        string='Color',
+        help="Here you can set a specific HTML color index (e.g. #ff0000) to display the color if the attribute type is 'Color'.")
+    display_type = fields.Selection(related='attribute_id.display_type', readonly=True)
 
     _sql_constraints = [
         ('value_company_uniq', 'unique (name, attribute_id)', "You cannot create two values with the same name for the same attribute.")
@@ -134,14 +144,14 @@ class ProductAttributeValue(models.Model):
             self.invalidate_cache()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_used_on_product(self):
         for pav in self:
             if pav.is_used_on_products:
                 raise UserError(
                     _("You cannot delete the value %s because it is used on the following products:\n%s") %
                     (pav.display_name, ", ".join(pav.pav_attribute_line_ids.product_tmpl_id.mapped('display_name')))
                 )
-        return super(ProductAttributeValue, self).unlink()
 
     def _without_no_variant_attributes(self):
         return self.filtered(lambda pav: pav.attribute_id.create_variant != 'no_variant')
@@ -361,8 +371,7 @@ class ProductTemplateAttributeLine(models.Model):
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             args = args or []
             domain = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
-            attribute_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-            return models.lazy_name_get(self.browse(attribute_ids).with_user(name_get_uid))
+            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return super(ProductTemplateAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _without_no_variant_attributes(self):
@@ -400,7 +409,6 @@ class ProductTemplateAttributeValue(models.Model):
         'product.template.attribute.exclusion',
         'product_template_attribute_value_id',
         string="Exclude for",
-        relation="product_template_attribute_exclusion",
         help="Make this attribute value not compatible with "
              "other values of the product or some attribute values of optional and accessory products.")
 
@@ -408,6 +416,10 @@ class ProductTemplateAttributeValue(models.Model):
     product_tmpl_id = fields.Many2one('product.template', string="Product Template", related='attribute_line_id.product_tmpl_id', store=True, index=True)
     attribute_id = fields.Many2one('product.attribute', string="Attribute", related='attribute_line_id.attribute_id', store=True, index=True)
     ptav_product_variant_ids = fields.Many2many('product.product', relation='product_variant_combination', string="Related Variants", readonly=True)
+
+    html_color = fields.Char('HTML Color Index', related="product_attribute_value_id.html_color")
+    is_custom = fields.Boolean('Is custom value', related="product_attribute_value_id.is_custom")
+    display_type = fields.Selection(related='product_attribute_value_id.display_type', readonly=True)
 
     _sql_constraints = [
         ('attribute_value_unique', 'unique(attribute_line_id, product_attribute_value_id)', "Each value should be defined only once per attribute per product."),
@@ -541,3 +553,21 @@ class ProductTemplateAttributeExclusion(models.Model):
     value_ids = fields.Many2many(
         'product.template.attribute.value', relation="product_attr_exclusion_value_ids_rel",
         string='Attribute Values', domain="[('product_tmpl_id', '=', product_tmpl_id), ('ptav_active', '=', True)]")
+
+
+class ProductAttributeCustomValue(models.Model):
+    _name = "product.attribute.custom.value"
+    _description = 'Product Attribute Custom Value'
+    _order = 'custom_product_template_attribute_value_id, id'
+
+    name = fields.Char("Name", compute='_compute_name')
+    custom_product_template_attribute_value_id = fields.Many2one('product.template.attribute.value', string="Attribute Value", required=True, ondelete='restrict')
+    custom_value = fields.Char("Custom Value")
+
+    @api.depends('custom_product_template_attribute_value_id.name', 'custom_value')
+    def _compute_name(self):
+        for record in self:
+            name = (record.custom_value or '').strip()
+            if record.custom_product_template_attribute_value_id.display_name:
+                name = "%s: %s" % (record.custom_product_template_attribute_value_id.display_name, name)
+            record.name = name

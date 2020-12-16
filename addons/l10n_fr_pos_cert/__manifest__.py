@@ -4,7 +4,7 @@
 {
     'name': 'France - VAT Anti-Fraud Certification for Point of Sale (CGI 286 I-3 bis)',
     'version': '1.0',
-    'category': 'Accounting/Accounting',
+    'category': 'Accounting/Localizations/Point of Sale',
     'description': """
 This add-on brings the technical requirements of the French regulation CGI art. 286, I. 3° bis that stipulates certain criteria concerning the inalterability, security, storage and archiving of data related to sales to private individuals (B2C).
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -36,6 +36,6 @@ The module adds following features:
         'security/ir.model.access.csv',
         'security/account_closing_intercompany.xml',
     ],
-    'qweb': ['static/src/xml/pos.xml'],
+    'qweb': ['static/src/xml/OrderReceipt.xml'],
     'post_init_hook': '_setup_inalterability',
 }

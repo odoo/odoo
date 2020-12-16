@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="AdyenAccountCreationConfirmation">
+        <main>
+            <div class="alert alert-info">
+                You can start processing payments as soon as your application is sent.<br/>
+                Payouts will be blocked until your application has been accepted.<br/>
+                We will notify you when the status of the review changes, or if additional data is required.<br/>
+            </div>
+
+            <h3>Submitted data</h3>
+            <table class="table table-sm">
+                <t t-if="data.is_business">
+                    <tr>
+                        <td>Legal Entity</td>
+                        <td>Business</td>
+                    </tr>
+                    <tr>
+                        <td>Legal Business Name</td>
+                        <td t-esc="data.legal_business_name"/>
+                    </tr>
+                    <tr>
+                        <td>Doing Business As</td>
+                        <td t-esc="data.doing_business_as"/>
+                    </tr>
+                    <tr>
+                        <td>Registration Number</td>
+                        <td t-esc="data.registration_number"/>
+                    </tr>
+                </t>
+                <t t-else="">
+                    <tr>
+                        <td>Legal Entity</td>
+                        <td>Individual</td>
+                    </tr>
+                    <tr>
+                        <td>First Name</td>
+                        <td t-esc="data.first_name"/>
+                    </tr>
+                    <tr>
+                        <td>Last Name</td>
+                        <td t-esc="data.last_name"/>
+                    </tr>
+                    <tr>
+                        <td>Date of Birth</td>
+                        <td t-esc="data.date_of_birth.format('YYYY-MM-DD')"/>
+                    </tr>
+                </t>
+                <tr>
+                    <td>Email</td>
+                    <td t-esc="data.email"/>
+                </tr>
+                <tr>
+                    <td>Phone Number</td>
+                    <td t-esc="data.phone_number"/>
+                </tr>
+                <tr>
+                    <td>Address</td>
+                    <td>
+                        <t t-esc="data.street"/> <t t-esc="data.house_number_or_name"/>,
+                        <t t-esc="data.city"/> <t t-if="data.state_code" t-esc="data.state_code"/> <t t-esc="data.zip"/>,
+                        <t t-esc="data.country_code"/>
+                    </td>
+                </tr>
+            </table>
+
+            <h3>Disclaimers</h3>
+            <p>WARNING: Please note that the right to use the payment services is only for
+            sales in your own name. You may not resell, hire or on any other basis allow third
+            parties to use the payment services to enable such third parties to be paid for their
+            services. You may not use the payment services for different types of product and
+            services than as registered with your application. In particular you confirm that you
+            will not use the payment services for any type of product or service appearing in the
+            <a href="https://www.odoo.com/odoo_adyen/static/src/pdf/marketpay_prohibited_products_and_services.pdf">
+            Prohibited Products and Services List of our Processor</a>. If we or our
+            Processor at any time discover that the information you provided about your
+            business is incorrect or has changed without informing us or if you violate any of
+            these conditions, the services may be suspended and/or terminated with
+            immediate effect and fines may be applied by the Credit Card Schemes and/or the
+            authorities for unregistered or inappropriate use of payment services which will in
+            such case be payable by you.</p>
+
+            <h3>Contractual Relationship</h3>
+            <p>The payment processing services ordered by you by placing this order will be
+            provided to you by Adyen N.V. (hereafter “Processor”), with which you are
+            entering into a direct agreement by confirming this order. Odoo S.A.
+            (hereafter “We /Us”) will assist and support you in your use of the services to be
+            provided by the Processor and we will provide you first line assistance with and
+            enable you to connect to the systems of Processor to be able to use its services.
+            For this purpose, you hereby instruct Processor to provide us access to your data
+            and setting in Processor’s systems which are used by Processor to provide the
+            services and authorise us to manage these on your behalf.</p>
+
+            <h3>Pricing</h3>
+            <ul>
+                <li>Payment and processing fees are listed on <a href="http://www.adyen.com/pricing">adyen.com/pricing</a>.</li>
+                <li>Payouts cost 0.20€ (EU) or 0.22$ (US) each.</li>
+                <li>Chargebacks cost 7.5€ each.</li>
+                <li>Onboarding and KYC cost 5€.</li>
+            </ul>
+
+            <input type="checkbox" class="opt_in_checkbox"/>
+            I confirm I have taken notice of and accept the following terms and restrictions:
+            <ul>
+                <li>Adyen MarketPay Terms and Conditions (click <a href="https://www.odoo.com/odoo_adyen/static/src/pdf/marketpay_terms_and_conditions.pdf">here</a> to download and review)</li>
+                <li>Adyen Restricted and Prohibited Products and Services list (click <a href="https://www.odoo.com/odoo_adyen/static/src/pdf/marketpay_prohibited_products_and_services.pdf">here</a> to download and review)</li>
+            </ul>
+        </main>
+    </t>
+
+    <t t-name="AdyenKYCStatusTag">
+        <t t-if="value === 'awaiting_data'">
+            <span class="badge badge-pill badge-warning">Data to provide</span>
+        </t>
+        <t t-if="value === 'pending'">
+            <span class="badge badge-pill badge-info">Waiting for validation</span>
+        </t>
+        <t t-if="value === 'passed'">
+            <span class="badge badge-pill badge-success">Confirmed</span>
+        </t>
+        <t t-if="value === 'failed'">
+            <span class="badge badge-pill badge-danger">Failed</span>
+        </t>
+    </t>
+</templates>

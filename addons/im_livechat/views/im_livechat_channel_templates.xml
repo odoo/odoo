@@ -7,22 +7,38 @@
         -->
         <template id="assets_backend" name="im_livechat assets backend" inherit_id="web.assets_backend">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_backend.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_view.js"></script>
                 <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat_channel_form_controller.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/bugfix/bugfix.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss/discuss.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss_sidebar/discuss_sidebar.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/notification_list/notification_list.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_needaction_preview/thread_needaction_preview.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_preview/thread_preview.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/messaging_initializer/messaging_initializer.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/messaging_notification_handler/messaging_notification_handler.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/partner/partner.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/models/thread/thread.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/widgets/discuss/discuss.js"></script>
+
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/bugfix/bugfix.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_history.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_form.scss"/>
             </xpath>
         </template>
 
-        <template id="qunit_suite" name="livechat_tests" inherit_id="web.qunit_suite">
-            <xpath expr="//t[@t-set='head']" position="inside">
-                <script type="text/javascript" src="/im_livechat/static/src/js/website_livechat_window.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat_message.js"></script>
-
-                <script type="text/javascript" src="/im_livechat/static/tests/discuss_livechat_tests.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/tests/website_livechat_window_tests.js"></script>
+        <template id="qunit_suite" name="livechat_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/im_livechat/static/src/bugfix/bugfix_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/composer/composer_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/discuss/discuss_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/messaging_menu/messaging_menu_tests.js"/>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_icon/thread_icon_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/components/thread_textual_typing_status/thread_textual_typing_status_tests.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/legacy/public_livechat.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/tests/helpers/mock_models.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/tests/helpers/mock_server.js"></script>
             </xpath>
         </template>
 
@@ -126,6 +142,7 @@
             <!-- Qweb2 lib -->
             <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
             <!-- Odoo JS Framework -->
+            <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
             <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
             <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
             <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
@@ -153,42 +170,23 @@
             <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
             <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
+            <script type="text/javascript" src="/web/static/src/js/common_env.js"></script>
             <script type="text/javascript" src="/web/static/src/js/public/lazyloader.js"/>
+            <script type="text/javascript" src="/web/static/src/js/public/public_env.js"/>
             <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
             <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
             <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
             <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
             <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
             <!-- Bus, Mail, Livechat -->
-                <!-- thread windows -->
-                <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/js/website_livechat_window.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/thread_widget.js"></script>
-
             <script type="text/javascript" src="/bus/static/src/js/longpolling_bus.js"></script>
             <script type="text/javascript" src="/bus/static/src/js/crosstab_bus.js"></script>
             <script type="text/javascript" src="/bus/static/src/js/services/bus_service.js"></script>
-
             <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
-            <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
-            <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
-            <!-- Models -->
-                    <!-- threads -->
-                    <script type="text/javascript" src="/mail/static/src/js/models/threads/abstract_thread.js"></script>
-                    <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js"></script>
-                    <!-- messages -->
-                    <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
-                    <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat_message.js"></script>
-                    <!-- utils -->
-                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timer.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timers.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/utils/cc_throttle_function.js"></script>
+            <script type="text/javascript" src="/im_livechat/static/src/legacy/public_livechat.js"></script>
             <t t-call="web._assets_helpers"/>
             <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat_bootstrap.scss"/>
-            <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
-            <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
-            <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/legacy/public_livechat.scss"/>
         </template>
 
         <!-- the js code to initialize the LiveSupport object -->
@@ -206,7 +204,7 @@
                     odoo.define('im_livechat.livesupport', function (require) {
             <t t-if="info['available']" t-translation="off">
                         var rootWidget = require('root.widget');
-                        var im_livechat = require('im_livechat.im_livechat');
+                        var im_livechat = require('im_livechat.legacy.im_livechat.im_livechat');
                         var button = new im_livechat.LivechatButton(
                             rootWidget,
                             "<t t-esc="info['server_url']"/>",

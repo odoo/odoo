@@ -97,16 +97,20 @@ an impact on all view types.
 
   Disable/enable record duplication on the view through the **Action** dropdown.
 
-* ``decoration-$`` (``list`` & ``gantt``)
+* ``decoration-{$name}`` (``list`` & ``gantt``)
 
   Define a conditional display of a record in the style of a row's text based on the corresponding
   record's attributes.
 
   Values are Python expressions. For each record, the expression is evaluated
-  with the record's attributes as context values and, if ``true``, the
-  corresponding style is applied to the row. Other context values are
-  ``uid`` (the id of the current user) and ``current_date`` (the current date
-  as a string of the form ``YYYY-MM-DD``).
+  with the record's attributes as context values and if ``true``, the
+  corresponding style is applied to the row. Here are some of the other values
+  available in the context:
+
+  * ``uid``: the id of the current user,
+  * ``today``: the current local date as a string of the form ``YYYY-MM-DD``,
+  * ``now``: same as ``today`` with the addition of the current time.
+    This value is formatted as ``YYYY-MM-DD hh:mm:ss``.
 
   .. code-block:: xml
 
@@ -120,6 +124,18 @@ an impact on all view types.
      Supported values differ for the two view types. The Gantt view only supports ``success``,
      ``info``, ``warning``, ``danger`` and ``secondary`` displays. The list view supports ``bf``,
      ``it``, ``success``, ``info``, ``warning``, ``danger``, ``muted`` and ``primary`` displays.
+
+* ``sample`` (``kanban`` & ``list`` & ``gantt`` & ``graph`` & ``pivot`` & ``cohort`` & ``dashboard``)
+
+  Populate the view with a set of sample records if none are found for the current model.
+  This attribute is false by default.
+
+  These fake records will have heuristics for certain field names/models. For example,
+  a field 'display_name' on the model 'res.users' will be populated with sample people names
+  while an 'email' field will be in the form 'firstname.lastname@sample.demo'.
+
+  The user will not be able to interact with these data and they will be discarded as soon as
+  an action is performed (record created, column added, etc.)
 
 * ``banner_route``
   a route address to be fetched and prepended to the view.
@@ -176,12 +192,29 @@ inherited views.
 
 * ``inherit_id`` :class:`~odoo.fields.Many2one`
 
-  the current view's parent view, unset by default
+  the current view's parent view, unset by default. Specify the parent using
+  the `ref` attribute:
+
+  .. code-block:: xml
+
+      <field name="inherit_id" ref="library.view_book_form"/>
 
 * ``mode`` :class:`~odoo.fields.Selection`: `extension / primary`
 
   inheritance mode, ``extension`` by default if ``inherit_id`` is set,
   ``primary`` otherwise.
+
+  An example of where you would want to override ``mode`` while using
+  ``inherit_id`` is delegation inheritance.
+  In that case your derived model will be separate from its parent and views
+  matching with one won't match with the other. Suppose you inherit from a view
+  associated with the parent model and want to customize the derived view to
+  show data from the derived model. The ``mode`` of the derived view needs to
+  be set to ``primary``, because it's the base (and maybe only) view for that
+  derived model. Otherwise the :ref:`view matching <reference/views/inheritance/view-matching>`
+  rules won't apply.
+
+.. _reference/views/inheritance/view-matching:
 
 View matching
 -------------
@@ -359,7 +392,7 @@ Possible children of the view element are:
 Calendar
 --------
 
-Calendar views display records as events in a daily, weekly or monthly
+Calendar views display records as events in a daily, weekly, monthly or yearly
 calendar. Their root element is ``<calendar>``. Available attributes on the
 calendar view are:
 
@@ -387,14 +420,21 @@ calendar view are:
     in a new form view (with a do_action)
 ``quick_add``
     enables quick-event creation on click: only asks the user for a ``name``
-    and tries to create a new event with just that and the clicked event
-    time. Falls back to a full form dialog if the quick creation fails
+    (the field to which this values is saved can be controlled through
+    ``rec_name``) and tries to create a new event with just that and the clicked
+    event time. Falls back to a full form dialog if the quick creation fails
+``create_name_field``
+    name of the record's field holding the textual representation of the record,
+    this is used when creating records through the 'quick create' mechanism
 ``all_day``
     name of a boolean field on the record indicating whether the corresponding
     event is flagged as day-long (and duration is irrelevant)
 ``mode``
     Default display mode when loading the calendar.
-    Possible attributes are: ``day``, ``week``, ``month``
+    Possible attributes are: ``day``, ``week``, ``month``, ``year``
+``scales``
+    Comma-separated list of scales to provide. By default, all scales are
+    available. See mode for possible scale values.
 
 ``<field>``
   declares fields to aggregate or to use in kanban *logic*. If the field is
@@ -415,37 +455,6 @@ calendar view are:
 
     use "True" to add this field in filter in the sidebar. You can specify
     a ``color`` field used to colorize the checkbox.
-
-``templates``
-  defines the :ref:`reference/qweb` template ``calendar-box``. Cards definition
-  may be split into multiple templates for clarity which will be rendered once
-  for each record.
-
-  The kanban view uses mostly-standard :ref:`javascript qweb
-  <reference/qweb/javascript>` and provides the following context variables:
-
-  ``widget``
-    the current :js:class:`KanbanRecord`, can be used to fetch some
-    meta-information. These methods are also available directly in the
-    template context and don't need to be accessed via ``widget``
-    ``getColor`` to convert in a color integer
-    ``getAvatars`` to convert in an avatar image
-    ``displayFields`` list of not invisible fields
-  ``record``
-    an object with all the requested fields as its attributes. Each field has
-    two attributes ``value`` and ``raw_value``
-  ``event``
-    the calendar event object
-  ``format``
-    format method to convert values into a readable string with the user
-    parameters
-  ``fields``
-    definition of all model fields
-    parameters
-  ``user_context``
-    self-explanatory
-  ``read_only_mode``
-    self-explanatory
 
 .. _reference/views/cohort:
 
@@ -508,6 +517,20 @@ attributes:
 - ``measure`` (optional)
     A field that can be aggregated.  This field will be used to compute the values
     for each cell.  If not set, the cohort view will count the number of occurrences.
+
+``<field>`` (optional)
+  allows to specify a particular field in order to manage it from the available measures, it's
+  main use is for hiding a field from the selectable measures:
+
+- ``name`` (required)
+    the name of the field to use in the view.
+- ``string`` (optional)
+    the name that would be used to display the field in the cohort view, overrides the
+    default python String attribute of the field.
+- ``invisible`` (optional)
+    if true, the field will not appear either in the active measures nor in the selectable
+    measures (useful for fields that do not make sense aggregated, such as fields in different
+    units, e.g. € and $).
 
 .. _reference/views/dashboard:
 
@@ -775,6 +798,9 @@ system. Available semantic components are:
   ``special``
     for form views opened in dialogs: ``save`` to save the record and close the
     dialog, ``cancel`` to close the dialog without saving.
+  ``confirm``
+    confirmation message to display (and for the user to accept) before
+    performing the button's Odoo call (also works in Kanban views).
 
 ``field``
   renders (and allow editing of, possibly) a single field of the current
@@ -785,6 +811,9 @@ system. Available semantic components are:
 
   ``name`` (mandatory)
     the name of the field to render
+  ``id``
+    the node id. Useful when there are several occurrences of the same field in
+    the view (see ``label`` component below). Default is the field name.
   ``widget``
     fields have a default rendering based on their type
     (e.g. :class:`~odoo.fields.Char`,
@@ -856,16 +885,38 @@ system. Available semantic components are:
     for opening specific kanban view when selecting records from m2o/m2m in mobile
     environment
 
+``label``
+  when a ``field`` component isn't placed directly inside a ``group``, or when
+  its ``nolabel`` attribute is set, the field's label isn't automatically
+  displayed alongside its value. The ``label`` component is the manual alternative
+  of displaying the label of a field. Possible attributes are:
+
+  ``for`` (mandatory)
+    the reference to the field associated with the label. Can be either the name
+    of a field, or its id (``id`` attribute set on the ``field``). When there are
+    several occurrences of the same field in the view, and there are several
+    ``label`` components associated with these ``field`` nodes, those labels
+    must have unique ``for`` attributes (in this case referencing the ``id``
+    attribute of the corresponding ``field`` nodes).
+  ``string``
+    the label to display. Display the field's label (coming from the field
+    definition in the model) by default.
+  ``class``
+    same as for ``field`` component.
+  ``attrs``
+    same as for ``field`` component.
+
+
 Generic structure
 ~~~~~~~~~~~~~~~~~
 
 .. code-block:: xml
 
   <form>
+    <header>
+      <field name="state" widget="statusbar"/>
+    </header>
     <sheet>
-      <header>
-        <field name="state"  widget="statusbar"/>
-      </header>
       <div class="oe_button_box">
         <BUTTONS/>
       </div>
@@ -921,9 +972,13 @@ take the following attributes:
 
     Values are Python expressions. For each record, the expression is evaluated
     with the record's attributes as context values and if ``true``, the
-    corresponding style is applied to the row. Other context values are
-    ``uid`` (the id of the current user) and ``current_date`` (the current date
-    as a string of the form ``yyyy-MM-dd``).
+    corresponding style is applied to the row. Here are some of the other values
+    available in the context:
+
+    * ``uid``: the id of the current user,
+    * ``today``: the current local date as a string of the form ``YYYY-MM-DD``,
+    * ``now``: same as ``today`` with the addition of the current time.
+      This value is formatted as ``YYYY-MM-DD hh:mm:ss``.
 
     ``{$name}`` can be one of the following `bootstrap contextual color`_ (``danger``,
     ``info``, ``secondary``, ``success`` or ``warning``).
@@ -1074,6 +1129,10 @@ attributes:
   within a group
 ``disable_linking``
   set to ``True`` to prevent from redirecting clicks on graph to list view
+``order``
+  if set, x-axis values will be sorted by default according their measure with
+  respect to the given order (``asc`` or ``desc``). Only used for ``bar`` and
+  ``pie`` charts.
 
 The only allowed element within a graph view is ``field`` which can have the
 following attributes:
@@ -1084,6 +1143,10 @@ following attributes:
 
 ``title`` (optional)
   string displayed on the top of the graph.
+
+``invisible`` (optional)
+  if true, the field will not appear either in the active measures nor in the
+  selectable measures.
 
 ``type``
   indicates whether the field should be used as a grouping criteria or as an
@@ -1421,9 +1484,6 @@ Possible children elements of the list view are:
             unexpected results as domains are combined with a logical AND.
     ``context``
         merged into the view's context when performing the button's Odoo call
-    ``confirm``
-        confirmation message to display (and for the user to accept) before
-        performing the button's Odoo call
 
     .. todo:: declared but unused: help
 
@@ -1469,6 +1529,16 @@ Possible children elements of the list view are:
         be 3 times larger than the others). Note that when there are records in
         the list, we let the browser automatically adapt the column's widths
         according to their content, and this attribute is thus ignored.
+    ``decoration-{$name}``
+        allow changing the style of a cell's text based on the corresponding
+        record's attributes.
+
+        ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
+        (``font-style: italic``), or any `bootstrap contextual color`_ (``danger``,
+        ``info``, ``muted``, ``primary``, ``success`` or ``warning``).
+    ``nolabel``
+        if set to "1", the column header will remain empty. Also, the column
+        won't be sortable.
 
     .. note::
 
@@ -1616,6 +1686,8 @@ The ``<map>`` element can contain multiple ``<field>`` elements. Each ``<field>`
     The field to display.
 ``string``
     This string will be displayed before the field's content. It Can be used as a description.
+``limit``
+    The size of a page (default: 80). It must be a positive integer.
 
 No attribute or element is mandatory but as stated above if no res.partner many2one is provided the view won't be able to locate records.
 
@@ -1805,10 +1877,6 @@ Possible children elements of the search view are:
                   ``filter_domain="[]"``
     ``groups``
         make the field only available to specific users
-    ``widget``
-        use specific search widget for the field (the only use case in
-        standard Odoo 8.0 is a ``selection`` widget for
-        :class:`~odoo.fields.Many2one` fields)
     ``domain``
         if the field can provide an auto-completion
         (e.g. :class:`~odoo.fields.Many2one`), filters the possible
@@ -1981,12 +2049,38 @@ Possible children elements of the search view are:
 
   * ``color``: determines the icon color
 
-  Additional optional attributes are available in the ``multi`` case:
+  * ``enable_counters``: default is false. If set to true the record counters will be computed and
+    displayed if non-zero.
+
+    This feature has been implemented in case performances would be too bad.
+
+    Another way to solve performance issues is to properly override the
+    ``search_panel_select_range`` and ``search_panel_select_multi_range`` methods.
+
+  * ``expand``: default is false. If set to false categories or filters with 0 records will be hidden.
+
+  * ``limit``: default is 200. Integer determining the maximal number of values to fetch for the field.
+    If the limit is reached, no values will be displayed in the search panel and an error message will
+    appear instead because we consider that is useless / bad performance-wise. All values will be
+    fetched if set to 0.
+
+  Additional optional attributes are available according to the chosen case:
+
+  For the ``one`` case:
+
+  * ``hierarchize``: (only available for many2one fields) default is true. Handles the display style of categories :
+
+    If set to true child categories will appear under their related parent.
+    If not, all categories will be displayed on the same level.
+
+  For the ``multi`` case:
 
   * ``domain``: determines conditions that the comodel records have to satisfy.
 
   A domain might be used to express a dependency on another field (with select="one")
   of the search panel. Consider
+  /!\ This attribute is incompatible with a select="one" with enabled counters; if a select="multi"
+  has a `domain` attribute, all select="one" will have their counters disabled.
 
   .. code-block:: xml
 
@@ -2000,12 +2094,6 @@ Possible children elements of the search view are:
 
   * ``groupby``: field name of the comodel (only available for many2one and many2many fields). Values will be grouped by that field.
 
-  * ``disable_counters``: default is false. If set to true the counters won't be computed.
-
-    This feature has been implemented in case performances would be too bad.
-
-    Another way to solve performance issues is to properly override the
-    ``search_panel_select_multi_range`` method.
 
 .. _reference/views/search/defaults:
 

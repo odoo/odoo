@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_track_view_form" model="ir.ui.view" >
+        <field name="name">event.track.view.form.inherit.event.track.quiz</field>
+        <field name="model">event.track</field>
+        <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='event_track_cta_group']" position="after">
+                <group name="event_track_quiz_group">
+                    <field name="quiz_id"
+                        context="{'form_view_ref': 'website_event_track_quiz.event_quiz_view_form_from_track'}"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

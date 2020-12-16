@@ -1,7 +1,9 @@
 odoo.define('website_blog.website_blog', function (require) {
 'use strict';
+var core = require('web.core');
 
-var publicWidget = require('web.public.widget');
+const dom = require('web.dom');
+const publicWidget = require('web.public.widget');
 
 publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
     selector: '.website_blog',
@@ -72,11 +74,13 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
         var blogPostTitle = encodeURIComponent($('#o_wblog_post_name').html() || '');
         var articleURL = encodeURIComponent(window.location.href);
         if ($element.hasClass('o_twitter')) {
-            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=Amazing blog article : ' + blogPostTitle + "! " + articleURL;
+            var twitterText = core._t("Amazing blog article: %s! Check it live: %s");
+            var tweetText = _.string.sprintf(twitterText, blogPostTitle, articleURL);
+            url = 'https://twitter.com/intent/tweet?tw_p=tweetbutton&text=' + tweetText;
         } else if ($element.hasClass('o_facebook')) {
             url = 'https://www.facebook.com/sharer/sharer.php?u=' + articleURL;
         } else if ($element.hasClass('o_linkedin')) {
-            url = 'https://www.linkedin.com/shareArticle?mini=true&url=' + articleURL + '&title=' + blogPostTitle;
+            url = 'https://www.linkedin.com/sharing/share-offsite/?url=' + articleURL;
         }
         window.open(url, '', 'menubar=no, width=500, height=400');
     },
@@ -92,14 +96,7 @@ publicWidget.registry.websiteBlog = publicWidget.Widget.extend({
      * @param {Function} callback - to be executed after the scroll is performed
      */
     _forumScrollAction: function ($el, duration, callback) {
-        var $mainNav = $('#wrapwrap > header');
-        var gap = $mainNav.height() + $mainNav.offset().top;
-
-        $('html, body').stop().animate({
-            scrollTop: $el.offset().top - gap
-        }, duration, 'swing', function () {
-            callback();
-        });
+        dom.scrollTo($el[0], {duration: duration}).then(() => callback());
     },
 });
 });

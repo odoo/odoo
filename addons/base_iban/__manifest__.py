@@ -13,7 +13,8 @@ with a single statement.
     'depends': ['account', 'web'],
     'data': [
         'views/templates.xml',
-        'views/partner_view.xml'
+        'views/partner_view.xml',
+        'views/setup_wizards_view.xml'
     ],
     'demo': ['data/res_partner_bank_demo.xml'],
 }

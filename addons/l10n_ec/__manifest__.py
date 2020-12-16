@@ -6,7 +6,7 @@
 {
     'name': 'Ecuador - Accounting',
     'version': '1.1',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the accounting chart for Ecuador in Odoo.
 ==============================================================================
@@ -17,6 +17,8 @@ Accounting chart and localization for Ecuador.
     'depends': [
         'account',
         'base_iban',
+        'l10n_latam_base',
+        'l10n_latam_invoice_document',
     ],
     'data': [
         'data/l10n_ec_chart_data.xml',
@@ -25,6 +27,7 @@ Accounting chart and localization for Ecuador.
         'data/account_data.xml',
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
+        'data/res.country.state.csv',
     ],
     'demo': [
         'demo/demo_company.xml',

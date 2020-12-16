@@ -23,10 +23,14 @@
             </field>
         </record>
 
-        <record model="ir.actions.act_window" id="product_open_orderpoint">
-            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
-            <field name="name">Reordering Rules</field>
-            <field name="res_model">stock.warehouse.orderpoint</field>
+        <record model="ir.actions.server" id="action_open_routes">
+            <field name="name">Routes</field>
+            <field name="model_id" ref="product.model_product_template"/>
+            <field name="groups_id" eval="[(4,ref('stock.group_stock_user'))]"/>
+            <field name="state">code</field>
+            <field name="code">
+                action = model.action_open_routes_diagram()
+            </field>
         </record>
 
         <record id="view_stock_product_tree" model="ir.ui.view">
@@ -34,13 +38,9 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_product_tree_view"/>
             <field name="arch" type="xml">
-                <tree position="attributes">
-                    <attribute name="decoration-danger">type == 'product' and virtual_available&lt;0</attribute>
-                    <attribute name="decoration-info">type != 'product' or virtual_available&gt;=0</attribute>
-                </tree>
                 <field name="price" position="after">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted Quantity" optional="show"/>
+                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0" decoration-bf="1"/>
+                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" string="Forecasted Quantity" optional="show" decoration-danger="virtual_available &lt; 0" decoration-warning="virtual_available == 0"/>
                 </field>
             </field>
         </record>
@@ -50,13 +50,12 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_tree_view"/>
             <field name="arch" type="xml">
-                <tree position="attributes">
-                    <attribute name="decoration-danger">type == 'product' and virtual_available&lt;0</attribute>
-                    <attribute name="decoration-info">type != 'product' or virtual_available&gt;=0</attribute>
-                </tree>
                 <field name="uom_id" position="before">
-                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
-                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show"/>
+                    <field name="qty_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="qty_available &lt; 0"/>
+                    <field name="virtual_available" attrs="{'invisible':[('type', '!=', 'product')]}" optional="show" decoration-danger="virtual_available &lt; 0" decoration-bf="1"/>
+                </field>
+                <field name="default_code" position="after">
+                    <field name="responsible_id" widget="many2one_avatar_user"/>
                 </field>
             </field>
         </record>
@@ -100,15 +99,26 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
+                <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                    <label for="sale_delay" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
+                    <div attrs="{'invisible': [('sale_ok', '=', False)]}">
+                        <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
+                    </div>
+                </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
+                    <field name="has_available_route_ids" invisible="1"/>
                     <group string="Operations" name="operations">
-                        <field name="route_ids" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
-                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
-                        <label for="sale_delay" attrs="{'invisible': [('sale_ok', '=', False)]}"/>
-                        <div attrs="{'invisible': [('sale_ok', '=', False)]}">
-                            <field name="sale_delay" class="oe_inline" style="vertical-align:baseline"/> days
+                        <label for="route_ids" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <div>
+                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': ['|', ('has_available_route_ids', '=', False), ('type', 'in', ['service', 'digital'])]}"/>
+                            <button id="stock.view_diagram_button" string="View Diagram" type="action" name="%(action_open_routes)d" icon="fa-arrow-right"
+                                 attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
+                                 class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
                         </div>
+                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
                     </group>
+                </xpath>
+                <xpath expr="//group[@name='group_lots_and_weight']" position="after">
                     <group string="Traceability" name="traceability" groups="stock.group_production_lot"
                            attrs="{'invisible': [('type', '=', 'consu')]}">
                         <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
@@ -143,9 +153,9 @@
                 <xpath expr="//kanban" position="inside">
                     <field name="type"/>
                 </xpath>
-                <ul position="inside">
-                    <li t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                </ul>
+                <xpath expr="//div[@name='product_lst_price']" position="after">
+                    <div t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                </xpath>
             </field>
         </record>
 
@@ -236,13 +246,13 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                       <button string="Traceability"
+                       <button string="Product Moves"
                             type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-exchange"
                             groups="stock.group_stock_user"/>
-                        <button name="%(product_open_orderpoint)d" type="action"
+                        <button name="action_view_orderpoints" type="object"
                             attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
                             <div class="o_field_widget o_stat_info mr4">
@@ -254,8 +264,8 @@
                                 <span class="o_stat_value"><field name="reordering_max_qty"/></span>
                             </div>
                         </button>
-                        <button type="action"
-                            name="%(product_open_orderpoint)d"
+                        <button type="object"
+                            name="action_view_orderpoints"
                             attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '==', 1)]}"
                             class="oe_stat_button" icon="fa-refresh">
                             <field name="nbr_reordering_rules" widget="statinfo"/>
@@ -264,18 +274,17 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                       <button string="Routes" type="action"
-                            name="%(action_stock_rules_report)d"
-                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-cogs"
-                            context="{'default_product_id': id}"
-                            groups="stock.group_stock_multi_locations"/>
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
                             class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
                             attrs="{'invisible': [('type', '=', 'service')]}"
                             context="{'invisible_handle': True, 'single_product': True}"/>
                     </div>
+                    <xpath expr="//button[@name='%(action_open_routes)d']" position="attributes">
+                        <attribute name="context">
+                            {'default_product_id': id}
+                        </attribute>
+                    </xpath>
                 </data>
             </field>
         </record>
@@ -325,7 +334,7 @@
                                 <span class="o_stat_text">Forecasted</span>
                             </div>
                         </button>
-                        <button string="Traceability" type="object"
+                        <button string="Product Moves" type="object"
                             name= "action_view_stock_move_lines"
                             attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                             class="oe_stat_button" icon="fa-exchange"
@@ -354,12 +363,6 @@
                             name="action_open_product_lot"
                             attrs="{'invisible': [('tracking', '=', 'none')]}"
                             class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                        <button string="Routes" type="action"
-                            name="%(action_stock_rules_report)d"
-                            attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
-                            class="oe_stat_button" icon="fa-cogs"
-                            context="{'default_product_tmpl_id': id}"
-                            groups="stock.group_stock_multi_locations"/>
                         <button string="Putaway Rules" type="object"
                             name="action_view_related_putaway_rules"
                             class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
@@ -376,7 +379,7 @@
                         <attribute name="attrs">{'invisible': [('type', 'not in', ['product', 'consu'])]}</attribute>
                     </xpath>
 
-                    <xpath expr="//group[@name='group_lots_and_weight']" position="inside">
+                    <xpath expr="//label[@for='weight']" position="before">
                         <field name="responsible_id" domain="[('share', '=', False)]"/>
                     </xpath>
                 </data>
@@ -392,7 +395,9 @@
         <field name="context">{"search_default_consumable": 1, 'default_type': 'product'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Create a new product
+                No product found. Let's create one!
+            </p><p>
+                Track your stock quantities by creating storable products.
             </p>
         </field>
     </record>

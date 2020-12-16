@@ -50,11 +50,20 @@ value::
 .. autoclass:: odoo.models.BaseModel()
 
     .. autoattribute:: _auto
+    .. attribute:: _log_access
+
+        Whether the ORM should automatically generate and update the
+        :ref:`reference/fields/automatic/log_access`.
+
+        Defaults to whatever value was set for :attr:`~._auto`.
+
     .. autoattribute:: _table
     .. autoattribute:: _sequence
     .. autoattribute:: _sql_constraints
 
     .. autoattribute:: _register
+    .. autoattribute:: _abstract
+    .. autoattribute:: _transient
 
     .. autoattribute:: _name
     .. autoattribute:: _description
@@ -70,14 +79,6 @@ value::
     .. autoattribute:: _parent_name
     .. autoattribute:: _parent_store
 
-    .. autoattribute:: _abstract
-
-    .. seealso:: :class:`odoo.models.AbstractModel`
-
-    .. autoattribute:: _transient
-
-    .. seealso:: :class:`odoo.models.TransientModel`
-
     .. autoattribute:: _date_name
     .. autoattribute:: _fold_name
 
@@ -91,10 +92,18 @@ Model
 
 .. autoclass:: odoo.models.Model()
 
+      .. autoattribute:: _auto
+      .. autoattribute:: _abstract
+      .. autoattribute:: _transient
+
 TransientModel
 --------------
 
 .. autoclass:: odoo.models.TransientModel()
+
+      .. autoattribute:: _auto
+      .. autoattribute:: _abstract
+      .. autoattribute:: _transient
 
 .. _reference/fields:
 .. _reference/orm/fields:
@@ -144,22 +153,27 @@ Advanced Fields
 Date(time) Fields
 '''''''''''''''''
 
-Dates and Datetimes are very important fields in any kind of business
-application, they are heavily used in many popular Odoo applications such as
-logistics or accounting and their misuse can create invisible yet painful
-bugs, this excerpt aims to provide Odoo developers with the knowledge required
+:class:`Dates <odoo.fields.Date>` and :class:`Datetimes <odoo.fields.Datetime>`
+are very important fields in any kind of business application.
+Their misuse can create invisible yet painful bugs, this section
+aims to provide Odoo developers with the knowledge required
 to avoid misusing these fields.
 
 When assigning a value to a Date/Datetime field, the following options are valid:
 
 * A `date` or `datetime` object.
-* A string in the proper server format *(YYYY-MM-DD)* for Date fields,
-  *(YYYY-MM-DD HH:MM:SS)* for Datetime fields.
+* A string in the proper server format:
+
+  * ``YYYY-MM-DD`` for :class:`~odoo.fields.Date` fields,
+  * ``YYYY-MM-DD HH:MM:SS`` for :class:`~odoo.fields.Datetime` fields.
+
 * `False` or `None`.
 
 The Date and Datetime fields class have helper methods to attempt conversion
-into a compatible type: :func:`~odoo.fields.Date.to_date` will convert to a `datetime.date`
-object while :func:`~odoo.fields.Datetime.to_datetime` will convert to a `datetime.datetime`.
+into a compatible type:
+
+* :func:`~odoo.fields.Date.to_date` will convert to a :class:`datetime.date`
+* :func:`~odoo.fields.Datetime.to_datetime` will convert to a :class:`datetime.datetime`.
 
 .. admonition:: Example
 
@@ -205,6 +219,10 @@ Relational Fields
 .. autoclass:: One2many()
 
 .. autoclass:: Many2many()
+
+.. autoclass:: Command()
+    :members:
+    :undoc-members:
 
 Pseudo-relational fields
 ''''''''''''''''''''''''
@@ -288,6 +306,22 @@ it uses the values of other *fields*, it should specify those fields using
             record.discount_value = discount
             record.total = record.value - discount
 
+.. warning::
+
+    While it is possible to use the same compute method for multiple
+    fields, it is not recommended to do the same for the inverse
+    method.
+
+    During the computation of the inverse, **all** fields that use
+    said inverse are protected, meaning that they can't be computed,
+    even if their value is not in the cache.
+
+    If any of those fields is accessed and its value is not in cache,
+    the ORM will simply return a default value of `False` for these fields.
+    This means that the value of the inverse fields (other than the one
+    triggering the inverse method) may not give their correct value and
+    this will probably break the expected behavior of the inverse method.
+
 .. _reference/fields/related:
 
 Related fields
@@ -318,12 +352,32 @@ dependencies are modified.
 
 .. note:: The related fields are computed in sudo mode.
 
+.. warning::
+
+    You cannot chain :class:`~odoo.fields.Many2many` or :class:`~odoo.fields.One2many` fields in ``related`` fields dependencies.
+
+    ``related`` can be used to refer to a :class:`~odoo.fields.One2many` or
+    :class:`~odoo.fields.Many2many` field on another model on the
+    condition that it's done through a ``Many2one`` relation on the current model.
+    ``One2many`` and ``Many2many`` are not supported and the results will not be
+    aggregated correctly::
+
+      m2o_id = fields.Many2one()
+      m2m_ids = fields.Many2many()
+      o2m_ids = fields.One2many()
+
+      # Supported
+      d_ids = fields.Many2many(related="m2o_id.m2m_ids")
+      e_ids = fields.One2many(related="m2o_id.o2m_ids")
+
+      # Won't work: use a custom Many2many computed field instead
+      f_ids = fields.Many2many(related="m2m_ids.m2m_ids")
+      g_ids = fields.One2many(related="o2m_ids.o2m_ids")
+
 .. _reference/fields/automatic:
 
 Automatic fields
 ----------------
-
-.. Documented
 
 .. attribute:: id
 
@@ -333,23 +387,39 @@ Automatic fields
 
     Raise an Error otherwise.
 
-.. todo:: _log_access info
+.. _reference/fields/automatic/log_access:
+
+Access Log fields
+'''''''''''''''''
+
+These fields are automatically set and updated if
+:attr:`~odoo.models.BaseModel._log_access` is enabled. It can be
+disabled to avoid creating or updating those fields on tables for which they are
+not useful.
+
+By default, :attr:`~odoo.models.BaseModel._log_access` is set to the same value
+as :attr:`~odoo.models.BaseModel._auto`
 
 .. attribute:: create_date
 
-    :class:`~odoo.fields.Datetime`
+    Stores when the record was created, :class:`~odoo.fields.Datetime`
 
 .. attribute:: create_uid
 
-    :class:`~odoo.fields.Many2one`
+    Stores *who* created the record, :class:`~odoo.fields.Many2one` to a
+    ``res.users``.
 
 .. attribute:: write_date
 
-    :class:`~odoo.fields.Datetime`
+    Stores when the record was last updated, :class:`~odoo.fields.Datetime`
 
 .. attribute:: write_uid
 
-    :class:`~odoo.fields.Many2one`
+    Stores who last updated the record, :class:`~odoo.fields.Many2one` to a
+    ``res.users``.
+
+.. warning:: :attr:`~odoo.models.BaseModel._log_access` *must* be enabled on
+             :class:`~odoo.models.TransientModel`.
 
 .. _reference/orm/fields/reserved:
 
@@ -526,7 +596,7 @@ Method decorators
 =================
 
 .. automodule:: odoo.api
-    :members: depends, depends_context, constrains, onchange, returns, model, model_create_multi
+    :members: depends, depends_context, constrains, onchange, returns, autovacuum, model, model_create_multi
 
 .. .. currentmodule:: odoo.api
 
@@ -535,6 +605,7 @@ Method decorators
 .. .. autodata:: constrains
 .. .. autodata:: onchange
 .. .. autodata:: returns
+.. .. autodata:: autovacuum
 
 .. todo:: With sphinx 2.0 : autodecorator
 
@@ -948,8 +1019,10 @@ will yield:
     :language: text
     :lines: 13
 
-.. note:: it will also yield the various :ref:`automatic fields
-          <reference/fields/automatic>` unless they've been disabled
+.. note::
+
+    It will also yield the various :ref:`automatic fields
+    <reference/fields/automatic>` unless they've been disabled
 
 Delegation
 ----------
@@ -987,6 +1060,12 @@ and it's possible to write directly on the delegated field:
 
 .. warning:: when using delegation inheritance, methods are *not* inherited,
              only fields
+
+.. warning::
+
+    * `_inherits` is more or less implemented, avoid it if you can;
+    * chained `_inherits` is essentially not implemented, we cannot guarantee anything on the final behavior.
+
 
 Fields Incremental Definition
 -----------------------------

@@ -18,7 +18,7 @@ config_file_00 = os.path.join(os.path.dirname(__file__),'test-config-values-00.c
 conf = config.configmanager()
 conf.parse_config()
 
-assert conf['osv_memory_age_limit'] == 1.0
+assert conf['transient_age_limit'] == 1.0
 assert os.path.join(conf['root_path'], 'addons') == conf['addons_path']
 
 # 2. No config file, some command-line arguments
@@ -26,9 +26,9 @@ assert os.path.join(conf['root_path'], 'addons') == conf['addons_path']
 conf = config.configmanager()
 # mess with the optparse.Option definition to allow an invalid path
 conf.casts['addons_path'].action = 'store'
-conf.parse_config(['--addons-path=/xyz/dont-exist', '--osv-memory-age-limit=2.3'])
+conf.parse_config(['--addons-path=/xyz/dont-exist', '--transient-age-limit=2.3'])
 
-assert conf['osv_memory_age_limit'] == 2.3
+assert conf['transient_age_limit'] == 2.3
 assert conf['addons_path'] == '/xyz/dont-exist'
 
 # 3. Config file, no command-line arguments
@@ -36,11 +36,11 @@ assert conf['addons_path'] == '/xyz/dont-exist'
 conf = config.configmanager()
 conf.parse_config(['-c', config_file_00])
 
-assert conf['osv_memory_age_limit'] == 3.4
+assert conf['transient_age_limit'] == 3.4
 
 # 4. Config file, and command-line arguments
 
 conf = config.configmanager()
-conf.parse_config(['-c', config_file_00, '--osv-memory-age-limit=2.3'])
+conf.parse_config(['-c', config_file_00, '--transient-age-limit=2.3'])
 
-assert conf['osv_memory_age_limit'] == 2.3
+assert conf['transient_age_limit'] == 2.3

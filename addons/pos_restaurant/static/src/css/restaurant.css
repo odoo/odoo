@@ -111,7 +111,6 @@
     overflow: hidden;
     position: relative;
     bottom: 5px;
-    z-index: 5;
 }
 .floor-map .table.selected {
     outline: solid rgba(255,255,255,0.3);
@@ -166,7 +165,7 @@
 }
 .floor-map .edit-bar .color-picker {
     position: absolute;
-    left: -106px;
+    left: 36px;
     top: 40px;
     width: 180px;
     height: 180px;
@@ -209,26 +208,24 @@
 }
 
 .floor-map .table.selected .table-handle {
+    padding: 0px;
     position: absolute;
     width: 48px;
     height: 48px;
     left: 50%;
     top: 50%;
     border-radius: 24px;
-    margin-left: -24px;
-    margin-top:  -24px;
     background: white;
     box-shadow: 0px 2px 3px rgba(0,0,0,0.2);
     cursor: grab;
     transition: all 150ms linear;
     z-index: 100;
+    transform: translate(-50%, -50%);
 }
 .floor-map .table.selected .table-handle:hover {
     width: 60px;
     height: 60px;
     border-radius: 30px;
-    margin-left: -30px;
-    margin-top: -30px;
 }
 .floor-map .table .table-handle.top {      top: 0;         }
 .floor-map .table .table-handle.bottom {   top: 100%;      }
@@ -318,3 +315,264 @@
     margin-right: 4px;
 }
 
+/* ------ SPLIT BILL SCREEN ------- */
+
+.splitbill-screen.screen .contents {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0px auto;
+    max-width: 1024px;
+    border-left: dashed 1px rgb(215,215,215);
+    border-right: dashed 1px rgb(215,215,215);
+    height: 100%;
+}
+.splitbill-screen.screen .main {
+    display: flex;
+    flex-flow: row nowrap;
+    /* take the remaining vertical space */
+    flex: 1;
+    /* do not capture overflow in this element */
+    overflow: hidden;
+}
+.splitbill-screen.screen .main .lines {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    /* show scrollbar inside this element if its content overflows */
+    overflow-y: auto;
+}
+.splitbill-screen.screen .main .controls {
+    display: flex;
+    flex-flow: column nowrap;
+}
+.splitbill-screen.screen .pay-button {
+    margin: 16px;
+}
+.splitbill-screen.screen .pay-button .button {
+    background: #e2e2e2;
+    line-height: 74px;
+    font-size: 16px;
+    border: solid 1px rgb(202, 202, 202);
+    border-top-width: 0px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+.splitbill-screen.screen .pay-button .button:first-child {
+    border-top-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.splitbill-screen.screen .pay-button .button:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.splitbill-screen.screen .pay-button .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+
+.splitbill-screen.screen .main .lines {
+    border-right: dashed 1px rgb(215,215,215);
+}
+
+.splitbill-screen.screen .main .controls {
+    flex: 1;
+}
+
+/* ------ NARROWER SCREEN ------ */
+@media screen and (max-width: 768px) {
+    .splitbill-screen.screen .main {
+        flex-flow: column nowrap;
+    }
+    .splitbill-screen.screen .main .controls {
+        border-top: dashed 1px rgb(215,215,215);
+        flex: none;
+    }
+}
+
+.tip-screen .tip-options .total-amount {
+    text-align: center;
+    font-size: x-large;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tip-screen .tip-amount-options {
+    background: white;
+    border-radius: 3px;
+    margin-left: 4rem;
+    margin-right: 4rem;
+}
+
+.tip-screen .percentage-amounts {
+    display: flex;
+}
+
+.tip-screen .tip-options .button {
+    background: #FAFAFA;
+    border: solid 1px rgb(209, 209, 209);
+    border-radius: 3px;
+    flex: 1;
+    margin: 1rem;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.tip-screen .tip-options .button .percentage {
+    text-align: center;
+    font-size: xx-large;
+    color: #2196F3;
+    padding-top: 4rem;
+    padding-bottom: 0.75rem;
+}
+
+.tip-screen .tip-options .button .amount {
+    text-align: center;
+    font-size: large;
+    color: #757575;
+    padding-bottom: 4rem;
+}
+
+.tip-screen .custom-amount-form {
+    display: flex;
+}
+
+.tip-screen .custom-amount-form .item {
+    font-size: x-large;
+    color: #2196F3;
+    margin: 1rem;
+    flex: 1
+}
+
+.tip-screen .custom-amount-form .label {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    text-align: center;
+}
+
+.tip-screen .custom-amount-form .input {
+    background: #FAFAFA;
+    border: solid 1px rgb(209, 209, 209);
+    border-radius: 3px;
+    margin: 1rem;
+    text-align: right;
+    overflow: hidden;
+    position: relative;
+}
+
+.tip-screen .custom-amount-form .input .currency {
+    position: absolute;
+    display: flex;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.tip-screen .custom-amount-form .input input {
+    border: none;
+    padding: 0;
+    outline: none;
+    font-size: x-large;
+    text-align: right;
+    margin-left: 1rem;
+    margin-right: 3rem;
+    height: 100%;
+    width: calc(100% - 4rem);
+    background: #FAFAFA;
+    color: #2196F3;
+}
+
+.tip-screen .custom-amount-form .input input:focus {
+    border: none;
+    padding: 0;
+    outline: none;
+}
+
+.tip-screen .custom-amount-form .add {
+    text-align: center;
+}
+
+.tip-screen .no-tip {
+    display: flex;
+    color: #2196F3;
+    font-size: x-large;
+}
+
+.tip-screen .no-tip .button {
+    text-align: center;
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.tip-screen .pos-receipt-container {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin: 0;
+}
+
+@media print {
+    .tip-screen .pos-receipt-container {
+        display: block;
+    }
+    .tip-screen .pos-receipt-container * {
+        visibility: visible;
+    }
+}
+
+.pos-receipt .tip-form {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+.pos-receipt .tip-form .title {
+    text-align: center;
+}
+
+.pos-receipt .tip-form > div {
+    margin-top: 1rem;
+}
+
+.pos-receipt .tip-form .option {
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+}
+
+.pos-receipt .tip-form .percentage-options {
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+.ticket-screen .tip-cell {
+    height: 100%;
+    width: 100%;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.ticket-screen .tip-cell input {
+    width: 100%;
+    text-align: right;
+    font-size: medium;
+    color: #555555;
+    padding-bottom: 5px;
+    border: none;
+    outline: none;
+}
+
+.ticket-screen .tip-cell input:focus {
+    border: none;
+    outline: none;
+    border-bottom: solid 1px #555555;
+}

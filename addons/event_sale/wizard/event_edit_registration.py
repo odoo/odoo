@@ -41,6 +41,10 @@ class RegistrationEditor(models.TransientModel):
                     'event_id': so_line.event_id.id,
                     'event_ticket_id': so_line.event_ticket_id.id,
                     'sale_order_line_id': so_line.id,
+                    'name': so_line.order_partner_id.name,
+                    'email': so_line.order_partner_id.email,
+                    'phone': so_line.order_partner_id.phone,
+                    'mobile': so_line.order_partner_id.mobile,
                 }])
         res['event_registration_ids'] = attendee_list
         res = self._convert_to_write(res)
@@ -48,15 +52,17 @@ class RegistrationEditor(models.TransientModel):
 
     def action_make_registration(self):
         self.ensure_one()
+        registrations_to_create = []
         for registration_line in self.event_registration_ids:
             values = registration_line.get_registration_data()
             if registration_line.registration_id:
                 registration_line.registration_id.write(values)
             else:
-                self.env['event.registration'].create(values)
-        if self.env.context.get('active_model') == 'sale.order':
-            for order in self.env['sale.order'].browse(self.env.context.get('active_ids', [])):
-                order.order_line._update_registrations(confirm=False)
+                registrations_to_create.append(values)
+
+        self.env['event.registration'].create(registrations_to_create)
+        self.sale_order_id.order_line._update_registrations(confirm=self.sale_order_id.amount_total == 0)
+
         return {'type': 'ir.actions.act_window_close'}
 
 
@@ -64,6 +70,7 @@ class RegistrationEditorLine(models.TransientModel):
     """Event Registration"""
     _name = "registration.editor.line"
     _description = 'Edit Attendee Line on Sales Confirmation'
+    _order = "id desc"
 
     editor_id = fields.Many2one('registration.editor')
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line')

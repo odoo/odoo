@@ -13,6 +13,7 @@
         'views/event_registration_views.xml',
         'views/event_question_views.xml',
         'views/event_templates.xml',
+        'security/security.xml',
         'security/ir.model.access.csv',
     ],
     'demo': [

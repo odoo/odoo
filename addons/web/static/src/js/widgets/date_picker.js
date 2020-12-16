@@ -30,7 +30,7 @@ var DateWidget = Widget.extend({
         this.options = _.extend({
             locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
-            minDate: moment({ y: 1900 }),
+            minDate: moment({ y: 1000 }),
             maxDate: moment({ y: 9999, M: 11, d: 31 }),
             useCurrent: false,
             icons: {
@@ -75,7 +75,7 @@ var DateWidget = Widget.extend({
      */
     destroy: function () {
         if (this._onScroll) {
-            window.removeEventListener('scroll', this._onScroll, true);
+            window.removeEventListener('wheel', this._onScroll, true);
         }
         this.__libInput++;
         this.$el.datetimepicker('destroy');
@@ -183,9 +183,7 @@ var DateWidget = Widget.extend({
         this.set({'value': value});
         var formatted_value = value ? this._formatClient(value) : null;
         this.$input.val(formatted_value);
-        this.__libInput++;
-        this.$el.datetimepicker('date', value || null);
-        this.__libInput--;
+        this._setLibInputValue(value);
     },
 
     //--------------------------------------------------------------------------
@@ -233,6 +231,15 @@ var DateWidget = Widget.extend({
     },
     /**
      * @private
+     * @param {Moment|false} value
+     */
+    _setLibInputValue: function (value) {
+        this.__libInput++;
+        this.$el.datetimepicker('date', value || null);
+        this.__libInput--;
+    },
+    /**
+     * @private
      * @param {boolean} readonly
      */
     _setReadonly: function (readonly) {
@@ -263,7 +270,7 @@ var DateWidget = Widget.extend({
         this.__isOpen = false;
         this.changeDatetime();
         if (this._onScroll) {
-            window.removeEventListener('scroll', this._onScroll, true);
+            window.removeEventListener('wheel', this._onScroll, true);
         }
         this.changeDatetime();
     },
@@ -287,7 +294,7 @@ var DateWidget = Widget.extend({
                 self.__libInput--;
             }
         };
-        window.addEventListener('scroll', this._onScroll, true);
+        window.addEventListener('wheel', this._onScroll, true);
     },
     /**
      * @private

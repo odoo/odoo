@@ -18,24 +18,19 @@ class SaleOrder(models.Model):
             registrations_toupdate.write({'partner_id': vals['partner_id']})
         return result
 
-    def _action_confirm(self):
-        res = super(SaleOrder, self)._action_confirm()
-        for so in self:
-            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
-            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
-        return res
-
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         for so in self:
-            if any(so.order_line.filtered(lambda line: line.event_id)):
+            # confirm registration if it was free (otherwise it will be confirmed once invoice fully paid)
+            so.order_line._update_registrations(confirm=so.amount_total == 0, cancel_to_draft=False)
+            if any(line.event_id for line in so.order_line):
                 return self.env['ir.actions.act_window'] \
                     .with_context(default_sale_order_id=so.id) \
-                    .for_xml_id('event_sale', 'action_sale_order_event_registration')
+                    ._for_xml_id('event_sale.action_sale_order_event_registration')
         return res
 
     def action_view_attendee_list(self):
-        action = self.env.ref('event.event_registration_action_tree').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("event.event_registration_action_tree")
         action['domain'] = [('sale_order_id', 'in', self.ids)]
         return action
 
@@ -76,8 +71,9 @@ class SaleOrderLine(models.Model):
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
-        Registration = self.env['event.registration'].sudo()
-        registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
+        RegistrationSudo = self.env['event.registration'].sudo()
+        registrations = RegistrationSudo.search([('sale_order_line_id', 'in', self.ids)])
+        registrations_vals = []
         for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
@@ -88,12 +84,17 @@ class SaleOrderLine(models.Model):
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
-                registration_vals = {}
-                if registration_data:
-                    registration_vals = registration_data.pop()
+                values = {
+                    'sale_order_line_id': so_line.id,
+                    'sale_order_id': so_line.order_id.id
+                }
                 # TDE CHECK: auto confirmation
-                registration_vals['sale_order_line_id'] = so_line.id
-                Registration.create(registration_vals)
+                if registration_data:
+                    values.update(registration_data.pop())
+                registrations_vals.append(values)
+
+        if registrations_vals:
+            RegistrationSudo.create(registrations_vals)
         return True
 
     @api.onchange('product_id')
@@ -136,7 +137,7 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            company = self.event_id.company_id or self.env.company.id
+            company = self.event_id.company_id or self.env.company
             currency = company.currency_id
             return currency._convert(
                 self.event_ticket_id.price, self.order_id.currency_id,

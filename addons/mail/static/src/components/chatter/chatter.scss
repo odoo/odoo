@@ -1,0 +1,41 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Chatter {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.o_Chatter_composer {
+    border-bottom: $border-width solid;
+
+    &.o-bordered {
+        border-left: $border-width solid;
+        border-right: $border-width solid;
+    }
+}
+
+.o_Chatter_scrollPanel {
+    overflow-y: auto;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_Chatter {
+    background-color: white;
+    border-color: $border-color;
+}
+
+.o_Chatter_composer {
+    border-bottom-color: $border-color;
+
+    &.o-bordered {
+        border-left-color: $border-color;
+        border-right-color: $border-color;
+    }
+}

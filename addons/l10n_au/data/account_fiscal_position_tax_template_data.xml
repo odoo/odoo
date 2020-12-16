@@ -34,4 +34,122 @@
             <field name="tax_src_id" ref="au_tax_purchase_capital"/>
             <field name="tax_dest_id" ref="au_tax_purchase_0"/>
         </record>
+
+        <record id="fiscal_position_tpar_partner" model="account.fiscal.position.template">
+            <field name="name">TPAR</field>
+            <field name="chart_template_id" ref="l10n_au_chart_template"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_10_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_10_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_10_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_inc_10_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_inc_10_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_inc_10_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_capital_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_capital_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_capital_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_0_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_0_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_0_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_0_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_0_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_0_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_input_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_input_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_input_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_private_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_private_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_private_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_gst_only_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_gst_only_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_gst_only_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_adj_service" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner"/>
+            <field name="tax_src_id" ref="au_tax_purchase_adj_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_adj_service_tpar"/>
+        </record>
+
+        <record id="fiscal_position_tpar_partner_no_abn" model="account.fiscal.position.template">
+            <field name="name">TPAR without ABN</field>
+            <field name="chart_template_id" ref="l10n_au_chart_template"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_10_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_10_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_10_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_inc_10_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_inc_10_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_inc_10_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_capital_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_capital_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_capital_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_0_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_0_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_0_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_0_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_0_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_0_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_input_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_input_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_input_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_private_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_private_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_private_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_gst_only_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_gst_only_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_gst_only_service_tpar_no_abn"/>
+        </record>
+
+        <record id="fiscal_position_au_tax_purchase_adj_service_no_abn" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_tpar_partner_no_abn"/>
+            <field name="tax_src_id" ref="au_tax_purchase_adj_service"/>
+            <field name="tax_dest_id" ref="au_tax_purchase_adj_service_tpar_no_abn"/>
+        </record>
 </odoo>

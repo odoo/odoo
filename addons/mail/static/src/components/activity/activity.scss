@@ -1,0 +1,186 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_Activity {
+    display: flex;
+    flex: 0 0 auto;
+    padding: map-get($spacers, 2);
+}
+
+.o_Activity_detailsUserAvatar {
+    margin-inline-end: map-get($spacers, 2);
+    object-fit: cover;
+    height: 18px;
+    width: 18px;
+}
+
+.o_Activity_dueDateText, .o_Activity_summary {
+    margin-inline-end: map-get($spacers, 2);
+}
+
+.o_Activity_iconContainer {
+    @include o-position-absolute($top: auto, $left: auto, $bottom: -5px, $right: -5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    border-width: 2px;
+}
+
+.o_Activity_info {
+    display: flex;
+    align-items: baseline;
+}
+
+.o_Activity_note p {
+    margin-bottom: 0;
+}
+
+.o_Activity_sidebar {
+    display: flex;
+    flex: 0 0 36px;
+    margin-right: map-get($spacers, 3);
+    justify-content: center;
+}
+
+.o_Activity_toolButton {
+    padding-top: map-get($spacers, 0);
+}
+
+.o_Activity_tools {
+    display: flex;
+}
+
+.o_Activity_user {
+    height: 36px;
+    margin-left: map-get($spacers, 2);
+    margin-right: map-get($spacers, 2);
+    position: relative;
+    width: 36px;
+}
+
+.o_Activity_userAvatar {
+    height: map-get($sizes, 100);
+    width: map-get($sizes, 100);
+}
+
+// From python template
+.o_mail_note_title {
+    margin-top: map-get($spacers, 2);
+}
+
+.o_mail_note_title + div p {
+    margin-bottom: 0;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+$o-mail-activity-default-color: gray('300') !default;
+$o-mail-activity-overdue-color: darken(theme-color('danger'), 10%) !default;
+$o-mail-activity-planned-color: darken(theme-color('success'), 10%) !default;
+$o-mail-activity-today-color: darken(theme-color('warning'), 10%) !default;
+
+
+.o_Activity_deadlineDateText {
+   &.o-default {
+       color: $o-mail-activity-default-color;
+   }
+
+   &.o-overdue {
+       color: $o-mail-activity-overdue-color;
+   }
+
+   &.o-planned {
+       color: $o-mail-activity-planned-color;
+   }
+
+   &.o-today {
+    color: $o-mail-activity-today-color;
+   }
+}
+
+.o_Activity_details {
+    color: gray('500');
+}
+
+.o_Activity_detailsCreatorAvatar {
+    margin-inline-start: map-get($spacers, 2);
+}
+
+.o_Activity_detailsUserAvatar {
+    border-radius: 50%;
+}
+
+.o_Activity_dueDateText {
+    font-weight: bolder;
+
+   &.o-default {
+       color: $o-mail-activity-default-color;
+   }
+
+   &.o-overdue {
+       color: $o-mail-activity-overdue-color;
+   }
+
+   &.o-planned {
+       color: $o-mail-activity-planned-color;
+   }
+
+   &.o-today {
+    color: $o-mail-activity-today-color;
+   }
+}
+
+/* Needed specifity to counter default bootstrap style */
+a:not([href]):not([tabindex]).o_Activity_detailsButton {
+    background: transparent;
+    opacity: 0.5;
+    color: gray('500');
+
+    &:hover {
+        opacity: 1;
+        color: gray('600');
+    }
+}
+
+.o_Activity_detailsCreator {
+    font-weight: bold;
+}
+
+.o_Activity_iconContainer {
+    color: white;
+    border-color: white;
+    border-radius: 100%;
+    border-style: solid;
+}
+
+.o_Activity_sidebar {
+    font-size: smaller;
+}
+
+.o_Activity_summary {
+    font-weight: bolder;
+    color: gray('900');
+}
+
+.o_Activity_toolButton {
+    opacity: 0.5;
+    color: gray('500');
+
+    &:hover {
+        opacity: 1;
+        color: gray('600');
+    }
+}
+
+.o_Activity_userAvatar {
+    border-radius: 50%;
+}
+
+.o_Activity_userName {
+    color: gray('500');
+}

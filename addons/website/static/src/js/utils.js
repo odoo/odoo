@@ -33,7 +33,35 @@ function loadAnchors(url) {
  * @param {jQuery} $input
  */
 function autocompleteWithPages(self, $input) {
-    $input.autocomplete({
+    $.widget("website.urlcomplete", $.ui.autocomplete, {
+        _create: function () {
+            this._super();
+            this.widget().menu("option", "items", "> :not(.ui-autocomplete-category)");
+        },
+        _renderMenu: function (ul, items) {
+            const self = this;
+            items.forEach(item => {
+                if (item.separator) {
+                    self._renderSeparator(ul, item);
+                }
+                else {
+                    self._renderItem(ul, item);
+                }
+            });
+        },
+        _renderSeparator: function (ul, item) {
+            return $("<li class='ui-autocomplete-category font-weight-bold text-capitalize m-2'>")
+                   .append(`<div>${item.separator}</div>`)
+                   .appendTo(ul);
+        },
+        _renderItem: function (ul, item) {
+            return $("<li>")
+                   .data('ui-autocomplete-item', item)
+                   .append(`<div>${item.label}</div>`)
+                   .appendTo(ul);
+        },
+    });
+    $input.urlcomplete({
         source: function (request, response) {
             if (request.term[0] === '#') {
                 loadAnchors(request.term).then(function (anchors) {
@@ -41,32 +69,40 @@ function autocompleteWithPages(self, $input) {
                 });
             } else {
                 return self._rpc({
-                    model: 'website',
-                    method: 'search_pages',
-                    args: [null, request.term],
-                    kwargs: {
+                    route: '/website/get_suggested_links',
+                    params: {
+                        needle: request.term,
                         limit: 15,
-                    },
-                }).then(function (exists) {
-                    var rs = _.map(exists, function (r) {
-                        return r.loc;
+                    }
+                }).then(function (res) {
+                    let choices = res.matching_pages;
+                    res.others.forEach(other => {
+                        if (other.values.length) {
+                            choices = choices.concat(
+                                [{separator: other.title}],
+                                other.values,
+                            );
+                        }
                     });
-                    response(rs.sort());
+                    response(choices);
                 });
             }
         },
-        close: function () {
+        select: function (ev, ui) {
+            ev.target.value = ui.item.value;
             self.trigger_up('website_url_chosen');
+            ev.preventDefault();
         },
     });
 }
 
 /**
  * @param {jQuery} $element
+ * @param {jQuery} [$excluded]
  */
-function onceAllImagesLoaded($element) {
+function onceAllImagesLoaded($element, $excluded) {
     var defs = _.map($element.find('img').addBack('img'), function (img) {
-        if (img.complete) {
+        if (img.complete || $excluded && ($excluded.is(img) || $excluded.has(img).length)) {
             return; // Already loaded
         }
         var def = new Promise(function (resolve, reject) {
@@ -194,11 +230,44 @@ function websiteDomain(self) {
     return ['|', ['website_id', '=', false], ['website_id', '=', websiteID]];
 }
 
+function sendRequest(route, params) {
+    function _addInput(form, name, value) {
+        let param = document.createElement('input');
+        param.setAttribute('type', 'hidden');
+        param.setAttribute('name', name);
+        param.setAttribute('value', value);
+        form.appendChild(param);
+    }
+
+    let form = document.createElement('form');
+    form.setAttribute('action', route);
+    form.setAttribute('method', params.method || 'POST');
+
+    if (core.csrf_token) {
+        _addInput(form, 'csrf_token', core.csrf_token);
+    }
+
+    for (const key in params) {
+        const value = params[key];
+        if (Array.isArray(value) && value.length) {
+            for (const val of value) {
+                _addInput(form, key, val);
+            }
+        } else {
+            _addInput(form, key, value);
+        }
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
     onceAllImagesLoaded: onceAllImagesLoaded,
     prompt: prompt,
+    sendRequest: sendRequest,
     websiteDomain: websiteDomain,
 };
 });

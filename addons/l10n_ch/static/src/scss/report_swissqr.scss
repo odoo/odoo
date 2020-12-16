@@ -1,0 +1,145 @@
+body.l10n_ch_qr {
+    padding:0;
+
+    /* Disable custom bakground */
+    .o_report_layout_background {
+        background: none;
+        min-height: 0;
+    }
+
+    .swissqr_title {
+        position: absolute;
+        padding: 15px;
+        padding-top: 150px;
+    }
+
+    .swissqr_content {
+        position: static;
+    }
+
+    .swissqr_receipt {
+        position: absolute;
+        background-color: white;
+        border-color:black;
+        border-width: 1pt 1pt 1pt 1pt;
+        border-style: solid;
+        height: 131mm;    /* 105 * 1.25 - 0.25 mm to cope for rendering issues due to header (probably a rounding issue) */
+        width: 77.5mm;    /* 62 * 1.25 */
+        top: 240mm;       /* 192 * 1.25 */
+        left: 0mm;
+        /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+    }
+
+    .swissqr_body {
+        position: absolute;
+        background-color: white;
+        border-color:black;
+        border-width: 1pt 1pt 1pt 1pt;
+        border-style: solid;
+        height: 131mm;    /* 105 * 1.25 - 0.25mm to cope for rendering issues due to header (probably a rounding issue)*/
+        width: 185mm;     /* 148 * 1.25 */
+        top: 240mm;       /* 192 * 1.25 */
+        left: 77.5mm;     /* 62 * 1.25 */
+        /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+
+    }
+
+    .swissqr {
+        position: absolute;
+        height: 57.5mm; /* 46 * 1.25 */
+        width: 57.5mm; /* 46 * 1.25 */
+        top: 20mm; /* 16 * 1.25 */
+        left: 6.25mm;  /* 5 * 1.25 min readability margin for QR */
+        /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+    }
+
+    .ch_cross {
+        position: absolute;
+        background-color: white;
+        height: 8.75mm; /* 7 * 1.25 */
+        width: 8.75mm; /* 7 * 1.25 */
+        top: 44.375mm;  /* (16 + 23 - 7/2) * 1.25 = 41.5 * 1.25 */
+        left: 30.625mm; /* (5 + 23 - 7/2) * 1.25 = 24.5 * 1.25 */
+        /*These measures are multiplied by 1.25 here to fit the canvas size used by our reporting engine (1.25 times bigger than A4)*/
+    }
+
+    .swissqr_text {
+        font-family: Arial, Frutiger, Helvetica;
+        color: black;
+        line-height: 1;
+        padding-top: 1em;
+
+        .title {
+            font-size: 8pt;
+            font-weight: bold;
+            margin-top: 2mm;
+        }
+        .content {
+            font-size: 10pt;
+        }
+
+    }
+
+    .main_title {
+        margin-top: 5mm;
+        font-size: 11pt;
+        font-weight: bold;
+    }
+
+    .swissqr_column_left {
+        position: absolute;
+        left: 5mm;
+    }
+
+    .swissqr_column_right {
+        position: absolute;
+        left: 70mm; /* (5 + 46 + 5) * 1.25 */
+        max-width: 90mm;
+    }
+
+    .procedure_zone {
+        top: 15mm;
+    }
+
+    .receipt_indication_zone {
+        top: 10mm;
+    }
+
+    .indication_zone {
+        top: 10mm;
+    }
+
+    .receipt_amount_zone {
+        position: absolute;
+        top: 86mm;
+
+        .column {
+            margin-right: 5mm;
+            float: left;
+        }
+    }
+
+    .receipt_acceptance_point_zone {
+        position: relative;
+        top: 100mm;
+
+        .content {
+            float: right;
+            padding-right: 1em;
+        }
+
+    }
+
+    .amount_zone {
+        position: absolute;
+        top: 86mm;
+
+        .column {
+            margin-right: 5mm;
+            float: left;
+        }
+    }
+
+}
+
+

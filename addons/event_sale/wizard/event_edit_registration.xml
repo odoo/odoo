@@ -17,11 +17,12 @@
                             <field name="email"/>
                             <field name="mobile" class="o_force_ltr"/>
                             <field name="phone" class="o_force_ltr"/>
+                            <field name="sale_order_line_id" invisible="1"/>
                         </tree>
                     </field>
                     <footer>
-                        <button string="Apply" name="action_make_registration" type="object" class="btn-primary"/>
-                        <button string="Skip" class="btn-secondary" special="cancel"/>
+                        <button string="Confirm" name="action_make_registration" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>

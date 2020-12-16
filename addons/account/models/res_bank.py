@@ -36,7 +36,7 @@ class ResPartnerBank(models.Model):
                     return self._get_qr_code_url(candidate_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
                 elif not silent_errors:
-                    error_header = _("The following error prevented '%s' QR-code to be generated though it was detected as eligible: ") % candidate_name
+                    error_header = _("The following error prevented '%s' QR-code to be generated though it was detected as eligible: ", candidate_name)
                     raise UserError( error_header + error_message)
 
         return None

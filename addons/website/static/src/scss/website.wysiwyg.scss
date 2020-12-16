@@ -1,89 +1,69 @@
 
-@each $url in $o-theme-font-urls {
+@each $font-name, $font-config in $o-theme-font-configs {
+    $url: map-get($font-config, 'url');
     @if $url {
         @import url("https://fonts.googleapis.com/css?family=#{unquote($url)}&display=swap");
     }
 }
 
-// Override css variables to influence the default style of the editor without
-// duplicating the css.
 :root {
-    --o-we-toolbar-height: #{$o-navbar-height};
-    --o-we-bg-color: #{$o-we-color-dark};
-    --o-we-bg-color-dark: #{$o-we-color-darker};
-    --o-we-color: #{$o-we-color-text-normal};
-    --o-we-color-accent: #{$o-we-color-text-light};
+    // Override css variables to influence the default style of the editor
+    // without duplicating the css.
+    @include print-variable('o-we-toolbar-height', $o-navbar-height);
 
-    --o-we-dropdown-bg-color: #{$o-we-color-darker};
-    --o-we-dropdown-color: #{$o-we-color-text-normal};
-
-    --o-we-snippets-bg-color: #{$o-we-color-normal};
-    --o-we-snippets-color: #{$o-we-color-text-light};
+    // Need info about the color of each color palette
+    @for $index from 1 through length($o-color-palettes) - 1 { // Not the user one
+        @each $name, $color in nth($o-color-palettes, $index) {
+            @include print-variable('o-palette-#{$index}-#{$name}', $color);
+        }
+    }
 }
 
 // EDITOR TOP BAR AND POPOVER
-#web_editor-top-edit {
-    form.navbar-form {
-        @include o-position-absolute(0, 0, 0, auto);
-        z-index: $zindex-popover + 5;
-        height: $o-navbar-height;
-        margin: 0;
-        padding: 0;
-        transition: right 0.4s $o-we-md-ease 0s;
-        border-left: 1px solid $o-we-color-divider;
+#oe_snippets .o_we_website_top_actions {
+    display: flex;
+    height: $o-we-sidebar-top-height;
+    background-color: $o-we-sidebar-tabs-bg;
 
-        .btn-group {
-            height: 100%;
+    .btn-group, .btn {
+        height: 100%;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 0;
+        font-size: $o-we-font-size;
+        font-family: $o-we-font-family;
+        font-weight: 400;
+        line-height: 1;
+
+        &.btn-primary {
+            @include button-variant($o-brand-primary, $o-brand-primary);
         }
-
-        .btn {
-            height: 100%;
-            margin: 0;
-            padding: 10px;
-            line-height: 1.2;
-            font-size: 13px;
-            font-family: $o-we-font-family;
-
-            transition: all 0.3s ease 0s;
-            border: none;
-            border-radius: 0;
-
-            .fa {
-                margin-right: $grid-gutter-width/4;
-
-                &.fa-times {
-                    color: $o-we-color-danger;
-                }
-            }
-
-            &.btn-primary {
-                @include button-variant($o-brand-odoo, $o-brand-odoo);
-            }
-
-            &.btn-secondary {
-                @include button-variant($o-we-color-dark, $o-we-color-dark);
-
-                &:hover {
-                    background: rgba(black, 0.5);
-                }
-            }
-
-            &:focus,
-            &:active,
-            &:focus:active {
-                outline: none;
-            }
+        &.btn-secondary {
+            @include button-variant($o-we-sidebar-tabs-bg, $o-we-sidebar-tabs-bg);
         }
-
-        .dropdown-menu {
-            left: auto;
-            right: 0;
+        &:focus, &:active, &:focus:active {
+            outline: none;
+            box-shadow: none;
         }
+        .fa {
+            font-size: $o-we-font-size + 5;
+        }
+    }
+
+    .dropdown-menu {
+        left: auto;
+        right: 0;
     }
 }
 
 .note-statusbar {
     display: none;
+}
+
+table.table-picker {
+    position: absolute !important;
 }
 
 // TRANSLATIONS
@@ -98,20 +78,16 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
     &[data-oe-translation-state="translated"] {
         background: rgba($o-we-translated-content-color, 0.5) !important;
     }
-
-    &.o_dirty {
-        background: rgba($o-we-translated-content-color, 0.25) !important;
-    }
 }
 
 // SNIPPET PANEL
 $i: 1;
-@each $font in $o-theme-fonts {
+@each $font-name, $font-config in $o-theme-font-configs {
     we-toggler.o_we_option_font_#{$i}, we-button.o_we_option_font_#{$i} > div {
-        font-family: if($font, $font, $font-family-base);
+        font-family: o-safe-get($font-config, 'family', $font-family-base);
 
         &::before {
-            content: nth($o-theme-font-names, $i);
+            content: $font-name;
         }
     }
     $i: $i + 1;
@@ -120,49 +96,117 @@ $i: 1;
     border-top: 1px solid currentColor !important;
 }
 
+#oe_snippets > .o_we_customize_panel {
+    .o_we_user_value_widget.o_palette_color_preview_button {
+        > div {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: stretch;
+        }
+        .o_palette_color_preview {
+            flex: 1 0 0;
+            margin: 1px 0;
+            transition: flex 150ms ease 0s;
+        }
+        &:not(:hover) .o_palette_color_preview {
+            &:nth-child(4), &:nth-child(5) {
+                flex: 0 0 0;
+            }
+        }
+    }
+
+    we-select.o_scroll_effects_selector we-button {
+        padding-top: $o-we-item-spacing;
+        padding-bottom: $o-we-item-spacing;
+
+        img {
+            max-height: 80px;
+            width: auto;
+            margin-right: $o-we-item-spacing;
+            margin-left: $o-we-item-spacing * .5;
+        }
+    }
+
+    //----------------------------------------------------------------------
+    // 'Options' Tab Specific Components
+    //----------------------------------------------------------------------
+
+    // Theme Colors Editor
+    .o_we_theme_colors_selector {
+
+        > we-title {
+            display: none
+        }
+        .o_we_so_color_palette.o_we_user_value_widget {
+
+            + .o_we_so_color_palette {
+                margin-left: 10px;
+            }
+            .o_we_color_preview {
+                width: $o-we-sidebar-content-field-colorpicker-size-large;
+                height: $o-we-sidebar-content-field-colorpicker-size-large;
+            }
+        }
+        > div, we-select.o_we_theme_colors_select, we-toggler {
+            display: flex;
+        }
+        > div {
+            align-items: stretch;
+            width: 100%;
+        }
+        we-select.o_we_theme_colors_select {
+            justify-content: flex-end;
+            margin-left: auto;
+
+            > div, we-toggler {
+                height: 100%;
+            }
+        }
+        we-toggler {
+            align-items: center;
+            padding: 0 0.4rem;
+            font-size: 1.5em;
+
+            &:after {
+                content: none;
+            }
+        }
+    }
+
+    // Palettes Dropdown
+    .o_palette_color_preview_button > div {
+        min-height: 24px;
+    }
+
+    // CC Edition
+    .o_we_cc_preview_wrapper {
+        // Use box-shadow rather than border-bottom in order to
+        // avoid misalignments in the 'Options' tab.
+        border: 1px solid;
+        border-color: rgba($o-we-item-standup-color-light, .2) $o-we-sidebar-content-field-dropdown-border-color transparent;
+        box-shadow: 0 1px 0 $o-we-item-standup-color-dark;
+
+        + .o_we_collapse_toggler {
+            height: 35px; // FIXME hardcoded...
+        }
+    }
+}
+
 // SNIPPET OPTIONS
-.colorpicker {
-    .o_colorpicker_sections {
-        .note-color-palette > div {
-            color: $o-we-color-text-light;
-        }
-    }
+.o_we_border_preview {
+    display: inline-block;
+    width: 999px;
+    max-width: 100%;
+    margin-bottom: 2px;
+    border-width: 4px;
+    border-bottom: none !important;
+}
 
-    .o_colorpicker_section {
-        &:after {
-            content: "";
-            display: table;
-            clear: both;
-        }
+.pac-container { // google map autosuggestion
+    z-index: $zindex-modal-backdrop; // > $o-we-zindex
+    min-width: 400px;
 
-        > button {
-
-            &:hover,
-            &.selected {
-                box-shadow: 0px 0px 2px 2px $o-we-color-light;
-            }
-
-            &[data-event="foreColor"] {
-                background-color: $o-we-color-normal;
-
-                &:before {
-                    background-color: rgba(white, 0.3);
-                }
-            }
-        }
-    }
-
-    .note-palette-title {
-        color: $o-we-color-text-light;
-    }
-
-    .palette-reset {
-        .note-color-reset {
-            color: desaturate(rgba($o-we-color-danger, 0.6), 40%);
-
-            &:hover {
-                color: $o-we-color-danger;
-            }
-        }
+    &:after {
+        display: none;
     }
 }

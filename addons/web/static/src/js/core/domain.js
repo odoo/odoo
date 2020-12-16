@@ -5,6 +5,15 @@ var collections = require("web.collections");
 var pyUtils = require("web.py_utils");
 var py = window.py; // look py.js
 
+const TRUE_LEAF = [1, '=', 1];
+const FALSE_LEAF = [0, '=', 1];
+const TRUE_DOMAIN = [TRUE_LEAF];
+const FALSE_DOMAIN = [FALSE_LEAF];
+
+function compare(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+}
+
 /**
  * The Domain Class allows to work with a domain as a tree and provides tools
  * to manipulate array and string representations of domains.
@@ -58,23 +67,24 @@ var Domain = collections.Tree.extend({
             var fieldName = this._data[0];
             // We split the domain first part and check if it's a match
             // for the syntax 'parent.field'.
-            var parentField = this._data[0].split('.');
-            if ('parent' in values && parentField.length === 2) {
-                fieldName = parentField[1];
-                isParentField = parentField[0] === 'parent' &&
-                    fieldName in values.parent;
-            }
-            if (!(this._data[0] in values) && !(isParentField)) {
-                throw new Error(_.str.sprintf(
-                    "Unknown field %s in domain",
-                    this._data[0]
-                ));
-            }
-            var fieldValue;
-            if (!isParentField) {
-                fieldValue = values[fieldName];
+
+            let fieldValue;
+            if (compare(this._data, FALSE_LEAF) || compare(this._data, TRUE_LEAF)) {
+                fieldValue = this._data[0];
             } else {
-                fieldValue = values.parent[fieldName];
+                var parentField = this._data[0].split('.');
+                if ('parent' in values && parentField.length === 2) {
+                    fieldName = parentField[1];
+                    isParentField = parentField[0] === 'parent' &&
+                        fieldName in values.parent;
+                }
+                if (!(this._data[0] in values) && !(isParentField)) {
+                    throw new Error(_.str.sprintf(
+                        "Unknown field %s in domain",
+                        this._data[0]
+                    ));
+                }
+                fieldValue = isParentField ? values.parent[fieldName] : values[fieldName];
             }
 
             switch (this._data[1]) {
@@ -93,15 +103,15 @@ var Domain = collections.Tree.extend({
                 case ">=":
                     return (fieldValue >= this._data[2]);
                 case "in":
-                    return _.contains(
+                    return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        fieldValue
-                    );
+                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    ).length !== 0;;
                 case "not in":
-                    return !_.contains(
+                    return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        fieldValue
-                    );
+                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    ).length === 0;
                 case "like":
                     return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
                 case "=like":
@@ -233,132 +243,6 @@ var Domain = collections.Tree.extend({
             .replace(/null/g, "None")
             .replace(/false/g, "False")
             .replace(/true/g, "True");
-    },
-    /*
-     * @param {string} fieldName
-     * @param {string} period
-     * @param {string} type ('date' or 'datetime')
-     * @param {string} comparisonPeriod
-     * @returns {string} a domain in string form
-     */
-    constructDomain: function (fieldName, period, type, comparisonPeriod) {
-        var leftBoundaryParams, rightBoundaryParams;
-        var offsetPeriodParams;
-        function makeInterval () {
-            switch (comparisonPeriod) {
-                case 'previous_period':
-                    _.each(offsetPeriodParams, function (value, key) {
-                        if (!leftBoundaryParams[key] ||_.isNumber(leftBoundaryParams[key])) {
-                            leftBoundaryParams[key] = value + (leftBoundaryParams[key] || 0);
-                        } else {
-                            leftBoundaryParams[key] = value + ' + ' + leftBoundaryParams[key];
-                        }
-                        if (!rightBoundaryParams[key] || _.isNumber(rightBoundaryParams[key])) {
-                            rightBoundaryParams[key] = value + (rightBoundaryParams[key] || 0);
-                        } else {
-                            rightBoundaryParams[key] = value + ' + ' + rightBoundaryParams[key];
-                        }
-                    });
-                    break;
-                case 'previous_year':
-                    leftBoundaryParams.years = leftBoundaryParams.years ? leftBoundaryParams.years - 1 : -1;
-                    rightBoundaryParams.years = rightBoundaryParams.years ? rightBoundaryParams.years - 1 : -1;
-                  break;
-            }
-
-            var stringifyParams = function (value, key) {
-                return key + '=' + value;
-            };
-            var leftBoundaryStringifyParams = _.map(leftBoundaryParams, stringifyParams).join(', ');
-            var rightBoundaryStringifyParams = _.map(rightBoundaryParams, stringifyParams).join(', ');
-
-            if (type === 'date') {
-                return "['&'," +
-                    "('" + fieldName + "', '>=', (context_today() + relativedelta(" + leftBoundaryStringifyParams + ")).strftime('%Y-%m-%d'))," +
-                    "('" + fieldName + "', '<', (context_today() + relativedelta(" + rightBoundaryStringifyParams + ")).strftime('%Y-%m-%d'))"+
-                    "]";
-            }
-            else {
-                return "['&'," +
-                    "('" + fieldName + "', '>=', " +
-                    "(datetime.datetime.combine(context_today() + relativedelta(" + leftBoundaryStringifyParams + "), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))," +
-                    "('" + fieldName + "', '<', " +
-                    "(datetime.datetime.combine(context_today() + relativedelta(" + rightBoundaryStringifyParams + "), datetime.time(0,0,0)).to_utc()).strftime('%Y-%m-%d %H:%M:%S'))"+
-                    "]";
-            }
-        }
-        switch (period) {
-            case 'today':
-                leftBoundaryParams = {};
-                rightBoundaryParams = {days: 1};
-                offsetPeriodParams = {days: -1};
-                return makeInterval();
-            case 'this_week':
-                leftBoundaryParams = {weeks: -1, days: 1, weekday: 0};
-                rightBoundaryParams = {days: 1, weekday: 0};
-                offsetPeriodParams = {weeks: -1};
-                return makeInterval();
-            case 'this_month':
-                leftBoundaryParams = {day: 1};
-                rightBoundaryParams = {day: 1, months: 1};
-                offsetPeriodParams = {months: -1};
-                return makeInterval();
-            case 'this_quarter':
-                leftBoundaryParams = {months: '- (context_today().month - 1) % 3', day: 1};
-                rightBoundaryParams = {months: '3 - (context_today().month - 1) % 3', day: 1};
-                offsetPeriodParams = {months: -3};
-                return makeInterval();
-            case 'this_year':
-                leftBoundaryParams = {month: 1, day: 1};
-                rightBoundaryParams = {month: 1, day: 1, years: 1};
-                offsetPeriodParams = {years: -1};
-                return makeInterval();
-            case 'yesterday':
-                leftBoundaryParams = {days: -1};
-                rightBoundaryParams = {};
-                offsetPeriodParams = {days: -1};
-                return makeInterval();
-            case 'last_week':
-                leftBoundaryParams = {weeks: -2, days: 1, weekday: 0};
-                rightBoundaryParams = {weeks: -1, days: 1, weekday: 0};
-                offsetPeriodParams = {weeks: -1};
-                return makeInterval();
-            case 'last_month':
-                leftBoundaryParams = {months: -1, day: 1};
-                rightBoundaryParams = {day: 1};
-                offsetPeriodParams = {months: -1};
-                return makeInterval();
-            case 'last_quarter':
-                leftBoundaryParams = {months: '- 3 - (context_today().month - 1) % 3', day: 1};
-                rightBoundaryParams = {months: '- (context_today().month - 1) % 3', day: 1};
-                offsetPeriodParams = {months: -3};
-                return makeInterval();
-            case 'last_year':
-                leftBoundaryParams = {month: 1, day: 1, years: -1};
-                rightBoundaryParams = {month: 1, day: 1};
-                offsetPeriodParams = {years: -1};
-                return makeInterval();
-            case 'last_7_days':
-                leftBoundaryParams = {days: -7};
-                rightBoundaryParams = {};
-                offsetPeriodParams = {days: -7};
-                return makeInterval();
-            case 'last_30_days':
-                leftBoundaryParams = {days: -30};
-                rightBoundaryParams = {};
-                offsetPeriodParams = {days: -30};
-                return makeInterval();
-            case 'last_365_days':
-                leftBoundaryParams = {days: -365};
-                rightBoundaryParams = {};
-                offsetPeriodParams = {days: -365};
-                return makeInterval();
-            case 'last_5_years':
-                leftBoundaryParams = {years: -5};
-                rightBoundaryParams = {};
-                offsetPeriodParams = {years: -5};
-                return makeInterval();
-        }
     },
     /**
      * Converts a string representation of the Python prefix-array
@@ -517,6 +401,11 @@ var Domain = collections.Tree.extend({
         return astToStack(ast);
     },
 });
+
+Domain.TRUE_LEAF = TRUE_LEAF;
+Domain.FALSE_LEAF = FALSE_LEAF;
+Domain.TRUE_DOMAIN = TRUE_DOMAIN;
+Domain.FALSE_DOMAIN = FALSE_DOMAIN;
 
 return Domain;
 });

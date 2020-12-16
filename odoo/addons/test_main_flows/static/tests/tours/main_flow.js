@@ -439,7 +439,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
     position: "bottom"
 }, {
-    trigger: ".o_kanban_quick_create input:first",
+    trigger: ".o_kanban_quick_create input[name='name']",
     content: _t("<b>Choose a name</b> for your opportunity."),
     position: "right",
     run: "text the_flow.opportunity",
@@ -463,7 +463,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: '.o_field_widget[name=name] input',
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Customer')",
+    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
     content: _t('Let\'s enter the name.'),
     position: 'left',
     run: 'text the_flow.customer',
@@ -474,7 +474,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: ".modal-footer .btn-primary:contains('Save')",
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Customer')",
+    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
     content: _t('Save'),
     position: 'right',
 }, {
@@ -653,13 +653,31 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 ...tour.stepUtils.goToAppSteps('stock.menu_stock_root', _t('Go to Inventory')),
 tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Overview')"),
 {
-    trigger: ".o_menu_sections a:contains('Master Data')",
+    mobile: false,
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_stock_config_settings']",
     extra_trigger: '.o_main_navbar',
-    content: _t("Go to Master Data"),
+    content: _t("Go to Configuration"),
     position: "bottom"
 }, {
+    mobile: false,
     trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_reordering_rules_config']",
     content: _t("Reordering Rules"),
+    position: "bottom"
+}, {
+    mobile: true,
+    trigger: ".o_menu_sections a:contains('Configuration')",
+    extra_trigger: '.o_main_navbar',
+    content: _t("Go to Configuration"),
+    position: "bottom"
+}, {
+    mobile: true,
+    trigger: ".o_menu_sections a[data-menu-xmlid='stock.menu_product_in_config_stock']",
+    content: _t("Click on Product Section"),
+    position: "bottom"
+}, {
+    mobile: true,
+    trigger: ".o_menu_sections a:contains('Reordering Rules')",
+    content: _t("Click on Product Section"),
     position: "bottom"
 }, {
     mobile: false,
@@ -699,6 +717,12 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Inventory Ove
     position: "right",
     run: 'text 10',
 }, {
+    mobile: false,
+    trigger: ".o_list_button_save",
+    content: _t("<p>Save this reordering rule</p>"),
+    position: "bottom"
+}, {
+    mobile: true,
     trigger: ".o_form_button_save",
     content: _t("<p>Save this reordering rule</p>"),
     position: "bottom"
@@ -751,7 +775,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Create Bill', _t('go to Vendor Bills'), ".o_statusbar_status .btn.dropdown-toggle:contains('Purchase Order')"),
-...tour.stepUtils.statusbarButtonsSteps('Post', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
+...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
 ...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
     trigger: ".modal-footer .btn-primary",
@@ -799,17 +823,15 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Check availability', _t("Check availability")),
-...tour.stepUtils.statusbarButtonsSteps('Produce', _t("Produce"), "body.o_web_client:not(.oe_wait)"),
 {
-    mobile: false,
-    trigger: ".modal-footer .btn-primary:nth-child(3)",
-    content: _t('Record Production'),
-    position: 'bottom',
+    trigger: '.o_form_button_edit',
+    content: _t('Edit the production order'),
+    extra_trigger: 'body.o_web_client:not(.oe_wait)',
 }, {
-    mobile: true,
-    trigger: '.modal-footer .btn-primary[name="do_produce"]:not(.o_invisible_modifier)',
-    content: _t('Record Production'),
-    position: 'bottom',
+    trigger: "input[name=qty_producing]",
+    position: 'left',
+    content: _t("Produce"),
+    run: "text 1",
 },
 ...tour.stepUtils.statusbarButtonsSteps('Mark as Done', _t("Mark as Done"), ".o_statusbar_status .btn.dropdown-toggle:contains('To Close')"),
 {
@@ -860,7 +882,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
 },
 tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("the_flow.project")')),
 {
-    trigger: '.oe_button_box .oe_stat_button:has(span:contains("Timesheets"))',
+    trigger: '.oe_button_box .oe_stat_button:has(span:contains("Recorded"))',
     extra_trigger: '.o_form_readonly',
     content: _t('See Timesheets'),
     position: 'bottom',
@@ -918,8 +940,8 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t("Create and View Invoices"),
     position: "bottom",
 },
-...tour.stepUtils.statusbarButtonsSteps('Post', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
-...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".breadcrumb-item.active:contains('INV/')"),
+...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
+...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
     trigger: ".modal-footer .btn-primary",
     content: _t("Validate"),
@@ -933,26 +955,6 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     edition: "enterprise",
     trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: 'button[data-name=action_configure_bank_journal]',
-    content: _t('Configure Bank Journal'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: '.js_configure_manually',
-    content: _t('Enter manual data for bank account'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: ".o_field_widget[name=acc_number]",
-    content: _t("Enter an account number"),
-    position: "right",
-    run: "text 867656544",
-}, {
-    trigger: ".modal-footer .btn-primary",
-    content: _t('Save'),
     position: 'bottom',
 }, {
     edition: "enterprise",
@@ -970,7 +972,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     trigger: ".o_field_widget[name=balance_end_real] input",
     content: _t("Let's calculate the ending balance."),
     position: 'right',
-    run: 'text 9010.85', // + 12.65
+    run: 'text 9955.87',
 }, {
     // FIXME convert list in kanban + form
     edition: "enterprise",
@@ -1002,15 +1004,11 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     trigger: ".o_selected_row .o_field_widget[name=partner_id] input",
     content: _t("Write the name of your customer."),
     position: "bottom",
-}, {
-    mobile: true,
-    trigger: ".o_kanban_record .o_kanban_record_title :contains('the_flow.customer')",
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Partner')",
-    content: _t('Save'),
-    position: 'right',
-}, {
+},
+...tour.stepUtils.mobileKanbanSearchMany2X('Partner', 'the_flow.customer'),
+{
     edition: "enterprise",
-    trigger: ".o_selected_row .o_field_widget[name=name]",
+    trigger: ".o_selected_row .o_field_widget[name=payment_ref]",
     content: _t("Let's enter a name."),
     position: "bottom",
     run: "text the_flow.statement.line",
@@ -1020,7 +1018,8 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t('Save.'),
     position: 'bottom',
 },
-...tour.stepUtils.statusbarButtonsSteps('Reconcile', _t('<p><b>Reconcile</p>'), ".breadcrumb-item.active:contains('the_flow.statement')").map(tour.stepUtils.editionEnterpriseModifier),
+...tour.stepUtils.statusbarButtonsSteps('Post', _t('Processing'), ".breadcrumb-item.active:contains('the_flow.statement')").map(tour.stepUtils.editionEnterpriseModifier),
+...tour.stepUtils.statusbarButtonsSteps('Reconcile', _t('Reconcile'), ".o_statusbar_status .btn.dropdown-toggle:contains(Processing)").map(tour.stepUtils.editionEnterpriseModifier),
 {
     edition: "enterprise",
     trigger: "button.o_reconcile, button.o_validate",

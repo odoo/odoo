@@ -48,11 +48,24 @@ def table_kind(cr, tablename):
     cr.execute(query, (tablename,))
     return cr.fetchone()[0] if cr.rowcount else None
 
-def create_model_table(cr, tablename, comment=None):
+def create_model_table(cr, tablename, comment=None, columns=()):
     """ Create the table for a model. """
-    cr.execute('CREATE TABLE "{}" (id SERIAL NOT NULL, PRIMARY KEY(id))'.format(tablename))
+    colspecs = ['id SERIAL NOT NULL'] + [
+        '"{}" {}'.format(columnname, columntype)
+        for columnname, columntype, columncomment in columns
+    ]
+    cr.execute('CREATE TABLE "{}" ({}, PRIMARY KEY(id))'.format(tablename, ", ".join(colspecs)))
+
+    queries, params = [], []
     if comment:
-        cr.execute('COMMENT ON TABLE "{}" IS %s'.format(tablename), (comment,))
+        queries.append('COMMENT ON TABLE "{}" IS %s'.format(tablename))
+        params.append(comment)
+    for columnname, columntype, columncomment in columns:
+        queries.append('COMMENT ON COLUMN "{}"."{}" IS %s'.format(tablename, columnname))
+        params.append(columncomment)
+    if queries:
+        cr.execute("; ".join(queries), params)
+
     _schema.debug("Table %r: created", tablename)
 
 def table_columns(cr, tablename):
@@ -240,3 +253,27 @@ def reverse_order(order):
         direction = 'asc' if item[1:] == ['desc'] else 'desc'
         items.append('%s %s' % (item[0], direction))
     return ', '.join(items)
+
+
+def increment_field_skiplock(record, field):
+    """
+        Increment 'friendly' the [field] of the current [record](s)
+        If record is locked, we just skip the update.
+        It doesn't invalidate the cache since the update is not critical.
+
+        :rtype: bool - if field has been incremented or not
+    """
+    if not record:
+        return False
+
+    assert record._fields[field].type == 'integer'
+
+    cr = record._cr
+    query = """
+        UPDATE {table} SET {field} = {field} + 1 WHERE id IN (
+            SELECT id from {table} WHERE id in %(ids)s FOR UPDATE SKIP LOCKED
+        ) RETURNING id
+    """.format(table=record._table, field=field)
+    cr.execute(query, {'ids': tuple(record.ids)})
+
+    return bool(cr.fetchone())

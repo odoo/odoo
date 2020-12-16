@@ -13,7 +13,8 @@
                 <field name="product_tracking" invisible="1"/>
                 <field name="is_editable" invisible="1"/>
                 <field name="outdated" invisible="1"/>
-                <field name="product_id" options="{'no_create': True}" width="1.6"
+                <field name="product_id" width="1.6"
+                       context="{'default_type': 'product'}"
                        readonly="context.get('default_product_id', False)"
                        attrs="{'readonly': ['|',
                             ('is_editable', '=', False),
@@ -43,7 +44,7 @@
                             ('state', '!=', 'confirm')]}"/>
                 <field name="theoretical_qty" string="On Hand" width="0.5"
                        force_save="1" readonly="1" optional="show"/>
-                <button name="action_refresh_quantity" string="Refresh quantity" title="Refresh quantity"
+                <button name="action_refresh_quantity" title="Refresh quantity"
                         icon="fa-refresh" type="object"
                         attrs="{'invisible': [('outdated', '=', False)]}"/>
                 <field name="product_qty" width="0.5" string="Counted"/>
@@ -53,6 +54,17 @@
                 <field name="inventory_id" invisible="1"/>
                 <field name="state" invisible="1"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="stock_inventory_line_tree_no_product_create" model="ir.ui.view">
+        <field name="name">stock.inventory.line.tree2</field>
+        <field name="model">stock.inventory.line</field>
+        <field name="inherit_id" ref="stock.stock_inventory_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <field name="product_id" position="attributes"><attribute name="options">{'no_create': True}</attribute></field>
         </field>
     </record>
 
@@ -104,13 +116,13 @@
         <field name="name">stock.inventory.tree</field>
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
-            <tree string="Lot/Serial Number Inventory" decoration-muted="state == 'cancel'">
-                <field name="name"/>
+            <tree string="Lot/Serial Number Inventory" sample="1">
                 <field name="date"/>
+                <field name="name"/>
                 <field name="location_ids" widget="many2many_tags" optional="hide" groups="stock.group_stock_multi_locations"/>
                 <field name="product_ids" widget="many2many_tags" optional="hide"/>
-                <field name="state"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'confirm')"/>
             </tree>
         </field>
     </record>
@@ -119,7 +131,7 @@
         <field name="name">stock.inventory.kanban</field>
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="state"/>
@@ -156,6 +168,7 @@
                 <button name="action_open_inventory_lines" states="confirm" string="Continue Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                 <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '!=', [])]}" groups="stock.group_stock_manager"/>
                 <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '=', [])]}" class="oe_highlight" groups="stock.group_stock_manager"/>
+                <button name="action_print" string="Print Count Sheet" type="object" attrs="{'invisible': [('state', '=', 'draft')]}" groups="stock.group_stock_user"/>
                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                 <button name="action_cancel_draft" states="confirm" string="Cancel Inventory" type="object"
                     confirm="If you cancel this inventory adjustment, all its inventory adjustment lines will be lost. Are you sure you want to discard it ?"/>
@@ -163,6 +176,7 @@
             </header>
             <sheet>
                 <field name="line_ids" invisible="1"/>
+                <field name="is_conflict_inventory" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
                     <button string="Product Moves" type="object"
                             name="action_view_related_move_lines"
@@ -180,17 +194,26 @@
                                widget="many2many_tags"
                                force_save="1"
                                groups="stock.group_stock_multi_locations"/>
-                        <field name="product_ids" options="{'no_create': True}"
-                               widget="many2many_tags"/>
-                        <field name="exhausted"/>
+                        <field name="product_ids"
+                               context="{'default_type': 'product'}"
+                               widget="many2many_tags"
+                               attrs="{'readonly': ['|', ('is_conflict_inventory', '=', True), ('state', '!=', 'draft')]}"/>
+                        <field name="exhausted"
+                               attrs="{'invisible': [('is_conflict_inventory', '=', True)]}"/>
                     </group>
                     <group>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
+                               attrs="{'readonly': ['|', ('is_conflict_inventory', '=', True), ('state', '!=', 'draft')]}"/>
                         <field name="prefill_counted_quantity" widget="radio"
-                               attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                               attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_conflict_inventory', '=', True)]}"/>
                     </group>
                 </group>
             </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>
@@ -203,11 +226,22 @@
         <field name="view_id" ref="view_inventory_tree"/>
         <field name="search_view_id" ref="view_inventory_filter"/>
         <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Create a new inventory adjustment
+          <p class="o_view_nocontent_barcode_scanner">
+            Want to speed up your inventory counts? Try our Barcode app
           </p><p>
-            This is used to correct the product quantities you have in stock.
+            Barcode scanner can be activated via inventory settings.
+            Manual inventory adjustments can also be performed and pre-filled with
+            suggested counted quantity.
           </p>
+        </field>
+    </record>
+
+    <record id="action_open_inventory_adjustment_view" model="ir.actions.server">
+        <field name="name">Inventory Adjustments</field>
+        <field name="model_id" ref="model_stock_inventory"/>
+        <field name="state">code</field>
+        <field name="code">
+action = model.action_open_inventory_view()
         </field>
     </record>
 
@@ -233,5 +267,5 @@ if records:
         </field>
     </record>
 
-    <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_warehouse_mgmt" sequence="30"/>
+    <menuitem action="action_open_inventory_adjustment_view" id="menu_action_inventory_form" parent="menu_stock_warehouse_mgmt" sequence="30"/>
 </odoo>

@@ -5,37 +5,17 @@ from odoo import api, fields, models, _
 from odoo.addons.http_routing.models.ir_http import slug
 
 
-class EventType(models.Model):
-    _inherit = 'event.type'
-
-    website_track = fields.Boolean(
-        string='Tracks on Website', compute='_compute_website_menu_data',
-        copy=True, readonly=False, store=True)
-    website_track_proposal = fields.Boolean(
-        string='Tracks Proposals on Website', compute='_compute_website_menu_data',
-        copy=True, readonly=False, store=True)
-
-    @api.depends('website_menu')
-    def _compute_website_menu_data(self):
-        for event_type in self:
-            if not event_type.website_menu:
-                event_type.website_track = False
-                event_type.website_track_proposal = False
-
-
 class Event(models.Model):
     _inherit = "event.event"
 
     track_ids = fields.One2many('event.track', 'event_id', 'Tracks')
     track_count = fields.Integer('Track Count', compute='_compute_track_count')
-    sponsor_ids = fields.One2many('event.sponsor', 'event_id', 'Sponsors')
-    sponsor_count = fields.Integer('Sponsor Count', compute='_compute_sponsor_count')
     website_track = fields.Boolean(
         'Tracks on Website', compute='_compute_website_track',
-        copy=True, readonly=False, store=True)
+        readonly=False, store=True)
     website_track_proposal = fields.Boolean(
         'Proposals on Website', compute='_compute_website_track_proposal',
-        copy=True, readonly=False, store=True)
+        readonly=False, store=True)
     track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Tracks Menus', domain=[('menu_type', '=', 'track')])
     track_proposal_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Proposals Menus', domain=[('menu_type', '=', 'track_proposal')])
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
@@ -49,91 +29,77 @@ class Event(models.Model):
         for event in self:
             event.track_count = result.get(event.id, 0)
 
-    def _compute_sponsor_count(self):
-        data = self.env['event.sponsor'].read_group([], ['event_id'], ['event_id'])
-        result = dict((data['event_id'][0], data['event_id_count']) for data in data)
-        for event in self:
-            event.sponsor_count = result.get(event.id, 0)
-
-    @api.depends('event_type_id', 'website_menu', 'website_track_proposal')
+    @api.depends('event_type_id', 'website_menu')
     def _compute_website_track(self):
-        """ Explicitly checks that event_type has changed before copying its value
-        on the event itself. Changing website_menu trigger should not mess with the
-        behavior of event_type. """
+        """ Propagate event_type configuration (only at change); otherwise propagate
+        website_menu updated value. Also force True is track_proposal changes. """
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.website_track = event.event_type_id.website_track
+            elif event.website_menu and (event.website_menu != event._origin.website_menu or not event.website_track):
+                event.website_track = True
             elif not event.website_menu:
                 event.website_track = False
-            elif event.website_track_proposal and not event.website_track:
-                event.website_track = True
 
     @api.depends('event_type_id', 'website_track')
     def _compute_website_track_proposal(self):
+        """ Propagate event_type configuration (only at change); otherwise propagate
+        website_track updated value (both together True or False at update). """
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.website_track_proposal = event.event_type_id.website_track_proposal
-            elif not event.website_track:
-                event.website_track_proposal = False
+            elif event.website_track != event._origin.website_track or not event.website_track or not event.website_track_proposal:
+                event.website_track_proposal = event.website_track
 
     @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
     def _compute_tracks_tag_ids(self):
         for event in self:
             event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
 
-    def _update_website_menus(self):
-        super(Event, self)._update_website_menus()
-        for event in self:
-            if event.website_track and not event.track_menu_ids:
-                for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_menu_entries()):
-                    menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
-                    event.env['website.event.menu'].create({
-                        'menu_id': menu.id,
-                        'event_id': event.id,
-                        'menu_type': menu_type,
-                    })
-            elif not event.website_track:
-                event.track_menu_ids.mapped('menu_id').unlink()
-            if event.website_track_proposal and not event.track_proposal_menu_ids:
-                for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_proposal_menu_entries()):
-                    menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
-                    event.env['website.event.menu'].create({
-                        'menu_id': menu.id,
-                        'event_id': event.id,
-                        'menu_type': menu_type,
-                    })
-            elif not event.website_track_proposal:
-                event.track_proposal_menu_ids.mapped('menu_id').unlink()
-
-    def write(self, values):
-        track_activated = self.filtered(lambda event: event.website_track)
-        track_deactivated = self.filtered(lambda event: not event.website_track)
-        track_proposal_activated = self.filtered(lambda event: event.website_track_proposal)
-        track_proposal_deactivated = self.filtered(lambda event: not event.website_track_proposal)
-        super(Event, self).write(values)
-        to_deactivate = track_activated.filtered(lambda event: not event.website_track)
-        to_activate = track_deactivated.filtered(lambda event: event.website_track)
-        track_proposal_to_deactivate = track_proposal_activated.filtered(lambda event: not event.website_track_proposal)
-        track_proposal_to_activate = track_proposal_deactivated.filtered(lambda event: event.website_track_proposal)
-        (to_activate | to_deactivate | track_proposal_to_activate | track_proposal_to_deactivate)._update_website_menus()
-
-    def _get_track_menu_entries(self):
-        self.ensure_one()
-        res = [
-            (_('Talks'), '/event/%s/track' % slug(self), False, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 'track')]
-        return res
-
-    def _get_track_proposal_menu_entries(self):
-        self.ensure_one()
-        res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
-        return res
-
-    def toggle_website_menu(self, val):
-        self.website_menu = val
+    # ------------------------------------------------------------
+    # WEBSITE MENU MANAGEMENT
+    # ------------------------------------------------------------
 
     def toggle_website_track(self, val):
         self.website_track = val
 
     def toggle_website_track_proposal(self, val):
         self.website_track_proposal = val
+
+    def _get_menu_update_fields(self):
+        return super(Event, self)._get_menu_update_fields() + ['website_track', 'website_track_proposal']
+
+    def _update_website_menus(self, menus_update_by_field=None):
+        super(Event, self)._update_website_menus(menus_update_by_field=menus_update_by_field)
+        for event in self:
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('website_track')):
+                event._update_website_menu_entry('website_track', 'track_menu_ids', '_get_track_menu_entries')
+            if event.menu_id and (not menus_update_by_field or event in menus_update_by_field.get('website_track_proposal')):
+                event._update_website_menu_entry('website_track_proposal', 'track_proposal_menu_ids', '_get_track_proposal_menu_entries')
+
+    def _get_menu_type_field_matching(self):
+        res = super(Event, self)._get_menu_type_field_matching()
+        res['track_proposal'] = 'website_track_proposal'
+        return res
+
+    def _get_track_menu_entries(self):
+        """ Method returning menu entries to display on the website view of the
+        event, possibly depending on some options in inheriting modules.
+
+        Each menu entry is a tuple containing :
+          * name: menu item name
+          * url: if set, url to a route (do not use xml_id in that case);
+          * xml_id: template linked to the page (do not use url in that case);
+          * menu_type: key linked to the menu, used to categorize the created
+            website.event.menu;
+        """
+        self.ensure_one()
+        return [
+            (_('Talks'), '/event/%s/track' % slug(self), False, 10, 'track'),
+            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 70, 'track')
+        ]
+
+    def _get_track_proposal_menu_entries(self):
+        """ See website_event_track._get_track_menu_entries() """
+        self.ensure_one()
+        return [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 15, 'track_proposal')]

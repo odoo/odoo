@@ -37,7 +37,11 @@ class SaleOrderTemplate(models.Model):
             if len(companies) > 1:
                 raise ValidationError(_("Your template cannot contain products from multiple companies."))
             elif companies and companies != template.company_id:
-                raise ValidationError((_("Your template contains products from company %s whereas your template belongs to company %s. \n Please change the company of your template or remove the products from other companies.") % (companies.mapped('display_name'), template.company_id.display_name)))
+                raise ValidationError(_(
+                    "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n Please change the company of your template or remove the products from other companies.",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    template_company=template.company_id.display_name,
+                ))
 
     @api.onchange('sale_order_template_line_ids', 'sale_order_template_option_ids')
     def _onchange_template_line_ids(self):
@@ -108,7 +112,7 @@ class SaleOrderTemplateLine(models.Model):
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
         domain=[('sale_ok', '=', True)])
-    product_uom_qty = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
+    product_uom_qty = fields.Float('Quantity', required=True, digits='Product Unit of Measure', default=1)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
 
@@ -159,7 +163,7 @@ class SaleOrderTemplateOption(models.Model):
         required=True, check_company=True)
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure ', required=True, domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', readonly=True)
-    quantity = fields.Float('Quantity', required=True, digits='Product UoS', default=1)
+    quantity = fields.Float('Quantity', required=True, digits='Product Unit of Measure', default=1)
 
     @api.onchange('product_id')
     def _onchange_product_id(self):

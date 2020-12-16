@@ -3,6 +3,7 @@
 
 from odoo.addons.http_routing.models.ir_http import slugify
 from odoo import api, fields, models
+from odoo.tools.safe_eval import safe_eval
 
 
 class Page(models.Model):
@@ -14,16 +15,21 @@ class Page(models.Model):
 
     url = fields.Char('Page URL')
     view_id = fields.Many2one('ir.ui.view', string='View', required=True, ondelete="cascade")
-    website_indexed = fields.Boolean('Page Indexed', default=True)
+    website_indexed = fields.Boolean('Is Indexed', default=True)
     date_publish = fields.Datetime('Publishing Date')
     # This is needed to be able to display if page is a menu in /website/pages
     menu_ids = fields.One2many('website.menu', 'page_id', 'Related Menus')
     is_homepage = fields.Boolean(compute='_compute_homepage', inverse='_set_homepage', string='Homepage')
     is_visible = fields.Boolean(compute='_compute_visible', string='Is Visible')
 
+    cache_time = fields.Integer(default=3600, help='Time to cache the page. (0 = no cache)')
+    cache_key_expr = fields.Char(help='Expression (tuple) to evaluate the cached key. \nE.g.: "(request.params.get("currency"), )"')
+
     # Page options
     header_overlay = fields.Boolean()
     header_color = fields.Char()
+    header_visible = fields.Boolean(default=True)
+    footer_visible = fields.Boolean(default=True)
 
     # don't use mixin website_id but use website_id on ir.ui.view instead
     website_id = fields.Many2one(related='view_id.website_id', store=True, readonly=False, ondelete='cascade')
@@ -61,11 +67,15 @@ class Page(models.Model):
     def get_page_properties(self):
         self.ensure_one()
         res = self.read([
-            'id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish',
-            'menu_ids', 'is_homepage', 'website_id', 'visibility', 'visibility_group'
+            'id', 'view_id', 'name', 'url', 'website_published', 'website_indexed', 'date_publish',
+            'menu_ids', 'is_homepage', 'website_id', 'visibility', 'groups_id'
         ])[0]
-        if not res['visibility_group']:
-            res['visibility_group'] = self.env.ref('base.group_user').name_get()[0]
+        if not res['groups_id']:
+            res['group_id'] = self.env.ref('base.group_user').name_get()[0]
+        elif len(res['groups_id']) == 1:
+            res['group_id'] = self.env['res.groups'].browse(res['groups_id']).name_get()[0]
+        del res['groups_id']
+
         res['visibility_password'] = res['visibility'] == 'password' and self.visibility_password_display or ''
         return res
 
@@ -119,8 +129,11 @@ class Page(models.Model):
             'date_publish': data['date_publish'] or None,
             'is_homepage': data['is_homepage'],
             'visibility': data['visibility'],
-            'visibility_group': data['visibility'] == "restricted_group" and data['visibility_group'],
         }
+        if page.visibility == 'restricted_group' and data['visibility'] != "restricted_group":
+            w_vals['groups_id'] = False
+        elif 'group_id' in data:
+            w_vals['groups_id'] = [data['group_id']]
         if 'visibility_pwd' in data:
             w_vals['visibility_password_display'] = data['visibility_pwd'] or ''
 
@@ -129,6 +142,7 @@ class Page(models.Model):
         # Create redirect if needed
         if data['create_redirect']:
             self.env['website.rewrite'].create({
+                'name': data['name'],
                 'redirect_type': data['redirect_type'],
                 'url_from': original_url,
                 'url_to': url,
@@ -187,8 +201,35 @@ class Page(models.Model):
     def write(self, vals):
         if 'url' in vals and not vals['url'].startswith('/'):
             vals['url'] = '/' + vals['url']
+        self.clear_caches()  # write on page == write on view that invalid cache
         return super(Page, self).write(vals)
 
     def get_website_meta(self):
         self.ensure_one()
         return self.view_id.get_website_meta()
+
+    def _get_cache_key(self, req):
+        # Always call me with super() AT THE END to have cache_key_expr appended as last element
+        # It is the only way for end user to not use cache via expr.
+        # E.g  (None if 'token' in request.params else 1,)  will bypass cache_time
+        cache_key = (req.website.id, req.lang, req.httprequest.path)
+        if self.cache_key_expr:  # e.g. (request.session.geoip.get('country_code'),)
+            cache_key += safe_eval(self.cache_key_expr, {'request': req})
+        return cache_key
+
+    def _get_cache_response(self, cache_key):
+        """ Return the cached response corresponding to ``self`` and ``cache_key``.
+        Raise a KeyError if the item is not in cache.
+        """
+        # HACK: we use the same LRU as ormcache to take advantage from its
+        # distributed invalidation, but we don't explicitly use ormcache
+        return self.pool._Registry__cache[('website.page', _cached_response, self.id, cache_key)]
+
+    def _set_cache_response(self, cache_key, response):
+        """ Put in cache the given response. """
+        self.pool._Registry__cache[('website.page', _cached_response, self.id, cache_key)] = response
+
+
+# this is just a dummy function to be used as ormcache key
+def _cached_response():
+    pass

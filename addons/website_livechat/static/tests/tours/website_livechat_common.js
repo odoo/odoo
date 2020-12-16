@@ -2,7 +2,7 @@ odoo.define('website_livechat.tour_common', function(require) {
 'use strict';
 
 var session = require('web.session');
-var LivechatButton = require('im_livechat.im_livechat').LivechatButton;
+var LivechatButton = require('im_livechat.legacy.im_livechat.im_livechat').LivechatButton;
 
 /**
  * Alter this method for test purposes.
@@ -132,7 +132,7 @@ var closeStep = [{
 
 var goodRatingStep = [{
     content: "Send Good Rating",
-    trigger: "div.o_livechat_rating_choices > img[data-value=10]",
+    trigger: "div.o_livechat_rating_choices > img[data-value=5]",
 }, {
     content: "Check if feedback has been sent",
     trigger: "div.o_thread_window_header.feedback_sent",
@@ -143,7 +143,7 @@ var goodRatingStep = [{
 
 var okRatingStep = [{
     content: "Send ok Rating",
-    trigger: "div.o_livechat_rating_choices > img[data-value=5]",
+    trigger: "div.o_livechat_rating_choices > img[data-value=3]",
 }];
 
 var sadRatingStep = [{

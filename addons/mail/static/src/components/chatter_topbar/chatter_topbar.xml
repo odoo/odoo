@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ChatterTopbar" owl="1">
+        <div class="o_ChatterTopbar">
+            <t t-if="chatter">
+                <div class="o_ChatterTopbar_actions" t-att-class="{'o-has-active-button': chatter.isComposerVisible }">
+                    <t t-if="chatter.threadView">
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonSendMessage"
+                            type="button"
+                            t-att-class="{
+                                'o-active': chatter.isComposerVisible and chatter.composer and !chatter.composer.isLog,
+                                'o-bordered': chatter.hasExternalBorder,
+                            }"
+                            t-att-disabled="chatter.isDisabled"
+                            t-on-click="_onClickSendMessage"
+                        >
+                            Send message
+                        </button>
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonLogNote"
+                            type="button"
+                            t-att-class="{
+                                'o-active': chatter.isComposerVisible and chatter.composer and chatter.composer.isLog,
+                                'o-bordered': chatter.hasExternalBorder,
+                            }"
+                            t-att-disabled="chatter.isDisabled"
+                            t-on-click="_onClickLogNote"
+                        >
+                            Log note
+                        </button>
+                    </t>
+                    <t t-if="chatter.hasActivities">
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity">
+                            <i class="fa fa-clock-o"/>
+                            Schedule activity
+                        </button>
+                    </t>
+                    <div class="o-autogrow"/>
+                        <div class="o_ChatterTopbar_rightSection">
+                            <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonAttachments" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickAttachments">
+                                <i class="fa fa-paperclip"/>
+                                <t t-if="chatter.isDisabled or !chatter.isShowingAttachmentsLoading">
+                                    <span class="o_ChatterTopbar_buttonCount o_ChatterTopbar_buttonAttachmentsCount" t-esc="chatter.thread ? chatter.thread.allAttachments.length : 0"/>
+                                </t>
+                                <t t-else="">
+                                    <i class="o_ChatterTopbar_buttonAttachmentsCountLoader fa fa-spinner fa-spin" aria-label="Attachment counter loading..."/>
+                                </t>
+                            </button>
+                            <t t-if="chatter.hasFollowers and chatter.thread">
+                                <t t-if="chatter.thread.channel_type !== 'chat'">
+                                    <FollowButton
+                                        class="o_ChatterTopbar_button o_ChatterTopbar_followButton"
+                                        isDisabled="chatter.isDisabled"
+                                        threadLocalId="chatter.thread.localId"
+                                    />
+                                </t>
+                                <FollowerListMenu
+                                    class="o_ChatterTopbar_button o_ChatterTopbar_followerListMenu"
+                                    isDisabled="chatter.isDisabled"
+                                    threadLocalId="chatter.thread.localId"
+                                />
+                            </t>
+                        </div>
+                </div>
+                <t t-if="chatter.hasTopbarCloseButton">
+                    <div class="o_ChatterTopbar_buttonClose" title="Close" t-on-click="_onClickClose">
+                        <i class="fa fa-times"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

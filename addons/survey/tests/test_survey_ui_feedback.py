@@ -25,7 +25,7 @@ class TestUiFeedback(HttpCaseWithUserDemo):
                     'sequence': 1,
                     'question_type': False,
                     'is_page': True,
-                    'description': """<p>This section is about general informations about you. Answering them helps qualifying your answers.</p>""",
+                    'description': """<p>This section is about general information about you. Answering them helps qualifying your answers.</p>""",
                 }), (0, 0, {
                     'title': 'Where do you live ?',
                     'sequence': 2,

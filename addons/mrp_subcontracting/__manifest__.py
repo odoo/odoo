@@ -18,6 +18,7 @@
         'views/stock_picking_views.xml',
         'views/supplier_info_views.xml',
         'views/product_views.xml',
+        'views/mrp_production_views.xml',
         'wizard/stock_picking_return_views.xml',
     ],
     'demo': [

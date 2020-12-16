@@ -96,8 +96,20 @@ class TestProjectFlow(TestProjectCommon):
         self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
 
     def test_subtask_process(self):
-        """ Check subtask mecanism and change it from project. """
+        """
+        Check subtask mecanism and change it from project.
+
+        For this test, 2 projects are used:
+            - the 'pigs' project which has a partner_id
+            - the 'goats' project where the partner_id is removed at the beginning of the tests and then restored.
+
+        2 parent tasks are also used to be able to switch the parent task of a sub-task:
+            - 'parent_task' linked to the partner_2
+            - 'another_parent_task' linked to the partner_3
+        """
+
         Task = self.env['project.task'].with_context({'tracking_disable': True})
+
         parent_task = Task.create({
             'name': 'Mother Task',
             'user_id': self.user_projectuser.id,
@@ -105,23 +117,94 @@ class TestProjectFlow(TestProjectCommon):
             'partner_id': self.partner_2.id,
             'planned_hours': 12,
         })
-        child_task = Task.create({
-            'name': 'Task Child',
-            'parent_id': parent_task.id,
+
+        another_parent_task = Task.create({
+            'name': 'Another Mother Task',
+            'user_id': self.user_projectuser.id,
             'project_id': self.project_pigs.id,
+            'partner_id': self.partner_3.id,
+            'planned_hours': 0,
+        })
+
+        # remove the partner_id of the 'goats' project
+        goats_partner_id = self.project_goats.partner_id
+
+        self.project_goats.write({
+            'partner_id': False
+        })
+
+        # the child task 1 is linked to a project without partner_id (goats project)
+        child_task_1 = Task.create({
+            'name': 'Task Child with project',
+            'parent_id': parent_task.id,
+            'project_id': self.project_goats.id,
             'planned_hours': 3,
         })
 
-        self.assertEqual(parent_task.partner_id, child_task.partner_id, "Subtask should have the same partner than its parent")
-        self.assertEqual(parent_task.subtask_count, 1, "Parent task should have 1 child")
-        self.assertEqual(parent_task.subtask_planned_hours, 3, "Planned hours of subtask should impact parent task")
-
-        # change project
-        child_task.write({
-            'project_id': self.project_goats.id  # customer is partner_1
+        # the child task 2 is linked to a project with a partner_id (pigs project)
+        child_task_2 = Task.create({
+            'name': 'Task Child without project',
+            'parent_id': parent_task.id,
+            'project_id': self.project_pigs.id,
+            'planned_hours': 5,
         })
 
-        self.assertEqual(parent_task.partner_id, child_task.partner_id, "Subtask partner should not change when changing project")
+        self.assertEqual(
+            child_task_1.partner_id, child_task_1.parent_id.partner_id,
+            "When no project partner_id has been set, a subtask should have the same partner as its parent")
+
+        self.assertEqual(
+            child_task_2.partner_id, child_task_2.project_id.partner_id,
+            "When a project partner_id has been set, a subtask should have the same partner as its project")
+
+        self.assertEqual(
+            parent_task.subtask_count, 2,
+            "Parent task should have 2 children")
+
+        self.assertEqual(
+            parent_task.subtask_planned_hours, 8,
+            "Planned hours of subtask should impact parent task")
+
+        # change the parent of a subtask without a project partner_id
+        child_task_1.write({
+            'parent_id': another_parent_task.id
+        })
+
+        self.assertEqual(
+            child_task_1.partner_id, parent_task.partner_id,
+            "When changing the parent task of a subtask with no project partner_id, the partner_id should remain the same.")
+
+        # change the parent of a subtask with a project partner_id
+        child_task_2.write({
+            'parent_id': another_parent_task.id
+        })
+
+        self.assertEqual(
+            child_task_2.partner_id, child_task_2.project_id.partner_id,
+            "When changing the parent task of a subtask with a project, the partner_id should remain the same.")
+
+        # set a project with partner_id to a subtask without project partner_id
+        child_task_1.write({
+            'project_id': self.project_pigs.id
+        })
+
+        self.assertEqual(
+            child_task_1.partner_id, self.project_pigs.partner_id, 
+            "When the project changes, the subtask should have the same partner id as the new project.")
+
+        # restore the partner_id of the 'goats' project
+        self.project_goats.write({
+            'partner_id': goats_partner_id
+        })
+
+        # set a project with partner_id to a subtask with a project partner_id
+        child_task_2.write({
+            'project_id': self.project_goats.id
+        })
+
+        self.assertEqual(
+            child_task_2.partner_id, self.project_goats.partner_id,
+            "When the project changes, the subtask should have the same partner id as the new project.")
 
     def test_rating(self):
         """Check if rating works correctly even when task is changed from project A to project B"""
@@ -142,7 +225,7 @@ class TestProjectFlow(TestProjectCommon):
             'parent_res_id': self.project_pigs.id,
             'rated_partner_id': self.partner_2.id,
             'partner_id': self.partner_2.id,
-            'rating': 10,
+            'rating': 5,
             'consumed': False,
         })
 
@@ -153,7 +236,7 @@ class TestProjectFlow(TestProjectCommon):
             'parent_res_id': self.project_pigs.id,
             'rated_partner_id': self.partner_2.id,
             'partner_id': self.partner_2.id,
-            'rating': 5,
+            'rating': 3,
             'consumed': True,
         })
 
@@ -170,7 +253,7 @@ class TestProjectFlow(TestProjectCommon):
         self.assertEqual(self.project_pigs.rating_percentage_satisfaction, 0)  # There is a rating but not a "great" on, just an "okay".
 
         # Consuming rating_good
-        first_task.rating_apply(10, rating_good.access_token)
+        first_task.rating_apply(5, rating_good.access_token)
 
         # We need to invalidate cache since it is not done automatically by the ORM
         # Our One2Many is linked to a res_id (int) for which the orm doesn't create an inverse

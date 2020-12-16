@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-extend="website_event.customize_options">
+        <t t-jquery="a[name='display-website-menu']" t-operation="after">
+            <a t-if="window.document.location.pathname.endsWith('/community')" class="dropdown-item" href="#" name="allow-room-creation" role="menuitem">
+                <label class="o_switch" for="allow-room-creation">
+                    <input id="allow-room-creation" type="checkbox"/>
+                    <span/>
+                    Allow Room Creation
+                </label>
+            </a>
+        </t>
+    </t>
+</templates>

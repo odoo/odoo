@@ -4,6 +4,8 @@ odoo.define('stock.popover_widget', function (require) {
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
 var QWeb = core.qweb;
+var Context = require('web.Context');
+var data_manager = require('web.data_manager');
 var fieldRegistry = require('web.field_registry');
 
 /**
@@ -36,6 +38,7 @@ var PopoverWidgetField = AbstractField.extend({
         this.$el.html(QWeb.render(this.buttonTemplape, _.defaults(value, {color: this.color, icon: this.icon})));
         this.$el.find('a').prop('special_click', true);
         this.$popover = $(QWeb.render(value.popoverTemplate || this.popoverTemplate, value));
+        this.$popover.on('click', '.action_open_forecast', this._openForecast.bind(this));
         this.$el.find('a').popover({
             content: this.$popover,
             html: this.html,
@@ -44,6 +47,28 @@ var PopoverWidgetField = AbstractField.extend({
             trigger: this.trigger,
             delay: {'show': 0, 'hide': 100},
         });
+    },
+
+    /**
+     * Redirect to the product forecasted report.
+     *
+     * @private
+     * @param {MouseEvent} event
+     * @returns {Promise} action loaded
+     */
+    async _openForecast(ev) {
+        ev.stopPropagation();
+        const reportContext = {
+            active_model: 'product.product',
+            active_id: this.recordData.product_id.data.id,
+        };
+        const action = await this._rpc({
+            model: reportContext.active_model,
+            method: 'action_product_forecast_report',
+            args: [[reportContext.active_id]],
+        });
+        action.context = new Context(action.context, reportContext);
+        return this.do_action(action);
     },
 
     destroy: function () {

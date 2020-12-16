@@ -38,12 +38,13 @@
         </field>
     </record>
 
-    <act_window
-        id="act_res_partner_2_purchase_order"
-        name="Purchase orders"
-        domain="[('requisition_id', '=', active_id)]"
-        context="{'default_requisition_id': active_id}"
-        res_model="purchase.order"
-        binding_model="purchase.requisition" binding_views="form"/>
+    <record id="act_res_partner_2_purchase_order" model="ir.actions.act_window">
+        <field name="name">Purchase orders</field>
+        <field name="res_model">purchase.order</field>
+        <field name="domain">[('requisition_id', '=', active_id)]</field>
+        <field name="context">{'default_requisition_id': active_id}</field>
+        <field name="binding_model_id" ref="model_purchase_requisition"/>
+        <field name="binding_view_types">form</field>
+    </record>
 
 </odoo>

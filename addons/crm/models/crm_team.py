@@ -15,7 +15,9 @@ class Team(models.Model):
 
     use_leads = fields.Boolean('Leads', help="Check this box to filter and qualify incoming requests as leads before converting them into opportunities and assigning them to a salesperson.")
     use_opportunities = fields.Boolean('Pipeline', default=True, help="Check this box to manage a presales process with opportunities.")
-    alias_id = fields.Many2one('mail.alias', string='Alias', ondelete="restrict", required=True, help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
+    alias_id = fields.Many2one(
+        'mail.alias', string='Alias', ondelete="restrict", required=True,
+        help="The email address associated with this channel. New emails received will automatically create new leads assigned to the channel.")
     # statistics about leads / opportunities / both
     lead_unassigned_count = fields.Integer(
         string='# Unassigned Leads', compute='_compute_lead_unassigned_count')
@@ -24,11 +26,11 @@ class Team(models.Model):
         help="Number of leads and opportunities assigned this last month.")
     opportunities_count = fields.Integer(
         string='# Opportunities', compute='_compute_opportunities_data')
-    opportunities_amount = fields.Integer(
+    opportunities_amount = fields.Monetary(
         string='Opportunities Revenues', compute='_compute_opportunities_data')
     opportunities_overdue_count = fields.Integer(
         string='# Overdue Opportunities', compute='_compute_opportunities_overdue_data')
-    opportunities_overdue_amount = fields.Integer(
+    opportunities_overdue_amount = fields.Monetary(
         string='Overdue Opportunities Revenues', compute='_compute_opportunities_overdue_data',)
     # alias: improve fields coming from _inherits, use inherited to avoid replacing them
     alias_user_id = fields.Many2one(
@@ -57,18 +59,13 @@ class Team(models.Model):
             team.lead_all_assigned_month_count = counts.get(team.id, 0)
 
     def _compute_opportunities_data(self):
-        opportunity_data = self.env['crm.lead'].search([
+        opportunity_data = self.env['crm.lead'].read_group([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ]).read(['planned_revenue', 'team_id'])
-        counts = {}
-        amounts = {}
-        for datum in opportunity_data:
-            counts.setdefault(datum['team_id'][0], 0)
-            amounts.setdefault(datum['team_id'][0], 0)
-            counts[datum['team_id'][0]] += 1
-            amounts[datum['team_id'][0]] += (datum.get('planned_revenue', 0))
+        ], ['expected_revenue:sum', 'team_id'], ['team_id'])
+        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
+        amounts = {datum['team_id'][0]: datum['expected_revenue'] for datum in opportunity_data}
         for team in self:
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)
@@ -79,9 +76,9 @@ class Team(models.Model):
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
             ('date_deadline', '<', fields.Date.to_string(fields.Datetime.now()))
-        ], ['planned_revenue', 'team_id'], ['team_id'])
+        ], ['expected_revenue', 'team_id'], ['team_id'])
         counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: (datum['planned_revenue']) for datum in opportunity_data}
+        amounts = {datum['team_id'][0]: (datum['expected_revenue']) for datum in opportunity_data}
         for team in self:
             team.opportunities_overdue_count = counts.get(team.id, 0)
             team.opportunities_overdue_amount = amounts.get(team.id, 0)
@@ -95,43 +92,31 @@ class Team(models.Model):
     # ORM
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, vals):
-        alias_values = self._synchronize_alias(vals)
-        if alias_values:
-            vals.update(alias_values)
-        return super(Team, self).create(vals)
-
     def write(self, vals):
         result = super(Team, self).write(vals)
-        if 'use_leads' in vals or 'alias_defaults' in vals:
-            for team in self:
-                team.alias_id.write(team.get_alias_values())
         if 'use_leads' in vals or 'use_opportunities' in vals:
-            alias_values = self._synchronize_alias(vals)
-            if alias_values:
-                self.write(alias_values)
+            for team in self:
+                alias_vals = team._alias_get_creation_values()
+                team.write({
+                    'alias_name': alias_vals.get('alias_name', team.alias_name),
+                    'alias_defaults': alias_vals.get('alias_defaults'),
+                })
         return result
 
-    def _synchronize_alias(self, values):
-        use_leads = self.use_leads if self else values.get('use_leads', False)
-        use_opportunities = self.use_opportunities if self else values.get('use_opportunities', True)
-        if not use_leads and not use_opportunities:
-            return {'alias_name': False}
-        return {}
     # ------------------------------------------------------------
     # MESSAGING
     # ------------------------------------------------------------
 
-    def get_alias_model_name(self, vals):
-        return 'crm.lead'
-
-    def get_alias_values(self):
-        has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
-        values = super(Team, self).get_alias_values()
-        values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
-        defaults['type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
-        defaults['team_id'] = self.id
+    def _alias_get_creation_values(self):
+        values = super(Team, self)._alias_get_creation_values()
+        values['alias_model_id'] = self.env['ir.model']._get('crm.lead').id
+        if self.id:
+            if not self.use_leads and not self.use_opportunities:
+                values['alias_name'] = False
+            values['alias_defaults'] = defaults = ast.literal_eval(self.alias_defaults or "{}")
+            has_group_use_lead = self.env.user.has_group('crm.group_use_lead')
+            defaults['type'] = 'lead' if has_group_use_lead and self.use_leads else 'opportunity'
+            defaults['team_id'] = self.id
         return values
 
     # ------------------------------------------------------------
@@ -141,7 +126,7 @@ class Team(models.Model):
     #TODO JEM : refactor this stuff with xml action, proper customization,
     @api.model
     def action_your_pipeline(self):
-        action = self.env.ref('crm.crm_lead_action_pipeline').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_action_pipeline")
         user_team_id = self.env.user.sale_team_id.id
         if user_team_id:
             # To ensure that the team is readable in multi company
@@ -163,13 +148,13 @@ class Team(models.Model):
         return action
 
     def _compute_dashboard_button_name(self):
-        super(Team,self)._compute_dashboard_button_name()
+        super(Team, self)._compute_dashboard_button_name()
         team_with_pipelines = self.filtered(lambda el: el.use_opportunities)
         team_with_pipelines.update({'dashboard_button_name': _("Pipeline")})
 
     def action_primary_channel_button(self):
         if self.use_opportunities:
-            return self.env.ref('crm.crm_case_form_view_salesteams_opportunity').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("crm.crm_case_form_view_salesteams_opportunity")
         return super(Team,self).action_primary_channel_button()
 
     def _graph_get_model(self):

@@ -56,18 +56,18 @@ odoo.define('web.OwlCompatibility', function () {
      *         <SpecificAdapter Component="LegacyWidget" firstArg="a" secondArg="b"/>
      *
      * If the legacy widget has to be updated when props change, one must define
-     * a subclass of ComponentAdapter to override 'update' and 'render'. The
-     * 'update' function takes the nextProps as argument, and should update the
+     * a subclass of ComponentAdapter to override 'updateWidget' and 'renderWidget'. The
+     * 'updateWidget' function takes the nextProps as argument, and should update the
      * internal state of the widget (might be async, and return a Promise).
      * However, to ensure that the DOM is updated all at once, it shouldn't do
-     * a re-rendering. This is the role of function 'render', which will be
+     * a re-rendering. This is the role of function 'renderWidget', which will be
      * called just before patching the DOM, and which thus must be synchronous.
      * For instance:
      *     class SpecificAdapter extends ComponentAdapter {
-     *         update(nextProps) {
+     *         updateWidget(nextProps) {
      *             return this.widget.updateState(nextProps);
      *         }
-     *         render() {
+     *         renderWidget() {
      *             return this.widget.render();
      *         }
      *     }
@@ -142,7 +142,11 @@ odoo.define('web.OwlCompatibility', function () {
                 }
                 vnode.elm = this.widget.el;
             }
-            return super.__patch(...arguments);
+            const result = super.__patch(...arguments);
+            if (this.widget && this.el !== this.widget.el) {
+                this.__owl__.vnode.elm = this.widget.el;
+            }
+            return result;
         }
 
         /**
@@ -392,8 +396,11 @@ odoo.define('web.OwlCompatibility', function () {
          */
         destroy() {
             if (this.parentWidget) {
-                const index = children.get(this.parentWidget).indexOf(this);
-                children.get(this.parentWidget).splice(index, 1);
+                const parentChildren = children.get(this.parentWidget);
+                if (parentChildren) {
+                    const index = parentChildren.indexOf(this);
+                    children.get(this.parentWidget).splice(index, 1);
+                }
             }
             super.destroy();
         }
@@ -445,11 +452,9 @@ odoo.define('web.OwlCompatibility', function () {
                 // we may not be in the DOM, but actually want to be redrawn
                 // (e.g. we were detached from the DOM, and now we're going to
                 // be re-attached, but we need to be reloaded first). In this
-                // case, we have to fool Owl as it would skip the rendering if
-                // we simply call render.
-                const tmpEl = document.createElement('div');
-                this.el.parentElement.replaceChild(tmpEl, this.el);
-                prom = this.mount(tmpEl, { position: 'self' });
+                // case, we have to call 'mount' as Owl would skip the rendering
+                // if we simply call render.
+                prom = this.mount(...this._mountArgs);
             }
             return prom;
         }
@@ -473,7 +478,10 @@ odoo.define('web.OwlCompatibility', function () {
                     // stopImmediatePropagation to prevent from getting here)
                     if (!ev.cancelBubble) {
                         ev.stopPropagation();
-                        this.parentWidget.trigger_up(ev.type.replace(/-/g, '_'), ev.detail);
+                        const detail = Object.assign({}, ev.detail, {
+                            __originalComponent: ev.originalComponent,
+                        });
+                        this.parentWidget.trigger_up(ev.type.replace(/-/g, '_'), detail);
                     }
                 });
             }
@@ -493,6 +501,22 @@ odoo.define('web.OwlCompatibility', function () {
                 children.set(parent, parentChildren);
             }
             parentChildren.push(this);
+        }
+        /**
+         * Stores mount target and position at first mount. That way, when updating
+         * while out of DOM, we know where and how to remount.
+         * @see update()
+         * @override
+         */
+        async mount(target, options) {
+            if (options && options.position === 'self') {
+                throw new Error(
+                    'Unsupported position: "self" is not allowed for wrapper components. ' +
+                    'Contact the JS Framework team or open an issue if your use case is relevant.'
+                );
+            }
+            this._mountArgs = arguments;
+            return super.mount(...arguments);
         }
     }
     ComponentWrapper.template = xml`<t t-component="Component" t-props="props" t-ref="component"/>`;

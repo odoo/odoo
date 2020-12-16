@@ -4,7 +4,7 @@ odoo.define('web.SearchBar', function (require) {
     const Domain = require('web.Domain');
     const field_utils = require('web.field_utils');
     const { useAutofocus } = require('web.custom_hooks');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
     const { Component, hooks } = owl;
@@ -42,14 +42,14 @@ odoo.define('web.SearchBar', function (require) {
 
             this.focusOnUpdate = useAutofocus();
             this.inputRef = useRef('search-input');
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
             this.state = useState({
                 sources: [],
                 focusedItem: 0,
                 inputValue: "",
             });
 
-            this.autoCompleteSources = this.model.getFiltersOfType('field').map(
+            this.autoCompleteSources = this.model.get('filters', f => f.type === 'field').map(
                 filter => this._createSource(filter)
             );
             this.noResultItem = [null, this.env._t("(no result)")];
@@ -60,15 +60,15 @@ odoo.define('web.SearchBar', function (require) {
 
         mounted() {
             // 'search' will always patch the search bar, 'focus' will never.
-            this.env.controlPanelModel.on('search', this, this.focusOnUpdate);
-            this.env.controlPanelModel.on('focus-control-panel', this, () => {
+            this.env.searchModel.on('search', this, this.focusOnUpdate);
+            this.env.searchModel.on('focus-control-panel', this, () => {
                 this.inputRef.el.focus();
             });
         }
 
         willUnmount() {
-            this.env.controlPanelModel.off('search', this);
-            this.env.controlPanelModel.off('focus-control-panel', this);
+            this.env.searchModel.off('search', this);
+            this.env.searchModel.off('focus-control-panel', this);
         }
 
         //---------------------------------------------------------------------
@@ -81,6 +81,8 @@ odoo.define('web.SearchBar', function (require) {
         _closeAutoComplete() {
             this.state.sources = [];
             this.state.focusedItem = 0;
+            this.state.inputValue = "";
+            this.inputRef.el.value = "";
             this.focusOnUpdate();
         }
 
@@ -90,34 +92,41 @@ odoo.define('web.SearchBar', function (require) {
          * @returns {Object}
          */
         _createSource(filter) {
+            const field = this.props.fields[filter.fieldName];
+            const type = field.type === "reference" ? "char" : field.type;
             const source = {
                 active: true,
                 description: filter.description,
-                fieldName: filter.fieldName,
                 filterId: filter.id,
                 filterOperator: filter.operator,
                 id: sourceId ++,
-                operator: CHAR_FIELDS.includes(filter.fieldType) ? 'ilike' : '=',
+                operator: CHAR_FIELDS.includes(type) ? 'ilike' : '=',
                 parent: false,
+                type,
             };
-            switch (filter.fieldType) {
-                case 'selection':
+            switch (type) {
+                case 'selection': {
                     source.active = false;
-                    source.selection = this.props.fields[filter.fieldName].selection;
+                    source.selection = field.selection || [];
                     break;
-                case 'boolean':
+                }
+                case 'boolean': {
                     source.active = false;
                     source.selection = [
                         [true, this.env._t("Yes")],
                         [false, this.env._t("No")],
                     ];
                     break;
-                case 'many2one':
+                }
+                case 'many2one': {
                     source.expand = true;
                     source.expanded = false;
+                    source.context = field.context;
+                    source.relation = field.relation;
                     if (filter.domain) {
                         source.domain = filter.domain;
                     }
+                }
             }
             return source;
         }
@@ -131,7 +140,6 @@ odoo.define('web.SearchBar', function (require) {
         _createSubSource(source, [value, label], active = true) {
             const subSource = {
                 active,
-                fieldName: source.fieldName,
                 filterId: source.filterId,
                 filterOperator: source.filterOperator,
                 id: sourceId ++,
@@ -159,16 +167,15 @@ odoo.define('web.SearchBar', function (require) {
                         args = [];
                     }
                 }
-                const { context, relation } = this.props.fields[source.fieldName];
                 const results = await this.rpc({
                     kwargs: {
                         args,
-                        context,
+                        context: source.context,
                         limit: 8,
                         name: this.state.inputValue.trim(),
                     },
                     method: 'name_search',
-                    model: relation,
+                    model: source.relation,
                 });
                 const options = results.map(result => this._createSubSource(source, result));
                 const parentIndex = this.state.sources.indexOf(source);
@@ -233,20 +240,28 @@ odoo.define('web.SearchBar', function (require) {
          * @param {Object} source
          * @returns {string}
          */
-        _parseWithSource(rawValue, source) {
-            const { type } = this.props.fields[source.fieldName];
+        _parseWithSource(rawValue, { type }) {
             const parser = field_utils.parse[type];
             let parsedValue;
-            if (['date', 'datetime'].includes(type)) {
-                const parsedDate = parser(rawValue, { type }, { timezone: true });
-                const dateFormat = type === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
-                const momentValue = moment(parsedDate, dateFormat);
-                if (!momentValue.isValid()) {
-                    throw new Error('Invalid date');
+            switch (type) {
+                case 'date':
+                case 'datetime': {
+                    const parsedDate = parser(rawValue, { type }, { timezone: true });
+                    const dateFormat = type === 'datetime' ? 'YYYY-MM-DD HH:mm:ss' : 'YYYY-MM-DD';
+                    const momentValue = moment(parsedDate, dateFormat);
+                    if (!momentValue.isValid()) {
+                        throw new Error('Invalid date');
+                    }
+                    parsedValue = parsedDate.toJSON();
+                    break;
                 }
-                parsedValue = parsedDate.toJSON();
-            } else {
-                parsedValue = parser(rawValue);
+                case 'many2one': {
+                    parsedValue = rawValue;
+                    break;
+                }
+                default: {
+                    parsedValue = parser(rawValue);
+                }
             }
             return parsedValue;
         }
@@ -268,8 +283,6 @@ odoo.define('web.SearchBar', function (require) {
                     operator: source.filterOperator || source.operator,
                 });
             }
-            this.state.inputValue = "";
-            this.inputRef.el.value = "";
             this._closeAutoComplete();
         }
 
@@ -363,9 +376,8 @@ odoo.define('web.SearchBar', function (require) {
                         this.state.focusedItem = this.state.sources.indexOf(currentItem.parent);
                         // Priority 3: Do nothing (navigation inside text).
                     } else if (ev.target.selectionStart === 0) {
-                        const facets = this.model.getFacets();
                         // Priority 4: navigate to rightmost facet.
-                        this._focusFacet(facets.length - 1);
+                        this._focusFacet(this.model.get("facets").length - 1);
                     }
                     break;
                 case 'ArrowRight':
@@ -395,7 +407,7 @@ odoo.define('web.SearchBar', function (require) {
                     break;
                 case 'Backspace':
                     if (!this.state.inputValue.length) {
-                        const facets = this.model.getFacets();
+                        const facets = this.model.get("facets");
                         if (facets.length) {
                             this._onFacetRemove(facets[facets.length - 1]);
                         }

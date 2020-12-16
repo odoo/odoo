@@ -3,10 +3,10 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.addons.website_form.controllers import main
 
 
-class WebsiteForm(WebsiteForm):
+class WebsiteForm(main.WebsiteForm):
 
     def _get_country(self):
         country_code = request.session.geoip and request.session.geoip.get('country_code') or False
@@ -18,8 +18,7 @@ class WebsiteForm(WebsiteForm):
         return ['phone', 'mobile']
 
     # Check and insert values from the form on the model <model> + validation phone fields
-    @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
-    def website_form(self, model_name, **kwargs):
+    def _handle_website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if model_record and hasattr(request.env[model_name], 'phone_format'):
             try:
@@ -43,10 +42,10 @@ class WebsiteForm(WebsiteForm):
             geoip_country_code = request.session.get('geoip', {}).get('country_code')
             geoip_state_code = request.session.get('geoip', {}).get('region')
             if geoip_country_code and geoip_state_code:
-                State = request.env['res.country.state']
-                request.params['state_id'] = State.search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)]).id
-
-        return super(WebsiteForm, self).website_form(model_name, **kwargs)
+                state = request.env['res.country.state'].search([('code', '=', geoip_state_code), ('country_id.code', '=', geoip_country_code)])
+                if state:
+                    request.params['state_id'] = state.id
+        return super(WebsiteForm, self)._handle_website_form(model_name, **kwargs)
 
     def insert_record(self, request, model, values, custom, meta=None):
         is_lead_model = model.model == 'crm.lead'

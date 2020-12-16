@@ -33,7 +33,8 @@ class CashBox(models.TransientModel):
             if record.state == 'confirm':
                 raise UserError(_("You cannot put/take money in/out for a bank statement which is closed."))
             values = box._calculate_values_for_statement_line(record)
-            record.write({'line_ids': [(0, False, values)]})
+            account = record.journal_id.company_id.transfer_account_id
+            self.env['account.bank.statement.line'].with_context(counterpart_account_id=account.id).create(values)
 
 
 class CashBoxOut(CashBox):
@@ -49,6 +50,5 @@ class CashBoxOut(CashBox):
             'statement_id': record.id,
             'journal_id': record.journal_id.id,
             'amount': amount,
-            'account_id': record.journal_id.company_id.transfer_account_id.id,
-            'name': self.name,
+            'payment_ref': self.name,
         }

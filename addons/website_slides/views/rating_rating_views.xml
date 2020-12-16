@@ -12,7 +12,7 @@
                 <field name="partner_id"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <t t-set="val_stars" t-value="record.rating.raw_value / 2"/>
+                        <t t-set="val_stars" t-value="record.rating.raw_value"/>
                         <t t-set="val_integer" t-value="Math.floor(val_stars)"/>
                         <t t-set="val_decimal" t-value="val_stars - val_integer"/>
                         <t t-set="empty_star" t-value="5 - (val_integer + Math.ceil(val_decimal))"/>
@@ -79,7 +79,7 @@
         <field name="model">rating.rating</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <graph string="Rating Average" type="bar">
+            <graph string="Rating Average" type="bar" sample="1">
                 <field name="res_name" type="row"/>
                 <field name="rating" type="measure"/>
             </graph>
@@ -91,7 +91,7 @@
         <field name="model">rating.rating</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <pivot>
+            <pivot sample="1">
                 <field name="res_name" type="row"/>
                 <field name="rating_text" type="col"/>
                 <field name="rating" type="measure"/>

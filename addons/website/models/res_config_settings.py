@@ -23,8 +23,7 @@ class ResConfigSettings(models.TransientModel):
     website_logo = fields.Binary(related='website_id.logo', readonly=False)
     language_ids = fields.Many2many(related='website_id.language_ids', relation='res.lang', readonly=False)
     website_language_count = fields.Integer(string='Number of languages', compute='_compute_website_language_count', readonly=True)
-    website_default_lang_id = fields.Many2one(string='Default language', related='website_id.default_lang_id',
-                                              readonly=False, relation='res.lang')
+    website_default_lang_id = fields.Many2one(string='Default language', related='website_id.default_lang_id', readonly=False)
     website_default_lang_code = fields.Char('Default language code', related='website_id.default_lang_id.code', readonly=False)
     specific_user_account = fields.Boolean(related='website_id.specific_user_account', readonly=False,
                                            help='Are newly created user accounts website specific')
@@ -139,13 +138,13 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('language_ids')
     def _compute_website_language_count(self):
         for config in self:
-            config.website_language_count = len(self.language_ids)
+            config.website_language_count = len(config.language_ids)
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
 
     def open_template_user(self):
-        action = self.env.ref('base.action_res_users').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
         action['res_id'] = literal_eval(self.env['ir.config_parameter'].sudo().get_param('base.template_portal_user_id', 'False'))
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action
@@ -190,6 +189,6 @@ class ResConfigSettings(models.TransientModel):
 
     def install_theme_on_current_website(self):
         self.website_id._force()
-        action = self.env.ref('website.theme_install_kanban_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website.theme_install_kanban_action")
         action['target'] = 'main'
         return action

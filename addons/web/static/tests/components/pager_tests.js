@@ -72,6 +72,37 @@ odoo.define('web.pager_tests', function (require) {
             pager.destroy();
         });
 
+        QUnit.test("keydown on pager with same value", async function (assert) {
+            assert.expect(7);
+
+            const pager = await createComponent(Pager, {
+                props: {
+                    currentMinimum: 1,
+                    limit: 4,
+                    size: 10,
+                },
+                intercepts: {
+                    "pager-changed": () => assert.step("pager-changed"),
+                },
+            });
+
+            // Enter edit mode
+            await testUtils.dom.click(pager.el.querySelector('.o_pager_value'));
+
+            assert.containsOnce(pager, "input");
+            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-4");
+            assert.verifySteps([]);
+
+            // Exit edit mode
+            await testUtils.dom.triggerEvent(pager.el.querySelector('input'), "keydown", { key: "Enter" });
+
+            assert.containsNone(pager, "input");
+            assert.strictEqual(cpHelpers.getPagerValue(pager), "1-4");
+            assert.verifySteps(["pager-changed"]);
+
+            pager.destroy();
+        });
+
         QUnit.test('pager value formatting', async function (assert) {
             assert.expect(8);
 

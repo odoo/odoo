@@ -1,26 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import json
 import jinja2
-import subprocess
-import socket
-import sys
-import netifaces
-import odoo
-from odoo import http
+import logging
 import os
-from odoo.tools import misc
 from pathlib import Path
+import socket
+import subprocess
+import sys
 import threading
 
-from odoo.addons.hw_proxy.controllers import main as hw_proxy
-from odoo.addons.web.controllers import main as web
-from odoo.modules.module import get_resource_path
-from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.controllers.driver import iot_devices
+from odoo import http
 from odoo.http import Response
+from odoo.modules.module import get_resource_path
+
+from odoo.addons.hw_drivers.main import iot_devices
+from odoo.addons.hw_drivers.tools import helpers
+from odoo.addons.web.controllers import main as web
 
 _logger = logging.getLogger(__name__)
 
@@ -42,7 +39,7 @@ jinja_env.filters["json"] = json.dumps
 homepage_template = jinja_env.get_template('homepage.html')
 server_config_template = jinja_env.get_template('server_config.html')
 wifi_config_template = jinja_env.get_template('wifi_config.html')
-driver_list_template = jinja_env.get_template('driver_list.html')
+handler_list_template = jinja_env.get_template('handler_list.html')
 remote_connect_template = jinja_env.get_template('remote_connect.html')
 configure_wizard_template = jinja_env.get_template('configure_wizard.html')
 six_payment_terminal_template = jinja_env.get_template('six_payment_terminal.html')
@@ -80,7 +77,7 @@ class IoTboxHomepage(web.Home):
             iot_device.append({
                 'name': iot_devices[device].device_name + ' : ' + str(iot_devices[device].data['value']),
                 'type': iot_devices[device].device_type.replace('_', ' '),
-                'message': iot_devices[device].device_identifier + iot_devices[device].get_message()
+                'identifier': iot_devices[device].device_identifier,
             })
 
         return {
@@ -103,24 +100,29 @@ class IoTboxHomepage(web.Home):
         else:
             return homepage_template.render(self.get_homepage_data())
 
-    @http.route('/list_drivers', type='http', auth='none', website=True)
-    def list_drivers(self):
+    @http.route('/list_handlers', type='http', auth='none', website=True)
+    def list_handlers(self):
         drivers_list = []
-        for driver in os.listdir(get_resource_path('hw_drivers', 'drivers')):
+        for driver in os.listdir(get_resource_path('hw_drivers', 'iot_handlers/drivers')):
             if driver != '__pycache__':
                 drivers_list.append(driver)
-        return driver_list_template.render({
-            'title': "Odoo's IoT Box - Drivers list",
-            'breadcrumb': 'Drivers list',
+        interfaces_list = []
+        for interface in os.listdir(get_resource_path('hw_drivers', 'iot_handlers/interfaces')):
+            if interface != '__pycache__':
+                interfaces_list.append(interface)
+        return handler_list_template.render({
+            'title': "Odoo's IoT Box - Handlers list",
+            'breadcrumb': 'Handlers list',
             'drivers_list': drivers_list,
+            'interfaces_list': interfaces_list,
             'server': helpers.get_odoo_server_url()
         })
 
-    @http.route('/load_drivers', type='http', auth='none', website=True)
-    def load_drivers(self):
-        helpers.download_drivers(False)
+    @http.route('/load_iot_handlers', type='http', auth='none', website=True)
+    def load_iot_handlers(self):
+        helpers.download_iot_handlers(False)
         subprocess.check_call(["sudo", "service", "odoo", "restart"])
-        return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069/list_drivers'>"
+        return "<meta http-equiv='refresh' content='20; url=http://" + helpers.get_ip() + ":8069/list_handlers'>"
 
     @http.route('/list_credential', type='http', auth='none', website=True)
     def list_credential(self):
@@ -188,12 +190,13 @@ class IoTboxHomepage(web.Home):
         helpers.unlink_file('odoo-remote-server.conf')
         return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069'>"
 
-    @http.route('/drivers_clear', type='http', auth='none', cors='*', csrf=False)
-    def clear_drivers_list(self):
-        for driver in os.listdir(get_resource_path('hw_drivers', 'drivers')):
-            if driver != '__pycache__':
-                helpers.unlink_file(get_resource_path('hw_drivers', 'drivers', driver))
-        return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069/list_drivers'>"
+    @http.route('/handlers_clear', type='http', auth='none', cors='*', csrf=False)
+    def clear_handlers_list(self):
+        for directory in ['drivers', 'interfaces']:
+            for file in os.listdir(get_resource_path('hw_drivers', 'iot_handlers', directory)):
+                if file != '__pycache__':
+                    helpers.unlink_file(get_resource_path('hw_drivers', 'iot_handlers', directory, file))
+        return "<meta http-equiv='refresh' content='0; url=http://" + helpers.get_ip() + ":8069/list_handlers'>"
 
     @http.route('/server_connect', type='http', auth='none', cors='*', csrf=False)
     def connect_to_server(self, token, iotname):
@@ -327,11 +330,11 @@ class IoTboxHomepage(web.Home):
             _logger.error('A error encountered : %s ' % e)
             return Response(str(e), status=500)
 
-    @http.route('/hw_proxy/perform_flashing_download_raspbian', type='http', auth='none')
-    def perform_flashing_download_raspbian(self):
+    @http.route('/hw_proxy/perform_flashing_download_raspios', type='http', auth='none')
+    def perform_flashing_download_raspios(self):
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; download_raspbian']).decode().split('\n')[-2]
-            if response == 'Error_Raspbian_Download':
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; download_raspios']).decode().split('\n')[-2]
+            if response == 'Error_Raspios_Download':
                 raise Exception(response)
             return Response('success', status=200)
         except subprocess.CalledProcessError as e:
@@ -341,10 +344,10 @@ class IoTboxHomepage(web.Home):
             _logger.error('A error encountered : %s ' % e)
             return Response(str(e), status=500)
 
-    @http.route('/hw_proxy/perform_flashing_copy_raspbian', type='http', auth='none')
-    def perform_flashing_copy_raspbian(self):
+    @http.route('/hw_proxy/perform_flashing_copy_raspios', type='http', auth='none')
+    def perform_flashing_copy_raspios(self):
         try:
-            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; copy_raspbian']).decode().split('\n')[-2]
+            response = subprocess.check_output(['sudo', 'bash', '-c', '. /home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/upgrade.sh; copy_raspios']).decode().split('\n')[-2]
             if response == 'Error_Iotbox_Download':
                 raise Exception(response)
             return Response('success', status=200)

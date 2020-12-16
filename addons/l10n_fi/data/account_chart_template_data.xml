@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="account_reports_fi_statements_menu" name="Finland" parent="account.menu_finance_reports" sequence="0" groups="account.group_account_user"/>
+    <!-- Account Chart Template -->
+    <record id="fi_chart_template" model="account.chart.template">
+        <field name="name">Finnish Chart of Accounts</field>
+        <field name="cash_account_code_prefix">1910</field>
+        <field name="bank_account_code_prefix">1921</field>
+        <field name="transfer_account_code_prefix">1950</field>
+        <field name="code_digits">4</field>
+        <field name="currency_id" ref="base.EUR"/>
+    </record>
+</odoo>

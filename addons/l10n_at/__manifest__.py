@@ -13,10 +13,10 @@
     "version": "3.0",
     "author": "WT-IO-IT GmbH, Wolfgang Taferner",
     "website": "https://www.wt-io-it.at",
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'summary': "Austrian Standardized Charts & Tax",
     "description": """
-   
+
 Austrian charts of accounts (Einheitskontenrahmen 2010).
 ==========================================================
 
@@ -26,7 +26,7 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
     * Defines tax templates
     * Defines fiscal positions for Austrian fiscal legislation
     * Defines tax reports U1/U30
- 
+
     """,
     "depends": [
         "account",
@@ -34,6 +34,7 @@ Austrian charts of accounts (Einheitskontenrahmen 2010).
         "base_vat",
     ],
     "data": [
+        'data/res.country.state.csv',
         'data/account_account_tag.xml',
         'data/account_account_template.xml',
         'data/account_chart_template.xml',

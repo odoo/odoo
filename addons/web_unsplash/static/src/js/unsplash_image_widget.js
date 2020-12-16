@@ -27,8 +27,6 @@ widgetsMedia.ImageWidget.include({
         'click .o_unsplash_attachment_cell[data-imgid]': '_onUnsplashImgClick',
         'click button.save_unsplash': '_onSaveUnsplashCredentials',
     }),
-    // Max number of database attachments to show when searching.
-    maxDbAttachments: 5,
 
     /**
      * @override
@@ -103,10 +101,11 @@ widgetsMedia.ImageWidget.include({
      */
     search: async function (needle) {
         var self = this;
-        await this._super(needle, true);
+        await this._super(...arguments);
 
         this._unsplash.query = needle;
         if (!needle) {
+            this._unsplash.records = [];
             return;
         }
 
@@ -117,6 +116,17 @@ widgetsMedia.ImageWidget.include({
         }, function (err) {
             self._unsplash.error = err;
         });
+    },
+    /**
+     * @override
+     */
+    hasContent() {
+        if (this.searchService === 'all') {
+            return this._super(...arguments) || (this.unsplashRecords && this.unsplashRecords.length);
+        } else if (this.searchService === 'unsplash') {
+            return (this.unsplashRecords && this.unsplashRecords.length);
+        }
+        return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -149,6 +159,10 @@ widgetsMedia.ImageWidget.include({
      */
     _renderThumbnails: function () {
         this._super(...arguments);
+        this.$('.unsplash_error').empty();
+        if (!['all', 'unsplash'].includes(this.searchService)) {
+            return;
+        }
         if (this._unsplash.query && this._unsplash.error) {
             this.$('.unsplash_error').html(
                 core.qweb.render('web_unsplash.dialog.error.content', {
@@ -157,9 +171,8 @@ widgetsMedia.ImageWidget.include({
             );
             return;
         }
-        this.$('.unsplash_error').empty();
 
-        if (this._unsplash.query && !this._unsplash.isMaxed) {
+        if (['all', 'unsplash'].includes(this.searchService) && this._unsplash.query && !this._unsplash.isMaxed) {
             this.$('.o_load_more').removeClass('d-none');
             this.$('.o_load_done_msg').addClass('d-none');
         }
@@ -168,10 +181,7 @@ widgetsMedia.ImageWidget.include({
      * @override
      */
     _renderExisting: function (attachments) {
-        if (this._unsplash.records.length) {
-            attachments.splice(this.maxDbAttachments);
-        }
-        return this._super(attachments.concat(this._unsplash.records.map(record => {
+        this.unsplashRecords = this._unsplash.records.map(record => {
             const url = new URL(record.urls.regular);
             // In small windows, row height could get quite a bit larger than the min, so we keep some leeway.
             url.searchParams.set('h', 2 * this.MIN_ROW_HEIGHT);
@@ -179,7 +189,8 @@ widgetsMedia.ImageWidget.include({
             return Object.assign({}, record, {
                 url: url.toString(),
             });
-        })));
+        });
+        return this._super(...arguments);
     },
     /**
      * @override

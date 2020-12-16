@@ -35,7 +35,7 @@ class Partner(models.Model):
                 field_name = re_match.group()[2:-2]
                 field_pos = re_match.start()
                 if field_name not in street_fields:
-                    raise UserError(_("Unrecognized field %s in street format.") % field_name)
+                    raise UserError(_("Unrecognized field %s in street format.", field_name))
                 if not previous_field:
                     # first iteration: add heading chars in street_format
                     if partner[field_name]:
@@ -104,7 +104,7 @@ class Partner(models.Model):
                 # value not found: keep looking for the same field
                 pass
             if field_name not in street_fields:
-                raise UserError(_("Unrecognized field %s in street format.") % field_name)
+                raise UserError(_("Unrecognized field %s in street format.", field_name))
             previous_pos = re_match.end()
 
         # last field value is what remains in street_raw minus trailing chars in street_format

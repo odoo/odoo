@@ -54,6 +54,10 @@
         > input {
             padding-right: 15px;
             cursor: pointer;
+
+            &::-ms-clear {
+                display: none;
+            }
         }
 
         .o_dropdown_button {
@@ -80,6 +84,17 @@
                 width: 100px;
                 flex: 1 0 auto;
             }
+        }
+    }
+
+    // Many2OneAvatar
+    &.o_field_many2one_avatar {
+        > img.o_m2o_avatar {
+            border-radius: 50%;
+            width: 19px;
+            height: 19px;
+            object-fit: cover;
+            margin-right: 4px;
         }
     }
 
@@ -161,6 +176,9 @@
         .o_colorpicker > ul {
             @include o-tag-colorpicker;
             white-space: normal;
+            li > .o_hide_in_kanban label {
+                line-height: $o-line-height-base;
+            }
         }
 
         @for $size from 1 through length($o-colors) {
@@ -452,7 +470,7 @@
         color: $o-brand-primary;
         font-weight: $badge-font-weight;
         text-align: center;
-        padding-right: 100px;
+        padding-right: 6rem;
         word-break: break-word;
         .o_clipboard_button {
             @include o-position-absolute($top: 0, $right: 0);
@@ -466,6 +484,10 @@
                 height: 100%;
             }
         }
+        &.o_field_copy_url {
+            cursor: pointer;
+            padding-left: 3px;
+        }
     }
 
     & > .o_field_color {
@@ -475,6 +497,16 @@
         height: 30px;
         margin: 0 5px 0 0;
         display: inline-block;
+    }
+
+    &.o_field_badge {
+        border: 0;
+        font-size: 12px;
+        user-select: none;
+        background-color: rgba(lightgray, 0.5);
+        font-weight: 500;
+        @include o-text-overflow;
+        transition: none; // remove transition to prevent badges from flickering at reload
     }
 }
 

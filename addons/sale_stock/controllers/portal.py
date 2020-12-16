@@ -30,7 +30,7 @@ class SaleStockPortal(CustomerPortal):
             return request.redirect('/my')
 
         # print report as sudo, since it require access to product, taxes, payment term etc.. and portal does not have those access rights.
-        pdf = request.env.ref('stock.action_report_delivery').sudo().render_qweb_pdf([picking_sudo.id])[0]
+        pdf = request.env.ref('stock.action_report_delivery').sudo()._render_qweb_pdf([picking_sudo.id])[0]
         pdfhttpheaders = [
             ('Content-Type', 'application/pdf'),
             ('Content-Length', len(pdf)),

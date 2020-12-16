@@ -251,7 +251,7 @@ Open the ``__manifest__.py`` you created and copy/paste the following:
     'data': [
     ],
     'category': 'Theme/Creative',
-    'depends': ['website'],
+    'depends': ['website', 'website_theme_install'],
   }
 
 Replace the first four property’s values with anything you like.
@@ -262,12 +262,12 @@ The ``data`` property will contain the xml files list. Right now it’s empty, b
 ``category`` defines your module category (always “Theme”) and, after a slash, the subcategory. You can use one subcategory from the Odoo Apps categories list. (https://www.odoo.com/apps/themes)
 
 
-``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website. If you need blogging or eCommerce features as well, you have to add those modules too.
+``depends`` specifies the modules needed by our theme to work properly. For our tutorial theme, we only need website and website_theme_install to install/update. If you need blogging or eCommerce features as well, you have to add those modules too.
 
 .. code-block:: python
 
    ...
-   'depends': ['website', 'website_blog', 'sale'],
+   'depends': ['website', 'website_theme_install', 'website_blog', 'sale'],
    ...
 
 
@@ -280,7 +280,7 @@ To install your theme, you just place your theme folder inside addons in your Od
 After that, navigate to the Odoo **Website** module, go to
 :menuselection:`Configuration --> Settings`.
 
-Under **Website** section click the **Choose a theme** button, then hover over
+Under **Website** section click the **Pick a Theme** button, then hover over
 your theme and click **Use this theme**.
 
 Structure of an Odoo page
@@ -337,7 +337,7 @@ code.
     </xpath>
 
     <!-- Add an element after the top menu  -->
-    <xpath expr="//div[@id='wrapwrap']/header/div" position="after">
+    <xpath expr="//div[@id='wrapwrap']/header/nav" position="after">
       <div class="container">
         <div class="alert alert-info mt16" role="alert">
           <strong>Welcome</strong> in our website!
@@ -763,16 +763,16 @@ We start by adding a new file in our views folder - name it **options.xml** and 
 .. code-block:: xml
 
   <template id="snippet_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='background']" position="after">
+    <xpath expr="//div[@data-js='Box']" position="after">
       <div data-selector=".snippet_testimonial"> <!-- Options group -->
-        <li class="dropdown-submenu">
-          <a href="#">Your Option</a>
-          <div class="dropdown-menu"> <!-- Options list -->
-            <a href="#" class="dropdown-item" data-select-class="opt_shadow">Shadow Images</a>
-            <a href="#" class="dropdown-item" data-select-class="opt_grey_bg">Grey Bg</a>
-            <a href="#" class="dropdown-item" data-select-class="">None</a>
+        <div class="dropdown-submenu">
+              <a href="#" class="dropdown-item">Your Option</a>
+              <div class="dropdown-menu"><!-- Options list -->
+                  <a href="#" class="dropdown-item" data-select-class="opt_shadow">Shadow Images</a>
+                  <a href="#" class="dropdown-item" data-select-class="opt_grey_bg">Grey Bg</a>
+                  <a href="#" class="dropdown-item" data-select-class="">None</a>
+              </div>
           </div>
-        </li>
       </div>
     </xpath>
    </template>
@@ -861,27 +861,22 @@ the following code
 
 .. code-block:: javascript
 
-    (function() {
-        'use strict';
-        var website = odoo.website;
-        website.odoo_website = {};
-    })();
+    odoo.define(function (require) {
+       var options = require('web_editor.snippets.options');
+   });
 
 Great, we successfully created our javascript editor file. This file will contain all the javascript functions used by our snippets in edit mode. Let’s create a new function for our testimonial snippet using the ``snippet_testimonial_options`` method that we created before.
 
 .. code-block:: javascript
 
-   (function() {
-       'use strict';
-       var website = odoo.website;
-       website.odoo_website = {};
-
-       website.snippet.options.snippet_testimonial_options = website.snippet.Option.extend({
-           onFocus: function() {
-               alert("On focus!");
-           }
-       })
-   })();
+   odoo.define(function (require) {
+       var snippetOptions = require('web_editor.snippets.options');
+       snippetOptions.registry.snippet_testimonial_options = snippetOptions.SnippetOptionWidget.extend({
+           onFocus: function () {
+               alert("On focus!")
+           },
+       });
+   });
 
 As you will notice, we used a method called ``onFocus`` to trigger our function. The Website Builder provides several events you can use to trigger your custom functions.
 

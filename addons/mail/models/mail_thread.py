@@ -19,11 +19,12 @@ import threading
 
 from collections import namedtuple
 from email.message import EmailMessage
+from email import message_from_string, policy
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
 
-from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID
+from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
 from odoo.osv import expression
 
@@ -232,7 +233,8 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_error(self, operator, operand):
-        return ['&', ('message_ids.has_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
+        message_ids = self.env['mail.message']._search([('has_error', operator, operand), ('author_id', '=', self.env.user.partner_id.id)])
+        return [('message_ids', 'in', message_ids)]
 
     def _compute_message_attachment_count(self):
         read_group_var = self.env['ir.attachment'].read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
@@ -243,9 +245,9 @@ class MailThread(models.AbstractModel):
         for record in self:
             record.message_attachment_count = attachment_count_dict.get(record.id, 0)
 
-    # ------------------------------------------------------
-    # CRUD overrides for automatic subscription and logging
-    # ------------------------------------------------------
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -284,14 +286,16 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_create_nolog'):
             threads_no_subtype = self.env[self._name]
             for thread in threads:
-                body = thread._get_creation_message()
                 subtype = thread._creation_subtype()
                 if subtype:  # if we have a subtype, post message to notify users from _message_auto_subscribe
-                    thread.sudo().message_post(body=body, subtype_id=subtype.id, author_id=self.env.user.partner_id.id)
+                    thread.sudo().message_post(subtype_id=subtype.id, author_id=self.env.user.partner_id.id)
                 else:
                     threads_no_subtype += thread
             if threads_no_subtype:
-                threads_no_subtype._message_log_batch(bodies={t.id: body for t in threads_no_subtype})
+                bodies = dict(
+                    (thread.id, thread._creation_message())
+                    for thread in threads_no_subtype)
+                threads_no_subtype._message_log_batch(bodies=bodies)
 
         # post track template if a tracked field changed
         threads._discard_tracking()
@@ -322,12 +326,6 @@ class MailThread(models.AbstractModel):
 
         return result
 
-    def _compute_field_value(self, field):
-        if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
-            self._prepare_tracking(f.name for f in self._field_computed[field] if f.store)
-
-        return super()._compute_field_value(field)
-
     def unlink(self):
         """ Override unlink to delete messages and followers. This cannot be
         cascaded, because link is done through (res_model, res_id). """
@@ -335,7 +333,7 @@ class MailThread(models.AbstractModel):
             return True
         # discard pending tracking
         self._discard_tracking()
-        self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids), ('message_type', '!=', 'user_notification')]).unlink()
+        self.env['mail.message'].search([('model', '=', self._name), ('res_id', 'in', self.ids)]).sudo().unlink()
         res = super(MailThread, self).unlink()
         self.env['mail.followers'].sudo().search(
             [('res_model', '=', self._name), ('res_id', 'in', self.ids)]
@@ -388,7 +386,7 @@ class MailThread(models.AbstractModel):
             if "oe_view_nocontent_alias" not in help:
                 return "%(static_help)s<p class='oe_view_nocontent_alias'>%(dyn_help)s</p>" % {
                     'static_help': help,
-                    'dyn_help': _("Create a new %(document)s by sending an email to %(email_link)s") %  {
+                    'dyn_help': _("Create new %(document)s by sending an email to %(email_link)s") %  {
                         'document': document_name,
                         'email_link': email_link,
                     }
@@ -396,104 +394,40 @@ class MailThread(models.AbstractModel):
 
         if nothing_here:
             return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
-                'dyn_help': _("Create a new %(document)s") % {
+                'dyn_help': _("Create new %(document)s") % {
                     'document': document_name,
                 }
             }
 
         return help
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(MailThread, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            doc = etree.XML(res['arch'])
-            for node in doc.xpath("//field[@name='message_ids']"):
-                # the 'Log a note' button is employee only
-                options = ast.literal_eval(node.get('options', '{}'))
-                is_employee = self.env.user.has_group('base.group_user')
-                options['display_log_button'] = is_employee
-                # save options on the node
-                node.set('options', repr(options))
-            res['arch'] = etree.tostring(doc, encoding='unicode')
-        return res
-
     # ------------------------------------------------------
-    # Technical methods / wrappers / tools
+    # MODELS / CRUD HELPERS
     # ------------------------------------------------------
 
-    def _prepare_tracking(self, fields):
-        """ Prepare the tracking of ``fields`` for ``self``.
+    def _compute_field_value(self, field):
+        if not self._context.get('tracking_disable') and not self._context.get('mail_notrack'):
+            self._prepare_tracking(f.name for f in self.pool.field_computed[field] if f.store)
 
-        :param fields: iterable of fields names to potentially track
+        return super()._compute_field_value(field)
+
+    def _creation_subtype(self):
+        """ Give the subtypes triggered by the creation of a record
+
+        :returns: a subtype browse record (empty if no subtype is triggered)
         """
-        fnames = self._get_tracked_fields().intersection(fields)
-        if not fnames:
-            return
-        func = self.browse()._finalize_tracking
-        [initial_values] = self.env.cr.precommit.add(func, dict)
-        for record in self:
-            if not record.id:
-                continue
-            values = initial_values.setdefault(record.id, {})
-            if values is not None:
-                for fname in fnames:
-                    values.setdefault(fname, record[fname])
+        return self.env['mail.message.subtype']
 
-    def _discard_tracking(self):
-        """ Prevent any tracking of fields on ``self``. """
-        if not self._get_tracked_fields():
-            return
-        func = self.browse()._finalize_tracking
-        [initial_values] = self.env.cr.precommit.add(func, dict)
-        # disable tracking by setting initial values to None
-        for id_ in self.ids:
-            initial_values[id_] = None
-
-    def _finalize_tracking(self, initial_values):
-        """ Generate the tracking messages for the records that have been
-        prepared with ``_prepare_tracking``.
+    def _creation_message(self):
+        """ Get the creation message to log into the chatter at the record's creation.
+        :returns: The message's body to log.
         """
-        ids = [id_ for id_, vals in initial_values.items() if vals]
-        if not ids:
-            return
-        records = self.browse(ids).sudo()
-        fnames = self._get_tracked_fields()
-        context = clean_context(self._context)
-        tracking = records.with_context(context).message_track(fnames, initial_values)
-        for record in records:
-            changes, tracking_value_ids = tracking.get(record.id, (None, None))
-            record._message_track_post_template(changes)
-        # this method is called after the main flush() and just before commit();
-        # we have to flush() again in case we triggered some recomputations
-        self.flush()
-
-    def with_lang(self):
-        if not self._context.get("lang"):
-            return self.with_context(lang=self.env.user.lang)
-        return self
+        self.ensure_one()
+        doc_name = self.env['ir.model']._get(self._name).name
+        return _('%s created', doc_name)
 
     @api.model
-    def _garbage_collect_attachments(self):
-        """ Garbage collect lost mail attachments. Those are attachments
-            - linked to res_model 'mail.compose.message', the composer wizard
-            - with res_id 0, because they were created outside of an existing
-                wizard (typically user input through Chatter or reports
-                created on-the-fly by the templates)
-            - unused since at least one day (create_date and write_date)
-        """
-        limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
-        limit_date_str = datetime.datetime.strftime(limit_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
-        self.env['ir.attachment'].search([
-            ('res_model', '=', 'mail.compose.message'),
-            ('res_id', '=', 0),
-            ('create_date', '<', limit_date_str),
-            ('write_date', '<', limit_date_str)]
-        ).unlink()
-        return True
-
-    @api.model
-    def get_mail_message_access(self, res_ids, operation, model_name=None):
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
         """ mail.message check permission rules for related document. This method is
             meant to be inherited in order to implement addons-specific behavior.
             A common behavior would be to allow creating messages when having read
@@ -512,7 +446,20 @@ class MailThread(models.AbstractModel):
             check_operation = operation
         return check_operation
 
-    def message_change_thread(self, new_thread):
+    def _valid_field_parameter(self, field, name):
+        # allow tracking on models inheriting from 'mail.thread'
+        return name == 'tracking' or super()._valid_field_parameter(field, name)
+
+    def _fallback_lang(self):
+        if not self._context.get("lang"):
+            return self.with_context(lang=self.env.user.lang)
+        return self
+
+    # ------------------------------------------------------
+    # WRAPPERS AND TOOLS
+    # ------------------------------------------------------
+
+    def message_change_thread(self, new_thread, new_parent_message=False):
         """
         Transfer the list of the mail thread messages from an model to another
 
@@ -542,51 +489,77 @@ class MailThread(models.AbstractModel):
             ('subtype_id', '!=', subtype_comment)])
 
         # update the messages
-        msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
-        msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
+        msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
+        if new_parent_message:
+            msg_vals["parent_id"] = new_parent_message.id
+        msg_comment.write(msg_vals)
+
+        # other than comment: reset subtype
+        msg_vals["subtype_id"] = None
+        msg_not_comment.write(msg_vals)
         return True
 
     # ------------------------------------------------------
-    # Automatic log / Tracking
+    # TRACKING / LOG
     # ------------------------------------------------------
 
-    @tools.ormcache()
+    def _prepare_tracking(self, fields):
+        """ Prepare the tracking of ``fields`` for ``self``.
+
+        :param fields: iterable of fields names to potentially track
+        """
+        fnames = self._get_tracked_fields().intersection(fields)
+        if not fnames:
+            return
+        self.env.cr.precommit.add(self._finalize_tracking)
+        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
+        for record in self:
+            if not record.id:
+                continue
+            values = initial_values.setdefault(record.id, {})
+            if values is not None:
+                for fname in fnames:
+                    values.setdefault(fname, record[fname])
+
+    def _discard_tracking(self):
+        """ Prevent any tracking of fields on ``self``. """
+        if not self._get_tracked_fields():
+            return
+        self.env.cr.precommit.add(self._finalize_tracking)
+        initial_values = self.env.cr.precommit.data.setdefault(f'mail.tracking.{self._name}', {})
+        # disable tracking by setting initial values to None
+        for id_ in self.ids:
+            initial_values[id_] = None
+
+    def _finalize_tracking(self):
+        """ Generate the tracking messages for the records that have been
+        prepared with ``_prepare_tracking``.
+        """
+        initial_values = self.env.cr.precommit.data.pop(f'mail.tracking.{self._name}', {})
+        ids = [id_ for id_, vals in initial_values.items() if vals]
+        if not ids:
+            return
+        records = self.browse(ids).sudo()
+        fnames = self._get_tracked_fields()
+        context = clean_context(self._context)
+        tracking = records.with_context(context).message_track(fnames, initial_values)
+        for record in records:
+            changes, tracking_value_ids = tracking.get(record.id, (None, None))
+            record._message_track_post_template(changes)
+        # this method is called after the main flush() and just before commit();
+        # we have to flush() again in case we triggered some recomputations
+        self.flush()
+
+    @tools.ormcache('self.env.uid', 'self.env.su')
     def _get_tracked_fields(self):
         """ Return the set of tracked fields names for the current model. """
-        return {
+        fields = {
             name
             for name, field in self._fields.items()
             if getattr(field, 'tracking', None) or getattr(field, 'track_visibility', None)
         }
 
-    def _creation_subtype(self):
-        """ Give the subtypes triggered by the creation of a record
-
-        :returns: a subtype browse record (empty if no subtype is triggered)
-        """
-        return self.env['mail.message.subtype']
-
-    def _get_creation_message(self):
-        """ Get the creation message to log into the chatter at the record's creation.
-        :returns: The message's body to log.
-        """
-        self.ensure_one()
-        doc_name = self.env['ir.model']._get(self._name).name
-        return _('%s created') % doc_name
-
-    def _track_subtype(self, init_values):
-        """ Give the subtypes triggered by the changes on the record according
-        to values that have been updated.
-
-        :param init_values: the original values of the record; only modified fields
-                            are present in the dict
-        :type init_values: dict
-        :returns: a subtype browse record or False if no subtype is trigerred
-        """
-        return False
-
-    def _track_template(self, changes):
-        return dict()
+        return fields and set(self.fields_get(fields))
 
     def _message_track_post_template(self, changes):
         if not changes:
@@ -604,52 +577,13 @@ class MailThread(models.AbstractModel):
             if not template:
                 continue
             if isinstance(template, str):
-                self.with_lang().message_post_with_view(template, **post_kwargs)
+                self._fallback_lang().message_post_with_view(template, **post_kwargs)
             else:
-                self.with_lang().message_post_with_template(template.id, **post_kwargs)
+                self._fallback_lang().message_post_with_template(template.id, **post_kwargs)
         return True
 
-    @api.model
-    def static_message_track(self, record, tracked_fields, initial):
-        """ For a given record, fields to check (tuple column name, column info)
-        and initial values, return a structure that is a tuple containing :
-
-         - a set of updated column names
-         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value'
-
-        This static method is usefull when you don't want to inherit from mail.thread but
-        you want to use '_message_track()' method.
-        """
-        record.ensure_one()
-        changes = set()  # contains onchange tracked fields that changed
-        tracking_value_ids = []
-
-        # generate tracked_values data structure: {'col_name': {col_info, new_value, old_value}}
-        for col_name, col_info in tracked_fields.items():
-            if col_name not in initial:
-                continue
-            initial_value = initial[col_name]
-            new_value = record[col_name]
-
-            if new_value != initial_value and (new_value or initial_value):  # because browse null != False
-                tracking_sequence = getattr(record._fields[col_name], 'tracking',
-                                            getattr(record._fields[col_name], 'track_sequence', 100))  # backward compatibility with old parameter name
-                if tracking_sequence is True:
-                    tracking_sequence = 100
-                tracking = record.env['mail.tracking.value'].create_tracking_values(initial_value, new_value, col_name, col_info, tracking_sequence, record._name)
-                if tracking:
-                    tracking_value_ids.append([0, 0, tracking])
-                changes.add(col_name)
-
-        return changes, tracking_value_ids
-
-    def _message_track(self, tracked_fields, initial):
-        """ For a given record, fields to check (tuple column name, column info)
-        and initial values, return a structure that is a tuple containing :
-
-         - a set of updated column names
-         - a list of ORM (0, 0, values) commands to create 'mail.tracking.value' """
-        return self.static_message_track(self, tracked_fields, initial)
+    def _track_template(self, changes):
+        return dict()
 
     def message_track(self, tracked_fields, initial_values):
         """ Track updated values. Comparing the initial and current values of
@@ -669,7 +603,7 @@ class MailThread(models.AbstractModel):
         tracking = dict()
         for record in self:
             try:
-                tracking[record.id] = record._message_track(tracked_fields, initial_values[record.id])
+                tracking[record.id] = record._mail_track(tracked_fields, initial_values[record.id])
             except MissingError:
                 continue
 
@@ -693,13 +627,24 @@ class MailThread(models.AbstractModel):
 
         return tracking
 
+    def _track_subtype(self, init_values):
+        """ Give the subtypes triggered by the changes on the record according
+        to values that have been updated.
+
+        :param init_values: the original values of the record; only modified fields
+                            are present in the dict
+        :type init_values: dict
+        :returns: a subtype browse record or False if no subtype is trigerred
+        """
+        return False
+
     # ------------------------------------------------------
-    # Mail gateway
+    # MAIL GATEWAY
     # ------------------------------------------------------
 
     def _routing_warn(self, error_message, message_id, route, raise_exception=True):
         """ Tools method used in _routing_check_route: whether to log a warning or raise an error """
-        short_message = _("Mailbox unavailable - %s") % error_message
+        short_message = _("Mailbox unavailable - %s", error_message)
         full_message = ('Routing mail with Message-Id %s: route %s: %s' %
                         (message_id, route, error_message))
         _logger.info(full_message)
@@ -719,8 +664,10 @@ class MailThread(models.AbstractModel):
         bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
         if bounce_from:
             bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', bounce_from))
-        else:
+        elif self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias") not in message['To']:
             bounce_mail_values['email_from'] = tools.decode_message_header(message, 'To')
+        else:
+            bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', self.env.user.email_normalized))
         bounce_mail_values.update(mail_values)
         self.env['mail.mail'].sudo().create(bounce_mail_values).send()
 
@@ -817,22 +764,27 @@ class MailThread(models.AbstractModel):
             self._routing_warn(_('target model unspecified'), message_id, route, raise_exception)
             return ()
         elif model not in self.env:
-            self._routing_warn(_('unknown target model %s') % model, message_id, route, raise_exception)
+            self._routing_warn(_('unknown target model %s', model), message_id, route, raise_exception)
             return ()
         record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
 
         # Existing Document: check if exists and model accepts the mailgateway; if not, fallback on create if allowed
         if thread_id:
             if not record_set.exists():
-                self._routing_warn(_('reply to missing document (%s,%s), fall back on document creation') % (model, thread_id), message_id, route, False)
+                self._routing_warn(
+                    _('reply to missing document (%(model)s,%(thread)s), fall back on document creation', model=model, thread=thread_id),
+                    message_id,
+                    route,
+                    False
+                )
                 thread_id = None
             elif not hasattr(record_set, 'message_update'):
-                self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation') % model, message_id, route, False)
+                self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation', model), message_id, route, False)
                 thread_id = None
 
         # New Document: check model accepts the mailgateway
         if not thread_id and model and not hasattr(record_set, 'message_new'):
-            self._routing_warn(_('model %s does not accept document creation') % model, message_id, route, raise_exception)
+            self._routing_warn(_('model %s does not accept document creation', model), message_id, route, raise_exception)
             return ()
 
         # Update message author. We do it now because we need it for aliases (contact settings)
@@ -855,12 +807,14 @@ class MailThread(models.AbstractModel):
                 obj = self.env[alias.alias_parent_model_id.model].browse(alias.alias_parent_thread_id)
             else:
                 obj = self.env[model]
-            if hasattr(obj, '_alias_check_contact'):
-                error_code = obj._alias_check_contact(message, message_dict, alias)
-            else:
-                error_code = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
-            if error_code is not True:
-                self._routing_warn(_('alias %s: %s') % (alias.alias_name, error_code or _('unknown error')), message_id, route, False)
+            error_message = obj._alias_get_error_message(message, message_dict, alias)
+            if error_message:
+                self._routing_warn(
+                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error_message or _('unknown error')),
+                    message_id,
+                    route,
+                    False
+                )
                 body = alias._get_alias_bounced_body(message_dict)
                 self._routing_create_bounce_email(email_from, body, message, references=message_id)
                 return False
@@ -1011,7 +965,7 @@ class MailThread(models.AbstractModel):
             # check it does not directly contact catchall
             if catchall_alias and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
-                body = self.env.ref('mail.mail_bounce_catchall').render({
+                body = self.env.ref('mail.mail_bounce_catchall')._render({
                     'message': message,
                 }, engine='ir.qweb')
                 self._routing_create_bounce_email(email_from, body, message, references=message_id, reply_to=self.env.company.email)
@@ -1061,6 +1015,7 @@ class MailThread(models.AbstractModel):
         thread_id = False
         for model, thread_id, custom_values, user_id, alias in routes or ():
             subtype_id = False
+            related_user = self.env['res.users'].browse(user_id)
             Model = self.env[model].with_context(mail_create_nosubscribe=True, mail_create_nolog=True)
             if not (thread_id and hasattr(Model, 'message_update') or hasattr(Model, 'message_new')):
                 raise ValueError(
@@ -1070,7 +1025,7 @@ class MailThread(models.AbstractModel):
 
             # disabled subscriptions during message_new/update to avoid having the system user running the
             # email gateway become a follower of all inbound messages
-            ModelCtx = Model.with_user(user_id).sudo()
+            ModelCtx = Model.with_user(related_user).sudo()
             if thread_id and hasattr(ModelCtx, 'message_update'):
                 thread = ModelCtx.browse(thread_id)
                 thread.message_update(message_dict)
@@ -1103,6 +1058,9 @@ class MailThread(models.AbstractModel):
             if thread._name == 'mail.thread':  # message with parent_id not linked to record
                 new_msg = thread.message_notify(**post_params)
             else:
+                # parsing should find an author independently of user running mail gateway, and ensure it is not odoobot
+                partner_from_found = message_dict.get('author_id') and message_dict['author_id'] != self.env['ir.model.data'].xmlid_to_res_id('base.partner_root')
+                thread = thread.with_context(mail_create_nosubscribe=not partner_from_found)
                 new_msg = thread.message_post(**post_params)
 
             if new_msg and original_partner_ids:
@@ -1342,13 +1300,21 @@ class MailThread(models.AbstractModel):
         processing.
 
         :param email_message: an email.message instance;
-        :param message_dict: dictionary holding already-parsed values and in
-            which bounce-related values will be added;
+        :param message_dict: dictionary holding already-parsed values;
+
+        :return dict: bounce-related values will be added, containing
+
+          * bounced_email: email that bounced (normalized);
+          * bounce_partner: res.partner recordset whose email_normalized =
+            bounced_email;
+          * bounced_msg_id: list of message_ID references (<...@myserver>) linked
+            to the email that bounced;
+          * bounced_message: if found, mail.message recordset matching bounced_msg_id;
         """
         if not isinstance(email_message, EmailMessage):
             raise TypeError('message must be an email.message.EmailMessage at this point')
 
-        email_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/rfc822'), None)
+        email_part = next((part for part in email_message.walk() if part.get_content_type() in {'message/rfc822', 'text/rfc822-headers'}), None)
         dsn_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
         bounced_email = False
@@ -1363,8 +1329,12 @@ class MailThread(models.AbstractModel):
         bounced_msg_id = False
         bounced_message = self.env['mail.message'].sudo()
         if email_part:
-            email = email_part.get_payload()[0]
-            bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email, 'Message-Id'))
+            if email_part.get_content_type() == 'text/rfc822-headers':
+                # Convert the message body into a message itself
+                email_payload = message_from_string(email_part.get_payload(), policy=policy.SMTP)
+            else:
+                email_payload = email_part.get_payload()[0]
+            bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
             if bounced_msg_id:
                 bounced_message = self.env['mail.message'].sudo().search([('message_id', 'in', bounced_msg_id)])
 
@@ -1484,32 +1454,8 @@ class MailThread(models.AbstractModel):
         return msg_dict
 
     # ------------------------------------------------------
-    # Recipient management
+    # RECIPIENTS MANAGEMENT TOOLS
     # ------------------------------------------------------
-
-    @api.model
-    def _message_get_default_recipients_on_records(self, records):
-        """ Generic implementation for finding default recipient to mail on
-        a recordset. ``_message_get_default_recipients`` may be defined to
-        implement custom behavior. """
-        if hasattr(records, '_message_get_default_recipients'):
-            return records._message_get_default_recipients()
-
-        res = {}
-        for record in records:
-            recipient_ids, email_to, email_cc = [], False, False
-            if 'partner_id' in record and record.partner_id:
-                recipient_ids.append(record.partner_id.id)
-            elif 'email_normalized' in record and record.email_normalized:
-                email_to = record.email_normalized
-            elif 'email_from' in record and record.email_from:
-                email_to = record.email_from
-            elif 'partner_email' in record and record.partner_email:
-                email_to = record.partner_email
-            elif 'email' in record and record.email:
-                email_to = record.email
-            res[record.id] = {'partner_ids': recipient_ids, 'email_to': email_to, 'email_cc': email_cc}
-        return res
 
     def _message_add_suggested_recipient(self, result, partner=None, email=None, reason=''):
         """ Called by _message_get_suggested_recipients, to add a suggested
@@ -1696,7 +1642,7 @@ class MailThread(models.AbstractModel):
         return result
 
     # ------------------------------------------------------
-    # Post / Send message API
+    # MESSAGE POST API
     # ------------------------------------------------------
 
     def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
@@ -1725,7 +1671,7 @@ class MailThread(models.AbstractModel):
             if not self.env.user.has_group('base.group_user'):
                 attachment_ids = filtered_attachment_ids.ids
 
-            m2m_attachment_ids += [(4, id) for id in attachment_ids]
+            m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
 
         if attachments: # generate 
@@ -1756,6 +1702,8 @@ class MailThread(models.AbstractModel):
                     continue
                 if isinstance(content, str):
                     content = content.encode('utf-8')
+                elif isinstance(content, EmailMessage):
+                    content = content.as_bytes()
                 elif content is None:
                     continue
                 attachement_values= {
@@ -1845,7 +1793,7 @@ class MailThread(models.AbstractModel):
         if 'subtype' in kwargs:
             raise ValueError("message_post doesn't support subtype parameter anymore. Please give a valid subtype_id or subtype_xmlid value instead.")
 
-        self = self.with_lang() # add lang to context imediatly since it will be usefull in various flows latter.
+        self = self._fallback_lang() # add lang to context imediatly since it will be usefull in various flows latter.
 
         # Explicit access rights check, because display_name is computed as sudo.
         self.check_access_rights('read')
@@ -1915,8 +1863,8 @@ class MailThread(models.AbstractModel):
         self._message_set_main_attachment_id(values['attachment_ids'])
 
         if values['author_id'] and values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
-            # if self.env['res.partner'].browse(values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
-            self._message_subscribe([values['author_id']])
+            if self.env['res.partner'].browse(values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
+                self._message_subscribe([values['author_id']])
 
         self._message_post_after_hook(new_message, values)
         self._notify_thread(new_message, values, **notif_kwargs)
@@ -1935,6 +1883,10 @@ class MailThread(models.AbstractModel):
         message and computed value are given, to try to lessen query count by
         using already-computed values instead of having to rebrowse things. """
         pass
+
+    # ------------------------------------------------------
+    # MESSAGE POST TOOLS
+    # ------------------------------------------------------
 
     def message_post_with_view(self, views_or_xmlid, **kwargs):
         """ Helper method to send a mail / post a message using a view_id to
@@ -1956,7 +1908,7 @@ class MailThread(models.AbstractModel):
             return
         for record in self:
             values['object'] = record
-            rendered_template = views.render(values, engine='ir.qweb', minimal_qcontext=True)
+            rendered_template = views._render(values, engine='ir.qweb', minimal_qcontext=True)
             kwargs['body'] = rendered_template
             record.message_post_with_template(False, **kwargs)
 
@@ -2120,8 +2072,8 @@ class MailThread(models.AbstractModel):
             # Avoid warnings about non-existing fields
             for x in ('from', 'to', 'cc', 'canned_response_ids'):
                 create_values.pop(x, None)
-            create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
-            create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
+            create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
+            create_values['channel_ids'] = [Command.link(cid) for cid in create_values.get('channel_ids', [])]
             create_values_list.append(create_values)
         if 'default_child_ids' in self._context:
             ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
@@ -2129,7 +2081,7 @@ class MailThread(models.AbstractModel):
         return self.env['mail.message'].create(create_values_list)
 
     # ------------------------------------------------------
-    # Notification API
+    # NOTIFICATION API
     # ------------------------------------------------------
 
     def _notify_thread(self, message, msg_vals=False, notify_by_email=True, **kwargs):
@@ -2160,7 +2112,7 @@ class MailThread(models.AbstractModel):
 
         message_values = {}
         if rdata['channels']:
-            message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
+            message_values['channel_ids'] = [Command.set([r['id'] for r in rdata['channels']])]
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
         if notify_by_email:
@@ -2180,7 +2132,7 @@ class MailThread(models.AbstractModel):
         """
         channel_ids = [r['id'] for r in recipients_data['channels']]
         if channel_ids:
-            message.write({'channel_ids': [(6, 0, channel_ids)]})
+            message.write({'channel_ids': [Command.set(channel_ids)]})
 
         inbox_pids = [r['id'] for r in recipients_data['partners'] if r['notif'] == 'inbox']
         if inbox_pids:
@@ -2209,7 +2161,7 @@ class MailThread(models.AbstractModel):
                 for channel in channels.filtered(lambda c: c.email_send):
                     users = channel.channel_partner_ids.mapped('user_ids')
                     for user in users.filtered(lambda u: u.notification_type == 'email'):
-                        channel.with_user(user).channel_seen()
+                        channel.with_user(user).channel_seen(message.id)
 
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
@@ -2239,7 +2191,7 @@ class MailThread(models.AbstractModel):
             return True
 
         model = msg_vals.get('model') if msg_vals else message.model
-        model_name = model_description or (self.with_lang().env['ir.model']._get(model).display_name if model else False) # one query for display name
+        model_name = model_description or (self._fallback_lang().env['ir.model']._get(model).display_name if model else False) # one query for display name
         recipients_groups_data = self._notify_classify_recipients(partners_data, model_name)
 
         if not recipients_groups_data:
@@ -2266,11 +2218,16 @@ class MailThread(models.AbstractModel):
             'references': message.parent_id.sudo().message_id if message.parent_id else False,
             'subject': mail_subject,
         }
-        headers = self._notify_email_headers()
-        if headers:
-            base_mail_values['headers'] = headers
+        base_mail_values = self._notify_by_email_add_values(base_mail_values)
 
-        Mail = self.env['mail.mail'].sudo()
+        # Clean the context to get rid of residual default_* keys that could cause issues during
+        # the mail.mail creation.
+        # Example: 'default_state' would refer to the default state of a previously created record
+        # from another model that in turns triggers an assignation notification that ends up here.
+        # This will lead to a traceback when trying to create a mail.mail with this state value that
+        # doesn't exist.
+        SafeMail = self.env['mail.mail'].sudo().with_context(clean_context(self._context))
+        SafeNotification = self.env['mail.notification'].sudo().with_context(clean_context(self._context))
         emails = self.env['mail.mail'].sudo()
 
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
@@ -2284,7 +2241,7 @@ class MailThread(models.AbstractModel):
             # {actions, button_access, has_button_access, recipients}
 
             if base_template:
-                mail_body = base_template.render(render_values, engine='ir.qweb', minimal_qcontext=True)
+                mail_body = base_template._render(render_values, engine='ir.qweb', minimal_qcontext=True)
             else:
                 mail_body = message.body
             mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
@@ -2298,12 +2255,12 @@ class MailThread(models.AbstractModel):
                 create_values = {
                     'body_html': mail_body,
                     'subject': mail_subject,
-                    'recipient_ids': [(4, pid) for pid in recipient_ids],
+                    'recipient_ids': [Command.link(pid) for pid in recipient_ids],
                 }
                 if email_to:
                     create_values['email_to'] = email_to
                 create_values.update(base_mail_values)  # mail_message_id, mail_server_id, auto_delete, references, headers
-                email = Mail.create(create_values)
+                email = SafeMail.create(create_values)
 
                 if email and recipient_ids:
                     tocreate_recipient_ids = list(recipient_ids)
@@ -2330,7 +2287,7 @@ class MailThread(models.AbstractModel):
                 emails |= email
 
         if notif_create_values:
-            self.env['mail.notification'].sudo().create(notif_create_values)
+            SafeNotification.create(notif_create_values)
 
         # NOTE:
         #   1. for more than 50 followers, use the queue system
@@ -2345,12 +2302,13 @@ class MailThread(models.AbstractModel):
                 email_ids = emails.ids
                 dbname = self.env.cr.dbname
                 _context = self._context
+
+                @self.env.cr.postcommit.add
                 def send_notifications():
                     db_registry = registry(dbname)
                     with api.Environment.manage(), db_registry.cursor() as cr:
                         env = api.Environment(cr, SUPERUSER_ID, _context)
                         env['mail.mail'].browse(email_ids).send()
-                self._cr.after('commit', send_notifications)
             else:
                 emails.send()
 
@@ -2420,6 +2378,19 @@ class MailThread(models.AbstractModel):
             'subtype': message.subtype_id,
             'lang': lang,
         }
+
+    def _notify_by_email_add_values(self, base_mail_values):
+        """ Add model-specific values to the dictionary used to create the
+        notification email. Its base behavior is to compute model-specific
+        headers.
+
+        :param dict base_mail_values: base mail.mail values, holding message
+        to notify (mail_message_id and its fields), server, references, subject.
+        """
+        headers = self._notify_email_headers()
+        if headers:
+            base_mail_values['headers'] = headers
+        return base_mail_values
 
     def _notify_compute_recipients(self, message, msg_vals):
         """ Compute recipients to notify based on subtype and followers. This
@@ -2602,7 +2573,7 @@ class MailThread(models.AbstractModel):
         access_link = self._notify_get_action_link('view')
 
         if model_name:
-            view_title = _('View %s') % model_name
+            view_title = _('View %s', model_name)
         else:
             view_title = _('View')
 
@@ -2629,90 +2600,6 @@ class MailThread(models.AbstractModel):
 
         return result
 
-    def _notify_get_reply_to(self, default=None, records=None, company=None, doc_names=None):
-        """ Returns the preferred reply-to email address when replying to a thread
-        on documents. Documents are either given by self it this method is called
-        as a true multi method on a record set or can be given using records to
-        have a generic implementation available for all models.
-        Reply-to is formatted like "MyCompany MyDocument <reply.to@domain>".
-        Heuristic it the following:
-         * search for specific aliases as they always have priority; it is limited
-           to aliases linked to documents (like project alias for task for example);
-         * use catchall address;
-         * use default;
-        This method works on documents
-         * as a true multi method for models inheriting from mail.thread; call
-           ``records._notify_get_reply_to(...)``;
-         * as a generic implementation if records are given; call ``MailThread.
-           _notify_get_reply_to(records=records, ...)``;
-         * as a generic implementation is self is a void mail.thread record set
-           meaning catchall is computed; call ``MailThread._notify_get_reply_to
-           (records=None)``;
-        Tweak this method on a specific model by overriding if it inherits from
-        mail.thread. An example would be tasks taking their reply-to alias from
-        their project.
-        :param default: default email if no alias or catchall is found;
-        :param records: record_set if self if a generic mail.thread record allowing
-          generic implementation of finding reply-to;
-        :param company: used to compute company name part of the from name; provide
-          it if already known, otherwise fall back on user company;
-        :param doc_names: dict(res_id, doc_name) used to compute doc name part of
-          the from name; provide it if already known to avoid queries, otherwise
-          name_get on document will be performed;
-        :return result: dictionary. Keys are record IDs and value is formatted
-          like an email "Company_name Document_name <reply_to@email>"/
-        """
-        _records = self if self and self._name != 'mail.thread' else records
-        model = _records._name if _records and _records._name != 'mail.thread' else False
-        res_ids = _records.ids if _records and model else []
-        _res_ids = res_ids or [False]  # always have a default value located in False
-
-        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
-        result = dict.fromkeys(_res_ids, False)
-        result_email = dict()
-        doc_names = doc_names if doc_names else dict()
-
-        if alias_domain:
-            if model and res_ids:
-                if not doc_names:
-                    doc_names = dict((rec.id, rec.display_name) for rec in _records)
-
-                mail_aliases = self.env['mail.alias'].sudo().search([
-                    ('alias_parent_model_id.model', '=', model),
-                    ('alias_parent_thread_id', 'in', res_ids),
-                    ('alias_name', '!=', False)])
-                # take only first found alias for each thread_id, to match order (1 found -> limit=1 for each res_id)
-                for alias in mail_aliases:
-                    result_email.setdefault(alias.alias_parent_thread_id, '%s@%s' % (alias.alias_name, alias_domain))
-
-            # left ids: use catchall
-            left_ids = set(_res_ids) - set(result_email)
-            if left_ids:
-                catchall = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias")
-                if catchall:
-                    result_email.update(dict((rid, '%s@%s' % (catchall, alias_domain)) for rid in left_ids))
-
-            # compute name of reply-to - TDE tocheck: quotes and stuff like that
-            company_name = company.name if company else self.env.company.name
-            for res_id in result_email.keys():
-                name = '%s%s%s' % (company_name, ' ' if doc_names.get(res_id) else '', doc_names.get(res_id, ''))
-                result[res_id] = tools.formataddr((name, result_email[res_id]))
-
-        left_ids = set(_res_ids) - set(result_email)
-        if left_ids:
-            result.update(dict((res_id, default) for res_id in left_ids))
-
-        return result
-
-    @api.model
-    def _notify_get_reply_to_on_records(self, default=None, records=None, company=None, doc_names=None):
-        """ Generic wrapper on ``_notify_get_reply_to`` checking mail.thread inheritance
-        and allowing to call model-specific implementation in a one liner. This
-        method should not be overridden. """
-        if records and hasattr(records, '_notify_get_reply_to'):
-            return records._notify_get_reply_to(default=default, company=company, doc_names=doc_names)
-        return self._notify_get_reply_to(default=default, records=records, company=company, doc_names=doc_names)
-
     def _notify_email_recipient_values(self, recipient_ids):
         """ Format email notification recipient values to store on the notification
         mail.mail. Basic method just set the recipient partners as mail_mail
@@ -2726,7 +2613,7 @@ class MailThread(models.AbstractModel):
         }
 
     # ------------------------------------------------------
-    # Followers API
+    # FOLLOWERS API
     # ------------------------------------------------------
 
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
@@ -2863,10 +2750,10 @@ class MailThread(models.AbstractModel):
                 'model_description': model_description,
                 'access_link': self._notify_get_action_link('view'),
             }
-            assignation_msg = view.render(values, engine='ir.qweb', minimal_qcontext=True)
+            assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
             record.message_notify(
-                subject=_('You have been assigned to %s') % record.display_name,
+                subject=_('You have been assigned to %s', record.display_name),
                 body=assignation_msg,
                 partner_ids=partner_ids,
                 record_name=record.display_name,
@@ -2909,11 +2796,11 @@ class MailThread(models.AbstractModel):
 
         if udpated_fields:
             doc_data = [(model, [updated_values[fname] for fname in fnames]) for model, fnames in updated_relation.items()]
-            res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True)
-            for fid, rid, pid, cid, subtype_ids, pshare in res:
+            res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True, include_active=True)
+            for fid, rid, pid, cid, subtype_ids, pshare, active in res:
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
                 sids += [sid for sid in subtype_ids if sid not in parent and sid in def_ids or sid in int_ids]
-                if pid:
+                if pid and active:  # auto subscribe only active partners
                     new_partners[pid] = (set(sids) & set(all_ids)) - set(int_ids) if pshare else set(sids) & set(all_ids)
                 if cid:
                     new_channels[cid] = (set(sids) & set(all_ids)) - set(int_ids)
@@ -2940,7 +2827,7 @@ class MailThread(models.AbstractModel):
         return True
 
     # ------------------------------------------------------
-    # Controllers
+    # CONTROLLERS
     # ------------------------------------------------------
 
     def _get_mail_redirect_suggested_company(self):
@@ -2948,7 +2835,7 @@ class MailThread(models.AbstractModel):
         in case of a mail redirection to the record. To avoid multi
         company issues when clicking on a link sent by email, this
         could be called to try setting the most suited company on
-        the allowed_company_ids in the context. This method can be 
+        the allowed_company_ids in the context. This method can be
         overridden, for example on the hr.leave model, where the
         most suited company is the company of the leave type, as
         specified by the ir.rule.

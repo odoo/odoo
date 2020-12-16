@@ -11,12 +11,12 @@ _logger = logging.getLogger(__name__)
 class Users(models.Model):
     _inherit = "res.users"
 
-    _populate_sizes = {"small": 10, "medium": 2000, "large": 10000}
+    _populate_sizes = {"small": 10, "medium": 1000, "large": 10000}
 
     _populate_dependencies = ["res.partner"]
 
     def _populate_factories(self):
-        partner_ids = self.env.registry.populated_models["res.partner"]
+        partner_ids = list(self.env.registry.populated_models["res.partner"])
 
         def get_partner_id(random=None, **kwargs):
             partner_id = random.choice(partner_ids)

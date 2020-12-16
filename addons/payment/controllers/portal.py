@@ -10,7 +10,9 @@ import werkzeug
 
 from odoo import http, _
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, consteq, ustr
+from odoo.tools.float_utils import float_repr
 from datetime import datetime, timedelta
 
 
@@ -197,10 +199,15 @@ class WebsitePayment(http.Controller):
 
         # Check acquirer
         acquirers = None
-        if acquirer_id:
-            acquirers = env['payment.acquirer'].browse(int(acquirer_id))
-        if not acquirers:
-            acquirers = env['payment.acquirer'].search([('state', 'in', ['enabled', 'test']), ('company_id', '=', user.company_id.id)])
+        if order_id and order:
+            cid = order.company_id.id
+        elif kw.get('company_id'):
+            try:
+                cid = int(kw.get('company_id'))
+            except:
+                cid = user.company_id.id
+        else:
+            cid = user.company_id.id
 
         # Check partner
         if not user._is_public():
@@ -219,13 +226,27 @@ class WebsitePayment(http.Controller):
             'error_msg': kw.get('error_msg')
         })
 
+        acquirer_domain = ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', cid)]
+        if partner_id:
+            partner = request.env['res.partner'].browse([partner_id])
+            acquirer_domain = expression.AND([
+            acquirer_domain,
+            ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.sudo().country_id.id])]
+        ])
+        if acquirer_id:
+            acquirers = env['payment.acquirer'].browse(int(acquirer_id))
+        if order_id:
+            acquirers = env['payment.acquirer'].search(acquirer_domain)
+        if not acquirers:
+            acquirers = env['payment.acquirer'].search(acquirer_domain)
+
         # s2s mode will always generate a token, which we don't want for public users
         valid_flows = ['form', 's2s'] if not user._is_public() else ['form']
         values['acquirers'] = [acq for acq in acquirers if acq.payment_flow in valid_flows]
         if partner_id:
             values['pms'] = request.env['payment.token'].search([
                 ('acquirer_id', 'in', acquirers.ids),
-                ('partner_id', '=', partner_id)
+                ('partner_id', 'child_of', partner.commercial_partner_id.id)
             ])
         else:
             values['pms'] = []
@@ -260,7 +281,7 @@ class WebsitePayment(http.Controller):
         values['reference'] = request.env['payment.transaction']._compute_reference(values=reference_values, prefix=reference)
         tx = request.env['payment.transaction'].sudo().with_context(lang=None).create(values)
         secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+        token_str = '%s%s%s' % (tx.id, tx.reference, float_repr(tx.amount, precision_digits=tx.currency_id.decimal_places))
         token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
         tx.return_url = '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
 
@@ -302,7 +323,7 @@ class WebsitePayment(http.Controller):
         try:
             tx.s2s_do_transaction()
             secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-            token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+            token_str = '%s%s%s' % (tx.id, tx.reference, float_repr(tx.amount, precision_digits=tx.currency_id.decimal_places))
             token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
             tx.return_url = return_url or '/website_payment/confirm?tx_id=%d&access_token=%s' % (tx.id, token)
         except Exception as e:
@@ -317,7 +338,7 @@ class WebsitePayment(http.Controller):
             if access_token:
                 tx = request.env['payment.transaction'].sudo().browse(tx_id)
                 secret = request.env['ir.config_parameter'].sudo().get_param('database.secret')
-                valid_token_str = '%s%s%s' % (tx.id, tx.reference, tx.amount)
+                valid_token_str = '%s%s%s' % (tx.id, tx.reference, float_repr(tx.amount, precision_digits=tx.currency_id.decimal_places))
                 valid_token = hmac.new(secret.encode('utf-8'), valid_token_str.encode('utf-8'), hashlib.sha256).hexdigest()
                 if not consteq(ustr(valid_token), access_token):
                     raise werkzeug.exceptions.NotFound
@@ -329,6 +350,9 @@ class WebsitePayment(http.Controller):
             elif tx.state == 'pending':
                 status = 'warning'
                 message = tx.acquirer_id.pending_msg
+            else:
+                status = 'danger'
+                message = tx.state_message or _('An error occured during the processing of this payment')
             PaymentProcessing.remove_payment_transaction(tx)
             return request.render('payment.confirm', {'tx': tx, 'status': status, 'message': message})
         else:

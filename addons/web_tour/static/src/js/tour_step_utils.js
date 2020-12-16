@@ -102,10 +102,15 @@ return core.Class.extend({
         return [
             {
                 mobile: true,
-                trigger: '.o_statusbar_buttons .btn.dropdown-toggle:contains(Action)',
+                auto: true,
+                trigger: '.o_statusbar_buttons',
                 extra_trigger: extraTrigger,
-                content: _t('Open Action Dropdown Menu.'),
-                position: 'bottom',
+                run: actions => {
+                    const $action = $('.o_statusbar_buttons .btn.dropdown-toggle:contains(Action)');
+                    if ($action.length) {
+                        actions.click($action);
+                    }
+                },
             }, {
                 trigger: `.o_statusbar_buttons button:enabled:contains('${innerTextButton}')`,
                 content: description,

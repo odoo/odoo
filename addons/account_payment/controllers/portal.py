@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.account.controllers.portal import PortalAccount
+from odoo.addons.account.controllers import portal
 from odoo.http import request
 
 
-class PortalAccount(PortalAccount):
+class PortalAccount(portal.PortalAccount):
 
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         values = super(PortalAccount, self)._invoice_get_page_view_values(invoice, access_token, **kwargs)
-        payment_inputs = request.env['payment.acquirer']._get_available_payment_input(company=invoice.company_id)
+        payment_inputs = request.env['payment.acquirer']._get_available_payment_input(partner=invoice.partner_id, company=invoice.company_id)
         # if not connected (using public user), the method _get_available_payment_input will return public user tokens
         is_public_user = request.env.user._is_public()
         if is_public_user:

@@ -3,6 +3,7 @@
 
 from datetime import date, datetime, timedelta
 
+from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.product.tests import common
 from odoo.tests import Form
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
@@ -15,15 +16,15 @@ class TestCreatePicking(common.TestProductCommon):
         self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
         self.product_id_1 = self.env['product.product'].create({'name': 'Large Desk'})
         self.product_id_2 = self.env['product.product'].create({'name': 'Conference Chair'})
-        res_users_purchase_user = self.env.ref('purchase.group_purchase_user')
 
-        Users = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True})
-        self.user_purchase_user = Users.create({
-            'name': 'Pauline Poivraisselle',
-            'login': 'pauline',
-            'email': 'pur@example.com',
-            'notification_type': 'inbox',
-            'groups_id': [(6, 0, [res_users_purchase_user.id])]})
+        self.user_purchase_user = mail_new_test_user(
+            self.env,
+            name='Pauline Poivraisselle',
+            login='pauline',
+            email='pur@example.com',
+            notification_type='inbox',
+            groups='purchase.group_purchase_user',
+        )
 
         self.po_vals = {
             'partner_id': self.partner_id.id,
@@ -100,6 +101,7 @@ class TestCreatePicking(common.TestProductCommon):
         """
         stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
         customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
+        picking_type_out = self.env['ir.model.data'].xmlid_to_object('stock.picking_type_out')
         # route buy should be there by default
         partner = self.env['res.partner'].create({
             'name': 'Jhon'
@@ -131,6 +133,7 @@ class TestCreatePicking(common.TestProductCommon):
             'product_uom': product.uom_id.id,
             'product_uom_qty': 100.0,
             'procure_method': 'make_to_order',
+            'picking_type_id': picking_type_out.id,
         })
 
         customer_move._action_confirm()
@@ -141,8 +144,8 @@ class TestCreatePicking(common.TestProductCommon):
         # Check purchase order line data.
         purchase_order_line = purchase_order.order_line
         self.assertEqual(purchase_order_line.product_id, product, 'The product on the purchase order line is not correct.')
-        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same than the seller.')
-        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same than the move.')
+        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same as the seller.')
+        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same as the move.')
         self.assertEqual(purchase_order_line.price_subtotal, 1200.0, 'The purchase order line subtotal should be equal to the move qty * seller price.')
 
         purchase_order.button_cancel()
@@ -172,10 +175,9 @@ class TestCreatePicking(common.TestProductCommon):
         picking.move_lines.quantity_done = 100.0
         picking.button_validate()
 
-        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 100.0, 'Wrong quantity in stock.')
-
-        customer_move._action_assign()
-        self.assertEqual(customer_move.state, 'assigned', 'Reservation should work with the new quantity provided by the PO.')
+        # mts move will be automatically assigned
+        self.assertEqual(customer_move.state, 'assigned', 'Automatically assigned due to the incoming move makes it available.')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(product, stock_location), 0.0, 'Wrong quantity in stock.')
 
     def test_03_uom(self):
         """ Buy a dozen of products stocked in units. Check that the quantities on the purchase order
@@ -283,8 +285,8 @@ class TestCreatePicking(common.TestProductCommon):
         # Check purchase order line data.
         purchase_order_line = purchase_order.order_line
         self.assertEqual(purchase_order_line.product_id, product, 'The product on the purchase order line is not correct.')
-        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same than the seller.')
-        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same than the move.')
+        self.assertEqual(purchase_order_line.price_unit, seller.price, 'The purchase order line price should be the same as the seller.')
+        self.assertEqual(purchase_order_line.product_qty, customer_move.product_uom_qty, 'The purchase order line qty should be the same as the move.')
 
         purchase_order.button_confirm()
 
@@ -379,7 +381,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move2.product_uom.id, uom_dozen.id)
         self.assertEqual(move2.product_qty, 24)
 
-    def create_delivery_order(self, propagate_date, propagate_date_minimum_delta):
+    def create_delivery_order(self):
         stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
         customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
         unit = self.ref("uom.product_uom_unit")
@@ -393,10 +395,6 @@ class TestCreatePicking(common.TestProductCommon):
         warehouse1 = self.env.ref('stock.warehouse0')
         route_buy = warehouse1.buy_pull_id.route_id
         route_mto = warehouse1.mto_pull_id.route_id
-
-        # change propagete date and Reschedule if Higher Than on rules
-        route_buy.rule_ids.write({'propagate_date': propagate_date,
-            'propagate_date_minimum_delta': propagate_date_minimum_delta})
 
         product = self.env['product.product'].create({
             'name': 'Usb Keyboard',
@@ -431,13 +429,11 @@ class TestCreatePicking(common.TestProductCommon):
 
         return delivery_order, purchase_order
 
-    def test_05_if_propagate_date(self):
-        """ In order to check scheduled date of the delivery order is changed based
-            stock rules with propagate date and minimum delta.
-        """
+    def test_05_propagate_deadline(self):
+        """ In order to check deadline date of the delivery order is changed and the planned date not."""
 
         # Create Delivery Order and with propagate date and minimum delta
-        delivery_order, purchase_order = self.create_delivery_order(True, 5)
+        delivery_order, purchase_order = self.create_delivery_order()
 
         # check po is created or not
         self.assertTrue(purchase_order, 'No purchase order created.')
@@ -447,38 +443,16 @@ class TestCreatePicking(common.TestProductCommon):
         # change scheduled date of po line.
         purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
 
-        # Now check scheduled date of delivery order is changed or not.
-        self.assertEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
-            'Delivery order schedule date should be changed as we have set date propagate.')
-
-    def test_06_no_propagate_date(self):
-        """ In order to check scheduled date of the delivery order is changed based
-            stock rules without propagate date and minimum delta.
-        """
-
-        # Create Delivery Order and without propagate date and minimum delta
-        delivery_order, purchase_order = self.create_delivery_order(False, 5)
-
-        # check po is created or not
-        self.assertTrue(purchase_order, 'No purchase order created.')
-
-        purchase_order_line = purchase_order.order_line
-
-        # change scheduled date of po line.
-        purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
-
-        # Now check scheduled date of delivery order is changed or not.
-        self.assertNotEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
-            'Delivery order schedule date should not changed.')
+        # Now check scheduled date and deadline of delivery order.
+        self.assertNotEqual(
+            purchase_order_line.date_planned, delivery_order.scheduled_date,
+            'Scheduled delivery order date should not changed.')
+        self.assertEqual(
+            purchase_order_line.date_planned, delivery_order.date_deadline,
+            'Delivery deadline date should be changed.')
 
     def test_07_differed_schedule_date(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
-
-        # mark all rules as propagate_date so that push rules will use it
-        self.env['stock.rule'].search([]).write({
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 5,
-        })
 
         with Form(warehouse) as w:
             w.reception_steps = 'three_steps'
@@ -493,12 +467,6 @@ class TestCreatePicking(common.TestProductCommon):
             line.date_planned = datetime.today() + timedelta(days=7)
             line.product_qty = 1.0
         po = po_form.save()
-
-        # mark the po line as propagate_date so that the created moves will use it
-        po.order_line.write({
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 5,
-        })
 
         po.button_approve()
 
@@ -546,4 +514,4 @@ class TestCreatePicking(common.TestProductCommon):
 
         po.order_line.product_qty += 2
         backorder = po.picking_ids.filtered(lambda picking: picking.state == 'assigned')
-        self.assertEqual(backorder.move_lines.product_uom_qty, 7)
+        self.assertEqual(backorder.move_lines.product_uom_qty, 9)

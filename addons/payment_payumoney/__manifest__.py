@@ -4,6 +4,7 @@
 {
     'name': 'PayuMoney Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 375,
     'summary': 'Payment Acquirer: PayuMoney Implementation',
     'description': """
     PayuMoney Payment Acquirer for India.
@@ -18,4 +19,5 @@
     ],
     'application': True,
     'post_init_hook': 'create_missing_journal_for_acquirers',
+    'uninstall_hook': 'uninstall_hook',
 }

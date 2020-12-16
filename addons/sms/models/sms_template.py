@@ -32,7 +32,7 @@ class SMSTemplate(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {},
-                       name=_("%s (copy)") % self.name)
+                       name=_("%s (copy)", self.name))
         return super(SMSTemplate, self).copy(default=default)
 
     def unlink(self):
@@ -44,13 +44,13 @@ class SMSTemplate(models.Model):
         view = self.env.ref('sms.sms_composer_view_form')
 
         for template in self:
-            button_name = _('Send SMS (%s)') % template.name
+            button_name = _('Send SMS (%s)', template.name)
             action = ActWindow.create({
                 'name': button_name,
                 'type': 'ir.actions.act_window',
                 'res_model': 'sms.composer',
                 # Add default_composition_mode to guess to determine if need to use mass or comment composer
-                'context': "{'default_template_id' : %d, 'default_composition_mode': 'guess', 'default_res_ids': active_ids, 'default_res_id': active_id}" % (template.id),
+                'context': "{'default_template_id' : %d, 'sms_composition_mode': 'guess', 'default_res_ids': active_ids, 'default_res_id': active_id}" % (template.id),
                 'view_mode': 'form',
                 'view_id': view.id,
                 'target': 'new',

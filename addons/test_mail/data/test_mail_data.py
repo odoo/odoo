@@ -467,6 +467,63 @@ Web: <a class="moz-txt-link-freetext" href="http://www.odoo.com">http://www.odoo
 
 --------------A6B5FD5F68F4D73ECD739009--"""
 
+MAIL_EML_ATTACHMENT_BOUNCE_HEADERS="""\
+Date: Tue, 24 Dec 2019 11:32:07 +0100 (CET)
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary=16063919151.b32bE0eD.7
+Content-Transfer-Encoding: 7bit
+Subject: Undelivered Mail Returned to Sender
+From: {email_from}
+To: {to}
+Message-Id: <20191224103207.415713014C@example.com>
+Return-Path: <MAILER-DAEMON>
+Delivered-To: odoo+82240-account.invoice-19177@mycompany.example.com
+Received: by example.com (Postfix) id 415713014C; Tue, 24 Dec
+ 2019 11:32:07 +0100 (CET)
+Auto-Submitted: auto-replied
+
+
+--16063919151.b32bE0eD.7
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary=16063919150.2cD3F37.7
+Content-Transfer-Encoding: 7bit
+Content-ID: <16063919152.fD96.7@8f286b7b7880>
+
+
+--16063919150.2cD3F37.7
+Content-Type: text/plain; charset=US-ASCII
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+
+This is the mail system at host example.com.
+
+I'm sorry to have to inform you that your message could not
+be delivered to one or more recipients. It's attached below.
+
+For further assistance, please send mail to postmaster.
+
+If you do so, please include this problem report. You can
+delete your own text from the attached returned message.
+
+
+--16063919151.b32bE0eD.7
+Content-Type: text/rfc822-headers
+Content-Transfer-Encoding: 7bit
+
+Return-Path: <bounce+82240-account.invoice-19177@mycompany.example.com>
+Received: by example.com (Postfix) id 415713014C; Tue, 24 Dec
+Content-Type: multipart/mixed; boundary="===============3600759226158551994=="
+MIME-Version: 1.0
+Message-Id: {msg_id}
+references: <1571814481.189281940460205.799582441238467-openerp-19177-account.invoice@mycompany.example.com>
+Subject: Test
+From: "Test" <noreply+srglvrz-gmail.com@mycompany.example.com>
+Reply-To: "MY COMPANY" <info@mycompany.example.com>
+To: "Test" <test@anothercompany.example.com>
+Date: Tue, 24 Dec 2019 10:32:05 -0000
+X-Odoo-Objects: account.invoice-19177
+
+--16063919151.b32bE0eD.7--"""
 
 MAIL_XHTML = """Return-Path: <xxxx@xxxx.com>
 Received: from xxxx.internal (xxxx.xxxx.internal [1.1.1.1])

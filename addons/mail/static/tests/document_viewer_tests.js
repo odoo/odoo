@@ -14,12 +14,12 @@ var Widget = require('web.Widget');
  * @param {boolean} [params.debug]
  * @returns {DocumentViewer}
  */
-var createViewer = function (params) {
+var createViewer = async function (params) {
     var parent = new Widget();
     var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID);
 
     var mockRPC = function (route) {
-        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment') {
+        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment%26filename%3DfilePdf.pdf') {
             return Promise.resolve();
         }
         if (route === 'https://www.youtube.com/embed/FYqW0Gdwbzk') {
@@ -28,11 +28,11 @@ var createViewer = function (params) {
         if (route === '/web/content/4?model=ir.attachment') {
             return Promise.resolve();
         }
-        if (route === '/web/image/6?unique=1&signature=999&model=ir.attachment') {
+        if (route === '/web/image/6?unique=56789abc&model=ir.attachment') {
             return Promise.resolve();
         }
     };
-    testUtils.mock.addMockEnvironment(parent, {
+    await testUtils.mock.addMockEnvironment(parent, {
         mockRPC: function () {
             if (params.mockRPC) {
                 var _super = this._super;
@@ -62,7 +62,8 @@ var createViewer = function (params) {
     });
 };
 
-QUnit.module('DocumentViewer', {
+QUnit.module('mail', {}, function () {
+QUnit.module('document_viewer_tests.js', {
     beforeEach: function () {
         this.attachments = [
             {id: 1, name: 'filePdf.pdf', type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
@@ -70,7 +71,7 @@ QUnit.module('DocumentViewer', {
             {id: 3, name: 'urlRandom', type: 'url', mimetype: '', url: 'https://www.google.com'},
             {id: 4, name: 'text.html', type: 'binary', mimetype: 'text/html', datas:'testee'},
             {id: 5, name: 'video.mp4', type: 'binary', mimetype: 'video/mp4', datas:'R0lDOP////ywAADs='},
-            {id: 6, name: 'image.jpg', type: 'binary', mimetype: 'image/jpeg', checksum: 999, datas:'R0lVOP////ywAADs='},
+            {id: 6, name: 'image.jpg', type: 'binary', mimetype: 'image/jpeg', checksum: '123456789abc', datas:'R0lVOP////ywAADs='},
         ];
     },
 }, function () {
@@ -166,7 +167,7 @@ QUnit.module('DocumentViewer', {
 
         assert.strictEqual(viewer.$(".o_image_caption:contains('image.jpg')").length, 1,
             "the viewer be on the right attachment");
-        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=1&signature=999&model=ir.attachment"]',
+        assert.containsOnce(viewer, 'img[data-src="/web/image/6?unique=56789abc&model=ir.attachment"]',
             "there should be a video player");
 
         viewer.destroy();
@@ -225,6 +226,7 @@ QUnit.module('DocumentViewer', {
 
         viewer.destroy();
     });
-
 });
+});
+
 });

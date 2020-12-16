@@ -11,7 +11,12 @@
                     <t t-set="locations" t-value="move_line_ids.mapped('location_id').sorted(lambda location: location.complete_name)"/>
                     <t t-call="web.external_layout">
                         <div class="page">
-                            <h3>Summary: <span t-field="o.name"/></h3>
+                            <div class="d-flex">
+                                <div><h3>Summary: <span t-field="o.name"/></h3></div>
+                                <div class="mr-auto">
+                                    <img alt="Barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', quote_plus(o.name or ''), 600, 150)" style="width:300px;height:50px"/>
+                                </div>
+                            </div>
                             <div t-if="o.user_id">
                                 <strong>Responsible:</strong>
                                 <span t-field="o.user_id"/>
@@ -77,7 +82,7 @@
                                             </td>
                                             <td>
                                                 <t t-if="not has_package">
-                                                    <t t-if="any(move_operation.filtered(lambda l: l.state == 'done'))">
+                                                    <t t-if="move_operation.state == 'done'">
                                                         <span t-esc="sum(move_operation.mapped('qty_done'))"/>
                                                     </t>
                                                     <t t-else="">
@@ -95,8 +100,8 @@
                                             <td>
                                                 <span t-esc="move_operation.mapped('picking_id').display_name"/>
                                             </td>
-                                            <td t-if="has_serial_number and (move_operation.lot_id or move_operation.lot_name)" class="text-center h6" width="15%">
-                                                <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', move_operation.lot_id.name, 600, 100)" style="width:100%;height:35px;" alt="Barcode"/>
+                                            <td t-if="has_serial_number" class="text-center h6" width="15%">
+                                                <img t-if="move_operation.lot_id or move_operation.lot_name" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', move_operation.lot_id.name, 600, 100)" style="width:100%;height:35px;" alt="Barcode"/>
                                             </td>
                                             <td width="15%" class="text-center" t-if="has_barcode">
                                                 <span t-if="move_operation.product_id and move_operation.product_id.barcode">

@@ -154,18 +154,18 @@ class Challenge(models.Model):
 
         return template.id if template else False
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         """Overwrite the create method to add the user of groups"""
+        for vals in vals_list:
+            if vals.get('user_domain'):
+                users = self._get_challenger_users(ustr(vals.get('user_domain')))
 
-        if vals.get('user_domain'):
-            users = self._get_challenger_users(ustr(vals.get('user_domain')))
+                if not vals.get('user_ids'):
+                    vals['user_ids'] = []
+                vals['user_ids'].extend((4, user.id) for user in users)
 
-            if not vals.get('user_ids'):
-                vals['user_ids'] = []
-            vals['user_ids'].extend((4, user.id) for user in users)
-
-        return super(Challenge, self).create(vals)
+        return super().create(vals_list)
 
     def write(self, vals):
         if vals.get('user_domain'):
@@ -251,7 +251,7 @@ class Challenge(models.Model):
                          AND gg.user_id = ru.id
                          AND ru.id = log.create_uid
                          AND gg.write_date < log.create_date
-                         AND gg.closed IS false
+                         AND gg.closed IS NOT TRUE
                          AND gc.id IN %s
                          AND (gg.state = 'inprogress'
                               OR (gg.state = 'reached'
@@ -472,7 +472,7 @@ class Challenge(models.Model):
                 ('state', '!=', 'draft'),
             ]
             if restrict_goals:
-                domain.append(('ids', 'in', restrict_goals.ids))
+                domain.append(('id', 'in', restrict_goals.ids))
             else:
                 # if no subset goals, use the dates for restriction
                 if start_date:
@@ -596,7 +596,7 @@ class Challenge(models.Model):
     def accept_challenge(self):
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has joined the challenge") % user.name)
+        sudoed.message_post(body=_("%s has joined the challenge", user.name))
         sudoed.write({'invited_user_ids': [(3, user.id)], 'user_ids': [(4, user.id)]})
         return sudoed._generate_goals_from_challenge()
 
@@ -604,7 +604,7 @@ class Challenge(models.Model):
         """The user discard the suggested challenge"""
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has refused the challenge") % user.name)
+        sudoed.message_post(body=_("%s has refused the challenge", user.name))
         return sudoed.write({'invited_user_ids': (3, user.id)})
 
     def _check_challenge_reward(self, force=False):
@@ -652,11 +652,15 @@ class Challenge(models.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished.") % challenge.name
+                message_body = _("The challenge %s is finished.", challenge.name)
 
                 if rewarded_users:
                     user_names = rewarded_users.name_get()
-                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s.") % (challenge.reward_id.name, ", ".join(name for (user_id, name) in user_names))
+                    message_body += _(
+                        "<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
+                        badge_name=challenge.reward_id.name,
+                        users=", ".join(name for (user_id, name) in user_names)
+                    )
                 else:
                     message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 

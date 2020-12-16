@@ -1,0 +1,29 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_DropZone {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 1;
+    align-items: center;
+    justify-content: center;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_DropZone {
+    color: $o-enterprise-primary-color;
+    background: rgba(255, 255, 255, 0.9);
+    border: 2px dashed $o-enterprise-primary-color;
+
+    &.o-dragging-inside {
+        border-width: 5px;
+    }
+}

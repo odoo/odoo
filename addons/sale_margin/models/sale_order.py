@@ -25,6 +25,12 @@ class SaleOrderLine(models.Model):
             line = line.with_company(line.company_id)
             product = line.product_id
             product_cost = product.standard_price
+            if not product_cost:
+                # If the standard_price is 0
+                # Avoid unnecessary computations
+                # and currency conversions
+                line.purchase_price = 0.0
+                continue
             fro_cur = product.cost_currency_id
             to_cur = line.currency_id or line.order_id.currency_id
             if line.product_uom and line.product_uom != product.uom_id:
@@ -38,7 +44,7 @@ class SaleOrderLine(models.Model):
                 company=line.company_id or self.env.company,
                 date=line.order_id.date_order or fields.Date.today(),
                 round=False,
-            ) if to_cur else product_cost
+            ) if to_cur and product_cost else product_cost
             # The pricelist may not have been set, therefore no conversion
             # is needed because we don't know the target currency..
 
@@ -46,7 +52,7 @@ class SaleOrderLine(models.Model):
     def _compute_margin(self):
         for line in self:
             line.margin = line.price_subtotal - (line.purchase_price * line.product_uom_qty)
-            line.margin_percent = line.price_subtotal  and line.margin/line.price_subtotal
+            line.margin_percent = line.price_subtotal and line.margin/line.price_subtotal
 
 
 class SaleOrder(models.Model):
@@ -57,6 +63,21 @@ class SaleOrder(models.Model):
 
     @api.depends('order_line.margin', 'amount_untaxed')
     def _compute_margin(self):
-        for order in self:
-            order.margin = sum(order.order_line.mapped('margin'))
-            order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed
+        if not all(self._ids):
+            for order in self:
+                order.margin = sum(order.order_line.mapped('margin'))
+                order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed
+        else:
+            self.env["sale.order.line"].flush(['margin'])
+            # On batch records recomputation (e.g. at install), compute the margins
+            # with a single read_group query for better performance.
+            # This isn't done in an onchange environment because (part of) the data
+            # may not be stored in database (new records or unsaved modifications).
+            grouped_order_lines_data = self.env['sale.order.line'].read_group(
+                [
+                    ('order_id', 'in', self.ids),
+                ], ['margin', 'order_id'], ['order_id'])
+            mapped_data = {m['order_id'][0]: m['margin'] for m in grouped_order_lines_data}
+            for order in self:
+                order.margin = mapped_data.get(order.id, 0.0)
+                order.margin_percent = order.amount_untaxed and order.margin/order.amount_untaxed

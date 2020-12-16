@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.tests import Form
@@ -15,9 +15,9 @@ class TestProcurement(TestMrpCommon):
         # Update BOM
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
         self.bom_1.bom_line_ids.filtered(lambda x: x.product_id == self.product_1).unlink()
-
         # Update route
         self.warehouse = self.env.ref('stock.warehouse0')
+        self.warehouse.mto_pull_id.route_id.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
         self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
@@ -39,7 +39,7 @@ class TestProcurement(TestMrpCommon):
         production_product_6.action_assign()
 
         # check production state is Confirmed
-        self.assertEqual(production_product_6.state, 'confirmed', 'Production order should be for Confirmed state')
+        self.assertEqual(production_product_6.state, 'confirmed')
 
         # Check procurement for product 4 created or not.
         # Check it created a purchase order
@@ -69,14 +69,9 @@ class TestProcurement(TestMrpCommon):
         # produce product4
         # ---------------
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': produce_product_4.id,
-            'active_ids': [produce_product_4.id],
-        }))
-        produce_form.qty_producing = produce_product_4.product_qty
-        product_produce = produce_form.save()
-        product_produce.do_produce()
-        produce_product_4.post_inventory()
+        mo_form = Form(produce_product_4)
+        mo_form.qty_producing = produce_product_4.product_qty
+        produce_product_4 = mo_form.save()
         # Check procurement and Production state for product 4.
         produce_product_4.button_mark_done()
         self.assertEqual(produce_product_4.state, 'done', 'Production order should be in state done')
@@ -95,14 +90,9 @@ class TestProcurement(TestMrpCommon):
         # ------------------------------------
 
         self.assertEqual(production_product_6.reservation_state, 'assigned', "Consume material not available")
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production_product_6.id,
-            'active_ids': [production_product_6.id],
-        }))
-        produce_form.qty_producing = production_product_6.product_qty
-        product_produce = produce_form.save()
-        product_produce.do_produce()
-        production_product_6.post_inventory()
+        mo_form = Form(production_product_6)
+        mo_form.qty_producing = production_product_6.product_qty
+        production_product_6 = mo_form.save()
         # Check procurement and Production state for product 6.
         production_product_6.button_mark_done()
         self.assertEqual(production_product_6.state, 'done', 'Production order should be in state done')
@@ -125,6 +115,7 @@ class TestProcurement(TestMrpCommon):
         # set the MTO route to the parent category (all)
         self.warehouse = self.env.ref('stock.warehouse0')
         mto_route = self.warehouse.mto_pull_id.route_id
+        mto_route.active = True
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
@@ -140,6 +131,7 @@ class TestProcurement(TestMrpCommon):
     def test_procurement_3(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         warehouse.write({'reception_steps': 'three_steps'})
+        warehouse.mto_pull_id.route_id.active = True
         self.env['stock.location']._parent_store_compute()
         warehouse.reception_route_id.rule_ids.filtered(
             lambda p: p.location_src_id == warehouse.wh_input_stock_loc_id and
@@ -191,20 +183,16 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(picking_qc_to_stock.state, 'done')
         mo.action_assign()
         self.assertEqual(mo.move_raw_ids.reserved_availability, 3.0)
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
+        produce_form = Form(mo)
         produce_form.qty_producing = 3.0
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
+        mo = produce_form.save()
         self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
         picking_qc_to_stock.move_line_ids.qty_done = 5.0
         self.assertEqual(mo.move_raw_ids.reserved_availability, 5.0)
         self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
 
-    def test_date_propagation(self):
-        """ Check propagation of shedule date for manufaturing route."""
+    def test_link_date_mo_moves(self):
+        """ Check link of shedule date for manufaturing with date stock move."""
 
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
@@ -232,8 +220,6 @@ class TestProcurement(TestMrpCommon):
             'name': 'move_orig',
             'product_id': product_1.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -246,7 +232,7 @@ class TestProcurement(TestMrpCommon):
             ('state', '=', 'confirmed')
         ])
 
-        self.assertAlmostEqual(mo.move_finished_ids.date_expected, mo.move_raw_ids.date_expected + timedelta(hours=1), delta=timedelta(seconds=1))
+        self.assertAlmostEqual(mo.move_finished_ids.date, mo.move_raw_ids.date + timedelta(hours=1), delta=timedelta(seconds=1))
 
         self.assertEqual(len(mo), 1, 'the manufacture order is not created')
 
@@ -263,13 +249,13 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(len(move_orig), 1, 'the move orig is not created')
         self.assertEqual(move_orig.product_qty, 10, 'the quantity to produce is not good relative to the move')
 
-        move_dest_scheduled_date = move_dest.date_expected
-
+        new_sheduled_date = fields.Datetime.to_datetime(mo.date_planned_start) + timedelta(days=5)
         mo_form = Form(mo)
-        mo_form.date_planned_start = fields.Datetime.to_datetime(mo_form.date_planned_start) + timedelta(days=5)
-        mo_form.save()
+        mo_form.date_planned_start = new_sheduled_date
+        mo = mo_form.save()
 
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
+        self.assertAlmostEqual(mo.move_raw_ids.date, mo.date_planned_start, delta=timedelta(seconds=1))
+        self.assertAlmostEqual(mo.move_finished_ids.date, mo.date_planned_finished, delta=timedelta(seconds=1))
 
     def test_finished_move_cancellation(self):
         """Check state of finished move on cancellation of raw moves. """
@@ -296,8 +282,6 @@ class TestProcurement(TestMrpCommon):
             'name': 'move_bottle',
             'product_id': product_bottle.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -313,64 +297,6 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
         self.assertEqual(mo.move_finished_ids[0].state, 'cancel', 'Finished move should be cancelled if mo is cancelled.')
         self.assertEqual(mo.move_dest_ids[0].state, 'waiting', 'Destination move should not be cancelled if prapogation cancel is False on manufacturing rule.')
-
-    def test_production_delay_alert(self):
-        """Check if the delay alert is set to True on the stock move."""
-        self.env['stock.rule'].search([]).delay_alert = True
-
-        parent_product = self.env['product.template'].create({
-            'name': 'Parent product',
-            'route_ids': [
-                (4, self.env.ref('mrp.route_warehouse0_manufacture').id, 0),
-                (4, self.env.ref('stock.route_warehouse0_mto').id, 0)
-            ]
-        })
-        child_product = self.env['product.template'].create({
-            'name': 'Child product',
-            'route_ids': [
-                (4, self.env.ref('mrp.route_warehouse0_manufacture').id, 0),
-                (4, self.env.ref('stock.route_warehouse0_mto').id, 0)
-            ]
-        })
-        child_component = self.env['product.template'].create({
-            'name': 'Child product',
-        })
-        parent_bom = self.env['mrp.bom'].create({
-            'product_id': parent_product.product_variant_ids.id,
-            'product_tmpl_id': parent_product.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
-            'type': 'normal',
-        })
-        self.env['mrp.bom.line'].create({
-            'bom_id': parent_bom.id,
-            'product_id': child_product.product_variant_ids.id,
-            'product_qty': 2,
-        })
-        child_bom = self.env['mrp.bom'].create({
-            'product_id': child_product.product_variant_ids.id,
-            'product_tmpl_id': child_product.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
-            'type': 'normal',
-        })
-        self.env['mrp.bom.line'].create({
-            'bom_id': child_bom.id,
-            'product_id': child_component.product_variant_ids.id,
-            'product_qty': 2,
-        })
-
-        mrp_order_form = Form(self.env['mrp.production'])
-        mrp_order_form.product_id = parent_product.product_variant_ids
-        mrp_order = mrp_order_form.save()
-        mrp_order.action_confirm()
-
-        child_mrp_production = self.env['mrp.production'].search([('product_id', '=', child_product.product_variant_ids.id)])
-
-        self.assertTrue(child_mrp_production.delay_alert)
-        self.assertTrue(child_mrp_production.move_raw_ids.delay_alert)
 
     def test_procurement_with_empty_bom(self):
         """Ensure that a procurement request using a product with an empty BoM
@@ -413,13 +339,181 @@ class TestProcurement(TestMrpCommon):
         self.env['stock.move'].create(move_values)
 
         production.action_confirm()
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production.id,
-            'active_ids': [production.id],
-        }))
-        product_produce = produce_form.save()
-        product_produce.do_produce()
+        produce_form = Form(production)
+        produce_form.qty_producing = production.product_qty
+        production = produce_form.save()
         production.button_mark_done()
 
         move_dest._action_assign()
         self.assertEqual(move_dest.reserved_availability, 10.0)
+
+    def test_auto_assign(self):
+        """ When auto reordering rule exists, check for when:
+        1. There is not enough of a manufactured product to assign (reserve for) a picking => auto-create 1st MO
+        2. There is not enough of a manufactured component to assign the created MO => auto-create 2nd MO
+        3. Add an extra manufactured component (not in stock) to 1st MO => auto-create 3rd MO
+        4. When 2nd MO is completed => auto-assign to 1st MO
+        5. When 1st MO is completed => auto-assign to picking
+        6. Additionally check that a MO that has component in stock auto-reserves when MO is confirmed (since default setting = 'at_confirm')"""
+
+        self.warehouse = self.env.ref('stock.warehouse0')
+        route_manufacture = self.warehouse.manufacture_pull_id.route_id
+
+        product_1 = self.env['product.product'].create({
+            'name': 'Cake',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_2 = self.env['product.product'].create({
+            'name': 'Cake Mix',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_3 = self.env['product.product'].create({
+            'name': 'Flour',
+            'type': 'consu',
+        })
+
+        bom1 = self.env['mrp.bom'].create({
+            'product_id': product_1.id,
+            'product_tmpl_id': product_1.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'consumption': 'flexible',
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_2.id, 'product_qty': 1}),
+            ]})
+
+        self.env['mrp.bom'].create({
+            'product_id': product_2.id,
+            'product_tmpl_id': product_2.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_3.id, 'product_qty': 1}),
+            ]})
+
+        # extra manufactured component added to 1st MO after it is already confirmed
+        product_4 = self.env['product.product'].create({
+            'name': 'Flavor Enchancer',
+            'type': 'product',
+            'route_ids': [(6, 0, [route_manufacture.id])]
+        })
+        product_5 = self.env['product.product'].create({
+            'name': 'MSG',
+            'type': 'consu',
+        })
+
+        self.env['mrp.bom'].create({
+            'product_id': product_4.id,
+            'product_tmpl_id': product_4.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': product_5.id, 'product_qty': 1}),
+            ]})
+
+        # setup auto orderpoints (reordering rules)
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake RR',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_1.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Cake Mix RR',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_2.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Flavor Enchancer RR',
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product_4.id,
+            'product_min_qty': 0,
+            'product_max_qty': 5,
+        })
+
+        # create picking output to trigger creating MO for reordering product_1
+        pick_output = self.env['stock.picking'].create({
+            'name': 'Cake Delivery Order',
+            'picking_type_id': self.ref('stock.picking_type_out'),
+            'location_id': self.warehouse.lot_stock_id.id,
+            'location_dest_id': self.ref('stock.stock_location_customers'),
+            'move_lines': [(0, 0, {
+                'name': '/',
+                'product_id': product_1.id,
+                'product_uom': product_1.uom_id.id,
+                'product_uom_qty': 10.00,
+                'procure_method': 'make_to_stock',
+            })],
+        })
+        pick_output.action_confirm()  # should trigger orderpoint to create and confirm 1st MO
+        pick_output.action_assign()
+
+        mo = self.env['mrp.production'].search([
+            ('product_id', '=', product_1.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        self.assertEqual(len(mo), 1, "Manufacture order was not automatically created")
+        mo.action_assign()
+        self.assertEqual(mo.move_raw_ids.reserved_availability, 0, "No components should be reserved yet")
+        self.assertEqual(mo.product_qty, 15, "Quantity to produce should be picking demand + reordering rule max qty")
+
+        # 2nd MO for product_2 should have been created and confirmed when 1st MO for product_1 was confirmed
+        mo2 = self.env['mrp.production'].search([
+            ('product_id', '=', product_2.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        self.assertEqual(len(mo2), 1, 'Second manufacture order was not created')
+        self.assertEqual(mo2.product_qty, 20, "Quantity to produce should be MO's 'to consume' qty + reordering rule max qty")
+        mo2_form = Form(mo2)
+        mo2_form.qty_producing = 20
+        mo2 = mo2_form.save()
+        mo2.button_mark_done()
+
+        self.assertEqual(mo.move_raw_ids.reserved_availability, 15, "Components should have been auto-reserved")
+
+        # add new component to 1st MO
+        mo_form = Form(mo)
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = product_4
+            line.product_uom_qty = 1
+        mo_form.save()  # should trigger orderpoint to create and confirm 3rd MO
+
+        mo3 = self.env['mrp.production'].search([
+            ('product_id', '=', product_4.id),
+            ('state', '=', 'confirmed')
+        ])
+
+        self.assertEqual(len(mo3), 1, 'Third manufacture order for added component was not created')
+        self.assertEqual(mo3.product_qty, 6, "Quantity to produce should be 1 + reordering rule max qty")
+
+        mo_form = Form(mo)
+        mo.move_raw_ids.quantity_done = 15
+        mo_form.qty_producing = 15
+        mo = mo_form.save()
+        mo.button_mark_done()
+
+        self.assertEqual(pick_output.move_ids_without_package.reserved_availability, 10, "Completed products should have been auto-reserved in picking")
+
+        # make sure next MO auto-reserves components now that they are in stock since
+        # default reservation_method = 'at_confirm'
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_1
+        mo_form.bom_id = bom1
+        mo_form.product_qty = 5
+        mo_form.product_uom_id = product_1.uom_id
+        mo_assign_at_confirm = mo_form.save()
+        mo_assign_at_confirm.action_confirm()
+
+        self.assertEqual(mo_assign_at_confirm.move_raw_ids.reserved_availability, 5, "Components should have been auto-reserved")

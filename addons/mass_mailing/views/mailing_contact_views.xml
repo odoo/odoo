@@ -68,6 +68,10 @@
                     domain="[('opt_out', '=', False), ('is_blacklisted', '=', False), ('email_normalized', '!=', False)]"
                     invisible="not context.get('default_list_ids')"/>
                 <separator/>
+                <filter name="filter_bounce" string="Bounced" domain="[('message_bounce', '>', 0)]"/>
+                <filter name="filter_blacklisted" string="Blacklisted" domain="[('is_blacklisted','=',True)]" invisible="1"/>
+                <filter name="filter_opt_out" string="Opted-out" domain="[('opt_out', '=', True)]" invisible="1"/>
+                <separator/>
                 <filter string="Exclude Blacklisted Emails"
                     name="filter_not_email_bl"
                     domain="[('is_blacklisted', '=', False)]"/>
@@ -89,13 +93,13 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <tree string="Mailing List Contacts">
+            <tree string="Mailing List Contacts" sample="1">
                 <field name="create_date"/>
                 <field name="name"/>
                 <field name="company_name"/>
                 <field name="email"/>
                 <field name="is_blacklisted" string="Email Blacklisted"/>
-                <field name="message_bounce"/>
+                <field name="message_bounce" sum="Total Bounces"/>
                 <field name="opt_out" invisible="'default_list_ids' not in context"/>
             </tree>
         </field>
@@ -105,7 +109,7 @@
         <field name="name">mailing.contact.view.kanban</field>
         <field name="model">mailing.contact</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <field name="name"/>
                 <field name="company_name"/>
                 <field name="email"/>
@@ -153,7 +157,7 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name" placeholder="e.g. John Smith"/>
+                            <field class="o_text_overflow" name="name" placeholder="e.g. John Smith"/>
                         </h1>
                         <label for="tag_ids" class="oe_edit_only"/>
                         <div>
@@ -189,8 +193,8 @@
                     </field>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -201,7 +205,7 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <pivot string="Mailing List Contacts" stacked="True">
+            <pivot string="Mailing List Contacts" stacked="True" sample="1">
                 <field name="create_date" type="row"/>
             </pivot>
         </field>
@@ -212,7 +216,7 @@
         <field name="model">mailing.contact</field>
         <field name="priority">10</field>
         <field name="arch" type="xml">
-            <graph string="Mailing List Contacts" stacked="True">
+            <graph string="Mailing List Contacts" stacked="True" sample="1">
                 <field name="create_date" type="row"/>
             </graph>
         </field>

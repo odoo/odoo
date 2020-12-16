@@ -104,9 +104,10 @@ Variables
 
     _("Scheduled meeting with %s" % invitee.name)
 
-**Do** set the dynamic variables outside of the translation lookup::
+**Do** set the dynamic variables as a parameter of the translation lookup (this
+will fallback on source in case of missing placeholder in the translation)::
 
-    _("Scheduled meeting with %s") % invitee.name
+    _("Scheduled meeting with %s", invitee.name)
 
 
 Blocks
@@ -135,16 +136,16 @@ Plural
 ^^^^^^
 **Don't** pluralize terms the English-way::
 
-    msg = _("You have %s invoice") % invoice_count
+    msg = _("You have %(count)s invoice", count=invoice_count)
     if invoice_count > 1:
       msg += _("s")
 
 **Do** keep in mind every language has different plural forms::
 
     if invoice_count > 1:
-      msg = _("You have %s invoices") % invoice_count
+      msg = _("You have %(count)s invoices", count=invoice_count)
     else:
-      msg = _("You have %s invoice") % invoice_count
+      msg = _("You have one invoice")
 
 Read vs Run Time
 ^^^^^^^^^^^^^^^^

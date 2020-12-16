@@ -23,7 +23,7 @@ tour.register('point_of_sale_tour', {
     edition: 'enterprise'
 }, {
     trigger: ".o_pos_kanban button.oe_kanban_action_button",
-    content: _t("<p>Click to start the point of sale interface. It <b>runs on tablets</b>, laptops, or industrial hardware.</p><p>Once the session launched, the system continues to run without an internet connection.</p>"),
+    content: _t("<p>Ready to have a look at the <b>POS Interface</b>? Let's start our first session.</p>"),
     position: "bottom"
 }]);
 

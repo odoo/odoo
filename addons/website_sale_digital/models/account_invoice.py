@@ -14,7 +14,7 @@ class AccountInvoiceLine(models.Model):
         # Get paid invoices
         purchases = self.sudo().search_read(
             domain=[
-                ('move_id.payment_state', '=', 'paid'),
+                ('move_id.payment_state', 'in', ['paid', 'in_payment']),
                 ('move_id.partner_id', '=', partner.id),
                 ('product_id', '!=', False),
             ],
@@ -23,7 +23,7 @@ class AccountInvoiceLine(models.Model):
 
         # Get free products
         purchases += self.env['sale.order.line'].sudo().search_read(
-            domain=[('price_subtotal', '=', 0.0), ('order_id.partner_id', '=', partner.id)],
+            domain=[('order_id.partner_id', '=', partner.id), '|', ('price_subtotal', '=', 0.0), ('order_id.amount_total', '=', 0.0)],
             fields=['product_id'],
         )
 

@@ -31,10 +31,10 @@ tour.stepUtils.showAppsMenuItem(),
 }, {
     content: "search the pricelist",
     trigger: 'div[name="pricelist_id"] input',
-    run: 'text Public Pricelist'
+    run: 'text Custom pricelist (TEST)'
 }, {
     content: "select the pricelist",
-    trigger: 'ul.ui-autocomplete > li > a:contains(Public Pricelist)',
+    trigger: 'ul.ui-autocomplete > li > a:contains(Custom pricelist (TEST))',
 }, {
     trigger: "a:contains('Add a product')"
 }, {

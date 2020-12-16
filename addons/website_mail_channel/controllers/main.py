@@ -44,9 +44,12 @@ class MailGroup(http.Controller):
 
         # compute statistics
         month_date = datetime.today() - relativedelta.relativedelta(months=1)
-        messages = request.env['mail.message'].read_group(
-            [('model', '=', 'mail.channel'), ('date', '>=', fields.Datetime.to_string(month_date)), ('message_type', '!=', 'notification')],
-            [], ['res_id'])
+        messages = request.env['mail.message'].read_group([
+            ('model', '=', 'mail.channel'),
+            ('date', '>=', fields.Datetime.to_string(month_date)),
+            ('message_type', '!=', 'notification'),
+            ('res_id', 'in', groups.ids),
+        ], ['res_id'], ['res_id'])
         message_data = dict((message['res_id'], message['res_id_count']) for message in messages)
 
         group_data = dict(
@@ -203,7 +206,7 @@ class MailGroup(http.Controller):
             'msg_more_count': message_count - self._replies_per_page,
             'replies_per_page': self._replies_per_page,
         }
-        return request.env.ref('website_mail_channel.messages_short').render(values, engine='ir.qweb')
+        return request.env.ref('website_mail_channel.messages_short')._render(values, engine='ir.qweb')
 
     @http.route("/groups/<int:group_id>/get_alias_info", type='json', auth='public', website=True)
     def get_alias_info(self, group_id, **post):

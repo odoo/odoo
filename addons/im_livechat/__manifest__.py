@@ -2,7 +2,7 @@
 {
     'name' : 'Live Chat',
     'version': '1.0',
-    'sequence': 170,
+    'sequence': 210,
     'summary': 'Chat with your website visitors',
     'category': 'Website/Live Chat',
     'complexity': 'easy',
@@ -19,12 +19,12 @@ Help your customers with this chat, and analyse their feedback.
 
         """,
     'data': [
+        "security/im_livechat_channel_security.xml",
+        "security/ir.model.access.csv",
         "data/mail_shortcode_data.xml",
         "data/mail_data.xml",
         "data/im_livechat_channel_data.xml",
         'data/digest_data.xml',
-        "security/im_livechat_channel_security.xml",
-        "security/ir.model.access.csv",
         "views/rating_views.xml",
         "views/mail_channel_views.xml",
         "views/im_livechat_channel_views.xml",
@@ -39,7 +39,12 @@ Help your customers with this chat, and analyse their feedback.
         'data/mail_shortcode_demo.xml',
     ],
     'depends': ["mail", "rating", "digest"],
-    'qweb': ['static/src/xml/*.xml'],
+    'qweb': [
+        'static/src/bugfix/bugfix.xml',
+        'static/src/components/composer/composer.xml',
+        'static/src/components/discuss_sidebar/discuss_sidebar.xml',
+        'static/src/components/thread_icon/thread_icon.xml',
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,

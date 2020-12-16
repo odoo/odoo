@@ -133,6 +133,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             warehouse.manufacture_steps = 'pbm_sam'
             warehouse.delivery_steps = 'pick_pack_ship'
         self.warehouse.flush()
+        self.env.ref('stock.route_warehouse0_mto').active = True
         self.env['stock.quant']._update_available_quantity(self.raw_product, self.warehouse.lot_stock_id, 4.0)
         picking_customer = self.env['stock.picking'].create({
             'location_id': self.warehouse.wh_output_stock_loc_id.id,
@@ -149,11 +150,14 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
             'location_id': self.warehouse.wh_output_stock_loc_id.id,
             'location_dest_id': self.customer_location,
             'procure_method': 'make_to_order',
+            'origin': 'SOURCEDOCUMENT',
             'state': 'draft',
         })
         picking_customer.action_confirm()
         production_order = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
         self.assertTrue(production_order)
+        self.assertEqual(production_order.origin, 'SOURCEDOCUMENT', 'The MO origin should be the SO name')
+        self.assertNotEqual(production_order.name, 'SOURCEDOCUMENT', 'The MO name should not be the origin of the move')
 
         picking_stock_preprod = self.env['stock.move'].search([
             ('product_id', '=', self.raw_product.id),
@@ -170,8 +174,10 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         self.assertTrue(picking_stock_preprod)
         self.assertTrue(picking_stock_postprod)
-        self.assertEqual(picking_stock_preprod.state, 'confirmed')
+        self.assertEqual(picking_stock_preprod.state, 'assigned')
         self.assertEqual(picking_stock_postprod.state, 'waiting')
+        self.assertEqual(picking_stock_preprod.origin, production_order.name, 'The pre-prod origin should be the MO name')
+        self.assertEqual(picking_stock_postprod.origin, 'SOURCEDOCUMENT', 'The post-prod origin should be the SO name')
 
         picking_stock_preprod.action_assign()
         picking_stock_preprod.move_line_ids.qty_done = 4
@@ -184,13 +190,9 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(production_order.reservation_state, 'assigned')
         self.assertEqual(picking_stock_postprod.state, 'waiting')
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production_order.id,
-            'active_ids': [production_order.id],
-        }))
+        produce_form = Form(production_order)
         produce_form.qty_producing = production_order.product_qty
-        product_produce = produce_form.save()
-        product_produce.do_produce()
+        production_order = produce_form.save()
         production_order.button_mark_done()
 
         self.assertFalse(sum(self.env['stock.quant']._gather(self.raw_product, self.warehouse.pbm_loc_id).mapped('quantity')))
@@ -248,7 +250,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         self.assertTrue(move_stock_preprod)
         self.assertTrue(move_stock_postprod)
-        self.assertEqual(move_stock_preprod.state, 'confirmed')
+        self.assertEqual(move_stock_preprod.state, 'assigned')
         self.assertEqual(move_stock_postprod.state, 'waiting')
 
         move_stock_preprod._action_cancel()

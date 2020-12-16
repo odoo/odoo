@@ -20,31 +20,49 @@ class HrEmployeeBase(models.AbstractModel):
     hours_today = fields.Float(compute='_compute_hours_today')
     hours_last_month_display = fields.Char(compute='_compute_hours_last_month')
 
+    @api.depends('user_id.im_status', 'attendance_state')
     def _compute_presence_state(self):
         """
         Override to include checkin/checkout in the presence state
         Attendance has the second highest priority after login
         """
         super()._compute_presence_state()
-        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present')
+        employees = self.filtered(lambda e: e.hr_presence_state != 'present')
+        employee_to_check_working = self.filtered(lambda e: e.attendance_state == 'checked_out'
+                                                            and e.hr_presence_state == 'to_define')
+        working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
-            if employee.attendance_state == 'checked_out' and employee.hr_presence_state == 'to_define':
+            if employee.attendance_state == 'checked_out' and employee.hr_presence_state == 'to_define' and \
+                    employee.id not in working_now_list:
                 employee.hr_presence_state = 'absent'
-        for employee in employees:
-            if employee.attendance_state == 'checked_in':
+            elif employee.attendance_state == 'checked_in':
                 employee.hr_presence_state = 'present'
 
     def _compute_hours_last_month(self):
+        now = fields.Datetime.now()
+        now_utc = pytz.utc.localize(now)
         for employee in self:
-            now = datetime.now()
-            start = now + relativedelta(months=-1, day=1)
-            end = now + relativedelta(days=-1, day=1)
+            tz = pytz.timezone(employee.tz or 'UTC')
+            now_tz = now_utc.astimezone(tz)
+            start_tz = now_tz + relativedelta(months=-1, day=1, hour=0, minute=0, second=0, microsecond=0)
+            start_naive = start_tz.astimezone(pytz.utc).replace(tzinfo=None)
+            end_tz = now_tz + relativedelta(day=1, hour=0, minute=0, second=0, microsecond=0)
+            end_naive = end_tz.astimezone(pytz.utc).replace(tzinfo=None)
+
             attendances = self.env['hr.attendance'].search([
                 ('employee_id', '=', employee.id),
-                ('check_in', '>=', start),
-                ('check_out', '<=', end),
+                '&',
+                ('check_in', '<=', end_naive),
+                ('check_out', '>=', start_naive),
             ])
-            employee.hours_last_month = sum(attendances.mapped('worked_hours'))
+
+            hours = 0
+            for attendance in attendances:
+                check_in = max(attendance.check_in, start_naive)
+                check_out = min(attendance.check_out, end_naive)
+                hours += (check_out - check_in).total_seconds() / 3600.0
+
+            employee.hours_last_month = round(hours, 2)
             employee.hours_last_month_display = "%g" % employee.hours_last_month
 
     def _compute_hours_today(self):
@@ -90,7 +108,7 @@ class HrEmployeeBase(models.AbstractModel):
         employee = self.sudo().search([('barcode', '=', barcode)], limit=1)
         if employee:
             return employee._attendance_action('hr_attendance.hr_attendance_action_kiosk_mode')
-        return {'warning': _('No employee corresponding to barcode %(barcode)s') % {'barcode': barcode}}
+        return {'warning': _("No employee corresponding to Badge ID '%(barcode)s.'") % {'barcode': barcode}}
 
     def attendance_manual(self, next_action, entered_pin=None):
         self.ensure_one()
@@ -106,7 +124,7 @@ class HrEmployeeBase(models.AbstractModel):
         """
         self.ensure_one()
         employee = self.sudo()
-        action_message = self.env.ref('hr_attendance.hr_attendance_action_greeting_message').read()[0]
+        action_message = self.env["ir.actions.actions"]._for_xml_id("hr_attendance.hr_attendance_action_greeting_message")
         action_message['previous_attendance_change_date'] = employee.last_attendance_id and (employee.last_attendance_id.check_out or employee.last_attendance_id.check_in) or False
         action_message['employee_name'] = employee.name
         action_message['barcode'] = employee.barcode
@@ -147,3 +165,10 @@ class HrEmployeeBase(models.AbstractModel):
         if 'pin' in groupby or 'pin' in self.env.context.get('group_by', '') or self.env.context.get('no_group_by'):
             raise exceptions.UserError(_('Such grouping is not allowed.'))
         return super(HrEmployeeBase, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
+
+    def _compute_presence_icon(self):
+        res = super()._compute_presence_icon()
+        # All employee must chek in or check out. Everybody must have an icon
+        employee_to_define = self.filtered(lambda e: e.hr_icon_display == 'presence_undetermined')
+        employee_to_define.hr_icon_display = 'presence_to_define'
+        return res

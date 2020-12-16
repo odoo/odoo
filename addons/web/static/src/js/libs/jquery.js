@@ -92,15 +92,15 @@ $.fn.extend({
     },
     /**
      * Makes DOM elements bounce the way Odoo decided it.
+     *
+     * @param {string} [extraClass]
      */
-    odooBounce: function () {
-        return this.each(function () {
-            var $el = $(this);
-            $el.addClass('o_catch_attention');
-            setTimeout(function () {
-                $el.removeClass('o_catch_attention');
-            }, 400);
-        });
+    odooBounce: function (extraClass) {
+        for (const el of this) {
+            el.classList.add('o_catch_attention', extraClass);
+            setTimeout(() => el.classList.remove('o_catch_attention', extraClass), 400);
+        }
+        return this;
     },
     /**
      * Allows to bind events to a handler just as the standard `$.on` function
@@ -122,5 +122,114 @@ $.fn.extend({
             });
         });
     },
+    /**
+     * @return {jQuery}
+     */
+    closestScrollable() {
+        let $el = this;
+        while ($el[0] !== document.scrollingElement) {
+            if ($el.isScrollable()) {
+                return $el;
+            }
+            $el = $el.parent();
+        }
+        return $el;
+    },
+    /**
+     * Adapt the given css property by adding the size of a scrollbar if any.
+     * Limitation: only works if the given css property is not already used as
+     * inline style for another reason.
+     *
+     * @param {boolean} [add=true]
+     * @param {boolean} [isScrollElement=true]
+     * @param {string} [cssProperty='padding-right']
+     */
+    compensateScrollbar(add = true, isScrollElement = true, cssProperty = 'padding-right') {
+        for (const el of this) {
+            // Compensate scrollbar
+            el.style.removeProperty(cssProperty);
+            if (!add) {
+                return;
+            }
+            const scrollableEl = isScrollElement ? el : $(el).parent().closestScrollable()[0];
+            const style = window.getComputedStyle(el);
+            const newValue = parseInt(style[cssProperty]) + scrollableEl.offsetWidth - scrollableEl.clientWidth;
+            el.style.setProperty(cssProperty, `${newValue}px`, 'important');
+        }
+    },
+    /**
+     * @returns {jQuery}
+     */
+    getScrollingElement() {
+        const $baseScrollingElement = $(document.scrollingElement);
+        if ($baseScrollingElement.isScrollable()
+                && $baseScrollingElement.hasScrollableContent()) {
+            return $baseScrollingElement;
+        }
+        const bodyHeight = $(document.body).height();
+        for (const el of document.body.children) {
+            // Search for a body child which is at least as tall as the body
+            // and which has the ability to scroll if enough content in it. If
+            // found, suppose this is the top scrolling element.
+            if (el.scrollHeight < bodyHeight) {
+                continue;
+            }
+            const $el = $(el);
+            if ($el.isScrollable()) {
+                return $el;
+            }
+        }
+        return $baseScrollingElement;
+    },
+    /**
+     * @return {boolean}
+     */
+    hasScrollableContent() {
+        return this[0].scrollHeight > this[0].clientHeight;
+    },
+    /**
+     * @returns {boolean}
+     */
+    isScrollable() {
+        const overflow = this.css('overflow-y');
+        return overflow === 'auto' || overflow === 'scroll'
+            || (overflow === 'visible' && this === document.scrollingElement);
+    },
 });
+
+// jQuery functions monkey-patching
+
+// Some magic to ensure scrolltop and animate on html/body animate the top level
+// scrollable element even if not html or body.
+const originalScrollTop = $.fn.scrollTop;
+$.fn.scrollTop = function (value) {
+    if (value !== undefined && this.filter('html, body').length) {
+        // The caller wants to scroll a set of elements including html and/or
+        // body to a specific point -> do that but make sure to add the real
+        // top level element to that set of elements if any different is found.
+        originalScrollTop.apply(this.not('html, body').add($().getScrollingElement()), arguments);
+        return this;
+    } else if (value === undefined && this.eq(0).is('html, body')) {
+        // The caller wants to get the scroll point of a set of elements, jQuery
+        // will return the scroll point of the first one, if it is html or body
+        // return the scroll point of the real top level element.
+        return originalScrollTop.apply($().getScrollingElement(), arguments);
+    }
+    return originalScrollTop.apply(this, arguments);
+};
+const originalAnimate = $.fn.animate;
+$.fn.animate = function (properties, ...rest) {
+    const props = Object.assign({}, properties);
+    if ('scrollTop' in props && this.filter('html, body').length) {
+        // The caller wants to scroll a set of elements including html and/or
+        // body to a specific point -> do that but make sure to add the real
+        // top level element to that set of elements if any different is found.
+        originalAnimate.call(this.not('html, body').add($().getScrollingElement()), {'scrollTop': props['scrollTop']}, ...rest);
+        delete props['scrollTop'];
+    }
+    if (!Object.keys(props).length) {
+        return this;
+    }
+    return originalAnimate.call(this, props, ...rest);
+};
 });

@@ -2,12 +2,13 @@ odoo.define('website.s_countdown_options', function (require) {
 'use strict';
 
 const core = require('web.core');
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
+const CountdownWidget = require('website.s_countdown');
 
 const qweb = core.qweb;
 
-options.registry.countdown = options.Class.extend({
-    events: _.extend({}, options.Class.prototype.events || {}, {
+snippetOptions.registry.countdown = snippetOptions.SnippetOptionWidget.extend({
+    events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.events || {}, {
         'click .toggle-edit-message': '_onToggleEndMessageClick',
     }),
 
@@ -20,46 +21,57 @@ options.registry.countdown = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    endAction: function (previewMode, widgetValue, params) {
-        this.$target[0].dataset.endAction = widgetValue;
-        if (widgetValue === 'message') {
-            if (!this.$target.find('.s_countdown_end_message').length) {
-                const message = this.endMessage || qweb.render('website.s_countdown.end_message');
-                this.$target.find('.container').append(message);
-            }
-        } else {
-            const $message = this.$target.find('.s_countdown_end_message').detach();
-            if ($message.length) {
-                this.endMessage = $message[0].outerHTML;
-            }
-        }
+    endAction: async function (previewMode, widgetValue, params) {
+        const countdownEndAction = async (context) => {
+            await params.withDomMutations(this.$target, () => {
+                this.$target.attr('data-end-action', widgetValue);
+                if (widgetValue === 'message' || widgetValue === 'message_no_countdown') {
+                    if (!this.$target.find('.s_countdown_end_message').length) {
+                        const message = this.endMessage || qweb.render('website.s_countdown.end_message');
+                        this.$target.find('.container').append(message);
+                        this.$target.toggleClass('flex-row-reverse flex-row', widgetValue === 'message_no_countdown');
+                    }
+                } else {
+                    const $message = this.$target.find('.s_countdown_end_message');
+                    if ($message.length) {
+                        this.endMessage = $message[0].outerHTML;
+                    }
+                    $message.remove();
+                }
+            });
+        };
+        await this.wysiwyg.execCommand(countdownEndAction);
     },
     /**
     * Changes the countdown style.
     *
     * @see this.selectClass for parameters
     */
-    layout: function (previewMode, widgetValue, params) {
-        switch (widgetValue) {
-            case 'circle':
-                this.$target[0].dataset.progressBarStyle = 'disappear';
-                this.$target[0].dataset.progressBarWeight = 'thin';
-                this.$target[0].dataset.layoutBackground = 'none';
-                break;
-            case 'boxes':
-                this.$target[0].dataset.progressBarStyle = 'none';
-                this.$target[0].dataset.layoutBackground = 'plain';
-                break;
-            case 'clean':
-                this.$target[0].dataset.progressBarStyle = 'none';
-                this.$target[0].dataset.layoutBackground = 'none';
-                break;
-            case 'text':
-                this.$target[0].dataset.progressBarStyle = 'none';
-                this.$target[0].dataset.layoutBackground = 'none';
-                break;
-        }
-        this.$target[0].dataset.layout = widgetValue;
+    layout: async function (previewMode, widgetValue, params) {
+        this.wysiwyg.withDomMutations(this.$target, () => {
+            switch (widgetValue) {
+                case 'circle':
+                    this.$target[0].dataset.progressBarStyle = 'disappear';
+                    this.$target[0].dataset.progressBarWeight = 'thin';
+                    this.$target[0].dataset.layoutBackground = 'none';
+                    break;
+                case 'boxes':
+                    this.$target[0].dataset.progressBarStyle = 'none';
+                    this.$target[0].dataset.layoutBackground = 'plain';
+                    break;
+                case 'clean':
+                    this.$target[0].dataset.progressBarStyle = 'none';
+                    this.$target[0].dataset.layoutBackground = 'none';
+                    break;
+                case 'text':
+                    this.$target[0].dataset.progressBarStyle = 'none';
+                    this.$target[0].dataset.layoutBackground = 'none';
+                    break;
+                default:
+                    break;
+            }
+            this.$target[0].dataset.layout = widgetValue;
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -75,7 +87,7 @@ options.registry.countdown = options.Class.extend({
 
         // End Action UI
         this.$el.find('.toggle-edit-message')
-            .toggleClass('d-none', dataset.endAction !== 'message');
+            .toggleClass('d-none', dataset.endAction === 'nothing' || dataset.endAction === 'redirect');
 
         // End Message UI
         this.updateUIEndMessage();
@@ -90,6 +102,14 @@ options.registry.countdown = options.Class.extend({
             .toggleClass("d-none", !this.showEndMessage);
     },
 
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        this.$('.s_countdown_anvas_wrapper canvas').remove();
+        await this.updateChangesInWysiwyg();
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
@@ -102,6 +122,16 @@ options.registry.countdown = options.Class.extend({
             case 'endAction':
             case 'layout':
                 return this.$target[0].dataset[methodName];
+
+            case 'selectDataAttribute': {
+                if (params.colorNames) {
+                    // In this case, it is a colorpicker controlling a data
+                    // value on the countdown: the default value is determined
+                    // by the countdown public widget.
+                    params.attributeDefaultValue = CountdownWidget.prototype.defaultColor;
+                }
+                break;
+            }
         }
         return this._super(...arguments);
     },

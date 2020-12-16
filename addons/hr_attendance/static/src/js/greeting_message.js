@@ -3,6 +3,7 @@ odoo.define('hr_attendance.greeting_message', function (require) {
 
 var AbstractAction = require('web.AbstractAction');
 var core = require('web.core');
+var time = require('web.time');
 
 var _t = core._t;
 
@@ -47,7 +48,7 @@ var GreetingMessage = AbstractAction.extend({
         this.previous_attendance_change_date = action.previous_attendance_change_date && moment.utc(action.previous_attendance_change_date).local();
 
         // check in/out times displayed in the greeting message template.
-        this.format_time = 'HH:mm:ss';
+        this.format_time = time.getLangTimeFormat();
         this.attendance.check_in_time = this.attendance.check_in && this.attendance.check_in.format(this.format_time);
         this.attendance.check_out_time = this.attendance.check_out && this.attendance.check_out.format(this.format_time);
 

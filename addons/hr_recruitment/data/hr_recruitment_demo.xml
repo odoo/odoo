@@ -40,6 +40,41 @@
         <field name="no_of_recruitment">6</field>
     </record>
 
+    <record id="hr_recruitment_linkedin_developer" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_developer"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_ceo" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_ceo"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_cto" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_cto"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_consultant" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_consultant"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_hrm" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_hrm"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_marketing" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_marketing"/>
+    </record>
+
+    <record id="hr_recruitment_linkedin_trainee" model="hr.recruitment.source">
+        <field name="source_id" ref="utm.utm_source_linkedin"/>
+        <field name="job_id" ref="hr.job_trainee"/>
+    </record>
+
     <record id="hr_case_salesman0" model="hr.applicant">
         <field name="name">Sales Manager</field>
         <field name="job_id" ref="hr.job_marketing"/>
@@ -216,6 +251,7 @@
         <field name="partner_mobile">9898745745</field>
         <field name="stage_id" ref="stage_job4"/>
         <field name="partner_phone">6630125</field>
+        <field name="user_id" ref="base.user_admin"/>
     </record>
     <record id="hr_case_programmer" model="hr.applicant">
         <field name="name">Programmer</field>
@@ -223,6 +259,7 @@
         <field name="department_id" ref="hr.dep_rd"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="partner_name">Shane Williams</field>
         <field name="partner_mobile">9812398524</field>
         <field name="stage_id" ref="stage_job4"/>
@@ -235,6 +272,7 @@
         <field name="department_id" ref="hr.dep_ps"/>
         <field name="type_id" ref="degree_licenced"/>
         <field name="categ_ids" eval="[(6,0,[ref('tag_applicant_it')])]"/>
+        <field name="user_id" ref="base.user_admin"/>
         <field name="partner_name">David Billy</field>
         <field name="partner_mobile">9988774455</field>
         <field name="stage_id" ref="stage_job2"/>

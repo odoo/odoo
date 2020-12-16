@@ -15,11 +15,11 @@ odoo.define('web.test_utils_create', function (require) {
     const concurrency = require('web.concurrency');
     const config = require('web.config');
     const ControlPanel = require('web.ControlPanel');
-    const ControlPanelModel = require('web.ControlPanelModel');
     const customHooks = require('web.custom_hooks');
     const DebugManager = require('web.DebugManager.Backend');
     const dom = require('web.dom');
     const makeTestEnvironment = require('web.test_env');
+    const ActionModel = require('web/static/src/js/views/action_model.js');
     const Registry = require('web.Registry');
     const testUtilsMock = require('web.test_utils_mock');
     const Widget = require('web.Widget');
@@ -67,15 +67,23 @@ odoo.define('web.test_utils_create', function (require) {
         }
 
         params.server = mockServer;
-        Component.env = testUtilsMock.getMockedOwlEnv(params);
 
         const userContext = params.context && params.context.user_context || {};
         const actionManager = new ActionManager(widget, userContext);
+
+        // Override the ActionMenus registry unless told otherwise.
+        let actionMenusRegistry = ActionMenus.registry;
+        if (params.actionMenusRegistry !== true) {
+            ActionMenus.registry = new Registry();
+        }
 
         const originalDestroy = ActionManager.prototype.destroy;
         actionManager.destroy = function () {
             actionManager.destroy = originalDestroy;
             widget.destroy();
+            if (params.actionMenusRegistry !== true) {
+                ActionMenus.registry = actionMenusRegistry;
+            }
         };
         const fragment = document.createDocumentFragment();
         await actionManager.appendTo(fragment);
@@ -142,7 +150,7 @@ odoo.define('web.test_utils_create', function (require) {
         if (!(constructor.prototype instanceof Component)) {
             throw new Error(`Argument "constructor" must be an Owl Component.`);
         }
-        const env = Object.assign(testUtilsMock.getMockedOwlEnv(params), params.env);
+        const cleanUp = await testUtilsMock.addMockEnvironmentOwl(Component, params);
         class Parent extends Component {
             constructor() {
                 super(...arguments);
@@ -154,7 +162,6 @@ odoo.define('web.test_utils_create', function (require) {
                 }
             }
         }
-        Parent.env = env;
         Parent.template = xml`<t t-component="Component" t-props="state" t-ref="component"/>`;
         const parent = new Parent();
         await parent.mount(prepareTarget(params.debug), { position: 'first-child' });
@@ -162,6 +169,7 @@ odoo.define('web.test_utils_create', function (require) {
         const originalDestroy = child.destroy;
         child.destroy = function () {
             child.destroy = originalDestroy;
+            cleanUp();
             parent.destroy();
         };
         return child;
@@ -174,7 +182,7 @@ odoo.define('web.test_utils_create', function (require) {
      * available event handlers respectively.
      * @param {Object} [params={}]
      * @param {Object} [params.cpProps]
-     * @param {Object} [params.cpStoreConfig]
+     * @param {Object} [params.cpModelConfig]
      * @param {boolean} [params.debug]
      * @param {Object} [params.env]
      * @returns {Object} useful control panel testing elements:
@@ -184,42 +192,70 @@ odoo.define('web.test_utils_create', function (require) {
      *    available helpers)
      */
     async function createControlPanel(params = {}) {
-        const config = params.cpStoreConfig || {};
         const debug = params.debug || false;
-        const env = params.env || {};
+        const env = makeTestEnvironment(params.env || {});
         const props = Object.assign({
             action: {},
             fields: {},
         }, params.cpProps);
+        const globalConfig = Object.assign({
+            context: {},
+            domain: [],
+        }, params.cpModelConfig);
+
+        if (globalConfig.arch && globalConfig.fields) {
+            const model = "__mockmodel__";
+            const serverParams = {
+                model,
+                data: { [model]: { fields: globalConfig.fields, records: [] } },
+            };
+            const mockServer = await testUtilsMock.addMockEnvironment(
+                new Widget(),
+                serverParams,
+            );
+            const { arch, fields } = testUtilsMock.fieldsViewGet(mockServer, {
+                arch: globalConfig.arch,
+                fields: globalConfig.fields,
+                model,
+                viewOptions: { context: globalConfig.context },
+            });
+            Object.assign(globalConfig, { arch, fields });
+        }
+
+        globalConfig.env = env;
+        const archs = (globalConfig.arch && { search: globalConfig.arch, }) || {};
+        const { ControlPanel: controlPanelInfo, } = ActionModel.extractArchInfo(archs);
+        const extensions = {
+            ControlPanel: { archNodes: controlPanelInfo.children, },
+        };
 
         class Parent extends Component {
             constructor() {
                 super();
-                config.env = this.env;
-                this._controlPanelModel = new ControlPanelModel(config);
+                this.searchModel = new ActionModel(extensions, globalConfig);
                 this.state = useState(props);
                 this.controlPanel = useRef("controlPanel");
             }
             async willStart() {
-                await this._controlPanelModel.isReady;
+                await this.searchModel.load();
             }
             mounted() {
                 if (params['get-controller-query-params']) {
-                    this._controlPanelModel.on('get-controller-query-params', this,
+                    this.searchModel.on('get-controller-query-params', this,
                         params['get-controller-query-params']);
                 }
                 if (params.search) {
-                    this._controlPanelModel.on('search', this, params.search);
+                    this.searchModel.on('search', this, params.search);
                 }
             }
         }
         Parent.components = { ControlPanel };
-        Parent.env = makeTestEnvironment(env);
+        Parent.env = env;
         Parent.template = xml`
             <ControlPanel
                 t-ref="controlPanel"
                 t-props="state"
-                controlPanelModel="_controlPanelModel"
+                searchModel="searchModel"
             />`;
 
         const parent = new Parent();
@@ -231,7 +267,7 @@ odoo.define('web.test_utils_create', function (require) {
             controlPanel.destroy = destroy;
             parent.destroy();
         };
-        controlPanel.getQuery = () => parent._controlPanelModel.getQuery();
+        controlPanel.getQuery = () => parent.searchModel.get('query');
 
         return controlPanel;
     }
@@ -241,9 +277,9 @@ odoo.define('web.test_utils_create', function (require) {
      * mock method, assuming that the user has access rights, and is an admin.
      *
      * @param {Object} [params={}]
-     * @returns {DebugManager}
+     * @returns {Promise<DebugManager>}
      */
-    function createDebugManager(params = {}) {
+    async function createDebugManager(params = {}) {
         const mockRPC = params.mockRPC;
         Object.assign(params, {
             async mockRPC(route, args) {
@@ -268,7 +304,7 @@ odoo.define('web.test_utils_create', function (require) {
             },
         });
         const debugManager = new DebugManager();
-        testUtilsMock.addMockEnvironment(debugManager, params);
+        await testUtilsMock.addMockEnvironment(debugManager, params);
         return debugManager;
     }
 
@@ -280,12 +316,12 @@ odoo.define('web.test_utils_create', function (require) {
      * @param {Class} params.Model the model class to use
      * @returns {Model}
      */
-    function createModel(params) {
+    async function createModel(params) {
         const widget = new Widget();
 
-        const model = new params.Model(widget);
+        const model = new params.Model(widget, params);
 
-        testUtilsMock.addMockEnvironment(widget, params);
+        await testUtilsMock.addMockEnvironment(widget, params);
 
         // override the model's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the model and the mockServer.
@@ -304,11 +340,11 @@ odoo.define('web.test_utils_create', function (require) {
      *
      * @param {Object} params This object will be given to addMockEnvironment, so
      *   any parameters from that method applies
-     * @returns {Widget}
+     * @returns {Promise<Widget>}
      */
-    function createParent(params) {
+    async function createParent(params) {
         const widget = new Widget();
-        testUtilsMock.addMockEnvironment(widget, params);
+        await testUtilsMock.addMockEnvironment(widget, params);
         return widget;
     }
 
@@ -338,6 +374,8 @@ odoo.define('web.test_utils_create', function (require) {
      *   after this method returns
      * @param {Boolean} [params.doNotDisableAHref=false] will not preventDefault on the A elements of the view if true.
      *    Default is false.
+     * @param {Boolean} [params.touchScreen=false] will add the o_touch_device to the webclient (flag used to define a
+     *   device with a touch screen. Default value is false
      * @returns {Promise<AbstractController>} the instance of the view
      */
     async function createView(params) {
@@ -345,7 +383,7 @@ odoo.define('web.test_utils_create', function (require) {
         const widget = new Widget();
         // reproduce the DOM environment of views
         const webClient = Object.assign(document.createElement('div'), {
-            className: 'o_web_client',
+            className: params.touchScreen ? 'o_web_client o_touch_device' : 'o_web_client',
         });
         const actionManager = Object.assign(document.createElement('div'), {
             className: 'o_action_manager',
@@ -358,8 +396,6 @@ odoo.define('web.test_utils_create', function (require) {
         const viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
 
         params.server = mockServer;
-        const env = Object.assign(testUtilsMock.getMockedOwlEnv(params));
-        Component.env = env;
 
         // create the view
         const View = params.View;

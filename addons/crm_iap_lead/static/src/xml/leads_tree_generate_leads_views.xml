@@ -10,22 +10,12 @@
     <t t-extend="ListView.buttons" t-name="LeadMiningRequestListView.buttons">
         <t t-jquery="button.o_list_button_add" t-operation="after">
             <t t-call="LeadMiningRequest.generate_leads_button"/>
-            <t t-js="ctx">
-                if (window.odoo._modules.indexOf("base_import") >= 0) {
-                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
-                };
-            </t>
         </t>
     </t>
 
     <t t-extend="KanbanView.buttons" t-name="LeadMiningRequestKanbanView.buttons">
         <t t-jquery="button" t-operation="after">
             <t t-call="LeadMiningRequest.generate_leads_button"/>
-            <t t-js="ctx">
-                if (window.odoo._modules.indexOf("base_import") >= 0) {
-                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
-                };
-            </t>
         </t>
     </t>
 </templates>

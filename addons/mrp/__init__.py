@@ -5,8 +5,19 @@ from . import models
 from . import wizard
 from . import report
 from . import controller
+from . import populate
 
 from odoo import api, SUPERUSER_ID
+
+
+def _pre_init_mrp(cr):
+    """ Allow installing MRP in databases with large stock.move table (>1M records)
+        - Creating the computed+stored field stock_move.is_done is terribly slow with the ORM and
+          leads to "Out of Memory" crashes
+    """
+    cr.execute("""ALTER TABLE "stock_move" ADD COLUMN "is_done" bool;""")
+    cr.execute("""UPDATE stock_move
+                     SET is_done=COALESCE(state in ('done', 'cancel'), FALSE);""")
 
 def _create_warehouse_data(cr, registry):
     """ This hook is used to add a default manufacture_pull_id, manufacture

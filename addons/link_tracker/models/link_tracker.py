@@ -22,24 +22,46 @@ class LinkTracker(models.Model):
     _name = "link.tracker"
     _rec_name = "short_url"
     _description = "Link Tracker"
+    _order="count DESC"
     _inherit = ["utm.mixin"]
 
     # URL info
     url = fields.Char(string='Target URL', required=True)
+    absolute_url = fields.Char("Absolute URL", compute="_compute_absolute_url")
     short_url = fields.Char(string='Tracked URL', compute='_compute_short_url')
     redirected_url = fields.Char(string='Redirected URL', compute='_compute_redirected_url')
     short_url_host = fields.Char(string='Host of the short URL', compute='_compute_short_url_host')
     title = fields.Char(string='Page Title', store=True)
+    label = fields.Char(string='Button label')
     # Tracking
     link_code_ids = fields.One2many('link.tracker.code', 'link_id', string='Codes')
     code = fields.Char(string='Short URL code', compute='_compute_code')
     link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
     count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
 
+    @api.depends("url")
+    def _compute_absolute_url(self):
+        web_base_url = urls.url_parse(self.env['ir.config_parameter'].sudo().get_param('web.base.url'))
+        for tracker in self:
+            url = urls.url_parse(tracker.url)
+            if url.scheme:
+                tracker.absolute_url = tracker.url
+            else:
+                tracker.absolute_url = web_base_url.join(url).to_url()
+
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
+        if self.ids:
+            clicks_data = self.env['link.tracker.click'].read_group(
+                [('link_id', 'in', self.ids)],
+                ['link_id'],
+                ['link_id']
+            )
+            mapped_data = {m['link_id'][0]: m['link_id_count'] for m in clicks_data}
+        else:
+            mapped_data = dict()
         for tracker in self:
-            tracker.count = len(tracker.link_click_ids)
+            tracker.count = mapped_data.get(tracker.id, 0)
 
     @api.depends('code')
     def _compute_short_url(self):
@@ -89,9 +111,11 @@ class LinkTracker(models.Model):
         else:
             create_vals['url'] = tools.validate_url(vals['url'])
 
-        search_domain = []
-        for fname, value in create_vals.items():
-            search_domain.append((fname, '=', value))
+        search_domain = [
+            (fname, '=', value)
+            for fname, value in create_vals.items()
+            if fname in ['url', 'campaign_id', 'medium_id', 'source_id']
+        ]
 
         result = self.search(search_domain, limit=1)
 
@@ -121,7 +145,7 @@ class LinkTracker(models.Model):
         raise NotImplementedError('Moved on mail.render.mixin')
 
     def action_view_statistics(self):
-        action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')
+        action = self.env['ir.actions.act_window']._for_xml_id('link_tracker.link_tracker_click_action_statistics')
         action['domain'] = [('link_id', '=', self.id)]
         action['context'] = dict(self._context, create=False)
         return action
@@ -187,8 +211,12 @@ class LinkTrackerClick(models.Model):
     _rec_name = "link_id"
     _description = "Link Tracker Click"
 
-    campaign_id = fields.Many2one(string='UTM Campaign', comodel_name="utm.campaign", related="link_id.campaign_id", store=True)
-    link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
+    campaign_id = fields.Many2one(
+        'utm.campaign', 'UTM Campaign',
+        related="link_id.campaign_id", store=True)
+    link_id = fields.Many2one(
+        'link.tracker', 'Link',
+        index=True, required=True, ondelete='cascade')
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country', 'Country')
 

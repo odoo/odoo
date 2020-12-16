@@ -1,10 +1,10 @@
 odoo.define('web.GroupByMenu', function (require) {
     "use strict";
 
-    const { GROUPABLE_TYPES } = require('web.searchUtils');
-    const DropdownMenu = require('web.DropdownMenu');
     const CustomGroupByItem = require('web.CustomGroupByItem');
-    const { useModel } = require('web.model');
+    const DropdownMenu = require('web.DropdownMenu');
+    const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * 'Group by' menu
@@ -24,7 +24,7 @@ odoo.define('web.GroupByMenu', function (require) {
                 .filter(field => this._validateField(field))
                 .sort(({ string: a }, { string: b }) => a > b ? 1 : a < b ? -1 : 0);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
         }
 
         //---------------------------------------------------------------------
@@ -34,8 +34,15 @@ odoo.define('web.GroupByMenu', function (require) {
         /**
          * @override
          */
+        get icon() {
+            return FACET_ICONS.groupBy;
+        }
+
+        /**
+         * @override
+         */
         get items() {
-            return this.model.getFiltersOfType('groupBy');
+            return this.model.get('filters', f => f.type === 'groupBy');
         }
 
         /**
@@ -81,9 +88,6 @@ odoo.define('web.GroupByMenu', function (require) {
 
     GroupByMenu.components = Object.assign({}, DropdownMenu.components, {
         CustomGroupByItem,
-    });
-    GroupByMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-bars',
     });
     GroupByMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,

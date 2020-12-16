@@ -89,7 +89,7 @@ class PhoneBlackList(models.Model):
         records = self.env["phone.blacklist"].with_context(active_test=False).search([('number', 'in', numbers)])
         todo = [n for n in numbers if n not in records.mapped('number')]
         if records:
-            records.write({'active': True})
+            records.action_unarchive()
         if todo:
             records += self.create([{'number': n} for n in todo])
         return records
@@ -98,7 +98,7 @@ class PhoneBlackList(models.Model):
         records = self.remove(number)
         if reason:
             for record in records:
-                record.message_post(body=_("Unblacklisting Reason: %s" % (reason)))
+                record.message_post(body=_("Unblacklisting Reason: %s", reason))
         return records
 
     def remove(self, number):
@@ -112,7 +112,7 @@ class PhoneBlackList(models.Model):
         records = self.env["phone.blacklist"].with_context(active_test=False).search([('number', 'in', numbers)])
         todo = [n for n in numbers if n not in records.mapped('number')]
         if records:
-            records.write({'active': False})
+            records.action_archive()
         if todo:
             records += self.create([{'number': n, 'active': False} for n in todo])
         return records

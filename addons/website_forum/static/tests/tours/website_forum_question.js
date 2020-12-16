@@ -26,7 +26,7 @@ odoo.define('website_forum.tour_forum_question', function (require) {
     }, {
         content: "Click to post your question.",
         extra_trigger: "#wrap:not(:has(input[id=s2id_autogen2]:propValue('')))",
-        trigger: 'button:contains("Post Your Question")',
+        trigger: 'button:contains("Post")',
     }, {
         content: "This page contain new created question.",
         trigger: '#wrap:has(".fa-star")',
@@ -35,15 +35,37 @@ odoo.define('website_forum.tour_forum_question', function (require) {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
-    }, {
+    },
+    {
+        trigger: "a:contains(\"Answer\").collapsed",
+        content: "Click to answer.",
+        position: "bottom",
+    },
+    {
         content: "Put your answer here.",
         trigger: '.note-editable p',
-        run: 'text First Answer',
-    }, {
+        run: async () => {
+            const wysiwyg = $('.note-editable').data('wysiwyg');
+            await wysiwyg.editorHelpers.insertHtml(wysiwyg.editor, 'First Answer', $('.note-editable p')[0], 'INSIDE');
+        },
+    },
+    {
         content: "Click to post your answer.",
         extra_trigger: '.note-editable:not(:has(br))',
         trigger: 'button:contains("Post Answer")',
-    }, {
+        run: async (actions) => {
+            // There is a bug when simulating the event. As the value of the
+            // textarea of the form is contained in the wysiwyg editor, the
+            // textarea will be empty before clicking the first time. There is
+            // a handler on the form submission to fill the textarea but we need
+            // to wait for a microtask before we can get the value of the
+            // wysiwyg. Because of the microtask, the textarea will not be set
+            // on time. So we trigger another click on the next tick.
+            actions.auto();
+            setTimeout(actions.auto.bind(actions));
+        }
+    },
+     {
         content: "Close modal once modal animation is done.",
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",

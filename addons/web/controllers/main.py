@@ -18,7 +18,6 @@ import os
 import re
 import sys
 import tempfile
-import time
 
 import werkzeug
 import werkzeug.exceptions
@@ -35,11 +34,11 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, time
 from odoo import http, tools
 from odoo.http import content_disposition, dispatch_rpc, request, serialize_exception as _serialize_exception, Response
 from odoo.exceptions import AccessError, UserError, AccessDenied
@@ -297,8 +296,26 @@ def make_conditional(response, last_modified=None, etag=None, max_age=0):
         response.set_etag(etag)
     return response.make_conditional(request.httprequest)
 
+def _get_login_redirect_url(uid, redirect=None):
+    """ Decide if user requires a specific post-login redirect, e.g. for 2FA, or if they are
+    fully logged and can proceed to the requested URL
+    """
+    if request.session.uid: # fully logged
+        return redirect or '/web'
+
+    # partial session (MFA)
+    url = request.env(user=uid)['res.users'].browse(uid)._mfa_url()
+    if not redirect:
+        return url
+
+    parsed = werkzeug.urls.url_parse(url)
+    qs = parsed.decode_query()
+    qs['redirect'] = redirect
+    return parsed.replace(query=werkzeug.urls.url_encode(qs)).to_url()
+
 def login_and_redirect(db, login, key, redirect_url='/web'):
-    request.session.authenticate(db, login, key)
+    uid = request.session.authenticate(db, login, key)
+    redirect_url = _get_login_redirect_url(uid, redirect_url)
     return set_cookie_and_redirect(redirect_url)
 
 def set_cookie_and_redirect(redirect_url):
@@ -306,12 +323,31 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def clean_action(action):
-    action.setdefault('flags', {})
+def clean_action(action, env):
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
-        return fix_view_modes(action)
-    return action
+        action = fix_view_modes(action)
+
+    # When returning an action, keep only relevant fields/properties
+    readable_fields = env[action['type']]._get_readable_fields()
+    action_type_fields = env[action['type']]._fields.keys()
+
+    cleaned_action = {
+        field: value
+        for field, value in action.items()
+        # keep allowed fields and custom properties fields
+        if field in readable_fields or field not in action_type_fields
+    }
+
+    # Warn about custom properties fields, because use is discouraged
+    action_name = action.get('name') or action
+    custom_properties = action.keys() - readable_fields - action_type_fields
+    if custom_properties:
+        _logger.warning("Action %r contains custom properties %s. Passing them "
+            "via the `params` or `context` properties is recommended instead",
+            action_name, ', '.join(map(repr, custom_properties)))
+
+    return cleaned_action
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
@@ -773,11 +809,11 @@ class ExportXlsxWriter:
                 # fails note that you can't export
                 cell_value = pycompat.to_text(cell_value)
             except UnicodeDecodeError:
-                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % self.field_names[column])
+                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column])
 
         if isinstance(cell_value, str):
             if len(cell_value) > self.worksheet.xls_strmax:
-                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.") % self.worksheet.xls_strmax
+                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.", self.worksheet.xls_strmax)
             else:
                 cell_value = cell_value.replace("\r", " ")
         elif isinstance(cell_value, datetime.datetime):
@@ -820,6 +856,10 @@ class GroupExportXlsxWriter(ExportXlsxWriter):
         for field in self.fields[1:]: # No aggregates allowed in the first column because of the group title
             column += 1
             aggregated_value = aggregates.get(field['name'])
+            # Non-stored float fields may not be displayed properly because of float representation
+            # => we force 2 digits
+            if not field.get('store') and isinstance(aggregated_value, float):
+                aggregated_value = float_repr(aggregated_value, 2)
             self.write(row, column, str(aggregated_value if aggregated_value is not None else ''), self.header_bold_style)
         return row + 1, 0
 
@@ -869,7 +909,7 @@ class Home(http.Controller):
         return response
 
     def _login_redirect(self, uid, redirect=None):
-        return redirect if redirect else '/web'
+        return _get_login_redirect_url(uid, redirect)
 
     @http.route('/web/login', type='http', auth="none")
     def web_login(self, redirect=None, **kw):
@@ -901,7 +941,7 @@ class Home(http.Controller):
                     values['error'] = e.args[0]
         else:
             if 'error' in request.params and request.params.get('error') == 'access':
-                values['error'] = _('Only employee can access this database. Please contact the administrator.')
+                values['error'] = _('Only employees can access this database. Please contact the administrator.')
 
         if 'login' not in values and request.session.get('auth_login'):
             values['login'] = request.session.get('auth_login')
@@ -918,7 +958,8 @@ class Home(http.Controller):
         uid = request.env.user.id
         if request.env.user._is_system():
             uid = request.session.uid = odoo.SUPERUSER_ID
-            request.env['res.users']._invalidate_session_cache()
+            # invalidate session token cache as we've changed the uid
+            request.env['res.users'].clear_caches()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
         return http.local_redirect(self._login_redirect(uid), keep_hash=True)
@@ -1085,6 +1126,9 @@ class Database(http.Controller):
 
     @http.route('/web/database/create', type='http', auth="none", methods=['POST'], csrf=False)
     def create(self, master_pwd, name, lang, password, **post):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
@@ -1099,6 +1143,9 @@ class Database(http.Controller):
 
     @http.route('/web/database/duplicate', type='http', auth="none", methods=['POST'], csrf=False)
     def duplicate(self, master_pwd, name, new_name):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             if not re.match(DBNAME_PATTERN, new_name):
                 raise Exception(_('Invalid database name. Only alphanumerical characters, underscore, hyphen and dot are allowed.'))
@@ -1111,6 +1158,9 @@ class Database(http.Controller):
 
     @http.route('/web/database/drop', type='http', auth="none", methods=['POST'], csrf=False)
     def drop(self, master_pwd, name):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             dispatch_rpc('db','drop', [master_pwd, name])
             request._cr = None  # dropping a database leads to an unusable cursor
@@ -1121,6 +1171,9 @@ class Database(http.Controller):
 
     @http.route('/web/database/backup', type='http', auth="none", methods=['POST'], csrf=False)
     def backup(self, master_pwd, name, backup_format = 'zip'):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             odoo.service.db.check_super(master_pwd)
             ts = datetime.datetime.utcnow().strftime("%Y-%m-%d_%H-%M-%S")
@@ -1139,6 +1192,9 @@ class Database(http.Controller):
 
     @http.route('/web/database/restore', type='http', auth="none", methods=['POST'], csrf=False)
     def restore(self, master_pwd, backup_file, name, copy=False):
+        insecure = odoo.tools.config.verify_admin_password('admin')
+        if insecure and master_pwd:
+            dispatch_rpc('db', 'change_admin_password', ["admin", master_pwd])
         try:
             data_file = None
             db.check_super(master_pwd)
@@ -1198,12 +1254,12 @@ class Session(http.Controller):
         try:
             if request.env['res.users'].change_password(old_password, new_password):
                 return {'new_password':new_password}
-        except UserError as e:
-            msg = e.name
         except AccessDenied as e:
             msg = e.args[0]
             if msg == AccessDenied().args[0]:
                 msg = _('The old password you provided is incorrect, your password was not changed.')
+        except UserError as e:
+            msg = e.args[0]
         return {'title': _('Change Password'), 'error': msg}
 
     @http.route('/web/session/get_lang_list', type='json', auth="none")
@@ -1323,7 +1379,7 @@ class DataSet(http.Controller):
     def call_button(self, model, method, args, kwargs):
         action = self._call_kw(model, method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':
-            return clean_action(action)
+            return clean_action(action, env=request.env)
         return False
 
     @http.route('/web/dataset/resequence', type='json', auth="user")
@@ -1504,7 +1560,7 @@ class Binary(http.Controller):
         try:
             data = ufile.read()
             args = [len(data), ufile.filename,
-                    ufile.content_type, base64.b64encode(data)]
+                    ufile.content_type, pycompat.to_text(base64.b64encode(data))]
         except Exception as e:
             args = [False, str(e)]
         return out % (json.dumps(callback), json.dumps(args)) if callback else json.dumps(args)
@@ -1629,7 +1685,7 @@ class Binary(http.Controller):
         else:
             current_dir = os.path.dirname(os.path.abspath(__file__))
             fonts_directory = os.path.join(current_dir, '..', 'static', 'src', 'fonts', 'sign')
-            font_filenames = sorted(os.listdir(fonts_directory))
+            font_filenames = sorted([fn for fn in os.listdir(fonts_directory) if fn.endswith(('.ttf', '.otf', '.woff', '.woff2'))])
 
             for filename in font_filenames:
                 font_file = open(os.path.join(fonts_directory, filename), 'rb')
@@ -1653,7 +1709,7 @@ class Action(http.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.browse([action_id]).read(['type'])
+        base_action = Actions.browse([action_id]).sudo().read(['type'])
         if base_action:
             ctx = dict(request.context)
             action_type = base_action[0]['type']
@@ -1662,15 +1718,16 @@ class Action(http.Controller):
             if additional_context:
                 ctx.update(additional_context)
             request.context = ctx
-            action = request.env[action_type].browse([action_id]).read()
+            action = request.env[action_type].sudo().browse([action_id]).read()
             if action:
-                value = clean_action(action[0])
+                value = clean_action(action[0], env=request.env)
         return value
 
     @http.route('/web/action/run', type='json', auth="user")
     def run(self, action_id):
-        result = request.env['ir.actions.server'].browse([action_id]).run()
-        return clean_action(result) if result else False
+        action = request.env['ir.actions.server'].browse([action_id])
+        result = action.run()
+        return clean_action(result, env=action.env) if result else False
 
 class Export(http.Controller):
 
@@ -1848,13 +1905,16 @@ class ExportFormat(object):
         model, fields, ids, domain, import_compat = \
             operator.itemgetter('model', 'fields', 'ids', 'domain', 'import_compat')(params)
 
+        Model = request.env[model].with_context(**params.get('context', {}))
+        if not Model._is_an_ordinary_table():
+            fields = [field for field in fields if field['name'] != 'id']
+
         field_names = [f['name'] for f in fields]
         if import_compat:
             columns_headers = field_names
         else:
             columns_headers = [val['label'].strip() for val in fields]
 
-        Model = request.env[model].with_context(**params.get('context', {}))
         groupby = params.get('groupby')
         if not import_compat and groupby:
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
@@ -1872,11 +1932,9 @@ class ExportFormat(object):
             Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
 
-            if not Model._is_an_ordinary_table():
-                fields = [field for field in fields if field['name'] != 'id']
-
             export_data = records.export_data(field_names).get('datas',[])
             response_data = self.from_data(columns_headers, export_data)
+
         return request.make_response(response_data,
             headers=[('Content-Disposition',
                             content_disposition(self.filename(model))),
@@ -1944,6 +2002,8 @@ class ExcelExport(ExportFormat, http.Controller):
         with ExportXlsxWriter(fields, len(rows)) as xlsx_writer:
             for row_index, row in enumerate(rows):
                 for cell_index, cell_value in enumerate(row):
+                    if isinstance(cell_value, (list, tuple)):
+                        cell_value = pycompat.to_text(cell_value)
                     xlsx_writer.write_cell(row_index + 1, cell_index, cell_value)
 
         return xlsx_writer.value
@@ -1974,14 +2034,14 @@ class ReportController(http.Controller):
                 del data['context']['lang']
             context.update(data['context'])
         if converter == 'html':
-            html = report.with_context(context).render_qweb_html(docids, data=data)[0]
+            html = report.with_context(context)._render_qweb_html(docids, data=data)[0]
             return request.make_response(html)
         elif converter == 'pdf':
-            pdf = report.with_context(context).render_qweb_pdf(docids, data=data)[0]
+            pdf = report.with_context(context)._render_qweb_pdf(docids, data=data)[0]
             pdfhttpheaders = [('Content-Type', 'application/pdf'), ('Content-Length', len(pdf))]
             return request.make_response(pdf, headers=pdfhttpheaders)
         elif converter == 'text':
-            text = report.with_context(context).render_qweb_text(docids, data=data)[0]
+            text = report.with_context(context)._render_qweb_text(docids, data=data)[0]
             texthttpheaders = [('Content-Type', 'text/plain'), ('Content-Length', len(text))]
             return request.make_response(text, headers=texthttpheaders)
         else:
@@ -2028,6 +2088,7 @@ class ReportController(http.Controller):
         """
         requestcontent = json.loads(data)
         url, type = requestcontent[0], requestcontent[1]
+        reportname = '???'
         try:
             if type in ['qweb-pdf', 'qweb-text']:
                 converter = 'pdf' if type == 'qweb-pdf' else 'text'
@@ -2066,6 +2127,7 @@ class ReportController(http.Controller):
             else:
                 return
         except Exception as e:
+            _logger.exception("Error while generating report %s", reportname)
             se = _serialize_exception(e)
             error = {
                 'code': 200,

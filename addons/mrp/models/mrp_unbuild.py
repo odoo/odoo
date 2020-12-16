@@ -41,11 +41,12 @@ class MrpUnbuild(models.Model):
             ('company_id', '=', False)
         ]
 """,
-        required=True, states={'done': [('readonly', True)]}, check_company=True)
+        states={'done': [('readonly', True)]}, check_company=True)
     mo_id = fields.Many2one(
         'mrp.production', 'Manufacturing Order',
         domain="[('id', 'in', allowed_mo_ids)]",
         states={'done': [('readonly', True)]}, check_company=True)
+    mo_bom_id = fields.Many2one('mrp.bom', 'Bill of Material used on the Production Order', related='mo_id.bom_id')
     lot_id = fields.Many2one(
         'stock.production.lot', 'Lot/Serial Number',
         domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]", check_company=True,
@@ -96,8 +97,10 @@ class MrpUnbuild(models.Model):
     def _onchange_company_id(self):
         if self.company_id:
             warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
-            self.location_id = warehouse.lot_stock_id
-            self.location_dest_id = warehouse.lot_stock_id
+            if self.location_id.company_id != self.company_id:
+                self.location_id = warehouse.lot_stock_id
+            if self.location_dest_id.company_id != self.company_id:
+                self.location_dest_id = warehouse.lot_stock_id
         else:
             self.location_id = False
             self.location_dest_id = False
@@ -121,8 +124,9 @@ class MrpUnbuild(models.Model):
 
     @api.constrains('product_qty')
     def _check_qty(self):
-        if self.product_qty <= 0:
-            raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
+        for unbuild in self:
+            if unbuild.product_qty <= 0:
+                raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
 
     @api.model
     def create(self, vals):
@@ -130,10 +134,10 @@ class MrpUnbuild(models.Model):
             vals['name'] = self.env['ir.sequence'].next_by_code('mrp.unbuild') or _('New')
         return super(MrpUnbuild, self).create(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
         if 'done' in self.mapped('state'):
             raise UserError(_("You cannot delete an unbuild order if the state is 'Done'."))
-        return super(MrpUnbuild, self).unlink()
 
     def action_unbuild(self):
         self.ensure_one()
@@ -178,10 +182,10 @@ class MrpUnbuild(models.Model):
             if move.has_tracking != 'none':
                 original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
                 original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
-                needed_quantity = move.product_qty
+                needed_quantity = move.product_uom_qty
                 moves_lines = original_move.mapped('move_line_ids')
                 if move in produce_moves and self.lot_id:
-                    moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.lot_produced_ids)
+                    moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.produce_line_ids.lot_id)  # FIXME sle: double check with arm
                 for move_line in moves_lines:
                     # Iterate over all move_lines until we unbuilded the correct quantity.
                     taken_quantity = min(needed_quantity, move_line.qty_done)
@@ -204,7 +208,12 @@ class MrpUnbuild(models.Model):
         produce_moves._action_done()
         produced_move_line_ids = produce_moves.mapped('move_line_ids').filtered(lambda ml: ml.qty_done > 0)
         consume_moves.mapped('move_line_ids').write({'produce_line_ids': [(6, 0, produced_move_line_ids.ids)]})
-
+        if self.mo_id:
+            unbuild_msg = _(
+                "%s %s unbuilt in", self.product_qty, self.product_uom_id.name) + " <a href=# data-oe-model=mrp.unbuild data-oe-id=%d>%s</a>" % (self.id, self.display_name)
+            self.mo_id.message_post(
+                body=unbuild_msg,
+                subtype_id=self.env.ref('mail.mt_note').id)
         return self.write({'state': 'done'})
 
     def _generate_consume_moves(self):

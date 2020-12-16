@@ -10,6 +10,8 @@ odoo.define('website_slides.quiz', function (require) {
     var QuestionFormWidget = require('website_slides.quiz.question.form');
     var SlideQuizFinishModal = require('website_slides.quiz.finish');
 
+    var SlideEnrollDialog = require('website_slides.course.enroll').slideEnrollDialog;
+
     var QWeb = core.qweb;
     var _t = core._t;
 
@@ -26,7 +28,10 @@ odoo.define('website_slides.quiz', function (require) {
      */
     var Quiz = publicWidget.Widget.extend({
         template: 'slide.slide.quiz',
-        xmlDependencies: ['/website_slides/static/src/xml/slide_quiz.xml'],
+        xmlDependencies: [
+            '/website_slides/static/src/xml/slide_quiz.xml',
+            '/website_slides/static/src/xml/slide_course_join.xml'
+        ],
         events: {
             "click .o_wslides_quiz_answer": '_onAnswerClick',
             "click .o_wslides_js_lesson_quiz_submit": '_submitQuiz',
@@ -36,6 +41,7 @@ odoo.define('website_slides.quiz', function (require) {
             'click .o_wslides_js_quiz_add': '_onCreateQuizClick',
             'click .o_wslides_js_quiz_edit_question': '_onEditQuestionClick',
             'click .o_wslides_js_quiz_delete_question': '_onDeleteQuestionClick',
+            'click .o_wslides_js_channel_enroll': '_onSendRequestToResponsibleClick',
         },
 
         custom_events: {
@@ -121,7 +127,6 @@ odoo.define('website_slides.quiz', function (require) {
 
             this.displayNotification({
                 type: 'warning',
-                title: _t('Quiz validation error'),
                 message: message,
                 sticky: true
             });
@@ -532,6 +537,20 @@ odoo.define('website_slides.quiz', function (require) {
         },
 
         /**
+         * Handler for the contact responsible link below a Quiz
+         * @param ev
+         * @private
+         */
+        _onSendRequestToResponsibleClick: function(ev) {
+            ev.preventDefault();
+            var channelId = $(ev.currentTarget).data('channelId');
+            new SlideEnrollDialog(this, {
+                channelId: channelId,
+                $element: $(ev.currentTarget).closest('.alert.alert-info')
+            }).open();
+        },
+
+        /**
          * Displays the created Question at the correct place (after the last question or
          * at the first place if there is no questions yet) It also displays the 'Add Question'
          * button or open a new QuestionFormWidget if the user wants to immediately add another one.
@@ -548,11 +567,7 @@ odoo.define('website_slides.quiz', function (require) {
             }
             this.quiz.questionsCount++;
             event.data.questionFormWidget.destroy();
-            if (event.data.save_and_new) {
-                this._onCreateQuizClick();
-            } else {
-                this.$('.o_wslides_js_quiz_add_question').removeClass('d-none');
-            }
+            this.$('.o_wslides_js_quiz_add_question').removeClass('d-none');
         },
 
         /**
@@ -718,6 +733,7 @@ odoo.define('website_slides.quiz', function (require) {
             return {
                 channelId: slideData.channelId,
                 channelEnroll: slideData.channelEnroll,
+                channelRequestedAccess: slideData.channelRequestedAccess || false,
                 signupAllowed: slideData.signupAllowed
             };
         },

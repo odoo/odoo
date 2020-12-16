@@ -71,9 +71,6 @@ Running the server
     Enable screencasts and specify directory where to write screencasts files.
     The ``ffmpeg`` utility needs to be installed to encode frames into a video
     file. Otherwise frames will be kept instead of the video file.
-    
-    ``1``, ``t`` or ``true`` can be used to use the same directory as the above
-    mentioned ``--screenshots`` option.
 
 .. _reference/cmdline/server/database:
 
@@ -539,6 +536,10 @@ starting requirements are.
 
 Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
 
+.. code-block:: console
+
+    $ odoo_bin scaffold my_module /addons/
+
 .. option:: name (required)
 
     the name of the module to create, may munged in various manners to
@@ -554,8 +555,191 @@ Scaffolding is available via the :command:`odoo-bin scaffold` subcommand.
     a template directory, files are passed through jinja2_ then copied to
     the ``destination`` directory
 
-.. code-block:: console
-
-    $ odoo_bin scaffold my_module /addons/
 
 This will create module *my_module* in directory */addons/*.
+
+.. _reference/cmdline/populate:
+
+Database Population
+===================
+
+.. program:: odoo-bin populate
+
+Odoo CLI supports database population features. If the feature is
+:ref:`implemented on a given model <reference/testing/populate/methods>`, it allows automatic data
+generation of the model's records to test your modules in databases containing non-trivial amounts of records.
+
+.. code-block:: console
+
+    $ odoo_bin populate
+
+.. option:: --models
+
+    list of models for which the database should be filled
+
+.. option:: --size (small|medium|large)
+
+    population size, the actual records number depends on the model's `_populate_sizes` attribute.
+    The generated records content is specified by the :meth:`~odoo.models._populate_factories` method
+    of a given model (cf. the :file:`populate` folder of modules for further details).
+
+.. seealso::
+
+    :ref:`reference/testing/populate`
+
+
+Cloc
+====
+
+.. program:: odoo-bin cloc
+
+Odoo Cloc is a tool to count the number of relevant lines written in
+Python, Javascript or XML. This can be used as a rough metric for pricing
+maintenance of extra modules.
+
+Command-line options
+--------------------
+.. option:: -d <database>, --database <database>
+
+| Process the code of all extra modules installed on the provided database,
+  and of all server actions and computed fields manually created in the provided
+  database.
+| The :option:`--addons-path` option is required to specify the path(s) to the
+  module folder(s).
+| If combined with :option:`--path`, the count will be that of the sum of both
+  options' results (with possible overlaps). At least one of these two options is
+  required to specify which code to process.
+
+.. code-block:: console
+
+   $ odoo-bin cloc --addons-path=addons -d my_database
+
+.. seealso::
+   - :ref:`reference/cmdline/cloc/database-option`
+
+
+.. option:: -p <path>, --path <path>
+
+| Process the files in the provided path.
+| If combined with :option:`--database`, the count will be that of the sum of both
+  options' results (with possible overlaps). At least one of these two options is
+  required to specify which code to process.
+
+.. code-block:: console
+
+   $ odoo-bin cloc -p addons/account
+
+
+Multiple paths can be provided by repeating the option.
+
+.. code-block:: console
+
+   $ odoo-bin cloc -p addons/account -p addons/sale
+
+.. seealso::
+   - :ref:`reference/cmdline/cloc/path-option`
+
+
+.. option:: --addons-path <directories>
+
+| Comma-separated list of directories in which modules are stored. These directories
+  are scanned for modules.
+| Required if the :option:`--database` option is used.
+
+
+.. option:: -c <directories>
+
+Specify a configuration file to use in place of the :option:`--addons-path` option.
+
+.. code-block:: console
+
+    $ odoo-bin cloc -c config.conf -d my_database
+
+
+.. option:: -v, --verbose
+
+Show the details of lines counted for each file.
+
+
+Processed files
+---------------
+
+.. _reference/cmdline/cloc/database-option:
+
+With the :option:`--database` option
+''''''''''''''''''''''''''''''''''''
+
+Odoo Cloc counts the lines in each file of extra installed modules in a
+given database. In addition, it counts the Python lines of server actions and
+custom computed fields that have been directly created in the database or
+imported.
+
+Some files are excluded from the count by default:
+
+- The manifest (:file:`__manifest__.py` or :file:`__openerp__.py`)
+- The contents of the folder :file:`static/lib`
+- The tests defined in the folder :file:`tests` and :file:`static/tests`
+- The migrations scripts defined in the folder :file:`migrations`
+- The XML files declared in the ``demo`` or ``demo_xml`` sections of the manifest
+
+For special cases, a list of files that should be ignored by Odoo Cloc can be defined
+per module. This is specified by the ``cloc_exclude`` entry of the manifest:
+
+.. code-block:: python
+
+    "cloc_exclude": [
+        "lib/common.py", # exclude a single file
+        "data/*.xml",    # exclude all XML files in a specific folder
+        "example/**/*",  # exclude all files in a folder hierarchy recursively
+    ]
+
+| The pattern ``**/*`` can be used to ignore an entire module. This can be useful
+  to exclude a module from maintenance service costs.
+| For more information about the pattern syntax, see `glob
+  <https://docs.python.org/3/library/pathlib.html#pathlib.Path.glob>`_.
+
+
+
+.. _reference/cmdline/cloc/path-option:
+
+With the :option:`--path` option
+''''''''''''''''''''''''''''''''
+
+This method works the same as with the :ref:`--database option
+<reference/cmdline/cloc/database-option>` if a manifest file is present in the given
+folder. Otherwise, it counts all files.
+
+
+Identifying Extra Modules
+-------------------------
+
+To distinguish between standard and extra modules, Odoo Cloc uses the following heuristic:
+modules that are located (real file system path, after following symbolic links)
+in the same parent directory as the ``base``, ``web`` or ``web_enterprise``
+standard modules are considered standard. Other modules are treated as extra modules.
+
+
+Error Handling
+--------------
+
+Some file cannot be counted by Odoo Cloc.
+Those file are reported at the end of the output.
+
+Max file size exceeded
+''''''''''''''''''''''
+
+Odoo Cloc rejects any file larger than 25MB. Usually, source files are smaller
+than 1 MB. If a file is rejected, it may be:
+
+- A generated XML file that contains lots of data. It should be excluded in the manifest.
+- A JavaScript library that should be placed in the :file:`static/lib` folder.
+
+Syntax Error
+''''''''''''
+
+Odoo Cloc cannot count the lines of code of a Python file with a syntax problem.
+If an extra module contains such files, they should be fixed to allow the module to
+load. If the module works despite the presence of those files, they are probably
+not loaded and should therefore be removed from the module, or at least excluded
+in the manifest via ``cloc_exclude``.
+

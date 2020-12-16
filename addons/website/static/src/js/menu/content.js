@@ -25,6 +25,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         'click input#visibility_password': '_onPasswordClicked',
         'change input#visibility_password': '_onPasswordChanged',
         'change select#visibility': '_onVisibilityChanged',
+        'error.datetimepicker': '_onDateTimePickerError',
     }),
 
     /**
@@ -37,7 +38,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         var length_url = serverUrl.length;
         var serverUrlTrunc = serverUrl;
         if (length_url > 30) {
-            serverUrlTrunc = serverUrl.slice(0,14) + '..' + serverUrl.slice(-14);
+            serverUrlTrunc = serverUrl.slice(0, 14) + '..' + serverUrl.slice(-14);
         }
         this.serverUrl = serverUrl;
         this.serverUrlTrunc = serverUrlTrunc;
@@ -95,6 +96,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             args: [this.page_id],
         }).then(function (page) {
             page.url = _.str.startsWith(page.url, '/') ? page.url.substring(1) : page.url;
+            page.hasSingleGroup = page.group_id !== undefined;
             self.page = page;
         }));
 
@@ -115,9 +117,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             this.$('.show_visibility_password').addClass('d-none');
         }
         if (this.page.visibility !== 'restricted_group') {
-            this.$('.show_visibility_group').addClass('d-none');
+            this.$('.show_group_id').addClass('d-none');
         }
-        this.autocompleteWithGroups(this.$('#visibility_group'));
+        this.autocompleteWithGroups(this.$('#group_id'));
 
         defs.push(this._getPageDependencies(this.page_id)
         .then(function (dependencies) {
@@ -128,7 +130,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                 }
             });
             dep_text = dep_text.join(', ');
-            self.$('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', { dependencies: dependencies, dep_text: dep_text }));
+            self.$('#dependencies_redirect').html(qweb.render('website.show_page_dependencies', {dependencies: dependencies, dep_text: dep_text}));
             self.$('#dependencies_redirect [data-toggle="popover"]').popover({
                 container: 'body',
             });
@@ -164,10 +166,10 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                   }));
 
         var datepickersOptions = {
-            minDate: moment({y: 1900}),
+            minDate: moment({ y: 1000 }),
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
-            icons : {
+            icons: {
                 time: 'fa fa-clock-o',
                 date: 'fa fa-calendar',
                 next: 'fa fa-chevron-right',
@@ -175,9 +177,9 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
                 up: 'fa fa-chevron-up',
                 down: 'fa fa-chevron-down',
             },
-            locale : moment.locale(),
-            format : time.getLangDatetimeFormat(),
-            widgetPositioning : {
+            locale: moment.locale(),
+            format: time.getLangDatetimeFormat(),
+            widgetPositioning: {
                 horizontal: 'auto',
                 vertical: 'top',
             },
@@ -236,9 +238,11 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
             redirect_type: this.$('#redirect_type').val(),
             website_indexed: this.$('#is_indexed').prop('checked'),
             visibility: this.$('#visibility').val(),
-            visibility_group: this.$('#visibility').val() === 'restricted_group' ? this.$('#visibility_group').data('group-id') : false,
             date_publish: datePublish,
         };
+        if (this.page.hasSingleGroup && this.$('#visibility').val() === 'restricted_group') {
+            params['group_id'] = this.$('#group_id').data('group-id');
+        }
         if (this.$('#visibility').val() === 'password') {
             var field_pwd = $('#visibility_password');
             if (!field_pwd.get(0).reportValidity()) {
@@ -345,8 +349,7 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
         var datetime = moment(value, time.getLangDatetimeFormat(), true);
         if (datetime.isValid()) {
             return time.datetime_to_str(datetime.toDate());
-        }
-        else {
+        } else {
             return false;
         }
     },
@@ -418,8 +421,16 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
      */
     _onVisibilityChanged: function (ev) {
         this.$('.show_visibility_password').toggleClass('d-none', ev.target.value !== 'password');
-        this.$('.show_visibility_group').toggleClass('d-none', ev.target.value !== 'restricted_group');
+        this.$('.show_group_id').toggleClass('d-none', ev.target.value !== 'restricted_group');
         this.$('#visibility_password').attr('required', ev.target.value === 'password');
+    },
+    /**
+     * Library clears the wrong date format so just ignore error
+     *
+     * @private
+     */
+    _onDateTimePickerError: function (ev) {
+        return false;
     },
     /**
      * @private
@@ -427,7 +438,8 @@ var PagePropertiesDialog = weWidgets.Dialog.extend({
     _onPasswordClicked: function (ev) {
         ev.target.value = '';
         this._onPasswordChanged();
-    },    /**
+    },
+    /**
      * @private
      */
     _onPasswordChanged: function () {
@@ -443,16 +455,14 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
     /**
      * @constructor
      */
-    init: function (parent, options, editable, data) {
+    init: function (parent, options) {
+        const props = _.extend({
+            needLabel: true,
+        }, options.props);
+
         this._super(parent, _.extend({
             title: _t("Add a menu item"),
-        }, options || {}), editable, _.extend({
-            needLabel: true,
-            text: data.name || '',
-            isNewWindow: data.new_window,
-        }, data || {}));
-
-        this.menuType = data.menuType;
+        }, options || {}, { props: props }));
     },
     /**
      * @override
@@ -468,7 +478,7 @@ var MenuEntryDialog = weWidgets.LinkDialog.extend({
         this.$('label[for="o_link_dialog_label_input"]').text(_t("Menu Label"));
 
         // Auto add '#' URL and hide the input if for mega menu
-        if (this.menuType === 'mega') {
+        if (this.props.menuType === 'mega') {
             var $url = this.$('input[name="url"]');
             $url.val('#').trigger('change');
             $url.closest('.form-group').addClass('d-none');
@@ -674,8 +684,8 @@ var EditMenuDialog = weWidgets.Dialog.extend({
      */
     _onAddMenuButtonClick: function (ev) {
         var menuType = ev.currentTarget.dataset.type;
-        var dialog = new MenuEntryDialog(this, {}, null, {
-            menuType: menuType,
+        var dialog = new MenuEntryDialog(this, {
+            props: { menuType: menuType },
         });
         dialog.on('save', this, link => {
             var newMenu = {
@@ -722,9 +732,12 @@ var EditMenuDialog = weWidgets.Dialog.extend({
         var menuID = $menu.data('menu-id');
         var menu = this.flat[menuID];
         if (menu) {
-            var dialog = new MenuEntryDialog(this, {}, null, _.extend({
+            const props = _.extend({
                 menuType: menu.fields['is_mega_menu'] ? 'mega' : undefined,
-            }, menu.fields));
+            }, menu.fields);
+            props.text = props.name;
+            props.isNewWindow = props.new_window;
+            const dialog = new MenuEntryDialog(this, { props: props });
             dialog.on('save', this, link => {
                 _.extend(menu.fields, {
                     'name': link.text,
@@ -767,11 +780,11 @@ var PageOption = Class.extend({
      * @param {*} [value]
      *        by default: consider the current value is a boolean and toggle it
      */
-    setValue: function (value) {
+    setValue: async function (value, wysiwyg) {
         if (value === undefined) {
             value = !this.value;
         }
-        this.setValueCallback.call(this, value);
+        await this.setValueCallback.call(this, value, wysiwyg);
         this.value = value;
         this.isDirty = true;
     },
@@ -787,12 +800,26 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         toggle_page_option: '_togglePageOption',
     }),
     pageOptionsSetValueCallbacks: {
-        header_overlay: function (value) {
-            $('#wrapwrap').toggleClass('o_header_overlay', value);
+        header_overlay: async function (value, wysiwyg) {
+            const $wrapwrap = $('#wrapwrap');
+            wysiwyg = wysiwyg || $wrapwrap.data('wysiwyg');
+            await wysiwyg.withDomMutations($wrapwrap, () => {
+                $wrapwrap.toggleClass('o_header_overlay', !!value);
+            });
         },
-        header_color: function (value) {
-            $('#wrapwrap > header').removeClass(this.value)
-                                   .addClass(value);
+        header_color: async function (value, wysiwyg) {
+            const $wrapwrap = $('#wrapwrap');
+            wysiwyg = wysiwyg || $wrapwrap.data('wysiwyg');
+            const ContentMenuHeaderColor = async (context) => {
+                $wrapwrap.find('>header').removeClass(this.value).addClass(value);
+            };
+            await wysiwyg.withDomMutations($wrapwrap, ContentMenuHeaderColor);
+        },
+        header_visible: function (value) {
+            $('#wrapwrap > header').toggleClass('d-none o_snippet_invisible', !value);
+        },
+        footer_visible: function (value) {
+            $('#wrapwrap > footer').toggleClass('d-none o_snippet_invisible', !value);
         },
     },
 
@@ -905,6 +932,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                 return self._togglePageOption({
                     name: optionName,
                     value: option.value,
+                    wysiwyg: option.wysiwyg,
                 }, true, true);
             }
         });
@@ -937,7 +965,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @param {boolean} [noReload=false]
      * @returns {Promise}
      */
-    _togglePageOption: function (params, forceSave, noReload) {
+    _togglePageOption: async function (params, forceSave, noReload) {
         // First check it is a website page
         var mo;
         this.trigger_up('main_object_request', {
@@ -956,7 +984,7 @@ var ContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         }
 
         // Toggle the value
-        option.setValue(params.value);
+        await option.setValue(params.value, params.wysiwyg);
 
         // If simulate is true, it means we want the option to be toggled but
         // not saved on the server yet
@@ -1015,7 +1043,7 @@ var PageManagement = Widget.extend({
 
     _onPagePropertiesButtonClick: function (ev) {
         var moID = $(ev.currentTarget).data('id');
-        var dialog = new PagePropertiesDialog(this,moID, {'fromPageManagement': true}).open();
+        var dialog = new PagePropertiesDialog(this, moID, {'fromPageManagement': true}).open();
         return dialog;
     },
     _onClonePageButtonClick: function (ev) {
@@ -1083,7 +1111,7 @@ function _clonePage(pageId) {
             title: _t("Duplicate Page"),
             $content: $(qweb.render('website.duplicate_page_action_dialog')),
             confirm_callback: function () {
-                var new_page_name =  this.$('#page_name').val();
+                var new_page_name = this.$('#page_name').val();
                 return self._rpc({
                     model: 'website.page',
                     method: 'clone_page',

@@ -8,6 +8,7 @@ from odoo.tools import mute_logger
 
 
 class TestCertificationBadge(common.TestSurveyCommon):
+
     def setUp(self):
         super(TestCertificationBadge, self).setUp()
         self.certification_survey = self.env['survey.survey'].with_user(self.survey_manager).create({
@@ -30,24 +31,39 @@ class TestCertificationBadge(common.TestSurveyCommon):
 
         self.certification_badge = self.env['gamification.badge'].with_user(self.survey_manager).create({
             'name': self.certification_survey.title,
-            'description': 'Congratulation, you succeeded this certification',
+            'description': 'Congratulations, you have succeeded this certification',
             'rule_auth': 'nobody',
             'level': None,
         })
 
         self.certification_badge_2 = self.env['gamification.badge'].with_user(self.survey_manager).create({
             'name': self.certification_survey.title + ' 2',
-            'description': 'Congratulation, you succeeded this certification',
+            'description': 'Congratulations, you have succeeded this certification',
             'rule_auth': 'nobody',
             'level': None,
         })
 
         self.certification_badge_3 = self.env['gamification.badge'].with_user(self.survey_manager).create({
             'name': self.certification_survey.title + ' 3',
-            'description': 'Congratulation, you succeeded this certification',
+            'description': 'Congratulations, you have succeeded this certification',
             'rule_auth': 'nobody',
             'level': None,
         })
+
+    def test_archive(self):
+        """ Archive status of survey is propagated to its badges. """
+        self.certification_survey.write({
+            'certification_give_badge': True,
+            'certification_badge_id': self.certification_badge.id
+        })
+
+        self.certification_survey.action_archive()
+        self.assertFalse(self.certification_survey.active)
+        self.assertFalse(self.certification_badge.active)
+
+        self.certification_survey.action_unarchive()
+        self.assertTrue(self.certification_survey.active)
+        self.assertTrue(self.certification_badge.active)
 
     def test_give_badge_without_badge(self):
         with mute_logger('odoo.sql_db'):

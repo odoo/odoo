@@ -258,15 +258,7 @@ section of the view, and allowing a few *optional* attributes:
     website interface) and its default status. If unset, the view is always
     enabled.
 
-``report``
-----------
-
-Creates a :ref:`IrActionsReport <reference/actions/report>` record with a few default values.
-
-Mostly just proxies attributes to the corresponding fields on
-``ir.actions.report``, but also automatically creates the item in the
-:guilabel:`More` menu of the report's ``model``.
-
+.. deprecated act_window & report
 .. ignored url, act_window and ir_set
 
 CSV data files
@@ -286,14 +278,13 @@ For this case, data files can also use csv_, this is often the case for
 Here's the first lines of the data file defining US states
 ``res.country.state.csv``
 
-.. literalinclude:: ../../odoo/addons/base/data/res.country.state.csv
+.. literalinclude:: static/res.country.state.csv
     :language: text
-    :lines: 1-15
 
 rendered in a more readable format:
 
 .. csv-table::
-    :file: ../../odoo/addons/base/data/res.country.state.csv
+    :file: static/res.country.state.csv
     :header-rows: 1
     :class: table-striped table-hover table-condensed
 

@@ -5,7 +5,7 @@ var tour = require('web_tour.tour');
 
 tour.register('html_editor_multiple_templates', {
     test: true,
-    url: '/aboutus',
+    url: '/generic',
 },
     [
         // 1. Edit the page through Edit Mode, it will COW the view
@@ -17,14 +17,28 @@ tour.register('html_editor_multiple_templates', {
             content: "drop a snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail',
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: "drag_and_drop #oe_structure_test_ui",
+            run: 'drag_and_drop #oe_structure_test_ui',
+        },
+        {
+            content: "check if the section is dirty",
+            trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
+            run: () => {
+                const wysiwyg = $('#wrapwrap').data('wysiwyg');
+                // Retrieve the editor node.
+                const node = wysiwyg.editorHelpers.getNodes(document.querySelector('#oe_structure_test_ui'))[0];
+                if (node.dirty) {
+                    // As the tour test selectors, add class for the next step
+                    // to test if the node is dirty
+                    $('#oe_structure_test_ui').addClass('o_dirty');
+                }
+            },
         },
         {
             content: "save the page",
             extra_trigger: '#oe_structure_test_ui.o_dirty',
-            trigger: "#web_editor-top-edit button[data-action=save]",
+            trigger: ".o_we_website_top_actions button[name=save]",
         },
-        // 2. Edit generic aboutus view
+        // 2. Edit generic view
         {
             content: "open customize menu",
             extra_trigger: "body:not(.editor_enable)",
@@ -35,8 +49,8 @@ tour.register('html_editor_multiple_templates', {
             trigger: '#html_editor',
         },
         {
-            content: "add something in the aboutus view",
-            trigger: 'div.ace_line .ace_xml:contains("aboutus")',
+            content: "add something in the generic view",
+            trigger: 'div.ace_line .ace_xml:contains("Generic")',
             run: function () {
                 ace.edit('ace-view-editor').getSession().insert({row: 3, column: 1}, '<p>somenewcontent</p>\n');
             },
@@ -46,13 +60,13 @@ tour.register('html_editor_multiple_templates', {
             content: "select oe_structure specific view",
             trigger: 'div.ace_line .ace_xml:contains("somenewcontent")',
             run: function () {
-                var viewId = $('#ace-view-list option:contains("oe_structure")').val();
+                var viewId = $('#ace-view-list option:contains("oe_structure_test_ui")').val();
                 $('#ace-view-list').val(viewId).trigger('change');
             },
         },
         {
             content: "add something in the oe_structure specific view",
-            extra_trigger: '#ace-view-id:contains("website.aboutus_oe_structure_test_ui")', // If no xml_id it should show key
+            extra_trigger: '#ace-view-id:contains("test.generic_view_oe_structure_test_ui")', // If no xml_id it should show key
             trigger: 'div.ace_line .ace_xml:contains("s_cover")',
             run: function () {
                 ace.edit('ace-view-editor').getSession().insert({row: 2, column: 1}, '<p>anothernewcontent</p>\n');
@@ -74,7 +88,7 @@ tour.register('html_editor_multiple_templates', {
 
 tour.register('test_html_editor_scss', {
     test: true,
-    url: '/aboutus',
+    url: '/contactus',
 },
     [
         // 1. Open Html Editor and select a scss file

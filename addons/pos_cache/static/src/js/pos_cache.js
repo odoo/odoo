@@ -21,6 +21,7 @@ models.PosModel = models.PosModel.extend({
         // uncached way, so get rid of it.
         if (product_index !== -1) {
             this.models.splice(product_index, 1);
+            this.product_model = product_model;
         }
         return posmodel_super.load_server_data.apply(this, arguments).then(function () {
           // Give both the fields and domain to pos_cache in the
@@ -28,14 +29,14 @@ models.PosModel = models.PosModel.extend({
           // values in the backend and they automatically stay in
           // sync with whatever is defined (and maybe extended by
           // other modules) in js.
-          var product_fields =  typeof product_model.fields === 'function'  ? product_model.fields(self)  : product_model.fields;
-          var product_domain =  typeof product_model.domain === 'function'  ? product_model.domain(self)  : product_model.domain;
+          var product_fields =  typeof self.product_model.fields === 'function'  ? self.product_model.fields(self)  : self.product_model.fields;
+          var product_domain =  typeof self.product_model.domain === 'function'  ? self.product_model.domain(self)  : self.product_model.domain;
             var records = rpc.query({
                     model: 'pos.config',
                     method: 'get_products_from_cache',
                     args: [self.pos_session.config_id[0], product_fields, product_domain],
                 });
-            self.chrome.loading_message(_t('Loading') + ' product.product', 1);
+            self.setLoadingMessage(_t('Loading') + ' product.product', 1);
             return records.then(function (products) {
                 self.db.add_products(_.map(products, function (product) {
                     product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});

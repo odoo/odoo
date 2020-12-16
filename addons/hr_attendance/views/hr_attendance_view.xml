@@ -7,7 +7,7 @@
         <field name="name">hr.attendance.tree</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" editable="bottom">
+            <tree string="Employee attendances" edit="0" sample="1">
                 <field name="employee_id"/>
                 <field name="check_in"/>
                 <field name="check_out"/>
@@ -16,11 +16,24 @@
         </field>
     </record>
 
+    <record id="view_attendance_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.tree.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="edit">1</attribute>
+                <attribute name="editable">bottom</attribute>
+            </tree>
+        </field>
+    </record>
+
     <record id="view_hr_attendance_kanban" model="ir.ui.view">
         <field name="name">hr.attendance.kanban</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="employee_id"/>
                 <field name="check_in"/>
                 <field name="check_out"/>
@@ -50,7 +63,7 @@
         <field name="name">hr.attendance.form</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <form string="Employee attendances">
+            <form string="Employee attendances" edit="0">
                 <sheet>
                     <group>
                         <field name="employee_id"/>
@@ -58,6 +71,18 @@
                         <field name="check_out"/>
                     </group>
                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.form.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="edit">1</attribute>
             </form>
         </field>
     </record>
@@ -86,10 +111,10 @@
         <field name="name">hr.attendance.pivot</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <pivot string="Attendance">
+            <pivot string="Attendance" sample="1">
                 <field name="employee_id" type="row"/>
                 <field name="check_in" type="col"/>
-                <field name="worked_hours" type="measure"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
             </pivot>
         </field>
     </record>
@@ -98,7 +123,7 @@
         <field name="name">hr.attendance.graph</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <graph string="Attendance">
+            <graph string="Attendance" sample="1">
                 <field name="employee_id"/>
                 <field name="check_in"/>
                 <field name="worked_hours" type="measure"/>
@@ -142,6 +167,11 @@
         <field name="res_model">hr.attendance</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id"></field>  <!-- force empty -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="hr_attendance_action_graph_filtered" model="ir.actions.act_window">
@@ -153,6 +183,11 @@
             'default_department_id': active_id}
         </field>
         <field name="view_id"></field>  <!-- force empty -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="hr_attendance_action_kiosk_mode" model="ir.actions.client">
@@ -176,17 +211,15 @@
 
     <menuitem id="menu_hr_attendance_root" name="Attendances" sequence="90" groups="hr_attendance.group_hr_attendance,hr_attendance.group_hr_attendance_kiosk" web_icon="hr_attendance,static/description/icon.png"/>
 
-    <menuitem id="menu_hr_attendance_kiosk_no_user_mode" name="Kiosk Mode" parent="menu_hr_attendance_root" sequence="1" groups="hr_attendance.group_hr_attendance_kiosk" action="hr_attendance_action_kiosk_mode"/>
+    <menuitem id="menu_hr_attendance_my_attendances" name="Check In / Check Out" parent="menu_hr_attendance_root" sequence="1" groups="hr_attendance.group_hr_attendance" action="hr_attendance_action_my_attendances"/>
 
-    <menuitem id="menu_hr_attendance_my_attendances" name="Check In / Check Out" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance" action="hr_attendance_action_my_attendances"/>
+    <menuitem id="menu_hr_attendance_kiosk_no_user_mode" name="Kiosk Mode" parent="menu_hr_attendance_root" sequence="10" groups="hr_attendance.group_hr_attendance_kiosk" action="hr_attendance_action_kiosk_mode"/>
 
     <menuitem id="menu_hr_attendance_manage_attendances" name="Manager" parent="menu_hr_attendance_root" sequence="20" groups="hr_attendance.group_hr_attendance_user"/>
 
     <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_manage_attendances" sequence="10" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action"/>
 
     <menuitem id="menu_hr_attendance_view_employees_kanban" name="Employees" parent="menu_hr_attendance_manage_attendances" sequence="15" groups="hr_attendance.group_hr_attendance_user" action="hr.open_view_employee_list_my"/>
-
-    <menuitem id="menu_hr_attendance_kiosk_mode" name="Kiosk Mode" parent="menu_hr_attendance_manage_attendances" sequence="20" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_kiosk_mode"/>
 
     <menuitem id="menu_hr_attendance_report" name="Reporting" parent="menu_hr_attendance_root" sequence="30" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_graph"/>
 </odoo>

@@ -3,15 +3,13 @@
 
 import logging
 from collections import defaultdict, namedtuple
-from datetime import datetime, time
 
 from dateutil.relativedelta import relativedelta
-from psycopg2 import OperationalError
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.exceptions import UserError
 from odoo.osv import expression
-from odoo.tools import float_compare, float_is_zero, float_round, frozendict, html_escape
+from odoo.tools import float_compare, float_is_zero, html_escape
 from odoo.tools.misc import split_every
 
 _logger = logging.getLogger(__name__)
@@ -53,7 +51,7 @@ class StockRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
-        domain=[('company_id', '?=', 'route_company_id')])
+        domain="[('id', '=?', route_company_id)]")
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
@@ -72,7 +70,7 @@ class StockRule(models.Model):
         required=True, check_company=True,
         domain="[('code', '=?', picking_type_code_domain)]")
     picking_type_code_domain = fields.Char(compute='_compute_picking_type_code_domain')
-    delay = fields.Integer('Delay', default=0, help="The expected date of the created transfer will be computed based on this delay.")
+    delay = fields.Integer('Lead Time', default=0, help="The expected date of the created transfer will be computed based on this lead time.")
     partner_address_id = fields.Many2one(
         'res.partner', 'Partner Address',
         check_company=True,
@@ -91,14 +89,6 @@ class StockRule(models.Model):
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
-    propagate_date = fields.Boolean(string="Propagate Rescheduling", default=True,
-        help='The rescheduling is propagated to the next move.')
-    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
-        help='The change must be higher than this value to be propagated', default=1)
-    delay_alert = fields.Boolean(
-        'Alert if Delay',
-        help='Log an exception on the picking if this move has to be delayed (due to a change in the previous move scheduled date).',
-    )
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -108,8 +98,6 @@ class StockRule(models.Model):
         """
         self.location_src_id = self.picking_type_id.default_location_src_id.id
         self.location_id = self.picking_type_id.default_location_dest_id.id
-        if self.picking_type_id.code == 'outgoing':
-            self.delay_alert = True
 
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
@@ -140,12 +128,12 @@ class StockRule(models.Model):
         if self.action in ('push', 'pull', 'pull_push'):
             suffix = ""
             if self.procure_method == 'make_to_order' and self.location_src_id:
-                suffix = _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.") % (source)
+                suffix = _("<br>A need is created in <b>%s</b> and a rule will be triggered to fulfill it.", source)
             if self.procure_method == 'mts_else_mto' and self.location_src_id:
-                suffix = _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.") % source
+                suffix = _("<br>If the products are not available in <b>%s</b>, a rule will be triggered to bring products in this location.", source)
             message_dict = {
-                'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.') % (destination, operation, source) + suffix,
-                'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.') % (source, operation, destination)
+                'pull': _('When products are needed in <b>%s</b>, <br/> <b>%s</b> are created from <b>%s</b> to fulfill the need.', destination, operation, source) + suffix,
+                'push': _('When products arrive in <b>%s</b>, <br/> <b>%s</b> are created to send them in <b>%s</b>.', source, operation, destination)
             }
         return message_dict
 
@@ -176,16 +164,15 @@ class StockRule(models.Model):
         Care this function is not call by method run. It is called explicitely
         in stock_move.py inside the method _push_apply
         """
-        new_date = fields.Datetime.to_string(move.date_expected + relativedelta(days=self.delay))
+        self.ensure_one()
+        new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
         if self.auto == 'transparent':
-            move.write({
-                'date': new_date,
-                'date_expected': new_date,
-                'location_dest_id': self.location_id.id})
+            old_dest_location = move.location_dest_id
+            move.write({'date': new_date, 'location_dest_id': self.location_id.id})
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
-            if self.location_id != move.location_dest_id:
+            if self.location_id != old_dest_location:
                 # TDE FIXME: should probably be done in the move model IMO
-                move._push_apply()
+                return move._push_apply()[:1]
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
             new_move = move.sudo().copy(new_move_vals)
@@ -193,7 +180,7 @@ class StockRule(models.Model):
                 new_move.write({'procure_method': 'make_to_stock'})
             if not new_move.location_id.should_bypass_reservation():
                 move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move._action_confirm()
+            return new_move
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         company_id = self.company_id.id
@@ -204,15 +191,11 @@ class StockRule(models.Model):
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
             'date': new_date,
-            'date_expected': new_date,
             'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'warehouse_id': self.warehouse_id.id,
-            'delay_alert': self.delay_alert,
             'procure_method': 'make_to_order',
         }
         return new_move_vals
@@ -282,9 +265,13 @@ class StockRule(models.Model):
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
 
-        date_expected = fields.Datetime.to_string(
+        date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
+        date_deadline = values.get('date_deadline') and (fields.Datetime.to_datetime(values['date_deadline']) - relativedelta(days=self.delay or 0)) or False
+        partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
+        if partner:
+            product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)
         picking_description = product_id._get_description(self.picking_type_id)
         if values.get('product_description_variants'):
             picking_description += values['product_description_variants']
@@ -302,7 +289,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_uom': product_uom.id,
             'product_uom_qty': qty_left,
-            'partner_id': self.partner_address_id.id or (values.get('group_id', False) and values['group_id'].partner_id.id) or False,
+            'partner_id': partner.id if partner else False,
             'location_id': self.location_src_id.id,
             'location_dest_id': location_id.id,
             'move_dest_ids': move_dest_ids,
@@ -313,14 +300,11 @@ class StockRule(models.Model):
             'group_id': group_id,
             'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
-            'date': date_expected,
-            'date_expected': date_expected,
+            'date': date_scheduled,
+            'date_deadline': False if self.group_propagation_option == 'fixed' else date_deadline,
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': picking_description,
-            'priority': values.get('priority', "1"),
-            'delay_alert': self.delay_alert,
+            'priority': values.get('priority', "0"),
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
         }
         for field in self._get_custom_move_fields():
@@ -338,7 +322,7 @@ class StockRule(models.Model):
         :rtype: tuple
         """
         delay = sum(self.filtered(lambda r: r.action in ['pull', 'pull_push']).mapped('delay'))
-        delay_description = ''.join(['<tr><td>%s %s</td><td>+ %d %s</td></tr>' % (_('Delay on'), html_escape(rule.name), rule.delay, _('day(s)')) for rule in self if rule.action in ['pull', 'pull_push'] and rule.delay])
+        delay_description = ''.join(['<tr><td>%s %s</td><td class="text-right">+ %d %s</td></tr>' % (_('Delay on'), html_escape(rule.name), rule.delay, _('day(s)')) for rule in self if rule.action in ['pull', 'pull_push'] and rule.delay])
         return delay, delay_description
 
 
@@ -409,8 +393,8 @@ class ProcurementGroup(models.Model):
         actions_to_run = defaultdict(list)
         procurement_errors = []
         for procurement in procurements:
-            procurement.values.setdefault('company_id', self.env.company)
-            procurement.values.setdefault('priority', '1')
+            procurement.values.setdefault('company_id', procurement.location_id.company_id)
+            procurement.values.setdefault('priority', '0')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             if (
                 procurement.product_id.type not in ('consu', 'product') or
@@ -479,7 +463,14 @@ class ProcurementGroup(models.Model):
 
     @api.model
     def _get_rule_domain(self, location, values):
-        return [('location_id', '=', location.id), ('action', '!=', 'push')]
+        domain = ['&', ('location_id', '=', location.id), ('action', '!=', 'push')]
+        # In case the method is called by the superuser, we need to restrict the rules to the
+        # ones of the company. This is not useful as a regular user since there is a record
+        # rule to filter out the rules based on the company.
+        if self.env.su and values.get('company_id'):
+            domain_company = ['|', ('company_id', '=', False), ('company_id', 'child_of', values['company_id'].ids)]
+            domain = expression.AND([domain, domain_company])
+        return domain
 
     def _merge_domain(self, values, rule, group_id):
         return [
@@ -493,21 +484,33 @@ class ProcurementGroup(models.Model):
             ('product_id', '=', values['product_id'].id)]
 
     @api.model
-    def _get_moves_to_assign_domain(self):
-        return expression.AND([
-            [('state', 'in', ['confirmed', 'partially_available'])],
-            [('product_uom_qty', '!=', 0.0)]
-        ])
+    def _get_moves_to_assign_domain(self, company_id):
+        moves_domain = [
+            ('state', 'in', ['confirmed', 'partially_available']),
+            ('product_uom_qty', '!=', 0.0)
+        ]
+        # TODO: make picking_type_id/reservation method one value on stock.move
+        moves_domain = expression.AND([moves_domain, ['|', '|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
+                                                                ('picking_id.picking_type_id.reservation_method', '=', 'at_confirm'),
+                                                                ('reservation_date', '<=', fields.Date.today())]])
+        if company_id:
+            moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
+        return moves_domain
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         # Minimum stock rules
-        self.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id)
+        domain = self._get_orderpoint_domain(company_id=company_id)
+        orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
+        # ensure that qty_* which depends on datetime.now() are correctly
+        # recomputed
+        orderpoints.sudo()._compute_qty_to_order()
+        orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
 
         # Search all confirmed stock_moves and try to assign them
-        domain = self._get_moves_to_assign_domain()
+        domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
-            order='priority desc, date_expected asc')
+            order='priority desc, date asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:
@@ -518,6 +521,13 @@ class ProcurementGroup(models.Model):
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
+
+        if use_new_cursor:
+            self._cr.commit()
+
+        # Run cyclic inventories
+        self.env['stock.inventory']._run_inventory_tasks(company_id)
+
         if use_new_cursor:
             self._cr.commit()
 
@@ -541,109 +551,8 @@ class ProcurementGroup(models.Model):
         return {}
 
     @api.model
-    def _procurement_from_orderpoint_get_order(self):
-        return 'location_id,company_id'
-
     def _get_orderpoint_domain(self, company_id=False):
-        domain = [('company_id', '=', company_id)] if company_id else []
-        domain += [('product_id.active', '=', True)]
+        domain = [('trigger', '=', 'auto'), ('product_id.active', '=', True)]
+        if company_id:
+            domain += [('company_id', '=', company_id)]
         return domain
-
-    @api.model
-    def _procure_orderpoint_confirm(self, use_new_cursor=False, company_id=None):
-        """ Create procurements based on orderpoints.
-        :param bool use_new_cursor: if set, use a dedicated cursor and auto-commit after processing
-            1000 orderpoints.
-            This is appropriate for batch jobs only.
-        """
-        self = self.with_company(company_id)
-        domain = self._get_orderpoint_domain(company_id=company_id)
-        orderpoints_noprefetch = self.env['stock.warehouse.orderpoint'].search_read(
-            domain, fields=['id'], order=self._procurement_from_orderpoint_get_order())
-        orderpoints_noprefetch = [orderpoint['id'] for orderpoint in orderpoints_noprefetch]
-
-        for orderpoints_batch in split_every(1000, orderpoints_noprefetch):
-            if use_new_cursor:
-                cr = registry(self._cr.dbname).cursor()
-                self = self.with_env(self.env(cr=cr))
-            orderpoints_batch = self.env['stock.warehouse.orderpoint'].browse(orderpoints_batch)
-            orderpoints_exceptions = []
-            while orderpoints_batch:
-
-                # Calculate groups that can be executed together
-                orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
-
-                procurements = []
-                for orderpoint in orderpoints_batch:
-                    orderpoint_context = orderpoint._get_product_context()
-                    product_context = frozendict({**self.env.context, **orderpoint_context})
-                    orderpoints_contexts[product_context] |= orderpoint
-
-                for orderpoint_context, orderpoints_by_context in orderpoints_contexts.items():
-                    substract_quantity = orderpoints_by_context._quantity_in_progress()
-                    product_quantity = orderpoints_by_context.product_id.with_context(orderpoint_context)._product_available()
-
-                    for orderpoint in orderpoints_by_context:
-                        op_product_virtual = product_quantity[orderpoint.product_id.id]['virtual_available']
-                        if op_product_virtual is None:
-                            continue
-                        if float_compare(op_product_virtual, orderpoint.product_min_qty, precision_rounding=orderpoint.product_uom.rounding) <= 0:
-                            qty = max(orderpoint.product_min_qty, orderpoint.product_max_qty) - op_product_virtual
-                            remainder = orderpoint.qty_multiple > 0 and qty % orderpoint.qty_multiple or 0.0
-
-                            if float_compare(remainder, 0.0, precision_rounding=orderpoint.product_uom.rounding) > 0:
-                                qty += orderpoint.qty_multiple - remainder
-
-                            if float_compare(qty, 0.0, precision_rounding=orderpoint.product_uom.rounding) < 0:
-                                continue
-
-                            qty -= substract_quantity[orderpoint.id]
-                            qty_rounded = float_round(qty, precision_rounding=orderpoint.product_uom.rounding)
-                            if qty_rounded > 0:
-                                date = datetime.combine(orderpoint_context.get('to_date'), time.min)
-                                values = orderpoint._prepare_procurement_values(qty_rounded, date=date)
-                                procurements.append(self.env['procurement.group'].Procurement(
-                                    orderpoint.product_id, qty_rounded, orderpoint.product_uom,
-                                    orderpoint.location_id, orderpoint.name, orderpoint.name,
-                                    orderpoint.company_id, values))
-
-                try:
-                    with self.env.cr.savepoint():
-                        self.env['procurement.group'].with_context(from_orderpoint=True).run(procurements, raise_user_error=False)
-                except ProcurementException as errors:
-                    for procurement, error_msg in errors.procurement_exceptions:
-                        orderpoints_exceptions += [(procurement.values.get('orderpoint_id'), error_msg)]
-                    failed_orderpoints = self.env['stock.warehouse.orderpoint'].concat(*[o[0] for o in orderpoints_exceptions])
-                    if not failed_orderpoints:
-                        _logger.error('Unable to process orderpoints')
-                        break
-                    orderpoints_batch -= failed_orderpoints
-
-                except OperationalError:
-                    if use_new_cursor:
-                        cr.rollback()
-                        continue
-                    else:
-                        raise
-                else:
-                    orderpoints_batch._post_process_scheduler()
-                    break
-
-            # Log an activity on product template for failed orderpoints.
-            for orderpoint, error_msg in orderpoints_exceptions:
-                existing_activity = self.env['mail.activity'].search([
-                    ('res_id', '=', orderpoint.product_id.product_tmpl_id.id),
-                    ('res_model_id', '=', self.env.ref('product.model_product_template').id),
-                    ('note', '=', error_msg)])
-                if not existing_activity:
-                    orderpoint.product_id.product_tmpl_id.activity_schedule(
-                        'mail.mail_activity_data_warning',
-                        note=error_msg,
-                        user_id=orderpoint.product_id.responsible_id.id or SUPERUSER_ID,
-                    )
-
-            if use_new_cursor:
-                cr.commit()
-                cr.close()
-
-        return {}

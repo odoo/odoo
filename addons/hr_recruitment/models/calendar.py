@@ -33,4 +33,4 @@ class CalendarEvent(models.Model):
                 if event.applicant_id.id == applicant_id:
                     event.is_highlighted = True
 
-    applicant_id = fields.Many2one('hr.applicant', string="Applicant")
+    applicant_id = fields.Many2one('hr.applicant', string="Applicant", index=True, ondelete='set null')

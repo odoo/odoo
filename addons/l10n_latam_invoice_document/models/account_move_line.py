@@ -1,11 +1,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api, fields
+from odoo.tools.sql import column_exists, create_column
 
 
 class AccountMoveLine(models.Model):
 
     _inherit = 'account.move.line'
+
+    def _auto_init(self):
+        # Skip the computation of the field `l10n_latam_document_type_id` at the module installation
+        # See `_auto_init` in `l10n_latam_invoice_document/models/account_move.py` for more information
+        if not column_exists(self.env.cr, "account_move_line", "l10n_latam_document_type_id"):
+            create_column(self.env.cr, "account_move_line", "l10n_latam_document_type_id", "int4")
+        return super()._auto_init()
 
     l10n_latam_document_type_id = fields.Many2one(
         related='move_id.l10n_latam_document_type_id', auto_join=True, store=True, index=True)
@@ -22,7 +30,7 @@ class AccountMoveLine(models.Model):
                 invoice.l10n_latam_document_type_id and invoice.l10n_latam_document_type_id._filter_taxes_included(
                     line.tax_ids)
             if not included_taxes:
-                price_unit = line.tax_ids.with_context(round=False).compute_all(
+                price_unit = line.tax_ids.with_context(round=False, force_sign=invoice._get_tax_force_sign()).compute_all(
                     line.price_unit, invoice.currency_id, 1.0, line.product_id, invoice.partner_id)
                 l10n_latam_price_unit = price_unit['total_excluded']
                 l10n_latam_price_subtotal = line.price_subtotal
@@ -30,11 +38,11 @@ class AccountMoveLine(models.Model):
                 l10n_latam_price_net = l10n_latam_price_unit * (1 - (line.discount or 0.0) / 100.0)
             else:
                 not_included_taxes = line.tax_ids - included_taxes
-                l10n_latam_price_unit = included_taxes.compute_all(
+                l10n_latam_price_unit = included_taxes.with_context(force_sign=invoice._get_tax_force_sign()).compute_all(
                     line.price_unit, invoice.currency_id, 1.0, line.product_id, invoice.partner_id)['total_included']
                 l10n_latam_price_net = l10n_latam_price_unit * (1 - (line.discount or 0.0) / 100.0)
                 price = line.price_unit * (1 - (line.discount or 0.0) / 100.0)
-                l10n_latam_price_subtotal = included_taxes.compute_all(
+                l10n_latam_price_subtotal = included_taxes.with_context(force_sign=invoice._get_tax_force_sign()).compute_all(
                     price, invoice.currency_id, line.quantity, line.product_id,
                     invoice.partner_id)['total_included']
 

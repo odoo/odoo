@@ -1,0 +1,142 @@
+<odoo>
+    <record model="ir.ui.view" id="view_totp_list">
+        <field name="name">users list: add totp status</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_tree"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="totp_enabled"/>
+            </tree>
+        </field>
+    </record>
+    <record model="ir.ui.view" id="view_totp_form">
+        <field name="name">user form: add totp status</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='references']/group[1]" position="before">
+                <field name="totp_enabled" invisible="1"/>
+                <group attrs="{'invisible': [('totp_enabled', '!=', False)]}">
+                    <div>
+                        <span class="alert alert-info" role="status">
+                            <i class="fa fa-warning"/>
+                            Two-factor authentication not enabled
+                        </span>
+                    </div>
+                </group>
+                <group attrs="{'invisible': [('totp_enabled', '=', False)]}">
+                    <div>
+                        <span class="text-success">
+                            <i class="fa fa-check-circle"/>
+                            Two-factor authentication enabled
+                        </span>
+                    </div>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_disable_totp">
+        <field name="name">Disable TOTP on users</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="binding_model_id" ref="base.model_res_users"/>
+        <field name="binding_view_types">list</field>
+        <field name="state">code</field>
+        <field name="code">
+            action = records.totp_disable()
+        </field>
+        <field name="groups_id" eval="[(4, ref('base.group_erp_manager'), 0)]"/>
+    </record>
+
+    <record model="ir.ui.view" id="view_totp_wizard">
+        <field name="name">auth_totp wizard</field>
+        <field name="model">auth_totp.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="row container">
+                        <div class="mb-3">
+                            <h3 class="font-weight-bold">Scan this barcode with your app</h3>
+                            <div>
+                                Scan the image below with the authenticator app on your phone.<br/>
+                                If you cannot scan the barcode, here are some alternative options:
+                                <ul>
+                                    <li><field class="text-wrap" name="url" widget="url"
+                                               options="{'website_path': True}"
+                                               text="Click on this link to open your authenticator app"/></li>
+
+                                    <li>Or enter the secret code manually:
+                                        <a data-toggle="collapse"
+                                           href="#collapseTotpSecret" role="button" aria-expanded="false"
+                                           aria-controls="collapseTotpSecret">show the code</a>
+                                    </li>
+                                </ul>
+                                <!-- code outside list to have more horiz space on mobile -->
+                                <div class="collapse col-12 col-md-6" id="collapseTotpSecret">
+                                  <div class="card card-body">
+                                    <h3>Your two-factor secret:</h3>
+                                    <code class="text-center"><field name="secret"/></code>
+                                  </div>
+                                </div>
+                            </div>
+
+                            <field class="offset-1" name="qrcode" readonly="True" widget="image"/>
+
+                            <h3 class="font-weight-bold">Enter the 6-digit code from your app</h3>
+                            <div class="text-justify col-10 col-lg-6 px-0">
+                                After scanning the barcode, the app will display a 6-digit code that you
+                                should enter below. Don't worry if the code changes in the app,
+                                it stays valid a bit longer.
+                            </div>
+                            <div class="mt-2">
+                                <label for="code" class="col-4 col-md-12 px-0">Verification Code</label>
+                                <field required="True" name="code" class="col-10 col-md-6 px-0"/>
+                            </div>
+
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button type="object" name="enable" class="btn btn-primary"
+                            string="Enable two-factor authentication"/>
+                    <button string="Cancel" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_totp_field">
+        <field name="name">users preference: totp</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+        <field name="arch" type="xml">
+            <button name="preference_change_password" position="after">
+                    <field name="totp_enabled" invisible="1"/>
+                    <group attrs="{'invisible': [('totp_enabled', '!=', False)]}">
+                        <div>
+                            <span class="alert alert-info" role="status">
+                                <i class="fa fa-warning"/>
+                                Two-factor authentication not enabled
+                                <a href="https://www.odoo.com/documentation/user/general/auth/2fa.html"
+                                   title="What is this?" class="o_doc_link" target="_blank"></a>
+                            </span>
+                            <button name="totp_enable_wizard" type="object" string="Enable two-factor authentication"
+                                    class="btn btn-info mx-3"/>
+                        </div>
+                    </group>
+                    <group attrs="{'invisible': [('totp_enabled', '=', False)]}">
+                        <div>
+                            <span class="text-success">
+                                <i class="fa fa-check-circle"/>
+                                Two-factor authentication enabled
+                                <a href="https://www.odoo.com/documentation/user/general/auth/2fa.html"
+                                   title="What is this?" class="o_doc_link" target="_blank"></a>
+                            </span>
+                            <button name="totp_disable" type="object" string="(Disable two-factor authentication)"
+                                    class="btn btn-link text-muted"/>
+                        </div>
+                    </group>
+            </button>
+        </field>
+    </record>
+</odoo>

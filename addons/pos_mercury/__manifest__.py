@@ -34,7 +34,9 @@ following:
         'data/pos_mercury_demo.xml',
     ],
     'qweb': [
-        'static/src/xml/pos_mercury.xml',
+        'static/src/xml/OrderReceipt.xml',
+        'static/src/xml/PaymentScreenPaymentLines.xml',
+        'static/src/xml/PaymentTransactionPopup.xml',
     ],
     'installable': True,
     'auto_install': False,

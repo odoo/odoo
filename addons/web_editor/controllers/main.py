@@ -4,16 +4,24 @@ import io
 import logging
 import re
 import time
+import requests
+import werkzeug.urls
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
+from base64 import b64decode, b64encode
 
 from odoo.http import request
-from odoo import http, tools, _
+from odoo import http, tools, _, SUPERUSER_ID
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError
+from odoo.modules.module import get_module_path, get_resource_path
+from odoo.tools.misc import file_open
+
+from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
-
+DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
 
 class Web_Editor(http.Controller):
     #------------------------------------------------------
@@ -155,42 +163,19 @@ class Web_Editor(http.Controller):
         return True
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
+    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         try:
             data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
         except UserError:
             pass  # not an image
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, filters=filters)
+        self._clean_context()
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
-    def add_url(self, url, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
-        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model, filters=filters)
-        return attachment._get_media_info()
-
-    @http.route('/web_editor/attachment/<model("ir.attachment"):attachment>/update', type='json', auth='user', methods=['POST'], website=True)
-    def attachment_update(self, attachment, name=None, width=0, height=0, quality=0, copy=False, **kwargs):
-        if attachment.type == 'url':
-            raise UserError(_("You cannot change the quality, the width or the name of an URL attachment."))
-        if copy:
-            original = attachment
-            attachment = attachment.copy()
-            attachment.original_id = original
-            # Uniquify url by adding a path segment with the id before the name
-            if attachment.url:
-                url_fragments = attachment.url.split('/')
-                url_fragments.insert(-1, str(attachment.id))
-                attachment.url = '/'.join(url_fragments)
-        elif attachment.original_id:
-            attachment.datas = attachment.original_id.datas
-        data = {}
-        if name:
-            data['name'] = name
-        try:
-            data['datas'] = tools.image_process(attachment.datas, size=(width, height), quality=quality)
-        except UserError:
-            pass  # not an image
-        attachment.write(data)
+    def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
+        self._clean_context()
+        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
@@ -200,6 +185,7 @@ class Web_Editor(http.Controller):
         Returns a dict mapping attachments which would not be removed (if any)
         mapped to the views preventing their removal
         """
+        self._clean_context()
         Attachment = attachments_to_remove = request.env['ir.attachment']
         Views = request.env['ir.ui.view']
 
@@ -225,27 +211,37 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, image_id=None, xml_id=None):
-        """This route is used from CropImageDialog to get image info.
-        It is used to display the original image when we crop a previously
-        cropped image.
+    def get_image_info(self, src=''):
+        """This route is used to determine the original of an attachment so that
+        it can be used as a base to modify it again (crop/optimization/filters).
         """
-        if xml_id:
-            record = request.env['ir.attachment'].get_attachment_by_key(xml_id)
-        elif image_id:
-            record = request.env['ir.attachment'].browse(image_id)
-        result = {
-            'mimetype': record.mimetype,
+        attachment = None
+        id_match = re.search('^/web/image/([^/?]+)', src)
+        if id_match:
+            url_segment = id_match.group(1)
+            number_match = re.match('^(\d+)', url_segment)
+            if '.' in url_segment: # xml-id
+                attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
+            elif number_match: # numeric id
+                attachment = request.env['ir.attachment'].browse(int(number_match.group(1)))
+        else:
+            # Find attachment by url. There can be multiple matches because of default
+            # snippet images referencing the same image in /static/, so we limit to 1
+            attachment = request.env['ir.attachment'].search([
+                ('url', '=like', src),
+                ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
+            ], limit=1)
+        if not attachment:
+            return {
+                'attachment': False,
+                'original': False,
+            }
+        return {
+            'attachment': attachment.read(['id'])[0],
+            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
-        # If we received the image ID and that image has an associated URL
-        # field, this should be a crop image attachment, so we return the ID
-        # and URL to confirm
-        if image_id and record.url:
-            result['id'] = record.id
-            result['originalSrc'] = record.url
-        return result
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', filters=None):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
         if not name and url:
             name = url.split("/").pop()
@@ -254,9 +250,6 @@ class Web_Editor(http.Controller):
             res_id = int(res_id)
         else:
             res_id = False
-
-        if filters:
-            name = filters + '_' + name
 
         attachment_data = {
             'name': name,
@@ -277,6 +270,12 @@ class Web_Editor(http.Controller):
 
         attachment = request.env['ir.attachment'].create(attachment_data)
         return attachment
+
+    def _clean_context(self):
+        # avoid allowed_company_ids which may erroneously restrict based on website
+        context = dict(request.context)
+        context.pop('allowed_company_ids', None)
+        request.context = context
 
     @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
     def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
@@ -459,3 +458,173 @@ class Web_Editor(http.Controller):
                 be found
         """
         request.env['web_editor.assets'].reset_asset(url, bundle_xmlid)
+
+    @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
+    def public_render_template(self, args):
+        # args[0]: xml id of the template to render
+        # args[1]: optional dict of rendering values, only trusted keys are supported
+        len_args = len(args)
+        assert len_args >= 1 and len_args <= 2, 'Need a xmlID and potential rendering values to render a template'
+
+        trusted_value_keys = ('debug',)
+
+        xmlid = args[0]
+        values = len_args > 1 and args[1] or {}
+
+        View = request.env['ir.ui.view']
+        if request.env.user._is_public() \
+                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
+            View = View.sudo()
+        return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+
+    @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):
+        """
+        Creates a modified copy of an attachment and returns its image_src to be
+        inserted into the DOM.
+        """
+        fields = {
+            'original_id': attachment.id,
+            'datas': data,
+            'type': 'binary',
+            'res_model': res_model or 'ir.ui.view',
+        }
+        if fields['res_model'] == 'ir.ui.view':
+            fields['res_id'] = 0
+        elif res_id:
+            fields['res_id'] = res_id
+        if name:
+            fields['name'] = name
+        attachment = attachment.copy(fields)
+        if attachment.url:
+            # Don't keep url if modifying static attachment because static images
+            # are only served from disk and don't fallback to attachments.
+            if re.match(r'^/\w+/static/', attachment.url):
+                attachment.url = None
+            # Uniquify url by adding a path segment with the id before the name.
+            # This allows us to keep the unsplash url format so it still reacts
+            # to the unsplash beacon.
+            else:
+                url_fragments = attachment.url.split('/')
+                url_fragments.insert(-1, str(attachment.id))
+                attachment.url = '/'.join(url_fragments)
+        if attachment.public:
+            return attachment.image_src
+        attachment.generate_access_token()
+        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+
+    @http.route(['/web_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def shape(self, module, filename, **kwargs):
+        """
+        Returns a color-customized svg (background shape or illustration).
+        """
+        svg = None
+        if module == 'illustration':
+            attachment = request.env['ir.attachment'].sudo().browse(unslug(filename)[1])
+            if (not attachment.exists()
+                    or attachment.type != 'binary'
+                    or not attachment.public
+                    or not attachment.url.startswith(request.httprequest.path)):
+                raise werkzeug.exceptions.NotFound()
+            svg = b64decode(attachment.datas).decode('utf-8')
+        else:
+            shape_path = get_resource_path(module, 'static', 'shapes', filename)
+            if not shape_path:
+                raise werkzeug.exceptions.NotFound()
+            with tools.file_open(shape_path, 'r') as file:
+                svg = file.read()
+
+        user_colors = []
+        for key, value in kwargs.items():
+            colorMatch = re.match('^c([1-5])$', key)
+            if colorMatch:
+                # Check that color is hex or rgb(a) to prevent arbitrary injection
+                if not re.match(r'(?i)^#[0-9A-F]{6,8}$|^rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)$', value.replace(' ', '')):
+                    raise werkzeug.exceptions.BadRequest()
+                user_colors.append([tools.html_escape(value), colorMatch.group(1)])
+            elif key == 'flip':
+                if value == 'x':
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
+                elif value == 'y':
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
+                elif value == 'xy':
+                    svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
+
+        default_palette = {
+            '1': '#3AADAA',
+            '2': '#7C6576',
+            '3': '#F6F6F6',
+            '4': '#FFFFFF',
+            '5': '#383E45',
+        }
+        color_mapping = {default_palette[palette_number]: color for color, palette_number in user_colors}
+        # create a case-insensitive regex to match all the colors to replace, eg: '(?i)(#3AADAA)|(#7C6576)'
+        regex = '(?i)%s' % '|'.join('(%s)' % color for color in color_mapping.keys())
+
+        def subber(match):
+            key = match.group().upper()
+            return color_mapping[key] if key in color_mapping else key
+        svg = re.sub(regex, subber, svg)
+
+        return request.make_response(svg, [
+            ('Content-type', 'image/svg+xml'),
+            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+        ])
+
+    @http.route(['/web_editor/media_library_search'], type='json', auth="user", website=True)
+    def media_library_search(self, **params):
+        ICP = request.env['ir.config_parameter'].sudo()
+        endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+        params['dbuuid'] = ICP.get_param('database.uuid')
+        response = requests.post('%s/media-library/1/search' % endpoint, data=params)
+        if response.status_code == requests.codes.ok and response.headers['content-type'] == 'application/json':
+            return response.json()
+        else:
+            return {'error': response.status_code}
+
+    @http.route('/web_editor/save_library_media', type='json', auth='user', methods=['POST'])
+    def save_library_media(self, media):
+        """
+        Saves images from the media library as new attachments, making them
+        dynamic SVGs if needed.
+            media = {
+                <media_id>: {
+                    'query': 'space separated search terms',
+                    'is_dynamic_svg': True/False,
+                    'dynamic_colors': maps color names to their color,
+                }, ...
+            }
+        """
+        attachments = []
+        ICP = request.env['ir.config_parameter'].sudo()
+        library_endpoint = ICP.get_param('web_editor.media_library_endpoint', DEFAULT_LIBRARY_ENDPOINT)
+
+        media_ids = ','.join(media.keys())
+        params = {
+            'dbuuid': ICP.get_param('database.uuid'),
+            'media_ids': media_ids,
+        }
+        response = requests.post('%s/media-library/1/download_urls' % library_endpoint, data=params)
+        if response.status_code != requests.codes.ok:
+            raise Exception(_("ERROR: couldn't get download urls from media library."))
+
+        for id, url in response.json().items():
+            req = requests.get(url)
+            name = '_'.join([media[id]['query'], url.split('/')[-1]])
+            # Need to bypass security check to write image with mimetype image/svg+xml
+            # ok because svgs come from whitelisted origin
+            context = {'binary_field_real_user': request.env['res.users'].sudo().browse([SUPERUSER_ID])}
+            attachment = request.env['ir.attachment'].sudo().with_context(context).create({
+                'name': name,
+                'mimetype': req.headers['content-type'],
+                'datas': b64encode(req.content),
+                'public': True,
+                'res_model': 'ir.ui.view',
+                'res_id': 0,
+            })
+            if media[id]['is_dynamic_svg']:
+                colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
+                attachment['url'] = '/web_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
+            attachments.append(attachment._get_media_info())
+
+        return attachments

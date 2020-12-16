@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 from odoo import api, fields, models, _
-
+from odoo.modules.module import get_module_resource
+from odoo.modules.module import get_resource_path
 
 class ResCompany(models.Model):
     _inherit = "res.company"
@@ -33,7 +35,7 @@ class ResCompany(models.Model):
     def action_open_sale_onboarding_payment_acquirer(self):
         """ Called by onboarding panel above the quotation list."""
         self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env.ref('sale.action_open_sale_onboarding_payment_acquirer_wizard').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_onboarding_payment_acquirer_wizard")
         return action
 
     def _get_sample_sales_order(self):
@@ -52,9 +54,13 @@ class ResCompany(models.Model):
             # take any existing product or create one
             product = self.env['product.product'].search([], limit=1)
             if len(product) == 0:
+                default_image_path = get_module_resource('product', 'static/img', 'product_product_13-image.png')
                 product = self.env['product.product'].create({
-                    'name': _('Sample Product')
+                    'name': _('Sample Product'),
+                    'active': False,
+                    'image_1920': base64.b64encode(open(default_image_path, 'rb').read())
                 })
+                product.product_tmpl_id.write({'active': False})
             self.env['sale.order.line'].create({
                 'name': _('Sample Order Line'),
                 'product_id': product.id,
@@ -71,19 +77,35 @@ class ResCompany(models.Model):
             with the edi_invoice_template message loaded by default. """
         sample_sales_order = self._get_sample_sales_order()
         template = self.env.ref('sale.email_template_edi_sale', False)
-        action = self.env.ref('sale.action_open_sale_onboarding_sample_quotation').read()[0]
-        action['context'] = {
-            'default_res_id': sample_sales_order.id,
-            'default_use_template': bool(template),
-            'default_template_id': template and template.id or False,
-            'default_model': 'sale.order',
-            'default_composition_mode': 'comment',
-            'mark_so_as_sent': True,
-            'custom_layout': 'mail.mail_notification_paynow',
-            'proforma': self.env.context.get('proforma', False),
-            'force_email': True,
-            'mail_notify_author': True,
-        }
+
+        message_composer = self.env['mail.compose.message'].with_context(
+            default_use_template=bool(template),
+            mark_so_as_sent=True,
+            custom_layout='mail.mail_notification_paynow',
+            proforma=self.env.context.get('proforma', False),
+            force_email=True, mail_notify_author=True
+        ).create({
+            'res_id': sample_sales_order.id,
+            'template_id': template and template.id or False,
+            'model': 'sale.order',
+            'composition_mode': 'comment'})
+
+        # Simulate the onchange (like trigger in form the view)
+        update_values = message_composer.onchange_template_id(template.id, 'comment', 'sale.order', sample_sales_order.id)['value']
+        message_composer.write(update_values)
+
+        message_composer.send_mail()
+
+        self.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
+
+        self.action_close_sale_quotation_onboarding()
+
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
+        action.update({
+            'views': [[self.env.ref('sale.view_order_form').id, 'form']],
+            'view_mode': 'form',
+            'target': 'main',
+        })
         return action
 
     def get_and_update_sale_quotation_onboarding_state(self):

@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import json
-import logging
-import werkzeug
-import math
-
 from ast import literal_eval
 from collections import defaultdict
 
+import base64
+import json
+import logging
+import math
+import werkzeug
+
 from odoo import http, tools, _
-from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.website_profile.controllers.main import WebsiteProfile
+from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
@@ -58,9 +59,9 @@ class WebsiteSlides(WebsiteProfile):
         if request.env.user._is_public() or not slide.website_published or not slide.channel_id.is_member:
             viewed_slides = request.session.setdefault('viewed_slides', list())
             if slide.id not in viewed_slides:
-                slide.sudo().public_views += 1
-                viewed_slides.append(slide.id)
-                request.session['viewed_slides'] = viewed_slides
+                if tools.sql.increment_field_skiplock(slide, 'public_views'):
+                    viewed_slides.append(slide.id)
+                    request.session['viewed_slides'] = viewed_slides
         else:
             slide.action_set_viewed(quiz_attempts_inc=quiz_attempts_inc)
         return True
@@ -201,21 +202,14 @@ class WebsiteSlides(WebsiteProfile):
 
         return channel_progress
 
-    def _extract_channel_tag_search(self, **post):
-        tags = request.env['slide.channel.tag']
-        if post.get('tags'):
-            try:
-                tag_ids = literal_eval(post['tags'])
-            except:
-                pass
-            else:
-                # perform a search to filter on existing / valid tags implicitely
-                tags = request.env['slide.channel.tag'].search([('id', 'in', tag_ids)])
-        return tags
-
-    def _build_channel_domain(self, base_domain, slide_type=None, my=False, **post):
+    def _build_channel_domain(self, base_domain, slide_type=None, slug_tags=None, my=False, **post):
         search_term = post.get('search')
-        tags = self._extract_channel_tag_search(**post)
+        if slug_tags:
+            tags = self._channel_search_tags_slug(slug_tags)
+        elif post.get('tags'):
+            tags = self._channel_search_tags_ids(post['tags'])
+        else:
+            tags = request.env['slide.channel.tag']
 
         domain = base_domain
         if search_term:
@@ -258,6 +252,72 @@ class WebsiteSlides(WebsiteProfile):
         for slide in slides:
             session_slide_answer_quiz.pop(str(slide['id']), None)
         request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
+
+    # TAG UTILITIES
+    # --------------------------------------------------
+
+    def _slugify_tags(self, tag_ids, toggle_tag_id=None):
+        """ Prepares a comma separated slugified tags for the sake of readable
+        URLs.
+
+        :param toggle_tag_id: add the tag being clicked (current_tag) to the already
+          selected tags (tag_ids) as well as in URL; if tag is already selected
+          by the user it is removed from the selected tags (and so from the URL);
+        """
+        tag_ids = list(tag_ids)  # required to avoid using the same list
+        if toggle_tag_id and toggle_tag_id in tag_ids:
+            tag_ids.remove(toggle_tag_id)
+        elif toggle_tag_id:
+            tag_ids.append(toggle_tag_id)
+        return ','.join(slug(tag) for tag in request.env['slide.channel.tag'].browse(tag_ids))
+
+    def _channel_search_tags_ids(self, search_tags):
+        """ Input: %5B4%5D """
+        ChannelTag = request.env['slide.channel.tag']
+        try:
+            tag_ids = literal_eval(search_tags or '')
+        except Exception:
+            return ChannelTag
+        # perform a search to filter on existing / valid tags implicitly
+        return ChannelTag.search([('id', 'in', tag_ids)]) if tag_ids else ChannelTag
+
+    def _channel_search_tags_slug(self, search_tags):
+        """ Input: hotels-1,adventure-2 """
+        ChannelTag = request.env['slide.channel.tag']
+        try:
+            tag_ids = list(filter(None, [unslug(tag)[1] for tag in (search_tags or '').split(',')]))
+        except Exception:
+            return ChannelTag
+        # perform a search to filter on existing / valid tags implicitly
+        return ChannelTag.search([('id', 'in', tag_ids)]) if tag_ids else ChannelTag
+
+    def _create_or_get_channel_tag(self, tag_id, group_id):
+        if not tag_id:
+            return request.env['slide.channel.tag']
+        # handle creation of new channel tag
+        if tag_id[0] == 0:
+            group_id = self._create_or_get_channel_tag_group(group_id)
+            if not group_id:
+                return {'error': _('Missing "Tag Group" for creating a new "Tag".')}
+
+            new_tag = request.env['slide.channel.tag'].create({
+                'name': tag_id[1]['name'],
+                'group_id': group_id,
+            })
+            return new_tag
+        return request.env['slide.channel.tag'].browse(tag_id[0])
+
+    def _create_or_get_channel_tag_group(self, group_id):
+        if not group_id:
+            return False
+        # handle creation of new channel tag group
+        if group_id[0] == 0:
+            tag_group = request.env['slide.channel.tag.group'].create({
+                'name': group_id[1]['name'],
+            })
+            group_id = tag_group.id
+        # use existing channel tag group
+        return group_id[0]
 
     # --------------------------------------------------
     # SLIDE.CHANNEL MAIN / SEARCH
@@ -305,30 +365,43 @@ class WebsiteSlides(WebsiteProfile):
             'top3_users': self._get_top3_users(),
             'challenges': challenges,
             'challenges_done': challenges_done,
-            'search_tags': request.env['slide.channel.tag']
+            'search_tags': request.env['slide.channel.tag'],
+            'slide_query_url': QueryURL('/slides/all', ['tag']),
+            'slugify_tags': self._slugify_tags,
         })
 
         return request.render('website_slides.courses_home', values)
 
-    @http.route('/slides/all', type='http', auth="public", website=True, sitemap=True)
-    def slides_channel_all(self, slide_type=None, my=False, **post):
+    @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
+    def slides_channel_all(self, slide_type=None, slug_tags=None, my=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
           :param string slide_type: if provided, filter the course to contain at
            least one slide of type 'slide_type'. Used notably to display courses
            with certifications;
+          :param string slug_tags: if provided, filter the slide.channels having
+            the tag(s) (in comma separated slugified form);
           :param bool my: if provided, filter the slide.channels for which the
            current user is a member of
           :param dict post: post parameters, including
 
            * ``search``: filter on course description / name;
-           * ``channel_tag_id``: filter on courses containing this tag;
-           * ``channel_tag_group_id_<id>``: filter on courses containing this tag
-             in the tag group given by <id> (used in navigation based on tag group);
         """
+
+        if slug_tags and request.httprequest.method == 'GET':
+            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
+            # in GET request for proper bot indexation;
+            # if the search term is available, do not remove any existing
+            # tags because it is user who provided search term with GET
+            # request and so clearly it's not SEO bot.
+            tag_list = slug_tags.split(',')
+            if len(tag_list) > 1 and not post.get('search'):
+                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_type=slide_type)()
+                return request.redirect(url, code=302)
+
         domain = request.website.website_domain()
-        domain = self._build_channel_domain(domain, slide_type=slide_type, my=my, **post)
+        domain = self._build_channel_domain(domain, slide_type=slide_type, slug_tags=slug_tags, my=my, **post)
 
         order = self._channel_order_by_criterion.get(post.get('sorting'))
 
@@ -337,7 +410,12 @@ class WebsiteSlides(WebsiteProfile):
 
         tag_groups = request.env['slide.channel.tag.group'].search(
             ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
-        search_tags = self._extract_channel_tag_search(**post)
+        if slug_tags:
+            search_tags = self._channel_search_tags_slug(slug_tags)
+        elif post.get('tags'):
+            search_tags = self._channel_search_tags_ids(post['tags'])
+        else:
+            search_tags = request.env['slide.channel.tag']
 
         values = self._prepare_user_values(**post)
         values.update({
@@ -347,8 +425,9 @@ class WebsiteSlides(WebsiteProfile):
             'search_slide_type': slide_type,
             'search_my': my,
             'search_tags': search_tags,
-            'search_channel_tag_id': post.get('channel_tag_id'),
             'top3_users': self._get_top3_users(),
+            'slugify_tags': self._slugify_tags,
+            'slide_query_url': QueryURL('/slides/all', ['tag']),
         })
 
         return request.render('website_slides.courses_all', values)
@@ -406,7 +485,8 @@ class WebsiteSlides(WebsiteProfile):
 
         # sorting criterion
         if channel.channel_type == 'documentation':
-            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else channel.promote_strategy
+            default_sorting = 'latest' if channel.promote_strategy in ['specific', 'none', False] else channel.promote_strategy
+            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else default_sorting
         else:
             actual_sorting = 'sequence'
         order = request.env['slide.slide']._order_by_strategy[actual_sorting]
@@ -463,9 +543,13 @@ class WebsiteSlides(WebsiteProfile):
                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
                 last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
                 if last_message_attachment_ids:
-                    last_message_attachment_ids = json.dumps(request.env['ir.attachment'].browse(last_message_attachment_ids).read(
-                        ['id', 'name', 'mimetype', 'file_size', 'access_token']
-                    ))
+                    # use sudo as portal user cannot read access_token, necessary for updating attachments
+                    # through frontend chatter -> access is already granted and limited to current user message
+                    last_message_attachment_ids = json.dumps(
+                        request.env['ir.attachment'].sudo().browse(last_message_attachment_ids).read(
+                            ['id', 'name', 'mimetype', 'file_size', 'access_token']
+                        )
+                    )
             else:
                 last_message_values = {}
                 last_message_attachment_ids = []
@@ -485,7 +569,10 @@ class WebsiteSlides(WebsiteProfile):
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
         # documentation mode may display less slides than content by category but overhead of
         # computation is reasonable
-        values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
+        if channel.promote_strategy == 'specific':
+            values['slide_promoted'] = channel.sudo().promoted_slide_id
+        else:
+            values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
 
         limit_category_data = False
         if channel.channel_type == 'documentation':
@@ -602,36 +689,16 @@ class WebsiteSlides(WebsiteProfile):
             channel = request.env['slide.channel'].browse(int(channel_id))
             can_upload = channel.can_upload
             can_publish = channel.can_publish
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         else:
             if not can_upload or not can_publish:
                 return {'error': _('You cannot add tags to this course.')}
 
-        if tag_id:
-            # handle creation of new channel tag
-            if tag_id[0] == 0:
-                if group_id:
-                    # handle creation of new channel tag group
-                    if group_id[0] == 0:
-                        tag_group = request.env['slide.channel.tag.group'].create({
-                            'name': group_id[1]['name'],
-                        })
-                        group_id = tag_group.id
-                    # use existing channel tag group
-                    else:
-                        group_id = group_id[0]
-                else:
-                    return {'error': _('Missing "Tag Group" for creating a new "Tag".')}
+        tag = self._create_or_get_channel_tag(tag_id, group_id)
+        tag.write({'channel_ids': [(4, channel.id, 0)]})
 
-                request.env['slide.channel.tag'].create({'name': tag_id[1]['name'],
-                                                         'channel_ids': [channel.id],
-                                                         'group_id': group_id,
-                                                         })
-            else:
-                # use existing channel tag
-                request.env['slide.channel.tag'].browse(tag_id[0]).write({'channel_ids': [(4, channel.id, 0)]})
         return {'url': "/slides/%s" % (slug(channel))}
 
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
@@ -804,6 +871,15 @@ class WebsiteSlides(WebsiteProfile):
         return result
 
     # --------------------------------------------------
+    # TAGS SECTION
+    # --------------------------------------------------
+
+    @http.route('/slide_channel_tag/add', type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_create_or_get(self, tag_id, group_id):
+        tag = self._create_or_get_channel_tag(tag_id, group_id)
+        return {'tag_id': tag.id}
+
+    # --------------------------------------------------
     # QUIZ SECTION
     # --------------------------------------------------
 
@@ -854,7 +930,7 @@ class WebsiteSlides(WebsiteProfile):
                 'comment': answer['comment']
             }) for answer in answer_ids]
         })
-        return request.env.ref('website_slides.lesson_content_quiz_question').render({
+        return request.env.ref('website_slides.lesson_content_quiz_question')._render({
             'slide': slide,
             'question': slide_question,
         })
@@ -982,14 +1058,14 @@ class WebsiteSlides(WebsiteProfile):
     @http.route(['/slides/prepare_preview'], type='json', auth='user', methods=['POST'], website=True)
     def prepare_preview(self, **data):
         Slide = request.env['slide.slide']
-        document_type, document_id = Slide._find_document_data_from_url(data['url'])
+        unused, document_id = Slide._find_document_data_from_url(data['url'])
         preview = {}
         if not document_id:
             preview['error'] = _('Please enter valid youtube or google doc url')
             return preview
         existing_slide = Slide.search([('channel_id', '=', int(data['channel_id'])), ('document_id', '=', document_id)], limit=1)
         if existing_slide:
-            preview['error'] = _('This video already exists in this channel on the following slide: %s') % existing_slide.name
+            preview['error'] = _('This video already exists in this channel on the following slide: %s', existing_slide.name)
             return preview
         values = Slide._parse_document_url(data['url'], only_preview_fields=True)
         if values.get('error'):
@@ -1013,9 +1089,9 @@ class WebsiteSlides(WebsiteProfile):
             channel = request.env['slide.channel'].browse(values['channel_id'])
             can_upload = channel.can_upload
             can_publish = channel.can_publish
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         else:
             if not can_upload:
                 return {'error': _('You cannot upload on this channel.')}
@@ -1024,15 +1100,15 @@ class WebsiteSlides(WebsiteProfile):
             # minutes to hours conversion
             values['completion_time'] = int(post['duration']) / 60
 
-        category_id = False
+        category = False
         # handle creation of new categories on the fly
         if post.get('category_id'):
             category_id = post['category_id'][0]
             if category_id == 0:
                 category = request.env['slide.slide'].create(self._get_new_slide_category_values(channel, post['category_id'][1]['name']))
                 values['sequence'] = category.sequence + 1
-                category_id = category.id
             else:
+                category = request.env['slide.slide'].browse(category_id)
                 values.update({
                     'sequence': request.env['slide.slide'].browse(post['category_id'][0]).sequence + 1
                 })
@@ -1042,15 +1118,15 @@ class WebsiteSlides(WebsiteProfile):
             values['user_id'] = request.env.uid
             values['is_published'] = values.get('is_published', False) and can_publish
             slide = request.env['slide.slide'].sudo().create(values)
-        except (UserError, AccessError) as e:
+        except UserError as e:
             _logger.error(e)
-            return {'error': e.name}
+            return {'error': e.args[0]}
         except Exception as e:
             _logger.error(e)
-            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s') % e}
+            return {'error': _('Internal server error, please try again later or contact administrator.\nHere is the error message: %s', e)}
 
         # ensure correct ordering by re sequencing slides in front-end (backend should be ok thanks to list view)
-        channel._resequence_slides(slide, category_id)
+        channel._resequence_slides(slide, force_category=category)
 
         redirect_url = "/slides/slide/%s" % (slide.id)
         if channel.channel_type == "training" and not slide.slide_type == "webpage":

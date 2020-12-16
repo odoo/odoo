@@ -7,6 +7,7 @@
                 <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/slide_views.scss"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slide_category_one2many.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/rating_field_backend.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/activity.js"/>
             </xpath>
         </template>
 
@@ -21,17 +22,21 @@
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_share.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_upload.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_category_add.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_category_delete.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_slide_archive.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_slide_toggle_is_preview.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_slide_like.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_slides_list.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_fullscreen_player.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_join.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_enroll_email.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_quiz.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_quiz_question_form.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_quiz_finish.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_tag_add.js"/>
                 <script type="text/javascript" src="/website_slides/static/src/js/slides_course_unsubscribe.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/tours/slides_tour.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/portal_chatter.js"/>
             </xpath>
         </template>
 
@@ -61,6 +66,11 @@
             <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
         </template>
 
+        <template id="website_slides_tests" name="eLearning tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/website_slides/static/src/components/activity/activity_tests.js"/>
+            </xpath>
+        </template>
 
     </data>
 </odoo>

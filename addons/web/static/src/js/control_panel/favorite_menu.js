@@ -3,8 +3,9 @@ odoo.define('web.FavoriteMenu', function (require) {
 
     const Dialog = require('web.OwlDialog');
     const DropdownMenu = require('web.DropdownMenu');
+    const { FACET_ICONS } = require("web.searchUtils");
     const Registry = require('web.Registry');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * 'Favorites' menu
@@ -21,7 +22,7 @@ odoo.define('web.FavoriteMenu', function (require) {
         constructor() {
             super(...arguments);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
             this.state.deletedFavorite = false;
         }
 
@@ -32,13 +33,21 @@ odoo.define('web.FavoriteMenu', function (require) {
         /**
          * @override
          */
+        get icon() {
+            return FACET_ICONS.favorite;
+        }
+
+        /**
+         * @override
+         */
         get items() {
-            const favorites = this.model.getFiltersOfType('favorite');
+            const favorites = this.model.get('filters', f => f.type === 'favorite');
             const registryMenus = this.constructor.registry.values().reduce(
                 (menus, Component) => {
                     if (Component.shouldBeDisplayed(this.env)) {
                         menus.push({
                             key: Component.name,
+                            groupNumber: Component.groupNumber,
                             Component,
                         });
                     }
@@ -82,7 +91,7 @@ odoo.define('web.FavoriteMenu', function (require) {
          * @private
          */
         async _onRemoveFavorite() {
-            await this.model.dispatch('deleteFavorite', this.state.deletedFavorite.id);
+            this.model.dispatch('deleteFavorite', this.state.deletedFavorite.id);
             this.state.deletedFavorite = false;
         }
     }
@@ -91,9 +100,6 @@ odoo.define('web.FavoriteMenu', function (require) {
 
     FavoriteMenu.components = Object.assign({}, DropdownMenu.components, {
         Dialog,
-    });
-    FavoriteMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-star',
     });
     FavoriteMenu.template = 'web.FavoriteMenu';
 

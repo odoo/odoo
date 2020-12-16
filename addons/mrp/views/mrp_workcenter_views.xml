@@ -6,7 +6,7 @@
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
             <field name="view_mode">tree,kanban,form,gantt</field>
-            <field name="domain">[('routing_id', '!=', False),('routing_id.operation_ids.workcenter_id','=', active_id)]</field>
+            <field name="domain">[('bom_id', '!=', False), ('bom_id.operation_ids.workcenter_id', '=', active_id)]</field>
         </record>
 
         <record id="action_work_orders" model="ir.actions.act_window">
@@ -18,14 +18,12 @@
             <field name="domain">[('state', 'not in', ('done', 'cancel'))]</field>
             <field name="context">{'search_default_workcenter_id': active_id}</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Add a work center
-              </p><p>
-                Work Centers allow you to create and manage manufacturing
-                units. They consist of workers and/or machines, which are
-                considered as units for task assignment as well as capacity
-                and planning forecast.
-              </p>
+                <p class="o_view_nocontent_smiling_face">
+                    No work orders to do!
+                </p><p>
+                    Work orders are operations to do as part of a manufacturing order.
+                    Operations are defined in the bill of materials or added in the manufacturing order directly.
+                </p>
             </field>
         </record>
 
@@ -72,9 +70,9 @@
             <field name="model">mrp.workcenter.productivity</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <graph string="Workcenter Productivity" type="pie">
+                <graph string="Workcenter Productivity" type="pie" sample="1">
                     <field name="loss_id"/>
-                    <field name="duration" type="measure"/>
+                    <field name="duration" type="measure" string="Duration (minutes)"/>
                 </graph>
             </field>
         </record>
@@ -87,9 +85,9 @@
             <field name="domain">[('workcenter_id','=',active_id')]</field>
             <field name="context">{'search_default_thismonth':True}</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_empty_folder">
-                Overall Equipment Effectiveness: no working or blocked time
-              </p>
+                <p class="o_view_nocontent_smiling_face">
+                    Overall Equipment Effectiveness: no working or blocked time
+                </p>
             </field>
         </record>
         <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report_blocked">
@@ -127,7 +125,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.workorder</field>
             <field name="domain">[]</field>
-            <field name="context">{'search_default_done': True}</field>
+            <field name="context">{'search_default_workcenter': 1, 'search_default_product': 2}</field>
             <field name="view_mode">graph,pivot,tree,form,gantt</field>
             <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
             <field name="help" type="html">
@@ -142,7 +140,7 @@
             <field name="name">mrp.workcenter.kanban</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_workcenter_kanban" create="0">
+                <kanban class="oe_background_grey o_kanban_dashboard o_workcenter_kanban" create="0" sample="1">
                     <field name="name"/>
                     <field name="color"/>
                     <field name="workorder_count"/>
@@ -166,7 +164,7 @@
                                         <div class="col-6 o_kanban_primary_left">
                                             <div class="btn-group" name="o_wo">
                                             <t t-if="record.workorder_count.raw_value &gt; 0">
-                                                <button class="btn btn-primary" name="action_work_order" type="object">
+                                                <button class="btn btn-primary" name="action_work_order" type="object" context="{'search_default_ready': 1, 'search_default_progress': 1}">
                                                     <span>WORK ORDERS</span>
                                                 </button>
                                             </t>
@@ -400,9 +398,8 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a new work center
               </p><p>
-                Manufacturing operations are processed at Work Centers. A Work Center can be composed
-                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
-                The Work Centers are defined on the Routing's operations.
+                Manufacturing operations are processed at Work Centers. A Work Center can be composed of
+                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
               </p>
             </field>
         </record>
@@ -420,7 +417,7 @@
               </p><p>
                 Manufacturing operations are processed at Work Centers. A Work Center can be composed of
                 workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
-                The Work Centers are defined on the Routing's operations.
+                They can be defined via the configuration menu.
               </p>
             </field>
         </record>
@@ -428,16 +425,8 @@
         <menuitem id="menu_view_resource_search_mrp"
             action="mrp_workcenter_action"
             groups="group_mrp_routings"
-            parent="menu_mrp_bom"
+            parent="menu_mrp_configuration"
             sequence="90"/>
-
-        <menuitem id="menu_mrp_dashboard"
-            name="Overview"
-            action="mrp_workcenter_kanban_action"
-            groups="group_mrp_routings"
-            parent="menu_mrp_root"
-            sequence="5"/>
-
 
     <record id="oee_loss_form_view" model="ir.ui.view">
         <field name="name">mrp.workcenter.productivity.loss.form</field>
@@ -518,6 +507,7 @@
                 <filter name="performance" string="Performance Losses" domain="[('loss_type','=','performance')]"/>
                 <filter name="quality" string="Quality Losses" domain="[('loss_type','=','quality')]"/>
                 <filter name="productive" string="Fully Productive" domain="[('loss_type','=','productive')]"/>
+                <filter name="filter_date_start" string="Date" date="date_start"/>
                 <separator/>
                 <group expand='0' string='Group by...'>
                     <filter string="User" name="user" context="{'group_by': 'create_uid'}"/>
@@ -573,10 +563,10 @@
         <field name="name">mrp.workcenter.productivity.graph</field>
         <field name="model">mrp.workcenter.productivity</field>
         <field name="arch" type="xml">
-            <graph string="Workcenter Productivity">
+            <graph string="Workcenter Productivity" sample="1">
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
-                <field name="duration" type="measure"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
             </graph>
         </field>
     </record>
@@ -585,10 +575,10 @@
         <field name="name">mrp.workcenter.productivity.pivot</field>
         <field name="model">mrp.workcenter.productivity</field>
         <field name="arch" type="xml">
-            <pivot string="Workcenter Productivity">
+            <pivot string="Workcenter Productivity" sample="1">
                 <field name="date_start" type="row" interval="day"/>
                 <field name="loss_type" type="col"/>
-                <field name="duration" type="measure"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
             </pivot>
         </field>
     </record>
@@ -599,11 +589,11 @@
         <field name="res_model">mrp.workcenter.productivity</field>
         <field name="view_mode">graph,pivot,tree,form</field>
         <field name="domain">[]</field>
-        <field name="context">{'search_default_workcenter_group': 1, 'search_default_thismonth':True, 'create':False,'edit':False}</field>
+        <field name="context">{'search_default_workcenter_group': 1, 'search_default_loss_group': 2, 'create':False,'edit':False}</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            Overall Equipment Effectiveness: no working or blocked time
-          </p>
+            <p class="o_view_nocontent_smiling_face">
+                Overall Equipment Effectiveness: no working or blocked time
+            </p>
         </field>
     </record>
 

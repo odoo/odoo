@@ -189,12 +189,11 @@ QUnit.test('activity view: simple activity rendering', async function (assert) {
 QUnit.test('activity view: no content rendering', async function (assert) {
     assert.expect(2);
 
-    // remove activities from tasks
+    // reset incompatible setup
+    this.data['mail.activity'].records = [];
     this.data.task.records.forEach(function (task) {
         task.activity_ids = false;
     });
-
-    // remove activity types
     this.data['mail.activity.type'].records = [];
 
     var activity = await createView({
@@ -352,7 +351,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
 
     activity.destroy();
 });
-QUnit.test('activity view: no group_by_menu and no time_range_menu', async function (assert) {
+QUnit.test('activity view: no group_by_menu and no comparison_menu', async function (assert) {
     assert.expect(4);
 
     var actionManager = await createActionManager({

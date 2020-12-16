@@ -1,10 +1,13 @@
 odoo.define('web.search_bar_tests', function (require) {
     "use strict";
 
+    const { Model } = require('web/static/src/js/model.js');
+    const Registry = require("web.Registry");
+    const SearchBar = require('web.SearchBar');
     const testUtils = require('web.test_utils');
 
     const cpHelpers = testUtils.controlPanel;
-    const { createActionManager } = testUtils;
+    const { createActionManager, createComponent } = testUtils;
 
     QUnit.module('Components', {
         beforeEach: function () {
@@ -165,6 +168,63 @@ odoo.define('web.search_bar_tests', function (require) {
                 'The format of the datetime in the facet should be in locale');
 
             actionManager.destroy();
+        });
+
+        QUnit.test("autocomplete menu clickout interactions", async function (assert) {
+            assert.expect(9);
+
+            const fields = this.data.partner.fields;
+
+            class TestModelExtension extends Model.Extension {
+                get(property) {
+                    switch (property) {
+                        case 'facets':
+                            return [];
+                        case 'filters':
+                            return Object.keys(fields).map((fname, index) => Object.assign({
+                                description: fields[fname].string,
+                                fieldName: fname,
+                                fieldType: fields[fname].type,
+                                id: index,
+                            }, fields[fname]));
+                        default:
+                            break;
+                    }
+                }
+            }
+            class MockedModel extends Model { }
+            MockedModel.registry = new Registry({ Test: TestModelExtension, });
+            const searchModel = new MockedModel({ Test: {} });
+            const searchBar = await createComponent(SearchBar, {
+                data: this.data,
+                env: { searchModel },
+                props: { fields },
+            });
+            const input = searchBar.el.querySelector('.o_searchview_input');
+
+            assert.containsNone(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.controlPanel.editSearch(searchBar, "Hello there");
+
+            assert.strictEqual(input.value, "Hello there", "input value should be updated");
+            assert.containsOnce(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.dom.triggerEvent(input, 'keydown', { key: 'Escape' });
+
+            assert.strictEqual(input.value, "", "input value should be empty");
+            assert.containsNone(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.controlPanel.editSearch(searchBar, "General Kenobi");
+
+            assert.strictEqual(input.value, "General Kenobi", "input value should be updated");
+            assert.containsOnce(searchBar, '.o_searchview_autocomplete');
+
+            await testUtils.dom.click(document.body);
+
+            assert.strictEqual(input.value, "", "input value should be empty");
+            assert.containsNone(searchBar, '.o_searchview_autocomplete');
+
+            searchBar.destroy();
         });
 
         QUnit.test('select an autocomplete field', async function (assert) {
@@ -414,23 +474,115 @@ odoo.define('web.search_bar_tests', function (require) {
 
         QUnit.test('open search view autocomplete on paste value using mouse', async function (assert) {
             assert.expect(1);
-    
+
             const actionManager = await createActionManager({
                 actions: this.actions,
                 archs: this.archs,
                 data: this.data,
             });
-    
+
             await actionManager.doAction(1);
             // Simulate paste text through the mouse.
             const searchInput = actionManager.el.querySelector('.o_searchview_input');
             searchInput.value = "ABC";
             await testUtils.dom.triggerEvent(searchInput, 'input',
-                    { inputType: 'insertFromPaste' });
+                { inputType: 'insertFromPaste' });
             await testUtils.nextTick();
             assert.containsOnce(actionManager, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on paste in search view");
-    
+
+            actionManager.destroy();
+        });
+
+        QUnit.test('select autocompleted many2one', async function (assert) {
+            assert.expect(5);
+
+            const archs = Object.assign({}, this.archs, {
+                'partner,false,search': `
+                    <search>
+                        <field name="foo"/>
+                        <field name="birthday"/>
+                        <field name="birth_datetime"/>
+                        <field name="bar" operator="child_of"/>
+                    </search>`,
+            });
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs,
+                data: this.data,
+                async mockRPC(route, { domain }) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(JSON.stringify(domain));
+                    }
+                    return this._super(...arguments);
+                },
+            });
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "rec");
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li:last-child'));
+
+            await cpHelpers.removeFacet(actionManager, 0);
+
+            await cpHelpers.editSearch(actionManager, "rec");
+            await testUtils.dom.click(actionManager.el.querySelector('.o_expand'));
+            await testUtils.dom.click(actionManager.el.querySelector('.o_searchview_autocomplete li.o_menu_item.o_indent'));
+
+            assert.verifySteps([
+                '[]',
+                '[["bar","child_of","rec"]]', // Incomplete string -> Name search
+                '[]',
+                '[["bar","child_of",1]]', // Suggestion select -> Specific ID
+            ]);
+
+            actionManager.destroy();
+        });
+
+        QUnit.test("reference fields are supported in search view", async function (assert) {
+            assert.expect(7);
+
+            this.data.partner.fields.ref = { type: 'reference', string: "Reference" };
+            this.data.partner.records.forEach((record, i) => {
+                record.ref = `ref${String(i).padStart(3, "0")}`;
+            });
+            const archs = Object.assign({}, this.archs, {
+                'partner,false,search': `
+                    <search>
+                        <field name="ref"/>
+                    </search>`,
+            });
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs,
+                data: this.data,
+                async mockRPC(route, { domain }) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(JSON.stringify(domain));
+                    }
+                    return this._super(...arguments);
+
+                }
+            });
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "ref");
+            await cpHelpers.validateSearch(actionManager);
+
+            assert.containsN(actionManager, ".o_data_row", 5);
+
+            await cpHelpers.removeFacet(actionManager, 0);
+            await cpHelpers.editSearch(actionManager, "ref002");
+            await cpHelpers.validateSearch(actionManager);
+
+            assert.containsOnce(actionManager, ".o_data_row");
+
+            assert.verifySteps([
+                '[]',
+                '[["ref","ilike","ref"]]',
+                '[]',
+                '[["ref","ilike","ref002"]]',
+            ]);
+
             actionManager.destroy();
         });
     });

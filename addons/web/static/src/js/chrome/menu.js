@@ -46,6 +46,7 @@ var Menu = Widget.extend({
         this.$menu_apps = this.$('.o_menu_apps');
         this.$menu_brand_placeholder = this.$('.o_menu_brand');
         this.$section_placeholder = this.$('.o_menu_sections');
+        this._updateMenuBrand();
 
         // Navbar's menus event handlers
         var on_secondary_menu_click = function (ev) {

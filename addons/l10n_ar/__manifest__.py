@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Argentinian Accounting',
+    'name': 'Argentina - Accounting',
     'version': "3.0",
     'description': """
 Functional
 ----------
 
-This module add accounting features for the Argentinian localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.
+This module add accounting features for the Argentinean localization, which represent the minimal configuration needed for a company  to operate in Argentina and under the AFIP (Administración Federal de Ingresos Públicos) regulations and guidelines.
 
 Follow the next configuration steps for Production:
 
@@ -55,7 +55,7 @@ Master Data:
   * Exento (EX)
   * Monotributo (Mono)
 
-* Argentinian Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)
+* Argentinean Taxes and Account Tax Groups (VAT taxes with the existing aliquots and other types)
 * AFIP Responsibility Types
 * Fiscal Positions (in order to map taxes)
 * Legal Documents Types in Argentina
@@ -66,7 +66,7 @@ Master Data:
 * Partners: Consumidor Final and AFIP
 """,
     'author': 'ADHOC SA',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'depends': [
         'l10n_latam_invoice_document',
         'l10n_latam_base',
@@ -87,6 +87,7 @@ Master Data:
         'data/res_partner_data.xml',
         'data/res.currency.csv',
         'data/res.country.csv',
+        'views/l10n_ar.xml',
         'views/account_move_view.xml',
         'views/res_partner_view.xml',
         'views/res_company_view.xml',
@@ -98,9 +99,9 @@ Master Data:
         'views/uom_uom_view.xml',
         'views/account_journal_view.xml',
         'views/l10n_latam_document_type_view.xml',
-        'views/ir_sequence_view.xml',
         'views/report_invoice.xml',
         'report/invoice_report_view.xml',
+        'data/account_chart_template_configure_data.xml',
     ],
     'demo': [
         # we create demo data on different companies (not main_company) to
@@ -109,7 +110,7 @@ Master Data:
         'demo/mono_demo.xml',
         'demo/respinsc_demo.xml',
         'demo/res_partner_demo.xml',
-        'demo/account_tax_template_demo.xml',
+        'demo/account_tax_demo.xml',
         'demo/product_product_demo.xml',
         'demo/account_customer_invoice_demo.xml',
         'demo/account_customer_refund_demo.xml',

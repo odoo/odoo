@@ -82,7 +82,7 @@ class L10nInExemptedReport(models.Model):
             JOIN account_account aa ON aa.id = aml.account_id
             JOIN account_journal aj ON aj.id = am.journal_id
             JOIN res_company c ON c.id = aj.company_id
-            LEFT JOIN res_partner cp ON cp.id = c.partner_id
+            LEFT JOIN res_partner cp ON cp.id = COALESCE(aj.l10n_in_gstin_partner_id, c.partner_id)
             LEFT JOIN res_partner p ON p.id = am.partner_id
             LEFT JOIN res_country pc ON pc.id = p.country_id
             WHERE aa.internal_type = 'other' and aml.tax_line_id IS NULL

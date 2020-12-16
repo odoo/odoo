@@ -127,19 +127,11 @@ ListRenderer.include({
      * @override
      */
     on_attach_callback: function () {
-        this.isInDOM = true;
+        this._super();
+        // _freezeColumnWidths requests style information, which produces a
+        // repaint, so we call it after _super to prevent flickering (in case
+        // other code would also modify the DOM post rendering/before repaint)
         this._freezeColumnWidths();
-        this._super();
-    },
-    /**
-     * The list renderer needs to know if it is in the DOM to properly compute
-     * column widths.
-     *
-     * @override
-     */
-    on_detach_callback: function () {
-        this.isInDOM = false;
-        this._super();
     },
 
     //--------------------------------------------------------------------------
@@ -186,7 +178,7 @@ ListRenderer.include({
             if (widgets.length) {
                 var $row = self._getRow(recordID);
                 var record = self._getRecord(recordID);
-                self._setDecorationClasses(record, $row);
+                self._setDecorationClasses($row, self.rowDecorations, record);
                 self._updateFooter();
             }
             return widgets;
@@ -220,7 +212,7 @@ ListRenderer.include({
         var self = this;
 
         var oldData = this.state.data;
-        this.state = state;
+        this._setState(state);
         return this.confirmChange(state, id, fields, ev).then(function () {
             // If no record with 'id' can be found in the state, the
             // confirmChange method will have rerendered the whole view already,
@@ -366,7 +358,7 @@ ListRenderer.include({
      * @param {string} recordID
      */
     removeLine: function (state, recordID) {
-        this.state = state;
+        this._setState(state);
         var $row = this._getRow(recordID);
         if ($row.length === 0) {
             return;
@@ -385,12 +377,10 @@ ListRenderer.include({
             // we want to always keep at least 4 (possibly empty) rows
             var $emptyRow = this._renderEmptyRow();
             $row.replaceWith($emptyRow);
-            if (this.editable === "top") {
-                // move the empty row we just inserted after data rows
-                var $lastDataRow = this.$('.o_data_row:last');
-                if ($lastDataRow.length) {
-                    $emptyRow.insertAfter($lastDataRow);
-                }
+            // move the empty row we just inserted after last data row
+            const $lastDataRow = this.$('.o_data_row:last');
+            if ($lastDataRow.length) {
+                $emptyRow.insertAfter($lastDataRow);
             }
         }
     },
@@ -1334,7 +1324,9 @@ ListRenderer.include({
      * Set a maximum width on the largest columns in the list in case the table
      * is overflowing. The idea is to shrink largest columns first, but to
      * ensure that they are still the largest at the end (maybe in equal measure
-     * with other columns).
+     * with other columns). Button columns aren't impacted by this function, as
+     * we assume that they can't be squeezed (we want all buttons to always be
+     * available, not being replaced by ellipsis).
      *
      * @private
      * @returns {integer[]} width (in px) of each column s.t. the table doesn't
@@ -1342,6 +1334,12 @@ ListRenderer.include({
      */
     _squeezeTable: function () {
         const table = this.el.getElementsByClassName('o_list_table')[0];
+
+        // Toggle a className used to remove style that could interfer with the ideal width
+        // computation algorithm (e.g. prevent text fields from being wrapped during the
+        // computation, to prevent them from being completely crushed)
+        table.classList.add('o_list_computing_widths');
+
         const thead = table.getElementsByTagName('thead')[0];
         const thElements = [...thead.getElementsByTagName('th')];
         const columnWidths = thElements.map(th => th.offsetWidth);
@@ -1362,7 +1360,7 @@ ListRenderer.include({
             return thresholdReached;
         };
         // Sort columns, largest first
-        const sortedThs = [...thead.getElementsByTagName('th')]
+        const sortedThs = [...thead.querySelectorAll('th:not(.o_list_button)')]
             .sort((a, b) => getWidth(b) - getWidth(a));
         const allowedWidth = table.parentNode.offsetWidth;
 
@@ -1388,6 +1386,9 @@ ListRenderer.include({
 
             totalWidth = getTotalWidth();
         }
+
+        // We are no longer computing widths, so restore the normal style
+        table.classList.remove('o_list_computing_widths');
 
         return columnWidths;
     },
@@ -1701,6 +1702,11 @@ ListRenderer.include({
             'mousedown',
             'mouseup',
         ];
+
+        // Fix container width to prevent the table from overflowing when being resized
+        if (!this.el.style.width) {
+            this.el.style.width = `${initialTableWidth}px`;
+        }
 
         // Apply classes to table and selected column
         table.classList.add('o_resizing');

@@ -25,6 +25,10 @@
                 <separator/>
                 <filter string="Unscheduled" name="unscheduled" domain="[('schedule_date', '=', False)]"/>
                 <separator/>
+                <filter name="filter_request_date" date="request_date"/>
+                <filter name="filter_schedule_date" date="schedule_date"/>
+                <filter name="filter_close_date" date="close_date"/>
+                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
@@ -95,12 +99,12 @@
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
                     </group>
-                    <field name='description' placeholder="Internal Note ......."/>
+                    <field name='description' placeholder="Internal Notes"/>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -110,7 +114,7 @@
         <field name="name">equipment.request.kanban</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <kanban default_group_by="stage_id">
+            <kanban default_group_by="stage_id" sample="1">
                 <field name="stage_id"/>
                 <field name="color"/>
                 <field name="priority"/>
@@ -119,7 +123,6 @@
                 <field name="owner_user_id"/>
                 <field name="category_id"/>
                 <field name="kanban_state"/>
-                <field name="message_needaction_counter"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
@@ -155,17 +158,13 @@
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left">
                                         <field name="priority" widget="priority"/>
-                                        <t t-if="record.message_needaction_counter.raw_value">
-                                            <span role="alert" class='oe_kanban_mail_new' title='Unread Messages'><i class='fa fa-comments' role="img" aria-label="Unread Messages"/><t t-raw="record.message_needaction_counter.raw_value"/></span>
-                                        </t>
                                         <div class="o_kanban_inline_block ml4 mr4">
                                             <field name="activity_ids" widget="kanban_activity" />
                                         </div>
                                     </div>
                                     <div class="oe_kanban_bottom_right">
                                         <field name="kanban_state" widget="state_selection"/>
-                                        <t t-set="unassigned"><t t-esc="_t('Unassigned')"/></t>
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value || unassigned" t-att-alt="record.user_id.value" class="oe_kanban_avatar float-right"/>
+                                        <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
                             </div>
@@ -181,7 +180,7 @@
         <field name="name">equipment.request.tree</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <tree string="maintenance Request" multi_edit="1" decoration-bf="message_needaction==True">
+            <tree string="maintenance Request" multi_edit="1" sample="1">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <field name="request_date" groups="base.group_no_one"/>
@@ -199,7 +198,7 @@
         <field name="name">equipment.request.graph</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <graph string="maintenance Request">
+            <graph string="maintenance Request" sample="1">
                 <field name="user_id"/>
                 <field name="stage_id"/>
             </graph>
@@ -210,7 +209,7 @@
         <field name="name">equipment.request.pivot</field>
         <field name="model">maintenance.request</field>
         <field name="arch" type="xml">
-            <pivot string="maintenance Request">
+            <pivot string="maintenance Request" sample="1">
                 <field name="user_id"/>
                 <field name="stage_id"/>
                 <field name="color" invisible="1"/>
@@ -400,9 +399,9 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -412,7 +411,7 @@
         <field name="name">equipment.kanban</field>
         <field name="model">maintenance.equipment</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <field name="name"/>
                 <field name="color"/>
                 <field name="technician_user_id"/>
@@ -423,7 +422,6 @@
                 <field name="maintenance_ids"/>
                 <field name="maintenance_open_count"/>
                 <field name="next_action_date"/>
-                <field name="technician_user_id"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -469,7 +467,7 @@
                                         <div class="o_kanban_inline_block" t-if="!selection_mode">
                                             <field name="activity_ids" widget="kanban_activity" />
                                         </div>
-                                        <img t-att-src="kanban_image('res.users', 'image_128', record.owner_user_id.raw_value)" t-att-title="record.owner_user_id.value" t-att-alt="record.owner_user_id.value" class="oe_kanban_avatar"/>
+                                        <field name="owner_user_id" widget="many2one_avatar_user"/>
                                     </div>
                                 </div>
                             </div>
@@ -485,7 +483,7 @@
         <field name="name">equipment.tree</field>
         <field name="model">maintenance.equipment</field>
         <field name="arch" type="xml">
-            <tree string="Assign To User"  decoration-bf="message_needaction==True">
+            <tree string="Assign To User" sample="1">
                 <field name="message_needaction" invisible="1"/>
                 <field name="name"/>
                 <!-- <field name="active" invisible="1"/> -->
@@ -617,8 +615,8 @@
                 <field name="note" nolabel="1"/>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -661,7 +659,6 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div class="mb4">
                                 <strong><field name="name"/></strong>
-                                <img t-att-src="kanban_image('res.users', 'image_128', record.technician_user_id.raw_value)" t-att-title="record.technician_user_id.value" t-att-alt="record.technician_user_id.value" class="oe_kanban_avatar o_image_24_cover float-right"/>
                             </div>
                             <div class="row mt4">
                                 <div class="col-6">
@@ -673,6 +670,7 @@
                                     <span class="badge badge-pill">
                                         <strong>Maintenance:</strong> <field name="maintenance_count"/>
                                     </span>
+                                    <field name="technician_user_id" widget="many2one_avatar_user"/>
                                 </div>
                             </div>
                         </div>
@@ -841,39 +839,29 @@
                                         </button>
                                     </div>
                                     <div class="col-6 o_kanban_primary_right">
-                                        <div class="row">
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_request_action_cal)d" type="action">
-                                                    Scheduled
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                        <div t-if="record.todo_request_count_date.raw_value > 0">
+                                            <a name="%(hr_equipment_request_action_cal)d" type="action">
                                                 <t t-esc="record.todo_request_count_date.value"/>
-                                            </div>
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_top_priority': 1}">
-                                                    Top Priorities
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                                Scheduled
+                                            </a>
+                                        </div>
+                                        <div t-if="record.todo_request_count_high_priority.raw_value > 0">
+                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_high_priority': 1}">
                                                 <t t-esc="record.todo_request_count_high_priority.value"/>
-                                            </div>
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
-                                                    Blocked
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                                Top Priorities
+                                            </a>
+                                        </div>
+                                        <div t-if="record.todo_request_count_block.raw_value > 0">
+                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_kanban_state_block': 1}">
                                                 <t t-esc="record.todo_request_count_block.value"/>
-                                            </div>
-                                            <div class="col-9">
-                                                <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
-                                                    Unscheduled
-                                                </a>
-                                            </div>
-                                            <div class="col-3">
+                                                Blocked
+                                            </a>
+                                        </div>
+                                        <div t-if="record.todo_request_count_unscheduled.raw_value > 0">
+                                            <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action" context="{'search_default_unscheduled': 1}">
                                                 <t t-esc="record.todo_request_count_unscheduled.value"/>
-                                            </div>
+                                                Unscheduled
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -881,7 +869,7 @@
                                 <div class="row">
                                     <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
                                         <div role="menuitem" class="o_kanban_card_manage_title">
-                                            <span>View</span>
+                                            <span>Requests</span>
                                         </div>
                                         <div role="menuitem">
                                             <a name="%(hr_equipment_todo_request_action_from_dashboard)d" type="action">
@@ -919,8 +907,8 @@
                                     <div class="col-8" role="menuitem" aria-haspopup="true">
                                         <ul role="menu" class="oe_kanban_colorpicker" data-field="color"/>
                                     </div>
-                                    <div role="menuitem" class="col-4 text-right">
-                                        <a type="edit">Settings</a>
+                                    <div role="menuitem" class="col-4">
+                                        <a type="edit" class="dropdown-item">Configuration</a>
                                     </div>
                                 </div>
                             </div>

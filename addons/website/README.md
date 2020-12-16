@@ -27,7 +27,7 @@ Odoo's building blocks allow to design modern websites that are not possible
 with traditional WYSIWYG page editors.
 
 Whether it's for products descriptions, blogs or static pages, you don't need
-to be a professioanl designer to create clean contents. Just drag and drop and
+to be a professional designer to create clean contents. Just drag and drop and
 customize predefined building blocks.
 
 Enterprise-Ready, out-of-the-box
@@ -64,11 +64,6 @@ Multi-Languages Made Easy
 Get your website translated in multiple languages with no effort. Odoo proposes
 and propagates translations automatically across pages, following what you edit
 on the master page.
-
-Benefit from professional translators to translate all your contents
-automatically with the [Gengo](http://gengo.com) integration. Update any part
-of your website and the translated versions are pushed automatically in a few
-hours.
 
 Designer-Friendly Templates
 ---------------------------

@@ -15,8 +15,9 @@
 
                                 <label for="fiscalyear_last_month" string="Fiscal Year End"/>
                                 <div>
-                                    <field name="fiscalyear_last_day"/>
-                                    <field name="fiscalyear_last_month"/>
+                                    <field name="fiscalyear_last_day" class="oe_inline text-center" style="width: 20% !important;"/>
+                                    <span style="width: 5%; display: inline-block"/>
+                                    <field name="fiscalyear_last_month" class="oe_inline" style="width: 75% !important;"/>
                                 </div>
                             </group>
                         </group>
@@ -40,25 +41,19 @@
                     <field name="company_id" invisible="1"/>
                     <field name="linked_journal_id" invisible="1"/>
                     <sheet>
-                        <div class="oe_title">
-                            <h1><field name="new_journal_name" placeholder="e.g Checking account" class="oe_inline"/></h1>
-                        </div>
                         <group>
                             <group>
                                 <field name="acc_number" placeholder="e.g BE15001559627230"/>
                                 <field name="bank_id" placeholder="e.g Bank of America"/>
-                                <field name="new_journal_code"/>
-                            </group>
-                            <group>
-                                <field name="related_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
+                                <field name="bank_bic" placeholder="e.g GEBABEBB" string="Bank Identifier Code"/>
                             </group>
                         </group>
-                        <group attrs="{'invisible': [('num_journals_without_account', '&lt;', 2)]}">
+                        <group attrs="{'invisible': [('num_journals_without_account', '=', 0)]}">
                            <group>
-                            <field name="linked_journal_id" attrs="{'required': [('num_journals_without_account','!=',0)]}"/>
+                            <field name="linked_journal_id" options="{'no_create': True}"/>
                           </group>
                           <group>
-                               <span class="text-muted">Only journals not yet linked to a bank account are proposed</span>
+                               <span class="text-muted">Leave empty to create a new journal for this bank account, or select a journal to link it with the bank account.</span>
                            </group>
                         </group>
                     </sheet>
@@ -74,18 +69,19 @@
             <field name="name">account.setup.opening.move.line.tree</field>
             <field name="model">account.account</field>
             <field name="arch" type="xml">
-                <tree editable="top" create="1" delete="1" multi_edit="1" decoration-muted="opening_debit == 0 and opening_credit == 0">
+                <tree editable="top" create="1" delete="1" decoration-muted="opening_debit == 0 and opening_credit == 0">
                     <field name="code"/>
                     <field name="name"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="user_type_id"/>
+                    <field name="user_type_id" widget="account_hierarchy_selection"/>
                     <field name="reconcile" widget="boolean_toggle"/>
                     <field name="opening_debit"/>
                     <field name="opening_credit"/>
+                    <field name="opening_balance" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
-                    <button name="action_read_account" type="object" icon="fa-expand" title="Open" aria-label="Open" class="float-right"/>
+                    <button name="action_read_account" type="object" string="Setup" class="float-right btn-secondary"/>
                 </tree>
             </field>
         </record>

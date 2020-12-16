@@ -9,6 +9,8 @@ from odoo import fields
 class TestStockFlow(TestStockCommon):
     def setUp(cls):
         super(TestStockFlow, cls).setUp()
+        decimal_product_uom = cls.env.ref('product.decimal_product_uom')
+        decimal_product_uom.digits = 3
         cls.partner_company2 = cls.env['res.partner'].create({
             'name': 'My Company (Chicago)-demo',
             'email': 'chicago@yourcompany.com',
@@ -1037,8 +1039,6 @@ class TestStockFlow(TestStockCommon):
         res_dict = bo_out_3.button_validate()
         wizard = Form(self.env[(res_dict.get('res_model'))].with_context(res_dict['context'])).save()
         res_dict_for_back_order = wizard.process()
-        backorder_wizard = self.env[(res_dict_for_back_order.get('res_model'))].browse(res_dict_for_back_order.get('res_id')).with_context(res_dict_for_back_order['context'])
-        backorder_wizard.process()
         quants = self.StockQuantObj.search([('product_id', '=', productKG.id), ('location_id', '=', self.stock_location)])
         total_qty = [quant.quantity for quant in quants]
         self.assertEqual(sum(total_qty), 999.9980, 'Expecting 999.9980 kg , got %.4f kg on location stock!' % (sum(total_qty)))
@@ -1330,7 +1330,7 @@ class TestStockFlow(TestStockCommon):
         # Set the quantity done on the pack operation
         move_in.move_line_ids.qty_done = 3.0
         # Put in a pack
-        picking_in.put_in_pack()
+        picking_in.action_put_in_pack()
         # Get the new package
         picking_in_package = move_in.move_line_ids.result_package_id
         # Validate picking
@@ -1725,8 +1725,7 @@ class TestStockFlow(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
 
-        with self.assertRaises(UserError):
-            move_mto_alone._action_confirm()
+        move_mto_alone._action_confirm()
         move_with_ancestors._action_confirm()
         other_move._action_confirm()
 
@@ -1734,7 +1733,7 @@ class TestStockFlow(TestStockCommon):
         move_with_ancestors._do_unreserve()
         other_move._do_unreserve()
 
-        self.assertEqual(move_mto_alone.state, "draft")
+        self.assertEqual(move_mto_alone.state, "waiting")
         self.assertEqual(move_with_ancestors.state, "waiting")
         self.assertEqual(other_move.state, "confirmed")
 

@@ -55,6 +55,8 @@ class StockRule(models.Model):
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
             self.env['stock.move'].sudo().create(productions._get_moves_raw_values())
+            self.env['stock.move'].sudo().create(productions._get_moves_finished_values())
+            productions._create_workorder()
             productions.filtered(lambda p: p.move_raw_ids).action_confirm()
 
             for production in productions:
@@ -82,7 +84,8 @@ class StockRule(models.Model):
             product=product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
-        date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
+        date_planned = self._get_date_planned(product_id, company_id, values)
+        date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=company_id.manufacturing_lead) + relativedelta(days=product_id.produce_delay)
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -93,12 +96,9 @@ class StockRule(models.Model):
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
-            'date_planned_start': date_deadline,
+            'date_planned_start': date_planned,
             'procurement_group_id': False,
-            'delay_alert': self.delay_alert,
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'picking_type_id': self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
             'company_id': company_id.id,
@@ -124,13 +124,11 @@ class StockRule(models.Model):
             return delay, delay_description
         manufacture_rule.ensure_one()
         manufacture_delay = product.produce_delay
-        if manufacture_delay:
-            delay += manufacture_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
+        delay += manufacture_delay
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacturing Lead Time'), manufacture_delay, _('day(s)'))
         security_delay = manufacture_rule.picking_type_id.company_id.manufacturing_lead
-        if security_delay:
-            delay += security_delay
-            delay_description += '<tr><td>%s</td><td>+ %d %s</td></tr>' % (_('Company Manufacture Lead Time'), security_delay, _('day(s)'))
+        delay += security_delay
+        delay_description += '<tr><td>%s</td><td class="text-right">+ %d %s</td></tr>' % (_('Manufacture Security Lead Time'), security_delay, _('day(s)'))
         return delay, delay_description
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
@@ -142,7 +140,7 @@ class StockRule(models.Model):
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
 
-    mrp_production_id = fields.One2many('mrp.production', 'procurement_group_id')
+    mrp_production_ids = fields.One2many('mrp.production', 'procurement_group_id')
 
     @api.model
     def run(self, procurements, raise_user_error=True):
@@ -151,7 +149,11 @@ class ProcurementGroup(models.Model):
         """
         procurements_without_kit = []
         for procurement in procurements:
-            bom_kit = self.env['mrp.bom']._bom_find(product=procurement.product_id, bom_type='phantom')
+            bom_kit = self.env['mrp.bom']._bom_find(
+                product=procurement.product_id,
+                company_id=procurement.company_id.id,
+                bom_type='phantom',
+            )
             if bom_kit:
                 order_qty = procurement.product_uom._compute_quantity(procurement.product_qty, bom_kit.product_uom_id, round=False)
                 qty_to_produce = (order_qty / bom_kit.product_qty)
@@ -170,7 +172,7 @@ class ProcurementGroup(models.Model):
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit, raise_user_error=raise_user_error)
 
-    def _get_moves_to_assign_domain(self):
-        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
         domain = expression.AND([domain, [('production_id', '=', False)]])
         return domain

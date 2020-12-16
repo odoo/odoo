@@ -21,16 +21,22 @@ class Employee(models.AbstractModel):
     # Stored field used in the presence kanban reporting view
     # to allow group by state.
     hr_presence_state_display = fields.Selection([
+        ('to_define', 'To Define'),
         ('present', 'Present'),
         ('absent', 'Absent'),
-        ('to_define', 'To Define')])
+        ])
 
     def _compute_presence_state(self):
         super()._compute_presence_state()
-        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and not employee.is_absent)
+        employees = self.filtered(lambda e: e.hr_presence_state != 'present' and not e.is_absent)
         company = self.env.company
+        employee_to_check_working = employees.filtered(lambda e:
+                                                       not e.is_absent and
+                                                       (e.email_sent or e.ip_connected or e.manually_set_present))
+        working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in employees:
-            if not employee.is_absent and company.hr_presence_last_compute_date and company.hr_presence_last_compute_date.day == Datetime.now().day and \
+            if not employee.is_absent and company.hr_presence_last_compute_date and employee.id in working_now_list and \
+                    company.hr_presence_last_compute_date.day == Datetime.now().day and \
                     (employee.email_sent or employee.ip_connected or employee.manually_set_present):
                 employee.hr_presence_state = 'present'
 
@@ -62,7 +68,7 @@ class Employee(models.AbstractModel):
                     ('ip', '!=', False),
                     ('create_date', '>=', Datetime.to_string(Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)))]
                 ).mapped('ip')
-                if any([ip in ip_list for ip in employee_ips]):
+                if any(ip in ip_list for ip in employee_ips):
                     ip_employees |= employee
             ip_employees.write({'ip_connected': True})
             employees = employees - ip_employees
@@ -103,7 +109,9 @@ class Employee(models.AbstractModel):
             'view_mode': 'kanban,tree,form',
             "domain": [],
             "name": "Employee's Presence to Define",
-            "context": {'search_default_group_hr_presence_state': 1},
+            "search_view_id": [self.env.ref('hr_presence.hr_employee_view_presence_search').id, 'search'],
+            "context": {'search_default_group_hr_presence_state': 1,
+                        'searchpanel_default_hr_presence_state_display': 'to_define'},
         }
 
     def action_set_present(self):
@@ -142,7 +150,7 @@ class Employee(models.AbstractModel):
 
         template = self.env.ref('hr_presence.sms_template_presence', False)
         if not template:
-            context['default_body'] = _("""Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of leaves from you.
+            context['default_body'] = _("""Exception made if there was a mistake of ours, it seems that you are not at your office and there is not request of time off from you.
 Please, take appropriate measures in order to carry out this work absence.
 Do not hesitate to contact your manager or the human resource department.""")
         else:

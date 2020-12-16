@@ -51,6 +51,7 @@ class AccountInvoiceSend(models.TransientModel):
         for wizard in self:
             if wizard.composer_id:
                 wizard.composer_id.template_id = wizard.template_id.id
+                wizard._compute_composition_mode()
                 wizard.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
@@ -62,6 +63,8 @@ class AccountInvoiceSend(models.TransientModel):
                     'composition_mode': 'comment' if len(res_ids) == 1 else 'mass_mail',
                     'template_id': self.template_id.id
                 })
+            else:
+                self.composer_id.template_id = self.template_id.id
             self.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
@@ -84,11 +87,12 @@ class AccountInvoiceSend(models.TransientModel):
 
     def _send_email(self):
         if self.is_email:
-            self.composer_id.send_mail()
+            # with_context : we don't want to reimport the file we just exported.
+            self.composer_id.with_context(no_new_invoice=True, mail_notify_author=self.env.user.partner_id in self.composer_id.partner_ids).send_mail()
             if self.env.context.get('mark_invoice_as_sent'):
                 #Salesman send posted invoice, without the right to write
                 #but they should have the right to change this flag
-                self.mapped('invoice_ids').sudo().write({'invoice_sent': True})
+                self.mapped('invoice_ids').sudo().write({'is_move_sent': True})
 
     def _print_document(self):
         """ to override for each type of models that will use this composer."""

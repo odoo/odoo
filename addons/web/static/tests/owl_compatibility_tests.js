@@ -5,9 +5,9 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
     const testUtils = require('web.test_utils');
     const Widget = require('web.Widget');
 
-    const getMockedOwlEnv = testUtils.mock.getMockedOwlEnv;
     const makeTestPromise = testUtils.makeTestPromise;
     const nextTick = testUtils.nextTick;
+    const addMockEnvironmentOwl = testUtils.mock.addMockEnvironmentOwl;
 
     const { Component, tags, useState } = owl;
     const { xml } = tags;
@@ -448,17 +448,17 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     this.MyWidget = MyWidget;
                 }
             }
-            Parent.env = getMockedOwlEnv({
-                mockRPC: function (route, args) {
-                    assert.step(`${route} ${args.val}`);
-                    return Promise.resolve();
-                },
-            });
             Parent.template = xml`
                 <div>
                     <ComponentAdapter Component="MyWidget"/>
                 </div>`;
             Parent.components = { ComponentAdapter };
+            const cleanUp = await addMockEnvironmentOwl(Parent, {
+                mockRPC: function (route, args) {
+                    assert.step(`${route} ${args.val}`);
+                    return Promise.resolve();
+                },
+            });
 
             const target = testUtils.prepareTarget();
             const parent = new Parent();
@@ -468,6 +468,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             assert.verifySteps(['some/route 2']);
 
             parent.destroy();
+            cleanUp();
         });
 
         QUnit.test("sub widget that calls a service", async function (assert) {
@@ -493,16 +494,14 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     this.MyWidget = MyWidget;
                 }
             }
-            const env = getMockedOwlEnv();
-            env.services.math = {
-                sqrt: v => Math.sqrt(v),
-            };
-            Parent.env = env;
             Parent.template = xml`
                 <div>
                     <ComponentAdapter Component="MyWidget"/>
                 </div>`;
             Parent.components = { ComponentAdapter };
+            Parent.env.services.math = {
+                sqrt: v => Math.sqrt(v),
+            };
 
             const target = testUtils.prepareTarget();
             const parent = new Parent();
@@ -525,20 +524,21 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     this.MyWidget = MyWidget;
                 }
             }
-            Parent.env = getMockedOwlEnv({
-                session: { key: 'value' },
-            });
             Parent.template = xml`
                 <div>
                     <ComponentAdapter Component="MyWidget"/>
                 </div>`;
             Parent.components = { ComponentAdapter };
+            const cleanUp = await addMockEnvironmentOwl(Parent, {
+                session: { key: 'value' },
+            });
 
             const target = testUtils.prepareTarget();
             const parent = new Parent();
             await parent.mount(target);
 
             parent.destroy();
+            cleanUp();
         });
 
         QUnit.test("sub widget that calls load_views", async function (assert) {
@@ -555,7 +555,12 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     this.MyWidget = MyWidget;
                 }
             }
-            Parent.env = getMockedOwlEnv({
+            Parent.template = xml`
+                <div>
+                    <ComponentAdapter Component="MyWidget"/>
+                </div>`;
+            Parent.components = { ComponentAdapter };
+            const cleanUp = await addMockEnvironmentOwl(Parent, {
                 mockRPC: function (route, args) {
                     assert.strictEqual(route, '/web/dataset/call_kw/some_model');
                     assert.deepEqual(args.kwargs.context, { x: 2 });
@@ -563,11 +568,6 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
                     return Promise.resolve();
                 },
             });
-            Parent.template = xml`
-                <div>
-                    <ComponentAdapter Component="MyWidget"/>
-                </div>`;
-            Parent.components = { ComponentAdapter };
 
             const target = testUtils.prepareTarget();
             const parent = new Parent();
@@ -576,6 +576,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             assert.strictEqual(parent.el.innerHTML, '<div></div>');
 
             parent.destroy();
+            cleanUp();
         });
 
         QUnit.test("sub widgets in a t-if/t-else", async function (assert) {
@@ -675,6 +676,150 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             myWidget.trigger_up('some-event', { value: 'c' });
 
             assert.verifySteps(['a', 'c']);
+
+            parent.destroy();
+        });
+
+        QUnit.test("adapter keeps same el as sub widget (modify)", async function (assert) {
+            assert.expect(7);
+
+            let myWidget;
+            const MyWidget = Widget.extend({
+                events: {
+                    click: "_onClick",
+                },
+                init: function (parent, name) {
+                    myWidget = this;
+                    this._super.apply(this, arguments);
+                    this.name = name;
+                },
+                start: function () {
+                    this.render();
+                },
+                render: function () {
+                    this.$el.text("Click me!");
+                },
+                update: function (name) {
+                    this.name = name;
+                },
+                _onClick: function () {
+                    assert.step(this.name);
+                },
+            });
+            class MyWidgetAdapter extends ComponentAdapter {
+                updateWidget(nextProps) {
+                    return this.widget.update(nextProps.name);
+                }
+                renderWidget() {
+                    this.widget.render();
+                }
+            }
+            class Parent extends Component {
+                constructor() {
+                    super(...arguments);
+                    this.MyWidget = MyWidget;
+                    this.state = useState({
+                        name: "GED",
+                    });
+                }
+            }
+            Parent.template = xml`
+                <MyWidgetAdapter Component="MyWidget" name="state.name"/>
+            `;
+            Parent.components = { MyWidgetAdapter };
+
+            const target = testUtils.prepareTarget();
+            const parent = new Parent();
+            await parent.mount(target);
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "AAB";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "MCM";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            assert.verifySteps(["GED", "AAB", "MCM"]);
+
+            parent.destroy();
+        });
+
+        QUnit.test("adapter keeps same el as sub widget (replace)", async function (assert) {
+            assert.expect(7);
+
+            let myWidget;
+            const MyWidget = Widget.extend({
+                events: {
+                    click: "_onClick",
+                },
+                init: function (parent, name) {
+                    myWidget = this;
+                    this._super.apply(this, arguments);
+                    this.name = name;
+                },
+                start: function () {
+                    this.render();
+                },
+                render: function () {
+                    this._replaceElement("<div>Click me!</div>");
+                },
+                update: function (name) {
+                    this.name = name;
+                },
+                _onClick: function () {
+                    assert.step(this.name);
+                },
+            });
+            class MyWidgetAdapter extends ComponentAdapter {
+                updateWidget(nextProps) {
+                    return this.widget.update(nextProps.name);
+                }
+                renderWidget() {
+                    this.widget.render();
+                }
+            }
+            class Parent extends Component {
+                constructor() {
+                    super(...arguments);
+                    this.MyWidget = MyWidget;
+                    this.state = useState({
+                        name: "GED",
+                    });
+                }
+            }
+            Parent.template = xml`
+                <MyWidgetAdapter Component="MyWidget" name="state.name"/>
+            `;
+            Parent.components = { MyWidgetAdapter };
+
+            const target = testUtils.prepareTarget();
+            const parent = new Parent();
+            await parent.mount(target);
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "AAB";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "MCM";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            assert.verifySteps(["GED", "AAB", "MCM"]);
 
             parent.destroy();
         });

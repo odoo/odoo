@@ -6,8 +6,8 @@ from odoo import api, fields, models, _
 class ChannelPartner(models.Model):
     _inherit = 'mail.channel.partner'
 
-    @api.model
-    def unpin_old_livechat_sessions(self):
+    @api.autovacuum
+    def _gc_unpin_livechat_sessions(self):
         """ Unpin livechat sessions with no activity for at least one day to
             clean the operator's interface """
         self.env.cr.execute("""
@@ -83,12 +83,10 @@ class MailChannel(models.Model):
             if channel.channel_type == 'livechat':
                 # add the operator id
                 if channel.livechat_operator_id:
-                    channel_infos_dict[channel.id]['operator_pid'] = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
+                    res = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
+                    channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
                 # add the anonymous or partner name
-                channel_infos_dict[channel.id]['correspondent_name'] = channel._channel_get_livechat_partner_name()
-                last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
-                if last_msg:
-                    channel_infos_dict[channel.id]['last_message_date'] = last_msg.date
+                channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
         return list(channel_infos_dict.values())
 
     @api.model
@@ -97,6 +95,28 @@ class MailChannel(models.Model):
         pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
         values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('id', 'in', pinned_channels.ids)]).channel_info()
         return values
+
+    def _channel_get_livechat_visitor_info(self):
+        self.ensure_one()
+        # remove active test to ensure public partner is taken into account
+        channel_partner_ids = self.with_context(active_test=False).channel_partner_ids
+        partners = channel_partner_ids - self.livechat_operator_id
+        if not partners:
+            # operator probably testing the livechat with his own user
+            partners = channel_partner_ids
+        first_partner = partners and partners[0]
+        if first_partner and (not first_partner.user_ids or not any(user._is_public() for user in first_partner.user_ids)):
+            # legit non-public partner
+            return {
+                'country': first_partner.country_id.name_get()[0] if first_partner.country_id else False,
+                'id': first_partner.id,
+                'name': first_partner.name,
+            }
+        return {
+            'country': self.country_id.name_get()[0] if self.country_id else False,
+            'id': False,
+            'name': self.anonymous_name or _("Visitor"),
+        }
 
     def _channel_get_livechat_partner_name(self):
         if self.livechat_operator_id in self.channel_partner_ids:
@@ -115,8 +135,8 @@ class MailChannel(models.Model):
             return self.anonymous_name
         return _("Visitor")
 
-    @api.model
-    def remove_empty_livechat_sessions(self):
+    @api.autovacuum
+    def _gc_empty_livechat_sessions(self):
         hours = 1  # never remove empty session created within the last hour
         self.env.cr.execute("""
             SELECT id as id
@@ -136,6 +156,10 @@ class MailChannel(models.Model):
             'channel_types': ['livechat'],
             'help': _('See 15 last visited pages')
         }
+
+    def _execute_command_help_message_extra(self):
+        msg = super(MailChannel, self)._execute_command_help_message_extra()
+        return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
 
     def _execute_command_history(self, **kwargs):
         notification = []
@@ -183,10 +207,10 @@ class MailChannel(models.Model):
             "channel": self,
         }
         template = self.env.ref('im_livechat.livechat_email_template')
-        mail_body = template.render(render_context, engine='ir.qweb', minimal_qcontext=True)
+        mail_body = template._render(render_context, engine='ir.qweb', minimal_qcontext=True)
         mail_body = self.env['mail.render.mixin']._replace_local_links(mail_body)
         mail = self.env['mail.mail'].sudo().create({
-            'subject': _('Conversation with %s') % self.livechat_operator_id.name,
+            'subject': _('Conversation with %s', self.livechat_operator_id.name),
             'email_from': company.catchall_formatted or company.email_formatted,
             'author_id': self.env.user.partner_id.id,
             'email_to': email,

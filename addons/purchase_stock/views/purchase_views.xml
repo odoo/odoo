@@ -9,6 +9,9 @@
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
                 <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
             </xpath>
+            <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('effective_date', '!=', False)]}</attribute>
+            </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button type="object"
                     name="action_view_picking"
@@ -24,11 +27,16 @@
             <xpath expr="//field[@name='order_line']/tree//field[@name='date_planned']" position="after">
                 <field name="move_dest_ids" invisible="1"/>
             </xpath>
-            <xpath expr="//div[@name='date_planned_div']" position="replace">
-                <div class="o_row">
-                    <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
-                    <span class="text-muted" attrs="{'invisible': [('effective_date', '!=', False), ('date_planned', '!=', False)]}">Expected: <field name="expected_date" widget="date"/></span>
-                </div>
+            <xpath expr="//div[@name='date_planned_div']" position="inside">
+                <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" attrs="{'invisible': ['|', ('state', 'in', ['purchase', 'done']), ('partner_id', '=', False)]}">
+                    <span attrs="{'invisible': [('on_time_rate', '&lt;', 0)]}"><field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>
+                    <span attrs="{'invisible': [('on_time_rate', '&gt;=', 0)]}">No On-time Delivery Data</span>
+                </button>
+            </xpath>
+            <xpath expr="//div[@name='reminder']" position="attributes">
+                <attribute name="attrs">{'invisible': [('effective_date', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='reminder']" position="after">
                 <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">

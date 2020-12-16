@@ -150,6 +150,7 @@ var config = require('web.config');
 var publicWidget = require('web.public.widget');
 var VariantMixin = require('sale.VariantMixin');
 var wSaleUtils = require('website_sale.utils');
+const wUtils = require('website.utils');
 require("web.zoomodoo");
 
 
@@ -194,11 +195,10 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     /**
      * @override
      */
-    start: function () {
-        var self = this;
-        var def = this._super.apply(this, arguments);
+    start() {
+        const def = this._super(...arguments);
 
-        this._applyHash();
+        this._applyHashFromSearch();
 
         _.each(this.$('div.js_product'), function (product) {
             $('input.js_product_change', product).first().trigger('change');
@@ -217,9 +217,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
 
         this._startZoom();
 
-        window.addEventListener('hashchange', function (e) {
-            self._applyHash();
-            self.triggerVariantChange($(self.el));
+        window.addEventListener('hashchange', () => {
+            this._applyHash();
+            this.triggerVariantChange(this.$el);
         });
 
         return def;
@@ -346,13 +346,13 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             },
         }).then(function (data) {
             // placeholder phone_code
-            //$("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
+            $("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
 
             // populate states and display
             var selectStates = $("select[name='state_id']");
             // dont reload state at first loading (done in qweb)
             if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
-                if (data.states.length) {
+                if (data.states.length || data.state_required) {
                     selectStates.html('');
                     _.each(data.states, function (x) {
                         var opt = $('<option>').text(x[1])
@@ -380,6 +380,15 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                 _.each(all_fields, function (field) {
                     $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
                 });
+            }
+
+            if ($("label[for='zip']").length) {
+                $("label[for='zip']").toggleClass('label-optional', !data.zip_required);
+                $("label[for='zip']").get(0).toggleAttribute('required', !!data.zip_required);
+            }
+            if ($("label[for='zip']").length) {
+                $("label[for='state_id']").toggleClass('label-optional', !data.state_required);
+                $("label[for='state_id']").get(0).toggleAttribute('required', !!data.state_required);
             }
         });
     },
@@ -516,29 +525,18 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @returns {Promise} never resolved
      */
     _submitForm: function () {
-        var $productCustomVariantValues = $('<input>', {
-            name: 'product_custom_attribute_values',
-            type: "hidden",
-            value: JSON.stringify(this.rootProduct.product_custom_attribute_values)
-        });
-        this.$form.append($productCustomVariantValues);
+        let params = this.rootProduct;
+        params.add_qty = params.quantity;
 
-        var $productNoVariantAttributeValues = $('<input>', {
-            name: 'no_variant_attribute_values',
-            type: "hidden",
-            value: JSON.stringify(this.rootProduct.no_variant_attribute_values)
-        });
-        this.$form.append($productNoVariantAttributeValues);
-
+        params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
+        params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
+        
         if (this.isBuyNow) {
-            this.$form.append($('<input>', {name: 'express', type: "hidden", value: true}));
+            params.express = true;
         }
 
-        this.$form.trigger('submit', [true]);
-
-        return new Promise(function () {});
+        return wUtils.sendRequest('/shop/cart/update', params);
     },
-
     /**
      * @private
      * @param {MouseEvent} ev
@@ -718,6 +716,27 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
     _onToggleSummary: function () {
         $('.toggle_summary_div').toggleClass('d-none');
         $('.toggle_summary_div').removeClass('d-xl-block');
+    },
+    /**
+     * @private
+     */
+    _applyHashFromSearch() {
+        const params = $.deparam(window.location.search.slice(1));
+        if (params.attrib) {
+            const dataValueIds = [];
+            for (const attrib of [].concat(params.attrib)) {
+                const attribSplit = attrib.split('-');
+                const attribValueSelector = `.js_variant_change[name="ptal-${attribSplit[0]}"][value="${attribSplit[1]}"]`;
+                const attribValue = this.el.querySelector(attribValueSelector);
+                if (attribValue !== null) {
+                    dataValueIds.push(attribValue.dataset.value_id);
+                }
+            }
+            if (dataValueIds.length) {
+                history.replaceState(undefined, undefined, `#attr=${dataValueIds.join(',')}`);
+            }
+        }
+        this._applyHash();
     },
 });
 

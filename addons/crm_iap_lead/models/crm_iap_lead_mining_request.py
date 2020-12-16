@@ -4,14 +4,14 @@
 import logging
 
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
-from odoo.addons.iap import jsonrpc, InsufficientCreditError
+from odoo.addons.iap.tools import iap_tools
 
 _logger = logging.getLogger(__name__)
 
 DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 
 MAX_LEAD = 200
+
 MAX_CONTACT = 5
 
 CREDIT_PER_COMPANY = 1
@@ -28,32 +28,39 @@ class CRMLeadMiningRequest(models.Model):
         else:
             return 'opportunity'
 
+    def _default_country_ids(self):
+        return self.env.user.company_id.country_id
+
     name = fields.Char(string='Request Number', required=True, readonly=True, default=lambda self: _('New'), copy=False)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('error', 'Error')], string='Status', required=True, default='draft')
 
     # Request Data
-    lead_number = fields.Integer(string='Number of Leads', required=True, default=10)
+    lead_number = fields.Integer(string='Number of Leads', required=True, default=3)
     search_type = fields.Selection([('companies', 'Companies'), ('people', 'Companies and their Contacts')], string='Target', required=True, default='companies')
     error = fields.Text(string='Error', readonly=True)
 
     # Lead / Opportunity Data
-    lead_type = fields.Selection([('lead', 'Lead'), ('opportunity', 'Opportunity')], string='Type', required=True, default=_default_lead_type)
-    team_id = fields.Many2one('crm.team', string='Sales Team', domain="[('use_opportunities', '=', True)]")
-    user_id = fields.Many2one('res.users', string='Salesperson')
+
+    lead_type = fields.Selection([('lead', 'Leads'), ('opportunity', 'Opportunities')], string='Type', required=True, default=_default_lead_type)
+    display_lead_label = fields.Char(compute='_compute_display_lead_label')
+    team_id = fields.Many2one(
+        'crm.team', string='Sales Team',
+        domain="[('use_opportunities', '=', True)]", readonly=False, compute='_compute_team_id', store=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
     tag_ids = fields.Many2many('crm.tag', string='Tags')
     lead_ids = fields.One2many('crm.lead', 'lead_mining_request_id', string='Generated Lead / Opportunity')
-    leads_count = fields.Integer(compute='_compute_leads_count', string='Number of Generated Leads')
+    lead_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Leads')
 
     # Company Criteria Filter
     filter_on_size = fields.Boolean(string='Filter on Size', default=False)
     company_size_min = fields.Integer(string='Size', default=1)
     company_size_max = fields.Integer(default=1000)
-    country_ids = fields.Many2many('res.country', string='Countries')
+    country_ids = fields.Many2many('res.country', string='Countries', default=_default_country_ids)
     state_ids = fields.Many2many('res.country.state', string='States')
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
 
     # Contact Generation Filter
-    contact_number = fields.Integer(string='Number of Contacts', default=1)
+    contact_number = fields.Integer(string='Number of Contacts', default=10)
     contact_filter_type = fields.Selection([('role', 'Role'), ('seniority', 'Seniority')], string='Filter on', default='role')
     preferred_role_id = fields.Many2one('crm.iap.lead.role', string='Preferred Role')
     role_ids = fields.Many2many('crm.iap.lead.role', string='Other Roles')
@@ -63,6 +70,15 @@ class CRMLeadMiningRequest(models.Model):
     lead_credits = fields.Char(compute='_compute_tooltip', readonly=True)
     lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
     lead_total_credits = fields.Char(compute='_compute_tooltip', readonly=True)
+
+    @api.depends('lead_type', 'lead_number')
+    def _compute_display_lead_label(self):
+        selection_description_values = {
+            e[0]: e[1] for e in self._fields['lead_type']._description_selection(self.env)}
+        for request in self:
+            lead_type = selection_description_values[request.lead_type]
+            request.display_lead_label = '%s %s' % (request.lead_number, lead_type)
+
 
     @api.onchange('lead_number', 'contact_number')
     def _compute_tooltip(self):
@@ -74,10 +90,24 @@ class CRMLeadMiningRequest(models.Model):
             record.lead_credits = _('%d credits will be consumed to find %d companies.') % (company_credits, record.lead_number)
             record.lead_total_credits = _("This makes a total of %d credits for this request.") % (total_contact_credits + company_credits)
 
-    @api.depends('lead_ids')
-    def _compute_leads_count(self):
-        for req in self:
-            req.leads_count = len(req.lead_ids)
+    @api.depends('lead_ids.lead_mining_request_id')
+    def _compute_lead_count(self):
+        if self.ids:
+            leads_data = self.env['crm.lead'].read_group(
+                [('lead_mining_request_id', 'in', self.ids)],
+                ['lead_mining_request_id'], ['lead_mining_request_id'])
+        else:
+            leads_data = []
+        mapped_data = dict(
+            (m['lead_mining_request_id'][0], m['lead_mining_request_id_count'])
+            for m in leads_data)
+        for request in self:
+            request.lead_count = mapped_data.get(request.id, 0)
+
+    @api.depends('user_id')
+    def _compute_team_id(self):
+        for record in self:
+            record.team_id = record.user_id.sale_team_id
 
     @api.onchange('lead_number')
     def _onchange_lead_number(self):
@@ -149,9 +179,9 @@ class CRMLeadMiningRequest(models.Model):
             'data': server_payload
         }
         try:
-            response = jsonrpc(endpoint, params=params, timeout=300)
+            response = iap_tools.iap_jsonrpc(endpoint, params=params, timeout=300)
             return response['data']
-        except InsufficientCreditError as e:
+        except iap_tools.InsufficientCreditError as e:
             self.error = 'Insufficient credits. Recharge your account and retry.'
             self.state = 'error'
             self._cr.commit()
@@ -160,15 +190,21 @@ class CRMLeadMiningRequest(models.Model):
     def _create_leads_from_response(self, result):
         """ This method will get the response from the service and create the leads accordingly """
         self.ensure_one()
-        lead_vals = []
+        lead_vals_list = []
         messages_to_post = {}
         for data in result:
-            lead_vals.append(self._lead_vals_from_response(data))
-            messages_to_post[data['company_data']['clearbit_id']] = self.env['crm.iap.lead.helpers'].format_data_for_message_post(data['company_data'], data.get('people_data'))
-        leads = self.env['crm.lead'].create(lead_vals)
+            lead_vals_list.append(self._lead_vals_from_response(data))
+
+            template_values = data['company_data']
+            template_values.update({
+                'flavor_text': _("Opportunity created by Odoo Lead Generation"),
+                'people_data': data.get('people_data'),
+            })
+            messages_to_post[data['company_data']['clearbit_id']] = template_values
+        leads = self.env['crm.lead'].create(lead_vals_list)
         for lead in leads:
             if messages_to_post.get(lead.reveal_id):
-                lead.message_post_with_view('crm_iap_lead.lead_message_template', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
+                lead.message_post_with_view('iap_mail.enrich_company', values=messages_to_post[lead.reveal_id], subtype_id=self.env.ref('mail.mt_note').id)
 
     # Methods responsible for format response data into valid odoo lead data
     @api.model
@@ -206,7 +242,7 @@ class CRMLeadMiningRequest(models.Model):
 
     def action_get_lead_action(self):
         self.ensure_one()
-        action = self.env.ref('crm.crm_lead_all_leads').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_all_leads")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'lead')]
         action['help'] = _("""<p class="o_view_nocontent_empty_folder">
             No leads found
@@ -217,7 +253,7 @@ class CRMLeadMiningRequest(models.Model):
 
     def action_get_opportunity_action(self):
         self.ensure_one()
-        action = self.env.ref('crm.crm_lead_opportunities').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_opportunities")
         action['domain'] = [('id', 'in', self.lead_ids.ids), ('type', '=', 'opportunity')]
         action['help'] = _("""<p class="o_view_nocontent_empty_folder">
             No opportunities found

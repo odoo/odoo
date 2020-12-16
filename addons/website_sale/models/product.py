@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models import ir_http
@@ -9,12 +9,17 @@ from odoo.tools.translate import html_translate
 from odoo.osv import expression
 
 
-class ProductStyle(models.Model):
-    _name = "product.style"
-    _description = 'Product Style'
+class ProductRibbon(models.Model):
+    _name = "product.ribbon"
+    _description = 'Product ribbon'
 
-    name = fields.Char(string='Style Name', required=True)
-    html_class = fields.Char(string='HTML Classes')
+    def name_get(self):
+        return [(ribbon.id, '%s (#%d)' % (tools.html2plaintext(ribbon.html), ribbon.id)) for ribbon in self]
+
+    html = fields.Char(string='Ribbon html', required=True, translate=True)
+    bg_color = fields.Char(string='Ribbon background color', required=False)
+    text_color = fields.Char(string='Ribbon text color', required=False)
+    html_class = fields.Char(string='Ribbon class', required=True, default='')
 
 
 class ProductPricelist(models.Model):
@@ -54,7 +59,7 @@ class ProductPricelist(models.Model):
 
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
-        if data.keys() & {'code', 'active', 'website_id', 'selectable'}:
+        if data.keys() & {'code', 'active', 'website_id', 'selectable', 'company_id'}:
             self._check_website_pricelist()
         self.clear_cache()
         return res
@@ -65,8 +70,8 @@ class ProductPricelist(models.Model):
         self.clear_cache()
         return res
 
-    def _get_partner_pricelist_multi_search_domain_hook(self):
-        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook()
+    def _get_partner_pricelist_multi_search_domain_hook(self, company_id):
+        domain = super(ProductPricelist, self)._get_partner_pricelist_multi_search_domain_hook(company_id)
         website = ir_http.get_request_website()
         if website:
             domain += self._get_website_pricelists_domain(website.id)
@@ -89,6 +94,7 @@ class ProductPricelist(models.Model):
         - Have its `website_id` set to current website (specific pricelist).
         - Have no `website_id` set and should be `selectable` (generic pricelist)
           or should have a `code` (generic promotion).
+        - Have no `company_id` or a `company_id` matching its website one.
 
         Note: A pricelist without a website_id, not selectable and without a
               code is a backend pricelist.
@@ -96,13 +102,17 @@ class ProductPricelist(models.Model):
         Change in this method should be reflected in `_get_website_pricelists_domain`.
         """
         self.ensure_one()
+        if self.company_id and self.company_id != self.env["website"].browse(website_id).company_id:
+            return False
         return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
 
     def _get_website_pricelists_domain(self, website_id):
         ''' Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         '''
+        company_id = self.env["website"].browse(website_id).company_id.id
         return [
+            '&', ('company_id', 'in', [False, company_id]),
             '|', ('website_id', '=', website_id),
             '&', ('website_id', '=', False),
             '|', ('selectable', '=', True), ('code', '!=', False),
@@ -126,8 +136,7 @@ class ProductPricelist(models.Model):
         '''
         for record in self.filtered(lambda pl: pl.website_id and pl.company_id):
             if record.website_id.company_id != record.company_id:
-                raise ValidationError(_("Only the company's websites are allowed. \
-                    Leave the Company field empty or select a website from that company."))
+                raise ValidationError(_("""Only the company's websites are allowed.\nLeave the Company field empty or select a website from that company."""))
 
 
 class ProductPublicCategory(models.Model):
@@ -187,9 +196,9 @@ class ProductTemplate(models.Model):
         help='Accessories show up when the customer reviews the cart before payment (cross-sell strategy).')
     website_size_x = fields.Integer('Size X', default=1)
     website_size_y = fields.Integer('Size Y', default=1)
-    website_style_ids = fields.Many2many('product.style', string='Styles')
+    website_ribbon_id = fields.Many2one('product.ribbon', string='Ribbon')
     website_sequence = fields.Integer('Website Sequence', help="Determine the display order in the Website E-commerce",
-                                      default=lambda self: self._default_website_sequence())
+                                      default=lambda self: self._default_website_sequence(), copy=False)
     public_categ_ids = fields.Many2many(
         'product.public.category', relation='product_public_category_product_template_rel',
         string='Website Product Category',
@@ -282,7 +291,7 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.user_has_groups('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id)
+            fpos = self.env['account.fiscal.position'].get_fiscal_position(partner.id).sudo()
             taxes = fpos.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
 
             # The list_price is always the price of one.
@@ -313,6 +322,21 @@ class ProductTemplate(models.Model):
         :rtype: recordset of `product.product`
         """
         return self._create_product_variant(self._get_first_possible_combination(), log_warning)
+
+    def _get_image_holder(self):
+        """Returns the holder of the image to use as default representation.
+        If the product template has an image it is the product template,
+        otherwise if the product has variants it is the first variant
+
+        :return: this product template or the first product variant
+        :rtype: recordset of 'product.template' or recordset of 'product.product'
+        """
+        self.ensure_one()
+        if self.image_1920:
+            return self
+        variant = self.env['product.product'].browse(self._get_first_possible_variant_id())
+        # if the variant has no image anyway, spare some queries by using template
+        return variant if variant.image_variant_1920 else self
 
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to
@@ -373,7 +397,8 @@ class ProductTemplate(models.Model):
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
         for product in self:
-            product.website_url = "/shop/product/%s" % slug(product)
+            if product.id:
+                product.website_url = "/shop/%s" % slug(product)
 
     # ---------------------------------------------------------
     # Rating Mixin API
@@ -407,6 +432,7 @@ class Product(models.Model):
 
     website_url = fields.Char('Website URL', compute='_compute_product_website_url', help='The full URL to access the document through the website.')
 
+    @api.depends_context('lang')
     @api.depends('product_tmpl_id.website_url', 'product_template_attribute_value_ids')
     def _compute_product_website_url(self):
         for product in self:

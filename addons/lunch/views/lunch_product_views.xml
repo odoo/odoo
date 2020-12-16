@@ -16,8 +16,8 @@
                     <filter name="group_by_category" string="Category" context="{'group_by': 'category_id'}"/>
                 </group>
                 <searchpanel>
-                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B"/>
-                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck"/>
+                    <field name="category_id" select="multi" string="Categories" icon="fa-cutlery" color="#875A7B" enable_counters="1"/>
+                    <field name="supplier_id" select="multi" string="Vendors" icon="fa-truck" enable_counters="1"/>
                 </searchpanel>
             </search>
         </field>
@@ -85,10 +85,27 @@
                         <group>
                             <field name="new_until"/>
                             <field name='description'/>
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+    <record id="lunch_product_report_view_tree" model="ir.ui.view">
+        <field name="name">lunch.product.tree</field>
+        <field name="model">lunch.product.report</field>
+        <field name="priority">999</field>
+        <field name="arch" type="xml">
+            <tree js_class="lunch_list">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="supplier_id"/>
+                <field name="description"/>
+                <field name="product_id" invisible="1"/>
+                <field name="price" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+            </tree>
         </field>
     </record>
 
@@ -110,8 +127,8 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_kanban_record">
-                            <field name="image_128" class="o_lunch_image o_kanban_image_fill_left d-none d-md-block" options="{'placeholder': '/lunch/static/img/lunch.png'}" widget="image"/>
-                            <div class="oe_kanban_details">
+                            <field name="image_128" class="o_lunch_image o_kanban_image_fill_left d-none d-md-block" options="{'placeholder': '/lunch/static/img/lunch.png', 'size': [94, 94]}" widget="image"/>
+                            <div class="oe_kanban_details ml8">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
                                         <strong class="o_kanban_record_title">
@@ -232,8 +249,11 @@
                             <field name="name"/>
                         </h1>
                     </div>
+                    <label for="company_id" groups="base.group_multi_company"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group>
                         <group>
+                            <field name="active" invisible="1"/>
                             <field name="topping_label_1"/>
                             <field name="topping_quantity_1"/>
                         </group>
@@ -314,6 +334,17 @@
         </field>
     </record>
 
+    <record id="lunch_product_category_view_search" model="ir.ui.view">
+        <field name="name">lunch.product.category.search</field>
+        <field name="model">lunch.product.category</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
     <record id="lunch_product_action" model="ir.actions.act_window">
         <field name="name">Products</field>
         <field name="res_model">lunch.product</field>
@@ -330,7 +361,7 @@
     <record id="lunch_product_action_order" model="ir.actions.act_window">
         <field name="name">Order Your Lunch</field>
         <field name="res_model">lunch.product.report</field>
-        <field name="view_mode">kanban</field>
+        <field name="view_mode">kanban,tree</field>
         <field name="view_id" ref="view_lunch_product_kanban_order"/>
         <field name="search_view_id" ref="lunch_product_report_view_search"/>
         <field name="domain">[('supplier_id.available_today', '=', True), '|', ('user_id', '=', False), ('user_id', '=', uid)]</field>
@@ -347,6 +378,7 @@
         <field name="name">Product Categories</field>
         <field name="res_model">lunch.product.category</field>
         <field name="view_mode">tree,form,kanban</field>
+        <field name="search_view_id" ref="lunch_product_category_view_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
             Create a new product category

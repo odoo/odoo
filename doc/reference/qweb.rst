@@ -436,7 +436,7 @@ Javascript
 Exclusive directives
 --------------------
 
-defining templates
+Defining templates
 ''''''''''''''''''
 
 The ``t-name`` directive can only be placed at the top-level of a template
@@ -455,18 +455,51 @@ The template name is an arbitrary string, although when multiple templates
 are related (e.g. called sub-templates) it is customary to use dot-separated
 names to indicate hierarchical relationships.
 
-template inheritance
+Template inheritance
 ''''''''''''''''''''
 
-Template inheritance is used to alter existing templates in-place, e.g. to
-add information to templates created by other modules.
+Template inheritance is used to either:
+ - Alter existing templates in-place, e.g. to add information to templates
+created by other modules.
+ - Create a new template from a given parent template
+
+Template inheritance is performed via the use of two directives:
+ - ``t-inherit`` which is the name of the template to inherit from,
+ - ``t-inherit-mode`` which is the behaviour of the inheritance: it can either be
+   set to ``primary`` to create a new child template from the parented one or
+   to ``extension`` to alter the parent template in place.
+
+An optional ``t-name`` directive can also be specified. It will be the name of
+the newly created template if used in primary mode, else it will be added as a
+comment on the transformed template to help retrace inheritances.
+
+For the inheritance itself, the changes are done using xpaths directives.
+See the XPATH_ documentation for the complete set of available instructions.
+
+Primary inheritance (child template)::
+
+    <t t-name="child.template" t-inherit="base.template" t-inherit-mode="primary">
+        <xpath expr="//ul" position="inside">
+            <li>new element</li>
+        </xpath>
+    </t>
+
+Extension inheritance (in-place transformation)::
+
+    <t t-inherit="base.template" t-inherit-mode="extension">
+        <xpath expr="//tr[1]" position="after">
+            <tr><td>new cell</td></tr>
+        </xpath>
+    </t>
+
+Old inheritance mechanism (deprecated)
+''''''''''''''''''''''''''''''''''''''
 
 Template inheritance is performed via the ``t-extend`` directive which takes
 the name of the template to alter as parameter.
 
-When ``t-extend`` is combined with ``t-name`` a new template with the given name
-is created. In this case the extended template is not altered, instead the
-directives define how to create the new template.
+The directive ``t-extend`` will act as a primary inheritance when combined with
+``t-name`` and as an extension one when used alone.
 
 In both cases the alteration is then performed with any number of ``t-jquery``
 sub-directives::
@@ -650,3 +683,4 @@ API
 .. _XSS: https://en.wikipedia.org/wiki/Cross-site_scripting
 .. _JSON: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
 .. _CSS selector: https://api.jquery.com/category/selectors/
+.. _XPATH: https://developer.mozilla.org/en-US/docs/Web/XPath

@@ -133,14 +133,12 @@ class TestUi(HttpCaseWithUserDemo, HttpCaseWithUserPortal):
             'value_ids': [(4, product_attribute_value_1.id), (4, product_attribute_value_2.id)],
         })
         self.product_product_11_product_template.attribute_line_ids[0].product_template_value_ids[1].price_extra = 6.40
-        self.product_product_4_product_template.optional_product_ids = [(4, self.product_product_11_product_template.id)]
 
         # Setup a second optional product
         self.product_product_1_product_template = self.env['product.template'].create({
             'name': 'Chair floor protection',
             'list_price': 12.0,
         })
-        self.product_product_11_product_template.optional_product_ids = [(4, self.product_product_1_product_template.id)]
 
         # fix runbot, sometimes one pricelist is chosen, sometimes the other...
         pricelists = self.env['website'].get_current_website().get_current_pricelist() | self.env.ref('product.list0')

@@ -26,7 +26,7 @@ from odoo.tools.translate import _
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools import config, DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, pycompat
 
-FIELDS_RECURSION_LIMIT = 2
+FIELDS_RECURSION_LIMIT = 3
 ERROR_PREVIEW_BYTES = 200
 DEFAULT_IMAGE_TIMEOUT = 3
 DEFAULT_IMAGE_MAXBYTES = 10 * 1024 * 1024
@@ -297,7 +297,7 @@ class Import(models.TransientModel):
                         _("Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s") % {
                             'row': rowx,
                             'col': colx,
-                            'cell_value': xlrd.error_text_from_code.get(cell.value, _("unknown error code %s") % cell.value)
+                            'cell_value': xlrd.error_text_from_code.get(cell.value, _("unknown error code %s", cell.value))
                         }
                     )
                 else:
@@ -400,6 +400,7 @@ class Import(models.TransientModel):
             return ['boolean']
 
         # If all values can be cast to float, type is either float or monetary
+        results = []
         try:
             thousand_separator = decimal_separator = False
             for val in preview_values:
@@ -432,11 +433,11 @@ class Import(models.TransientModel):
             if thousand_separator and not options.get('float_decimal_separator'):
                 options['float_thousand_separator'] = thousand_separator
                 options['float_decimal_separator'] = decimal_separator
-            return ['float', 'monetary']
+            results = ['float', 'monetary']
         except ValueError:
             pass
 
-        results = self._try_match_date_time(preview_values, options)
+        results += self._try_match_date_time(preview_values, options)
         if results:
             return results
 
@@ -737,7 +738,7 @@ class Import(models.TransientModel):
             old_value = line[index]
             line[index] = self._remove_currency_symbol(line[index])
             if line[index] is False:
-                raise ValueError(_("Column %s contains incorrect values (value: %s)" % (name, old_value)))
+                raise ValueError(_("Column %s contains incorrect values (value: %s)", name, old_value))
 
     def _infer_separators(self, value, options):
         """ Try to infer the shape of the separators: if there are two
@@ -856,13 +857,13 @@ class Import(models.TransientModel):
             response.raise_for_status()
 
             if response.headers.get('Content-Length') and int(response.headers['Content-Length']) > maxsize:
-                raise ValueError(_("File size exceeds configured maximum (%s bytes)") % maxsize)
+                raise ValueError(_("File size exceeds configured maximum (%s bytes)", maxsize))
 
             content = bytearray()
             for chunk in response.iter_content(DEFAULT_IMAGE_CHUNK_SIZE):
                 content += chunk
                 if len(content) > maxsize:
-                    raise ValueError(_("File size exceeds configured maximum (%s bytes)") % maxsize)
+                    raise ValueError(_("File size exceeds configured maximum (%s bytes)", maxsize))
 
             image = Image.open(io.BytesIO(content))
             w, h = image.size
@@ -951,9 +952,11 @@ class Import(models.TransientModel):
             for index, column_name in enumerate(columns):
                 if column_name:
                     # Update to latest selected field
-                    exist_records = BaseImportMapping.search([('res_model', '=', self.res_model), ('column_name', '=', column_name)])
-                    if exist_records:
-                        exist_records.write({'field_name': fields[index]})
+                    mapping_domain = [('res_model', '=', self.res_model), ('column_name', '=', column_name)]
+                    column_mapping = BaseImportMapping.search(mapping_domain, limit=1)
+                    if column_mapping:
+                        if column_mapping.field_name != fields[index]:
+                            column_mapping.field_name = fields[index]
                     else:
                         BaseImportMapping.create({
                             'res_model': self.res_model,

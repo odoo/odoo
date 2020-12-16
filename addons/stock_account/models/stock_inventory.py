@@ -26,19 +26,17 @@ class StockInventory(models.Model):
 
     def action_get_account_moves(self):
         self.ensure_one()
-        action_ref = self.env.ref('account.action_move_journal_line')
-        if not action_ref:
-            return False
-        action_data = action_ref.read()[0]
+        action_data = self.env['ir.actions.act_window']._for_xml_id('account.action_move_journal_line')
         action_data['domain'] = [('stock_move_id.id', 'in', self.move_ids.ids)]
         action_data['context'] = dict(self._context, create=False)
         return action_data
 
     def post_inventory(self):
+        res = True
         acc_inventories = self.filtered(lambda inventory: inventory.accounting_date)
         for inventory in acc_inventories:
-            super(StockInventory, inventory.with_context(force_period_date=inventory.accounting_date)).post_inventory()
+            res = super(StockInventory, inventory.with_context(force_period_date=inventory.accounting_date)).post_inventory()
         other_inventories = self - acc_inventories
         if other_inventories:
-            super(StockInventory, other_inventories).post_inventory()
-
+            res = super(StockInventory, other_inventories).post_inventory()
+        return res

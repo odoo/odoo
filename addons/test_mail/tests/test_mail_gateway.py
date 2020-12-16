@@ -13,6 +13,7 @@ from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.addons.test_mail.models.test_mail_models import MailTestGateway
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.tests import tagged
+from odoo.tests.common import users
 from odoo.tools import email_split_and_format, formataddr, mute_logger
 
 
@@ -59,6 +60,20 @@ class TestEmailParsing(TestMailCommon):
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
         self.env['mail.thread'].message_parse(self.from_string(mail))
 
+    def test_message_parse_eml_bounce_headers(self):
+        # Test Text/RFC822-Headers MIME content-type
+        msg_id = '<861878175823148.1577183525.736005783081055-openerp-19177-account.invoice@mycompany.example.com>'
+        mail = self.format(
+            test_mail_data.MAIL_EML_ATTACHMENT_BOUNCE_HEADERS,
+            email_from='MAILER-DAEMON@example.com (Mail Delivery System)',
+            to='test_bounce+82240-account.invoice-19177@mycompany.example.com',
+            # msg_id goes to the attachment's Message-Id header
+            msg_id=msg_id,
+        )
+        res = self.env['mail.thread'].message_parse(self.from_string(mail))
+
+        self.assertEqual(res['bounced_msg_id'], [msg_id], "Message-Id is not extracted from Text/RFC822-Headers attachment")
+
     def test_message_parse_plaintext(self):
         """ Incoming email in plaintext should be stored as html """
         mail = self.format(test_mail_data.MAIL_TEMPLATE_PLAINTEXT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
@@ -73,9 +88,49 @@ class TestEmailParsing(TestMailCommon):
 @tagged('mail_gateway')
 class TestMailAlias(TestMailCommon):
 
+    @users('employee')
+    def test_alias_creation(self):
+        record = self.env['mail.test.container'].create({
+            'name': 'Test Record',
+            'alias_name': 'alias.test',
+            'alias_contact': 'followers',
+        })
+        self.assertEqual(record.alias_id.alias_model_id, self.env['ir.model']._get('mail.test.container'))
+        self.assertEqual(record.alias_id.alias_force_thread_id, record.id)
+        self.assertEqual(record.alias_id.alias_parent_model_id, self.env['ir.model']._get('mail.test.container'))
+        self.assertEqual(record.alias_id.alias_parent_thread_id, record.id)
+        self.assertEqual(record.alias_id.alias_name, 'alias.test')
+        self.assertEqual(record.alias_id.alias_contact, 'followers')
+
+        record.write({
+            'alias_name': 'better.alias.test',
+            'alias_defaults': "{'default_name': 'defaults'}"
+        })
+        self.assertEqual(record.alias_id.alias_name, 'better.alias.test')
+        self.assertEqual(record.alias_id.alias_defaults, "{'default_name': 'defaults'}")
+
+        with self.assertRaises(exceptions.AccessError):
+            record.write({
+                'alias_force_thread_id': 0,
+            })
+
+        with self.assertRaises(exceptions.AccessError):
+            record.write({
+                'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id,
+            })
+
+        with self.assertRaises(exceptions.ValidationError):
+            record.write({'alias_defaults': "{'custom_field': brokendict"})
+
     def test_alias_setup(self):
-        alias = self.env['mail.alias'].with_context(alias_model_name='mail.test').create({'alias_name': 'b4r+_#_R3wl$$'})
+        alias = self.env['mail.alias'].create({
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_name': 'b4r+_#_R3wl$$',
+        })
         self.assertEqual(alias.alias_name, 'b4r+_-_r3wl-', 'Disallowed chars should be replaced by hyphens')
+
+        with self.assertRaises(exceptions.ValidationError):
+            alias.write({'alias_defaults': "{'custom_field': brokendict"})
 
     def test_alias_name_unique(self):
         alias_model_id = self.env['ir.model']._get('mail.test.gateway').id
@@ -187,19 +242,62 @@ class TestMailgateway(TestMailCommon):
             set(['rosaçée.gif', 'verte!µ.gif', 'orangée.gif']))
 
     def test_message_process_followers(self):
-        pass
-        # TODO : the author of a message post should be added as follower
-        # currently it is not the case as otherwise Administrator would be follower of a lot of stuff
-        # this is a bug with mail_create_nosubscribe -> should be changed in master
-        # self.assertEqual(record.message_partner_ids, self.partner_1,
-        #                  'message_process: recognized email -> added as follower')
+        """ Incoming email: recognized author not archived and not odoobot: added as follower """
+        with self.mock_mail_gateway():
+            record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@test.com')
 
-        # TODO : the author of a message post on mail.test should not be added as follower
-        # Test: author (and not recipient) added as follower
-        # self.assertEqual(self.test_public.message_partner_ids, self.partner_1 | self.partner_2,
-        #                  'message_process: after reply, group should have 2 followers')
-        # self.assertEqual(self.test_public.message_channel_ids, self.env['mail.test'],
-        #                  'message_process: after reply, group should have 2 followers (0 channels)')
+        self.assertEqual(record.message_ids[0].author_id, self.partner_1,
+                         'message_process: recognized email -> author_id')
+        self.assertEqual(record.message_ids[0].email_from, self.partner_1.email_formatted)
+        self.assertEqual(record.message_follower_ids.partner_id, self.partner_1,
+                         'message_process: recognized email -> added as follower')
+        self.assertEqual(record.message_partner_ids, self.partner_1,
+                         'message_process: recognized email -> added as follower')
+
+        # just an email -> no follower
+        with self.mock_mail_gateway():
+            record2 = self.format_and_process(
+                MAIL_TEMPLATE, self.email_from, 'groups@test.com',
+                subject='Another Email')
+
+        self.assertEqual(record2.message_ids[0].author_id, self.env['res.partner'])
+        self.assertEqual(record2.message_ids[0].email_from, self.email_from)
+        self.assertEqual(record2.message_follower_ids.partner_id, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+        self.assertEqual(record2.message_partner_ids, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+
+        # archived partner -> no follower
+        self.partner_1.active = False
+        self.partner_1.flush()
+        with self.mock_mail_gateway():
+            record3 = self.format_and_process(
+                MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@test.com',
+                subject='Yet Another Email')
+
+        self.assertEqual(record3.message_ids[0].author_id, self.env['res.partner'])
+        self.assertEqual(record3.message_ids[0].email_from, self.partner_1.email_formatted)
+        self.assertEqual(record3.message_follower_ids.partner_id, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+        self.assertEqual(record3.message_partner_ids, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+
+
+        # partner_root -> never again
+        odoobot = self.env.ref('base.partner_root')
+        odoobot.active = True
+        odoobot.email = 'odoobot@example.com'
+        with self.mock_mail_gateway():
+            record4 = self.format_and_process(
+                MAIL_TEMPLATE, odoobot.email_formatted, 'groups@test.com',
+                subject='Odoobot Automatic Answer')
+
+        self.assertEqual(record4.message_ids[0].author_id, odoobot)
+        self.assertEqual(record4.message_ids[0].email_from, odoobot.email_formatted)
+        self.assertEqual(record4.message_follower_ids.partner_id, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
+        self.assertEqual(record4.message_partner_ids, self.env['res.partner'],
+                         'message_process: unrecognized email -> no follower')
 
     # --------------------------------------------------
     # Author recognition
@@ -298,6 +396,29 @@ class TestMailgateway(TestMailCommon):
         self.assertFalse(record, 'message_process: should have bounced')
         # Check if default (hardcoded) value is in the mail content
         self.assertSentEmail('"MAILER-DAEMON" <bounce.test@test.com>', ['whatever-2a840@postmaster.twitter.com'], body_content='The following email sent to')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_process_alias_defaults(self):
+        """ Test alias defaults and inner values """
+        self.alias.write({
+            'alias_user_id': self.user_employee.id,
+            'alias_defaults': "{'custom_field': 'defaults_custom'}"
+        })
+
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Specific')
+        self.assertEqual(len(record), 1)
+        res = record.get_metadata()[0].get('create_uid') or [None]
+        self.assertEqual(res[0], self.user_employee.id)
+        self.assertEqual(record.name, 'Specific')
+        self.assertEqual(record.custom_field, 'defaults_custom')
+
+        self.alias.write({'alias_defaults': '""'})
+        record = self.format_and_process(MAIL_TEMPLATE, self.email_from, 'groups@test.com', subject='Specific2')
+        self.assertEqual(len(record), 1)
+        res = record.get_metadata()[0].get('create_uid') or [None]
+        self.assertEqual(res[0], self.user_employee.id)
+        self.assertEqual(record.name, 'Specific2')
+        self.assertFalse(record.custom_field)
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_process_alias_user_id(self):
@@ -480,7 +601,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -507,7 +628,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -537,7 +658,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -563,7 +684,7 @@ class TestMailgateway(TestMailCommon):
         new_alias_2 = self.env['mail.alias'].create({
             'alias_name': 'test',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         new_rec = self.format_and_process(
@@ -816,14 +937,14 @@ class TestMailgateway(TestMailCommon):
         self.env['mail.alias'].create({
             'alias_name': 'test.alias',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         init_msg_count = len(self.test_record.message_ids)
         res_test = self.format_and_process(
             MAIL_TEMPLATE, self.email_from, 'test.alias@test.com',
             subject='My Dear Forward', extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
-            target_model='mail.test')
+            target_model='mail.test.container')
 
         self.assertEqual(len(self.test_record.message_ids), init_msg_count)
         self.assertEqual(len(self.fake_email.child_ids), 0)
@@ -843,7 +964,7 @@ class TestMailgateway(TestMailCommon):
         res_test = self.format_and_process(
             MAIL_TEMPLATE, self.email_from, 'test.alias@test.com',
             subject='My Dear Forward', extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
-            target_model='mail.test')
+            target_model='mail.test.container')
 
         self.assertEqual(len(self.test_record.message_ids), init_msg_count + 1)
         self.assertEqual(len(self.fake_email.child_ids), 1)
@@ -855,14 +976,14 @@ class TestMailgateway(TestMailCommon):
         self.env['mail.alias'].create({
             'alias_name': 'test.alias',
             'alias_user_id': False,
-            'alias_model_id': self.env['ir.model']._get('mail.test').id,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
             'alias_contact': 'everyone',
         })
         init_msg_count = len(self.test_record.message_ids)
         res_test = self.format_and_process(
             MAIL_TEMPLATE, self.email_from, 'catchall.test@test.com', cc='test.alias@test.com',
             subject='My Dear Forward', extra='References: <2233@a.com>\r\n\t<3edss_dsa@b.com> %s' % self.fake_email.message_id,
-            target_model='mail.test')
+            target_model='mail.test.container')
 
         self.assertEqual(len(self.test_record.message_ids), init_msg_count + 1)
         self.assertEqual(len(self.fake_email.child_ids), 1)

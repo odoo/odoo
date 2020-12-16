@@ -9,7 +9,7 @@
 {
     'name' : 'Venezuela - Accounting',
     'author': ['Odoo S.A.', 'Vauxoo'],
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description':
 """
 Chart of Account for Venezuela.
@@ -22,7 +22,7 @@ this plan comply with this practices.
 This module has been tested as base for more of 1000 companies, because
 it is based in a mixtures of most common software in the Venezuelan
 market what will allow for sure to accountants feel them first steps with
-Odoo more confortable.
+Odoo more comfortable.
 
 This module doesn't pretend be the total localization for Venezuela,
 but it will help you to start really quickly with Odoo in this country.

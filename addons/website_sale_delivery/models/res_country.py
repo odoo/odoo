@@ -31,7 +31,7 @@ class ResCountry(models.Model):
             delivery_carriers = self.env['delivery.carrier'].sudo().search(dom)
 
             for carrier in delivery_carriers:
-                if not carrier.country_ids and not carrier.state_ids:
+                if not carrier.country_ids or not carrier.state_ids:
                     states = res
                     break
                 states |= carrier.state_ids

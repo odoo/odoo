@@ -13,18 +13,26 @@ class User(models.Model):
     employee_id = fields.Many2one('hr.employee', string="Company employee",
         compute='_compute_company_employee', search='_search_company_employee', store=False)
 
-    job_title = fields.Char(related='employee_id.job_title', readonly=False)
-    work_phone = fields.Char(related='employee_id.work_phone', readonly=False)
-    mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False)
+    job_title = fields.Char(related='employee_id.job_title', readonly=False, related_sudo=False)
+    work_phone = fields.Char(related='employee_id.work_phone', readonly=False, related_sudo=False)
+    mobile_phone = fields.Char(related='employee_id.mobile_phone', readonly=False, related_sudo=False)
     employee_phone = fields.Char(related='employee_id.phone', readonly=False, related_sudo=False)
     work_email = fields.Char(related='employee_id.work_email', readonly=False, related_sudo=False)
     category_ids = fields.Many2many(related='employee_id.category_ids', string="Employee Tags", readonly=False, related_sudo=False)
     department_id = fields.Many2one(related='employee_id.department_id', readonly=False, related_sudo=False)
     address_id = fields.Many2one(related='employee_id.address_id', readonly=False, related_sudo=False)
     work_location = fields.Char(related='employee_id.work_location', readonly=False, related_sudo=False)
-    employee_parent_id = fields.Many2one(related='employee_id.parent_id', related_sudo=False)
+    employee_parent_id = fields.Many2one(related='employee_id.parent_id', readonly=False, related_sudo=False)
     coach_id = fields.Many2one(related='employee_id.coach_id', readonly=False, related_sudo=False)
     address_home_id = fields.Many2one(related='employee_id.address_home_id', readonly=False, related_sudo=False)
+    private_street = fields.Char(related='address_home_id.street', string="Private Street", readonly=False, related_sudo=False)
+    private_street2 = fields.Char(related='address_home_id.street2', string="Private Street2", readonly=False, related_sudo=False)
+    private_city = fields.Char(related='address_home_id.city', string="Private City", readonly=False, related_sudo=False)
+    private_state_id = fields.Many2one(
+        related='address_home_id.state_id', string="Private State", readonly=False, related_sudo=False,
+        domain="[('country_id', '=?', private_country_id)]")
+    private_zip = fields.Char(related='address_home_id.zip', readonly=False, string="Private Zip", related_sudo=False)
+    private_country_id = fields.Many2one(related='address_home_id.country_id', string="Private Country", readonly=False, related_sudo=False)
     is_address_home_a_company = fields.Boolean(related='employee_id.is_address_home_a_company', readonly=False, related_sudo=False)
     private_email = fields.Char(related='address_home_id.email', string="Private Email", readonly=False)
     km_home_work = fields.Integer(related='employee_id.km_home_work', readonly=False, related_sudo=False)
@@ -78,6 +86,7 @@ class User(models.Model):
             'active',
             'child_ids',
             'employee_id',
+            'address_home_id',
             'employee_ids',
             'employee_parent_id',
             'hr_presence_state',
@@ -88,7 +97,12 @@ class User(models.Model):
 
         hr_writable_fields = [
             'additional_note',
-            'address_home_id',
+            'private_street',
+            'private_street2',
+            'private_city',
+            'private_state_id',
+            'private_zip',
+            'private_country_id',
             'address_id',
             'barcode',
             'birthday',
@@ -164,7 +178,7 @@ class User(models.Model):
         can_edit_self = self.env['ir.config_parameter'].sudo().get_param('hr.hr_employee_self_edit') or self.env.user.has_group('hr.group_hr_user')
         if hr_fields and not can_edit_self:
             # Raise meaningful error message
-            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other informations."))
+            raise AccessError(_("You are only allowed to update your preferences. Please contact a HR officer to update other information."))
 
         result = super(User, self).write(vals)
 
@@ -188,7 +202,7 @@ class User(models.Model):
     @api.model
     def action_get(self):
         if self.env.user.employee_id:
-            return self.sudo().env.ref('hr.res_users_action_my').read()[0]
+            return self.env['ir.actions.act_window']._for_xml_id('hr.res_users_action_my')
         return super(User, self).action_get()
 
     @api.depends('employee_ids')
@@ -198,17 +212,12 @@ class User(models.Model):
             user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _search_company_employee(self, operator, value):
-        employees = self.env['hr.employee'].search([
-            ('name', operator, value),
-            '|',
-            ('company_id', '=', self.env.company.id),
-            ('company_id', '=', False)
-        ], order='company_id ASC')
-        return [('id', 'in', employees.mapped('user_id').ids)]
+        return [('employee_ids', operator, value)]
 
     def action_create_employee(self):
         self.ensure_one()
         self.env['hr.employee'].create(dict(
             name=self.name,
+            company_id=self.env.company.id,
             **self.env['hr.employee']._sync_user(self)
         ))

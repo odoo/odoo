@@ -39,12 +39,13 @@ function escFormat() {
 
 kanbanExamplesRegistry.add('project', {
     ghostColumns: [_lt('New'), _lt('Assigned'), _lt('In Progress'), _lt('Done')],
+    applyExamplesText: _lt("Use This For My Project"),
     examples:[{
         name: _lt('Software Development'),
         columns: [_lt('Backlog'), _lt('Specifications'), _lt('Development'), _lt('Tests'), _lt('Delivered')],
         description: escFormat(_lt('Prioritize Tasks by using the %s icon.'+
-            '%s Use the %s button to signalize to your colleagues that a task is ready for the next stage.'+
-            '%s Use the %s to signalize a problem or a need for discussion on a task.'+
+            '%s Use the %s button to inform your colleagues that a task is ready for the next stage.'+
+            '%s Use the %s to indicate a problem or a need for discussion on a task.'+
             '%s'), star, '<br/>', greenBullet, '<br/>', redBullet, description_activities),
         bullets: [greenBullet, redBullet, star],
     }, {
@@ -75,7 +76,7 @@ kanbanExamplesRegistry.add('project', {
     }, {
         name: _lt('Consulting'),
         columns: [_lt('New Projects'), _lt('Resources Allocation'), _lt('In Progress'), _lt('Done')],
-        description: escFormat(_lt('Manage the lifecycle of your project using the kanban view. Add newly acquired project, assign them and use the %s and %s to define if the project is ready for the next step. %s'), greenBullet, redBullet, description_activities),
+        description: escFormat(_lt('Manage the lifecycle of your project using the kanban view. Add newly acquired projects, assign them and use the %s and %s to define if the project is ready for the next step. %s'), greenBullet, redBullet, description_activities),
         bullets: [greenBullet, redBullet],
     }, {
         name: _lt('Research Project'),

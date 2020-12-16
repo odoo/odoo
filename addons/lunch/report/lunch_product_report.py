@@ -33,7 +33,7 @@ class LunchProductReport(models.Model):
     def _compute_image_128(self):
         for product_r in self:
             product = product_r.product_id
-            category = product_r.category_id
+            category = product_r.sudo().category_id
             if product.image_128:
                 product_r.image_128 = product.image_128
             elif category.image_128:

@@ -47,18 +47,52 @@ class QWeb(models.AbstractModel):
 
     # compile directives
 
+    def _compile_node(self, el, options):
+        snippet_key = options.get('snippet-key')
+        if snippet_key == options['template'] \
+                or options.get('snippet-sub-call-key') == options['template']:
+            # Get the path of element to only consider the first node of the
+            # snippet template content (ignoring all ancestors t elements which
+            # are not t-call ones)
+            nb_real_elements_in_hierarchy = 0
+            node = el
+            while node is not None and nb_real_elements_in_hierarchy < 2:
+                if node.tag != 't' or 't-call' in node.attrib:
+                    nb_real_elements_in_hierarchy += 1
+                node = node.getparent()
+            if nb_real_elements_in_hierarchy == 1:
+                # The first node might be a call to a sub template
+                sub_call = el.get('t-call')
+                if sub_call:
+                    el.set('t-call-options', f"{{'snippet-key': '{snippet_key}', 'snippet-sub-call-key': '{sub_call}'}}")
+                # If it already has a data-snippet it is a saved snippet.
+                # Do not override it.
+                elif 'data-snippet' not in el.attrib:
+                    el.attrib['data-snippet'] = snippet_key.split('.', 1)[-1]
+
+        return super()._compile_node(el, options)
+
     def _compile_directive_snippet(self, el, options):
-        el.set('t-call', el.attrib.pop('t-snippet'))
-        View = self.env['ir.ui.view']
-        view_id = View.get_view_id(el.attrib.get('t-call'))
+        key = el.attrib.pop('t-snippet')
+        el.set('t-call', key)
+        el.set('t-call-options', "{'snippet-key': '" + key + "'}")
+        View = self.env['ir.ui.view'].sudo()
+        view_id = View.get_view_id(key)
         name = View.browse(view_id).name
         thumbnail = el.attrib.pop('t-thumbnail', "oe-thumbnail")
-        div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s">' % (
+        div = u'<div name="%s" data-oe-type="snippet" data-oe-thumbnail="%s" data-oe-snippet-id="%s" data-oe-keywords="%s">' % (
             escape(pycompat.to_text(name)),
             escape(pycompat.to_text(thumbnail)),
             escape(pycompat.to_text(view_id)),
+            escape(pycompat.to_text(el.findtext('keywords')))
         )
         return [self._append(ast.Str(div))] + self._compile_node(el, options) + [self._append(ast.Str(u'</div>'))]
+
+    def _compile_directive_snippet_call(self, el, options):
+        key = el.attrib.pop('t-snippet-call')
+        el.set('t-call', key)
+        el.set('t-call-options', "{'snippet-key': '" + key + "'}")
+        return self._compile_node(el, options)
 
     def _compile_directive_install(self, el, options):
         if self.user_has_groups('base.group_system'):
@@ -86,6 +120,7 @@ class QWeb(models.AbstractModel):
     def _directives_eval_order(self):
         directives = super(QWeb, self)._directives_eval_order()
         directives.insert(directives.index('call'), 'snippet')
+        directives.insert(directives.index('call'), 'snippet-call')
         directives.insert(directives.index('call'), 'install')
         return directives
 
@@ -359,16 +394,18 @@ class Image(models.AbstractModel):
 
         url_object = urls.url_parse(url)
         if url_object.path.startswith('/web/image'):
-            # url might be /web/image/<model>/<id>[_<checksum>]/<field>[/<width>x<height>]
             fragments = url_object.path.split('/')
             query = url_object.decode_query()
-            if fragments[3].isdigit():
+            url_id = fragments[3].split('-')[0]
+            # ir.attachment image urls: /web/image/<id>[-<checksum>][/...]
+            if url_id.isdigit():
                 model = 'ir.attachment'
-                oid = fragments[3]
+                oid = url_id
                 field = 'datas'
+            # url of binary field on model: /web/image/<model>/<id>/<field>[/...]
             else:
                 model = query.get('model', fragments[3])
-                oid = query.get('id', fragments[4].split('_')[0])
+                oid = query.get('id', fragments[4])
                 field = query.get('field', fragments[5])
             item = self.env[model].browse(int(oid))
             return item[field]

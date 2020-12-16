@@ -46,7 +46,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
 
     var steps = [{ // Leave category displayed by default
         content: 'waiting for loading to finish',
-        trigger: 'body:has(.loader:hidden)',
+        trigger: 'body:not(:has(.loader))',
         run: function () {
             var product_wall_shelf = posmodel.db.search_product_in_category(0, 'Wall Shelf Unit')[0];
             var product_small_shelf = posmodel.db.search_product_in_category(0, 'Small Shelf')[0];
@@ -55,7 +55,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
             var product_desk_pad = posmodel.db.search_product_in_category(0, 'Desk Pad')[0];
             var product_letter_tray = posmodel.db.search_product_in_category(0, 'Letter Tray')[0];
             var product_whiteboard = posmodel.db.search_product_in_category(0, 'Whiteboard')[0];
-            var product_miscellaneous = posmodel.db.search_product_in_category(0, 'Discount')[0];
 
             compare_backend_frontend(product_letter_tray, 'Public Pricelist', 0, undefined)()
                 .then(compare_backend_frontend(product_letter_tray, 'Public Pricelist', 1, undefined))
@@ -76,9 +75,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
                 .then(compare_backend_frontend(product_letter_tray, 'Category', 1, undefined))
                 .then(compare_backend_frontend(product_wall_shelf, 'Product template', 1, undefined))
                 .then(compare_backend_frontend(product_wall_shelf, 'Dates', 1, undefined))
-                .then(compare_backend_frontend(product_miscellaneous, 'Cost base', 1, undefined))
-                .then(compare_backend_frontend(product_miscellaneous, 'Pricelist base', 1, undefined))
-                .then(compare_backend_frontend(product_miscellaneous, 'Pricelist base 2', 1, undefined))
                 .then(compare_backend_frontend(product_small_shelf, 'Pricelist base rounding', 1, undefined))
                 .then(compare_backend_frontend(product_whiteboard, 'Public Pricelist', 1, undefined))
                 .then(function () {
@@ -93,7 +89,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         run: function () {}, // it's a check
     }, {
         content: "click category switch",
-        trigger: ".js-category-switch",
+        trigger: ".breadcrumb-home",
         run: 'click',
     }, {
         content: "click pricelist button",
@@ -105,10 +101,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     }, {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('Fixed')",
-    }, {
-        content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Discount'):contains('$ 1.00')",
-        run: function () {}, // it's a check
     }, {
         content: "open customer list",
         trigger: "button.set-customer",
@@ -128,10 +120,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     }, {
         content: "cancel pricelist dialog",
         trigger: ".button.cancel:visible",
-    }, {
-        content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Discount'):contains('$ 0.00')",
-        run: function () {}, // it's a check
     }, {
         content: "open customer list",
         trigger: "button.set-customer",
@@ -164,20 +152,43 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "change qty to 2 kg",
         trigger: ".numpad button.input-button:visible:contains('2')",
     }, {
+        content: "qty of Wall Shelf line should be 2",
+        trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf')",
+        extra_trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf') ~ .info-list .info em:contains('2.0')",
+        run: function() {},
+    }, {
         content: "verify that unit price of shelf changed to $1",
         trigger: ".total > .value:contains('$ 2.00')",
+        run: function() {},
     }, {
         content: "order different shelf",
         trigger: ".product:contains('Small Shelf')",
     }, {
+        content: "Small Shelf line should be selected with quantity 1",
+        trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf')",
+        extra_trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .info-list .info em:contains('1.0')",
+        run: function() {}
+    }, {
         content: "change to price mode",
         trigger: ".numpad button:contains('Price')",
+    }, {
+        content: "make sure price mode is activated",
+        trigger: ".numpad button.selected-mode:contains('Price')",
+        run: function() {},
     }, {
         content: "manually override the unit price of these shelf to $5",
         trigger: ".numpad button.input-button:visible:contains('5')",
     }, {
+        content: "Small Shelf line should be selected with unit price of 5",
+        trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf')",
+        extra_trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .price:contains('5.0')",
+    }, {
         content: "change back to qty mode",
         trigger: ".numpad button:contains('Qty')",
+    }, {
+        content: "make sure qty mode is activated",
+        trigger: ".numpad button.selected-mode:contains('Qty')",
+        run: function() {},
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -185,8 +196,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select public pricelist",
         trigger: ".selection-item:contains('Public Pricelist')",
     }, {
-        content: "verify that the boni shelf have been recomputed and the\
-shelf have not (their price was manually overridden)",
+        content: "verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)",
         trigger: ".total > .value:contains('$ 8.96')",
     }, {
         content: "click pricelist button",
@@ -194,19 +204,6 @@ shelf have not (their price was manually overridden)",
     }, {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('min_quantity ordering')",
-    }, {
-        content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Discount')",
-    }, {
-        content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Discount')",
-    }, {
-        content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Discount')",
-    }, {
-        content: "verify there is one line with 3 miscellaneous products",
-        trigger: ".orderline:contains('Discount') em:contains('3.000')",
-        run: function () {}, // it's a check
     }, {
         content: "close the Point of Sale frontend",
         trigger: ".header-button",
@@ -216,7 +213,7 @@ shelf have not (their price was manually overridden)",
         run: function() {}, //it's a check,
     }]);
 
-    Tour.register('pos_pricelist', { test: true, url: '/pos/web' }, steps);
+    Tour.register('pos_pricelist', { test: true, url: '/pos/ui' }, steps);
 });
 
 odoo.define('point_of_sale.tour.acceptance', function (require) {
@@ -231,7 +228,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: 'the ' + product_name + ' have been added to the order',
             trigger: '.order .product-name:contains("' + product_name + '")',
-            run: function () {}, // it's a check
+            run: function () {},
         }];
     }
 
@@ -245,7 +242,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: 'the fiscal position ' + fp_name + ' has been set to the order',
             trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
-            run: function () {}, // it's a check
+            run: function () {},
         }];
     }
 
@@ -258,16 +255,49 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
                 trigger: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
             });
         }
-
         return steps;
     }
 
-    function generate_payment_screen_keypad_steps(amount_str) {
-        return generate_keypad_steps(amount_str, '.payment-numpad');
+    function press_payment_numpad(val) {
+        return [{
+            content: `press ${val} on payment screen numpad`,
+            trigger: `.payment-numpad .input-button:contains("${val}"):visible`,
+        }]
     }
 
-    function generate_product_screen_keypad_steps(amount_str) {
-        return generate_keypad_steps(amount_str, '.numpad');
+    function press_product_numpad(val) {
+        return [{
+            content: `press ${val} on product screen numpad`,
+            trigger: `.numpad .input-button:contains("${val}"):visible`,
+        }]
+    }
+
+    function selected_payment_has(name, val) {
+        return [{
+            content: `selected payment is ${name} and has ${val}`,
+            trigger: `.paymentlines .paymentline.selected .payment-name:contains("${name}")`,
+            extra_trigger: `.paymentlines .paymentline.selected .payment-name:contains("${name}") ~ .payment-amount:contains("${val}")`,
+            run: function () {},
+        }]
+    }
+
+    function selected_orderline_has({ product, price = null, quantity = null }) {
+        const result = [];
+        if (price !== null) {
+            result.push({
+                content: `Selected line has product '${product}' and price '${price}'`,
+                trigger: `.order-container .orderlines .orderline.selected .product-name:contains("${product}") ~ span.price:contains("${price}")`,
+                run: function () {},
+            });
+        }
+        if (quantity !== null) {
+            result.push({
+                content: `Selected line has product '${product}' and quantity '${quantity}'`,
+                trigger: `.order-container .orderlines .orderline.selected .product-name:contains('${product}') ~ .info-list .info em:contains('${quantity}')`,
+                run: function () {},
+            });
+        }
+        return result;
     }
 
     function verify_order_total(total_str) {
@@ -288,64 +318,31 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }];
     }
 
-    function activate_email_and_select_a_customer_then_deactivate_email() {
-        // Check if the flow to select customer with email activated is working.
-        return [{
-            content: "activate email",
-            trigger: '.button.js_email',
-        }, {
-            content: "validate the order",
-            trigger: '.button.next.highlight:visible',
-        }, {
-            content: "verify dialog box to select customer",
-            trigger: ".button.confirm:visible",
-        }, {
-            content: "select a customer",
-            trigger: 'tr.client-line:contains("TEST PARTNER")',
-        }, {
-            content: "verify the selected customer",
-            trigger: '.button.next.highlight:visible',
-        }, {
-            content: "check if customer is set",
-            trigger: 'span.js_customer_name:contains("TEST PARTNER")',
-            run: function () {}, // it's a check
-        }, {
-            // sending email should be checked in different test
-            content: "deactivate email",
-            trigger: '.button.js_email',
-        }];
-    }
-
     function finish_order() {
         return [{
             content: "validate the order",
-            trigger: '.button.next:visible',
-        }, {
-            content: "verify that the order is being sent to the backend",
-            trigger: ".js_connecting:visible",
-            run: function () {}, // it's a check
+            trigger: '.payment-screen .button.next.highlight:visible',
         }, {
             content: "verify that the order has been successfully sent to the backend",
             trigger: ".js_connected:visible",
-            run: function () {}, // it's a check
+            run: function () {},
         }, {
-            content: "next order",
-            trigger: '.button.next:visible',
-        }, { // Leave category displayed by default
-            content: "click category switch",
-            trigger: ".js-category-switch",
-            run: 'click',
+            content: "click Next Order",
+            trigger: '.receipt-screen .button.next.highlight:visible',
+        }, {
+            content: "check if we left the receipt screen",
+            trigger: '.pos-content .screen:not(:has(.receipt-screen))',
+            run: function () {},
         }];
     }
 
     var steps = [{
             content: 'waiting for loading to finish',
-            trigger: 'body:has(.loader:hidden)',
-            run: function () {}, // it's a check
+            trigger: 'body:not(:has(.loader))',
+            run: function () {},
         }, { // Leave category displayed by default
             content: "click category switch",
-            trigger: ".js-category-switch",
-            run: 'click',
+            trigger: ".breadcrumb-home",
         }];
 
     steps = steps.concat(add_product_to_order('Desk Organizer'));
@@ -363,15 +360,16 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             remaining := 0.00
             change := 1.50
     */
-    steps = steps.concat(generate_payment_screen_keypad_steps("5.20"));
+    steps = steps.concat(press_payment_numpad('5'));
+    steps = steps.concat(selected_payment_has('Cash', '5.0'));
     steps = steps.concat([{
         content: "verify remaining",
-        trigger: '.payment-status-remaining .amount:contains("5.00")',
-        run: function () {}, // it's a check
+        trigger: '.payment-status-remaining .amount:contains("5.20")',
+        run: function () {},
     }, {
         content: "verify change",
         trigger: '.payment-status-change .amount:contains("0.00")',
-        run: function () {}, // it's a check
+        run: function () {},
     }]);
 
     /*  make additional payment line of 6.50
@@ -386,31 +384,37 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         content: "pay with cash",
         trigger: '.paymentmethod:contains("Cash")',
     }]);
-    steps = steps.concat(generate_payment_screen_keypad_steps("6.50"));
-
+    steps = steps.concat(selected_payment_has('Cash', '5.2'));
+    steps = steps.concat(press_payment_numpad('6'))
+    steps = steps.concat(selected_payment_has('Cash', '6.0'));
     steps = steps.concat([{
         content: "verify remaining",
         trigger: '.payment-status-remaining .amount:contains("0.00")',
-        run: function () {}, // it's a check
+        run: function () {},
     }, {
         content: "verify change",
-        trigger: '.payment-status-change .amount:contains("1.50")',
-        run: function () {}, // it's a check
+        trigger: '.payment-status-change .amount:contains("0.80")',
+        run: function () {},
     }]);
 
-    steps = steps.concat(activate_email_and_select_a_customer_then_deactivate_email());
     steps = steps.concat(finish_order());
 
     // test opw-672118 orderline subtotal rounding
     steps = steps.concat(add_product_to_order('Desk Organizer'));
-    steps = steps.concat(generate_product_screen_keypad_steps('.999')); // sets orderline qty
-    steps = steps.concat(verify_order_total('5.09'));
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '1.0'}));
+    steps = steps.concat(press_product_numpad('.'))
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.0', price: '0.0'}));
+    steps = steps.concat(press_product_numpad('9'))
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.9', price: '4.59'}));
+    steps = steps.concat(press_product_numpad('9'))
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.99', price: '5.05'}));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(generate_payment_screen_keypad_steps("10"));
+    steps = steps.concat(selected_payment_has('Cash', '5.05'));
     steps = steps.concat(finish_order());
 
     // Test fiscal position one2many map (align with backend)
     steps = steps.concat(add_product_to_order('Letter Tray'));
+    steps = steps.concat(selected_orderline_has({product: 'Letter Tray', quantity: '1.0'}));
     steps = steps.concat(verify_order_total('5.28'));
     steps = steps.concat(set_fiscal_position_on_order('FP-POS-2M'));
     steps = steps.concat(verify_order_total('5.52'));
@@ -420,10 +424,10 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         trigger: ".header-button",
     }, {
         content: "confirm closing the frontend",
-        trigger: ".header-button",
+        trigger: ".header-button.confirm",
         run: function() {}, //it's a check,
     }]);
 
-    Tour.register('pos_basic_order', { test: true, url: '/pos/web' }, steps);
+    Tour.register('pos_basic_order', { test: true, url: '/pos/ui' }, steps);
 
 });
