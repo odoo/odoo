@@ -1,5 +1,4 @@
-odoo.define('web.ListController', function (require) {
-"use strict";
+/** @odoo-module alias=web.ListController **/
 
 /**
  * The List Controller controls the list renderer and the list model.  Its role
@@ -7,14 +6,14 @@ odoo.define('web.ListController', function (require) {
  * and bind all extra buttons/pager in the control panel.
  */
 
-var config = require('web.config');
-var core = require('web.core');
-var BasicController = require('web.BasicController');
-var DataExport = require('web.DataExport');
-var Dialog = require('web.Dialog');
-var ListConfirmDialog = require('web.ListConfirmDialog');
-var session = require('web.session');
-const viewUtils = require('web.viewUtils');
+import config from 'web.config';
+import core from 'web.core';
+import BasicController from 'web.BasicController';
+import DataExport from 'web.DataExport';
+import Dialog from 'web.Dialog';
+import ListConfirmDialog from 'web.ListConfirmDialog';
+import session from 'web.session';
+import viewUtils from 'web.viewUtils';
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -978,6 +977,4 @@ var ListController = BasicController.extend({
     },
 });
 
-return ListController;
-
-});
+export default ListController;

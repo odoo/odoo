@@ -4,7 +4,7 @@ odoo.define('web.GroupByMenu', function (require) {
     const CustomGroupByItem = require('web.CustomGroupByItem');
     const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     /**
      * 'Group by' menu

@@ -1,8 +1,7 @@
-odoo.define("web/static/src/js/views/search_panel.js", function (require) {
-    "use strict";
+/** @odoo-module alias=web.searchPanel **/
 
-    const { Model, useModel } = require("web/static/src/js/model.js");
-    const patchMixin = require("web.patchMixin");
+    import { Model, useModel } from "web.Model";
+    import patchMixin from "web.patchMixin";
 
     const { Component, hooks } = owl;
     const { useState, useSubEnv } = hooks;
@@ -210,5 +209,4 @@ odoo.define("web/static/src/js/views/search_panel.js", function (require) {
     };
     SearchPanel.template = "web.SearchPanel";
 
-    return patchMixin(SearchPanel);
-});
+    export default patchMixin(SearchPanel);

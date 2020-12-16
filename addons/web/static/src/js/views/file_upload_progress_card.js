@@ -1,8 +1,7 @@
-odoo.define('web.ProgressCard', function (require) {
-'use strict';
+/** @odoo-module alias=web.ProgressCard **/
 
-const { _t } = require('web.core');
-const Widget = require('web.Widget');
+import { _t } from 'web.core';
+import Widget from 'web.Widget';
 
 const ProgressCard = Widget.extend({
     template: 'web.ProgressCard',
@@ -47,6 +46,4 @@ const ProgressCard = Widget.extend({
     },
 });
 
-return ProgressCard;
-
-});
+export default ProgressCard;

@@ -4,7 +4,7 @@ odoo.define('web.SearchBar', function (require) {
     const Domain = require('web.Domain');
     const field_utils = require('web.field_utils');
     const { useAutofocus } = require('web.custom_hooks');
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
     const { Component, hooks } = owl;

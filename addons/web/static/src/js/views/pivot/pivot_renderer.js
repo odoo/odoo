@@ -1,9 +1,8 @@
-odoo.define('web.PivotRenderer', function (require) {
-    "use strict";
+/** @odoo-module alias=web.PivotRenderer **/
 
-    const OwlAbstractRenderer = require('web.AbstractRendererOwl');
-    const field_utils = require('web.field_utils');
-    const patchMixin = require('web.patchMixin');
+    import OwlAbstractRenderer from 'web.AbstractRendererOwl';
+    import field_utils from 'web.field_utils';
+    import patchMixin from 'web.patchMixin';
 
     const { useExternalListener, useState, onMounted, onPatched } = owl.hooks;
 
@@ -199,6 +198,4 @@ odoo.define('web.PivotRenderer', function (require) {
 
     PivotRenderer.template = 'web.PivotRenderer';
 
-    return patchMixin(PivotRenderer);
-
-});
+    export default patchMixin(PivotRenderer);

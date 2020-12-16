@@ -1,5 +1,4 @@
-odoo.define('web.ListView', function (require) {
-"use strict";
+/** @odoo-module alias=web.ListView **/
 
 /**
  * The list view is one of the core and most basic view: it is used to look at
@@ -9,12 +8,12 @@ odoo.define('web.ListView', function (require) {
  * form view. Only a ListRenderer is used in that case.
  */
 
-var BasicView = require('web.BasicView');
-var core = require('web.core');
-var ListModel = require('web.ListModel');
-var ListRenderer = require('web.ListRenderer');
-var ListController = require('web.ListController');
-var pyUtils = require('web.py_utils');
+import BasicView from 'web.BasicView';
+import core from 'web.core';
+import ListModel from 'web.ListModel';
+import ListRenderer from 'web.ListRenderer';
+import ListController from 'web.ListController';
+import pyUtils from 'web.py_utils';
 
 var _lt = core._lt;
 
@@ -132,6 +131,4 @@ var ListView = BasicView.extend({
     },
 });
 
-return ListView;
-
-});
+export default ListView;

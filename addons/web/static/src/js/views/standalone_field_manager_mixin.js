@@ -1,8 +1,6 @@
-odoo.define('web.StandaloneFieldManagerMixin', function (require) {
-"use strict";
+/** @odoo-module alias=web.StandaloneFieldManagerMixin **/
 
-
-var FieldManagerMixin = require('web.FieldManagerMixin');
+import FieldManagerMixin from 'web.FieldManagerMixin';
 
 /**
  * The StandaloneFieldManagerMixin is a mixin, designed to be used by a widget
@@ -59,6 +57,4 @@ var StandaloneFieldManagerMixin = _.extend({}, FieldManagerMixin, {
     },
 });
 
-return StandaloneFieldManagerMixin;
-
-});
+export default StandaloneFieldManagerMixin;
