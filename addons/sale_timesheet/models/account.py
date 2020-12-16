@@ -92,12 +92,6 @@ class AccountAnalyticLine(models.Model):
                 values['account_id'] = task.analytic_account_id.id
                 values['company_id'] = task.analytic_account_id.company_id.id
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
-        # task implies so line (at create)
-        if any([field_name in values for field_name in ['task_id', 'project_id']]) and not values.get('so_line') and (values.get('employee_id') or self.mapped('employee_id')):
-            task = self.env['project.task'].sudo().browse(values['task_id']) if values.get('task_id') else self.env['project.task']
-            employee = self.env['hr.employee'].sudo().browse(values['employee_id']) if values.get('employee_id') else self.mapped('employee_id')
-            project = self.env['project.project'].sudo().browse(values['project_id']) if values.get('project_id') else task.project_id
-            values['so_line'] = self._timesheet_determine_sale_line(task, employee, project).id
         return values
 
     @api.model
