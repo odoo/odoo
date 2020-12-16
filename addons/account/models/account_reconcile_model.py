@@ -209,6 +209,7 @@ class AccountReconcileModel(models.Model):
     match_partner_category_ids = fields.Many2many('res.partner.category', string='Restrict Partner Categories to',
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
+<<<<<<< HEAD
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
     partner_mapping_line_ids = fields.One2many(string="Partner Mapping Lines",
                                                comodel_name='account.reconcile.model.partner.mapping',
@@ -217,6 +218,47 @@ class AccountReconcileModel(models.Model):
                                                     "- To Match the text at the beginning of the line (in label or notes), simply fill in your text.\n"
                                                     "- To Match the text anywhere (in label or notes), put your text between .*\n"
                                                     "  e.g: .*N°48748 abc123.*")
+=======
+    # ===== Write-Off =====
+    # First part fields.
+    account_id = fields.Many2one('account.account', string='Account', ondelete='cascade', domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
+    journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.", domain="[('company_id', '=', company_id)]")
+    label = fields.Char(string='Journal Item Label')
+    amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
+        ], required=True, default='percentage')
+    show_force_tax_included = fields.Boolean(compute='_compute_show_force_tax_included', help='Technical field used to show the force tax included button')
+    force_tax_included = fields.Boolean(string='Tax Included in Price',
+        help='Force the tax to be managed as a price included tax.')
+    amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    amount_from_label_regex = fields.Char(string="Amount from Label (regex)", default=r"([\d\.,]+)", help="There is no need for regex delimiter, only the regex is needed. For instance if you want to extract the amount from\nR:9672938 10/07 AX 9415126318 T:5L:NA BRT: 3358,07 C:\nYou could enter\nBRT: ([\d,]+)")
+    decimal_separator = fields.Char(default=lambda self: self.env['res.lang']._lang_get(self.env.user.lang).decimal_point, help="Every character that is nor a digit nor this separator will be removed from the matching string")
+    tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+                                        relation='account_reconcile_model_analytic_tag_rel')
+    # Second part fields.
+    has_second_line = fields.Boolean(string='Add a second line', default=False)
+    second_account_id = fields.Many2one('account.account', string='Second Account', ondelete='cascade', domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
+    second_journal_id = fields.Many2one('account.journal', string='Second Journal', ondelete='cascade', help="This field is ignored in a bank statement reconciliation.", domain="[('company_id', '=', company_id)]")
+    second_label = fields.Char(string='Second Journal Item Label')
+    second_amount_type = fields.Selection([
+        ('fixed', 'Fixed'),
+        ('percentage', 'Percentage of balance'),
+        ('regex', 'From label'),
+        ], string="Second Amount type",required=True, default='percentage')
+    show_second_force_tax_included = fields.Boolean(compute='_compute_show_second_force_tax_included', help='Technical field used to show the force tax included button')
+    force_second_tax_included = fields.Boolean(string='Second Tax Included in Price',
+        help='Force the second tax to be managed as a price included tax.')
+    second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
+    second_amount_from_label_regex = fields.Char(string="Second Amount from Label (regex)", default=r"([\d\.,]+)")
+    second_tax_ids = fields.Many2many('account.tax', relation='account_reconcile_model_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
+    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
+    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+                                               relation='account_reconcile_model_second_analytic_tag_rel')
+>>>>>>> aee30f15ed6... temp
 
     past_months_limit = fields.Integer(string="Past Months Limit", default=18, help="Number of months in the past to consider entries from when applying this model.")
 
