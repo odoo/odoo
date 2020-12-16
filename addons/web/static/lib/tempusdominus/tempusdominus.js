@@ -2726,6 +2726,19 @@ var TempusDominusBootstrap4 = function ($) {
             });
         };
 
+        TempusDominusBootstrap4._onScroll = function _onScroll(event){
+            var $target = getSelectorFromElement($(this)),
+            config = $target.data(DateTimePicker.DATA_KEY);
+            if ($target.length === 0) {
+                return;
+            }
+            // /!\ ODOO FIX: check on 'config' existence added by odoo
+            if (config && config._options.debug || window.debug) {
+                return;
+            }
+            TempusDominusBootstrap4._jQueryInterface.call($target, 'hide', event);
+        }
+
         return TempusDominusBootstrap4;
     }(DateTimePicker);
 
@@ -2758,6 +2771,7 @@ var TempusDominusBootstrap4 = function ($) {
         if (config && config._options.debug || window.debug) {
             return;
         }
+        window.removeEventListener('scroll', TempusDominusBootstrap4._onScroll, true);
         TempusDominusBootstrap4._jQueryInterface.call($target, 'hide', event);
     }).on(DateTimePicker.Event.KEYDOWN, '.' + DateTimePicker.ClassName.INPUT, function (event) {
         var $target = getSelectorFromElement($(this));
@@ -2781,6 +2795,7 @@ var TempusDominusBootstrap4 = function ($) {
         if (!(config && config._options.allowInputToggle)) {
             return;
         }
+        window.addEventListener('scroll', TempusDominusBootstrap4._onScroll.bind(this), true);
         TempusDominusBootstrap4._jQueryInterface.call($target, 'show', event);
     });
 
