@@ -31,7 +31,6 @@ class TranspilerJS:
         return new_content
 
     def get_define_url(self, url):
-        print(url)
         result = re.match(r"\/?(?P<module>\w+)\/[\w\/]*js\/(?P<url>[\w\/]*)", url)
         d = result.groupdict()
         return "@%s/%s" % (d.get('module'), d.get('url'))
@@ -103,10 +102,20 @@ class TranspilerJS:
         return content
 
     def remove_comment(self, content):
+        # first we remove the slashes in strings
+        p = re.findall(r"""([\"'`].*/.*[\"'`])""", content)
+
+        for string in p:
+            new_string = string.replace('/', "@___slash___@")
+            content = content.replace(string, new_string)
+
+        # We remove the comments
         p = re.compile(r'(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$)', flags=re.MULTILINE)
         repl = r""
-        return p.sub(repl, content)
+        content = p.sub(repl, content)
 
+        # We add the slashes in strings
+        return content.replace("@___slash___@", '/')
 
     def replace_default(self, content):
         new_content = self.replace_function_and_class_export(content, True)
