@@ -90,11 +90,11 @@ class Location(models.Model):
                     depth = 1
                 else:
                     # Scenario 3 : one company with high depth location tree
-                    depth = 20
+                    depth = 10
 
                 nb_by_level = int(math.log(nb_loc_to_take, depth)) + 1 if depth > 1 else nb_loc_to_take  # number of loc to put by level
 
-                _logger.info("Create locations (%d) tree for one warehouse - depth : %d, width : %d" % (nb_loc_to_take, depth, nb_by_level))
+                _logger.info("Create locations (%d) tree for a warehouse (%s) - depth : %d, width : %d" % (nb_loc_to_take, warehouse.code, depth, nb_by_level))
 
                 # Root is the lot_stock_id of warehouse
                 root = warehouse.lot_stock_id
@@ -109,7 +109,7 @@ class Location(models.Model):
                             children.append(loc_ids_by_company[company_id].pop())
 
                         child_locations = self.env['stock.location'].concat(*children)
-                        child_locations.location_id = parent
+                        child_locations.location_id = parent  # Quite slow, because the ORM flush each time
                         for child in child_locations:
                             link_next_locations(child, level + 1)
 
@@ -119,7 +119,7 @@ class Location(models.Model):
         # Change 20 % the usage of some no-leaf location into 'view' (instead of 'internal')
         to_views = locations_sample.filtered_domain([('child_ids', '!=', [])]).ids
         random = populate.Random('stock_location_views')
-        self.browse(random.sample(to_views, int(len(to_views) * 0.2))).usage = 'view'
+        self.browse(random.sample(to_views, int(len(to_views) * 0.1))).usage = 'view'
 
         return locations
 
