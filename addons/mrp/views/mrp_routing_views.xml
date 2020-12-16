@@ -73,6 +73,7 @@
                 Each operation is done at a specific Work Center and has a specific duration.
               </p>
             </field>
+            <field name="domain">['|', ('bom_id', '=', False), ('bom_id.active', '=', True)]</field>
         </record>
 
         <menuitem id="menu_mrp_routing_action"
