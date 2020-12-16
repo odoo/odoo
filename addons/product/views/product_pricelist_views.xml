@@ -238,7 +238,7 @@
                         <notebook>
                             <page name="pricelist_rules" string="Price Rules">
                               <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}">
-                                  <tree string="Pricelist Items" editable="bottom">
+                                  <tree string="Pricelist Items" editable="bottom" default_order="product_tmpl_id, product_id, min_quantity, id">
                                       <field name="product_tmpl_id" string="Products" required="1"/>
                                       <field name="product_id" string="Variants"
                                         groups="product.group_product_variant"
@@ -284,12 +284,14 @@
                 -->
                 <field name="item_ids" position="replace">
                   <field name="item_ids" nolabel="1" context="{'default_base':'list_price'}" groups="product.group_product_pricelist">
-                      <tree string="Pricelist Items">
+                      <tree string="Pricelist Items" default_order="applied_on, product_tmpl_id, product_id, min_quantity, categ_id, id">
                           <field name="name" string="Applicable On"/>
                           <field name="min_quantity"/>
                           <field name="price" string="Price"/>
                           <field name="date_start"/>
                           <field name="date_end"/>
+                          <field name="product_tmpl_id" invisible="1"/>
+				          <field name="product_id" invisible="1"/>
                           <field name="base" invisible="1"/>
                           <field name="price_discount" invisible="1"/>
                           <field name="applied_on" invisible="1"/>
