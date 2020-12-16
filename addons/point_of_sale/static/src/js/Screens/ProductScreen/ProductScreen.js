@@ -250,13 +250,12 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 startingValue: 0,
                 title: this.env._t('Set the new quantity'),
             });
-            let newQuantity = inputNumber !== ""? Math.abs(inputNumber): null;
+            let newQuantity = inputNumber !== ""? inputNumber: null;
             if (confirmed && newQuantity !== null) {
                 let order = this.env.pos.get_order();
                 let selectedLine = this.env.pos.get_order().get_selected_orderline();
                 let currentQuantity = selectedLine.get_quantity()
-
-                if(currentQuantity === 1 && newQuantity > 0)
+                if(selectedLine.is_last_line() && currentQuantity === 1 && newQuantity < currentQuantity)
                     selectedLine.set_quantity(newQuantity);
                 else if(newQuantity >= currentQuantity)
                     selectedLine.set_quantity(newQuantity);
