@@ -224,6 +224,43 @@ class MrpRoutingWorkcenter(models.Model):
         ]
 
 
+class MrpBomByproduct(models.Model):
+    _inherit = 'mrp.bom.byproduct'
+
+    _populate_sizes = {'small': 50, 'medium': 1_000, 'large': 5_000}
+    _populate_dependencies = ['mrp.bom.line', 'mrp.routing.workcenter']
+
+    def _populate_factories(self):
+        # Take a subset (50%) of bom to have some of then without any operation
+        random = populate.Random('byproduct_subset_bom')
+        boms_ids = self.env.registry.populated_models['mrp.bom']
+        boms_ids = random.sample(boms_ids, int(len(boms_ids) * 0.5))
+
+        boms = self.env['mrp.bom'].search([('id', 'in', self.env.registry.populated_models['mrp.bom'])], order='sequence, product_id')
+
+        product_manu_ids = OrderedSet()
+        for bom in boms:
+            if bom.product_id:
+                product_manu_ids.add(bom.product_id.id)
+            else:
+                for product_id in bom.product_tmpl_id.product_variant_ids:
+                    product_manu_ids.add(product_id.id)
+        product_manu = self.env['product.product'].browse(product_manu_ids)
+        # product_no_manu is products which don't have any bom (leaves in the BoM trees)
+        product_no_manu = self.env['product.product'].browse(self.env.registry.populated_models['product.product']) - product_manu
+        product_no_manu_ids = product_no_manu.ids
+
+        def get_product_uom_id(values, counter, random):
+            return self.env['product.product'].browse(values['product_id']).uom_id.id
+
+        return [
+            ('bom_id', populate.iterate(boms_ids)),
+            ('product_id', populate.randomize(product_no_manu_ids)),
+            ('product_uom_id', populate.compute(get_product_uom_id)),
+            ('product_qty', populate.randint(1, 10)),
+        ]
+
+
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
