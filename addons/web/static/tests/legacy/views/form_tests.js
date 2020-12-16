@@ -947,6 +947,39 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('hide notebook element if all pages hidden', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                    <sheet>
+                        <field name="bar"/>
+                        <notebook class="new_class">
+                            <page string="Foo" attrs="{'invisible': [['bar', '=', true]]}">
+                                <field name="foo"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>`,
+        });
+
+        assert.ok(form.$('.o_notebook .nav li:not(.o_invisible_modifier)').length,
+            "there should be visible page");
+        assert.notOk(form.$('.o_notebook .nav').hasClass('o_invisible_modifier'),
+            'the notebook headers should not be hidden if one of the page is visible');
+
+        await testUtils.dom.click(form.$('.o_field_boolean input'));
+        assert.notOk(form.$('.o_notebook .nav li:not(.o_invisible_modifier)').length,
+            "there should not be any visible page");
+        assert.ok(form.$('.o_notebook .nav').hasClass('o_invisible_modifier'),
+            'the notebook headers should be hidden if none of the page is visible');
+
+        form.destroy();
+    });
+
     QUnit.test('autofocus on second notebook page', async function (assert) {
         assert.expect(2);
 
