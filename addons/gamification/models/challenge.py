@@ -331,9 +331,9 @@ class Challenge(models.Model):
         :param list(int) ids: the list of challenge concerned"""
 
         Goals = self.env['gamification.goal']
+        to_update = Goals.browse(())
         for challenge in self:
             (start_date, end_date) = start_end_date_for_period(challenge.period, challenge.start_date, challenge.end_date)
-            to_update = Goals.browse(())
 
             for line in challenge.line_ids:
                 # there is potentially a lot of users
@@ -387,15 +387,17 @@ class Challenge(models.Model):
                 if challenge.remind_update_delay:
                     values['remind_update_delay'] = challenge.remind_update_delay
 
+                to_create = []
                 for user_id in (participant_user_ids - user_with_goal_ids):
                     values['user_id'] = user_id
-                    to_update |= Goals.create(values)
-
-            to_update.update_goal()
+                    to_create.append(dict(values))
+                if to_create:
+                    to_update |= Goals.create(to_create)
 
             if self.env.context.get('commit_gamification'):
                 self.env.cr.commit()
 
+        to_update.update_goal()
         return True
 
     ##### JS utilities #####
