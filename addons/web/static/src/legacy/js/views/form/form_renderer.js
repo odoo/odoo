@@ -1007,6 +1007,8 @@ var FormRenderer = BasicRenderer.extend({
                             self.inactiveNotebooks.push(renderedTabs);
                         }
                     }
+                    // if all pages are invisible then hide notebooks header's ul as well
+                    $headers.toggleClass('o_invisible_modifier', !$headers.find('li:not(.o_invisible_modifier)').length);
                 },
             });
         });
