@@ -145,6 +145,7 @@ var GraphView = AbstractView.extend({
         ];
 
         this.rendererParams.fields = this.fields;
+        this.rendererParams.measures = this.controllerParams.measures;
         this.rendererParams.title = this.arch.attrs.title; // TODO: use attrs.string instead
         this.rendererParams.disableLinking = !!JSON.parse(this.arch.attrs.disable_linking || '0');
 
