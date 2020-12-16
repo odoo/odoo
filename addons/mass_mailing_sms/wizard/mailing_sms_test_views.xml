@@ -6,10 +6,10 @@
         <field name="arch" type="xml">
             <form string="Send a Sample SMS">
                 <p class="text-muted">
-                    Send a sample SMS for testing purpose to the numbers below (comma-separated list).
+                    Send a sample SMS for testing purpose to the numbers below (carriage-return-separated list).
                 </p>
                 <group>
-                    <field name="numbers" placeholder="+32 495 85 85 77, +33 545 55 55 55"/>
+                    <field name="numbers" placeholder="+32 495 85 85 77&#10;+33 545 55 55 55"/>
                     <field name="mailing_id" invisible="1"/>
                 </group>
                 <footer>
