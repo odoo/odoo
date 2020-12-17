@@ -279,7 +279,7 @@ class Picking(models.Model):
         'procurement.group', 'Procurement Group',
         readonly=True, related='move_lines.group_id', store=True)
     priority = fields.Selection(
-        PROCUREMENT_PRIORITIES, string='Priority', default='0', index=True,
+        PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Products will be reserved first for the transfers with the highest priorities.")
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
