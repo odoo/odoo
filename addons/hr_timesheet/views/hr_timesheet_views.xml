@@ -24,7 +24,7 @@
                 <tree editable="top" string="Timesheet Activities" sample="1">
                     <field name="date"/>
                     <field name="employee_id" invisible="1"/>
-                    <field name="project_id" required="1" options="{'no_create_edit': True}" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
+                    <field name="project_id" required="1" options="{'no_create_edit': True}"/>
                     <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="name" optional="show" required="0"/>
                     <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" decoration-danger="unit_amount &gt; 24"/>

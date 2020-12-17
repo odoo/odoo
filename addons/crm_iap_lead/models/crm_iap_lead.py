@@ -20,7 +20,7 @@ class PeopleRole(models.Model):
     _name = 'crm.iap.lead.role'
     _description = 'People Role'
 
-    name = fields.Char(string='Role Name', required=True, translate=True)
+    name = fields.Char(string='Industry', required=True, translate=True)
     reveal_id = fields.Char(required=True)
     color = fields.Integer(string='Color Index')
 
