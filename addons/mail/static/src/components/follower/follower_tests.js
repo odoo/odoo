@@ -52,7 +52,10 @@ QUnit.test('base rendering not editable', async function (assert) {
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 1, model: 'mail.channel', name: "François Perusse" }]],
+        partner: [['insert', {
+            id: 1,
+            name: "François Perusse",
+        }]],
         followedThread: [['link', thread]],
         id: 2,
         isActive: true,
@@ -95,7 +98,10 @@ QUnit.test('base rendering editable', async function (assert) {
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 1, model: 'mail.channel', name: "François Perusse" }]],
+        partner: [['insert', {
+            id: 1,
+            name: "François Perusse",
+        }]],
         followedThread: [['link', thread]],
         id: 2,
         isActive: true,
@@ -131,63 +137,6 @@ QUnit.test('base rendering editable', async function (assert) {
         document.body,
         '.o_Follower_removeButton',
         "should have a remove button"
-    );
-});
-
-QUnit.test('click on channel follower details', async function (assert) {
-    assert.expect(7);
-
-    const bus = new Bus();
-    bus.on('do-action', null, payload => {
-        assert.step('do_action');
-        assert.strictEqual(
-            payload.action.res_id,
-            10,
-            "The redirect action should redirect to the right res id (10)"
-        );
-        assert.strictEqual(
-            payload.action.res_model,
-            'mail.channel',
-            "The redirect action should redirect to the right res model (mail.channel)"
-        );
-        assert.strictEqual(
-            payload.action.type,
-            "ir.actions.act_window",
-            "The redirect action should be of type 'ir.actions.act_window'"
-        );
-    });
-    this.data['res.partner'].records.push({ id: 100 });
-    this.data['mail.channel'].records.push({ id: 10 });
-    await this.start({
-        env: { bus },
-    });
-    const thread = this.env.models['mail.thread'].create({
-        id: 100,
-        model: 'res.partner',
-    });
-    const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 10, model: 'mail.channel', name: "channel" }]],
-        followedThread: [['link', thread]],
-        id: 2,
-        isActive: true,
-        isEditable: true,
-    });
-    await this.createFollowerComponent(follower);
-    assert.containsOnce(
-        document.body,
-        '.o_Follower',
-        "should have follower component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_Follower_details',
-        "should display a details part"
-    );
-
-    document.querySelector('.o_Follower_details').click();
-    assert.verifySteps(
-        ['do_action'],
-        "clicking on channel should redirect to channel form view"
     );
 });
 

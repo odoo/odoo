@@ -247,8 +247,7 @@ class MailThread(models.AbstractModel):
         if not self._context.get('mail_create_nosubscribe'):
             for thread in threads:
                 self.env['mail.followers']._insert_followers(
-                    thread._name, thread.ids, self.env.user.partner_id.ids,
-                    None, None, None,
+                    thread._name, thread.ids, self.env.user.partner_id.ids, None,
                     customer_ids=[],
                     check_existing=False
                 )
@@ -2384,12 +2383,12 @@ class MailThread(models.AbstractModel):
             'partners': [],
             'channels': [],
         }
-        res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids, cids)
+        res = self.env['mail.followers']._get_recipient_data(self, message_type, subtype_id, pids)
         if not res:
             return recipient_data
 
         author_id = msg_vals.get('author_id') or message.author_id.id
-        for pid, cid, active, pshare, ctype, notif, groups in res:
+        for pid, active, pshare, notif, groups in res:
             if pid and pid == author_id and not self.env.context.get('mail_notify_author'):  # do not notify the author of its own messages
                 continue
             if pid:
@@ -2404,8 +2403,6 @@ class MailThread(models.AbstractModel):
                     recipient_data['partners'].append(dict(pdata, notif=notif, type='portal'))
                 else:  # has no user, is therefore customer
                     recipient_data['partners'].append(dict(pdata, notif=notif if notif else 'email', type='customer'))
-            elif cid:
-                recipient_data['channels'].append({'id': cid, 'notif': notif, 'type': ctype})
 
         # add partner ids in email channels
         email_cids = [r['id'] for r in recipient_data['channels'] if r['notif'] == 'email']
@@ -2639,13 +2636,12 @@ class MailThread(models.AbstractModel):
 
         if not subtype_ids:
             self.env['mail.followers']._insert_followers(
-                self._name, self.ids, partner_ids, None, None, None,
+                self._name, self.ids, partner_ids, None,
                 customer_ids=customer_ids, check_existing=True, existing_policy='skip')
         else:
             self.env['mail.followers']._insert_followers(
                 self._name, self.ids,
                 partner_ids, dict((pid, subtype_ids) for pid in partner_ids),
-                None, None,
                 customer_ids=customer_ids, check_existing=True, existing_policy='replace')
 
         return True
@@ -2655,8 +2651,7 @@ class MailThread(models.AbstractModel):
         # not necessary for computation, but saves an access right check
         if not partner_ids:
             return True
-        user_pid = self.env.user.partner_id.id
-        if set(partner_ids) == set([user_pid]):
+        if set(partner_ids) == set([self.env.user.partner_id.id]):
             self.check_access_rights('read')
             self.check_access_rule('read')
         else:
@@ -2758,7 +2753,7 @@ class MailThread(models.AbstractModel):
         if not self:
             return True
 
-        new_partners, new_channels = dict(), dict()
+        new_partners = dict()
 
         # return data related to auto subscription based on subtype matching (aka: 
         # default task subtypes or subtypes from project triggering task subtypes)
@@ -2774,8 +2769,8 @@ class MailThread(models.AbstractModel):
         if udpated_fields:
             # fetch "parent" subscription data (aka: subtypes on project to propagate on task)
             doc_data = [(model, [updated_values[fname] for fname in fnames]) for model, fnames in updated_relation.items()]
-            res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True, include_active=True)
-            for fid, rid, pid, cid, subtype_ids, pshare, active in res:
+            res = self.env['mail.followers']._get_subscription_data(doc_data, None, include_pshare=True, include_active=True)
+            for fid, rid, pid, subtype_ids, pshare, active in res:
                 # use project.task_new -> task.new link
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
                 # add checked subtypes matching model_name
@@ -2785,8 +2780,6 @@ class MailThread(models.AbstractModel):
                         new_partners[pid] = set(sids) - set(all_int_ids)
                     else:
                         new_partners[pid] = set(sids)
-                if cid:  # never subscribe channels to internal subtypes
-                    new_channels[cid] = set(sids) - set(all_int_ids)
 
         notify_data = dict()
         res = self._message_auto_subscribe_followers(updated_values, def_ids)
@@ -2800,7 +2793,6 @@ class MailThread(models.AbstractModel):
         self.env['mail.followers']._insert_followers(
             self._name, self.ids,
             list(new_partners), new_partners,
-            None, None,
             check_existing=True, existing_policy=followers_existing_policy)
 
         # notify people from auto subscription, for example like assignation
