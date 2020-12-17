@@ -186,7 +186,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
                         this.tssInformation[key].value = json.tss_info[key];
                     }
                     if (this.get_orderlines().length > 0) {
-                        this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+                        this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_product().display_name;
                     }
                 }
             }
@@ -305,7 +305,7 @@ odoo.define('l10n_de_pos_cert.pos', function(require) {
             this.tssInformation.signature_algorithm.value = data.signature.algorithm;
             this.tssInformation.signature_public_key.value = data.signature.public_key;
             this.tssInformation.client_serial_number.value = data.client_serial_number;
-            this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_full_product_name();
+            this.tssInformation.erstBestellung.value = this.get_orderlines()[0].get_product().display_name;
             this.transactionFinished();
         },
         async finishShortTransaction() {
