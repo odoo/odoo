@@ -37,6 +37,7 @@ class TranspilerJS:
 
     def add_odoo_def(self, content, url):
         return f"odoo.define('{self.get_define_url(url)}', function (require) {{\
+                \n'use strict';\
                 \nlet __exports = {{}};\
                 \n{content}\
                 \nreturn __exports;\
