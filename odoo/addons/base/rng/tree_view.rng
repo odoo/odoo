@@ -83,6 +83,11 @@
                     <rng:element name="newline"><rng:empty/></rng:element>
                 </rng:choice>
             </rng:zeroOrMore>
+            <rng:zeroOrMore>
+                <rng:element name="widget">
+                    <rng:attribute name="name"/>
+                </rng:element>
+            </rng:zeroOrMore>
         </rng:element>
     </rng:define>
     <rng:start>
