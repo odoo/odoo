@@ -2868,6 +2868,12 @@ const SnippetOptionWidget = Widget.extend({
         // Ask a mutexed snippet update according to the widget value change
         const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
         this.trigger_up('snippet_edition_request', {exec: async () => {
+            // If some previous snippet edition in the mutex removed the target from
+            // the DOM, the widget can be destroyed, in that case the edition request
+            // is now useless and can be discarded.
+            if (this.isDestroyed()) {
+                return;
+            }
             // Filter actions that are counterbalanced by earlier/later actions
             const actionQueue = this._actionQueues.get(widget).filter(({previewMode}, i, actions) => {
                 const prev = actions[i - 1];
