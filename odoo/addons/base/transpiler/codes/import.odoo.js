@@ -5,16 +5,16 @@ odoo.define('@tests/import', function (require) {
   /**
    * import { Dialog, Notification } from "../js/Dialog";
    */
-  const {Dialog} = require("@tests/Dialog");
-  const {Dialog, Notification} = require("@tests/Dialog");
-  const {Dialog, Notification} = require("@tests/Dialog");
-  const {Dialog, Notification} = require("@tests/Dialog");
-  const {Dialog, Notification} = require("@tests/Dialog");
-  const {Dialog, Notification} = require("@tests/Dialog");
-  const DialogModel = require("@tests/Dialog").__default;
-  const DialogModel = require("@tests/Dialog").__default;
+  const { Line1} = require("@tests/Dialog");
+  const { Line2, Notification} = require("@tests/Dialog");
+  const { Line3, Notification} = require("@tests/Dialog");
+  const { Line4, Notification} = require("@tests/Dialog");
+  const { Line5, Notification} = require("@tests/Dialog");
+  const { Line6, Notification} = require("@tests/Dialog");
+  const Line7 = require("@tests/Dialog").__default;
+  const Line8 = require("@tests/Dialog").__default;
 
-  const test = `import { Dialog, Notification } from "../js/Dialog";`
+  const test = `import { Line9, Notification } from "../js/Dialog";`
 
   return __exports;
 });

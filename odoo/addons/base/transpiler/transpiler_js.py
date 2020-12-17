@@ -101,27 +101,30 @@ class TranspilerJS:
         return content
 
     def alias_comments(self, content):
-        p = re.compile(r"""(?P<comment>\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$)""", flags=re.MULTILINE)
+        p = re.compile(r"""(?P<comment>(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$))""", flags=re.MULTILINE)
 
         def repl(matchobj):
             self.comment_id += 1
-            string = matchobj.groupdict()['comment']
+            string = matchobj.groupdict().get('comment')
             self.comments_mapping[self.comment_id] = string
             return f"@___comment{{{self.comment_id}}}___@"
 
-        return p.sub(repl, content)
+        result = p.sub(repl, content)
+        return result
+
 
     def unalias_comments(self, content):
         p = re.compile(r"""@___comment\{(?P<id>[0-9]+)\}___@""")
 
         def repl(matchobj):
-            id = int(matchobj.groupdict()["id"])
+            id = int(matchobj.groupdict().get("id"))
             return self.comments_mapping[id]
 
-        return p.sub(repl, content)
+        result = p.sub(repl, content)
+        return result
 
     def alias_strings(self, content):
-        p = re.compile(r"""(?P<all>(?P<from>from\s+)?(`.*?`|\".*?\"|'.*?"))""", flags=re.DOTALL)
+        p = re.compile(r"""(?P<all>(?P<from>from\s+)?(`.*?`|\".*?\"|'.*?'))""", flags=re.DOTALL)
 
         def repl(matchobj):
             has_from = matchobj.groupdict().get('from')
