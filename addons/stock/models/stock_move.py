@@ -32,7 +32,7 @@ class StockMove(models.Model):
     sequence = fields.Integer('Sequence', default=10)
     priority = fields.Selection(
         PROCUREMENT_PRIORITIES, 'Priority', default='0',
-        compute="_compute_priority", store=True, index=True)
+        compute="_compute_priority", store=True)
     date = fields.Datetime(
         'Date Scheduled', default=fields.Datetime.now, index=True, required=True,
         help="Scheduled date until move is done, then date of actual move processing")
