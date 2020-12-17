@@ -1611,7 +1611,6 @@ MockServer.include({
      * @param {string} model not in server method but necessary for thread mock
      * @param {integer[]} ids
      * @param {integer[]} partner_ids
-     * @param {integer[]} channel_ids
      * @param {integer[]} subtype_ids
      * @returns {boolean}
      */

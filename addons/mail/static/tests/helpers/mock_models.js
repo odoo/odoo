@@ -108,7 +108,6 @@ class MockModels {
             },
             'mail.followers': {
                 fields: {
-                    channel_id: { type: 'integer' },
                     email: { type: 'char' },
                     id: { type: 'integer' },
                     is_active: { type: 'boolean' },

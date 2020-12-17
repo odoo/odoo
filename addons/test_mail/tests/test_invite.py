@@ -26,8 +26,6 @@ class TestInvite(TestMailCommon):
         # check added followers and that emails were sent
         self.assertEqual(test_record.message_partner_ids,
                          test_partner | self.user_admin.partner_id)
-        self.assertEqual(test_record.message_follower_ids.mapped('channel_id'),
-                         self.env['mail.channel'])
         self.assertSentEmail(self.partner_employee, [test_partner])
         self.assertSentEmail(self.partner_employee, [self.partner_admin])
         self.assertEqual(len(self._mails), 2)
