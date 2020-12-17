@@ -357,6 +357,59 @@ odoo.define('web.groupby_menu_tests', function (require) {
             controlPanel.destroy();
         });
 
+        QUnit.test('fields for which groupby filters available should not be proposed in "Add Custom Group" menu', async function (assert) {
+            assert.expect(9);
+
+            const arch = `
+                <search>
+                    <filter string="Bar" name="bar" context="{'group_by': 'bar'}"/>
+                    <filter string="Date" name="date" context="{'group_by': 'date_field'}"/>
+                </search>`;
+            const params = {
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
+                    searchMenuTypes
+                },
+                cpProps: { fields: this.fields, searchMenuTypes },
+            };
+
+            const controlPanel = await createControlPanel(params);
+
+            await cpHelpers.toggleGroupByMenu(controlPanel);
+            assert.containsN(controlPanel, '.o_menu_item', 2,
+                "there should be two menu item");
+            await cpHelpers.toggleAddCustomGroup(controlPanel);
+
+            let optionEls = controlPanel.el.querySelectorAll('div.o_generator_menu select.o_group_by_selector option');
+            assert.strictEqual(optionEls.length, 2, "there should be two options");
+            const optionDescriptions = [...optionEls].map(e => e.innerText.trim());
+            const expectedDescriptions = ['Birthday', 'Foo'];
+            assert.deepEqual(optionDescriptions, expectedDescriptions);
+
+            await cpHelpers.applyGroup(controlPanel);
+            assert.containsN(controlPanel, '.o_menu_item', 3,
+                "there should be three menu item");
+
+            await cpHelpers.toggleAddCustomGroup(controlPanel);
+            const groupBySelect = controlPanel.el.querySelector('div.o_generator_menu select.o_group_by_selector');
+            assert.strictEqual(groupBySelect.value, "foo",
+                "value foo should be selected");
+            optionEls = controlPanel.el.querySelectorAll('div.o_generator_menu select.o_group_by_selector option');
+            assert.strictEqual(optionEls.length, 1, "there should be one option remaining");
+            assert.strictEqual(optionEls[0].innerText.trim(), "Foo",
+                "remaining option should be Foo");
+
+            // Apply custom group again and check we don't have custom group item anymore
+            await cpHelpers.applyGroup(controlPanel);
+            assert.containsN(controlPanel, '.o_menu_item', 4,
+                "there should be three menu item");
+            assert.containsNone(controlPanel, 'div.o_generator_menu',
+                "groupby generator menu should not be displayed once all fields applied");
+
+            controlPanel.destroy();
+        });
+
         QUnit.test('default groupbys can be ordered', async function (assert) {
             assert.expect(2);
 

@@ -3,7 +3,7 @@ odoo.define('web.CustomGroupByItem', function (require) {
 
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const { useModel } = require('web/static/src/js/model.js');
-    const { onPatched } = owl.hooks;
+    const { onWillUpdateProps } = owl.hooks;
 
     /**
      * Group by generator menu
@@ -23,8 +23,8 @@ odoo.define('web.CustomGroupByItem', function (require) {
 
             this.model = useModel('searchModel');
 
-            onPatched(() => {
-                this.state.fieldName = this.props.fields[0].name;
+            onWillUpdateProps((nextProps) => {
+                this.state.fieldName = nextProps.fields[0].name;
             });
         }
 
