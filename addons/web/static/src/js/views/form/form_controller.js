@@ -54,9 +54,13 @@ var FormController = BasicController.extend({
      * leaving).
      *
      * @override
+     * @param {boolean} [shouldReload]
      */
-    willRestore: function () {
+    willRestore: function (shouldReload) {
         this.mode = this.model.isNew(this.handle) ? 'edit' : 'readonly';
+        if (shouldReload) {
+            return this._setMode(this.mode);
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -76,6 +80,25 @@ var FormController = BasicController.extend({
                     return this.$buttons.find('.o_form_button_edit').focus();
                 }
             }
+        }
+    },
+    /**
+     * @override
+     * @param {string} [recordID] - default to main recordID
+     * @returns {Promise<boolean>}
+     *          resolved if can be discarded, a boolean value is given to tells
+     *          if there is something to discard or not
+     *          rejected otherwise
+     */
+    canBeDiscarded: function (recordId) {
+        if (recordId !== this.handle && this.isDirty(recordId)) {
+            // Embedded list views can ask to discard their changes when we
+            // click in the webclient. If a field in the list is invalid, it
+            // stay dirty.
+            // When these conditions are met we don't want to discard.
+            return Promise.reject();
+        } else {
+            return Promise.resolve(true);
         }
     },
     /**
@@ -181,7 +204,7 @@ var FormController = BasicController.extend({
             return null;
         }
         return Object.assign(this._super(...arguments), {
-            validate: this.canBeDiscarded.bind(this),
+            validate: this.saveChanges.bind(this),
         });
     },
     /**
