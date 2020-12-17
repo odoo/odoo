@@ -8,11 +8,11 @@
                 <sheet>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
-                        <label for="name"/>
-                        <h1><field name="name" placeholder="e.g. Follow-up Call"/></h1>
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" placeholder="e.g. Schedule a meeting"/></h1>
                     </div>
                     <group>
-                        <group name="activity_details">
+                        <group name="activity_details" string="Activity Settings">
                             <field name="active" invisible="1"/>
                             <field name="category"/>
                             <field name="default_user_id" options="{'no_create': True, 'no_edit': True}" domain="[('share', '=', False)]"/>
@@ -23,11 +23,13 @@
                             <field name="icon" groups="base.group_no_one"/>
                             <field name="decoration_type" groups="base.group_no_one"/>
                         </group>
-                        <group name="activity_planning">
-                            <field name="force_next"/>
-                            <field name="default_next_type_id" attrs="{'required': [('force_next', '=', True)]}" context="{'default_res_model_id': res_model_id}"/>
-                            <field name="next_type_ids" widget="many2many_tags"
-                                attrs="{'invisible': ['|', ('force_next', '=', True), ('category', '=', 'upload_file')]}" context="{'default_res_model_id': res_model_id}"/>
+                        <group name="activity_planning" string="Next Activity">
+                            <field name="chaining_type" attrs="{'invisible': [('category', '=', 'upload_file')]}"/>
+                            <field name="triggered_next_type_id" options="{'no_open': True}" context="{'default_res_model_id': res_model_id}"
+                                attrs="{'required': ['&amp;', ('chaining_type', '=', 'trigger'), ('category', '!=', 'upload_file')],
+                                'invisible': ['&amp;', ('chaining_type', '=', 'suggest'), ('category', '!=', 'upload_file')]}"/>
+                            <field name="suggested_next_type_ids" widget="many2many_tags" context="{'default_res_model_id': res_model_id}"
+                                attrs="{'invisible': ['|', ('chaining_type', '=', 'trigger'), ('category', '=', 'upload_file')]}"/>
                             <field name="mail_template_ids" widget="many2many_tags"
                                 domain="[('model_id', '=', res_model_id)]"
                                 attrs="{'invisible': [('res_model_id', '=', False)]}"
@@ -35,17 +37,15 @@
                             <label for="delay_count"/>
                             <div>
                                 <div class="o_row">
-                                    <field name="delay_count"/>
-                                    <field name="delay_unit"/>
+                                    <field class="col-1 pl-0 pr-0" name="delay_count"/>
+                                    <field class="col-3 pl-1 pr-1" name="delay_unit"/>
+                                    <field name="delay_from"/>
                                 </div>
-                                <span class="oe_read_only">&amp;nbsp;</span>
-                                <field name="delay_from"/>
                             </div>
                         </group>
                     </group>
-                    <group>
-                        <field name="default_description"/>
-                    </group>
+                    <label for="default_note"/>
+                    <field name="default_note"/>
                     <p class="alert alert-info" role="alert" attrs="{'invisible': [('res_model_change', '=', False)]}">Modifying the model can have an impact on existing activities using this activity type, be careful.</p>
                 </sheet>
             </form>
@@ -104,7 +104,7 @@
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>
                         <field name="res_id" invisible="1" widget="integer"/>
-                        <field name="force_next" invisible="1"/>
+                        <field name="chaining_type" invisible="1"/>
                         <field name="previous_activity_type_id"/>
                         <field name="has_recommended_activities"/>
                     </group>
@@ -133,13 +133,13 @@
                             attrs="{'invisible': [('id', '!=', False)]}"/>
                         <button string="Save" name="action_close_dialog" type="object" class="btn-primary"
                             attrs="{'invisible': [('id', '=', False)]}"/>
-                        <button attrs="{'invisible': [('force_next', '=', True)]}" string="Mark as Done" name="action_done"
+                        <button attrs="{'invisible': [('chaining_type', '=', 'trigger')]}" string="Mark as Done" name="action_done"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
-                        <button attrs="{'invisible': [('force_next', '=', True)]}" string="Done &amp; Schedule Next" name="action_done_schedule_next"
+                        <button attrs="{'invisible': [('chaining_type', '=', 'trigger')]}" string="Done &amp; Schedule Next" name="action_done_schedule_next"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
-                        <button attrs="{'invisible': [('force_next', '=', False)]}" string="Done &amp; Launch Next" name="action_done_schedule_next"
+                        <button attrs="{'invisible': [('chaining_type', '=', 'suggest')]}" string="Done &amp; Launch Next" name="action_done_schedule_next"
                             type="object" class="btn-secondary"
                             context="{'mail_activity_quick_update': True}"/>
                         <button string="Discard" class="btn-secondary" special="cancel" />
