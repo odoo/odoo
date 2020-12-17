@@ -1575,7 +1575,7 @@ class AccountMove(models.Model):
         if not moves:
             return
 
-        self.flush()
+        self.flush(['name', 'journal_id', 'move_type', 'state'])
 
         # /!\ Computed stored fields are not yet inside the database.
         self._cr.execute('''
