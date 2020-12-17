@@ -535,6 +535,9 @@ class SaleOrderLine(models.Model):
 
     def _get_procurement_group(self):
         return self.order_id.procurement_group_id
+    
+    def _set_procurement_group(self, group):
+        self.order_id.procurement_group_id = group
 
     def _prepare_procurement_group_vals(self):
         return {
@@ -563,7 +566,7 @@ class SaleOrderLine(models.Model):
             group_id = line._get_procurement_group()
             if not group_id:
                 group_id = self.env['procurement.group'].create(line._prepare_procurement_group_vals())
-                line.order_id.procurement_group_id = group_id
+                line._set_procurement_group(group_id)
             else:
                 # In case the procurement group is already created and the order was
                 # cancelled, we need to update certain values of the group.
