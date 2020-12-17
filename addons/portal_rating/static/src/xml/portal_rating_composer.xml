@@ -7,22 +7,25 @@
     <t t-name="portal_rating.PopupComposer">
         <div class="d-flex flex-wrap align-items-center">
             <div class="text-nowrap">
-                <t t-call="portal_rating.rating_stars_static">
+                <t t-call="portal_rating.rating_stars_static" t-if="!widget.options['hide_rating_avg']">
                     <t t-set="val" t-value="widget.rating_avg || 0"/>
                     <t t-set="inline_mode" t-value="true"/>
                 </t>
             </div>
             <button t-if="widget.options['display_composer']" type="button"
-                t-att-class="'btn btn-sm mx-3 ' + widget.options['link_btn_classes'] or 'btn-primary'"
+                t-att-class="'btn ' + widget.options['link_btn_classes'] or 'btn-primary'"
                 data-toggle="modal" data-target="#ratingpopupcomposer">
-                <t t-if="widget.options['display_composer']">
-                    <t t-if="widget.options['default_message_id']">
-                        Modify your review
+                <i t-if="widget.options['icon']" t-att-class="widget.options['icon']"/>
+                <span t-att-class="widget.options['_text_classes']">
+                    <t t-if="widget.options['display_composer']">
+                        <t t-if="widget.options['default_message_id']">
+                            Modify your review
+                        </t>
+                        <t t-else="">
+                            Write a review
+                        </t>
                     </t>
-                    <t t-else="">
-                        Write a review
-                    </t>
-                </t>
+                </span>
             </button>
         </div>
 
