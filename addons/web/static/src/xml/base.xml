@@ -210,10 +210,13 @@
 </t>
 
 <t t-name="web.GroupByMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
+    <xpath expr="//div[contains(@class, 'o_dropdown')]" position="attributes">
+        <attribute name="t-on-custom-group-applied">_onCustomGroupApplied</attribute>
+    </xpath>
     <xpath expr="//ul[@role='menu']" position="inside">
-        <t t-if="fields.length">
+        <t t-if="state.fields.length">
             <li t-if="items.length" class="dropdown-divider" role="separator"/>
-            <CustomGroupByItem fields="fields"/>
+            <CustomGroupByItem fields="state.fields"/>
         </t>
     </xpath>
 </t>
@@ -444,7 +447,7 @@
         </button>
         <div t-if="state.open" class="dropdown-item-text">
             <select class="w-auto o_input o_group_by_selector" t-model="state.fieldName">
-                <option t-foreach="state.fields" t-as="field" t-key="field.name"
+                <option t-foreach="props.fields" t-as="field" t-key="field.name"
                     t-att-value="field.name"
                     t-esc="field.string"
                 />

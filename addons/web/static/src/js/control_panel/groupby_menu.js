@@ -20,11 +20,12 @@ odoo.define('web.GroupByMenu', function (require) {
         constructor() {
             super(...arguments);
 
-            this.fields = Object.values(this.props.fields)
+            this.model = useModel('searchModel');
+
+            const fields = Object.values(this.props.fields)
                 .filter(field => this._validateField(field))
                 .sort(({ string: a }, { string: b }) => a > b ? 1 : a < b ? -1 : 0);
-
-            this.model = useModel('searchModel');
+            this.state.fields = this._getCustomGroupByFields(fields);
         }
 
         //---------------------------------------------------------------------
@@ -58,6 +59,20 @@ odoo.define('web.GroupByMenu', function (require) {
 
         /**
          * @private
+         * @param {Object} fields
+         * @returns {Object}
+         */
+        _getCustomGroupByFields(fields) {
+            const groupBys = this.model.get('filters', f => f.type === 'groupBy');
+            if (!groupBys) {
+                return fields;
+            }
+            return fields.filter(field => {
+                return !groupBys.find(group => group.fieldName === field.name);
+            });
+        }
+        /**
+         * @private
          * @param {Object} field
          * @returns {boolean}
          */
@@ -71,6 +86,14 @@ odoo.define('web.GroupByMenu', function (require) {
         // Handlers
         //---------------------------------------------------------------------
 
+        /**
+         * @private
+         * @param {OwlEvent} ev
+         */
+        _onCustomGroupApplied(ev) {
+            ev.stopPropagation();
+            this.state.fields = this._getCustomGroupByFields(this.state.fields);
+        }
         /**
          * @private
          * @param {OwlEvent} ev

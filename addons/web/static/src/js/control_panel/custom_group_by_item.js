@@ -3,6 +3,7 @@ odoo.define('web.CustomGroupByItem', function (require) {
 
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const { useModel } = require('web/static/src/js/model.js');
+    const { onPatched } = owl.hooks;
 
     /**
      * Group by generator menu
@@ -21,20 +22,9 @@ odoo.define('web.CustomGroupByItem', function (require) {
             this.state.fieldName = this.props.fields[0].name;
 
             this.model = useModel('searchModel');
-            this.state.fields = this._getGroupByFields();
-        }
 
-        //---------------------------------------------------------------------
-        // Private
-        //---------------------------------------------------------------------
-
-        _getGroupByFields() {
-            const groupBys = this.model.get('filters', f => f.type === 'groupBy');
-            if (!groupBys) {
-                return this.props.fields;
-            }
-            return this.props.fields.filter(field => {
-                return !groupBys.find(group => group.fieldName === field.name);
+            onPatched(() => {
+                this.state.fieldName = this.props.fields[0].name;
             });
         }
 
@@ -48,9 +38,8 @@ odoo.define('web.CustomGroupByItem', function (require) {
         _onApply() {
             const field = this.props.fields.find(f => f.name === this.state.fieldName);
             this.model.dispatch('createNewGroupBy', field);
-            this.state.fields = this._getGroupByFields();
-            this.state.fieldName = this.state.fields.length && this.state.fields[0].name;
             this.state.open = false;
+            this.trigger('custom-group-applied');
         }
     }
 
