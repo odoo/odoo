@@ -1,4 +1,6 @@
 odoo.define('@tests/variables', function (require) {
+  'use strict';
+
   let __exports = {};
 
   const v = __exports.v = 5;

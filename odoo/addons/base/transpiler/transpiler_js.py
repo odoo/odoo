@@ -7,19 +7,26 @@ class TranspilerJS:
         self.content = content
         self.url = url
         self.generate = generate
+        self.comments_mapping = {}
+        self.comment_id = 0
+        self.strings_mapping = {}
+        self.string_id = 0
 
     def convert(self):
         new_content = self.content
         legacy_odoo_define = self.get_legacy_odoo_define(new_content, self.url)
-        new_content = self.remove_comment(new_content)
         new_content = self.replace_legacy_default_import(new_content)
         new_content = self.replace_import(new_content)
         new_content = self.replace_default_import(new_content)
         new_content = self.replace_relative_imports(new_content)
+        new_content = self.alias_strings(new_content)
+        new_content = self.alias_comments(new_content)
         new_content = self.replace_function_and_class_export(new_content)
         new_content = self.replace_variable_export(new_content)
         new_content = self.replace_list_export(new_content)
         new_content = self.replace_default(new_content)
+        new_content = self.unalias_comments(new_content)
+        new_content = self.unalias_strings(new_content)
         new_content = self.add_odoo_def(new_content, self.url)
         if legacy_odoo_define:
             new_content += legacy_odoo_define
@@ -49,25 +56,10 @@ class TranspilerJS:
         if default:
             pattern = r"export\s+default\s+(?P<type>function|class)\s+(?P<identifier>\w+)"
             repl = r"const \g<identifier> = __exports.__default = \g<type> \g<identifier>"
-        # class_or_function = re.findall(pattern, content)
-        # new_content = content + "\n" + "\n".join([f"__exports.{name[1]} = {name[1]};" for name in class_or_function])
-
-        # if default:
-        #     new_content = content + "\n" + "\n".join([f"__exports.__default = {name[1]};" for name in class_or_function])
-        # p = re.compile(pattern)
-        # repl = r"\g<type> \g<identifier>"
-        # return p.sub(repl, new_content)
         p = re.compile(pattern)
         return p.sub(repl, content)
 
     def replace_variable_export(self, content, default=False):
-        # pattern = r"export\s+(?P<type>let|const|var)\s+(?P<identifier>\w+)\s*="
-        # variables = re.findall(pattern, content)
-        # new_content = content + "\n" + "\n".join([f"__exports.{name[1]} = {name[1]};" for name in variables])
-
-        # p = re.compile(pattern)
-        # repl = r"\g<type> \g<identifier> ="
-        # return p.sub(repl, new_content)
         p = re.compile(r"export\s+(?P<type>let|const|var)\s+(?P<identifier>\w+)\s*=")
         repl = r"\g<type> \g<identifier> = __exports.\g<identifier> ="
         if default:
@@ -108,23 +100,45 @@ class TranspilerJS:
                 content = re.sub(rf"require\({str(open)}{path}{str(close)}\)", f'require("{self.get_full_import_path(path)}")', content)
         return content
 
-    def remove_comment(self, content):
-        # first we remove the slashes in strings
-        p = re.compile(r"""([\"'`].*/.*[\"'`])""")
+    def alias_comments(self, content):
+        p = re.compile(r"""(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$)""", flags=re.MULTILINE)
 
         def repl(matchobj):
+            self.comment_id += 1
             string = matchobj.group(0)
-            return string.replace('/', "@___slash___@")
+            self.comments_mapping[self.comment_id] = string
+            return f"@___comment{{{self.comment_id}}}___@"
 
-        new_content = p.sub(repl, content)
+        return p.sub(repl, content)
 
-        # We remove the comments
-        p = re.compile(r'(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$)', flags=re.MULTILINE)
-        repl = r""
-        new_content = p.sub(repl, new_content)
+    def unalias_comments(self, content):
+        p = re.compile(r"""@___comment\{(?P<id>[0-9]+)\}___@""")
 
-        # We add the slashes in strings
-        return new_content.replace("@___slash___@", '/')
+        def repl(matchobj):
+            id = int(matchobj.groupdict()["id"])
+            return self.comments_mapping[id]
+
+        return p.sub(repl, content)
+
+    def alias_strings(self, content):
+        p = re.compile(r"""(`.*?`|\".*?\"|'.*?")""", flags=re.DOTALL)
+
+        def repl(matchobj):
+            self.string_id += 1
+            string = matchobj.group(0)
+            self.strings_mapping[self.string_id] = string
+            return f"@___string{{{self.string_id}}}___@"
+
+        return p.sub(repl, content)
+
+    def unalias_strings(self, content):
+        p = re.compile(r"""@___string\{(?P<id>[0-9]+)\}___@""")
+
+        def repl(matchobj):
+            id = int(matchobj.groupdict()["id"])
+            return self.strings_mapping[id]
+
+        return p.sub(repl, content)
 
     def replace_default(self, content):
         new_content = self.replace_function_and_class_export(content, True)

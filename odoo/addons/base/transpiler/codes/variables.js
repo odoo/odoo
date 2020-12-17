@@ -1,9 +1,3 @@
-/**
- * Not supported:
- * export const x = 4, y = 12;
- * export { a as aa, b as bb };
- */
-
 export const v = 5;
 
 const a = 12;

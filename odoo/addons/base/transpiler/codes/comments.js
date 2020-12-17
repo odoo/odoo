@@ -1,5 +1,5 @@
 /**
- * This is a comment, it should be gone !
+ * This is a comment
  */
 
 export class Test {

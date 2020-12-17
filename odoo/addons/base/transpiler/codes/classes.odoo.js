@@ -1,4 +1,5 @@
 odoo.define('@tests/classes', function (require) {
+  'use strict';
 
   let __exports = {};
 

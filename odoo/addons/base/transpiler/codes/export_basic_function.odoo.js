@@ -1,4 +1,6 @@
 odoo.define('@tests/export_basic_function', function (require) {
+    'use strict';
+
   let __exports = {};
 
   const sayHello = __exports.sayHello = function sayHello() {
