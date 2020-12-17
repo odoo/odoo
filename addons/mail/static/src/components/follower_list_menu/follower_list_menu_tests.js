@@ -130,10 +130,6 @@ QUnit.test('click on "add followers" button', async function (assert) {
             'res.partner',
             "'The 'add followers' action should contain thread model in context'"
         );
-        assert.notOk(
-            payload.action.context.mail_invite_follower_channel_only,
-            "The 'add followers' action should not be restricted to channels only"
-        );
         assert.strictEqual(
             payload.action.context.default_res_id,
             100,
