@@ -362,6 +362,9 @@ class Applicant(models.Model):
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
+            'context': {
+                'active_test': False
+            },
         }
 
     def _track_template(self, changes):
