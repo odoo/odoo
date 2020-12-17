@@ -27,5 +27,4 @@
         'static/src/xml/partner_autocomplete.xml',
     ],
     'auto_install': True,
-    'post_init_hook': '_enrich_base_company',
 }
