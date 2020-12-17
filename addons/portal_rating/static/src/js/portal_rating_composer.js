@@ -17,6 +17,7 @@ var RatingPopupComposer = publicWidget.Widget.extend({
     template: 'portal_rating.PopupComposer',
     xmlDependencies: [
         '/portal/static/src/xml/portal_chatter.xml',
+        '/portal_rating/static/src/xml/portal_chatter.xml',
         '/portal_rating/static/src/xml/portal_tools.xml',
         '/portal_rating/static/src/xml/portal_rating_composer.xml',
     ],
