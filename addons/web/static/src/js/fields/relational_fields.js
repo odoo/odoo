@@ -770,7 +770,7 @@ var FieldMany2One = AbstractField.extend({
         }
         const firstValue = this.suggestions.find(s => s.id);
         if (firstValue) {
-            this.reinitialize(firstValue.id);
+            this.reinitialize({ id: firstValue.id, name: firstValue.name });
         } else if (this.can_create) {
             new M2ODialog(this, this.string, this.$input.val()).open();
         }
