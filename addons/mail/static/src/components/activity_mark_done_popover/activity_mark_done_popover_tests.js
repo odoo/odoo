@@ -93,7 +93,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
     const activity = this.env.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
-        force_next: true,
+        chaining_type: 'trigger',
         id: 12,
         thread: [['insert', { id: 42, model: 'res.partner' }]],
     });

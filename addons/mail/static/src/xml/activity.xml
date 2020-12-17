@@ -84,11 +84,11 @@
     </t>
     <t t-name="mail.activity_thread_message_tools">
         <div t-if="activity.can_write" class="o_thread_message_tools btn-group">
-            <span t-if="activity.activity_category !== 'upload_file'" class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
+            <span t-if="activity.activity_category !== 'upload_file'" class="o_mark_as_done" data-toggle="popover" t-att-data-activity-id="activity.id" t-att-data-chaining-type-activity="activity.chaining_type" t-att-data-previous-activity-type-id="activity.activity_type_id[0]">
                 <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
                 <i class="fa fa-check"/> Mark Done </a>
             </span>
-            <span t-if="activity.activity_category === 'upload_file'" class="o_mark_as_done_upload_file" t-att-data-activity-id="activity.id" t-att-data-force-next-activity="activity.force_next" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" t-att-data-fileupload-id="activity.fileuploadID">
+            <span t-if="activity.activity_category === 'upload_file'" class="o_mark_as_done_upload_file" t-att-data-activity-id="activity.id" t-att-data-chaining-type-activity="activity.chaining_type" t-att-data-previous-activity-type-id="activity.activity_type_id[0]" t-att-data-fileupload-id="activity.fileuploadID">
                 <a role="button" href="#" class="btn btn-link btn-success text-muted o_activity_link mr8">
                 <i class="fa fa-upload"/> Upload Document </a>
             </span>
@@ -112,7 +112,7 @@
         <div>
             <textarea class="form-control" rows="3" id="activity_feedback" placeholder="Write Feedback"/>
             <div class="mt8">
-                <t t-if="!force_next">
+                <t t-if="chaining_type === 'suggest'">
                     <button type="button" class="btn btn-sm btn-primary o_activity_popover_done_next" t-att-data-previous-activity-type-id="previous_activity_type_id">
                         Done &amp; Schedule Next</button>
                     <button type="button" class="btn btn-sm btn-primary o_activity_popover_done">
