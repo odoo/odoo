@@ -1474,7 +1474,7 @@ var SnippetsMenu = Widget.extend({
      * @returns {Promise<SnippetEditor>}
      *          (might be async when an editor must be created)
      */
-    _activateSnippet: async function ($snippetBlock, previewMode, ifInactiveOptions) {
+    _activateSnippet: async function ($snippetBlock, previewMode, ifInactiveOptions, get$Element) {
         if (this._blockPreviewOverlays && previewMode) {
             return;
         }
@@ -1488,6 +1488,9 @@ var SnippetsMenu = Widget.extend({
 
         return exec(async () => {
             let snippetEditor;
+            if (get$Element) {
+                $snippetBlock = get$Element();
+            }
             // Take the first parent of the provided DOM (or itself) which
             // should have an associated snippet editor and create + enable it.
             if ($snippetBlock.length) {
@@ -2384,7 +2387,7 @@ var SnippetsMenu = Widget.extend({
         if (ev.data.saveTarget) {
             this._setLastSnippet(ev.data.$element, ev.data.savePreview && ev.data.previewMode);
         }
-        this._activateSnippet(ev.data.$element, ev.data.previewMode, ev.data.ifInactiveOptions);
+        this._activateSnippet(ev.data.$element, ev.data.previewMode, ev.data.ifInactiveOptions, ev.data.get$Element);
     },
     /**
      * Called when a child editor asks to operate some operation on all child

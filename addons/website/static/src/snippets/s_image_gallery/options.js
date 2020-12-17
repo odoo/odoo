@@ -335,32 +335,37 @@ snippetOptions.registry.gallery = snippetOptions.SnippetOptionWidget.extend({
                     break;
             }
             position = images.indexOf(data.$image[0]);
-            _.each(images, function (img, index) {
-                // Note: there might be more efficient ways to do that but it is
-                // more simple this way and allows compatibility with 10.0 where
-                // indexes were not the same as positions.
-                $(img).attr('data-index', index);
+            let currentMode;
+            await this.wysiwyg.withDomMutations(this.$target, async () => {
+                _.each(images, function (img, index) {
+                    // Note: there might be more efficient ways to do that but it is
+                    // more simple this way and allows compatibility with 10.0 where
+                    // indexes were not the same as positions.
+                    $(img).attr('data-index', index);
+                });
+                currentMode = this.getMode();
+                await this._setMode('reset', currentMode);
+                if (currentMode === 'slideshow') {
+                    const $carousel = this.$target.find('.carousel');
+                    $carousel.removeClass('slide');
+                    $carousel.carousel(position);
+                    this.$target.find('.carousel-indicators li').removeClass('active');
+                    this.$target.find('.carousel-indicators li[data-slide-to="' + position + '"]').addClass('active');
+                    $carousel.addClass('slide');
+                }
             });
-            const currentMode = this.getMode();
-            this._setMode('reset', currentMode);
             if (currentMode === 'slideshow') {
-                const $carousel = this.$target.find('.carousel');
-                $carousel.removeClass('slide');
-                $carousel.carousel(position);
-                this.$target.find('.carousel-indicators li').removeClass('active');
-                this.$target.find('.carousel-indicators li[data-slide-to="' + position + '"]').addClass('active');
                 this.trigger_up('activate_snippet', {
                     $element: this.$target.find('.carousel-item.active img'),
+                    get$Element: () => this.$target.find('.carousel-item.active img'),
                     ifInactiveOptions: true,
                 });
-                $carousel.addClass('slide');
             } else {
                 this.trigger_up('activate_snippet', {
                     $element: data.$image,
                     ifInactiveOptions: true,
                 });
             }
-            await this.updateChangesInWysiwyg();
         }
     },
 
