@@ -320,7 +320,10 @@
                         </td>
                         <td><span t-field="opp.contact_name" /></td>
                         <td>
-                            <span class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
+                            <span t-if="opp.company_currency" class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
+                            <span t-else="" class="text-nowrap" t-esc="opp.expected_revenue"/>
+                            <span> at </span>
+                            <span t-field="opp.probability" />%
                         </td>
                         <td>
                             <span class="badge badge-info badge-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
