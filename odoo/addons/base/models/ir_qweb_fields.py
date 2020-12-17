@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
+import datetime
 import re
 from collections import OrderedDict
 from io import BytesIO
@@ -211,6 +212,8 @@ class DateConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
+        if isinstance(value, datetime.datetime):
+            value = fields.Datetime.context_timestamp(self, value)
         return format_date(self.env, value, date_format=options.get('format'))
 
 
