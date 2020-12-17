@@ -3,7 +3,7 @@
 
 from odoo.tests import common
 from odoo.modules.module import get_module_resource
-
+from odoo.tools import safe_eval
 
 class TestRecruitmentProcess(common.TransactionCase):
 
@@ -43,3 +43,26 @@ class TestRecruitmentProcess(common.TransactionCase):
         applicant_meeting = applicant.action_makeMeeting()
         self.assertEquals(applicant_meeting['context']['default_name'], 'Application for the post of Jr.application Programmer.',
             'Applicant name does not match.')
+
+    def test_alias_sync(self):
+        """Alias is in sync with job fields."""
+        department = self.env['hr.department'].create({
+            'name': 'test',
+        })
+        job = self.env['hr.job'].create({
+            'alias_name': 'test',
+            'name': 'test',
+            'no_of_recruitment': 1,
+            'state': 'recruit',
+        })
+        # No department by default
+        alias_defaults = safe_eval(job.alias_id.alias_defaults)
+        self.assertDictContainsSubset({'job_id': job.id, 'department_id': False}, alias_defaults)
+        # Job department is updated
+        job.department_id = department
+        alias_defaults = safe_eval(job.alias_id.alias_defaults)
+        self.assertDictContainsSubset({'job_id': job.id, 'department_id': department.id}, alias_defaults)
+        # Department is removed
+        department.unlink()
+        alias_defaults = safe_eval(job.alias_id.alias_defaults)
+        self.assertDictContainsSubset({'job_id': job.id, 'department_id': False}, alias_defaults)

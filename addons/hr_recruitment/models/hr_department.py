@@ -32,3 +32,9 @@ class HrDepartment(models.Model):
         for department in self:
             department.new_hired_employee = new_emp.get(department.id, 0)
             department.expected_employee = expected_emp.get(department.id, 0)
+
+    def unlink(self):
+        related_jobs = self.env['hr.job'].search([('department_id', 'in', self.ids)])
+        result = super().unlink()
+        related_jobs._sync_alias_values()
+        return result

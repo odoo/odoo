@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import safe_eval
 
 
 class Job(models.Model):
@@ -54,6 +55,13 @@ class Job(models.Model):
         for job in self:
             job.application_count = result.get(job.id, 0)
 
+    def _sync_alias_values(self):
+        """Sync alias values with job's."""
+        for one in self.filtered("alias_id"):
+            alias_defaults = safe_eval(self.alias_id.alias_defaults) or {}
+            alias_defaults.update(one.get_alias_values()['alias_defaults'])
+            self.alias_id.alias_defaults = alias_defaults
+
     def get_alias_model_name(self, vals):
         return 'hr.applicant'
 
@@ -69,6 +77,11 @@ class Job(models.Model):
     @api.model
     def create(self, vals):
         return super(Job, self.with_context(mail_create_nolog=True)).create(vals)
+
+    def write(self, vals):
+        result = super().write(vals)
+        self._sync_alias_values()
+        return result
 
     @api.multi
     def _track_subtype(self, init_values):
