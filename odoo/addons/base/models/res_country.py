@@ -139,31 +139,47 @@ class CountryState(models.Model):
     name = fields.Char(string='State Name', required=True,
                help='Administrative divisions of a country. E.g. Fed. State, Departement, Canton')
     code = fields.Char(string='State Code', help='The state code.', required=True)
-
+    qualified_name = fields.Char('Qualified Name', compute='_compute_qualified_name', store=True)    
+    qualified_code = fields.Char('Qualified Code', compute='_compute_qualified_code', store=True)    
+    
     _sql_constraints = [
         ('name_code_uniq', 'unique(country_id, code)', 'The code of the state must be unique by country !')
     ]
-
+    
+    @api.depends('name', 'country_id.name')
+    def _compute_qualified_name(self):
+        for state in self:
+            state.qualified_name = '%s / %s' % (state.country_id.name, state.name)
+    
+    @api.depends('code', 'country_id.code')
+    def _compute_qualified_code(self):
+        for state in self:
+            state.qualified_code = '%s / %s' % (state.country_id.code, state.code)
+    
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         if self.env.context.get('country_id'):
             args = expression.AND([args, [('country_id', '=', self.env.context.get('country_id'))]])
 
-        if operator == 'ilike' and not (name or '').strip():
+        if not (name or '').strip():
             first_domain = []
-            domain = []
+            second_domain = []
+        elif '/' in name:
+            first_domain = [('qualified_code', '=ilike', name)]
+            second_domain = [('qualified_name', operator, name)]
         else:
             first_domain = [('code', '=ilike', name)]
-            domain = [('name', operator, name)]
-
-        first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid) if first_domain else []
-        return list(first_state_ids) + [
-            state_id
-            for state_id in self._search(expression.AND([domain, args]),
-                                         limit=limit, access_rights_uid=name_get_uid)
-            if state_id not in first_state_ids
-        ]
+            second_domain = [('name', operator, name)]
+        
+        first_state_ids = self._search(expression.AND([first_domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        if len(first_state_ids) >= limit:
+            return first_state_ids
+        
+        second_limit = limit - len(first_state_ids)
+        second_state_ids = self._search(expression.AND([second_domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        unqiue_second_state_ids = [state_id for state_id in second_state_ids if state_id not in first_state_ids]
+        return list(first_state_ids) + unqiue_second_state_ids[:second_limit]
 
     def name_get(self):
         result = []
