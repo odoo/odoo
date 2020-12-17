@@ -45,12 +45,12 @@
                                     <field name="categ_id" string="Product Category"/>
                                 </group>
                                 <group name="group_standard_price">
-                                    <label for="list_price"/>
+                                    <label for="list_price" class="mt-1"/>
                                     <div name="pricing">
                                       <field name="list_price" class="oe_inline" widget='monetary'
                                         options="{'currency_field': 'currency_id', 'field_digits': True}"/>
                                       <button name="open_pricelist_rules" icon="fa-arrow-right" type="object"
-                                        groups="product.group_product_pricelist" class="oe_inline">
+                                        groups="product.group_product_pricelist" class="oe_inline btn-link pt-1">
                                         <field name="pricelist_item_count" attrs="{'invisible': [('pricelist_item_count', '=', 0)]}"/>
                                         <span attrs="{'invisible': [('pricelist_item_count', '=', 1)]}">
                                           Extra Prices
