@@ -346,16 +346,18 @@ class Project(models.Model):
             self.map_tasks(project.id)
         return project
 
-    @api.model
-    def create(self, vals):
+    @api.model_create_multi
+    def create(self, vals_list):
         # Prevent double project creation
         self = self.with_context(mail_create_nosubscribe=True)
-        project = super(Project, self).create(vals)
-        if not vals.get('subtask_project_id'):
-            project.subtask_project_id = project.id
-        if project.privacy_visibility == 'portal' and project.partner_id.user_ids:
-            project.allowed_user_ids |= project.partner_id.user_ids
-        return project
+        projects = super().create(vals_list)
+        for project in projects:
+            if not project.subtask_project_id:
+                project.subtask_project_id = project.id
+            if project.privacy_visibility == 'portal' and project.partner_id.user_ids:
+                project.allowed_user_ids |= project.partner_id.user_ids
+        projects and projects._update_cron()
+        return projects
 
     def write(self, vals):
         allowed_users_changed = 'allowed_portal_user_ids' in vals or 'allowed_internal_user_ids' in vals
@@ -366,6 +368,7 @@ class Project(models.Model):
             vals.pop('is_favorite')
             self._fields['is_favorite'].determine_inverse(self)
         res = super(Project, self).write(vals) if vals else True
+        self and self._update_cron()
 
         if allowed_users_changed:
             for project in self:
@@ -418,7 +421,15 @@ class Project(models.Model):
                 analytic_accounts_to_delete |= project.analytic_account_id
         result = super(Project, self).unlink()
         analytic_accounts_to_delete.unlink()
+        self and self._update_cron()
         return result
+
+    def _update_cron(self):
+        rating_cron = self.env.ref("project.ir_cron_rating_project", raise_if_not_found=False)
+        rating_cron and rating_cron.toggle(model=self._name, domain=[
+            ('rating_active', '=', True),
+            ('rating_status', '=', 'periodic'),
+        ])
 
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None):
         """
