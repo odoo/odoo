@@ -126,18 +126,6 @@ class BaseFollowersTest(TestMailCommon):
         test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_cl_def.id, self.mt_al_def.id])
         self.assertEqual(follower.subtype_ids, self.mt_cl_def | self.mt_al_def)
 
-    def test_followers_no_DID(self):
-        """Test that a follower cannot suffer from dissociative identity disorder.
-           It cannot be both a partner and a channel.
-        """
-        with self.assertRaises(IntegrityError), mute_logger('odoo.sql_db'):
-            self.env['mail.followers'].create({
-                'res_model': self.test_record._name,
-                'res_id': self.test_record.id,
-                'partner_id': self.user_employee.partner_id.id,
-                'channel_id': self.channel_listen.id,
-            })
-
     @users('employee')
     def test_followers_inactive(self):
         """ Test standard API does not subscribe inactive partners """
@@ -435,10 +423,10 @@ class DuplicateNotificationTest(TestMailCommon):
         self.assertEqual(notif.notification_type, 'email')
 
         subtype = self.env.ref('mail.mt_comment')
-        res = self.env['mail.followers']._get_recipient_data(test, 'comment',  subtype.id, pids=common_partner.ids)
+        res = self.env['mail.followers']._get_recipient_data(test, 'comment', subtype.id, pids=common_partner.ids)
         partner_notif = [r for r in res if r[0] == common_partner.id]
         self.assertEqual(len(partner_notif), 1)
-        self.assertEqual(partner_notif[0][5], 'email')
+        self.assertEqual(partner_notif[0][3], 'email')
 
 @tagged('post_install', '-at_install')
 class UnlinkedNotificationTest(TestMailCommon):

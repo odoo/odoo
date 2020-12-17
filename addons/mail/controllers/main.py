@@ -141,7 +141,6 @@ class MailController(http.Controller):
             followers.append({
                 'id': follower.id,
                 'partner_id': follower.partner_id.id,
-                'channel_id': follower.channel_id.id,
                 'name': follower.name,
                 'email': follower.email,
                 'is_active': follower.is_active,

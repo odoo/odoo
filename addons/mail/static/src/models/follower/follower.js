@@ -55,10 +55,7 @@ function factory(dependencies) {
          * Opens the most appropriate view that is a profile for this follower.
          */
         async openProfile() {
-            if (this.partner) {
-                return this.partner.openProfile();
-            }
-            return this.channel.openProfile();
+            return this.partner.openProfile();
         }
 
         /**
@@ -158,69 +155,9 @@ function factory(dependencies) {
             return `${this.modelName}_${data.id}`;
         }
 
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeName() {
-            if (this.channel) {
-                return this.channel.name;
-            }
-            if (this.partner) {
-                return this.partner.name;
-            }
-            return '';
-        }
-
-        /**
-         * @private
-         * @returns {integer}
-         */
-        _computeResId() {
-            if (this.partner) {
-                return this.partner.id;
-            }
-            if (this.channel) {
-                return this.channel.id;
-            }
-            return 0;
-        }
-
-        /**
-         * @private
-         * @returns {string}
-         */
-        _computeResModel() {
-            if (this.partner) {
-                return this.partner.model;
-            }
-            if (this.channel) {
-                return this.channel.model;
-            }
-            return '';
-        }
-
     }
 
     Follower.fields = {
-        resId: attr({
-            compute: '_computeResId',
-            default: 0,
-            dependencies: [
-                'channelId',
-                'partnerId',
-            ],
-        }),
-        channel: many2one('mail.thread'),
-        channelId: attr({
-            related: 'channel.id',
-        }),
-        channelModel: attr({
-            related: 'channel.model',
-        }),
-        channelName: attr({
-            related: 'channel.name',
-        }),
         followedThread: many2one('mail.thread', {
             inverse: 'followers',
         }),
@@ -234,29 +171,13 @@ function factory(dependencies) {
             default: false,
         }),
         name: attr({
-            compute: '_computeName',
-            dependencies: [
-                'channelName',
-                'partnerName',
-            ],
-        }),
-        partner: many2one('mail.partner'),
-        partnerId: attr({
-            related: 'partner.id',
-        }),
-        partnerModel: attr({
-            related: 'partner.model',
-        }),
-        partnerName: attr({
             related: 'partner.name',
         }),
-        resModel: attr({
-            compute: '_computeResModel',
-            default: '',
-            dependencies: [
-                'channelModel',
-                'partnerModel',
-            ],
+        partner: many2one('mail.partner', {
+            required: true,
+        }),
+        partnerId: attr({
+            related: 'partner.id',
         }),
         selectedSubtypes: many2many('mail.follower_subtype'),
         subtypes: many2many('mail.follower_subtype'),
