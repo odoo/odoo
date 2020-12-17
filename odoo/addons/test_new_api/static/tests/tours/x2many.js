@@ -328,9 +328,6 @@ odoo.define('web.test.x2many', function (require) {
         trigger: '.o_cp_buttons .o_form_button_cancel',
         extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody:has(tr td:containsExact(ddd))',
         run: 'click',
-    }, {
-        content: "confirm cancel change",
-        trigger: '.modal-footer button:contains(Ok)',
     },
 
     /////////////////////////////////////////////////////////////////////////////////////////////
@@ -501,8 +498,5 @@ odoo.define('web.test.x2many', function (require) {
         content: "cancel change",
         trigger: '.o_cp_buttons .o_form_button_cancel',
         run: 'click',
-    }, {
-        content: "confirm cancel change",
-        trigger: '.modal-footer button:contains(Ok)',
     }]);
 });
