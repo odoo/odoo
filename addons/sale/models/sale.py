@@ -1240,12 +1240,16 @@ class SaleOrderLine(models.Model):
             line.price_reduce_taxexcl = line.price_subtotal / line.product_uom_qty if line.product_uom_qty else 0.0
 
     def _compute_tax_id(self):
-        for line in self:
+        for line in self.filtered(lambda l: not l.is_tax_readonly):
             line = line.with_company(line.company_id)
             fpos = line.order_id.fiscal_position_id or line.order_id.fiscal_position_id.get_fiscal_position(line.order_partner_id.id)
             # If company_id is set, always filter taxes by the company
             taxes = line.product_id.taxes_id.filtered(lambda t: t.company_id == line.env.company)
             line.tax_id = fpos.map_tax(taxes, line.product_id, line.order_id.partner_shipping_id)
+
+    def _compute_is_tax_readonly(self):
+        for line in self:
+            line.is_tax_readonly = line.qty_invoiced > 0
 
     @api.model
     def _prepare_add_missing_fields(self, values):
@@ -1404,6 +1408,7 @@ class SaleOrderLine(models.Model):
     is_downpayment = fields.Boolean(
         string="Is a down payment", help="Down payments are made when creating invoices from a sales order."
         " They are not copied when duplicating a sales order.")
+    is_tax_readonly = fields.Boolean('Is Tax Read-only?', compute='_compute_is_tax_readonly')
 
     state = fields.Selection(
         related='order_id.state', string='Order Status', readonly=True, copy=False, store=True, default='draft')
