@@ -182,6 +182,9 @@ class ProjectTaskRecurrence(models.Model):
                     count = delta.years * 12 + delta.months
                 for i in range(count):
                     start = start.replace(day=min(repeat_day, monthrange(start.year, start.month)[1]))
+                    if i == 0 and start < date_start:
+                        # Ensure the next recurrence is in the future
+                        start += relativedelta(months=repeat_interval)
                     dates.append(start)
                     start += relativedelta(months=repeat_interval)
                 return dates
