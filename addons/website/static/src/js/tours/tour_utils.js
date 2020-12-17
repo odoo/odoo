@@ -64,6 +64,17 @@ function changeBackgroundColor(position = "bottom") {
     };
 }
 
+function selectColorPalette(position = "left") {
+    return {
+        trigger: ".o_we_customize_panel .o_we_so_color_palette we-selection-items",
+        alt_trigger: ".o_we_customize_panel .o_we_color_preview",
+        content: _t(`<b>Select</b> a Color Palette.`),
+        position: position,
+        run: 'click',
+        location: position === 'left' ? '#oe_snippets' : undefined,
+    };
+}
+
 function changeColumnSize(position = "right") {
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
@@ -100,6 +111,18 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
         content: _t(`<b>Click</b> on this option to change the ${optionTooltipLabel} of the block.`),
         position: position,
         run: "click",
+    };
+}
+
+function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabel = '', position = "top") {
+    const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`;
+    return {
+        trigger: trigger,
+        content: _t(`<b>Select</b> a ${optionTooltipLabel}.`),
+        alt_trigger: alt_trigger == null ? undefined : `${option_block} ${alt_trigger}`,
+        position: position,
+        run: 'click',
+        location: position === 'left' ? '#oe_snippets' : undefined,
     };
 }
 
@@ -161,7 +184,7 @@ function clickOnSave(position = "bottom") {
 function clickOnText(snippet, element, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} ${element}`,
-        content: _t("Even if this title is cool, you can change it. <b>Click on a text</b> to start editing it."),
+        content: _t("<b>Click on a text</b> to start editing it."),
         position: position,
         run: "text",
         consumeEvent: "input",
@@ -257,7 +280,9 @@ return {
     dragNDrop,
     goBackToBlocks,
     goToOptions,
+    selectColorPalette,
     selectHeader,
+    selectNested,
     selectSnippetColumn,
 
     registerThemeHomepageTour,
