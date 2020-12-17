@@ -111,7 +111,7 @@ QUnit.test('basic rendering', async function (assert) {
         "message should display the content"
     );
     assert.strictEqual(
-        messageEl.querySelector(`:scope .o_Message_content`).innerHTML,
+        messageEl.querySelector(`:scope .o_Message_prettyBody`).innerHTML,
         "<p>Test</p>",
         "message should display the correct content"
     );
