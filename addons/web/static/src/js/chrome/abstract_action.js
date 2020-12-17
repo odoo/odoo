@@ -1,8 +1,5 @@
 /** odoo-alias default web.AbstractAction **/
 
-
-
-
 /**
  * We define here the AbstractAction widget, which implements the ActionMixin.
  * All client actions must extend this widget.
@@ -14,10 +11,9 @@ import ActionMixin from "web.ActionMixin";
 import ActionModel from "web.ActionModel";
 import ControlPanel from "web.ControlPanel";
 import Widget from "web.Widget";
-import { ComponentWrapper } from "web.OwlCompatibility";
+import { ComponentWrapper as ComponentWrapper, b as Jack } from "web.OwlCompatibility";
 
-let AbstractAction;
-export default AbstractAction = Widget.extend(ActionMixin, {
+const AbstractAction = Widget.extend(ActionMixin, {
     config: {
         ControlPanel: ControlPanel,
     },
@@ -190,3 +186,4 @@ export default AbstractAction = Widget.extend(ActionMixin, {
     _onSearch: function () {},
 });
 
+export default AbstractAction;

@@ -80,8 +80,14 @@ class TranspilerJS:
         return p.sub(repl, content)
 
     def replace_import(self, content):
+
+        def repl(matchobj):
+            d = matchobj.groupdict()
+            new_list = d["list"].replace(" as ", ": ")
+            path = d["path"]
+            return f"const {new_list} = require({path})"
+
         p = re.compile(r"import\s+(?P<list>{(\s*\w+\s*,?\s*)+})\s*from\s*(?P<path>[^;\n]+)")
-        repl = r"const \g<list> = require(\g<path>)"
         return p.sub(repl, content)
 
     def replace_legacy_default_import(self, content):
@@ -103,19 +109,21 @@ class TranspilerJS:
 
     def remove_comment(self, content):
         # first we remove the slashes in strings
-        p = re.findall(r"""([\"'`].*/.*[\"'`])""", content)
+        p = re.compile(r"""([\"'`].*/.*[\"'`])""")
 
-        for string in p:
-            new_string = string.replace('/', "@___slash___@")
-            content = content.replace(string, new_string)
+        def repl(matchobj):
+            string = matchobj.group(0)
+            return string.replace('/', "@___slash___@")
+
+        new_content = p.sub(repl, content)
 
         # We remove the comments
         p = re.compile(r'(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$)', flags=re.MULTILINE)
         repl = r""
-        content = p.sub(repl, content)
+        new_content = p.sub(repl, new_content)
 
         # We add the slashes in strings
-        return content.replace("@___slash___@", '/')
+        return new_content.replace("@___slash___@", '/')
 
     def replace_default(self, content):
         new_content = self.replace_function_and_class_export(content, True)
