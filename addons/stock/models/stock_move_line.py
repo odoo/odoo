@@ -188,7 +188,7 @@ class StockMoveLine(models.Model):
             new_move = self.env['stock.move'].create({
                 'name': _('New Move:') + move_line.product_id.display_name,
                 'product_id': move_line.product_id.id,
-                'product_uom_qty': move_line.qty_done,
+                'product_uom_qty': 0 if move_line.picking_id and move_line.picking_id.state != 'done' else move_line.qty_done,
                 'product_uom': move_line.product_uom_id.id,
                 'description_picking': move_line.description_picking,
                 'location_id': move_line.picking_id.location_id.id,
