@@ -145,16 +145,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     */
-    canBeRemoved: function () {
-        // AAB: get rid of 'readonlyIfRealDiscard' option when on_hashchange mechanism is improved
-        return this.discardChanges(undefined, {
-            noAbandon: true,
-            readonlyIfRealDiscard: true,
-        });
-    },
-    /**
      * Discards the changes made on the record associated to the given ID, or
      * all changes made by the current controller if no recordID is given. For
      * example, when the user opens the 'home' screen, the action manager calls
