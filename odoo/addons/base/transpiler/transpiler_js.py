@@ -15,12 +15,12 @@ class TranspilerJS:
     def convert(self):
         new_content = self.content
         legacy_odoo_define = self.get_legacy_odoo_define(new_content, self.url)
+        new_content = self.alias_strings(new_content)
+        new_content = self.alias_comments(new_content)
         new_content = self.replace_legacy_default_import(new_content)
         new_content = self.replace_import(new_content)
         new_content = self.replace_default_import(new_content)
         new_content = self.replace_relative_imports(new_content)
-        new_content = self.alias_strings(new_content)
-        new_content = self.alias_comments(new_content)
         new_content = self.replace_function_and_class_export(new_content)
         new_content = self.replace_variable_export(new_content)
         new_content = self.replace_list_export(new_content)
@@ -101,11 +101,11 @@ class TranspilerJS:
         return content
 
     def alias_comments(self, content):
-        p = re.compile(r"""(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$)""", flags=re.MULTILINE)
+        p = re.compile(r"""(?P<comment>\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$)""", flags=re.MULTILINE)
 
         def repl(matchobj):
             self.comment_id += 1
-            string = matchobj.group(0)
+            string = matchobj.groupdict()['comment']
             self.comments_mapping[self.comment_id] = string
             return f"@___comment{{{self.comment_id}}}___@"
 
@@ -121,11 +121,14 @@ class TranspilerJS:
         return p.sub(repl, content)
 
     def alias_strings(self, content):
-        p = re.compile(r"""(`.*?`|\".*?\"|'.*?")""", flags=re.DOTALL)
+        p = re.compile(r"""(?P<all>(?P<from>from\s+)?(`.*?`|\".*?\"|'.*?"))""", flags=re.DOTALL)
 
         def repl(matchobj):
+            has_from = matchobj.groupdict().get('from')
+            if has_from:
+                return matchobj.groupdict().get('all')
             self.string_id += 1
-            string = matchobj.group(0)
+            string = matchobj.groupdict().get('all')
             self.strings_mapping[self.string_id] = string
             return f"@___string{{{self.string_id}}}___@"
 
