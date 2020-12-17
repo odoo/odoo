@@ -157,7 +157,7 @@
                         </t>
                     </t>
                     <div class="o_Message_content" t-ref="content">
-                        <t t-raw="message.prettyBody"/>
+                        <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
                         <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
                             <p t-esc="message.subtype_description"/>
                         </t>
