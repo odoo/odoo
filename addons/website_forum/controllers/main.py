@@ -212,8 +212,9 @@ class WebsiteForum(WebsiteProfile):
         if not forum.active:
             return request.render("website_forum.header", {'forum': forum})
 
+        # Hide posts by access rules for multiwebsite
         # Hide posts from abusers (negative karma), except for moderators
-        if not question.can_view:
+        if not forum.can_access_from_current_website() or not question.can_view:
             raise werkzeug.exceptions.NotFound()
 
         # Hide pending posts from non-moderators and non-creator
