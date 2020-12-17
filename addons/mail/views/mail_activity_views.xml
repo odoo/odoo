@@ -149,6 +149,20 @@
         </field>
     </record>
 
+    <record id="mail_activity_view_form" model="ir.ui.view">
+        <field name="name">mail.activity.view.form</field>
+        <field name="model">mail.activity</field>
+        <field name="priority">21</field>
+        <field name="mode">primary</field>
+        <field name="inherit_id" ref="mail.mail_activity_view_form_popup"/>
+        <field name="arch" type="xml">
+            <field name="activity_type_id" position="before">
+                <field name="res_name" readonly="1" string="Document"/>
+            </field>
+            <footer position="replace"/>
+        </field>
+    </record>
+
     <record id="mail_activity_view_search" model="ir.ui.view">
         <field name="name">mail.activity.view.search</field>
         <field name="model">mail.activity</field>
@@ -188,6 +202,18 @@
                 <field name="date_deadline"/>
             </tree>
         </field>
+    </record>
+
+    <record id="mail_activity_action_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="act_window_id" ref="mail.mail_activity_action"/>
+    </record>
+    <record id="mail_activity_action_view_form" model="ir.actions.act_window.view">
+        <field name="sequence" eval="2"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="mail.mail_activity_view_form"/>
+        <field name="act_window_id" ref="mail.mail_activity_action"/>
     </record>
 
     <record id="mail_activity_view_calendar" model="ir.ui.view">
