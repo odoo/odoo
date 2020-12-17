@@ -338,7 +338,7 @@ var Wysiwyg = Widget.extend({
         const rootElement = this.editorHelpers.getDomNodes(domLayout.root.firstDescendant(JWEditorLib.ContainerNode))[0];
         this.editorEditable = this.editorHelpers.getDomNodes(this.zoneMain)[0] || this.editorHelpers.getDomNodes(this.zoneMain.parent)[0];
 
-        this.$toolbar = $(rootElement).add('body').find('jw-toolbar').detach();
+        this.$toolbar = $(rootElement).add('body').find('jw-toolbar');
 
         if (this.options.enableWebsite) {
             const $wrapwrap = $('#wrapwrap');
@@ -369,6 +369,7 @@ var Wysiwyg = Widget.extend({
         };
 
         if (this.options.snippets) {
+            this.$toolbar.detach();
             this.$webEditorToolbar = $('<div id="web_editor-toolbars">');
 
             var $toolbarHandler = $('#web_editor-top-edit');
