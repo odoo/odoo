@@ -1034,7 +1034,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('onchange with modifiers for embedded one2many on the second page', async function (assert) {
-            assert.expect(7);
+            assert.expect(9);
 
             var data = this.data;
             var ids = [];
@@ -1099,13 +1099,14 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_one2many .o_list_view tbody tr:first td:first'));
             await testUtils.fields.editInput(form.$('.o_field_one2many .o_list_view tbody tr:first input:first'), 'blurp');
 
-            // the domain fail if the widget does not use the allready loaded data.
-            await testUtils.form.clickDiscard(form);
+            await testUtils.dom.click(form.$('.o_form_label'));
 
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "blurp#21#22#23#24#25#26#27#28#29",
                 "should display the records in order with the changes");
 
-            await testUtils.dom.click($('.modal .modal-footer button:first'));
+            // the domain fail if the widget does not use the allready loaded data.
+            await testUtils.form.clickDiscard(form);
+            assert.containsNone(document.body, '.modal', 'should not open modal');
 
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
@@ -1132,12 +1133,12 @@ QUnit.module('fields', {}, function () {
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence (display record with turtle_int=0)");
 
-            await testUtils.form.clickDiscard(form);
-
+            await testUtils.dom.click(form.$('.o_form_label'));
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#39#40#41#42#43#44#45#46#47",
                 "should display the records in order after resequence");
 
-            await testUtils.dom.click($('.modal .modal-footer button:first'));
+            await testUtils.form.clickDiscard(form);
+            assert.containsNone(document.body, '.modal', 'should not open modal');
 
             assert.equal(form.$('.o_field_one2many .o_list_char').text(), "#20#21#22#23#24#25#26#27#28#29",
                 "should cancel changes and display the records in order");
@@ -2090,9 +2091,7 @@ QUnit.module('fields', {}, function () {
 
             // discard changes
             await testUtils.form.clickDiscard(form);
-            assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'new value',
-                "changes shouldn't have been discarded yet, waiting for user confirmation");
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            assert.containsNone(form, '.modal', 'should not open modal');
             assert.strictEqual(form.$('.o_field_one2many tbody td').first().text(), 'relational record 1',
                 "display name of first record in o2m list should be 'relational record 1'");
 
@@ -2741,7 +2740,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('one2many list (editable): edition, part 3', async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
 
             var form = await createView({
                 View: FormView,
@@ -2770,7 +2769,7 @@ QUnit.module('fields', {}, function () {
 
             // cancel the edition
             await testUtils.form.clickDiscard(form);
-            await testUtils.dom.click($('.modal-footer button.btn-primary').first());
+            assert.containsNone(form, '.modal', 'should not open modal');
             assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data rows");
 
@@ -2907,7 +2906,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('editable one2many list, adding line, then discarding', async function (assert) {
-            assert.expect(2);
+            assert.expect(3);
 
             this.data.turtle.records.push({ id: 4, turtle_foo: 'stephen hawking' });
             this.data.partner.records[0].turtles = [1, 2, 3, 4];
@@ -2929,10 +2928,9 @@ QUnit.module('fields', {}, function () {
             // add a record, then discard
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-            await testUtils.form.clickDiscard(form);
 
-            // confirm the discard operation
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            await testUtils.form.clickDiscard(form);
+            assert.containsNone(form, '.modal', 'should not open modal');
 
             assert.isVisible(form.$('.o_field_widget[name=turtles] .o_pager'));
             assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-3 / 4',
@@ -3007,9 +3005,6 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-4 / 5',
                 "pager should still display the correct total");
 
-            // click on cancel
-            await testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
-
             assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-4 / 5',
                 "pager should again display the correct total");
             assert.containsOnce(form, '.o_field_one2many input.o_field_invalid',
@@ -3018,7 +3013,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('editable one2many list, adding, discarding, and pager', async function (assert) {
-            assert.expect(4);
+            assert.expect(5);
 
             this.data.partner.records[0].turtles = [1];
 
@@ -3048,7 +3043,7 @@ QUnit.module('fields', {}, function () {
 
             // discard
             await testUtils.form.clickDiscard(form);
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+            assert.containsNone(form, '.modal', 'should not open modal');
 
             assert.containsOnce(form, 'tr.o_data_row');
             assert.containsNone(form, '.o_field_widget[name=turtles] .o_pager');
@@ -3057,7 +3052,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('unselecting a line with missing required data', async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
 
             this.data.turtle.fields.turtle_foo.required = true;
             delete this.data.turtle.fields.turtle_foo.default;
@@ -3093,17 +3088,17 @@ QUnit.module('fields', {}, function () {
 
             // click elsewhere,
             await testUtils.dom.click(form.$('label.o_form_label'));
-            assert.strictEqual($('.modal').length, 1,
-                'a confirmation model should be opened');
+            assert.containsNone(document.body, '.modal',
+                'a confirmation modal should not be opened');
 
-            // click on cancel, the line should still be selected
-            await testUtils.dom.click($('.modal .modal-footer button.btn-secondary'));
+            // the line should still be selected
             assert.containsOnce(form, 'tr.o_data_row.o_selected_row',
                 "should still have 1 selected data row");
 
-            // click elsewhere, and click on ok (on the confirmation dialog)
-            await testUtils.dom.click(form.$('label.o_form_label'));
-            await testUtils.dom.click($('.modal .modal-footer button.btn-primary'));
+            // click discard
+            await testUtils.dom.click(form.$('.o_form_button_cancel'));
+            assert.containsNone(document.body, '.modal',
+                'a confirmation modal should not be opened');
             assert.containsNone(form, 'tr.o_data_row',
                 "should have 0 data rows (invalid line has been discarded");
 
@@ -7023,8 +7018,8 @@ QUnit.module('fields', {}, function () {
 
             assert.containsOnce(form, '.o_data_row.o_selected_row',
                 "line should not have been removed and should still be in edition");
-            assert.strictEqual($('.modal').length, 1,
-                "a confirmation dialog should be opened");
+            assert.containsNone(document.body, '.modal',
+                "a confirmation dialog should not be opened");
             assert.hasClass(form.$('.o_field_widget[name=int_field]'),'o_field_invalid',
                 "should indicate that int_field is invalid");
 

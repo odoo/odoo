@@ -47,10 +47,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // operations to complete before checking if there are changes to
         // discard when discardChanges is called
         this.savingDef = Promise.resolve();
-        // discardingDef is used to ensure that we don't ask twice the user if
-        // he wants to discard changes, when 'canBeDiscarded' is called several
-        // times "in parallel"
-        this.discardingDef = null;
+        this.discardingChanges = false;
         this.viewId = params.viewId;
     },
     /**
@@ -69,6 +66,20 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
     //--------------------------------------------------------------------------
 
     /**
+     * @override
+     */
+    canBeRemoved: function () {
+        if (!this.isDirty(this.handle) ||
+            this.model.isNew(this.handle) &&
+            this.discardingChanges
+        ) {
+            this.discardingChanges = false;
+            return Promise.resolve();
+        } else {
+            return this.saveChanges(this.handle);
+        }
+    },
+    /**
      * Determines if we can discard the current changes. If the model is not
      * dirty, that is not a problem. However, if it is dirty, we have to ask
      * the user for confirmation.
@@ -81,31 +92,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *          rejected otherwise
      */
     canBeDiscarded: function (recordID) {
-        var self = this;
-        if (this.discardingDef) {
-            // discard dialog is already open
-            return this.discardingDef;
-        }
-        if (!this.isDirty(recordID)) {
-            return Promise.resolve(false);
-        }
-
-        var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
-        this.discardingDef = new Promise(function (resolve, reject) {
-            var dialog = Dialog.confirm(self, message, {
-                title: _t("Warning"),
-                confirm_callback: () => {
-                    resolve(true);
-                    self.discardingDef = null;
-                },
-                cancel_callback: () => {
-                    reject();
-                    self.discardingDef = null;
-                },
-            });
-            dialog.on('closed', self.discardingDef, reject);
-        });
-        return this.discardingDef;
+        return Promise.resolve(true);
     },
     /**
      * Ask the renderer if all associated field widget are in a valid state for
@@ -154,6 +141,27 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     isDirty: function (recordID) {
         return this.model.isDirty(recordID || this.handle);
+    },
+    /**
+     * 
+     */
+    saveChanges: async function (recordId) {
+        recordId = recordId || this.handle;
+        if (this.isDirty(recordId)) {
+            try {
+                await Promise.all([this.mutex.getUnlockedDef(), this.savingDef]);
+                await this.saveRecord(recordId, {
+                    stayInEdit: true,
+                    reload: false,
+                });
+                this.displayNotification({
+                    message: _t("The record has been saved."),
+                    type: 'info',
+                });
+            } catch (e) {
+                return Promise.reject();
+            }
+        }
     },
     /**
      * Saves the record whose ID is given if necessary (@see _saveRecord).
@@ -386,6 +394,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         var self = this;
         recordID = recordID || this.handle;
         options = options || {};
+        this.discardingChanges = true;
         return this.canBeDiscarded(recordID)
             .then(function (needDiscard) {
                 if (options.readonlyIfRealDiscard && !needDiscard) {

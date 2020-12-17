@@ -73,7 +73,9 @@ ActionManager.include({
                 this._closeDialog(true); // there may be a currently opened dialog, close it
                 var viewOptions = {currentId: state.id};
                 var viewType = state.view_type || currentController.viewType;
-                return this._switchController(currentAction, viewType, viewOptions);
+                return this.clearUncommittedChanges().then(() => {
+                    return this._switchController(currentAction, viewType, viewOptions);
+                });
             } else if (!core.action_registry.contains(state.action)) {
                 // the action to load isn't the current one, so execute it
                 var context = {};
@@ -594,6 +596,7 @@ ActionManager.include({
      * @param {function} [ev.data.on_closed]
      * @param {function} [ev.data.on_fail]
      * @param {function} [ev.data.on_success]
+     * @param {bool} [ev.data.no_reload=false]
      */
     _onExecuteAction: function (ev) {
         ev.stopPropagation();
@@ -649,6 +652,11 @@ ActionManager.include({
         // if the request failed due to the DropPrevious,
         def.guardedCatch(ev.data.on_fail);
         this.dp.add(def).then(function (action) {
+            if (action.tag === 'reload' && ev.data.no_reload) {
+                ev.data.on_success(action);
+                return;
+            }
+
             // show effect if button have effect attribute
             // rainbowman can be displayed from two places: from attribute on a button or from python
             // code below handles the first case i.e 'effect' attribute on button.
@@ -724,7 +732,9 @@ ActionManager.include({
             if (ev.data.mode) {
                 options.mode = ev.data.mode;
             }
-            this._switchController(action, viewType, options);
+            this.clearUncommittedChanges().then(() => {
+                return this._switchController(action, viewType, options);
+            });
         }
     },
 });

@@ -79,6 +79,21 @@ var FormController = BasicController.extend({
         }
     },
     /**
+     * @override
+     * @param {string} [recordID] - default to main recordID
+     * @returns {Promise<boolean>}
+     *          resolved if can be discarded, a boolean value is given to tells
+     *          if there is something to discard or not
+     *          rejected otherwise
+     */
+    canBeDiscarded: function (recordId) {
+        if (!recordId || recordId === this.handle || !this.isDirty(recordId)) {
+            return Promise.resolve(true);
+        } else {
+            return Promise.reject();
+        }
+    },
+    /**
      * This method switches the form view in edit mode, with a new record.
      *
      * @todo make record creation a basic controller feature
@@ -181,7 +196,7 @@ var FormController = BasicController.extend({
             return null;
         }
         return Object.assign(this._super(...arguments), {
-            validate: this.canBeDiscarded.bind(this),
+            validate: this.saveChanges.bind(this),
         });
     },
     /**

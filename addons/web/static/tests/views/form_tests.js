@@ -2874,7 +2874,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('discard changes on a dirty form view', async function (assert) {
-        assert.expect(7);
+        assert.expect(5);
 
         var nbWrite = 0;
         var form = await createView({
@@ -2898,16 +2898,9 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('input[name=foo]').val(), 'new value',
             "input should contain new value");
 
-        // click on discard and cancel the confirm request
+        // click on discard
         await testUtils.form.clickDiscard(form);
-        assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-secondary');
-        assert.strictEqual(form.$('input').val(), 'new value', 'input should still contain new value');
-
-        // click on discard and confirm
-        await testUtils.form.clickDiscard(form);
-        assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-primary');
+        assert.containsNone(document.body, '.modal', "no confirm modal should be displayed");
         assert.strictEqual(form.$('.o_field_widget').text(), 'yop', 'field in readonly should display yop');
 
         assert.strictEqual(nbWrite, 0, "no write RPC should have been done");
@@ -2949,7 +2942,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('discard changes on relational data on new record', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         var form = await createView({
             View: FormView,
@@ -2982,9 +2975,9 @@ QUnit.module('Views', {
         assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xphone',
             "input should contain xphone");
 
-        // click on discard and confirm
+        // click on discard
         await testUtils.form.clickDiscard(form);
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        assert.containsNone(form, '.modal', 'modal should not be displayed');
 
         assert.notOk(form.$el.prop('outerHTML').match('xphone'),
             "the string xphone should not be present after discarding");
@@ -3021,7 +3014,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('discard changes on a new (dirty) form view', async function (assert) {
-        assert.expect(8);
+        assert.expect(7);
 
         this.data.partner.fields.foo.default = "ABC";
 
@@ -3047,17 +3040,14 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'DEF');
 
         // discard the changes and check it has properly been discarded
-        await testUtils.form.clickDiscard(form);
-        assert.containsOnce(document.body, '.modal', 'there should be a confirm modal');
         assert.strictEqual(form.$('input').val(), 'DEF', 'input should be DEF');
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        await testUtils.form.clickDiscard(form);
         assert.strictEqual(form.$('input').val(), 'ABC', 'input should now be ABC');
 
         // redirty and discard the field foo (to make sure initial changes haven't been lost)
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'GHI');
-        await testUtils.form.clickDiscard(form);
         assert.strictEqual(form.$('input').val(), 'GHI', 'input should be GHI');
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        await testUtils.form.clickDiscard(form);
         assert.strictEqual(form.$('input').val(), 'ABC', 'input should now be ABC');
 
         form.destroy();
@@ -3123,22 +3113,18 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'new value');
         assert.strictEqual(form.$('input').val(), 'new value', 'input should contain new value');
 
-        // click on the pager to switch to the next record and cancel the confirm request
+        // click on the pager to switch to the next record (will save record)
         await cpHelpers.pagerNext(form);
-        assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-secondary'); // click on cancel
-        assert.strictEqual(form.$('input[name=foo]').val(), 'new value',
-            "input should still contain new value");
-        assert.strictEqual(cpHelpers.getPagerValue(form), '1', "pager value should still be 1");
-
-        // click on the pager to switch to the next record and confirm
-        await cpHelpers.pagerNext(form);
-        assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
-        assert.strictEqual(form.$('input[name=foo]').val(), 'blip', "input should contain blip");
+        assert.containsNone(document.body, '.modal', "no confirm modal should be displayed");
         assert.strictEqual(cpHelpers.getPagerValue(form), '2', "pager value should be 2");
+        assert.strictEqual(form.$('input[name=foo]').val(), 'blip', "input should contain blip");
 
-        assert.strictEqual(nbWrite, 0, 'no write RPC should have been done');
+        await cpHelpers.pagerPrevious(form);
+        assert.containsNone(document.body, '.modal', "no confirm modal should be displayed");
+        assert.strictEqual(cpHelpers.getPagerValue(form), '1', "pager value should be 1");
+        assert.strictEqual(form.$('input[name=foo]').val(), 'new value', "input should contain new value");
+
+        assert.strictEqual(nbWrite, 1, 'no write RPC should have been done');
         form.destroy();
     });
 
@@ -3201,8 +3187,7 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'wrong value');
 
         await testUtils.form.clickDiscard(form);
-        assert.containsOnce(document.body, '.modal', "a confirm modal should be displayed");
-        await testUtils.dom.click('.modal-footer .btn-primary'); // click on confirm
+        assert.containsNone(document.body, '.modal', "no confirm modal should be displayed");
         await cpHelpers.pagerNext(form);
         assert.strictEqual(cpHelpers.getPagerValue(form), '2', "pager value should be 2");
         form.destroy();
@@ -3932,8 +3917,8 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('delete a line in a one2many while editing another line triggers a warning', async function (assert) {
-        assert.expect(3);
+    QUnit.test('delete a line in a one2many while editing another line', async function (assert) {
+        assert.expect(2);
 
         this.data.partner.records[0].p = [1, 2];
 
@@ -3956,18 +3941,14 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('input[name=display_name]'), '');
         await testUtils.dom.click(form.$('.fa-trash-o').eq(1));
 
-        assert.strictEqual($('.modal').find('.modal-title').first().text(), "Warning",
-            "Clicking out of a dirty line while editing should trigger a warning modal.");
-
-        await testUtils.dom.click($('.modal').find('.btn-primary'));
         // use of owlCompatibilityExtraNextTick because there are two sequential updates of the
         // control panel (which is written in owl): each of them waits for the next animation frame
         // to complete
         await testUtils.owlCompatibilityExtraNextTick();
-        assert.strictEqual(form.$('.o_data_cell').first().text(), "first record",
-            "Value should have been reset to what it was before editing began.");
-        assert.containsOnce(form, '.o_data_row',
-            "The other line should have been deleted.");
+        assert.hasClass(form.$('.o_data_cell').first(), "o_invalid_cell",
+            "Cell should be invalidated.");
+        assert.containsN(form, '.o_data_row', 2,
+            "The other line should not have been deleted.");
         form.destroy();
     });
 
@@ -4299,7 +4280,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('onchanges that complete after discarding', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var def1 = testUtils.makeTestPromise();
 
@@ -4338,7 +4319,7 @@ QUnit.module('Views', {
 
         // discard changes
         await testUtils.form.clickDiscard(form);
-        await testUtils.dom.click($('.modal-footer .btn-primary'));
+        assert.containsNone(form, '.modal');
         assert.strictEqual(form.$('span[name="foo"]').text(), "blip",
             "field foo should still be displayed to initial value");
 
@@ -4381,7 +4362,7 @@ QUnit.module('Views', {
 
         // save the value and discard directly
         await testUtils.form.clickSave(form);
-        form.discardChanges(); // Simulate click on breadcrumb
+        form.discardChanges();
 
         assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), "1234",
             "field foo should still contain new value");
@@ -8673,6 +8654,7 @@ QUnit.module('Views', {
     QUnit.test('call canBeRemoved twice', async function (assert) {
         assert.expect(4);
 
+        let writeCalls = 0;
         const form = await createView({
             View: FormView,
             model: 'partner',
@@ -8682,28 +8664,30 @@ QUnit.module('Views', {
             viewOptions: {
                 mode: 'edit',
             },
+            mockRPC(route) {
+                if (route === '/web/dataset/call_kw/partner/write') {
+                    writeCalls += 1;
+                }
+                return this._super(...arguments);
+            },
         });
 
         assert.containsOnce(form, '.o_form_editable');
         await testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'some value');
 
-        form.canBeRemoved();
-        await testUtils.nextTick();
-        assert.containsOnce(document.body, '.modal');
-
-        form.canBeRemoved();
-        await testUtils.nextTick();
-        assert.containsOnce(document.body, '.modal');
-
-        await testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
-
+        await form.canBeRemoved();
         assert.containsNone(document.body, '.modal');
+
+        await form.canBeRemoved();
+        assert.containsNone(document.body, '.modal');
+
+        assert.strictEqual(writeCalls, 1, 'should save once');
 
         form.destroy();
     });
 
     QUnit.test('domain returned by onchange is cleared on discard', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         this.data.partner.onchanges = {
             foo: function () {},
@@ -8748,8 +8732,7 @@ QUnit.module('Views', {
         // switch to another record (should ask to discard changes, and reset the domain)
         await cpHelpers.pagerNext(form);
 
-        // discard changes by clicking on confirm in the dialog
-        await testUtils.dom.click($('.modal .modal-footer .btn-primary:first'));
+        assert.containsNone(document.body, '.modal', 'should not open modal');
 
         assert.strictEqual(form.$('input[name=foo]').val(), 'blip', "should be on record 2");
 

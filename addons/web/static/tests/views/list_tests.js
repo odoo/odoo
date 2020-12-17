@@ -6536,10 +6536,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_cell:first'));
         await testUtils.fields.editInput(list.$('input[name="foo"]'), "hello");
         await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
-        assert.strictEqual($('.modal:visible').length, 1,
-            "a modal to ask for discard should be visible");
+        assert.containsNone(document.body, '.modal',
+            "a modal to ask for discard should not be visible");
 
-        await testUtils.dom.click($('.modal:visible .btn-primary'));
         assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
             "first cell should still contain 'yop'");
 
@@ -7674,8 +7673,7 @@ QUnit.module('Views', {
         $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
         await testUtils.dom.click($discardButton);
 
-        assert.ok($('.modal').text().includes("Warning"), "Modal should ask to discard changes");
-        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.containsNone(document.body, '.modal', 'should not open modal');
 
         assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "yop");
 
@@ -9088,7 +9086,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pressing ESC in editable grouped list should discard the current line changes', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var list = await createView({
             View: ListView,
@@ -9107,7 +9105,7 @@ QUnit.module('Views', {
         await testUtils.fields.editAndTrigger(list.$('tr.o_selected_row .o_data_cell:first input[name="foo"]'), 'new_value', 'input');
         // discard by pressing ESC
         await testUtils.fields.triggerKeydown(list.$('input[name="foo"]'), 'escape');
-        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.containsNone(document.body, '.modal', 'should not open modal');
 
         assert.containsOnce(list, 'tbody tr td:contains(yop)');
         assert.containsN(list, 'tr.o_data_row', 3);
@@ -9657,9 +9655,8 @@ QUnit.module('Views', {
 
         await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
 
-        assert.hasClass($('body'), 'modal-open',
-            'record has been modified, are you sure modal should be opened');
-        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        assert.containsNone(document.body, '.modal',
+            'record has been modified but modal should not be opened');
 
         assert.doesNotHaveClass(list.$('tr.o_data_row:eq(1)'), 'o_selected_row',
             'second row should be closed');

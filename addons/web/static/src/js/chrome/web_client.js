@@ -134,7 +134,7 @@ return AbstractWebClient.extend({
         }
 
         var self = this;
-        return this.clear_uncommitted_changes().then(function () {
+        return new Promise(function () {
             var stringstate = $.bbq.getState(false);
             if (!_.isEqual(self._current_state, stringstate)) {
                 var state = $.bbq.getState(true);
@@ -162,11 +162,6 @@ return AbstractWebClient.extend({
                 }
             }
             self._current_state = stringstate;
-        }, function () {
-            if (event) {
-                self._ignore_hashchange = true;
-                window.location = event.originalEvent.oldURL;
-            }
         });
     },
 
