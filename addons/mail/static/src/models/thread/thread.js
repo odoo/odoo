@@ -755,7 +755,7 @@ function factory(dependencies) {
          * Open a dialog to add partners as followers.
          */
         promptAddPartnerFollower() {
-            this._promptAddFollower({ mail_invite_follower_channel_only: false });
+            this._promptAddFollower();
         }
 
         async refresh() {
@@ -1523,10 +1523,8 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Object} [param0={}]
-         * @param {boolean} [param0.mail_invite_follower_channel_only=false]
          */
-        _promptAddFollower({ mail_invite_follower_channel_only = false } = {}) {
+        _promptAddFollower() {
             const action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.wizard.invite',
@@ -1537,7 +1535,6 @@ function factory(dependencies) {
                 context: {
                     default_res_model: this.model,
                     default_res_id: this.id,
-                    mail_invite_follower_channel_only,
                 },
             };
             this.env.bus.trigger('do-action', {
