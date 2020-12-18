@@ -82,6 +82,11 @@
                 <filter string="Internal" name="internal" domain="[('picking_id.picking_type_id.code', '=', 'internal')]"/>
                 <filter string="Manufacturing" name="manufacturing" domain="[('picking_id.picking_type_id.code', '=', 'mrp_operation')]"/>
                 <separator/>
+                <filter name="date" date="date" default_period="this_month"/>
+                <filter string="Last 30 Days" name="filter_last_30_days" domain="[('date','&gt;=', (context_today() - relativedelta(days=30)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last 3 Months" name="filter_last_3_months" domain="[('date','&gt;=', (context_today() - relativedelta(months=3)).strftime('%%Y-%%m-%%d'))]"/>
+                <filter string="Last 12 Months" name="filter_last_12_months" domain="[('date','&gt;=', (context_today() - relativedelta(years=1)).strftime('%%Y-%%m-%%d'))]"/>
+                <separator/>
                 <group expand="0" string="Group By">
                     <filter string="Product" name="groupby_product_id" domain="[]" context="{'group_by': 'product_id'}"/>
                     <filter string="Status" name="by_state" domain="[]"  context="{'group_by': 'state'}"/>
@@ -125,7 +130,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_mode">tree,kanban,pivot,form</field>
             <field name="view_id" ref="view_move_line_tree"/>
-            <field name="context">{'search_default_done': 1, 'search_default_groupby_product_id': 1, 'create': 0}</field>
+            <field name="context">{'search_default_filter_last_12_months': 1, 'search_default_done': 1, 'search_default_groupby_product_id': 1, 'create': 0}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_empty_folder">
                     There's no product move yet
