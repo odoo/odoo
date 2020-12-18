@@ -1,0 +1,12 @@
+Printing pages from Odoo result in missing footer and header, as per #977534
+and #885833. There is currently no Debian-supported workaround for that, as
+Debian does not ship a wkhtmltopdf version built against a patched version of
+qt.
+
+wkhtmltopdf's upstream proposes a package[0] that has been briefly
+tested and proved to work with 14.0.0+dfsg.2-1 in sid, it is still
+still officially considered as unsupported.
+
+[0] https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.5/wkhtmltox_0.12.5-1.buster_amd64.deb
+
+ -- Sebastien Delafond <seb@debian.org>, Wed, 16 Dec 2020 08:17:10 +0100
