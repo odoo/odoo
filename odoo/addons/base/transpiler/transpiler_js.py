@@ -14,7 +14,7 @@ class TranspilerJS:
 
     def convert(self):
         new_content = self.content
-        legacy_odoo_define = self.get_legacy_odoo_define(new_content, self.url)
+        new_content, legacy_odoo_define = self.get_legacy_odoo_define(new_content, self.url)
         new_content = self.alias_strings(new_content)
         new_content = self.alias_comments(new_content)
         new_content = self.replace_legacy_default_import(new_content)
@@ -38,7 +38,7 @@ class TranspilerJS:
         return new_content
 
     def get_define_url(self, url):
-        result = re.match(r"\/?(?P<module>\w+)\/[\w\/]*js\/(?P<url>[\w\/]*)", url)
+        result = re.match(r"\/?(?P<module>\w+)\/[\w\/]*static\/src\/(?P<url>[\w\/]*)", url)
         d = result.groupdict()
         return "@%s/%s" % (d.get('module'), d.get('url'))
 
@@ -160,14 +160,23 @@ class TranspilerJS:
         result = "/".join(url_split[:-nb_back] + [v for v in path_rel_split if not v in ["..", "."]])
         return self.get_define_url(result)
 
+    @staticmethod
+    def is_odoo_module(content):
+        result = re.match(r"\/\*\*\s+@odoo-module\s+(alias=(?P<alias>\S+))?\s*\*\*\/", content)
+        return bool(result)
+
     def get_legacy_odoo_define(self, content, url):
         define_url = self.get_define_url(url)
-        result = re.match(r"\/\*\*\s+odoo-alias\s*(?P<default>default)?\s+(?P<alias>\S+)\s*\*\*\/", content)
+        pattern = r"\/\*\*\s+@odoo-module\s+(alias=(?P<alias>\S+))?\s*\*\*\/"
+        result = re.match(pattern, content)
         if bool(result):
+            p = re.compile(pattern)
             d = result.groupdict()
-            alias = d['alias']
-            default = ".__default" if d.get('default') else ""
-            return """\nodoo.define(`%s`, function(require) {
-                    console.warn("%s is deprecated. Please use %s instead");
-                    return require('%s')%s;
-                    });\n""" % (alias, alias,  define_url, define_url, default)
+            alias = d.get('alias')
+            if alias:
+                return p.sub("", content), """\nodoo.define(`%s`, function(require) {
+                        console.warn("%s is deprecated. Please use %s instead");
+                        return require('%s').__default;
+                        });\n""" % (alias, alias,  define_url, define_url)
+
+        return content, False

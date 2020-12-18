@@ -1,4 +1,4 @@
-/** odoo-alias default web.AbstractAction **/
+/** @odoo-module alias=web.AbstractAction **/
 
 /**
  * We define here the AbstractAction widget, which implements the ActionMixin.

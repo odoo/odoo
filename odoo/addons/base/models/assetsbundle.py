@@ -701,35 +701,14 @@ class WebAsset(object):
 class JavascriptAsset(WebAsset):
 
     # JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content'])
-    excludedUrls = [
-        '/web/static/src/js/promise_extension.js',
-        '/web/static/src/js/boot.js',
-        '/web/static/src/js/component_extension.js',
-        '/web_editor/static/src/js/frontend/loader_loading.js',
-        '/web/static/tests/helpers/qunit_config.js',
-        '',
-    ]
-
     def __init__(self, bundle, inline=None, url=None, filename=None):
         super(JavascriptAsset, self).__init__(bundle, inline, url, filename)
-        if not self.is_odoo_defined_module() and not self.is_a_library() and not self.should_be_excluded():
+        if TranspilerJS.is_odoo_module(self.content):
             self.convert_to_odoo_defined_module()
 
     def convert_to_odoo_defined_module(self):
         t = TranspilerJS(self.content, self.url)
         self._content = t.convert()
-
-    def is_a_library(self):
-        lib_strs = ['lib/', 'libs/', 'libraries/', 'library/']
-        return any(s in self.url for s in lib_strs)
-
-    def should_be_excluded(self):
-        return self.url in self.excludedUrls
-
-    def is_odoo_defined_module(self):
-        regex = r"odoo\s*\.\s*define\s*\("
-        matches = re.search(regex, self.content)
-        return bool(matches)
 
     def minify(self):
         return self.with_header(rjsmin(self.content))
