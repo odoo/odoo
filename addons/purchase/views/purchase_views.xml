@@ -689,13 +689,13 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order Line" create="false">
                     <sheet>
-                        <label for="order_id" class="oe_edit_only"/>
+                        <label for="order_id"/>
                         <h1>
                             <field name="order_id" class="oe_inline"/>
                             <label string="," for="date_order" attrs="{'invisible':[('date_order','=',False)]}"/>
                             <field name="date_order" class="oe_inline"/>
                         </h1>
-                        <label for="partner_id" class="oe_edit_only"/>
+                        <label for="partner_id"/>
                         <h2><field name="partner_id"/></h2>
                         <group>
                             <group>

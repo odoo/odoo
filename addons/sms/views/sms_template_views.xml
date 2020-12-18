@@ -31,10 +31,10 @@
                         <button class="oe_stat_button" name="%(sms_template_preview_action)d" icon="fa-search-plus" string="Preview" type="action" target="new"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="SMS Template"/>
-                        <h1><field name="name" required="1"/></h1>
+                        <label for="name" string="SMS Template"/>
+                        <h1><field name="name" placeholder="e.g. Calendar Reminder" required="1"/></h1>
                         <group>
-                            <field name="model_id" required="1" options="{'no_create': True}"/>
+                            <field name="model_id" placeholder="e.g. Contact" required="1" options="{'no_create': True}"/>
                             <field name="model" invisible="1"/>
                             <field name="lang" groups="base.group_no_one" placeholder="e.g. en_US or ${object.partner_id.lang}"/>
                         </group>

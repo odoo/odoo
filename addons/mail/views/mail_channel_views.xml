@@ -56,11 +56,9 @@
                         <div class="oe_button_box" name="button_box"/>
                         <field name="image_128" widget="image" class="oe_avatar" options="{'size': [90, 90]}"/>
                         <div class="oe_title">
-                            <div class="oe_edit_only">
-                                <label for="name"/>
-                            </div>
+                            <label for="name" string="Group Name"/>
                             <h1>
-                                #<field name="name" default_focus="1" placeholder="Name" readonly="0"/>
+                                #<field name="name" class="oe_inline" default_focus="1" placeholder="e.g. support" readonly="0"/>
                             </h1>
                         </div>
                         <group class="o_label_nowrap">
