@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
 
-from datetime import datetime
+from datetime import datetime, time, timedelta
 from unittest.mock import patch
 
 from odoo import fields
@@ -24,6 +23,18 @@ class TestSupplier(TestsCommon):
         self.saturday_10am = datetime(2018, 11, 3, 10, 0, 0)
         self.saturday_1pm = datetime(2018, 11, 3, 13, 0, 0)
         self.saturday_8pm = datetime(2018, 11, 3, 20, 0, 0)
+
+    def test_send_email_cron(self):
+        self.supplier_kothai.cron_id.ensure_one()
+        self.assertEqual(self.supplier_kothai.cron_id.nextcall.time(), time(15, 0))
+        self.assertEqual(self.supplier_kothai.cron_id.code, f"""\
+# This cron is dynamically controlled by Lunch Supplier.
+# Do NOT modify this cron, modify the related record instead.
+env['lunch.supplier'].browse([{self.supplier_kothai.id}])._send_auto_email()""")
+
+        cron_id = self.supplier_kothai.cron_id.id
+        self.supplier_kothai.unlink()
+        self.assertFalse(self.env['ir.cron'].search([('id', '=', cron_id)]))
 
     def test_compute_available_today(self):
         tests = [(self.monday_1am, True), (self.monday_10am, True),
@@ -76,7 +87,7 @@ class TestSupplier(TestsCommon):
                     line.action_order()
                     assert line.state == 'ordered'
 
-                    self.supplier_pizza_inn._auto_email_send()
+                    self.supplier_pizza_inn._send_auto_email()
 
                     assert line.state == 'confirmed'
 
@@ -94,7 +105,7 @@ class TestSupplier(TestsCommon):
                     assert line.state == 'ordered'
                     assert line2.state == 'ordered'
 
-                    self.supplier_pizza_inn._auto_email_send()
+                    self.supplier_pizza_inn._send_auto_email()
 
                     assert line.state == 'confirmed'
                     assert line2.state == 'ordered'
@@ -121,4 +132,43 @@ class TestSupplier(TestsCommon):
 
                     assert all(line.state == 'ordered' for line in [line_1, line_2, line_3])
 
-                    self.supplier_pizza_inn._auto_email_send()
+                    self.supplier_pizza_inn._send_auto_email()
+
+    def test_cron_sync_create(self):
+        cron_ny = self.supplier_kothai.cron_id  # I am at New-York
+        self.assertTrue(cron_ny.active)
+        self.assertEqual(cron_ny.name, "Lunch: send automatic email to Kothai")
+        self.assertEqual(
+            [line for line in cron_ny.code.splitlines() if not line.lstrip().startswith("#")],
+            ["env['lunch.supplier'].browse([%i])._send_auto_email()" % self.supplier_kothai.id])
+        self.assertEqual(cron_ny.nextcall, datetime(2021, 1, 29, 15, 0))  # New-york is UTC-5
+
+    def test_cron_sync_active(self):
+        cron_ny = self.supplier_kothai.cron_id
+
+        self.supplier_kothai.active = False
+        self.assertFalse(cron_ny.active)
+        self.supplier_kothai.active = True
+        self.assertTrue(cron_ny.active)
+
+        self.supplier_kothai.send_by = 'phone'
+        self.assertFalse(cron_ny.active)
+        self.supplier_kothai.send_by = 'mail'
+        self.assertTrue(cron_ny.active)
+
+    def test_cron_sync_nextcall(self):
+        cron_ny = self.supplier_kothai.cron_id
+        old_nextcall = cron_ny.nextcall
+
+        self.supplier_kothai.automatic_email_time -= 5
+        self.assertEqual(cron_ny.nextcall, old_nextcall - timedelta(hours=5) + timedelta(days=1))
+
+        # Simulate cron execution
+        cron_ny.lastcall = old_nextcall - timedelta(hours=5)
+        cron_ny.nextcall += timedelta(days=1)
+
+        self.supplier_kothai.automatic_email_time += 7
+        self.assertEqual(cron_ny.nextcall, old_nextcall + timedelta(days=1, hours=2))
+
+        self.supplier_kothai.automatic_email_time -= 1
+        self.assertEqual(cron_ny.nextcall, old_nextcall + timedelta(days=1, hours=1))

@@ -1,10 +1,10 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import math
 import pytz
 
-from datetime import datetime, time
+from datetime import datetime, time, timedelta
+from textwrap import dedent
 
 from odoo import api, fields, models
 from odoo.osv import expression
@@ -14,6 +14,7 @@ from odoo.addons.base.models.res_partner import _tz_get
 
 
 WEEKDAY_TO_NAME = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+CRON_DEPENDS = {'name', 'active', 'send_by', 'automatic_email_time', 'moment', 'tz'}
 
 def float_to_time(hours, moment='am', tz=None):
     """ Convert a number of hours into a time object. """
@@ -59,6 +60,7 @@ class LunchSupplier(models.Model):
         ('mail', 'Email'),
     ], 'Send Order By', default='phone')
     automatic_email_time = fields.Float('Order Time', default=12.0, required=True)
+    cron_id = fields.Many2one('ir.cron', ondelete='cascade', required=True, readonly=True)
 
     recurrency_monday = fields.Boolean('Monday', default=True)
     recurrency_tuesday = fields.Boolean('Tuesday', default=True)
@@ -103,46 +105,106 @@ class LunchSupplier(models.Model):
                 res.append((supplier.id, supplier.name))
         return res
 
-    @api.model
-    def _auto_email_send(self):
-        """
-            This method is called every 20 minutes via a cron.
-            Its job is simply to get all the orders made for each supplier and send an email
-            automatically to the supplier if the supplier is configured for it and we are ready
-            to send it (usually at 11am or so)
-        """
-        records = self.search([('send_by', '=', 'mail')])
+    def _sync_cron(self):
+        for supplier in self:
+            supplier = supplier.with_context(tz=supplier.tz)
 
-        for supplier in records:
-            send_at = datetime.combine(fields.Date.today(),
-                                       float_to_time(supplier.automatic_email_time, supplier.moment, supplier.tz)).astimezone(pytz.UTC).replace(tzinfo=None)
-            if supplier.available_today and fields.Datetime.now() > send_at:
-                lines = self.env['lunch.order'].search([('supplier_id', '=', supplier.id),
-                                                             ('state', '=', 'ordered'), ('date', '=', fields.Date.today())])
+            sendat_tz = pytz.timezone(supplier.tz).localize(datetime.combine(
+                fields.Date.context_today(supplier),
+                float_to_time(supplier.automatic_email_time, supplier.moment)))
+            lc = supplier.cron_id.lastcall
+            if ((
+                lc and sendat_tz.date() <= fields.Datetime.context_timestamp(supplier, lc).date()
+            ) or (
+                not lc and sendat_tz <= fields.Datetime.context_timestamp(supplier, fields.Datetime.now())
+            )):
+                sendat_tz += timedelta(days=1)
+            sendat_utc = sendat_tz.astimezone(pytz.UTC).replace(tzinfo=None)
 
-                if lines:
-                    order = {
-                        'company_name': lines[0].company_id.name,
-                        'currency_id': lines[0].currency_id.id,
-                        'supplier_id': supplier.partner_id.id,
-                        'supplier_name': supplier.name,
-                        'email_from': supplier.responsible_id.email_formatted,
-                    }
+            supplier.cron_id.active = supplier.active and supplier.send_by == 'mail'
+            supplier.cron_id.name = f"Lunch: send automatic email to {supplier.name}"
+            supplier.cron_id.nextcall = sendat_utc
+            supplier.cron_id.code = dedent(f"""\
+                # This cron is dynamically controlled by {self._description}.
+                # Do NOT modify this cron, modify the related record instead.
+                env['{self._name}'].browse([{supplier.id}])._send_auto_email()""")
 
-                    _lines = [{
-                        'product': line.product_id.name,
-                        'note': line.note,
-                        'quantity': line.quantity,
-                        'price': line.price,
-                        'toppings': line.display_toppings,
-                        'username': line.user_id.name,
-                    } for line in lines]
+    @api.model_create_multi
+    def create(self, vals_list):
+        crons = self.env['ir.cron'].sudo().create([
+            {
+                'user_id': self.env.ref('base.user_root').id,
+                'active': False,
+                'interval_type': 'days',
+                'interval_number': 1,
+                'numbercall': -1,
+                'doall': False,
+                'name': "Lunch: send automatic email",
+                'model_id': self.env['ir.model']._get_id(self._name),
+                'state': 'code',
+                'code': "",
+            }
+            for _ in range(len(vals_list))
+        ])
+        for vals, cron in zip(vals_list, crons):
+            vals['cron_id'] = cron.id
 
-                    order['amount_total'] = sum(line.price for line in lines)
+        suppliers = super().create(vals_list)
+        suppliers._sync_cron()
+        return suppliers
 
-                    self.env.ref('lunch.lunch_order_mail_supplier').with_context(order=order, lines=_lines).send_mail(supplier.id)
+    def write(self, values):
+        super().write(values)
+        if not CRON_DEPENDS.isdisjoint(values):
+            self._sync_cron()
 
-                    lines.action_confirm()
+    def unlink(self):
+        crons = self.cron_id
+        super().unlink()
+        crons.unlink()
+
+    def _send_auto_email(self):
+        """ Send an email to the supplier with the order of the day """
+        # Called daily by cron
+        self.ensure_one()
+
+        if not self.available_today:
+            return
+
+        if self.send_by != 'mail':
+            raise ValueError("Cannot send an email to this supplier")
+
+        orders = self.env['lunch.order'].search([
+            ('supplier_id', '=', self.id),
+            ('state', '=', 'ordered'),
+            ('date', '=', fields.Date.context_today(self.with_context(tz=self.tz))),
+        ])
+        if not orders:
+            return
+
+        order = {
+            'company_name': orders[0].company_id.name,
+            'currency_id': orders[0].currency_id.id,
+            'supplier_id': self.partner_id.id,
+            'supplier_name': self.name,
+            'email_from': self.responsible_id.email_formatted,
+            'amount_total': sum(order.price for order in orders),
+        }
+
+        email_orders = [{
+            'product': order.product_id.name,
+            'note': order.note,
+            'quantity': order.quantity,
+            'price': order.price,
+            'toppings': order.display_toppings,
+            'username': order.user_id.name,
+        } for order in orders]
+
+        self.env.ref('lunch.lunch_order_mail_supplier').with_context(
+            order=order, lines=email_orders
+        ).send_mail(self.id)
+
+        orders.action_confirm()
 
     @api.depends('recurrency_end_date', 'recurrency_monday', 'recurrency_tuesday',
                  'recurrency_wednesday', 'recurrency_thursday', 'recurrency_friday',

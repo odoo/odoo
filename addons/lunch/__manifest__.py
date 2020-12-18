@@ -36,7 +36,6 @@ If you want to save your employees' time and avoid them to always have coins in 
         'views/lunch_views.xml',
         'data/mail_template_data.xml',
         'data/lunch_data.xml',
-        'data/ir_cron_data.xml'
     ],
     'demo': ['data/lunch_demo.xml'],
     'qweb': ['static/src/xml/lunch_templates.xml', ],
