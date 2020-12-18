@@ -491,7 +491,16 @@ class ComputeRecursive(models.Model):
 
     name = fields.Char(required=True)
     parent = fields.Many2one('test_new_api.recursive', ondelete='cascade')
+    full_name = fields.Char(compute='_compute_full_name')
     display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'parent.full_name')
+    def _compute_full_name(self):
+        for rec in self:
+            if rec.parent:
+                rec.full_name = rec.parent.full_name + " / " + rec.name
+            else:
+                rec.full_name = rec.name
 
     @api.depends('name', 'parent.display_name')
     def _compute_display_name(self):

@@ -5840,7 +5840,7 @@ Fields:
                     self.env.add_to_compute(field, records)
                 else:
                     if recursive:
-                        marked_records = self & self.env.cache.get_records(self, field)
+                        marked_records = records & self.env.cache.get_records(records, field)
                     self.env.cache.invalidate([(field, records._ids)])
                 # recursively trigger recomputation of field's dependents
                 if recursive:
