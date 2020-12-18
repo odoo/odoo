@@ -320,13 +320,13 @@ class Meeting(models.Model):
                 pattern['firstDayOfWeek'] = 'sunday'
 
             if recurrence.rrule_type == 'monthly' and recurrence.month_by == 'day':
-                byday_selection = [
-                    ('1', 'first'),
-                    ('2', 'second'),
-                    ('3', 'third'),
-                    ('4', 'fourth'),
-                    ('-1', 'last')
-                ]
+                byday_selection = {
+                    '1': 'first',
+                    '2': 'second',
+                    '3': 'third',
+                    '4': 'fourth',
+                    '-1': 'last',
+                }
                 pattern['index'] = byday_selection[recurrence.byday]
 
             rule_range = {
