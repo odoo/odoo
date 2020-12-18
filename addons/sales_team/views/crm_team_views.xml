@@ -53,8 +53,7 @@
                     <notebook>
                         <page string="Members" name="members_users">
                             <field name="member_ids" mode="kanban"
-                                class="w-100"
-                                attrs="{'invisible': [('is_membership_multi', '=', True)]}">
+                                class="w-100">
                                 <kanban>
                                     <field name="id"/>
                                     <field name="name"/>
@@ -82,7 +81,7 @@
                             </field>
                             <field name="crm_team_member_ids" mode="kanban"
                                 class="w-100"
-                                attrs="{'invisible': [('is_membership_multi', '=', False)]}"
+                                attrs="{'invisible': ['|', ('is_membership_multi', '=', True), ('is_membership_multi', '=', False)]}"
                                 context="{
                                     'kanban_view_ref': 'sales_team.crm_team_member_view_kanban_from_team',
                                     'form_view_ref': 'sales_team.crm_team_member_view_form_from_team',
