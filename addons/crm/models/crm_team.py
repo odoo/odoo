@@ -195,7 +195,7 @@ class Team(models.Model):
         ])._action_assign_leads(work_days=work_days)
         return True
 
-    def action_assign_leads(self, work_days=2):
+    def action_assign_leads(self, work_days=2, log=True):
         """ Manual (direct) leads assignment. This method both
 
           * assigns leads to teams given by self;
@@ -214,32 +214,16 @@ class Team(models.Model):
         """
         teams_data, members_data = self._action_assign_leads(work_days=work_days)
 
-        # extract some statistics
-        assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in self)
-        duplicates = sum(len(teams_data[team]['duplicates']) for team in self)
-        members = len(members_data.keys())
-        members_assigned = sum(len(member_data['assigned']) for member_data in members_data.values())
+        # format result messages
+        logs = self._action_assign_leads_logs(teams_data, members_data)
+        html_message = '<br />'.join(logs)
+        notif_message = ' '.join(logs)
 
-        # format user notification
-        # 1- team allocation
-        if not assigned:
-            message = _("No new lead allocated to the teams.")
-        elif len(self) == 1:
-            message = _("%(assigned)s leads allocated to the team.",
-                        assigned=assigned)
-        else:
-            message = _("%(assigned)s leads allocated among %(team_count)s teams.",
-                        assigned=assigned, team_count=len(self))
-        # 2- salespersons assignment
-        if not members_assigned:
-            message += " " + _("No lead has been assigned to team members. Check your Sales Teams and Members configuration.")
-        else:
-            message += " " + _("%(members_assigned)s leads assigned to %(members)s salesmen.",
-                               members_assigned=members_assigned, members=members)
-        # 3- duplicates removal
-        if duplicates:
-            message += " " + _("%(duplicates)s duplicates leads were merged.",
-                               duplicates=duplicates)
+        # log a note in case of manual assign (as this method will mainly be called
+        # on singleton record set, do not bother doing a specific message per team)
+        log_action = _("Lead Assignment requested by %(user_name)s", user_name=self.env.user.name)
+        log_message = "<p>%s<br /><br />%s</p>" % (log_action, html_message)
+        self._message_log_batch(bodies=dict((team.id, log_message) for team in self))
 
         return {
             'type': 'ir.actions.client',
@@ -247,7 +231,7 @@ class Team(models.Model):
             'params': {
                 'type': 'success',
                 'title': _("Leads Assigned"),
-                'message': message,
+                'message': notif_message,
                 'next': {
                     'type': 'ir.actions.act_window_close'
                 },
@@ -277,6 +261,72 @@ class Team(models.Model):
         members_data = self.crm_team_member_ids._assign_and_convert_leads(work_days=work_days)
         _logger.info('### END Lead Assignment')
         return teams_data, members_data
+
+    def _action_assign_leads_logs(self, teams_data, members_data):
+        """ Tool method to prepare notification about assignment process result.
+
+        :param teams_data: see ``CrmTeam._allocate_leads()``;
+        :param members_data: see ``CrmTeamMember._assign_and_convert_leads()``;
+
+        :return list: list of formatted logs, ready to be formatted into a nice
+        plaintext or html message at caller's will
+        """
+        # extract some statistics
+        assigned = sum(len(teams_data[team]['assigned']) + len(teams_data[team]['merged']) for team in self)
+        duplicates = sum(len(teams_data[team]['duplicates']) for team in self)
+        members = len(members_data)
+        members_assigned = sum(len(member_data['assigned']) for member_data in members_data.values())
+
+        # format user notification
+        message_parts = []
+        # 1- duplicates removal
+        if duplicates:
+            message_parts.append(_("%(duplicates)s duplicates leads have been merged.",
+                                   duplicates=duplicates))
+
+        # 2- nothing assigned at all
+        if not assigned and not members_assigned:
+            if len(self) == 1:
+                if not self.assignment_max:
+                    message_parts.append(
+                        _("No allocated leads to %(team_name)s team because it has no capacity. Add capacity to its salespersons.",
+                          team_name=self.name))
+                else:
+                    message_parts.append(
+                        _("No allocated leads to %(team_name)s team and its salespersons because no unassigned lead matches its domain.",
+                          team_name=self.name))
+            else:
+                message_parts.append(
+                    _("No allocated leads to any team or salesperson. Check your Sales Teams and Salespersons configuration as well as unassigned leads."))
+
+        # 3- team allocation
+        if not assigned and members_assigned:
+            if len(self) == 1:
+                message_parts.append(
+                    _("No new lead allocated to %(team_name)s team because no unassigned lead matches its domain.",
+                      team_name=self.name))
+            else:
+                message_parts.append(_("No new lead allocated to the teams because no lead match their domains."))
+        elif assigned:
+            if len(self) == 1:
+                message_parts.append(
+                    _("%(assigned)s leads allocated to %(team_name)s team.",
+                      assigned=assigned, team_name=self.name))
+            else:
+                message_parts.append(
+                    _("%(assigned)s leads allocated among %(team_count)s teams.",
+                      assigned=assigned, team_count=len(self)))
+
+        # 4- salespersons assignment
+        if not members_assigned and assigned:
+            message_parts.append(
+                _("No lead assigned to salespersons because no unassigned lead matches their domains."))
+        elif members_assigned:
+            message_parts.append(
+                _("%(members_assigned)s leads assigned among %(member_count)s salespersons.",
+                  members_assigned=members_assigned, member_count=members))
+
+        return message_parts
 
     def _allocate_leads(self, work_days=2):
         """ Allocate leads to teams given by self. This method sets ``team_id``
