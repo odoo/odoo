@@ -19,6 +19,7 @@ class Team(models.Model):
     _inherit = 'crm.team.member'
 
     # assignment
+    assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char('Assignment Domain', tracking=True)
     assignment_max = fields.Integer('Max Leads (last 30 days)')
     lead_month_count = fields.Integer(
