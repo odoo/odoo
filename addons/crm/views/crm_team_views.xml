@@ -112,7 +112,7 @@
                             string="Assign Leads"
                             class="oe_highlight"
                             confirm="This will assign leads to all members. Do you want to proceed?"
-                            attrs="{'invisible': [('assignment_enabled', '=', False)]}"/>
+                            attrs="{'invisible': ['|', '&amp;', ('use_leads', '=', False), ('use_opportunities', '=', False), ('assignment_enabled', '=', False)]}"/>
                     </header>
                 </xpath>
                 <xpath expr="//div[@name='options_active']" position="inside">
@@ -162,6 +162,7 @@
                         <field name="lead_all_assigned_month_count" class="oe_inline"/> /
                         <field name="assignment_max" class="oe_inline"/>
                     </div>
+                    <field name="assignment_optout" attrs="{'invisible': [('assignment_auto_enabled', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='member_ids']" position="attributes">
                     <attribute name="attrs">{'invisible': [('assignment_enabled', '=', True)]}</attribute>
