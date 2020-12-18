@@ -270,7 +270,8 @@ class Company(models.Model):
         action['res_id'] = self.env.company.id
         return action
 
-    def set_onboarding_step_done(self, step_name):
+    def _set_onboarding_step_done(self, step_name):
+        self = self.sudo()
         if self[step_name] == 'not_done':
             self[step_name] = 'just_done'
 
@@ -295,7 +296,7 @@ class Company(models.Model):
 
     def action_save_onboarding_company_step(self):
         if bool(self.street):
-            self.set_onboarding_step_done('base_onboarding_company_state')
+            self._set_onboarding_step_done('base_onboarding_company_state')
 
     @api.model
     def _get_main_company(self):

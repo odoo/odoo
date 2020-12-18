@@ -304,7 +304,7 @@ class ResCompany(models.Model):
     def setting_chart_of_accounts_action(self):
         """ Called by the 'Chart of Accounts' button of the setup bar."""
         company = self.env.company
-        company.sudo().set_onboarding_step_done('account_setup_coa_state')
+        company._set_onboarding_step_done('account_setup_coa_state')
 
         # If an opening move has already been posted, we open the tree view showing all the accounts
         if company.opening_move_posted():
@@ -451,11 +451,11 @@ class ResCompany(models.Model):
     def action_save_onboarding_invoice_layout(self):
         """ Set the onboarding step as done """
         if bool(self.external_report_layout_id):
-            self.set_onboarding_step_done('account_onboarding_invoice_layout_state')
+            self._set_onboarding_step_done('account_onboarding_invoice_layout_state')
 
     def action_save_onboarding_sale_tax(self):
         """ Set the onboarding step as done """
-        self.set_onboarding_step_done('account_onboarding_sale_tax_state')
+        self._set_onboarding_step_done('account_onboarding_sale_tax_state')
 
     def get_chart_of_accounts_or_fail(self):
         account = self.env['account.account'].search([('company_id', '=', self.id)], limit=1)

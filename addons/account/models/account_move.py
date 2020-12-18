@@ -2540,7 +2540,7 @@ class AccountMove(models.Model):
     @api.model
     def setting_upload_bill_wizard(self):
         """ Called by the 'First Bill' button of the setup bar."""
-        self.env.company.sudo().set_onboarding_step_done('account_setup_bill_state')
+        self.env.company._set_onboarding_step_done('account_setup_bill_state')
 
         new_wizard = self.env['account.tour.upload.bill'].create({})
         view_id = self.env.ref('account.account_tour_upload_bill').id

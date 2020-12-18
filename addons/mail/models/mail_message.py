@@ -733,26 +733,14 @@ class Message(models.Model):
 
         # notifies changes in messages through the bus.  To minimize the number of
         # notifications, we need to group the messages depending on their channel_ids
-        groups = []
-        messages = notifications.mapped('mail_message_id')
-        current_channel_ids = messages[0].channel_ids
-        current_group = []
-        for record in messages:
-            if record.channel_ids == current_channel_ids:
-                current_group.append(record.id)
-            else:
-                groups.append((current_group, current_channel_ids))
-                current_group = [record.id]
-                current_channel_ids = record.channel_ids
-
-        groups.append((current_group, current_channel_ids))
-        current_group = [record.id]
-        current_channel_ids = record.channel_ids
+        groups = {}
+        for record in notifications.mapped('mail_message_id'):
+            groups.setdefault(record.channel_ids, []).append(record.id)
 
         notifications.write({'is_read': True})
 
-        for (msg_ids, channel_ids) in groups:
-            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
+        for channel_ids, msg_ids in groups.items():
+            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': channel_ids.ids}
             self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id.id), notification)
 
     @api.model

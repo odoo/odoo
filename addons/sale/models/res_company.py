@@ -96,7 +96,7 @@ class ResCompany(models.Model):
 
         message_composer.send_mail()
 
-        self.set_onboarding_step_done('sale_onboarding_sample_quotation_state')
+        self._set_onboarding_step_done('sale_onboarding_sample_quotation_state')
 
         self.action_close_sale_quotation_onboarding()
 
