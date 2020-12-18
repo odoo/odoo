@@ -399,6 +399,11 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
+        # All users can read a package but only stock users should be able to write on it.
+        # Without this explicit check, a non-stock user could unpack a pack as the write
+        # on quants is done in sudo mode.
+        self.check_access_rights('write')
+
         for package in self:
             move_line_to_modify = self.env['stock.move.line'].search([
                 ('package_id', '=', package.id),
