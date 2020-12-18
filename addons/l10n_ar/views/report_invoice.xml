@@ -4,19 +4,19 @@
     <!-- this header can be used on any Argentinean report, to be useful some variables should be passed -->
     <template id="custom_header">
         <div>
-            <div class="row" t-if="not pre_printed_report">
-                <div name="left-upper-side" class="col-5">
+            <div class="row">
+                <div name="left-upper-side" class="col-5" t-if="not pre_printed_report">
                     <img t-if="o.company_id.logo" t-att-src="image_data_uri(o.company_id.logo)" style="max-height: 45px;" alt="Logo"/>
                 </div>
                 <div name="center-upper" class="col-2 text-center" t-att-style="'color: %s;' % o.company_id.primary_color">
                     <span style="display: inline-block; text-align: center; line-height: 8px;">
                         <h1 style="line-height: 25px;">
-                            <strong><span t-esc="document_letter"/></strong>
+                            <strong><span t-esc="not pre_printed_report and document_letter or '&#160;'"/></strong>
                         </h1>
-                        <span style="font-size: x-small;" t-esc="document_legend"/>
+                        <span style="font-size: x-small;" t-esc="not pre_printed_report and document_legend or '&#160;'"/>
                     </span>
                 </div>
-                <div name="right-upper-side" class="col-5 text-right">
+                <div name="right-upper-side" class="col-5 text-right" t-if="not pre_printed_report">
 
                     <!-- (6) Titulo de Documento -->
                     <h4 t-att-style="'color: %s;' % o.company_id.primary_color"><strong>
@@ -51,8 +51,8 @@
                     <t t-if="not pre_printed_report">
                         <!-- (7) Numero punto venta - (8) numero de documento -->
                         <span t-att-style="'color: %s;' % o.company_id.secondary_color">Nro: </span><span t-esc="report_number"/>
-                        <br/>
                     </t>
+                    <br/>
 
                     <!-- (9) Fecha -->
                     <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date: </span><span t-esc="report_date" t-options='{"widget": "date"}'/>
