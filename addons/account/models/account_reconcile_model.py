@@ -31,7 +31,7 @@ class AccountReconcileModelLine(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
-    model_id = fields.Many2one('account.reconcile.model', readonly=True)
+    model_id = fields.Many2one('account.reconcile.model', readonly=True, ondelete='cascade')
     match_total_amount = fields.Boolean(related='model_id.match_total_amount')
     match_total_amount_param = fields.Float(related='model_id.match_total_amount_param')
     rule_type = fields.Selection(related='model_id.rule_type')
