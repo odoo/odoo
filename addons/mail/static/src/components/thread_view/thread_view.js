@@ -215,6 +215,10 @@ Object.assign(ThreadView, {
         hasSquashCloseMessages: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
+        haveMessagesUnfollowIcon: {
+            type: Boolean,
+            optional: true,
+        },
         /**
          * Determines whether this should become focused.
          */

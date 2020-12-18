@@ -87,6 +87,11 @@ function factory(dependencies) {
                     id: data.res_id,
                     model: data.model,
                 };
+                if ('followers' in data && data.followers) {
+                    originThreadData.followers = insertAndReplace(data.followers.map(followerData =>
+                        this.env.models['mail.follower'].convertData(followerData)
+                    ));
+                }
                 if ('record_name' in data && data.record_name) {
                     originThreadData.name = data.record_name;
                 }
@@ -190,19 +195,22 @@ function factory(dependencies) {
          * Performs the `message_fetch` RPC on `mail.message`.
          *
          * @static
-         * @param {Array[]} domain
-         * @param {integer} [limit]
-         * @param {integer[]} [moderated_channel_ids]
-         * @param {Object} [context]
+         * @param {Object} param0
+         * @param {Object} param0.context
+         * @param {Array[]} param0.domain
+         * @param {boolean} param0.fetchFollowers
+         * @param {integer} param0.limit
+         * @param {integer[]} param0.moderated_channel_ids
          * @returns {mail.message[]}
          */
-        static async performRpcMessageFetch(domain, limit, moderated_channel_ids, context) {
+        static async performRpcMessageFetch({ domain, limit, moderated_channel_ids, context, fetchFollowers }) {
             const messagesData = await this.env.services.rpc({
                 model: 'mail.message',
                 method: 'message_fetch',
                 kwargs: {
                     context,
                     domain,
+                    fetch_followers: fetchFollowers,
                     limit,
                     moderated_channel_ids,
                 },

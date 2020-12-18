@@ -79,6 +79,7 @@ class Message extends Component {
                 message: message ? message.__state : undefined,
                 notifications: message ? message.notifications.map(notif => notif.__state) : [],
                 originThread,
+                originThreadCurrentPartnerFollowing: originThread && originThread.isCurrentPartnerFollowing,
                 originThreadModel: originThread && originThread.model,
                 originThreadName: originThread && originThread.name,
                 originThreadUrl: originThread && originThread.url,
@@ -647,6 +648,18 @@ class Message extends Component {
         } else {
             this.message.replyTo();
         }
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickUnfollow(ev) {
+        if (!this.message.originThread) {
+            return;
+        }
+        this.message.markAsRead();
+        this.message.originThread.unfollow();
     }
 
     /**

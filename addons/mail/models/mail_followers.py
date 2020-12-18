@@ -334,3 +334,16 @@ GROUP BY fol.id%s%s""" % (
                         update[fol_id] = {'subtype_ids': update_cmd}
 
         return new, update
+
+    def _follower_format(self):
+        """Returns the followers in the format expected by the web client."""
+        return [{
+            'email': follower.email,
+            'id': follower.id,
+            'is_active': follower.is_active,
+            # When editing the followers, the "pencil" icon that leads to the edition of subtypes
+            # should be always be displayed and not only when "debug" mode is activated.
+            'is_editable': True,
+            'name': follower.name,
+            'partner_id': follower.partner_id.id
+        } for follower in self]

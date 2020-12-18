@@ -119,6 +119,9 @@
                                 </t>
                             </t>
                             <div class="o_Message_commands o_Message_headerCommands" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }">
+                                <t t-if="threadView and threadView.thread === env.messaging.inbox and message.originThread and message.originThread.isCurrentPartnerFollowing">
+                                    <span class="o_Message_command o_Message_commandUnfollow o_Message_headerCommand fa fa-bell-slash-o" t-att-class="{ 'o-message-selected': isSelected, 'o-mobile': env.messaging.device.isMobile }" t-on-click="_onClickUnfollow" title="Unfollow"/>
+                                </t>
                                 <t t-if="!message.isTemporary and ((message.message_type !== 'notification' and message.originThread and message.originThread.model === 'mail.channel') or !message.isTransient) and message.moderation_status !== 'pending_moderation'">
                                     <span class="o_Message_command o_Message_commandStar o_Message_headerCommand fa"
                                         t-att-class="{

@@ -212,7 +212,8 @@ MockServer.include({
             const domain = args.args[0] || args.kwargs.domain;
             const limit = args.args[1] || args.kwargs.limit;
             const moderated_channel_ids = args.args[2] || args.kwargs.moderated_channel_ids;
-            return this._mockMailMessageMessageFetch(domain, limit, moderated_channel_ids);
+            const fetchFollowers = args.args[4] || args.kwargs.fetch_followers;
+            return this._mockMailMessageMessageFetch(domain, limit, moderated_channel_ids, fetchFollowers);
         }
         if (args.model === 'mail.message' && args.method === 'message_format') {
             const ids = args.args[0];
@@ -1068,6 +1069,26 @@ MockServer.include({
         }]);
     },
     /**
+     * Simulates `_follower_format` on `mail.followers`.
+     *
+     * @private
+     * @returns {integer[]} ids
+     * @returns {Object[]}
+     */
+    _mockMailFollowers_followerFormat(ids) {
+        const followers = this._getRecords('mail.followers',[['id', 'in', ids]]);
+        return followers.map(follower => {
+            return {
+                'email': follower.email,
+                'id': follower.id,
+                'is_active': follower.is_active,
+                'is_editable': follower.is_editable,
+                'name': follower.name,
+                'partner_id': follower.partner_id,
+            };
+        });
+    },
+    /**
      * Simulates `mark_all_as_read` on `mail.message`.
      *
      * @private
@@ -1121,9 +1142,10 @@ MockServer.include({
      * @param {Array[]} domain
      * @param {string} [limit=20]
      * @param {Object} [moderated_channel_ids]
+     * @param {boolean} fetch_followers
      * @returns {Object[]}
      */
-    _mockMailMessageMessageFetch(domain, limit = 20, moderated_channel_ids) {
+    _mockMailMessageMessageFetch(domain, limit = 20, moderated_channel_ids, fetch_followers) {
         let messages = this._getRecords('mail.message', domain);
         if (moderated_channel_ids) {
             const mod_messages = this._getRecords('mail.message', [
@@ -1141,7 +1163,7 @@ MockServer.include({
         });
         // pick at most 'limit' messages
         messages.length = Math.min(messages.length, limit);
-        return this._mockMailMessageMessageFormat(messages.map(message => message.id));
+        return this._mockMailMessageMessageFormat(messages.map(message => message.id), fetch_followers);
     },
     /**
      * Simulates `message_fetch_failed` on `mail.message`.
@@ -1172,9 +1194,10 @@ MockServer.include({
      *
      * @private
      * @returns {integer[]} ids
+     * @param {boolean} fetch_followers
      * @returns {Object[]}
      */
-    _mockMailMessageMessageFormat(ids) {
+    _mockMailMessageMessageFormat(ids, fetch_followers) {
         const messages = this._getRecords('mail.message', [['id', 'in', ids]]);
         // sorted from highest ID to lowest ID (i.e. from most to least recent)
         messages.sort(function (m1, m2) {
@@ -1236,6 +1259,15 @@ MockServer.include({
                 notifications,
                 tracking_value_ids: trackingValueIds,
             });
+            if (fetch_followers) {
+                const followerRecs = this._getRecords('mail.followers', [
+                    ['res_id', '=', message.res_id],
+                    ['res_model', '=', message.model]
+                ]);
+                response.followers = this._mockMailFollowers_followerFormat(
+                    followerRecs.map(follower => follower.id)
+                );
+            }
             if (message.subtype_id) {
                 const subtype = this._getRecords('mail.message.subtype', [
                     ['id', '=', message.subtype_id],

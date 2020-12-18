@@ -3112,6 +3112,41 @@ QUnit.test('rendering of inbox message', async function (assert) {
     );
 });
 
+QUnit.test('rendering of inbox message with unfollow button', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.followers'].records.push({
+        email: "bla@bla.bla",
+        id: 1,
+        is_active: true,
+        is_editable: true,
+        name: "François Perusse",
+        partner_id: this.data.currentPartnerId,
+        res_id: 20,
+        res_model: 'res.partner',
+    });
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        model: 'res.partner',
+        needaction: true,
+        needaction_partner_ids: [this.data.currentPartnerId],
+        record_name: 'Refactoring',
+        res_id: 20,
+    });
+    await this.start();
+    const message = document.querySelector('.o_Message');
+    assert.strictEqual(
+        message.querySelectorAll(`:scope .o_Message_command`).length,
+        4,
+        "should display 4 commands"
+    );
+    assert.strictEqual(
+        message.querySelectorAll(`:scope .o_Message_commandUnfollow`).length,
+        1,
+        "should display unfollow command"
+    );
+});
+
 QUnit.test('mark channel as seen on last message visible [REQUIRE FOCUS]', async function (assert) {
     assert.expect(3);
 
@@ -3304,6 +3339,61 @@ QUnit.test('receive new needaction messages', async function (assert) {
             }"]
         `),
         "should display 2nd needaction message"
+    );
+});
+
+QUnit.test('unfollow thread from inbox', async function (assert) {
+    assert.expect(5);
+
+    this.data['res.partner'].records.push({
+        id: 20,
+        message_follower_ids: [1],
+    });
+    this.data['mail.followers'].records.push({
+        email: "bla@bla.bla",
+        id: 1,
+        is_active: true,
+        is_editable: true,
+        name: "François Perusse",
+        partner_id: this.data.currentPartnerId,
+        res_id: 20,
+        res_model: 'res.partner',
+    });
+    this.data['mail.message'].records.push({
+        body: "<p>Test</p>",
+        id: 100,
+        model: 'res.partner',
+        needaction: true,
+        record_name: 'Refactoring',
+        res_id: 20,
+    });
+    this.data['mail.notification'].records.push({
+        mail_message_id: 100,
+        res_partner_id: this.data.currentPartnerId,
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            if (route.includes('message_unsubscribe')) {
+                assert.step('rpc:message_unsubscribe');
+                assert.strictEqual(args.args[0][0], 20);
+                assert.strictEqual(args.args[1][0], 3);
+            }
+            return this._super(...arguments);
+        },
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_Message_commandUnfollow').click()
+    );
+    assert.verifySteps([
+        'rpc:message_unsubscribe',
+    ]);
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "inbox should not have message after clicking on unfollow as it marked message as read"
     );
 });
 

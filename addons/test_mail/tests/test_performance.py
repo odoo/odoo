@@ -302,7 +302,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
         self._create_test_records()
         test_record = self.env['mail.test.ticket'].browse(self.test_record_full.id)
         test_template = self.env['mail.template'].browse(self.test_template_full.id)
-        with self.assertQueryCount(__system__=11, emp=12):
+        with self.assertQueryCount(__system__=14, emp=15):
             composer = self.env['mail.compose.message'].with_context({
                 'default_composition_mode': 'comment',
                 'default_model': test_record._name,
@@ -332,7 +332,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     @warmup
     def test_message_assignation_inbox(self):
         record = self.env['mail.test.track'].create({'name': 'Test'})
-        with self.assertQueryCount(__system__=17, emp=19):
+        with self.assertQueryCount(__system__=18, emp=20):
             record.write({
                 'user_id': self.user_test.id,
             })
@@ -388,7 +388,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
     def test_message_post_one_inbox_notification(self):
         record = self.env['mail.test.simple'].create({'name': 'Test'})
 
-        with self.assertQueryCount(__system__=11, emp=15):
+        with self.assertQueryCount(__system__=12, emp=16):
             record.message_post(
                 body='<p>Test Post Performances with an inbox ping</p>',
                 partner_ids=self.user_test.partner_id.ids,
@@ -611,7 +611,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         customer_id = self.customer.id
         user_id = self.user_portal.id
 
-        with self.assertQueryCount(__system__=105, emp=106):
+        with self.assertQueryCount(__system__=106, emp=107):
             rec = self.env['mail.test.ticket'].create({
                 'name': 'Test',
                 'container_id': container_id,
@@ -640,7 +640,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.user_portal.partner_id | self.env.user.partner_id)
         self.assertEqual(len(rec1.message_ids), 1)
-        with self.assertQueryCount(__system__=75, emp=75):
+        with self.assertQueryCount(__system__=76, emp=76):
             rec.write({
                 'name': 'Test2',
                 'container_id': self.container.id,
@@ -826,7 +826,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
             ]
         }])
 
-        with self.assertQueryCount(emp=5):
+        with self.assertQueryCount(emp=6):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
@@ -835,7 +835,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=16):
+        with self.assertQueryCount(emp=17):
             res = messages.message_format()
             self.assertEqual(len(res), 2)
             for message in res:
@@ -856,14 +856,14 @@ class TestMailComplexPerformance(BaseMailPerformance):
             'res_id': record.id
         } for record in records])
 
-        with self.assertQueryCount(emp=4):
+        with self.assertQueryCount(emp=5):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
         messages.flush()
         messages.invalidate_cache()
 
-        with self.assertQueryCount(emp=12):
+        with self.assertQueryCount(emp=13):
             res = messages.message_format()
             self.assertEqual(len(res), 6)
 
@@ -952,7 +952,7 @@ class TestMailHeavyPerformancePost(BaseMailPerformance):
         ]
         self.attachements = self.env['ir.attachment'].with_user(self.env.user).create(self.vals)
         attachement_ids = self.attachements.ids
-        with self.assertQueryCount(emp=66):
+        with self.assertQueryCount(emp=70):
             self.cr.sql_log = self.warm and self.cr.sql_log_count
             record.with_context({}).message_post(
                 body='<p>Test body <img src="cid:cid1"> <img src="cid:cid2"></p>',

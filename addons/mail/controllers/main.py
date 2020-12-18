@@ -133,24 +133,13 @@ class MailController(http.Controller):
         request.env[res_model].browse(res_id).check_access_rule("read")
         follower_recs = request.env['mail.followers'].search([('res_model', '=', res_model), ('res_id', '=', res_id)])
 
-        followers = []
         follower_id = None
         for follower in follower_recs:
             if follower.partner_id == request.env.user.partner_id:
                 follower_id = follower.id
-            followers.append({
-                'id': follower.id,
-                'partner_id': follower.partner_id.id,
-                'name': follower.name,
-                'display_name': follower.display_name,
-                'email': follower.email,
-                'is_active': follower.is_active,
-                # When editing the followers, the "pencil" icon that leads to the edition of subtypes
-                # should be always be displayed and not only when "debug" mode is activated.
-                'is_editable': True
-            })
+
         return {
-            'followers': followers,
+            'followers': follower_recs._follower_format(),
             'subtypes': self.read_subscription_data(follower_id) if follower_id else None
         }
 

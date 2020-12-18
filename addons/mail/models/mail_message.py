@@ -954,7 +954,7 @@ class Message(models.Model):
     # MESSAGE READ / FETCH / FAILURE API
     # ------------------------------------------------------
 
-    def _message_format(self, fnames):
+    def _message_format(self, fnames, fetch_followers=False):
         """Reads values from messages and formats them for the web client."""
         self.check_access_rule('read')
         vals_list = self._read_format(fnames)
@@ -995,11 +995,18 @@ class Message(models.Model):
                     })
 
             if message_sudo.model and message_sudo.res_id:
-                record_name = self.env[message_sudo.model] \
+                has_follower_access_rights = self.env['mail.followers'].check_access_rights('read', raise_exception=False)
+                self.env['mail.followers'].check_access_rule('read')
+
+                record_sudo = self.env[message_sudo.model] \
                     .browse(message_sudo.res_id) \
                     .sudo() \
-                    .with_prefetch(thread_ids_by_model_name[message_sudo.model]) \
-                    .display_name
+                    .with_prefetch(thread_ids_by_model_name[message_sudo.model])
+                record_name = record_sudo.display_name
+
+                record_sudo.check_access_rule('read')
+                if has_follower_access_rights and fetch_followers and record_sudo.check_access_rights('read'):
+                    vals['followers'] = record_sudo.message_follower_ids._follower_format()
             else:
                 record_name = False
 
@@ -1026,7 +1033,7 @@ class Message(models.Model):
         return messages._message_notification_format()
 
     @api.model
-    def message_fetch(self, domain, limit=20, moderated_channel_ids=None):
+    def message_fetch(self, domain, limit=20, moderated_channel_ids=None, fetch_followers=False):
         """ Get a limited amount of formatted messages with provided domain.
             :param domain: the domain to filter messages;
             :param limit: the maximum amount of messages to get;
@@ -1051,9 +1058,9 @@ class Message(models.Model):
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
             messages = messages.sorted(key='id', reverse=True)[:limit]
-        return messages.message_format()
+        return messages.message_format(fetch_followers=fetch_followers)
 
-    def message_format(self):
+    def message_format(self, fetch_followers=False):
         """ Get the message values in the format for web client. Since message values can be broadcasted,
             computed fields MUST NOT BE READ and broadcasted.
             :returns list(dict).
@@ -1094,7 +1101,7 @@ class Message(models.Model):
                     'moderation_status': 'pending_moderation'
                 }
         """
-        vals_list = self._message_format(self._get_message_format_fields())
+        vals_list = self._message_format(self._get_message_format_fields(), fetch_followers=fetch_followers)
 
         com_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment')
         note_id = self.env['ir.model.data'].xmlid_to_res_id('mail.mt_note')
