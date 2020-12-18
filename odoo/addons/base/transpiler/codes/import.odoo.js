@@ -14,6 +14,9 @@ odoo.define('@tests/import', function (require) {
   const Line7 = require("@tests/Dialog").__default;
   const Line8 = require("@tests/Dialog").__default;
 
+  const Line9 = require("test.Dialog");
+  const { Line10, Notification } = require('test.Dialog2');
+
   const test = `import { Line9, Notification } from "../js/Dialog";`
 
   return __exports;

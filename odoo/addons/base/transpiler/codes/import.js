@@ -10,4 +10,8 @@ import { Line6, Notification } from '../js/Dialog'
 import Line7  from "../js/Dialog";
 import  Line8  from '../js/Dialog'
 
+import Line9  from "test.Dialog";
+import  { Line10, Notification }  from 'test.Dialog2';
+
+
 const test = `import { Line9, Notification } from "../js/Dialog";`
