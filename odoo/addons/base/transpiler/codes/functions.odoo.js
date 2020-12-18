@@ -1,4 +1,4 @@
-odoo.define('@tests/export_basic_function', function (require) {
+odoo.define('@tests/functions', function (require) {
     'use strict';
 
   let __exports = {};

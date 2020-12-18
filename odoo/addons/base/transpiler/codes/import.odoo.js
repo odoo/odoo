@@ -3,7 +3,7 @@ odoo.define('@tests/import', function (require) {
 
   let __exports = {};
   /**
-   * import { Dialog, Notification } from "../js/Dialog";
+   * import { Dialog, Notification } from "../src/Dialog";
    */
   const { Line1} = require("@tests/Dialog");
   const { Line2, Notification} = require("@tests/Dialog");
@@ -17,7 +17,7 @@ odoo.define('@tests/import', function (require) {
   const Line9 = require("test.Dialog");
   const { Line10, Notification } = require('test.Dialog2');
 
-  const test = `import { Line9, Notification } from "../js/Dialog";`
+  const test = `import { Line9, Notification } from "../src/Dialog";`
 
   return __exports;
 });

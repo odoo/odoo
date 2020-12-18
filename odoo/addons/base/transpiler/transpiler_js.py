@@ -2,11 +2,12 @@ import re
 
 class TranspilerJS:
 
-    def __init__(self, content, url, generate = False):
+    def __init__(self, content, url, generate=False):
         super().__init__()
         self.content = content
         self.url = url
-        self.generate = generate
+        self.define_url = self.get_define_url(url)
+        self.generate = generate  # To Remove
         self.comments_mapping = {}
         self.comment_id = 0
         self.strings_mapping = {}
@@ -14,7 +15,7 @@ class TranspilerJS:
 
     def convert(self):
         new_content = self.content
-        new_content, legacy_odoo_define = self.get_legacy_odoo_define(new_content, self.url)
+        new_content, legacy_odoo_define = self.get_legacy_odoo_define(new_content)
         new_content = self.alias_strings(new_content)
         new_content = self.alias_comments(new_content)
         new_content = self.replace_legacy_default_import(new_content)
@@ -27,11 +28,11 @@ class TranspilerJS:
         new_content = self.replace_default(new_content)
         new_content = self.unalias_comments(new_content)
         new_content = self.unalias_strings(new_content)
-        new_content = self.add_odoo_def(new_content, self.url)
+        new_content = self.add_odoo_def(new_content)
         if legacy_odoo_define:
             new_content += legacy_odoo_define
 
-        if self.generate:
+        if self.generate: #To Remove
             with open('generated_test_transpiler_files/' + self.url.split("/")[-1], 'w') as f:
                 f.write(new_content)
 
@@ -42,8 +43,8 @@ class TranspilerJS:
         d = result.groupdict()
         return "@%s/%s" % (d.get('module'), d.get('url'))
 
-    def add_odoo_def(self, content, url):
-        return f"odoo.define('{self.get_define_url(url)}', function (require) {{\
+    def add_odoo_def(self, content):
+        return f"odoo.define('{self.define_url}', function (require) {{\
                 \n'use strict';\
                 \nlet __exports = {{}};\
                 \n{content}\
@@ -165,8 +166,7 @@ class TranspilerJS:
         result = re.match(r"\/\*\*\s+@odoo-module\s+(alias=(?P<alias>\S+))?\s*\*\*\/", content)
         return bool(result)
 
-    def get_legacy_odoo_define(self, content, url):
-        define_url = self.get_define_url(url)
+    def get_legacy_odoo_define(self, content):
         pattern = r"\/\*\*\s+@odoo-module\s+(alias=(?P<alias>\S+))?\s*\*\*\/"
         result = re.match(pattern, content)
         if bool(result):
@@ -177,6 +177,6 @@ class TranspilerJS:
                 return p.sub("", content), """\nodoo.define(`%s`, function(require) {
                         console.warn("%s is deprecated. Please use %s instead");
                         return require('%s').__default;
-                        });\n""" % (alias, alias,  define_url, define_url)
+                        });\n""" % (alias, alias,  self.define_url, self.define_url)
 
         return content, False

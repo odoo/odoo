@@ -1,4 +1,4 @@
-odoo.define('@tests//Users/francoisgeoris/Odoo/community/odoo/addons/base/transpiler/test_code/alias', function (require) {                
+odoo.define('@tests/alias', function (require) {
 'use strict';
 let __exports = {};
 
