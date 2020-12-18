@@ -1554,6 +1554,30 @@ QUnit.module('fields', {}, function () {
 
             form.destroy();
         });
+
+        QUnit.test('many2one select value on focus out in a many2many_tags', async function (assert) {
+            assert.expect(4);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+            });
+
+            assert.containsNone(form, '.o_field_many2manytags .badge');
+
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2manytags input'),
+                'gol', ['input', 'keyup']);
+            form.$('.o_field_many2manytags input').trigger('focusout');
+            await testUtils.nextTick();
+
+            assert.containsNone(document.body, '.modal');
+            assert.strictEqual(form.$('.o_field_many2manytags .o_badge_text').text(), 'gold');
+            assert.containsOnce(form, '.o_field_many2manytags .badge');
+
+            form.destroy();
+        });
     });
 });
 });
