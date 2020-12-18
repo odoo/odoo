@@ -68,9 +68,9 @@
                         <field name="kanban_state" class="oe_inline" widget="state_selection"/>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only" string="Title"/>
+                        <label for="name" string="Request"/>
                         <h1>
-                            <field name="name" placeholder="Maintenance Request"/>
+                            <field name="name" placeholder="e.g. Screen not working"/>
                         </h1>
                     </div>
                     <group>
@@ -345,8 +345,8 @@
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name" string="Name" placeholder="Equipment Name"/></h1>
+                        <label for="name"/>
+                        <h1><field name="name" string="Name" placeholder="e.g. LED Monitor"/></h1>
                     </div>
                     <group>
                         <group>
@@ -594,9 +594,9 @@
                     </button>
                 </div>
                 <div class="oe_title">
-                    <label for="name" class="oe_edit_only" string="Category Name"/>
+                    <label for="name" string="Category Name"/>
                     <h1>
-                        <field name="name"/>
+                        <field name="name" placeholder="e.g. Monitors"/>
                     </h1>
                 </div>
                 <group>
@@ -755,9 +755,9 @@
                 <sheet>
                 <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <div class="oe_title">
-                    <label for="name" class="oe_edit_only" string="Team Name"/>
+                    <label for="name" string="Team Name"/>
                     <h1>
-                        <field name="name"/>
+                        <field name="name" placeholder="e.g. Internal Maintenance"/>
                     </h1>
                 </div>
                 <group>

@@ -23,8 +23,8 @@
                     <field name="id" invisible="True"/>
                     <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                     <div class="oe_title">
-                        <label class="oe_edit_only" for="name" string="Product Name"/>
-                        <h1><field class="o_text_overflow" name="name" placeholder="Product Name"/></h1>
+                        <label for="name" string="Product Name"/>
+                        <h1><field class="o_text_overflow" name="name" placeholder="e.g. Cheese Burger"/></h1>
                         <div name="options" groups="base.group_user">
                             <div>
                                 <field name="sale_ok"/>
@@ -221,7 +221,7 @@
                         <field name="id" invisible="1"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
-                            <label class="oe_edit_only" for="name" string="Product Name"/>
+                            <label for="name" string="Product Name"/>
                             <h1><field name="name" readonly="1" placeholder="e.g. Odoo Enterprise Subscription"/></h1>
                             <field name="product_template_attribute_value_ids" widget="many2many_tags" readonly="1"/>
                             <p>
@@ -456,7 +456,7 @@
                             </button>
                         </div>
                         <div class="oe_title">
-                            <label for="name" string="Category name" class="oe_edit_only"/>
+                            <label for="name" string="Category"/>
                             <h1><field name="name" placeholder="e.g. Lamps"/></h1>
                         </div>
                         <group name="first" col="2">

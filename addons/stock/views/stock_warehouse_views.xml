@@ -15,12 +15,12 @@
                                     type="object"/>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. Central Warehouse"/></h1>
                         <group>
                             <group>
                                 <field name="active" invisible="1"/>
-                                <field name="code"/>
+                                <field name="code" placeholder="e.g. CW"/>
                             </group>
                             <group>
                                 <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
