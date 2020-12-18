@@ -979,12 +979,12 @@ class Meeting(models.Model):
 
     @api.onchange('start_date')
     def _onchange_start_date(self):
-        if self.start_date:
+        if self.start_date and self.allday:
             self.start = datetime.datetime.combine(self.start_date, datetime.time.min)
 
     @api.onchange('stop_date')
     def _onchange_stop_date(self):
-        if self.stop_date:
+        if self.stop_date and self.allday:
             self.stop = datetime.datetime.combine(self.stop_date, datetime.time.max)
 
     ####################################################
