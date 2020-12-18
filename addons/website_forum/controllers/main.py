@@ -703,6 +703,4 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):
-        if not request.session.uid:
-            return {'error': 'anonymous_user'}
-        return post.unlink_comment(comment.id)[0]
+        return post.unlink_comment(comment.id)

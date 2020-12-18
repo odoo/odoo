@@ -794,21 +794,19 @@ class Post(models.Model):
 
     def vote(self, upvote=True):
         Vote = self.env['forum.post.vote']
-        vote_ids = Vote.search([('post_id', 'in', self._ids), ('user_id', '=', self._uid)])
+        existing_votes = Vote.search([('post_id', 'in', self.ids), ('user_id', '=', self._uid)])
+
+        for vote in existing_votes:
+            if upvote:
+                new_vote = '0' if vote.vote == '-1' else '1'
+            else:
+                new_vote = '0' if vote.vote == '1' else '-1'
+            vote.vote = new_vote
+
         new_vote = '1' if upvote else '-1'
-        voted_forum_ids = set()
-        if vote_ids:
-            for vote in vote_ids:
-                if upvote:
-                    new_vote = '0' if vote.vote == '-1' else '1'
-                else:
-                    new_vote = '0' if vote.vote == '1' else '-1'
-                vote.vote = new_vote
-                voted_forum_ids.add(vote.post_id.id)
-        for post_id in set(self._ids) - voted_forum_ids:
-            for post_id in self._ids:
-                Vote.create({'post_id': post_id, 'vote': new_vote})
-        return {'vote_count': self.vote_count, 'user_vote': new_vote}
+        for post_id in self - existing_votes.post_id:
+            Vote.create({'post_id': post_id.id, 'vote': new_vote})
+        return {'vote_count': self[:1].vote_count, 'user_vote': new_vote}
 
     def convert_answer_to_comment(self):
         """ Tools to convert an answer (forum.post) to a comment (mail.message).
@@ -886,23 +884,22 @@ class Post(models.Model):
         return new_post
 
     def unlink_comment(self, message_id):
-        result = []
-        for post in self:
-            user = self.env.user
-            comment = self.env['mail.message'].sudo().browse(message_id)
-            if not comment.model == 'forum.post' or not comment.res_id == post.id:
-                result.append(False)
-                continue
-            # karma-based action check: must check the message's author to know if own or all
-            karma_unlink = (
-                comment.author_id.id == user.partner_id.id and
-                post.forum_id.karma_comment_unlink_own or post.forum_id.karma_comment_unlink_all
-            )
-            can_unlink = user.karma >= karma_unlink
-            if not can_unlink:
-                raise AccessError(_('%d karma required to unlink a comment.', karma_unlink))
-            result.append(comment.unlink())
-        return result
+        user = self.env.user
+        comment = self.env['mail.message'].sudo().browse(message_id)
+        if comment.model != 'forum.post' or comment.res_id != self.id:
+            return False
+
+        # karma-based action check: must check the message's author to know if own or all
+        if comment.author_id == user.partner_id:
+            karma_unlink = self.forum_id.karma_comment_unlink_own
+        else:
+            karma_unlink = self.forum_id.karma_comment_unlink_all
+
+        if user.karma < karma_unlink:
+            raise AccessError(_('%d karma required to unlink a comment.', karma_unlink))
+
+        comment.unlink()
+        return True
 
     def _set_viewed(self):
         self.ensure_one()
