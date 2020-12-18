@@ -228,13 +228,13 @@
         <field name="arch" type="xml">
             <form string="Goal definitions">
                 <sheet>
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" placeholder="e.g. Get started"/>
                         </h1>
-                        <label for="description" class="oe_edit_only"/>
+                        <label for="description"/>
                         <div>
-                            <field name="description" class="oe_inline"/>
+                            <field name="description" placeholder="e.g. Register to the platform" class="oe_inline"/>
                         </div>
 
                         <group string="How is the goal computed?" name="compute_details">

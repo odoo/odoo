@@ -39,8 +39,8 @@
                     <field name="has_active_session" invisible="1"/>
                     <field name="show_allow_invoicing_alert" invisible="1"/>
                     <div class="oe_title" id="title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name"/></h1>
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="e.g. NYC Shop"/></h1>
                     </div>
                     <div class="o_notification_alert alert alert-warning" attrs="{'invisible':[('has_active_session','=', False)]}" role="alert">
                       A session is currently opened for this PoS. Some settings can only be changed after the session is closed.
