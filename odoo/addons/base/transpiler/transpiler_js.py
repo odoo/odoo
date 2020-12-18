@@ -14,67 +14,65 @@ class TranspilerJS:
         self.string_id = 0
 
     def convert(self):
-        new_content = self.content
-        new_content, legacy_odoo_define = self.get_legacy_odoo_define(new_content)
-        new_content = self.alias_strings(new_content)
-        new_content = self.alias_comments(new_content)
-        new_content = self.replace_legacy_default_import(new_content)
-        new_content = self.replace_import(new_content)
-        new_content = self.replace_default_import(new_content)
-        new_content = self.replace_relative_imports(new_content)
-        new_content = self.replace_function_and_class_export(new_content)
-        new_content = self.replace_variable_export(new_content)
-        new_content = self.replace_list_export(new_content)
-        new_content = self.replace_default(new_content)
-        new_content = self.unalias_comments(new_content)
-        new_content = self.unalias_strings(new_content)
-        new_content = self.add_odoo_def(new_content)
+        legacy_odoo_define = self.get_legacy_odoo_define()
+        self.alias_strings()
+        self.alias_comments()
+        self.replace_legacy_default_import()
+        self.replace_import()
+        self.replace_default_import()
+        self.replace_relative_imports()
+        self.replace_function_and_class_export()
+        self.replace_variable_export()
+        self.replace_list_export()
+        self.replace_default()
+        self.unalias_comments()
+        self.unalias_strings()
+        self.add_odoo_def()
         if legacy_odoo_define:
-            new_content += legacy_odoo_define
+            self.content += legacy_odoo_define
 
         if self.generate: #To Remove
             with open('generated_test_transpiler_files/' + self.url.split("/")[-1], 'w') as f:
-                f.write(new_content)
+                f.write(self.content)
 
-        return new_content
+        return self.content
 
     def get_define_url(self, url):
         result = re.match(r"\/?(?P<module>\w+)\/[\w\/]*static\/src\/(?P<url>[\w\/]*)", url)
         d = result.groupdict()
         return "@%s/%s" % (d.get('module'), d.get('url'))
 
-    def add_odoo_def(self, content):
-        return f"odoo.define('{self.define_url}', function (require) {{\
+    def add_odoo_def(self):
+        self.content = f"odoo.define('{self.define_url}', function (require) {{\
                 \n'use strict';\
                 \nlet __exports = {{}};\
-                \n{content}\
+                \n{self.content}\
                 \nreturn __exports;\
                 \n}});\n"
 
-    def replace_function_and_class_export(self, content, default=False):
+    def replace_function_and_class_export(self, default=False):
         pattern = r"export\s+(?P<type>function|class)\s+(?P<identifier>\w+)"
         repl = r"const \g<identifier> = __exports.\g<identifier> = \g<type> \g<identifier>"
         if default:
             pattern = r"export\s+default\s+(?P<type>function|class)\s+(?P<identifier>\w+)"
             repl = r"const \g<identifier> = __exports.__default = \g<type> \g<identifier>"
         p = re.compile(pattern)
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def replace_variable_export(self, content, default=False):
+    def replace_variable_export(self, default=False):
         p = re.compile(r"export\s+(?P<type>let|const|var)\s+(?P<identifier>\w+)\s*=")
         repl = r"\g<type> \g<identifier> = __exports.\g<identifier> ="
         if default:
             p = re.compile(r"export\s+default\s+(?P<type>let|const|var)\s+(?P<identifier>\w+)\s*=")
             repl = r"\g<type> \g<identifier> = __exports.__default ="
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def replace_list_export(self, content):
+    def replace_list_export(self):
         p = re.compile(r"export\s*(?P<list>{(\s*\w+\s*,?\s*)+}\s*);")
         repl = r"__exports = Object.assign(__exports, \g<list>);"
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def replace_import(self, content):
-
+    def replace_import(self):
         def repl(matchobj):
             d = matchobj.groupdict()
             new_list = d["list"].replace(" as ", ": ")
@@ -82,26 +80,25 @@ class TranspilerJS:
             return f"const {new_list} = require({path})"
 
         p = re.compile(r"import\s+(?P<list>{(\s*\w+\s*,?\s*)+})\s*from\s*(?P<path>[^;\n]+)")
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def replace_legacy_default_import(self, content):
+    def replace_legacy_default_import(self):
         p = re.compile(r"import\s+(?P<identifier>\w+)\s*from\s*[\"\'](?P<path>\w+\.\w+)[\"\']")
         repl = r"""const \g<identifier> = require("\g<path>")"""
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def replace_default_import(self, content):
+    def replace_default_import(self):
         p = re.compile(r"import\s+(?P<identifier>\w+)\s*from\s*(?P<path>[^;\n]+)")
         repl = r"const \g<identifier> = require(\g<path>).__default"
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def replace_relative_imports(self, content):
-        p = re.findall(r"""require\((["'])([^@\"\']+)(["'])\)""", content)
+    def replace_relative_imports(self):
+        p = re.findall(r"""require\((["'])([^@\"\']+)(["'])\)""", self.content)
         for open, path, close in p:
             if not bool(re.match(r"\w+\.\w+", path)):
-                content = re.sub(rf"require\({str(open)}{path}{str(close)}\)", f'require("{self.get_full_import_path(path)}")', content)
-        return content
+                self.content = re.sub(rf"require\({str(open)}{path}{str(close)}\)", f'require("{self.get_full_import_path(path)}")', self.content)
 
-    def alias_comments(self, content):
+    def alias_comments(self):
         p = re.compile(r"""(?P<comment>(\/\*([^*]|[\r\n]|(\*+([^*\/]|[\r\n])))*\*+\/)|(\/\/(.+?)$))""", flags=re.MULTILINE)
 
         def repl(matchobj):
@@ -110,21 +107,18 @@ class TranspilerJS:
             self.comments_mapping[self.comment_id] = string
             return f"@___comment{{{self.comment_id}}}___@"
 
-        result = p.sub(repl, content)
-        return result
+        self.content = p.sub(repl, self.content)
 
-
-    def unalias_comments(self, content):
+    def unalias_comments(self):
         p = re.compile(r"""@___comment\{(?P<id>[0-9]+)\}___@""")
 
         def repl(matchobj):
             id = int(matchobj.groupdict().get("id"))
             return self.comments_mapping[id]
 
-        result = p.sub(repl, content)
-        return result
+        self.content = p.sub(repl, self.content)
 
-    def alias_strings(self, content):
+    def alias_strings(self):
         p = re.compile(r"""(?P<all>(?P<from>from\s+)?(`.*?`|\".*?\"|'.*?'))""", flags=re.DOTALL)
 
         def repl(matchobj):
@@ -136,23 +130,23 @@ class TranspilerJS:
             self.strings_mapping[self.string_id] = string
             return f"@___string{{{self.string_id}}}___@"
 
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def unalias_strings(self, content):
+    def unalias_strings(self):
         p = re.compile(r"""@___string\{(?P<id>[0-9]+)\}___@""")
 
         def repl(matchobj):
             id = int(matchobj.groupdict()["id"])
             return self.strings_mapping[id]
 
-        return p.sub(repl, content)
+        self.content = p.sub(repl, self.content)
 
-    def replace_default(self, content):
-        new_content = self.replace_function_and_class_export(content, True)
-        new_content = self.replace_variable_export(new_content, True)
+    def replace_default(self):
+        self.replace_function_and_class_export(True)
+        self.replace_variable_export(True)
         p = re.compile(r'export\s+default(\s+\w+\s*=)?')
         repl = r"__exports.__default ="
-        return p.sub(repl, new_content)
+        self.content = p.sub(repl, self.content)
 
     def get_full_import_path(self, path_rel):
         url_split = self.url.split("/")
@@ -166,17 +160,16 @@ class TranspilerJS:
         result = re.match(r"\/\*\*\s+@odoo-module\s+(alias=(?P<alias>\S+))?\s*\*\*\/", content)
         return bool(result)
 
-    def get_legacy_odoo_define(self, content):
+    def get_legacy_odoo_define(self):
         pattern = r"\/\*\*\s+@odoo-module\s+(alias=(?P<alias>\S+))?\s*\*\*\/"
-        result = re.match(pattern, content)
-        if bool(result):
+        result = re.match(pattern, self.content)
+        if result:
             p = re.compile(pattern)
             d = result.groupdict()
             alias = d.get('alias')
             if alias:
-                return p.sub("", content), """\nodoo.define(`%s`, function(require) {
+                self.content = p.sub("", self.content)
+                return """\nodoo.define(`%s`, function(require) {
                         console.warn("%s is deprecated. Please use %s instead");
                         return require('%s').__default;
-                        });\n""" % (alias, alias,  self.define_url, self.define_url)
-
-        return content, False
+                        });\n""" % (alias, alias, self.define_url, self.define_url)

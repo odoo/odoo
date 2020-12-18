@@ -20,12 +20,13 @@ def showStripped(result: str, expectation: str):
     print(stripped_expectation)
 
 if __name__ == '__main__':
-    expectation_paths = glob.glob("codes/*.odoo.js")
+    dir_path = "codes/"
+    expectation_paths = glob.glob(dir_path + "*.odoo.js")
     for expectation_path in expectation_paths:
         test_path = expectation_path.replace(".odoo", "")
         with open(test_path, "r") as file:
             content = file.read()
-            result = transpile(content, "tests/src/static/js/" + test_path.replace("codes/", ""))
+            result = transpile(content, "tests/static/src/" + test_path.replace(dir_path, ""))
             with open(expectation_path, "r") as expectation_file:
                 expectation = expectation_file.read()
                 is_similar = compare(result, expectation)
