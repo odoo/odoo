@@ -3,17 +3,17 @@
 # 	* hr_skills
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Jorunn D. Newth, 2020
-# Marius Stedjan <marius@stedjan.com>, 2020
+# Martin Trigaux, 2019
+# Jorunn D. Newth, 2019
+# Marius Stedjan <marius@stedjan.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -84,15 +84,12 @@ msgid "Description"
 msgstr "Beskrivelse"
 
 #. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__display_name
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__display_name
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__display_name
-#: model:ir.model.fields,field_description:hr_skills.field_res_users__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
 
@@ -109,28 +106,22 @@ msgid "Employee"
 msgstr "Ansatt"
 
 #. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee__id
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level__id
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type__id
-#: model:ir.model.fields,field_description:hr_skills.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
 #. module: hr_skills
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_resume_line_type____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_level____last_update
 #: model:ir.model.fields,field_description:hr_skills.field_hr_skill_type____last_update
-#: model:ir.model.fields,field_description:hr_skills.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Sist endret"
 
@@ -174,7 +165,7 @@ msgstr "Navn"
 #: code:addons/hr_skills/static/src/js/resume_widget.js:0
 #, python-format
 msgid "Other"
-msgstr "Annen"
+msgstr "Annet"
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_skill__level_progress
@@ -224,13 +215,23 @@ msgstr ""
 #. module: hr_skills
 #: model:ir.model,name:hr_skills.model_hr_resume_line
 msgid "Resumé line of an employee"
-msgstr "CV-linje for ansatt"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_search
+msgid "Resumé line type"
+msgstr ""
 
 #. module: hr_skills
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_hr_employee_public__resume_line_ids
 #: model:ir.model.fields,field_description:hr_skills.field_res_users__resume_line_ids
 msgid "Resumé lines"
+msgstr ""
+
+#. module: hr_skills
+#: model_terms:ir.ui.view,arch_db:hr_skills.resume_line_view_search
+msgid "Résume"
 msgstr ""
 
 #. module: hr_skills
@@ -295,13 +296,13 @@ msgstr ""
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
-msgid "The skill %(name)s and skill type %(type)s doesn't match"
+msgid "The skill %s and skill type %s doesn't match"
 msgstr ""
 
 #. module: hr_skills
 #: code:addons/hr_skills/models/hr_skills.py:0
 #, python-format
-msgid "The skill level %(level)s is not valid for skill type: %(type)s"
+msgid "The skill level %s is not valid for skill type: %s "
 msgstr ""
 
 #. module: hr_skills

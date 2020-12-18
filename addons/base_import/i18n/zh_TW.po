@@ -3,15 +3,18 @@
 # 	* base_import
 # 
 # Translators:
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# sejun huang <sejun.huang@gmail.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,22 +26,22 @@ msgstr ""
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
-msgid "%d records successfully imported"
+msgid "%d records successfully imported..."
 msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
-msgid "%d records successfully imported..."
-msgstr "%d 資料已成功導入..."
+msgid "%d records tested..."
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
-msgid "%d records tested..."
-msgstr "%d 資料已測試..."
+msgid "%d records were successfully imported"
+msgstr "%d記錄已成功導入"
 
 #. module: base_import
 #. openerp-web
@@ -88,14 +91,14 @@ msgstr "基本導入映射"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr "批次限制"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
-msgstr "在 %d 行和 %d 行之間"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -109,7 +112,7 @@ msgstr "取消"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Click 'Resume' to proceed with the import, resuming at line"
-msgstr "點選\"重新開始\"繼續導入，系統將重新運作於行"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -255,7 +258,6 @@ msgstr "十進制分隔符："
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__display_name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__display_name
-#: model:ir.model.fields,field_description:base_import.field_res_users__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -276,7 +278,6 @@ msgstr "點"
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
-#: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Download"
 msgstr "下載"
@@ -291,7 +292,7 @@ msgstr "Dt"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Due to its large size, the file will be imported by batches."
-msgstr "由於載入附檔較大，將分批進行導入。"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -379,7 +380,7 @@ msgstr "格式化選項......"
 msgid ""
 "Found invalid image data, images should be imported as either URLs or "
 "base64-encoded data."
-msgstr "發現不正確圖像資料，圖像應作為 URL 或 base64 編碼資料導入。"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -406,7 +407,6 @@ msgstr "下面是我們無法導入的起始文件："
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__id
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__id
-#: model:ir.model.fields,field_description:base_import.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -432,10 +432,11 @@ msgstr ""
 msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
-msgstr "如果模型使用 openchatter，歷史記錄跟蹤將在導入期間設置訂閱併發送通知，但會導致導入速度變慢。"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import"
@@ -457,17 +458,17 @@ msgstr "導入文件"
 
 #. module: base_import
 #. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
+#: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
-msgid "Import preview failed due to:"
-msgstr "導入預覽文件失敗"
+msgid "Import completed"
+msgstr "導入完成"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
-msgid "Import records"
-msgstr ""
+msgid "Import preview failed due to:"
+msgstr "導入預覽文件失敗"
 
 #. module: base_import
 #. openerp-web
@@ -483,7 +484,7 @@ msgstr "導入超時。請重試。如果仍然遇到此問題，則該文件針
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Invalid cell value at row %(row)s, column %(col)s: %(cell_value)s"
-msgstr "不正確的資料內容：row %(row)s, column %(col)s: %(cell_value)s"
+msgstr ""
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import____last_update
@@ -503,7 +504,6 @@ msgstr "不正確的資料內容：row %(row)s, column %(col)s: %(cell_value)s"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child____last_update
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
-#: model:ir.model.fields,field_description:base_import.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "最後修改於"
 
@@ -573,13 +573,13 @@ msgstr "匹配導入列"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
 msgid "Model"
-msgstr "模型"
+msgstr "型號"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m__name
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__name
 msgid "Name"
-msgstr "名稱"
+msgstr "名称"
 
 #. module: base_import
 #. openerp-web
@@ -620,6 +620,13 @@ msgid "Relation Fields"
 msgstr "關聯字段"
 
 #. module: base_import
+#. openerp-web
+#: code:addons/base_import/static/src/xml/base_import.xml:0
+#, python-format
+msgid "Reload File"
+msgstr "重新載入文件"
+
+#. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__res_model
 msgid "Res Model"
 msgstr "Res Model"
@@ -636,7 +643,7 @@ msgstr "重新開始"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Row %d%s"
-msgstr "%d%s行"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -644,7 +651,7 @@ msgstr "%d%s行"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr "查看可能的值"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -652,14 +659,6 @@ msgstr "查看可能的值"
 #, python-format
 msgid "Select a CSV or Excel file to import."
 msgstr "選擇 CSV 或者 Excel 文件導入。"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/js/import_action.js:0
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "Selected Sheet:"
-msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -699,7 +698,7 @@ msgstr "空格鍵"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr "開始於行"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -805,21 +804,12 @@ msgid ""
 "The first row\n"
 "                         contains the label of the column"
 msgstr ""
-"第一行\n"
-"                         包含列的表頭"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "This file has been successfully imported up to line %d."
-msgstr "此檔已成功導入到 %d 行。"
-
-#. module: base_import
-#. openerp-web
-#: code:addons/base_import/static/src/xml/base_import.xml:0
-#, python-format
-msgid "This is a preview of the first 10 rows of your file"
 msgstr ""
 
 #. module: base_import
@@ -883,7 +873,7 @@ msgstr "值2"
 msgid ""
 "Warning: ignores the labels line, empty lines and"
 "                             lines composed only of empty cells"
-msgstr "警告：忽略表頭，空行和僅由空單元格組成的行"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -898,7 +888,7 @@ msgstr "不能通過URL導入圖像，請與管理員進行聯繫。"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "You can test or reload your file before resuming the import."
-msgstr "在重新開始導入之前，可以測試或重新載入檔。"
+msgstr ""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -911,14 +901,14 @@ msgstr "您必須至少配置一個字段來導入"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at %d different rows:"
-msgstr "在 %d 不同行："
+msgstr ""
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "at row %d%s"
-msgstr "於 %d%s 行"
+msgstr ""
 
 #. module: base_import
 #. openerp-web
@@ -931,4 +921,4 @@ msgstr "在第 %d 行和第 %d 行之間"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr "未知錯誤代碼  %s"
+msgstr ""

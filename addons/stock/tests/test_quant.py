@@ -6,11 +6,11 @@ from datetime import datetime, timedelta
 
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.exceptions import ValidationError
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 from odoo.exceptions import AccessError, UserError
 
 
-class StockQuant(SavepointCase):
+class StockQuant(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockQuant, cls).setUpClass()

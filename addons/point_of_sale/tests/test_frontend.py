@@ -56,7 +56,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         pos_categ_chairs = env.ref('point_of_sale.pos_category_chairs')
 
         # test an extra price on an attribute
-        pear = env['product.product'].create({
+        self.whiteboard_pen = env['product.product'].create({
             'name': 'Whiteboard Pen',
             'available_in_pos': True,
             'list_price': 1.20,
@@ -65,45 +65,45 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             'to_weight': True,
             'pos_categ_id': pos_categ_misc.id,
         })
-        wall_shelf = env['product.product'].create({
+        self.wall_shelf = env['product.product'].create({
             'name': 'Wall Shelf Unit',
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
         })
-        small_shelf = env['product.product'].create({
+        self.small_shelf = env['product.product'].create({
             'name': 'Small Shelf',
             'available_in_pos': True,
             'list_price': 2.83,
             'taxes_id': False,
         })
-        magnetic_board = env['product.product'].create({
+        self.magnetic_board = env['product.product'].create({
             'name': 'Magnetic Board',
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
         })
-        monitor_stand = env['product.product'].create({
+        self.monitor_stand = env['product.product'].create({
             'name': 'Monitor Stand',
             'available_in_pos': True,
             'list_price': 3.19,
             'taxes_id': False,
         })
-        desk_pad = env['product.product'].create({
+        self.desk_pad = env['product.product'].create({
             'name': 'Desk Pad',
             'available_in_pos': True,
             'list_price': 1.98,
             'taxes_id': False,
             'pos_categ_id': pos_categ_desks.id,
         })
-        letter_tray = env['product.product'].create({
+        self.letter_tray = env['product.product'].create({
             'name': 'Letter Tray',
             'available_in_pos': True,
             'list_price': 4.80,
             'taxes_id': False,
             'pos_categ_id': pos_categ_chairs.id,
         })
-        desk_organizer = env['product.product'].create({
+        self.desk_organizer = env['product.product'].create({
             'name': 'Desk Organizer',
             'available_in_pos': True,
             'list_price': 5.10,
@@ -124,7 +124,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
             'attribute_id': attribute.id,
         })
         line = env['product.template.attribute.line'].create({
-            'product_tmpl_id': pear.product_tmpl_id.id,
+            'product_tmpl_id': self.whiteboard_pen.product_tmpl_id.id,
             'attribute_id': attribute.id,
             'value_ids': [(6, 0, attribute_value.ids)]
         })
@@ -201,12 +201,12 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
-                'product_id': wall_shelf.id,
+                'product_id': self.wall_shelf.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 13.95,  # test for issues like in 7f260ab517ebde634fc274e928eb062463f0d88f
                 'applied_on': '0_product_variant',
-                'product_id': small_shelf.id,
+                'product_id': self.small_shelf.id,
             })],
         })
 
@@ -216,17 +216,17 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'percentage',
                 'percent_price': 100,
                 'applied_on': '0_product_variant',
-                'product_id': wall_shelf.id,
+                'product_id': self.wall_shelf.id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 99,
                 'applied_on': '0_product_variant',
-                'product_id': small_shelf.id,
+                'product_id': self.small_shelf.id,
             }), (0, 0, {
                 'compute_price': 'percentage',
                 'percent_price': 0,
                 'applied_on': '0_product_variant',
-                'product_id': magnetic_board.id,
+                'product_id': self.magnetic_board.id,
             })],
         })
 
@@ -237,33 +237,33 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'price_discount': 6,
                 'price_surcharge': 5,
                 'applied_on': '0_product_variant',
-                'product_id': wall_shelf.id,
+                'product_id': self.wall_shelf.id,
             }), (0, 0, {
                 # .99 prices
                 'compute_price': 'formula',
                 'price_surcharge': -0.01,
                 'price_round': 1,
                 'applied_on': '0_product_variant',
-                'product_id': small_shelf.id,
+                'product_id': self.small_shelf.id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_min_margin': 10,
                 'price_max_margin': 100,
                 'applied_on': '0_product_variant',
-                'product_id': magnetic_board.id,
+                'product_id': self.magnetic_board.id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_surcharge': 10,
                 'price_max_margin': 5,
                 'applied_on': '0_product_variant',
-                'product_id': monitor_stand.id,
+                'product_id': self.monitor_stand.id,
             }), (0, 0, {
                 'compute_price': 'formula',
                 'price_discount': -100,
                 'price_min_margin': 5,
                 'price_max_margin': 20,
                 'applied_on': '0_product_variant',
-                'product_id': desk_pad.id,
+                'product_id': self.desk_pad.id,
             })],
         })
 
@@ -274,13 +274,13 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'fixed_price': 1,
                 'applied_on': '0_product_variant',
                 'min_quantity': 2,
-                'product_id': wall_shelf.id,
+                'product_id': self.wall_shelf.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
                 'applied_on': '0_product_variant',
                 'min_quantity': 1,
-                'product_id': wall_shelf.id,
+                'product_id': self.wall_shelf.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -296,7 +296,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
                 'compute_price': 'fixed',
                 'fixed_price': 1,
                 'applied_on': '1_product',
-                'product_tmpl_id': wall_shelf.product_tmpl_id.id,
+                'product_tmpl_id': self.wall_shelf.product_tmpl_id.id,
             }), (0, 0, {
                 'compute_price': 'fixed',
                 'fixed_price': 2,
@@ -437,7 +437,7 @@ class TestPointOfSaleHttpCommon(odoo.tests.HttpCase):
         src_tax = env['account.tax'].create({'name': "SRC", 'amount': 10})
         dst_tax = env['account.tax'].create({'name': "DST", 'amount': 5})
 
-        letter_tray.taxes_id = [(6, 0, [src_tax.id])]
+        self.letter_tray.taxes_id = [(6, 0, [src_tax.id])]
 
         self.main_pos_config.write({
             'tax_regime_selection': True,

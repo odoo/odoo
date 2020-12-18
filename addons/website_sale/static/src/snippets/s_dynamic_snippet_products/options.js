@@ -1,7 +1,7 @@
 odoo.define('website_sale.s_dynamic_snippet_products_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 const s_dynamic_snippet_carousel_options = require('website.s_dynamic_snippet_carousel_options');
 
 const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend({
@@ -21,12 +21,17 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
     onBuilt: function () {
         this._super.apply(this, arguments);
         this._rpc({
-            route: '/website_sale/snippet/options_filters'
-        }).then((data) => {
-            if (data.length) {
-                this.$target.get(0).dataset.filterId = data[0].id;
-                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].id].limit;
+            model: 'ir.model.data',
+            method: 'search_read',
+            kwargs: {
+                domain: [['module', '=', 'website_sale'], ['model', '=', 'website.snippet.filter']],
+                fields: ['id', 'res_id'],
             }
+        }).then(async (data) => {
+            await this.wysiwyg.withDomMutations(this.$target, () => {
+                this.$target.get(0).dataset.filterId = data[0].res_id;
+                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
+            });
         });
     },
 
@@ -85,7 +90,7 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
 
 });
 
-options.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
+snippetOptions.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
 
 return dynamicSnippetProductsOptions;
 });

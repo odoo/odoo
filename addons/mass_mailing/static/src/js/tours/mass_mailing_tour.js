@@ -37,28 +37,21 @@ odoo.define('mass_mailing.mass_mailing_tour', function (require) {
         run: 'click',
         auto: true,
     }, {
-        trigger: 'div[name="body_arch"] iframe #newsletter',
+        trigger: 'div[name="body_arch"] jw-template[name="template-template-newsletter"]',
         content: _t('Choose this <b>theme</b>.'),
         position: 'left',
         edition: 'enterprise',
         run: 'click',
     }, {
-        trigger: 'div[name="body_arch"] iframe #default',
+        trigger: 'div[name="body_arch"] jw-template[name="template-template-default"]',
         content: _t('Choose this <b>theme</b>.'),
         position: 'right',
         edition: 'community',
         run: 'click',
     }, {
-        trigger: 'div[name="body_arch"] iframe div.o_mail_block_paragraph',
+        trigger: 'div[name="body_arch"] .note-editing-area',
         content: _t('Click on this paragraph to edit it.'),
-        position: 'top',
-        edition: 'enterprise',
-        run: 'click',
-    }, {
-        trigger: 'div[name="body_arch"] iframe div.o_mail_block_title_text',
-        content: _t('Click on this paragraph to edit it.'),
-        position: 'top',
-        edition: 'community',
+        position: 'right',
         run: 'click',
     }, {
         trigger: 'button[name="action_test"]',

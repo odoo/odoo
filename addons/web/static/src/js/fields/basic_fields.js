@@ -255,6 +255,15 @@ var InputField = DebouncedField.extend({
         return this.$input.val();
     },
     /**
+     * By default this only calls a debounced method to notify the outside world
+     * of the changes if the actual value is not the same than the previous one.
+     * @see _doDebouncedAction
+     */
+    _notifyChanges() {
+        this.isDirty = !this._isLastSetValue(this.$input.val());
+        this._doDebouncedAction();
+    },
+    /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
@@ -328,15 +337,13 @@ var InputField = DebouncedField.extend({
         this.lastChangeEvent = event;
     },
     /**
-     * Called when the user is typing text -> By default this only calls a
-     * debounced method to notify the outside world of the changes.
-     * @see _doDebouncedAction
+     * Called when the user is typing text
+     * @see _notifyChanges
      *
      * @private
      */
-    _onInput: function () {
-        this.isDirty = !this._isLastSetValue(this.$input.val());
-        this._doDebouncedAction();
+    _onInput() {
+        this._notifyChanges();
     },
     /**
      * Stops the left/right navigation move event if the cursor is not at the
@@ -516,6 +523,43 @@ var NumericField = InputField.extend({
             }
         }
         return this._super(value, options);
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replace the decimal separator of the numpad decimal key
+     * by the decimal separator from the user's language setting.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onKeydown(ev) {
+        const kbdEvt = ev.originalEvent;
+        if (kbdEvt && utils.isNumpadDecimalSeparatorKey(kbdEvt)) {
+            const inputField = this.$input[0];
+            const curVal = inputField.value;
+            const from = inputField.selectionStart;
+            const to = inputField.selectionEnd;
+            const point = _t.database.parameters.decimal_point;
+
+            // Make sure the correct decimal separator
+            // from the user's settings is inserted
+            inputField.value = curVal.slice(0, from) + point + curVal.slice(to);
+
+            // Put the user caret at the right place
+            inputField.selectionStart = inputField.selectionEnd = from + point.length;
+
+            // Tell the world we made some changes and
+            // return preventing event default behaviour.
+            this._notifyChanges();
+            kbdEvt.preventDefault();
+            return;
+        }
+
+        return this._super(...arguments);
     },
 });
 
@@ -1227,7 +1271,8 @@ var FieldFloatToggle = AbstractField.extend({
 
         this.formatType = 'float_factor';
 
-        if (this.mode === 'edit') {
+        // force the button to work in readonly mode
+        if (this.mode === 'edit' || this.nodeOptions.force_button) {
             this.tagName = 'button';
         }
 
@@ -1317,8 +1362,9 @@ var FieldFloatToggle = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onClick: function(ev) {
-        if (this.mode === 'edit') {
-            ev.stopPropagation(); // only stop propagation in edit mode
+        // force the button to work in readonly mode
+        if (this.mode === 'edit' || this.nodeOptions.force_button) {
+            ev.stopPropagation();
             var next_val = this._nextValue();
             next_val = field_utils.format['float'](next_val);
             this._setValue(next_val); // will be parsed in _setValue
@@ -1704,6 +1750,23 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     className: 'o_field_copy o_text_overflow',
 });
 
+var URLCopyClipboard = FieldChar.extend(CopyClipboard, {
+    description: _lt("Copy to Clipboard"),
+    clipboardTemplate: 'CopyClipboardChar',
+    className: 'o_field_copy o_text_overflow o_field_copy_url',
+    events: _.extend({}, FieldChar.prototype.events, {
+        'click': '_onClick',
+    }),
+
+    _onClick: function(ev) {
+        if(ev.target.className.includes('o_field_copy_url')) {
+            ev.stopPropagation();
+
+            window.open(this.value, '_blank');
+        }
+    }
+});
+
 var AbstractFieldBinary = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'change .o_input_file': 'on_file_change',
@@ -1914,38 +1977,37 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     _renderReadonly: function () {
         this._super.apply(this, arguments);
 
-        if(this.nodeOptions.zoom) {
-            var unique = this.recordData.__last_update;
-            var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
-            var $img;
-            var imageField = _.find(Object.keys(this.recordData), function(o) {
-                return o.startsWith('image_');
-            });
+        var unique = this.recordData.__last_update;
+        var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
+        var $img;
+        var imageField = _.find(Object.keys(this.recordData), function(o) {
+            return o.startsWith('image_');
+        });
 
-            if(this.nodeOptions.background)
-            {
-                if('tag' in this.nodeOptions) {
-                    this.tagName = this.nodeOptions.tag;
-                }
-
-                if('class' in this.attrs) {
-                    this.$el.addClass(this.attrs.class);
-                }
-
-                const image_field = this.field.manual ? this.name:'image_128';
-                var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
-
-                this.$el.empty();
-                $img = this.$el;
-                $img.css('backgroundImage', 'url(' + urlThumb + ')');
-            } else {
-                $img = this.$('img');
+        if(this.nodeOptions.background)
+        {
+            if('tag' in this.nodeOptions) {
+                this.tagName = this.nodeOptions.tag;
             }
+
+            if('class' in this.attrs) {
+                this.$el.addClass(this.attrs.class);
+            }
+
+            const image_field = this.field.manual ? this.name:'image_128';
+            var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
+
+            this.$el.empty();
+            $img = this.$el;
+            $img.css('backgroundImage', 'url(' + urlThumb + ')');
+        } else {
+            $img = this.$('img');
+        }
+        if(this.nodeOptions.zoom) {
             var zoomDelay = 0;
             if (this.nodeOptions.zoom_delay) {
                 zoomDelay = this.nodeOptions.zoom_delay;
             }
-
             if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
                 $img.attr('data-zoom-image', url);
@@ -3711,6 +3773,7 @@ return {
     UrlWidget: UrlWidget,
     TextCopyClipboard: TextCopyClipboard,
     CharCopyClipboard: CharCopyClipboard,
+    URLCopyClipboard: URLCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
     FieldColor: FieldColor,

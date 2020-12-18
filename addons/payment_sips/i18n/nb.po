@@ -3,16 +3,15 @@
 # 	* payment_sips
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Marius Stedjan <marius@stedjan.com>, 2020
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,20 +22,20 @@ msgstr ""
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "Currency not supported by Wordline: %s"
-msgstr ""
+msgid "; multiple order found"
+msgstr "; flere ordrer funnet"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__display_name
-msgid "Display Name"
-msgstr "Visningsnavn"
+#: code:addons/payment_sips/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; ingen ordre funnet"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction__id
-msgid "ID"
-msgstr "ID"
+#: code:addons/payment_sips/models/payment.py:0
+#, python-format
+msgid "Currency not supported by Wordline"
+msgstr "Valuta ikke støttet av Wordline"
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
@@ -50,12 +49,6 @@ msgid "Interface Version"
 msgstr "Grensesnittversjon"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_sips.field_payment_transaction____last_update
-msgid "Last Modified on"
-msgstr "Sist endret"
-
-#. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_merchant_id
 msgid "Merchant ID"
 msgstr "Merchant ID"
@@ -63,7 +56,7 @@ msgstr "Merchant ID"
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Betalingsinnløser"
+msgstr "Betalingsløsning"
 
 #. module: payment_sips
 #: model:ir.model,name:payment_sips.model_payment_transaction
@@ -78,7 +71,7 @@ msgstr ""
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "Innløser"
+msgstr "Tilbyder"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_secret
@@ -86,22 +79,22 @@ msgid "Secret Key"
 msgstr "Hemmelig nøkkel"
 
 #. module: payment_sips
-#: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_key_version
-msgid "Secret Key Version"
-msgstr ""
-
-#. module: payment_sips
 #: model:ir.model.fields.selection,name:payment_sips.selection__payment_acquirer__provider__sips
 msgid "Sips"
-msgstr "Sips"
+msgstr ""
 
 #. module: payment_sips
 #: code:addons/payment_sips/models/payment.py:0
 #, python-format
-msgid "Sips: received data for reference %s; no order found"
-msgstr ""
+msgid "Sips: received data for reference %s"
+msgstr "Sips: Mottatt data for referanse %s"
 
 #. module: payment_sips
 #: model:ir.model.fields,field_description:payment_sips.field_payment_acquirer__sips_test_url
 msgid "Test url"
 msgstr ""
+
+#. module: payment_sips
+#: model:ir.model.fields,help:payment_sips.field_payment_acquirer__sips_merchant_id
+msgid "Used for production only"
+msgstr "Bare brukt i produksjon"

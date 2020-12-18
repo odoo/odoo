@@ -4,7 +4,7 @@
 
         <record model="mail.channel" id="channel_all_employees">
             <field name="name">general</field>
-            <field name="group_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="group_ids" eval="[Command.link(ref('base.group_user'))]"/>
             <field name="description">General announcements for all employees.</field>
         </record>
 
@@ -12,7 +12,7 @@
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.channel</field>
             <field name="res_id" ref="mail.channel_all_employees"/>
-            <field name="channel_ids" eval="[(4, ref('mail.channel_all_employees'))]"/>
+            <field name="channel_ids" eval="[Command.link(ref('mail.channel_all_employees'))]"/>
             <field name="message_type">email</field>
             <field name="subtype_id" ref="mail.mt_comment"/>
             <field name="subject">Welcome to Odoo!</field>

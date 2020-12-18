@@ -3,18 +3,18 @@
 # 	* website_form
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Martin Trigaux, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:08+0000\n"
-"PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Cas Vissers <casvissers@brahoo.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,91 +23,56 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "&amp;times;"
+msgstr "&amp;times;"
+
+#. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:12
+#, python-format
+msgid "&times;"
+msgstr "&times;"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/js/website_form.js:238
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "'%s' is geen correcte datum"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website_form/static/src/js/website_form.js:233
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s' is geen geldige datum/tijd"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:0
+#: code:addons/website_form/controllers/main.py:232
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr "<p>Bijgevoegde bestanden : </p>"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_form.contactus_thanks
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
 msgid ""
-"<span class=\"fa fa-check-circle\"/>\n"
-"                                            <span>Your message has been sent <b>successfully</b></span>"
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
-"<span class=\"fa fa-check-circle\"/>\n"
-"                                            <span>Uw bericht is <b>succesvol </b> verzonden.</span>"
+"<span class=\"fa fa-lg fa-globe\" title=\"De hier ingestelde waarden zijn "
+"website-specifiek.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr "<span class=\"s_website_form_label_content\">E-mail naar</span>"
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add a custom field"
+msgstr "Voeg een maatwerk veld toe"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Email</span>\n"
-"                                            <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">E-mail</span>\n"
-"                                            <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr "<span class=\"s_website_form_label_content\">Telefoonnummer</span>"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Subject</span>\n"
-"                                            <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Onderwerp</span>\n"
-"                                            <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr "<span class=\"s_website_form_label_content\">Uw bedrijf</span>"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid ""
-"<span class=\"s_website_form_label_content\">Your Name</span>\n"
-"                                            <span class=\"s_website_form_mark\"> *</span>"
-msgstr ""
-"<span class=\"s_website_form_label_content\">Uw naam</span>\n"
-"                                            <span class=\"s_website_form_mark\"> *</span>"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
-msgstr "<span class=\"s_website_form_label_content\">Uw vraag</span>"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Add a new field after this one"
-msgstr "Voeg hierna een nieuw veld toe"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Add a new field at the end"
-msgstr "Voeg aan het einde een nieuw veld toe"
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Add an existing field"
+msgstr "Bestaand veld toevoegen"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_access
@@ -116,7 +81,7 @@ msgstr "Toegestaan om te gebruiken in formulieren"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "An error has occured, the form has not been sent."
 msgstr "Er is een fout opgetreden, het formulier is nog niet verzonden."
@@ -132,61 +97,54 @@ msgid "Blacklisted in web forms"
 msgstr "Blacklisted in website formulieren"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Button Position"
-msgstr "Positie knop"
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+msgid "Change Form Parameters"
+msgstr "Wijzig formulier parameters"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Center"
-msgstr "Centreer"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Checkbox"
 msgstr "Checkbox"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Custom field"
-msgstr "Aangepast veld"
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:21
+#, python-format
+msgid "Close"
+msgstr "Sluiten"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model:ir.model,name:website_form.model_res_config_settings
+msgid "Config Settings"
+msgstr "Configuratie instellingen"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Date"
 msgstr "Datum"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Date &amp; Time"
 msgstr "Datum &amp; Tijd"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Decimal Number"
 msgstr "Decimaal cijfer"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Display"
-msgstr "Tonen"
-
-#. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model__display_name
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__display_name
-#: model:ir.model.fields,field_description:website_form.field_website__display_name
-msgid "Display Name"
-msgstr "Schermnaam"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Edit Message"
-msgstr "Wijzig bericht"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:44
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#, python-format
 msgid "Email"
 msgstr "E-mail"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "Email To"
+msgstr "E-mail naar"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
@@ -195,8 +153,8 @@ msgstr "Schakel de formulier bouwer in voor dit model."
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:0
-#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/xml/website_form.xml:21
 #, python-format
 msgid "Error"
 msgstr "Fout"
@@ -212,7 +170,7 @@ msgid "Fields"
 msgstr "Velden"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "File Upload"
 msgstr "Bestand uploaden"
 
@@ -226,63 +184,9 @@ msgstr ""
 "project.issue kan 'Maak een Issue' zijn."
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Height"
-msgstr "Hoogte"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Hidden"
 msgstr "Verborgen"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Hide"
-msgstr "Verberg"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Horizontal"
-msgstr "Horizontaal"
-
-#. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model__id
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__id
-#: model:ir.model.fields,field_description:website_form.field_website__id
-msgid "ID"
-msgstr "ID"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
-#, python-format
-msgid "In the meantime we invite you to visit our"
-msgstr "In de tussentijd nodigen wij je uit om onze"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Input Aligned"
-msgstr "Input uitgelijnd"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Input Placeholder"
-msgstr "Input plaatshouder"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Input Type"
-msgstr "Input type"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Label Name"
-msgstr "Naam label"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Label Position"
-msgstr "Label positie"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
@@ -290,39 +194,12 @@ msgid "Label for form action"
 msgstr "Label voor formulier actie"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Labels Width"
-msgstr "Breedte labels"
-
-#. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
-#: model:ir.model.fields,field_description:website_form.field_ir_model_fields____last_update
-#: model:ir.model.fields,field_description:website_form.field_website____last_update
-msgid "Last Modified on"
-msgstr "Laatst gewijzigd op"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Left"
-msgstr "Links"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Long Text"
 msgstr "Lange tekst"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Mark Text"
-msgstr "Markeer tekst"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Marked Fields"
-msgstr "Gemarkeerde velden"
-
-#. module: website_form
-#: code:addons/website_form/controllers/main.py:0
+#: code:addons/website_form/controllers/main.py:54
 #, python-format
 msgid "Metadata"
 msgstr "Metadata"
@@ -333,135 +210,77 @@ msgid "Models"
 msgstr "Modellen"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Multiple Checkboxes"
 msgstr "Meerdere selectievakjes"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:216
 #, python-format
 msgid "No matching record !"
 msgstr "Geen overeenkomende records!"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "None"
-msgstr "Geen"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Nothing"
-msgstr "Niets"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Number"
 msgstr "Nummer"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "On Success"
-msgstr "Bij succes"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "Option 1"
-msgstr "Optie 1"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "Option 2"
-msgstr "Optie 2"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "Option 3"
-msgstr "Optie 3"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Optional"
-msgstr "Optioneel"
-
-#. module: website_form
-#: code:addons/website_form/controllers/main.py:0
+#: code:addons/website_form/controllers/main.py:180
 #, python-format
 msgid "Other Information:"
 msgstr "Overige informatie:"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:36
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
-msgid "Our team will message you back as soon as possible."
-msgstr "Ons team zal je zo snel mogelijk een bericht sturen."
+msgid "Phone Number"
+msgstr "Telefoonnummer"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
+#: code:addons/website_form/static/src/xml/website_form.xml:14
 #, python-format
 msgid "Please fill in the form correctly."
 msgstr "Vul het formulier correct in a.u.b."
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Radio Buttons"
 msgstr "Radioknoppen"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:25
 #, python-format
 msgid "Recipient Email"
 msgstr "E-mail ontvanger"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Redirect"
-msgstr "Doorverwijzen"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Required"
 msgstr "Verplicht"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Right"
-msgstr "Rechts"
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:22
+#, python-format
+msgid "Save"
+msgstr "Opslaan"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Selection"
 msgstr "Selectie"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
-#, python-format
-msgid "Separate email addresses with a comma."
-msgstr "Splits e-mailadressen met een komma."
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Show Message"
-msgstr "Toon bericht"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Show reCaptcha Policy"
-msgstr "Toon reCaptcha beleid"
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
+msgid "Send"
+msgstr "Verzenden"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
@@ -472,96 +291,59 @@ msgstr ""
 " bevat."
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form.xml:60
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
-msgid "Submit"
-msgstr "Verstuur"
+#, python-format
+msgid "Subject"
+msgstr "Onderwerp"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:0
-#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "Success"
 msgstr "Succes"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:0
-#, python-format
-msgid "Suspicious activity detected by Google reCaptcha."
-msgstr "Verdachte activiteit gedetecteerd door Google reCaptcha"
+#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
+msgid "Technical data on contact form"
+msgstr "Technische gegevens op contactformulier"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Telephone"
-msgstr "Telefoon"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
 msgid "Text"
 msgstr "Tekst"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
-#, python-format
-msgid "Thank You For Your Feedback"
-msgstr "Bedankt voor uw feedback"
-
-#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
-msgid "Thank You!"
+msgid "Thanks!"
 msgstr "Bedankt!"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:7
 #, python-format
 msgid "The form has been sent successfully."
 msgstr "Het formulier is succesvol verzonden."
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:0
-#, python-format
-msgid "The form's specified model does not exist"
-msgstr "Het opgegeven model van het formulier bestaat niet."
-
-#. module: website_form
-#: code:addons/website_form/controllers/main.py:0
+#: code:addons/website_form/controllers/main.py:182
 #, python-format
 msgid "This message has been posted on your website!"
 msgstr "Dit bericht is geplaatst op uw website!"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Top"
-msgstr "Top"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Type"
-msgstr "Soort"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "URL"
-msgstr "URL"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Url"
-msgstr "Url"
+#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
+msgstr "Traceer metadata (IP, User Agent, ...) op uw website formulieren"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
 msgstr "Gebruikt in register van FormBuilder"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "Vertical"
-msgstr "Verticaal"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -585,41 +367,38 @@ msgid "Website Forms"
 msgstr "Website formulieren"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You can't duplicate a model field."
-msgstr "U kan een modelveld niet dupliceren."
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
-#, python-format
-msgid "You can't duplicate the submit button of the form."
+#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
+#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
+msgid "You can choose to log technical data like IP, User Agent ,..."
 msgstr ""
+"U kunt ervoor kiezen om technische data te loggen, zoals IP, User Agent,..."
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/xml/website_form.xml:52
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
-msgid "You can't remove a field that is required by the model itself."
-msgstr "U kan geen veld verwijderen dat door het model zelf vereist is."
+msgid "Your Company"
+msgstr "Uw bedrijf"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/xml/website_form.xml:28
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
-msgid "You can't remove the submit button of the form"
-msgstr ""
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
-msgid "rows"
-msgstr "rijen"
+msgid "Your Name"
+msgstr "Uw naam"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:68
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #, python-format
-msgid "website"
-msgstr "website"
+msgid "Your Question"
+msgstr "Uw vraag"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
+msgid "Your message has been sent successfully."
+msgstr "Uw bericht is succesvol verzonden."

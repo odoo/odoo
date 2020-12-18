@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import Form, tagged
+from odoo.tests import tagged
 from odoo.tools import float_compare
 
 from .common import TestSaleCommon
@@ -25,13 +25,13 @@ class TestSaleOrder(TestSaleCommon):
             'name': 'crm team 1',
             'company_id': cls.company_data['company'].id
         })
-        cls.user_in_team = cls.env['res.users'].create({
+        cls.user_in_team = cls.env['res.users'].sudo().create({
             'email': 'team0user@example.com',
             'login': 'team0user',
             'name': 'User in Team 0',
             'sale_team_id': cls.crm_team0.id
         })
-        cls.user_not_in_team = cls.env['res.users'].create({
+        cls.user_not_in_team = cls.env['res.users'].sudo().create({
             'email': 'noteamuser@example.com',
             'login': 'noteamuser',
             'name': 'User Not In Team',

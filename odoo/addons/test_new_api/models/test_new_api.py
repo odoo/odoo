@@ -3,7 +3,7 @@
 
 import datetime
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
 
 
@@ -572,7 +572,7 @@ class ComputeOnchange(models.Model):
             if any(line.foo == record.foo for line in record.line_ids):
                 continue
             # add a line with the same value as 'foo'
-            record.line_ids = [(0, 0, {'foo': record.foo})]
+            record.line_ids = [Command.create({'foo': record.foo})]
 
     @api.depends('foo')
     def _compute_tag_ids(self):
@@ -1179,3 +1179,23 @@ class ComputeEditableLine(models.Model):
     def _compute_edit(self):
         for line in self:
             line.edit = line.value
+
+
+class ConstrainedUnlinks(models.Model):
+    _name = 'test_new_api.model_constrained_unlinks'
+    _description = 'Model with unlink override that is constrained'
+
+    foo = fields.Char()
+    bar = fields.Integer()
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_bar_gt_five(self):
+        for rec in self:
+            if rec.bar and rec.bar > 5:
+                raise ValueError("Nooooooooo bar can't be greater than five!!")
+
+    @api.ondelete(at_uninstall=True)
+    def _unlink_except_prosciutto(self):
+        for rec in self:
+            if rec.foo and rec.foo == 'prosciutto':
+                raise ValueError("You didn't say if you wanted it crudo or cotto...")

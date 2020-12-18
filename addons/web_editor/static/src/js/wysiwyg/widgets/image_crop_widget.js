@@ -27,7 +27,7 @@ const ImageCropWidget = Widget.extend({
         this.document = media.ownerDocument;
         // key: ratio identifier, label: displayed to user, value: used by cropper lib
         this.aspectRatios = {
-            "0/0": {label: _t("Free"), value: 0},
+            "0/0": {label: _t("Flexible"), value: 0},
             "16/9": {label: "16:9", value: 16 / 9},
             "4/3": {label: "4:3", value: 4 / 3},
             "1/1": {label: "1:1", value: 1},
@@ -98,7 +98,6 @@ const ImageCropWidget = Widget.extend({
             this.$cropperImage.cropper('destroy');
             this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
         }
-        this.media.setAttribute('src', this.initialSrc);
         return this._super(...arguments);
     },
 
@@ -125,9 +124,18 @@ const ImageCropWidget = Widget.extend({
             }
         });
         delete this.media.dataset.resizeWidth;
-        this.initialSrc = await applyModifications(this.media);
+        this.media.setAttribute('src', await applyModifications(this.media));
         this.$media.trigger('image_cropped');
-        this.destroy();
+        return this.destroy();
+    },
+    /**
+     * Discards the current cropping session and restores the original image.
+     *
+     * @private
+     */
+    _discard() {
+        this.media.setAttribute('src', this.initialSrc);
+        return this.destroy();
     },
     /**
      * Returns an attribute's value for saving.
@@ -183,7 +191,7 @@ const ImageCropWidget = Widget.extend({
             case 'apply':
                 return this._save();
             case 'discard':
-                return this.destroy();
+                return this._discard();
         }
     },
     /**

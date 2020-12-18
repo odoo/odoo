@@ -1,41 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_vat
+# * base_vat
 # 
 # Translators:
-# Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
-# Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
-# Noma Yuki, 2020
-# 
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Noma Yuki, 2020\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
-msgid ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" aria-label=\"Values set here are company-specific.\" "
-"groups=\"base.group_multi_company\" role=\"img\"/>"
-msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"各企業固有の値\" aria-"
-"label=\"各企業固有の値\" groups=\"base.group_multi_company\" role=\"img\"/>"
-
-#. module: base_vat
-#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
-msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr "<span class=\"o_vat_label\">VAT</span>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -45,7 +28,7 @@ msgstr "会社"
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
 msgid "Config Settings"
-msgstr "コンフィグ設定"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -53,56 +36,34 @@ msgid "Contact"
 msgstr "連絡先"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
-msgid "Display Name"
-msgstr "表示名"
-
-#. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company__id
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
-msgid "ID"
-msgstr "ID"
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
-msgstr "このチェックボックスがオンになっている場合、ヨーロッパのVIESサービスでVAT番号を確認できないと、連絡先を保存できません。"
+msgstr ""
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company____last_update
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:base_vat.field_res_partner____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
-
-#. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
+#: code:addons/base_vat/models/res_partner.py:154
 #, python-format
 msgid ""
-"The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
-"Note: the expected format is %(format)s"
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
 msgstr ""
-"パートナー[%(name)s]のVAT番号[%(vat)s]が有効ではないようです。 \n"
-"注：予想される形式は%(format)sです"
+"VAT番号[%s]パートナー[%s]は有効ではないようです。\n"
+"注：期待される形式は%sです"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
+#: code:addons/base_vat/models/res_partner.py:153
 #, python-format
 msgid ""
-"The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
-"validation check or did not respect the expected format %(format)s."
-msgstr ""
-"パートナー[%(name)s]のVAT番号[%(vat)s]は、VIES "
-"VAT検証チェックに失敗したか、予期された形式%(format)sを認識しませんでした。"
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
+msgstr "VAT番号[%s]パートナー[%s]がVIES VATの妥当性チェックに失敗したか、または予想されるフォーマット%sを遵守していません。"
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "VAT（Value Added Tax）"
 
@@ -110,9 +71,9 @@ msgstr "VAT（Value Added Tax）"
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings__vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr "VAT番号を確認する"
+msgstr ""
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr "ヨーロッパのVIESサービスを使用してVAT番号を確認する"
+msgstr ""

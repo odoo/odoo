@@ -1,21 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* sale_quotation_builder
+# * sale_quotation_builder
 # 
 # Translators:
-# Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
-# Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
-# Manami Hashi <manami@roomsfor.hk>, 2020
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
-# 
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Manami Hashi <manami@roomsfor.hk>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,7 +22,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "&amp;times;"
 msgstr "&amp;times;"
 
@@ -45,14 +43,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
-msgid ""
-":\n"
-"                        this content will appear on the quotation only if this\n"
-"                        product is not removed."
-msgstr ""
-
-#. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid ""
 "<strong>Template Header:</strong> this content\n"
@@ -66,11 +56,6 @@ msgid "About us"
 msgstr "会社概要"
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
-msgid "An awesome"
-msgstr ""
-
-#. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid ""
 "As a leading professional services firm,\n"
@@ -79,31 +64,24 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
+msgid "Back"
+msgstr "戻る"
+
+#. module: sale_quotation_builder
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Close"
-msgstr "クローズ"
+msgstr "閉じる"
 
 #. module: sale_quotation_builder
-#: model:ir.model,name:sale_quotation_builder.model_res_company
-msgid "Companies"
-msgstr "会社"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
-msgid "Design Template"
+#: model:ir.model,name:sale_quotation_builder.model_res_config_settings
+msgid "Config Settings"
 msgstr ""
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__display_name
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_res_company__display_name
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_line__display_name
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_option__display_name
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template__display_name
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_line__display_name
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option__display_name
-msgid "Display Name"
-msgstr "表示名"
+#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_template_view_form_inherit_sale_quotation_builder
+msgid "Edit Template"
+msgstr "テンプレートを編集"
 
 #. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
@@ -120,18 +98,6 @@ msgstr ""
 "                                方法論や保証、チーム、SLA、利用規約などです。"
 
 #. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template__id
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_res_company__id
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order__id
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_line__id
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_option__id
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template__id
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_line__id
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option__id
-msgid "ID"
-msgstr "ID"
-
-#. module: sale_quotation_builder
 #: model_terms:sale.order.template,website_description:sale_quotation_builder.sale_order_template_default
 msgid ""
 "If you edit a quotation from the 'Preview' of a quotation, you will\n"
@@ -139,23 +105,6 @@ msgid ""
 "                        template (from the Configuration menu), all future quotations will\n"
 "                        use this modified template."
 msgstr ""
-
-#. module: sale_quotation_builder
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_product_template____last_update
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_res_company____last_update
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order____last_update
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_line____last_update
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_option____last_update
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template____last_update
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_line____last_update
-#: model:ir.model.fields,field_description:sale_quotation_builder.field_sale_order_template_option____last_update
-msgid "Last Modified on"
-msgstr "最終更新日"
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.brand_promotion
-msgid "Open Source CRM"
-msgstr "オープンソースCRM"
 
 #. module: sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
@@ -196,7 +145,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.sale_order_portal_content_inherit_sale_quotation_builder
 #: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
 msgid "Product:"
 msgstr "プロダクト:"
@@ -235,7 +183,7 @@ msgstr "販売オプション"
 
 #. module: sale_quotation_builder
 #: model:ir.model,name:sale_quotation_builder.model_sale_order
-msgid "Sales Order"
+msgid "Sale Order"
 msgstr "販売オーダ"
 
 #. module: sale_quotation_builder
@@ -270,11 +218,6 @@ msgid ""
 "                                customize it to fit your own needs from the <i>Sales</i>\n"
 "                                application, using the menu: Configuration /\n"
 "                                Quotation Templates."
-msgstr ""
-
-#. module: sale_quotation_builder
-#: model_terms:ir.ui.view,arch_db:sale_quotation_builder.so_template
-msgid "This is a preview of the sale order template."
 msgstr ""
 
 #. module: sale_quotation_builder

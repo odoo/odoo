@@ -628,10 +628,6 @@ Object.assign(MessageList, {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
         },
-        selectedMessageLocalId: {
-            type: String,
-            optional: true,
-        },
         threadViewLocalId: String,
     },
     template: 'mail.MessageList',

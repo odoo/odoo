@@ -3,29 +3,50 @@
 # 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# as co02 <asco02@163.com>, 2020
-# wopalm <wopalm@gmail.com>, 2020
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# keecome <7017511@qq.com>, 2019
+# 黎伟杰 <674416404@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: wopalm <wopalm@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: zh_CN\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid ""
+"<br/>\n"
+"                            on our services on \""
+msgstr ""
+"<br/>\n"
+"在我们的服务范围”"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
+msgstr ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+msgid "<span class=\"o_stat_text\">Resource</span>"
+msgstr "<span class=\"o_stat_text\">资源</span>"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
@@ -51,7 +72,12 @@ msgstr "备注"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
+msgid "Created on"
+msgstr "创建时间"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
@@ -65,8 +91,6 @@ msgid "Date"
 msgstr "日期"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_message__display_name
-#: model:ir.model.fields,field_description:rating.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
@@ -75,29 +99,23 @@ msgstr "显示名称"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "Document"
-msgstr "单据"
+msgstr "文档"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
 msgid "Document Model"
-msgstr "单据模型"
+msgstr "文档模型"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
 msgid "Email Thread"
-msgstr "邮件主题"
+msgstr "EMail线程"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
 msgstr "评级已提交，则该项为可行。"
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Feel free to write a feedback on your experience:"
-msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
@@ -106,19 +124,13 @@ msgstr "已填写的评级"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Go back to the Homepage"
-msgstr ""
+msgid "Go to our website"
+msgstr "请浏览我们的网站"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Group By"
 msgstr "分组"
-
-#. module: rating
-#: model:ir.model.fields,help:rating.field_rating_rating__is_internal
-msgid ""
-"Hide to public / portal users, independently from subtype configuration."
-msgstr ""
 
 #. module: rating
 #: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
@@ -127,8 +139,6 @@ msgid "Highly dissatisfied"
 msgstr "非常不满意"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_message__id
-#: model:ir.model.fields,field_description:rating.field_mail_thread__id
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
@@ -146,27 +156,29 @@ msgid "Image"
 msgstr "图像"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_message____last_update
-#: model:ir.model.fields,field_description:rating.field_mail_thread____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
+
+#. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
+msgid "Linked message"
+msgstr "链接信息"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_message
-#: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Message"
 msgstr "消息"
 
@@ -186,7 +198,7 @@ msgid "No Rating yet"
 msgstr "尚未评级"
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.rating_rating_view
+#: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "No rating yet"
 msgstr "还没点评"
 
@@ -217,16 +229,6 @@ msgid "Parent Document Name"
 msgstr "父级文档名称"
 
 #. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
-msgid "Parent Holder"
-msgstr ""
-
-#. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__parent_ref
-msgid "Parent Ref"
-msgstr ""
-
-#. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
 msgstr "父级相关文档模型"
@@ -234,7 +236,7 @@ msgstr "父级相关文档模型"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr "满意度"
+msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -247,6 +249,7 @@ msgid "Rated person"
 msgstr "评级人员"
 
 #. module: rating
+#: model:ir.actions.act_window,name:rating.action_view_rating
 #: model:ir.model,name:rating.model_rating_rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_ids
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_text
@@ -284,6 +287,11 @@ msgid "Rating Mixin"
 msgstr "混合评级"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
+msgid "Rating Number"
+msgstr "评级数值"
+
+#. module: rating
 #: model:ir.model,name:rating.model_rating_parent_mixin
 msgid "Rating Parent Mixin"
 msgstr ""
@@ -296,7 +304,6 @@ msgstr "评级满意度"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
-#: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Value"
 msgstr "评级值"
 
@@ -307,19 +314,16 @@ msgstr "点评数"
 
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
-msgid "Rating should be between 0 to 5"
-msgstr ""
+msgid "Rating should be between 0 to 10"
+msgstr "评级值应介于0-10之间"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
-msgid "Rating value: 0=Unhappy, 5=Happy"
-msgstr ""
+msgid "Rating value: 0=Unhappy, 10=Happy"
+msgstr "级值：0=不开心，10=开心"
 
 #. module: rating
-#: model:ir.actions.act_window,name:rating.rating_rating_view
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
-#: model:ir.ui.menu,name:rating.rating_rating_menu_technical
-#: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
 msgstr "点评"
@@ -333,7 +337,7 @@ msgstr "点评的理由"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
 msgid "Related Document Model"
-msgstr "相关的单据模型"
+msgstr "相关的文档模型"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
@@ -345,11 +349,6 @@ msgstr "相关评级"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Resource"
 msgstr "资源"
-
-#. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__resource_ref
-msgid "Resource Ref"
-msgstr ""
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
@@ -373,19 +372,15 @@ msgid "Send Feedback"
 msgstr "发送反馈"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__create_date
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
+#: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
 msgstr "提交日期"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
-msgid "Thank you for rating our services!"
-msgstr ""
-
-#. module: rating
-#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
-msgid "Thank you, we appreciate your feedback!"
-msgstr ""
+msgid "Thanks! We appreciate your feedback."
+msgstr "谢谢！非常感谢您的积极反馈。"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name
@@ -393,19 +388,30 @@ msgid "The name of the rated resource."
 msgstr "被评估对象的名字"
 
 #. module: rating
-#: model_terms:ir.actions.act_window,help:rating.rating_rating_view
+#: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "There is no rating for this object at the moment."
 msgstr "这个对象目前没有评级"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_rating_rating__is_internal
-msgid "Visible Internally Only"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid "We appreciate your feedback!"
+msgstr "感谢您的反馈！"
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Would be great if you can provide more information:"
+msgstr "希望您能提供以下信息："
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "Your rating has been submitted."
+msgstr "您的评级已提交。"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
-msgstr "单位"
+msgstr "作者"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
@@ -427,10 +433,15 @@ msgstr "不满意"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "on"
-msgstr "on"
+msgstr "在"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "satisfied"
 msgstr "满意"
+
+#. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
+msgid "you are"
+msgstr "你是"

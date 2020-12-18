@@ -3,17 +3,17 @@
 # 	* account_tax_python
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2020
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2020
-# Shaima Safar <shaima.safar@open-inside.com>, 2020
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Nisrine Tagri <nta@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: Nisrine Tagri <nta@odoo.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,13 +28,23 @@ msgid ""
 "    - Group of Taxes: The tax is a set of sub taxes.\n"
 "    - Fixed: The tax amount stays the same whatever the price.\n"
 "    - Percentage of Price: The tax amount is a % of the price:\n"
-"        e.g 100 * (1 + 10%) = 110 (not price included)\n"
+"        e.g 100 * 10% = 110 (not price included)\n"
 "        e.g 110 / (1 + 10%) = 100 (price included)\n"
 "    - Percentage of Price Tax Included: The tax amount is a division of the price:\n"
 "        e.g 180 / (1 - 10%) = 200 (not price included)\n"
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    -  مجموعة الضرائب: الضريبة هي مجموعة من الضرائب الفرعية.\n"
+"    - ثابت: يظل مبلغ الضريبة كما هو الثمن.\n"
+"    - نسبة السعر: مبلغ الضريبة هو٪ من السعر:\n"
+"        على سبيل المثال ، 100 * 10٪ = 110 (لا يشمل السعر)\n"
+"        على سبيل المثال 110 / (1 + 10٪) = 100 (السعر مشمول)\n"
+"    - نسبة ضريبة السعر المشمول: مبلغ الضريبة هو تقسيم للسعر\n"
+"         على سبيل المثال ، 180 / (1 - 10٪) = 200 (لا يشمل السعر)\n"
+"  على سبيل المثال ، 200 * (1 - 10٪) = 180 (السعر مشمول)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
@@ -117,24 +127,6 @@ msgstr ""
 ":param quantity: float\n"
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
-
-#. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__display_name
-msgid "Display Name"
-msgstr "الاسم المعروض"
-
-#. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__id
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__id
-msgid "ID"
-msgstr "المُعرف"
-
-#. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax____last_update
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template____last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute

@@ -20,7 +20,8 @@ from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 
-from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
+from odoo.addons.http_routing.models import ir_http
+from odoo.addons.http_routing.models.ir_http import _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
@@ -418,7 +419,7 @@ class Http(models.AbstractModel):
         return session_info
 
 
-class ModelConverter(ModelConverter):
+class ModelConverter(ir_http.ModelConverter):
 
     def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].with_user(uid)

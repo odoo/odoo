@@ -178,7 +178,9 @@ var BarcodeEvents = core.Class.extend(mixins.PropertiesMixin, {
         // have no way of redispatching 'genuine' key events. Resent events
         // don't trigger native event handlers of elements. So this means that
         // our fake events will not appear in eg. an <input> element.
-        if ((this.element_is_editable(e.target) && !$(e.target).data('enableBarcode')) && e.target.getAttribute("barcode_events") !== "true")
+        // Don't catch events targeting a shadow DOM because we must keep the
+        // behavior specific to the content.
+        if (((this.element_is_editable(e.target) || e.target.shadowRoot) && !$(e.target).data('enableBarcode')) && e.target.getAttribute("barcode_events") !== "true")
             return;
 
         // Catch and buffer the event

@@ -3,19 +3,17 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
-# sergeiruzkiicode <sergei.ruzki@icode.by>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
+# Denis Baranov <baranov@itlibertas.com>, 2019
+# Martin Trigaux, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2019\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,6 +26,22 @@ msgstr ""
 #, python-format
 msgid " : Check Number Sequence"
 msgstr ": Проверьте порядковый номер"
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "A check memo cannot exceed 60 characters."
+msgstr "Проверка памятки не может превышать 60 символов."
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Шаблон плана счетов"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -63,12 +77,12 @@ msgstr "Макет чека"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr "Левое поле чеке"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
 msgid "Check Number"
-msgstr "Номер чека"
+msgstr "контрольный номер"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
@@ -78,12 +92,12 @@ msgstr "Проверьте печать"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
 msgid "Check Printing Payment Method Selected"
-msgstr "Метод оплаты печатным чеком выбрано"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr "Правое поле чеке"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
@@ -94,12 +108,6 @@ msgstr "Проверьте последовательность"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr "Верхнее поле чеке"
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid "Check numbers can only consist of digits"
 msgstr ""
 
 #. module: account_check_printing
@@ -108,7 +116,7 @@ msgstr ""
 msgid "Check this option if your pre-printed checks are not numbered."
 msgstr ""
 "Проверьте эту опцию, если ваши предварительно напечатанные чеки не "
-"пронумерованы."
+"пронумерованы"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -123,7 +131,7 @@ msgstr "Проверки"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Последовательность нумерации чеков."
+msgstr "Последовательность нумерации чеков"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -143,19 +151,19 @@ msgid "Companies"
 msgstr "Компании"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_config_settings
-msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
+msgid "Company Country code"
+msgstr ""
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "Контакт"
+#: model:ir.model,name:account_check_printing.model_res_config_settings
+msgid "Config Settings"
+msgstr "Настройки конфигурации"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
@@ -163,33 +171,14 @@ msgid "Created on"
 msgstr "Создан"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "Перейти к панели конфигурации"
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "Номер"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -207,18 +196,7 @@ msgid "Journal"
 msgstr "Журнал"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "Запись журнала"
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
@@ -263,12 +241,6 @@ msgid "None"
 msgstr "Ничего"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
-msgid "Payment Method"
-msgstr "Метод оплаты"
-
-#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
 msgstr "Платежи"
@@ -280,8 +252,8 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Платежи к печати в виде чеков должны иметь способ оплаты 'Чек' и не должны "
-"быть уже согласованы"
+"Печать проверенных платежей должна иметь статус: 'Проверено' и выбрана в "
+"методах оплаты и не должны быть уже согласованы"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -289,24 +261,8 @@ msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
 msgstr ""
-"Пожалуйста, введите сперва номер предпечатного чека, который вы собираетесь "
-"напечатать."
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid ""
-"Preferred payment method when paying this vendor. This is used to filter "
-"vendor bills by preferred payment method to register payments in mass. Use "
-"cases: create bank files for batch wires, check runs."
-msgstr ""
+"Пожалуйста введите сперва номер пред печатной проверки которую вы "
+"собираетесь напечатать."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -327,7 +283,7 @@ msgstr "Напечатать чеки"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr "Метка даты печати"
+msgstr ""
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -335,12 +291,22 @@ msgstr "Метка даты печати"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "Напечатать предпросмотренные чеки"
+msgstr "Напечатать предпростмотренный чек"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_register
+msgid "Register Payment"
+msgstr "Регистрация Платежа"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Reset Amount in Words"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr "правое поле"
+msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -353,22 +319,9 @@ msgstr ""
 "Для того, чтобы выключить функцию печати, выберите 'None'."
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Sent"
-msgstr "Отправлено"
-
-#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "Порядковый номер для следующего напечатанного чека."
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid ""
-"Something went wrong with Check Layout, please select another layout in "
-"Invoicing/Accounting Settings and try again."
-msgstr ""
+msgstr "Порядковый номер для следующего напечатанного чека"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -376,16 +329,17 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
 msgstr ""
-"Техническая характеристика используется, чтобы узнать, была ли печать чека "
+"Техническая характеристика используется, чтобы узнать, была ли  печать чека "
 "включена в качестве метода оплаты."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
 msgid ""
-"The following numbers are already used:\n"
-"%s"
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
 msgstr ""
+"Код страны ISO в двух символах.\n"
+"Вы можете использовать это поле для быстрого поиска."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -394,7 +348,7 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"Последний номер чека был %s. Для того, чтобы избежать отклонение чека "
+"Последний номер чека был %s. Для того, чтобы избежать  отклонение чека "
 "банком, вы можете использовать только большее число."
 
 #. module: account_check_printing
@@ -405,7 +359,7 @@ msgid ""
 "wrong, you can change it in the journal configuration page."
 msgstr ""
 "Выбранный журнал настроен на печать номера чеков. Если заранее отпечатанные "
-"бумажные чеки уже имеют номера или если текущая нумерация ошибочна, вы "
+"бумажные чеки уже имеют номера, или если текущая нумерация ошибочна, вы "
 "можете изменить ее на странице конфигурации журнала."
 
 #. module: account_check_printing
@@ -422,7 +376,7 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid ""
-"This option allows you to print the date label on the check as per CPA.\n"
+"This option allows you to print the date label on the check as per CPA. "
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
 
@@ -438,14 +392,24 @@ msgid "Unmark Sent"
 msgstr "Снять отметку Отправлено"
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Void Check"
-msgstr ""
-
-#. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"You have to choose a check layout. For this, go in Invoicing/Accounting "
-"Settings, search for 'Checks layout' and set one."
+"You have to choose a check layout. For this, go in Apps, search for 'Checks "
+"layout' and install one."
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
+msgid "check in middle"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
+msgid "check on bottom"
+msgstr ""
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
+msgid "check on top"
 msgstr ""

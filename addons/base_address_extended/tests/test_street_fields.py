@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestStreetFields(SavepointCase):
+class TestStreetFields(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

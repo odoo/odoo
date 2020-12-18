@@ -1,9 +1,9 @@
 odoo.define('website.s_showcase_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-options.registry.Showcase = options.Class.extend({
+snippetOptions.registry.Showcase = snippetOptions.SnippetOptionWidget.extend({
     /**
      * @override
      */

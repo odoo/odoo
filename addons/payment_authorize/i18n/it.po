@@ -3,15 +3,17 @@
 # 	* payment_authorize
 # 
 # Translators:
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
+# Sergio Zanchetta <primes2h@gmail.com>, 2019
+# Luigia Cimmino Caserta <lcc@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Luigia Cimmino Caserta <lcc@odoo.com>, 2019\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,13 +28,11 @@ msgid ""
 " If you don't have any account, ask your salesperson to grant you a portal "
 "access. "
 msgstr ""
-"Se non si possiede un account, chiedere all'addetto vendite l'assegnazione "
-"di un accesso al portale."
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_client_key
 msgid "API Client Key"
-msgstr "Chiave API cliente"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_login
@@ -42,7 +42,7 @@ msgstr "ID accesso API"
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_signature_key
 msgid "API Signature Key"
-msgstr "Chiave di firma API"
+msgstr ""
 
 #. module: payment_authorize
 #: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__authorize_transaction_key
@@ -82,28 +82,14 @@ msgstr ""
 "digitale (%s) mancante"
 
 #. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__display_name
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__display_name
-msgid "Display Name"
-msgstr "Nome visualizzato"
-
-#. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "Generate Client Key"
-msgstr "Genera chiave cliente"
+msgstr ""
 
 #. module: payment_authorize
 #: model_terms:ir.ui.view,arch_db:payment_authorize.acquirer_form_authorize
 msgid "How to get paid with Authorize.Net"
-msgstr "Ricevere un pagamento con Authorize.Net"
-
-#. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token__id
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction__id
-msgid "ID"
-msgstr "ID"
+msgstr "Come essere pagati con Authorize.Net"
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -114,13 +100,6 @@ msgid ""
 msgstr ""
 "Rilevato token non valido: profilo di Authorize.Net mancante. Controllare "
 "che il token abbia un riferimento valido al sistema."
-
-#. module: payment_authorize
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment_authorize.field_payment_transaction____last_update
-msgid "Last Modified on"
-msgstr "Ultima modifica il"
 
 #. module: payment_authorize
 #: model:ir.model,name:payment_authorize.model_payment_acquirer
@@ -213,8 +192,6 @@ msgid ""
 "Unable to fetch Client Key, make sure the API Login and Transaction Key are "
 "correct."
 msgstr ""
-"Impossibile recuperare la chiave cliente, assicurarsi che l'accesso e la "
-"chiave di transazione siano corretti."
 
 #. module: payment_authorize
 #: code:addons/payment_authorize/models/payment.py:0
@@ -227,4 +204,4 @@ msgstr "Attenzione"
 #: code:addons/payment_authorize/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment."
-msgstr "Impossibile, al momento, aggiungere il metodo di pagamento."
+msgstr "Non ci è possibile aggiungere il tuo metodo di pagamento al momento."

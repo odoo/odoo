@@ -1,10 +1,8 @@
 .o_web_client .o_export {
-    padding: 20px;
     .o-export-panel {
         height: 100%;
     }
     .o_left_panel {
-        padding-right: 10px;
         flex-flow: column nowrap;
         height: 100%;
         .o_left_field_panel {
@@ -30,7 +28,6 @@
     }
 
     .o_right_panel {
-        padding-left: 10px;
         flex-flow: column nowrap;
         height: 100%;
         .o_save_list {
@@ -48,6 +45,20 @@
             .o_remove_field {
                 cursor: pointer;
             }
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        .ui-sortable-handle {
+            display: none;
+        }
+
+        .o_right_field_panel .o_export_field {
+            padding-left: map-get($spacers, 1);
+        }
+
+        .o_left_panel, .o_right_panel {
+            height: 50%;
         }
     }
 }

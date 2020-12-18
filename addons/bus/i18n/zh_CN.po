@@ -3,22 +3,21 @@
 # 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# 老窦 北京 <2662059195@qq.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# boho wong <wbh924@126.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# 稀饭~~ <wangwhai@qq.com>, 2020
+# Martin Trigaux, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# 老窦 北京 <2662059195@qq.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# boho wong <wbh924@126.com>, 2019
+# Youfu Sheng <wdmsyf@sina.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +29,11 @@ msgstr ""
 #: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr "用户只能有一个IM状态"
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr "自动清空"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -54,7 +58,7 @@ msgstr "联系人"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__create_date
@@ -64,16 +68,12 @@ msgstr "创建时间"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
-#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
-#: model:ir.model.fields,field_description:bus.field_res_users__display_name
 msgid "Display Name"
 msgstr "显示名称"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
-#: model:ir.model.fields,field_description:bus.field_res_partner__id
-#: model:ir.model.fields,field_description:bus.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -87,10 +87,8 @@ msgstr "IM的状态"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
-#: model:ir.model.fields,field_description:bus.field_res_partner____last_update
-#: model:ir.model.fields,field_description:bus.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
@@ -105,12 +103,12 @@ msgstr "最后登录"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
@@ -126,21 +124,6 @@ msgstr "离线"
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
 msgstr "在线"
-
-#. module: bus
-#. openerp-web
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#, python-format
-msgid "Refresh"
-msgstr "刷新"
-
-#. module: bus
-#. openerp-web
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#, python-format
-msgid "The page appears to be out of date."
-msgstr "‎该页面似乎已过期。‎"
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

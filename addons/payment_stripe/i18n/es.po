@@ -3,16 +3,15 @@
 # 	* payment_stripe
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Olivier Dony <odo@odoo.com>, 2020
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Olivier Dony <odo@odoo.com>, 2020\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -34,8 +33,8 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
-"Una URL relativa o absoluta que apunta a una imagen cuadrada de su marca o "
-"producto, tal como definió en su perfil de Stripe. Ver "
+"Una URL relativo o absoluto que apunta a una imagen cuadrada de su marca o "
+"producto, tal como definido en su perfil de Stripe. Ver "
 "https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
@@ -46,17 +45,9 @@ msgstr "URL de la imagen del proceso de pago"
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Close"
 msgstr "Cerrar"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
-msgid "Display Name"
-msgstr "Nombre mostrado"
 
 #. module: payment_stripe
 #. openerp-web
@@ -66,43 +57,21 @@ msgid "Error"
 msgstr "Error"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
-msgid "ID"
-msgstr "ID"
-
-#. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid ""
-"If you enable webhooks, this secret is used to verify the electronic "
-"signature of events sent by Stripe to Odoo. Failing to set this field in "
-"Odoo will disable the webhook system for this acquirer entirely."
-msgstr ""
-
-#. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Just one more second, We are redirecting you to Stripe..."
-msgstr "Solo un segundo más, lo estamos redirigiendo a Stripe..."
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Método de Pago"
+msgstr "Método de pago"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
 msgid "Payment Method ID"
-msgstr "ID de Método de Pago"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -144,12 +113,7 @@ msgstr "Stripe"
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr "ID de Intento de Pago de Stripe"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
-msgid "Stripe Payment Intent Secret"
-msgstr "Secreto de intento de pago de Stripe"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -162,12 +126,6 @@ msgid "Stripe Secret Key"
 msgstr "Contraseña secreta de Stripe"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid "Stripe Webhook Secret"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
@@ -176,8 +134,8 @@ msgstr "Stripe nos proporcionó la siguiente información sobre el problema: \"%
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
-msgid "Stripe: %(count)s orders found for reference %(reference)s"
-msgstr ""
+msgid "Stripe: %s orders found for reference %s"
+msgstr "Stripe: %s órdenes encontrados para referencia %s"
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
@@ -192,23 +150,20 @@ msgid ""
 "Unable to convert Stripe customer for SCA compatibility. Is there at least "
 "one card for this customer in the Stripe backend?"
 msgstr ""
-"No se puede convertir al cliente Stripe por compatibilidad SCA(Strong "
-"Customer Authentication). ¿Hay al menos una tarjeta para este cliente en el "
-"backend de Stripe?"
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "Unable to save card"
-msgstr "No se puede guardar la tarjeta"
+msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/js/payment_form.js:0
 #, python-format
 msgid "We are not able to add your payment method at the moment. "
-msgstr "No podemos agregar su método de pago en este momento."
+msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0

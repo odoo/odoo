@@ -3,16 +3,16 @@
 # 	* auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Martin Trigaux, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -263,9 +263,9 @@ msgstr ""
 "                        Електронна адреса для входу: <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
 "                        Ніколи не чули про Odoo? Усе в одному програмному забезпеченні для бізнесу, що подобається більше, ніж трьом мільйонам користувачів. Це значно покращить ваш досвід роботи та підвищить вашу продуктивність.\n"
 "                        <br/><br/>\n"
-"                        Подивіться <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> щоби відкрити для себе інструменти системи.\n"
+"                        Подивіться <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> щоби відкрити для себе інструменти.\n"
 "                        <br/><br/>\n"
-"                        Насолоджуйтесь Odoo!<br/>\n"
+"                        Вподобайте Odoo!<br/>\n"
 "                        --<br/> Команда ${object.company_id.name}\n"
 "                    </div>\n"
 "                </td></tr>\n"
@@ -348,11 +348,8 @@ msgid ""
 "                            </a>\n"
 "                        </div>\n"
 "                        If you do not expect this, you can safely ignore this email.<br/><br/>\n"
-"                        Thanks,\n"
-"                        % if user.signature:\n"
-"                            <br/>\n"
-"                            ${user.signature | safe}\n"
-"                        % endif\n"
+"                        Thanks,<br/>\n"
+"                        ${user.signature | safe}<br/>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -512,15 +509,12 @@ msgid ""
 "                        Your login is <strong>${object.email}</strong><br/>\n"
 "                        To gain access to your account, you can use the following link:\n"
 "                        <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"                            <a href=\"/web/login?auth_login=${object.email}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            <a href=\"/web/login?${ctx['auth_login']}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
 "                                Go to My Account\n"
 "                            </a>\n"
 "                        </div>\n"
-"                        Thanks,<br/>\n"
-"                        % if user.signature:\n"
-"                            <br/>\n"
-"                            ${user.signature | safe}\n"
-"                        % endif\n"
+"                        Thanks,<br/><br/>\n"
+"                        ${user.signature | safe}<br/>\n"
 "                    </div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
@@ -731,14 +725,6 @@ msgid "Default Access Rights"
 msgstr "Права доступу за замовчуванням"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_ir_http__display_name
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__display_name
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__display_name
-msgid "Display Name"
-msgstr "Відобразити назву"
-
-#. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
 msgstr "Не маєте облікового запису?"
@@ -760,26 +746,10 @@ msgid "HTTP Routing"
 msgstr "Маршрутизація HTTP"
 
 #. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_ir_http__id
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__id
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner__id
-#: model:ir.model.fields,field_description:auth_signup.field_res_users__id
-msgid "ID"
-msgstr "ID"
-
-#. module: auth_signup
 #: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
 msgstr "Невірний вхід токену"
-
-#. module: auth_signup
-#: model:ir.model.fields,field_description:auth_signup.field_ir_http____last_update
-#: model:ir.model.fields,field_description:auth_signup.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:auth_signup.field_res_partner____last_update
-#: model:ir.model.fields,field_description:auth_signup.field_res_users____last_update
-msgid "Last Modified on"
-msgstr "Останні зміни"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -837,13 +807,12 @@ msgstr "Скинути пароль"
 #: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr "Скинути пароль: невірне ім’я чи ел. пошта"
+msgstr "Скидання паролю: невірне ім’я чи ел. пошта"
 
 #. module: auth_signup
-#: model:ir.actions.server,name:auth_signup.action_send_password_reset_instructions
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
-msgid "Send Password Reset Instructions"
-msgstr "Надіслати інструкцію зі скидання паролю"
+msgid "Send Reset Password Instructions"
+msgstr "Відправити інструкції по скиданню паролю"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -895,13 +864,13 @@ msgstr "Реєстрація незапрошених користувачів �
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
-msgstr "Токен реєстрації '%s' вже не є дійсним"
+msgstr "Токен реєстрації '%s' вже не є вірним"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
-msgstr "Токен реєстрації '%s' не є дійсним"
+msgstr "Токен реєстрації '%s' не є вірним"
 
 #. module: auth_signup
 #: code:addons/auth_signup/models/res_users.py:0
@@ -970,12 +939,6 @@ msgstr "Користувачі: Повідомляти про незареєст
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
 msgstr "Вітаємо в ${object.company_id.name}!"
-
-#. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:0
-#, python-format
-msgid "You cannot perform this action on an archived user."
-msgstr "Ви не можете виконати цю дію на зархівованому користувачі."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

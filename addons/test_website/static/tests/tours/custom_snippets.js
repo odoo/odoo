@@ -10,8 +10,8 @@ var tour = require('web_tour.tour');
  * -> drag a banner into page content
  * -> customize banner (set text)
  * -> save banner as custom snippet
- * -> confirm name (remove in master when implicit default name feature is implemented)
- * -> confirm save & reload (remove in master because reload is not needed anymore)
+ * -> confirm name (TODO: remove when implicit default name feature is implemented)
+ * -> go to blocks
  * -> ensure custom snippet is available
  * -> drag custom snippet
  * -> ensure block appears as banner
@@ -51,8 +51,8 @@ tour.register('test_custom_snippet', {
         trigger: ".modal-dialog button span:contains('Save')",
     },
     {
-        content: "confirm save and reload",
-        trigger: ".modal-dialog button span:contains('Save and Reload')",
+        content: "go to blocks",
+        trigger: ".o_we_add_snippet_btn",
     },
     {
         content: "ensure custom snippet appeared",

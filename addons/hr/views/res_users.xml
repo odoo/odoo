@@ -124,14 +124,17 @@
                         <group>
                             <group string="Contact Information">
                                 <field name="employee_ids" invisible="1"/>
-                                <field name="address_home_id"
-                                    context="{
-                                        'show_address': 1,
-                                        'default_employee_ids': employee_ids,
-                                        'default_type': 'private',
-                                        'form_view_ref': 'base.res_partner_view_form_private'}"
-                                    options='{"always_reload": True, "highlight_first_line": True}'
-                                    attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                                <field name="address_home_id" invisible="1"/>
+                                <label for="private_street" string="Private Address"/>
+                                <div class="o_address_format">
+                                    <field name="private_street" placeholder="Street..." class="o_address_street"/>
+                                    <field name="private_street2" placeholder="Street 2..." class="o_address_street"/>
+                                    <field name="private_city" placeholder="City" class="o_address_city"/>
+                                    <field name="private_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': private_country_id}"/>
+                                    <field name="private_zip" placeholder="ZIP" class="o_address_zip"/>
+                                    <field name="private_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                </div>
+
                                 <field name="private_email" string="Email" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}"/>
                                 <field name="employee_phone" string="Phone" class="o_force_ltr" attrs="{'readonly': [('can_edit', '=', False)], 'invisible': [('address_home_id', '=', False)]}" options="{'enable_sms': false}"/>
                                 <field name="employee_bank_account_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>

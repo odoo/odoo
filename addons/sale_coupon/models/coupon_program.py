@@ -11,10 +11,8 @@ class CouponProgram(models.Model):
 
     # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
     def _compute_order_count(self):
-        product_data = self.env['sale.order.line'].read_group([('product_id', 'in', self.mapped('discount_line_product_id').ids)], ['product_id'], ['product_id'])
-        mapped_data = dict([(m['product_id'][0], m['product_id_count']) for m in product_data])
         for program in self:
-            program.order_count = mapped_data.get(program.discount_line_product_id.id, 0)
+            program.order_count = self.env['sale.order.line'].search_count([('product_id', '=', program.discount_line_product_id.id)])
 
     def action_view_sales_orders(self):
         self.ensure_one()
@@ -30,7 +28,7 @@ class CouponProgram(models.Model):
 
     def _check_promo_code(self, order, coupon_code):
         message = {}
-        if self.maximum_use_number != 0 and self.order_count >= self.maximum_use_number:
+        if self.maximum_use_number != 0 and self.total_order_count >= self.maximum_use_number:
             message = {'error': _('Promo code %s has been expired.') % (coupon_code)}
         elif not self._filter_on_mimimum_amount(order):
             message = {'error': _(
@@ -83,7 +81,7 @@ class CouponProgram(models.Model):
             untaxed_amount = order_amount['amount_untaxed'] - sum(line.price_subtotal for line in lines)
             tax_amount = order_amount['amount_tax'] - sum(line.price_tax for line in lines)
             program_amount = program._compute_program_amount('rule_minimum_amount', order.currency_id)
-            if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program.rule_minimum_amount_tax_inclusion == 'tax_excluded' and program_amount <= untaxed_amount:
+            if program.rule_minimum_amount_tax_inclusion == 'tax_included' and program_amount <= (untaxed_amount + tax_amount) or program_amount <= untaxed_amount:
                 program_ids.append(program.id)
 
         return self.browse(program_ids)
@@ -102,7 +100,7 @@ class CouponProgram(models.Model):
         return self.filtered(lambda program: program.promo_code_usage == 'code_needed' and program.promo_code != order.promo_code)
 
     def _filter_unexpired_programs(self, order):
-        return self.filtered(lambda program: program.maximum_use_number == 0 or program.order_count <= program.maximum_use_number)
+        return self.filtered(lambda program: program.maximum_use_number == 0 or program.total_order_count <= program.maximum_use_number)
 
     def _filter_programs_on_partners(self, order):
         return self.filtered(lambda program: program._is_valid_partner(order.partner_id))
@@ -194,3 +192,9 @@ class CouponProgram(models.Model):
         most_interesting_program = max(programs, key=lambda p: p.discount_percentage)
         # remove least interesting programs
         return self - (programs - most_interesting_program)
+
+    # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
+    def _compute_total_order_count(self):
+        super(CouponProgram, self)._compute_total_order_count()
+        for program in self:
+            program.total_order_count += program.order_count

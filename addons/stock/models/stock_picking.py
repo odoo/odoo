@@ -4,8 +4,7 @@
 import json
 import time
 from ast import literal_eval
-from collections import defaultdict
-from datetime import date
+from datetime import date, timedelta
 from itertools import groupby
 from operator import itemgetter
 
@@ -66,6 +65,12 @@ class PickingType(models.Model):
         'Pre-fill Detailed Operations', default=True,
         help="If this checkbox is ticked, Odoo will automatically pre-fill the detailed "
         "operations with the corresponding products, locations and lot/serial numbers.")
+    reservation_method = fields.Selection(
+        [('by_date', 'before scheduled date'), ('at_confirm', 'At Confirmation'), ('manual', 'Manually')],
+        'Reservation Method', required=True, default='at_confirm',
+        help="How products in transfers of this operation type should be reserved.")
+    reservation_days_before = fields.Integer('Days', help="Maximum number of days before scheduled date that products should be reserved.")
+
 
     count_picking_draft = fields.Integer(compute='_compute_picking_count')
     count_picking_ready = fields.Integer(compute='_compute_picking_count')
@@ -73,8 +78,6 @@ class PickingType(models.Model):
     count_picking_waiting = fields.Integer(compute='_compute_picking_count')
     count_picking_late = fields.Integer(compute='_compute_picking_count')
     count_picking_backorders = fields.Integer(compute='_compute_picking_count')
-    rate_picking_late = fields.Integer(compute='_compute_picking_count')
-    rate_picking_backorders = fields.Integer(compute='_compute_picking_count')
     barcode = fields.Char('Barcode', copy=False)
     company_id = fields.Many2one(
         'res.company', 'Company', required=True,
@@ -122,7 +125,6 @@ class PickingType(models.Model):
         return super(PickingType, self).write(vals)
 
     def _compute_picking_count(self):
-        # TDE TODO count picking can be done using previous two
         domains = {
             'count_picking_draft': [('state', '=', 'draft')],
             'count_picking_waiting': [('state', 'in', ('confirmed', 'waiting'))],
@@ -141,9 +143,6 @@ class PickingType(models.Model):
             }
             for record in self:
                 record[field] = count.get(record.id, 0)
-        for record in self:
-            record.rate_picking_late = record.count_picking and record.count_picking_late * 100 / record.count_picking or 0
-            record.rate_picking_backorders = record.count_picking and record.count_picking_backorders * 100 / record.count_picking or 0
 
     def name_get(self):
         """ Display 'Warehouse_name: PickingType_name' """
@@ -834,8 +833,8 @@ class Picking(models.Model):
                             'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
                             'company_id': picking.company_id.id,
                         })
-                        # TODO: in master, move package field in `stock` and clean code.
-                        if pack._allowed_to_move_between_transfers():
+                        # Propagate the result package in the next move for disposable packages only.
+                        if pack.package_use == 'disposable':
                             move_lines_to_pack.write({
                                 'result_package_id': pack.id,
                             })

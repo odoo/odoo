@@ -299,7 +299,7 @@ exports.PosModel = Backbone.Model.extend({
                                     self.config.iface_electronic_scale ||
                                     self.config.iface_print_via_proxy  ||
                                     self.config.iface_scan_via_proxy   ||
-                                    self.config.iface_customer_facing_display);
+                                    self.config.iface_customer_facing_display_via_proxy);
 
             self.db.set_uuid(self.config.uuid);
             self.set_cashier(self.get_cashier());
@@ -872,7 +872,14 @@ exports.PosModel = Backbone.Model.extend({
     send_current_order_to_customer_facing_display: function() {
         var self = this;
         this.render_html_for_customer_facing_display().then(function (rendered_html) {
-            self.proxy.update_customer_facing_display(rendered_html);
+            if (self.env.pos.customer_display) {
+                var $renderedHtml = $('<div>').html(rendered_html);
+                $(self.env.pos.customer_display.document.body).html($renderedHtml.find('.pos-customer_facing_display'));
+                var orderlines = $(self.env.pos.customer_display.document.body).find('.pos_orderlines_list');
+                orderlines.scrollTop(orderlines.prop("scrollHeight"));
+            } else if (self.env.pos.proxy.posbox_supports_display) {
+                self.proxy.update_customer_facing_display(rendered_html);
+            }
         });
     },
 
@@ -882,7 +889,6 @@ exports.PosModel = Backbone.Model.extend({
     render_html_for_customer_facing_display: function () {
         var self = this;
         var order = this.get_order();
-        var rendered_html = this.config.customer_facing_display_html;
 
         // If we're using an external device like the IoT Box, we
         // cannot get /web/image?model=product.product because the
@@ -903,43 +909,12 @@ exports.PosModel = Backbone.Model.extend({
             });
         }
 
-        // when all images are loaded in product.image_base64
         return Promise.all(get_image_promises).then(function () {
-            var rendered_order_lines = "";
-            var rendered_payment_lines = "";
-            var order_total_with_tax = self.format_currency(0);
-
-            if (order) {
-                rendered_order_lines = QWeb.render('CustomerFacingDisplayOrderLines', {
-                    'orderlines': order.get_orderlines(),
-                    'pos': self,
-                });
-                rendered_payment_lines = QWeb.render('CustomerFacingDisplayPaymentLines', {
-                    'order': order,
-                    'pos': self,
-                });
-                order_total_with_tax = self.format_currency(order.get_total_with_tax());
-            }
-
-            var $rendered_html = $(rendered_html);
-            $rendered_html.find('.pos_orderlines_list').html(rendered_order_lines);
-            $rendered_html.find('.pos-total').find('.pos_total-amount').html(order_total_with_tax);
-            var pos_change_title = $rendered_html.find('.pos-change_title').text();
-            $rendered_html.find('.pos-paymentlines').html(rendered_payment_lines);
-            $rendered_html.find('.pos-change_title').text(pos_change_title);
-
-            // prop only uses the first element in a set of elements,
-            // and there's no guarantee that
-            // customer_facing_display_html is wrapped in a single
-            // root element.
-            rendered_html = _.reduce($rendered_html, function (memory, current_element) {
-                return memory + $(current_element).prop('outerHTML');
-            }, ""); // initial memory of ""
-
-            rendered_html = QWeb.render('CustomerFacingDisplayHead', {
-                origin: window.location.origin
-            }) + rendered_html;
-            return rendered_html;
+            return QWeb.render('CustomerFacingDisplayOrder', {
+                pos: self.env.pos,
+                origin: window.location.origin,
+                order: order,
+            });
         });
     },
 
@@ -1813,6 +1788,10 @@ exports.Orderline = Backbone.Model.extend({
         }
     },
 
+    get_lot_lines: function() {
+        return this.pack_lot_lines.models;
+    },
+
     get_required_number_of_lots: function(){
         var lots_required = 1;
 
@@ -1929,6 +1908,7 @@ exports.Orderline = Backbone.Model.extend({
             tax:                this.get_tax(),
             product_description:      this.get_product().description,
             product_description_sale: this.get_product().description_sale,
+            pack_lot_lines:      this.get_lot_lines()
         };
     },
     generate_wrapped_product_name: function() {
@@ -1997,7 +1977,7 @@ exports.Orderline = Backbone.Model.extend({
             return round_pr(price_unit * (1.0 - (this.get_discount() / 100.0)), rounding);
         } else {
             var product =  this.get_product();
-            var taxes_ids = product.taxes_id;
+            var taxes_ids = this.tax_ids || product.taxes_id;
             var taxes =  this.pos.taxes;
             var product_taxes = [];
 
@@ -2035,7 +2015,7 @@ exports.Orderline = Backbone.Model.extend({
         var i;
         // Shenaningans because we need
         // to keep the taxes ordering.
-        var ptaxes_ids = this.get_product().taxes_id;
+        var ptaxes_ids = this.tax_ids || this.get_product().taxes_id;
         var ptaxes_set = {};
         for (i = 0; i < ptaxes_ids.length; i++) {
             ptaxes_set[ptaxes_ids[i]] = true;
@@ -2052,7 +2032,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.get_all_prices().taxDetails;
     },
     get_taxes: function(){
-        var taxes_ids = this.get_product().taxes_id;
+        var taxes_ids = this.tax_ids || this.get_product().taxes_id;
         var taxes = [];
         for (var i = 0; i < taxes_ids.length; i++) {
             taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
@@ -2267,7 +2247,7 @@ exports.Orderline = Backbone.Model.extend({
         var taxtotal = 0;
 
         var product =  this.get_product();
-        var taxes_ids = product.taxes_id;
+        var taxes_ids = this.tax_ids || product.taxes_id;
         var taxes =  this.pos.taxes;
         var taxdetail = {};
         var product_taxes = [];
@@ -2980,42 +2960,7 @@ exports.Order = Backbone.Model.extend({
         var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
         this.fix_tax_included_price(line);
 
-        if(options.quantity !== undefined){
-            line.set_quantity(options.quantity);
-        }
-
-        if(options.price !== undefined){
-            line.set_unit_price(options.price);
-            this.fix_tax_included_price(line);
-        }
-
-        if (options.price_extra !== undefined){
-            line.price_extra = options.price_extra;
-            line.set_unit_price(line.get_unit_price() + options.price_extra);
-            this.fix_tax_included_price(line);
-        }
-
-        if(options.lst_price !== undefined){
-            line.set_lst_price(options.lst_price);
-        }
-
-        if(options.discount !== undefined){
-            line.set_discount(options.discount);
-        }
-
-        if (options.description !== undefined){
-            line.description += options.description;
-        }
-
-        if(options.extras !== undefined){
-            for (var prop in options.extras) {
-                line[prop] = options.extras[prop];
-            }
-        }
-        if (options.is_tip) {
-            this.is_tipped = true;
-            this.tip_amount = options.price;
-        }
+        this.set_orderline_options(line, options);
 
         var to_merge_orderline;
         for (var i = 0; i < this.orderlines.length; i++) {
@@ -3036,6 +2981,44 @@ exports.Order = Backbone.Model.extend({
         }
         if (this.pos.config.iface_customer_facing_display) {
             this.pos.send_current_order_to_customer_facing_display();
+        }
+    },
+    set_orderline_options: function(orderline, options) {
+        if(options.quantity !== undefined){
+            orderline.set_quantity(options.quantity);
+        }
+
+        if(options.price !== undefined){
+            orderline.set_unit_price(options.price);
+            this.fix_tax_included_price(orderline);
+        }
+
+        if (options.price_extra !== undefined){
+            orderline.price_extra = options.price_extra;
+            orderline.set_unit_price(orderline.get_unit_price() + options.price_extra);
+            this.fix_tax_included_price(orderline);
+        }
+
+        if(options.lst_price !== undefined){
+            orderline.set_lst_price(options.lst_price);
+        }
+
+        if(options.discount !== undefined){
+            orderline.set_discount(options.discount);
+        }
+
+        if (options.description !== undefined){
+            orderline.description += options.description;
+        }
+
+        if(options.extras !== undefined){
+            for (var prop in options.extras) {
+                orderline[prop] = options.extras[prop];
+            }
+        }
+        if (options.is_tip) {
+            this.is_tipped = true;
+            this.tip_amount = options.price;
         }
     },
     get_selected_orderline: function(){
@@ -3262,8 +3245,8 @@ exports.Order = Backbone.Model.extend({
             tax_set[tax_id[i]] = true;
         }
 
-        this.orderlines.each(function(line){
-            var taxes_ids = line.get_product().taxes_id;
+        this.orderlines.each(line => {
+            var taxes_ids = this.tax_ids || line.get_product().taxes_id;
             for (var i = 0; i < taxes_ids.length; i++) {
                 if (tax_set[taxes_ids[i]]) {
                     total += line.get_price_with_tax();

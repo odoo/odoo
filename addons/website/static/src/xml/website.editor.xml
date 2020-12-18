@@ -9,19 +9,6 @@
         <p class="text-muted">Your current changes will be saved automatically.</p>
     </div>
 
-    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
-    <t t-name="website.editorbar">
-        <div class="o_we_website_top_actions">
-            <div class="o_we_external_history_buttons">
-                <button type="button" data-action="undo" class="btn btn-secondary fa fa-undo"/>
-                <button type="button" data-action="redo" class="btn btn-secondary fa fa-repeat"/>
-            </div>
-            <form class="ml-auto">
-                <button type="button" class="btn btn-secondary" data-action="cancel" accesskey="j">Discard</button>
-                <button type="button" class="btn btn-primary" data-action="save" accesskey="s">Save</button>
-            </form>
-        </div>
-    </t>
     <!-- Custom checkbox (material-design-like toggle) -->
     <t t-name="website.components.switch">
         <label class="o_switch" t-att-for="id">

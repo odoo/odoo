@@ -3,22 +3,48 @@
 # 	* mrp_subcontracting
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Martin Trigaux, 2019
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/stock_move.py:0
+#, python-format
+msgid ""
+"\n"
+"You have to use 'Records Components' button in order to register quantity for a\n"
+"subcontracted product(s) with tracked component(s):\n"
+" %s.\n"
+"If you want to process more than initially planned, you\n"
+"can use the edit + unlock buttons in order to adapt the initial demand on the\n"
+"operations."
+msgstr ""
+"\n"
+"Вам потрібно використовувати кнопку 'Компоненти записів' для реєстрації кількості для\n"
+"підрядних товарів з відстежуваними компонентами:\n"
+" %s.\n"
+"Якщо ви хочете обробити більше, ніж запланували, ви\n"
+"можете використати редагування + кнопки розблокування, щоб адаптувати початковий попит в\n"
+"операціях."
+
+#. module: mrp_subcontracting
+#: code:addons/mrp_subcontracting/models/res_company.py:0
+#, python-format
+msgid "%s: Subcontracting Location"
+msgstr "%s: Місцезнаходження субпідряду"
 
 #. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_mrp_bom
@@ -29,11 +55,6 @@ msgstr "Специфікація"
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__type
 msgid "BoM Type"
 msgstr "Тип специфікації"
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_product_template_search_view
-msgid "Can be Subcontracted"
-msgstr ""
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,help:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
@@ -48,79 +69,14 @@ msgid "Companies"
 msgstr "Компанії"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
-msgid "Consumed"
-msgstr "Спожитий"
-
-#. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_res_partner
 msgid "Contact"
 msgstr "Контакт"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Continue"
-msgstr "Продовжити"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__move_line_raw_ids
-msgid "Detail Component"
-msgstr ""
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
-msgid "Discard"
-msgstr "Відмінити"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_action_record_components
 msgid "Display Action Record Components"
 msgstr "Відображати компоненти запису дії"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__display_name
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__display_name
-msgid "Display Name"
-msgstr "Відобразити назву"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule__id
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse__id
-msgid "ID"
-msgstr "ID"
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_production____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_move_line____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_picking____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_rule____last_update
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_warehouse____last_update
-msgid "Last Modified on"
-msgstr "Останні зміни на"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -134,18 +90,13 @@ msgid "Product Moves (Stock Move Line)"
 msgstr "Переміщення товару (Рядок складського переміщення)"
 
 #. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_mrp_production
-msgid "Production Order"
-msgstr "Замовлення на виробництво"
-
-#. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_move.py:0
 #, python-format
 msgid "Raw Materials for %s"
 msgstr "Сировина для%s"
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_production_subcontracting_form_view
+#: model:ir.model,name:mrp_subcontracting.model_mrp_product_produce
 msgid "Record Production"
 msgstr "Запис виробництва"
 
@@ -158,11 +109,6 @@ msgstr "Запис компонентів"
 #: model_terms:ir.ui.view,arch_db:mrp_subcontracting.stock_picking_form_view
 msgid "Register components for subcontracted product"
 msgstr "Зареєструйте компоненти для субпідрядних товарів"
-
-#. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_tree_view
-msgid "Reserved"
-msgstr "Зарезервовано"
 
 #. module: mrp_subcontracting
 #: code:addons/mrp_subcontracting/models/stock_warehouse.py:0
@@ -210,22 +156,6 @@ msgid "Stock Move"
 msgstr "Складське переміщення "
 
 #. module: mrp_subcontracting
-#: model:ir.model,name:mrp_subcontracting.model_stock_rule
-msgid "Stock Rule"
-msgstr "Складське правило"
-
-#. module: mrp_subcontracting
-#: code:addons/mrp_subcontracting/models/stock_move.py:0
-#, python-format
-msgid "Subcontract"
-msgstr ""
-
-#. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_stock_return_picking__subcontract_location_id
-msgid "Subcontract Location"
-msgstr ""
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_product_supplierinfo__is_subcontractor
 msgid "Subcontracted"
 msgstr "Підрядник"
@@ -238,9 +168,7 @@ msgid "Subcontracting"
 msgstr "Субпідряд"
 
 #. module: mrp_subcontracting
-#: code:addons/mrp_subcontracting/models/res_company.py:0
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_company__subcontracting_location_id
-#, python-format
 msgid "Subcontracting Location"
 msgstr "Місцезнаходження субпідряду"
 
@@ -260,12 +188,6 @@ msgid "Subcontracting Operation Type"
 msgstr "Тип операції субпідряду"
 
 #. module: mrp_subcontracting
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__is_subcontractor
-#: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__is_subcontractor
-msgid "Subcontractor"
-msgstr "Субпідрядник"
-
-#. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_partner__property_stock_subcontractor
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_res_users__property_stock_subcontractor
 msgid "Subcontractor Location"
@@ -273,7 +195,6 @@ msgstr "Місцезнаходження підрядника"
 
 #. module: mrp_subcontracting
 #: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_bom__subcontractor_ids
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.view_partner_mrp_subcontracting_filter
 msgid "Subcontractors"
 msgstr "Субпідряники"
 
@@ -304,11 +225,6 @@ msgid "To subcontract, use a planned transfer."
 msgstr "Для підряду використовуйте запланований трансфер."
 
 #. module: mrp_subcontracting
-#: model_terms:ir.ui.view,arch_db:mrp_subcontracting.mrp_subcontracting_move_form_view
-msgid "Total Consumed"
-msgstr ""
-
-#. module: mrp_subcontracting
 #: model:ir.model,name:mrp_subcontracting.model_stock_picking
 msgid "Transfer"
 msgstr "Переміщення"
@@ -319,7 +235,6 @@ msgid "Warehouse"
 msgstr "Склад"
 
 #. module: mrp_subcontracting
-#: code:addons/mrp_subcontracting/models/mrp_production.py:0
-#, python-format
-msgid "You must enter a serial number for each line of %s"
-msgstr ""
+#: model:ir.model.fields,field_description:mrp_subcontracting.field_mrp_product_produce__subcontract_move_id
+msgid "stock move from the subcontract picking"
+msgstr "складське переміщення з комплектування підряду"

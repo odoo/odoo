@@ -695,11 +695,7 @@ actual arch.
             if node.tag == 'data' or node.tag == 'xpath' or node.get('position'):
                 self.inherit_branding(node)
             elif node.get('t-field'):
-                # Note: 'data-oe-field-xpath' and not 'data-oe-xpath' as this
-                # was introduced as a fix. To avoid breaking customizations and
-                # to make a minimal diff fix, a separated attribute was used.
-                # TODO Try to use a common attribute in master (14.1).
-                node.set('data-oe-field-xpath', xpath)
+                node.set('data-oe-xpath', xpath)
                 self.inherit_branding(node)
             else:
                 node.set('data-oe-id', str(self.id))
@@ -1637,11 +1633,7 @@ actual arch.
             node_path = "%s/%s[%d]" % (parent_xpath, e.tag, index_map[e.tag])
         if branding:
             if e.get('t-field'):
-                # Note: 'data-oe-field-xpath' and not 'data-oe-xpath' as this
-                # was introduced as a fix. To avoid breaking customizations and
-                # to make a minimal diff fix, a separated attribute was used.
-                # TODO Try to use a common attribute in master (14.1).
-                e.set('data-oe-field-xpath', node_path)
+                e.set('data-oe-xpath', node_path)
             elif not e.get('data-oe-model'):
                 e.attrib.update(branding)
                 e.set('data-oe-xpath', node_path)
@@ -1663,7 +1655,7 @@ actual arch.
                 # running index by tag type, for XPath query generation
                 indexes = collections.defaultdict(lambda: 0)
                 for child in e.iterchildren(tag=etree.Element):
-                    if child.get('data-oe-xpath') or child.get('data-oe-field-xpath'):
+                    if child.get('data-oe-xpath'):
                         # injected by view inheritance, skip otherwise
                         # generated xpath is incorrect
                         # Also, if a node is known to have been replaced during applying xpath

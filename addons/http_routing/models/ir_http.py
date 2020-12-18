@@ -17,7 +17,8 @@ except ImportError:
 
 import odoo
 from odoo import api, models, registry, exceptions, tools
-from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
+from odoo.addons.base.models import ir_http
+from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.qweb import QWebException
 from odoo.http import request
 from odoo.osv import expression
@@ -240,7 +241,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
         return False
 
 
-class ModelConverter(ModelConverter):
+class ModelConverter(ir_http.ModelConverter):
 
     def __init__(self, url_map, model=False, domain='[]'):
         super(ModelConverter, self).__init__(url_map, model)

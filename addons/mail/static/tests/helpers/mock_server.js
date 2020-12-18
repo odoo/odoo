@@ -420,7 +420,7 @@ MockServer.include({
             moderation_counter,
             needaction_inbox_counter,
             partner_root: partnerRootFormat,
-            public_partner: publicPartnerFormat,
+            public_partners: [publicPartnerFormat],
             shortcodes,
             starred_counter: starredCounter,
         };
@@ -752,6 +752,12 @@ MockServer.include({
             });
             if (channel.channel_type === 'channel') {
                 delete res.members;
+            } else {
+                res['seen_partners_info'] = [{
+                    partner_id: this.currentPartnerId,
+                    seen_message_id: channel.seen_message_id,
+                    fetched_message_id: channel.fetched_message_id,
+                }];
             }
             return res;
         });

@@ -15,7 +15,7 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
 
     @users('user_eventmanager')
     def test_create_menu(self):
-        event = self.env['event.event'].create({
+        vals = {
             'name': 'TestEvent',
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
@@ -27,13 +27,17 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
             'community_menu': True,
             'website_track': True,
             'website_track_proposal': True,
-        })
+        }
+        if 'exhibitor_menu' in self.env['event.event']:
+            vals['exhibitor_menu'] = False
+
+        event = self.env['event.event'].create(vals)
 
         self._assert_website_menus(event)
 
     @users('user_event_web_manager')
     def test_menu_management_frontend(self):
-        event = self.env['event.event'].create({
+        vals = {
             'name': 'TestEvent',
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
@@ -41,7 +45,11 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
             'community_menu': True,
             'website_track': True,
             'website_track_proposal': True,
-        })
+        }
+        if 'exhibitor_menu' in self.env['event.event']:
+            vals['exhibitor_menu'] = False
+
+        event = self.env['event.event'].create(vals)
         self.assertTrue(event.website_track)
         self.assertTrue(event.website_track_proposal)
         self._assert_website_menus(event)
@@ -81,10 +89,14 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
             'website_menu': False,
         })
         self.assertFalse(event.menu_id)
-        event.write({
+        vals = {
             'website_menu': True,
             'community_menu': True,
             'website_track': True,
             'website_track_proposal': True,
-        })
+        }
+        if 'exhibitor_menu' in self.env['event.event']:
+            vals['exhibitor_menu'] = False
+
+        event.write(vals)
         self._assert_website_menus(event)

@@ -4,11 +4,11 @@
 from datetime import date, datetime
 
 from odoo.tests import tagged
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
 @tagged('company_leave')
-class TestCompanyLeave(SavepointCase):
+class TestCompanyLeave(TransactionCase):
     """ Test leaves for a whole company, conflict resolutions """
 
     @classmethod

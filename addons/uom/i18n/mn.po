@@ -3,20 +3,18 @@
 # 	* uom
 # 
 # Translators:
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
-# Bayarkhuu Bataa, 2020
-# Martin Trigaux, 2020
-# Onii Onii <onii0223@yahoo.com>, 2020
-# Minj P <pminj322@gmail.com>, 2020
-# Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2020
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2019
+# Martin Trigaux, 2019
+# Onii Onii <onii0223@yahoo.com>, 2019
+# nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: nurbakhit nurka <nurbakhit@bumanit.mn>, 2019\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,12 +46,12 @@ msgstr "Идэвхитэй"
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
 msgid "Add a new unit of measure"
-msgstr "Шинэ хэмжих нэгж нэмэх"
+msgstr ""
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
 msgid "Add a new unit of measure category"
-msgstr "Шинэ хэмжих нэгжийн ангилал нэмэх"
+msgstr ""
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
@@ -63,7 +61,7 @@ msgstr "Архивласан"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
-msgstr "Том харьцаа"
+msgstr "Том Харьцаа"
 
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
@@ -72,7 +70,6 @@ msgstr "Сурвалж хэмжих нэгжээс их"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
-#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Category"
 msgstr "Ангилал"
 
@@ -103,6 +100,31 @@ msgid "Days"
 msgstr "Өдөр"
 
 #. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__length
+msgid "Default Length"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__unit
+msgid "Default Units"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__volume
+msgid "Default Volume"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__weight
+msgid "Default Weight"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields.selection,name:uom.selection__uom_category__measure_type__working_time
+msgid "Default Working Time"
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
@@ -112,11 +134,6 @@ msgstr "Дэлгэрэнгүй нэр"
 #: model:uom.uom,name:uom.product_uom_dozen
 msgid "Dozens"
 msgstr ""
-
-#. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
-msgid "Group By"
-msgstr "Бүлэглэлт"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -171,9 +188,14 @@ msgid "Length / Distance"
 msgstr "Урт / Зай"
 
 #. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "Liters"
+msgstr ""
+
+#. module: uom
 #: model:res.groups,name:uom.group_uom
 msgid "Manage Multiple Units of Measure"
-msgstr "Олон хэмжих нэгжийг удирдах"
+msgstr "Олон Хэмжих нэгжийг Менежмент хийх"
 
 #. module: uom
 #: model:ir.model,name:uom.model_uom_uom
@@ -208,7 +230,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Сурвалж хэмжих нэгжээс бага"
+msgstr "Сурвалж Хэмжих нэгжээс бага"
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -239,7 +261,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
-"category as the unit of measure %s defined on the product. Please correct "
+"category than the unit of measure %s defined on the product. Please correct "
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
@@ -248,6 +270,16 @@ msgstr ""
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
 msgid "Type"
 msgstr "Төрөл"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
+msgid "Type of Measure"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
+msgid "Type of measurement category"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -270,12 +302,12 @@ msgstr "Хэмжих нэгж"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
-msgstr "Хэмжих нэгжийн Ангилал"
+msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "Нэгж"
+msgstr ""
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -287,7 +319,7 @@ msgstr "Хэмжих нэгж"
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr "Хэмжих нэгжийн ангилал"
+msgstr ""
 
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
@@ -317,7 +349,7 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
@@ -335,7 +367,12 @@ msgstr "Жин"
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
-msgstr "Ажлын цаг"
+msgstr "Ажлын Цаг"
+
+#. module: uom
+#: model:ir.model.constraint,message:uom.constraint_uom_category_uom_category_unique_type
+msgid "You can have only one category per measurement type."
+msgstr ""
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0
@@ -367,32 +404,22 @@ msgstr "см"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
-msgid "fl oz (US)"
-msgstr ""
+msgid "fl oz"
+msgstr "шингэн унци"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
-msgid "ft"
-msgstr ""
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_cubic_foot
-msgid "ft³"
-msgstr ""
+msgid "foot(ft)"
+msgstr "фут(ft)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
-msgid "gal (US)"
+msgid "gals"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
-msgid "in"
-msgstr "дотор"
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_cubic_inch
-msgid "in³"
+msgid "inches"
 msgstr ""
 
 #. module: uom
@@ -407,25 +434,20 @@ msgstr "км"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
-msgid "lb"
+msgid "lbs"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
-msgid "mi"
-msgstr ""
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_cubic_meter
-msgid "m³"
+msgid "miles"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
-msgid "oz"
+msgid "ozs"
 msgstr ""
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
-msgid "qt (US)"
-msgstr ""
+msgid "qt"
+msgstr "qt"

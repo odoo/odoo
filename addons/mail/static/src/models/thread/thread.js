@@ -605,7 +605,6 @@ function factory(dependencies) {
                 args: [[this.id]],
                 kwargs: {
                     partner_ids: [this.env.messaging.currentPartner.id],
-                    context: {}, // FIXME empty context to be overridden in session.js with 'allowed_company_ids' task-2243187
                 },
             }));
             this.refreshFollowers();
@@ -1571,7 +1570,6 @@ function factory(dependencies) {
          * @param {boolean} [param0.mail_invite_follower_channel_only=false]
          */
         _promptAddFollower({ mail_invite_follower_channel_only = false } = {}) {
-            const self = this;
             const action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.wizard.invite',
@@ -1692,6 +1690,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'thread',
             isCausal: true,
+            readonly: true,
         }),
         correspondent: many2one('mail.partner', {
             compute: '_computeCorrespondent',
@@ -1756,7 +1755,9 @@ function factory(dependencies) {
                 'model',
             ],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         /**
          * States whether this thread is a `mail.channel` qualified as chat.
          *
@@ -1924,10 +1925,11 @@ function factory(dependencies) {
         /**
          * All messages that this thread is linked to.
          * Note that this field is automatically computed by inverse
-         * computed field. This field is readonly.
+         * computed field.
          */
         messages: many2many('mail.message', {
             inverse: 'threads',
+            readonly: true,
         }),
         /**
          * All messages that have been originally posted in this thread.
@@ -1954,6 +1956,10 @@ function factory(dependencies) {
         messagesIsNeedaction: attr({
             related: 'messages.isNeedaction',
         }),
+        /**
+         * Contains the message fetched/seen indicators for all messages of this thread.
+         * FIXME This field should be readonly once task-2336946 is done.
+         */
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
             isCausal: true,
@@ -1964,7 +1970,9 @@ function factory(dependencies) {
         messagingCurrentPartner: many2one('mail.partner', {
             related: 'messaging.currentPartner',
         }),
-        model: attr(),
+        model: attr({
+            required: true,
+        }),
         model_name: attr(),
         moderation: attr({
             default: false,
@@ -2104,6 +2112,10 @@ function factory(dependencies) {
             compute: '_computeOverdueActivities',
             dependencies: ['activitiesState'],
         }),
+        /**
+         * Contains the seen information for all members of the thread.
+         * FIXME This field should be readonly once task-2336946 is done.
+         */
         partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
             inverse: 'thread',
             isCausal: true,

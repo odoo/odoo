@@ -1,19 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* base_sparse_field
+# * base_sparse_field
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2020
-# RGB Consulting <odoo@rgbconsulting.com>, 2020
+# Martin Trigaux, 2018
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2020\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:16+0000\n"
+"Last-Translator: RGB Consulting <odoo@rgbconsulting.com>, 2018\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,17 +22,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_sparse_field
-#: model:ir.model,name:base_sparse_field.model_base
-msgid "Base"
-msgstr "Base"
-
-#. module: base_sparse_field
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__boolean
 msgid "Boolean"
 msgstr "Booleà"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:0
+#: code:addons/base_sparse_field/models/models.py:25
 #, python-format
 msgid "Changing the storing system for field \"%s\" is not allowed."
 msgstr "No està permès canviar el sistema de emmagatzemament pel camp \"%s\"."
@@ -58,7 +53,6 @@ msgid "Data"
 msgstr "Dades"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__display_name
 msgid "Display Name"
 msgstr "Mostrar Nom"
@@ -79,7 +73,6 @@ msgid "Float"
 msgstr "Nombre real"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields__id
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test__id
 msgid "ID"
 msgstr "ID"
@@ -100,7 +93,6 @@ msgid "Integer"
 msgstr "Enter"
 
 #. module: base_sparse_field
-#: model:ir.model.fields,field_description:base_sparse_field.field_ir_model_fields____last_update
 #: model:ir.model.fields,field_description:base_sparse_field.field_sparse_fields_test____last_update
 msgid "Last Modified on"
 msgstr "Última modificació el "
@@ -116,7 +108,7 @@ msgid "Last Updated on"
 msgstr "Última actualització el"
 
 #. module: base_sparse_field
-#: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__one
+#: selection:sparse_fields.test,selection:0
 msgid "One"
 msgstr ""
 
@@ -126,7 +118,7 @@ msgid "Partner"
 msgstr "Empresa"
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:0
+#: code:addons/base_sparse_field/models/models.py:27
 #, python-format
 msgid "Renaming sparse field \"%s\" is not allowed"
 msgstr "Canvi de nom de camp \"%s\" no està permès"
@@ -142,10 +134,10 @@ msgid "Serialization Field"
 msgstr "Camp de serialització "
 
 #. module: base_sparse_field
-#: code:addons/base_sparse_field/models/models.py:0
+#: code:addons/base_sparse_field/models/models.py:39
 #, python-format
-msgid "Serialization field %r not found for sparse field %s!"
-msgstr ""
+msgid "Serialization field `%s` not found for sparse field `%s`!"
+msgstr "No s'ha trobat el camp de serialització '%s' pel camp '%s'!"
 
 #. module: base_sparse_field
 #: model:ir.model,name:base_sparse_field.model_sparse_fields_test
@@ -153,11 +145,86 @@ msgid "Sparse fields Test"
 msgstr ""
 
 #. module: base_sparse_field
-#: model:ir.model.fields.selection,name:base_sparse_field.selection__sparse_fields_test__selection__two
+#: selection:sparse_fields.test,selection:0
 msgid "Two"
 msgstr ""
 
 #. module: base_sparse_field
-#: model:ir.model.fields.selection,name:base_sparse_field.selection__ir_model_fields__ttype__serialized
+#: selection:ir.model.fields,ttype:0
+msgid "binary"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "boolean"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "char"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "date"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "datetime"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "float"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "html"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "integer"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "many2many"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "many2one"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "monetary"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "one2many"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "reference"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "selection"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
 msgid "serialized"
+msgstr ""
+
+#. module: base_sparse_field
+#: selection:ir.model.fields,ttype:0
+msgid "text"
 msgstr ""

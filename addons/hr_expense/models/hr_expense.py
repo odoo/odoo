@@ -210,8 +210,12 @@ class HrExpense(models.Model):
 
     @api.constrains('product_id', 'product_uom_id')
     def _check_product_uom_category(self):
-        if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-            raise UserError(_('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.'))
+        for expense in self:
+            if expense.product_id and expense.product_uom_id.category_id != expense.product_id.uom_id.category_id:
+                raise UserError(_(
+                    'Selected Unit of Measure for expense %(expense)s does not belong to the same category as the Unit of Measure of product %(product)s.',
+                    expense=expense.name, product=expense.product_id.name,
+                ))
 
     def create_expense_from_attachments(self, attachment_ids=None, view_type='tree'):
         ''' Create the expenses from files.
@@ -267,11 +271,11 @@ class HrExpense(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted_or_approved(self):
         for expense in self:
             if expense.state in ['done', 'approved']:
                 raise UserError(_('You cannot delete a posted or approved expense.'))
-        return super(HrExpense, self).unlink()
 
     def write(self, vals):
         if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
@@ -805,6 +809,7 @@ class HrExpenseSheet(models.Model):
     department_id = fields.Many2one('hr.department', compute='_compute_from_employee_id', store=True, readonly=False, copy=False, string='Department', states={'post': [('readonly', True)], 'done': [('readonly', True)]})
     is_multiple_currency = fields.Boolean("Handle lines with different currencies", compute='_compute_is_multiple_currency')
     can_reset = fields.Boolean('Can Reset', compute='_compute_can_reset')
+    can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
     _sql_constraints = [
         ('journal_id_required_posted', "CHECK((state IN ('post', 'done') AND journal_id IS NOT NULL) OR (state NOT IN ('post', 'done')))", 'The journal must be set on posted expense'),
@@ -845,6 +850,13 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.can_reset = is_expense_user if is_expense_user else sheet.employee_id.user_id == self.env.user
 
+    @api.depends_context('uid')
+    def _compute_can_approve(self):
+        is_approver = self.user_has_groups('hr_expense.group_hr_expense_team_approver, hr_expense.group_hr_expense_user')
+        is_manager = self.user_has_groups('hr_expense.group_hr_expense_manager')
+        for sheet in self:
+            sheet.can_approve = is_manager or (is_approver and sheet.employee_id.user_id != self.env.user)
+
     @api.depends('employee_id')
     def _compute_from_employee_id(self):
         for sheet in self:
@@ -878,11 +890,11 @@ class HrExpenseSheet(models.Model):
         sheet.activity_update()
         return sheet
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted_or_paid(self):
         for expense in self:
             if expense.state in ['post', 'done']:
                 raise UserError(_('You cannot delete a posted or paid expense.'))
-        super(HrExpenseSheet, self).unlink()
 
     # --------------------------------------------
     # Mail Thread

@@ -8,7 +8,7 @@ import email.message
 import re
 import threading
 
-from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
     email_split,
@@ -426,7 +426,7 @@ class TestEmailTools(BaseCase):
                     self.assertEqual(formataddr(pair, charset), expected)
 
 
-class EmailConfigCase(SavepointCase):
+class EmailConfigCase(TransactionCase):
     @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
     def test_default_email_from(self, *args):
         """Email from setting is respected."""

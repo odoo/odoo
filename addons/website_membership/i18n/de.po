@@ -3,17 +3,20 @@
 # 	* website_membership
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Wolfgang Taferner, 2020
-# Chris Egal <sodaswed@web.de>, 2020
+# Martin Trigaux, 2019
+# Felix Schubert <felix.schubert@go-erp.com>, 2019
+# Wolfgang Taferner, 2019
+# Gab_Odoo <gab@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
+"POT-Creation-Date: 2019-08-12 11:33+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +39,7 @@ msgid "All"
 msgstr "Alle"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:0
+#: code:addons/website_membership/controllers/main.py:83
 #, python-format
 msgid "All Countries"
 msgstr "Alle Länder"
@@ -49,13 +52,7 @@ msgstr "Vereine & Verbände"
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "Close"
-msgstr "Schließen"
-
-#. module: website_membership
-#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__display_name
-#: model:ir.model.fields,field_description:website_membership.field_website__display_name
-msgid "Display Name"
-msgstr "Anzeigename"
+msgstr "Abschliessen"
 
 #. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.index
@@ -63,32 +60,19 @@ msgid "Find a business partner"
 msgstr "Finden Sie einen Geschäftspartner"
 
 #. module: website_membership
-#: code:addons/website_membership/controllers/main.py:0
+#: code:addons/website_membership/controllers/main.py:126
 #, python-format
 msgid "Free Members"
 msgstr "Kostenbefreite Mitglieder"
 
 #. module: website_membership
-#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line__id
-#: model:ir.model.fields,field_description:website_membership.field_website__id
-msgid "ID"
-msgstr "ID"
-
-#. module: website_membership
-#: model:ir.model.fields,field_description:website_membership.field_membership_membership_line____last_update
-#: model:ir.model.fields,field_description:website_membership.field_website____last_update
-msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
-
-#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_country
 msgid "Location"
-msgstr "Ort"
+msgstr "Lagerort"
 
 #. module: website_membership
-#: code:addons/website_membership/models/website.py:0
 #: model_terms:ir.ui.view,arch_db:website_membership.index
-#, python-format
+#: model:website.menu,name:website_membership.menu_members
 msgid "Members"
 msgstr "Mitglieder"
 
@@ -108,11 +92,11 @@ msgid "Our Members Directory"
 msgstr "Unser Mitgliederverzeichnis"
 
 #. module: website_membership
-#: model:ir.model,name:website_membership.model_website
-msgid "Website"
-msgstr "Website"
-
-#. module: website_membership
 #: model_terms:ir.ui.view,arch_db:website_membership.opt_index_google_map
 msgid "World Map"
 msgstr "Weltkarte"
+
+#. module: website_membership
+#: model_terms:ir.ui.view,arch_db:website_membership.index
+msgid "float-left"
+msgstr ""

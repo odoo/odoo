@@ -92,6 +92,12 @@ class Project(models.Model):
 
         (self - projects).warning_employee_rate = False
 
+    @api.depends('analytic_account_id', 'allow_billable', 'allow_timesheets')
+    def _compute_project_overview(self):
+        super()._compute_project_overview()
+        for project in self.filtered(lambda p: not p.project_overview):
+            project.project_overview = project.allow_billable or project.allow_timesheets
+
     @api.constrains('sale_line_id', 'pricing_type')
     def _check_sale_line_type(self):
         for project in self:

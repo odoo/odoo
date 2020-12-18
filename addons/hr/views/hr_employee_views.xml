@@ -178,7 +178,6 @@
                                 <group>
                                     <group string='Status' name="active_group">
                                         <field name="user_id" string="Related User" domain="[('share', '=', False)]"/>
-                                        <field name="job_id"/>
                                     </group>
                                     <group string="Attendance" name="identification_group">
                                         <field name="pin" string="PIN Code"/>
@@ -189,6 +188,10 @@
                                             <button name="%(hr_employee_print_badge)d" string="Print Badge" class="btn btn-link" type="action" attrs="{'invisible': [('barcode', '=', False)]}"/>
                                         </div>
                                     </group>
+                                    <group string='Payroll' name="payroll_group">
+                                        <field name="job_id"/>
+                                    </group>
+                                    <group name="application_group"/>
                                 </group>
                             </page>
                         </notebook>

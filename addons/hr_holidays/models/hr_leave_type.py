@@ -78,12 +78,12 @@ class HolidaysType(models.Model):
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
-        ('manager', "By Employee's Manager"),
-        ('both', "By Employee's Manager and Time Off Officer")], default='hr', string='Leave Validation')
+        ('manager', "By Employee's Approver"),
+        ('both', "By Employee's Approver and Time Off Officer")], default='hr', string='Leave Validation')
     allocation_validation_type = fields.Selection([
         ('hr', 'By Time Off Officer'),
-        ('manager', "By Employee's Manager"),
-        ('both', "By Employee's Manager and Time Off Officer")], default='manager', string='Allocation Validation')
+        ('manager', "By Employee's Approver"),
+        ('both', "By Employee's Approver and Time Off Officer")], default='manager', string='Allocation Validation')
     allocation_type = fields.Selection([
         ('no', 'No Limit'),
         ('fixed_allocation', 'Allow Employees Requests'),
@@ -187,10 +187,6 @@ class HolidaysType(models.Model):
                 valid_leave_types |= leave_type
 
         return [('id', 'in', valid_leave_types.ids)]
-
-    # YTI TODO: Remove me in master
-    def get_days(self, employee_id):
-        return self.get_employees_days([employee_id])[employee_id]
 
     def get_employees_days(self, employee_ids):
         result = {

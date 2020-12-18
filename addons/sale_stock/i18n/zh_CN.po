@@ -3,35 +3,36 @@
 # 	* sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# v2exerer <9010446@qq.com>, 2020
-# 苏州远鼎 <tiexinliu@126.com>, 2020
-# xiaobin wu <bd5dml@gmail.com>, 2020
-# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
-# Ted Wang <feiyuwang2012@gmail.com>, 2020
-# 老窦 北京 <2662059195@qq.com>, 2020
-# bf2549c5415a9287249cba2b8a5823c7, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
-# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2020
-# diaojiaolou <124412206@qq.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# Felix Yuen <fyu@odoo.com>, 2020
-# roye w <159820@qq.com>, 2020
-# snow wang <147156565@qq.com>, 2020
-# Jeanphy <hzh0292@qq.com>, 2020
-# John An <johnxan@163.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# Lin Li <ljsrzc007@gmail.com>, 2020
+# 卓忆科技 <zhanghao@jointd.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# 苏州远鼎 <tiexinliu@126.com>, 2019
+# xiaobin wu <bd5dml@gmail.com>, 2019
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
+# 老窦 北京 <2662059195@qq.com>, 2019
+# bf2549c5415a9287249cba2b8a5823c7, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2019
+# Jeff Yu - Elico Corp <jeff.yu@elico-corp.com>, 2019
+# diaojiaolou <124412206@qq.com>, 2019
+# JZH-Odoo <jzh@odoo.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
+# roye w <159820@qq.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# 张宏奎 <zhanghongkui@inspur.com>, 2019
+# John An <johnxan@163.com>, 2019
+# Jeanphy <hzh0292@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# Martin Trigaux, 2019
+# Jeffery CHEN <jeffery9@gmail.com>, 2019
+# Ted Wang <feiyuwang2012@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Lin Li <ljsrzc007@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Ted Wang <feiyuwang2012@gmail.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,7 +108,7 @@ msgstr "<strong>客户参考:</strong>"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
 msgid "<strong>Delivery Orders</strong>"
-msgstr "<strong>交货单</strong>"
+msgstr "<strong>出库单</strong>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -115,7 +116,6 @@ msgid "<strong>Incoterm: </strong>"
 msgstr "<strong>国际贸易术语解释通则:</strong>"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
 msgid "<strong>Incoterm:</strong>"
 msgstr "<strong>国际贸易术语解释通则:</strong>"
@@ -142,7 +142,7 @@ msgid ""
 msgstr ""
 "根据产品配置，交货数量可以通过机制自动计算：\n"
 " - 手动：在线手动输入数量\n"
-" - 费用分析：数量是来自过账费用的数量总和\n"
+" - 费用分析：数量是来自过帐费用的数量总和\n"
 " - 时间表：数量是与此销售线相关联的任务记录的时数\n"
 " - 库存变动：数量来自已确认的选择\n"
 
@@ -153,10 +153,10 @@ msgstr "售后"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "All planned operations included"
-msgstr "包括所有计划的操作"
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -173,21 +173,14 @@ msgstr "尽快"
 #: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
 #, python-format
 msgid "Availability"
-msgstr "可用性"
+msgstr "可用量"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "Available"
 msgstr "可用"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
-#, python-format
-msgid "Available in stock"
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -215,24 +208,14 @@ msgid "Date:"
 msgstr "日期:"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
-msgid "Default Warehouse"
-msgstr ""
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
 msgid "Delivery"
-msgstr "运费模板"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
-msgid "Delivery Alert"
-msgstr ""
+msgstr "交货"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
 msgid "Delivery Orders"
-msgstr "交货单"
+msgstr "出库单"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
@@ -248,29 +231,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
 msgid "Display Lots & Serial Numbers on Invoices"
 msgstr "在发票上显示批次 / 序列号"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_product_template__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_res_company__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_res_users__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__display_name
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__display_name
-msgid "Display Name"
-msgstr "显示名称"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
@@ -300,19 +260,9 @@ msgid ""
 msgstr "别忘了变更以下交货订单的客户信息：%s"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Documentation"
-msgstr "文档"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
-msgid "Draft SO"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
-msgstr "实际日期"
+msgstr "生效日期"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -337,24 +287,14 @@ msgstr "预计日期"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "Expected Delivery"
-msgstr "预计交货"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
-msgid "Expected:"
-msgstr "预计："
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
-msgid "Forecast Expected Date"
 msgstr ""
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "Forecasted Stock"
 msgstr "预测库存"
@@ -363,34 +303,6 @@ msgstr "预测库存"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
 msgid "Free Qty Today"
 msgstr "今日闲置数量"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
-msgid "Has late picking"
-msgstr ""
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_move__id
-#: model:ir.model.fields,field_description:sale_stock.field_account_move_line__id
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group__id
-#: model:ir.model.fields,field_description:sale_stock.field_product_template__id
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment__id
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule__id
-#: model:ir.model.fields,field_description:sale_stock.field_res_company__id
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__id
-#: model:ir.model.fields,field_description:sale_stock.field_res_users__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__id
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rule__id
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__id
-msgid "ID"
-msgstr "ID"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
@@ -424,11 +336,6 @@ msgid ""
 msgstr "国际商业条款是一系列用于国际交易的事先定义的商业条款。"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_users_view_form
-msgid "Inventory"
-msgstr "库存"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_location_route
 msgid "Inventory Routes"
 msgstr "库存路线"
@@ -444,42 +351,14 @@ msgid "Is Mto"
 msgstr "是MTO"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__json_popover
-msgid "JSON data for the popover widget"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move
-msgid "Journal Entry"
-msgstr "会计凭证"
+msgid "Journal Entries"
+msgstr "日记账分录"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_account_move_line
 msgid "Journal Item"
-msgstr "会计分录"
-
-#. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_move____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_account_move_line____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_procurement_group____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_product_template____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_product_product_replenishment____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_report_stock_report_stock_rule____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_res_company____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_res_users____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_sale_report____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_location_route____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_move____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_picking____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rule____last_update
-#: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report____last_update
-msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "日记账项"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
@@ -495,7 +374,7 @@ msgstr "批次 / 序列号会出现在发票上"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "按订单产生"
+msgstr "按订单生成"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -532,21 +411,7 @@ msgstr "将预期交货日期提前"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
-#, python-format
-msgid "No enough future availaibility"
-msgstr ""
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
-#, python-format
-msgid "No future availaibility"
-msgstr ""
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "On"
 msgstr "开"
@@ -560,7 +425,7 @@ msgstr "订购数量减少！"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
 msgid "Package"
-msgstr "邮包"
+msgstr "会计制度选择"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
@@ -592,20 +457,6 @@ msgstr "今日可用数量"
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
 msgid "Qty To Deliver"
 msgstr "待交货数量"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
-#, python-format
-msgid "Remaining demand available at"
-msgstr ""
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
-#, python-format
-msgid "Reserved"
-msgstr "已预留"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -653,14 +504,9 @@ msgid "Sales Order"
 msgstr "销售订单"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order_cancel
-msgid "Sales Order Cancel"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "销售订单行"
+msgstr "销售订单分录"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
@@ -723,27 +569,15 @@ msgid "Sold in the last 365 days"
 msgstr "已在过去365天内出售"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_cancel_view_form_inherit
-msgid ""
-"Some products have already been delivered. Returns can be created from the "
-"Delivery Orders."
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
 msgid "Stock Move"
-msgstr "库存凭证"
+msgstr "库存转移"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "库存移动"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
-msgid "Stock Replenishment Report"
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -761,13 +595,6 @@ msgid "Stock rule report"
 msgstr "库存规则报告"
 
 #. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
-#, python-format
-msgid "The delivery"
-msgstr ""
-
-#. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -782,14 +609,12 @@ msgstr ""
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
-msgid ""
-"This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
-"%(quantity).2f %(unit)s."
-msgstr "该产品被打包成 %(pack_size).2f %(pack_name)s. 你应当卖%(quantity).2f %(unit)s."
+msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
+msgstr "这个产品是由%.2f%s包装的。你应该销售%.2f%s。"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "This product is replenished on demand."
 msgstr "此产品根据需求补货。"
@@ -797,21 +622,16 @@ msgstr "此产品根据需求补货。"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
 msgid "Transfer"
-msgstr "转账"
+msgstr "调拨"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
 msgid "Transfers"
-msgstr "转账"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_res_users
-msgid "Users"
-msgstr "用户"
+msgstr "调拨"
 
 #. module: sale_stock
 #. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
 msgid "View Forecast"
 msgstr "查看预测"
@@ -838,7 +658,7 @@ msgstr "警告"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Warning!"
-msgstr "警告!"
+msgstr "警告！"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
@@ -892,16 +712,9 @@ msgstr "的"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "ordered instead of"
-msgstr "已订购，替换"
+msgstr "替代采购"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "processed instead of"
-msgstr "已处理，替换"
-
-#. module: sale_stock
-#. openerp-web
-#: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
-#, python-format
-msgid "will be late."
-msgstr ""
+msgstr "已做替代处理"

@@ -46,7 +46,7 @@ class ProjectTaskRecurrence(models.Model):
 
     task_ids = fields.One2many('project.task', 'recurrence_id')
     next_recurrence_date = fields.Date()
-    recurrence_left = fields.Integer(string="Number of tasks left to create")
+    recurrence_left = fields.Integer(string="Number of Tasks Left to Create")
 
     repeat_interval = fields.Integer(string='Repeat Every', default=1)
     repeat_unit = fields.Selection([

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-12-11 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -17,9 +17,7 @@ msgstr ""
 
 #. module: google_recaptcha
 #: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
-msgid ""
-"<i class=\"fa fa-arrow-right\"/> Generate site/secret keys for v3 reCaptcha "
-"type"
+msgid "<i class=\"fa fa-arrow-right\"/> Generate reCAPTCHA v3 keys"
 msgstr ""
 
 #. module: google_recaptcha
@@ -42,6 +40,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:google_recaptcha.field_ir_http__id
 #: model:ir.model.fields,field_description:google_recaptcha.field_res_config_settings__id
 msgid "ID"
+msgstr ""
+
+#. module: google_recaptcha
+#: model_terms:ir.ui.view,arch_db:google_recaptcha.res_config_settings_view_form
+msgid "If no keys are provided, no checks will be done."
 msgstr ""
 
 #. module: google_recaptcha
@@ -83,7 +86,9 @@ msgstr ""
 
 #. module: google_recaptcha
 #: model:ir.model.fields,help:google_recaptcha.field_res_config_settings__recaptcha_min_score
-msgid "Should be between 0.0 and 1.0"
+msgid ""
+"Should be between 0.0 and 1.0.\n"
+"1.0 is very likely a good interaction, 0.0 is very likely a bot"
 msgstr ""
 
 #. module: google_recaptcha

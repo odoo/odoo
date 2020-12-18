@@ -141,7 +141,11 @@ var FormController = BasicController.extend({
      * @param {jQuery} [$node]
      */
     renderButtons: function ($node) {
-        var $footer = this.footerToButtons ? this.renderer.$el && this.renderer.$('footer') : null;
+        var $footer = this.footerToButtons
+            ? this.renderer.$el && this.renderer.$('footer').filter(function () {
+                return !this.closest('.o_field_widget');
+            })
+            : null;
         var mustRenderFooterButtons = $footer && $footer.length;
         if ((this.defaultButtons && !this.$buttons) || mustRenderFooterButtons) {
             this.$buttons = $('<div/>');
@@ -280,7 +284,9 @@ var FormController = BasicController.extend({
             return;
         }
         if (this.footerToButtons) {
-            var $footer = this.renderer.$el && this.renderer.$('footer');
+            var $footer = this.renderer.$el && this.renderer.$('footer').filter(function () {
+                return !this.closest('.o_field_widget');
+            });
             if ($footer && $footer.length) {
                 this.$buttons.empty().append($footer);
             }
@@ -617,6 +623,7 @@ var FormController = BasicController.extend({
             parentID: data.parentID,
             readonly: data.readonly,
             deletable: record ? data.deletable : false,
+            disable_multiple_selection: data.disable_multiple_selection,
             recordID: record && record.id,
             res_id: record && record.res_id,
             res_model: data.field.relation,

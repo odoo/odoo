@@ -203,7 +203,9 @@ function factory(dependencies) {
     }
 
     User.fields = {
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         display_name: attr({
             compute: '_computeDisplayName',
             dependencies: [

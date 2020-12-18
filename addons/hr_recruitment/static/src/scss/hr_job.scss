@@ -4,6 +4,9 @@
             width: 350px;
             &:not(.o_kanban_ghost) {
                 height: 180px;
+                @include media-breakpoint-down(sm) {
+                    height: 150px;
+                }
             }
         }
 

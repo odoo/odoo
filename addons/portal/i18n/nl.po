@@ -3,22 +3,19 @@
 # 	* portal
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
-# Volluta <volluta@tutanota.com>, 2020
-# Cas Vissers <casvissers@brahoo.nl>, 2020
-# Wynand Tastenhoye <wta@odoo.com>, 2020
-# Raf Ven <raf.ven@dynapps.be>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Martin Trigaux, 2019
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Wynand Tastenhoye <wta@odoo.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +34,12 @@ msgstr "%d dagen te laat"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr "%s is niet de referentie van een rapport"
+msgstr "%sis niet de referentie van een rapport"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
+msgid "<b>Sign in</b>"
+msgstr "<b>Aanmelden</b>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -57,11 +59,6 @@ msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\
 msgstr ""
 "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Volgende\" "
 "title=\"Volgende\"/>"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr "<i class=\"fa fa-pencil mx-1\"/>Bewerk beveiligingsinstellingen"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -231,8 +228,8 @@ msgstr ""
 "                </td></tr>\n"
 "                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
 "                    ${object.user_id.company_id.phone}\n"
-"                    % if object.user_id.company_id.email\n"
-"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.email}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.email}</a>\n"
+"                    % if object.user_id.company_id.e-mail\n"
+"                        | <a href=\"'mailto:%s' % ${object.user_id.company_id.e-mail}\" style=\"text-decoration:none; color: #454748;\">${object.user_id.company_id.e-mail}</a>\n"
 "                    % endif\n"
 "                    % if object.user_id.company_id.website\n"
 "                        | <a href=\"'%s' % ${object.user_id.company_id.website}\" style=\"text-decoration:none; color: #454748;\">\n"
@@ -271,11 +268,6 @@ msgid "Access warning"
 msgstr "Toegang waarschuwing"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_layout
-msgid "Account Security"
-msgstr "Accountveiligheid"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 msgid "Add a note"
 msgstr "Voeg een notitie toe"
@@ -309,6 +301,11 @@ msgid "Apply"
 msgstr "Toepassen"
 
 #. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_archive_groups
+msgid "Archives"
+msgstr "Archieven"
+
+#. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
@@ -316,18 +313,10 @@ msgid "Avatar"
 msgstr "Avatar"
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal.js:0
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
-#, python-format
 msgid "Cancel"
 msgstr "Annuleren"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Change Password"
-msgstr "Wijzig wachtwoord"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -346,16 +335,9 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document(en) voor "
-"uw account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze "
+"Het wijzigen van de bedrijfsnaam is niet toegestaan nadat document (en) voor"
+" uw account zijn uitgegeven. Neem rechtstreeks contact met ons op voor deze "
 "bewerking."
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal.js:0
-#, python-format
-msgid "Check failed"
-msgstr "Controle mislukt."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -389,13 +371,6 @@ msgstr ""
 "<span class=\"fa fa-long-arrow-right\"/>"
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal.js:0
-#, python-format
-msgid "Confirm Password"
-msgstr "Bevestig wachtwoord"
-
-#. module: portal
 #: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
 msgid "Contact"
@@ -410,13 +385,6 @@ msgstr "Details contactpersoon"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
 msgstr "Contacten"
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal_composer.js:0
-#, python-format
-msgid "Could not save file <strong>%s</strong>"
-msgstr "Kon bestand <strong>%s</strong> niet opslaan."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -443,28 +411,6 @@ msgid "Created on"
 msgstr "Aangemaakt op"
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid ""
-"Currently available to everyone viewing this document, click to restrict to "
-"internal employees."
-msgstr ""
-"Momenteel beschikbaar voor iedereen die dit document bekijkt. Klik om dit te"
-" beperken tot interne medewerkers."
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid ""
-"Currently restricted to internal employees, click to make it available to "
-"everyone viewing this document."
-msgstr ""
-"Momenteel beperkt tot interne medewerkers. Klik om het beschikbaar te maken "
-"voor iedereen die dit document bekijkt."
-
-#. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
 msgstr "Klant portaal URL"
@@ -488,15 +434,10 @@ msgid "Details"
 msgstr "Details"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_ir_http__display_name
-#: model:ir.model.fields,field_description:portal.field_ir_ui_view__display_name
-#: model:ir.model.fields,field_description:portal.field_mail_message__display_name
-#: model:ir.model.fields,field_description:portal.field_mail_thread__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_share__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
-#: model:ir.model.fields,field_description:portal.field_res_partner__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
@@ -531,20 +472,6 @@ msgid "Email Thread"
 msgstr "E-mail discussie"
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid "Employees Only"
-msgstr "Alleen werknemers"
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal.js:0
-#, python-format
-msgid "Forgot password?"
-msgstr "Wachtwoord vergeten?"
-
-#. module: portal
 #: model:ir.model,name:portal.model_portal_wizard
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Grant Portal Access"
@@ -566,15 +493,10 @@ msgid "Home"
 msgstr "Home"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_ir_http__id
-#: model:ir.model.fields,field_description:portal.field_ir_ui_view__id
-#: model:ir.model.fields,field_description:portal.field_mail_message__id
-#: model:ir.model.fields,field_description:portal.field_mail_thread__id
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__id
 #: model:ir.model.fields,field_description:portal.field_portal_share__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__id
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__id
-#: model:ir.model.fields,field_description:portal.field_res_partner__id
 msgid "ID"
 msgstr "ID"
 
@@ -601,15 +523,10 @@ msgid "Invitation Message"
 msgstr "Uitnodigingsbericht invoeren"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_ir_http____last_update
-#: model:ir.model.fields,field_description:portal.field_ir_ui_view____last_update
-#: model:ir.model.fields,field_description:portal.field_mail_message____last_update
-#: model:ir.model.fields,field_description:portal.field_mail_thread____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_mixin____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_share____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard____last_update
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
-#: model:ir.model.fields,field_description:portal.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -645,7 +562,7 @@ msgid "Login User"
 msgstr "Gebruiker inloggen"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.user_dropdown
+#: model_terms:ir.ui.view,arch_db:portal.frontend_layout
 msgid "Logout"
 msgstr "Uitloggen"
 
@@ -658,11 +575,10 @@ msgstr "Bericht"
 #: code:addons/portal/models/mail_thread.py:0
 #, python-format
 msgid ""
-"Model %(model_name)s does not support token signature, as it does not have "
-"%(field_name)s field."
+"Model %s does not support token signature, as it does not have %s field."
 msgstr ""
-"Model %(model_name)s ondersteunt geen tokenhandtekening, aangezien het geen "
-"%(field_name)s veld heeft."
+"Model %s ondersteund geen token handtekening omdat deze het veld %s niet "
+"heeft."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -675,13 +591,7 @@ msgid "Name"
 msgstr "Naam"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "New Password:"
-msgstr "Nieuw wachtwoord:"
-
-#. module: portal
 #. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
@@ -708,33 +618,9 @@ msgstr ""
 "loggen."
 
 #. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, python-format
-msgid "Password"
-msgstr "Wachtwoord"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Password Updated!"
-msgstr "Wachtwoord bijgewerkt!"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Password:"
-msgstr "Wachtwoord:"
-
-#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Phone"
 msgstr "Telefoon"
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, python-format
-msgid "Please confirm your password to continue"
-msgstr "Bevestig alstublieft je wachtwoord om verder te gaan."
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -769,7 +655,6 @@ msgstr "Vorige"
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Previous"
 msgstr "Vorige"
@@ -794,24 +679,12 @@ msgstr "Gerelateerde document ID"
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__res_model
 msgid "Related Document Model"
-msgstr "Gerelateerde documentmodel"
+msgstr "Gerelateerde document model"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
 msgstr "Zoek"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Security"
-msgstr "Beveiliging"
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/js/portal.js:0
-#, python-format
-msgid "Security Control"
-msgstr "Veiligheidscontrole"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_token
@@ -850,16 +723,6 @@ msgid "Share Document"
 msgstr "Deel document"
 
 #. module: portal
-#: model:ir.model.fields,field_description:portal.field_ir_ui_view__customize_show
-msgid "Show As Optional Inherit"
-msgstr "Toon als optionele overerving"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.user_sign_in
-msgid "Sign in"
-msgstr "Aanmelden"
-
-#. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts don't have a valid email: "
@@ -880,6 +743,13 @@ msgid "Some required fields are empty."
 msgstr "Sommige verplichte velden zijn leeg."
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "Something went wrong."
+msgstr "Er is iets misgegaan."
+
+#. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
 msgstr "Staat / Provincie"
@@ -894,7 +764,7 @@ msgstr "Straat"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr "Bedankt!"
+msgstr "Danku!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -910,44 +780,34 @@ msgstr ""
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
-"De bijlage %s kan niet verwijderd worden omdat het niet in een in afwachting"
-" fase zit."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr "De bijlage %s bestaat niet of u heeft geen rechten om ze te bekijken."
+msgstr ""
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr "De bijlage bestaat niet of u heeft geen rechten om ze te bekijken."
+msgstr ""
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr "Het document bestaat niet of u heeft geen rechten om het te bekijken."
-
-#. module: portal
-#: code:addons/portal/controllers/portal.py:0
-#, python-format
-msgid "The new password and its confirmation must be identical."
-msgstr "Het nieuwe wachtwoord en haar bevestiging moeten identiek zijn."
-
-#. module: portal
-#: code:addons/portal/controllers/portal.py:0
-#, python-format
-msgid ""
-"The old password you provided is incorrect, your password was not changed."
 msgstr ""
-"Het oude wachtwoord wat u heeft ingevoerd is niet correct. Uw wachtwoord is "
-"niet gewijzigd."
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_chatter.js:0
+#, python-format
+msgid "The file <strong>%s</strong> could not be saved."
+msgstr ""
 
 #. module: portal
 #. openerp-web
@@ -966,17 +826,6 @@ msgstr "Dit document bestaat niet."
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
 msgstr "Dit is een voorbeeld van het klantenportaal."
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_security.xml:0
-#, python-format
-msgid ""
-"This is necessary for security-related changes. The authorization will last "
-"for a few minutes."
-msgstr ""
-"Dit is nodig voor beveiliging gerelateerde wijzigingen. De autorisatie duurt"
-" enkele minuten."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -1020,37 +869,12 @@ msgid "VAT Number"
 msgstr "BTW-nummer"
 
 #. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "Verify New Password:"
-msgstr "Bevestig het nieuwe wachtwoord:"
-
-#. module: portal
-#: model:ir.model,name:portal.model_ir_ui_view
-msgid "View"
-msgstr "Weergave"
-
-#. module: portal
-#. openerp-web
-#: code:addons/portal/static/src/xml/portal_chatter.xml:0
-#, python-format
-msgid "Visible"
-msgstr "Zichtbaar"
-
-#. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_hr_leave_allocation__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_mail_channel__website_message_ids
@@ -1063,28 +887,18 @@ msgstr "Zichtbaar"
 #: model:ir.model.fields,field_description:portal.field_maintenance_request__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_phone_blacklist__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,field_description:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "Websiteberichten"
+msgstr "Website berichten"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
-#: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle_log_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_fleet_vehicle_log_services__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_badge__website_message_ids
 #: model:ir.model.fields,help:portal.field_gamification_challenge__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_contract__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_department__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_employee__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_job__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave__website_message_ids
-#: model:ir.model.fields,help:portal.field_hr_leave_allocation__website_message_ids
 #: model:ir.model.fields,help:portal.field_lunch_supplier__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_blacklist__website_message_ids
 #: model:ir.model.fields,help:portal.field_mail_channel__website_message_ids
@@ -1097,8 +911,6 @@ msgstr "Websiteberichten"
 #: model:ir.model.fields,help:portal.field_maintenance_request__website_message_ids
 #: model:ir.model.fields,help:portal.field_note_note__website_message_ids
 #: model:ir.model.fields,help:portal.field_phone_blacklist__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_product__website_message_ids
-#: model:ir.model.fields,help:portal.field_product_template__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
@@ -1122,12 +934,6 @@ msgstr "Schrijf een reactie..."
 #, python-format
 msgid "You are invited to access %s"
 msgstr "U bent uitgenodigd voor toegang tot %s"
-
-#. module: portal
-#: code:addons/portal/controllers/portal.py:0
-#, python-format
-msgid "You cannot leave any password empty."
-msgstr "Het is niet toegestaan om de wachtwoord velden leeg te laten."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -1197,11 +1003,6 @@ msgstr "ingelogd"
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
 msgstr "odoo"
-
-#. module: portal
-#: model_terms:ir.ui.view,arch_db:portal.portal_my_security
-msgid "password"
-msgstr "wachtwoord"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

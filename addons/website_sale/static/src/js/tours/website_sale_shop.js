@@ -31,7 +31,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         run: "text 1.99",
     }, {
         trigger: "#wrap img.product_detail_img",
-        extra_trigger: ".product_price .o_dirty .oe_currency_value:not(:containsExact(1.00))",
+        extra_trigger: ".product_price .oe_currency_value:not(:containsExact(1.00))",
         content: _t("Double click here to set an image describing your product."),
         position: "top",
         run: function (actions) {
@@ -54,7 +54,7 @@ odoo.define("website_sale.tour_shop", function (require) {
         position: "bottom",
         run: "drag_and_drop",
     }, {
-        trigger: "button[data-action=save]",
+        trigger: "button[name=save]",
         content: _t("Once you click on <b>Save</b>, your product is updated."),
         position: "bottom",
     }, {

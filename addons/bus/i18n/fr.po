@@ -3,19 +3,18 @@
 # 	* bus
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Eloïse Stilmant <est@odoo.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# thomas quertinmont <tqu@odoo.com>, 2019
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Gilles Mangin <gilles.mangin@phidias.fr>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,6 +26,11 @@ msgstr ""
 #: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr "Un utilisateur ne peut avoir qu'un statut de messagerie instantanée."
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr "Aspiration automatique"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -61,16 +65,12 @@ msgstr "Créé le"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
-#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
-#: model:ir.model.fields,field_description:bus.field_res_users__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher Nom"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
-#: model:ir.model.fields,field_description:bus.field_res_partner__id
-#: model:ir.model.fields,field_description:bus.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -84,8 +84,6 @@ msgstr "Statut de messagerie instantanée"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
-#: model:ir.model.fields,field_description:bus.field_res_partner____last_update
-#: model:ir.model.fields,field_description:bus.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Dernière modification le"
 
@@ -123,21 +121,6 @@ msgstr "Hors ligne"
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
 msgstr "En ligne"
-
-#. module: bus
-#. openerp-web
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#, python-format
-msgid "Refresh"
-msgstr "Actualiser"
-
-#. module: bus
-#. openerp-web
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#, python-format
-msgid "The page appears to be out of date."
-msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

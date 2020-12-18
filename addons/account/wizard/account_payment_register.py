@@ -261,7 +261,7 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for wizard in self:
-            available_partner_bank_accounts = wizard.partner_id.bank_ids
+            available_partner_bank_accounts = wizard.partner_id.bank_ids.filtered_domain([('company_id', '=', wizard.company_id.id)])
             if available_partner_bank_accounts:
                 wizard.partner_bank_id = available_partner_bank_accounts[0]._origin
             else:

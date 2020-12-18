@@ -167,48 +167,54 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         message.sudo().unlink()
 
         # Test attachment can't be associated if no attachment token.
-        res = self.url_open(
+        res = self.opener.post(
             url='%s/mail/chatter_post' % self.base_url,
-            data={
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
-                'message': "test message 1",
-                'attachment_ids': attachment.id,
-                'attachment_tokens': 'false',
-                'csrf_token': http.WebRequest.csrf_token(self),
+            json={
+                'params': {
+                    'res_model': self.out_invoice._name,
+                    'res_id': self.out_invoice.id,
+                    'message': "test message 1",
+                    'attachment_ids': [attachment.id],
+                    'attachment_tokens': ['false'],
+                    'csrf_token': http.WebRequest.csrf_token(self),
+                },
             },
         )
-        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.status_code, 200)
         self.assertIn("The attachment %s does not exist or you do not have the rights to access it." % attachment.id, res.text)
 
         # Test attachment can't be associated if no main document token
-        res = self.url_open(
+        res = self.opener.post(
             url='%s/mail/chatter_post' % self.base_url,
-            data={
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
-                'message': "test message 1",
-                'attachment_ids': attachment.id,
-                'attachment_tokens': attachment.access_token,
-                'csrf_token': http.WebRequest.csrf_token(self),
+            json={
+                'params': {
+                    'res_model': self.out_invoice._name,
+                    'res_id': self.out_invoice.id,
+                    'message': "test message 1",
+                    'attachment_ids': [attachment.id],
+                    'attachment_tokens': [attachment.access_token],
+                    'csrf_token': http.WebRequest.csrf_token(self),
+                },
             },
         )
-        self.assertEqual(res.status_code, 403)
+        self.assertEqual(res.status_code, 200)
         self.assertIn("You are not allowed to access 'Journal Entry' (account.move) records.", res.text)
 
         # Test attachment can't be associated if not "pending" state
         self.assertFalse(self.out_invoice.message_ids)
         attachment.write({'res_model': 'model'})
-        res = self.url_open(
+        res = self.opener.post(
             url='%s/mail/chatter_post' % self.base_url,
-            data={
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
-                'message': "test message 1",
-                'attachment_ids': attachment.id,
-                'attachment_tokens': attachment.access_token,
-                'csrf_token': http.WebRequest.csrf_token(self),
-                'token': self.out_invoice._portal_ensure_token(),
+            json={
+                'params': {
+                    'res_model': self.out_invoice._name,
+                    'res_id': self.out_invoice.id,
+                    'message': "test message 1",
+                    'attachment_ids': [attachment.id],
+                    'attachment_tokens': [attachment.access_token],
+                    'csrf_token': http.WebRequest.csrf_token(self),
+                    'token': self.out_invoice._portal_ensure_token(),
+                },
             },
         )
         self.assertEqual(res.status_code, 200)
@@ -219,16 +225,18 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
 
         # Test attachment can't be associated if not correct user
         attachment.write({'res_model': 'mail.compose.message'})
-        res = self.url_open(
+        res = self.opener.post(
             url='%s/mail/chatter_post' % self.base_url,
-            data={
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
-                'message': "test message 2",
-                'attachment_ids': attachment.id,
-                'attachment_tokens': attachment.access_token,
-                'csrf_token': http.WebRequest.csrf_token(self),
-                'token': self.out_invoice._portal_ensure_token(),
+            json={
+                'params': {
+                    'res_model': self.out_invoice._name,
+                    'res_id': self.out_invoice.id,
+                    'message': "test message 2",
+                    'attachment_ids': [attachment.id],
+                    'attachment_tokens': [attachment.access_token],
+                    'csrf_token': http.WebRequest.csrf_token(self),
+                    'token': self.out_invoice._portal_ensure_token(),
+                },
             },
         )
         self.assertEqual(res.status_code, 200)
@@ -253,16 +261,18 @@ class TestPortalAttachment(AccountTestInvoicingHttpCommon):
         create_res = json.loads(res.content.decode('utf-8'))
         self.assertEqual(create_res['name'], "final attachment")
 
-        res = self.url_open(
+        res = self.opener.post(
             url='%s/mail/chatter_post' % self.base_url,
-            data={
-                'res_model': self.out_invoice._name,
-                'res_id': self.out_invoice.id,
-                'message': "test message 3",
-                'attachment_ids': create_res['id'],
-                'attachment_tokens': create_res['access_token'],
-                'csrf_token': http.WebRequest.csrf_token(self),
-                'token': self.out_invoice._portal_ensure_token(),
+            json={
+                'params': {
+                    'res_model': self.out_invoice._name,
+                    'res_id': self.out_invoice.id,
+                    'message': "test message 3",
+                    'attachment_ids': [create_res['id']],
+                    'attachment_tokens': [create_res['access_token']],
+                    'csrf_token': http.WebRequest.csrf_token(self),
+                    'token': self.out_invoice._portal_ensure_token(),
+                },
             },
         )
         self.assertEqual(res.status_code, 200)

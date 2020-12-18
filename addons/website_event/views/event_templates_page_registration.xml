@@ -269,15 +269,18 @@
                                 <div class="row">
                                     <div class="col-lg my-2">
                                         <label>Name</label>
-                                        <input class="form-control" type="text" t-attf-name="#{counter}-name" required="This field is required"/>
+                                        <input class="form-control" type="text" t-attf-name="#{counter}-name" required="This field is required"
+                                            t-att-value="default_first_attendee.get('name', '') if counter == 1 else ''"/>
                                     </div>
                                     <div class="col-lg my-2">
                                         <label>Email</label>
-                                        <input class="form-control" type="email" t-attf-name="#{counter}-email" required="This field is required"/>
+                                        <input class="form-control" type="email" t-attf-name="#{counter}-email" required="This field is required"
+                                            t-att-value="default_first_attendee.get('email', '') if counter == 1 else ''"/>
                                     </div>
                                     <div class="col-lg my-2">
                                         <label>Phone <small>(Optional)</small></label>
-                                        <input class="form-control" type="tel" t-attf-name="#{counter}-phone"/>
+                                        <input class="form-control" type="tel" t-attf-name="#{counter}-phone"
+                                            t-att-value="default_first_attendee.get('phone', '') if counter == 1 else ''"/>
                                     </div>
                                     <input class="d-none" type="text" t-attf-name="#{counter}-event_ticket_id" t-attf-value="#{ticket['id']}"/>
                                 </div>

@@ -3,34 +3,28 @@
 # 	* website_sale
 # 
 # Translators:
-# sao sang <saosangmo@yahoo.com>, 2020
-# Manh Vu <vuducmanh96vp@gmail.com>, 2020
-# Dao Nguyen <trucdao.uel@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Dung Nguyen Thi <dungnt@trobz.com>, 2020
-# fanha99 <fanha99@hotmail.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
-# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
-# Duy BQ <duybq86@gmail.com>, 2020
+# sao sang <saosangmo@yahoo.com>, 2019
+# Martin Trigaux, 2019
+# fanha99 <fanha99@hotmail.com>, 2019
+# Chinh Chinh <trinhttp@trobz.com>, 2019
+# Dao Nguyen <trucdao.uel@gmail.com>, 2019
+# Dung Nguyen Thi <dungnt@trobz.com>, 2019
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2019
+# Duy BQ <duybq86@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-09-27 09:10+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Duy BQ <duybq86@gmail.com>, 2019\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: vi\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard___data_fetched
-msgid " Data Fetched"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -49,29 +43,20 @@ msgid "&amp; Shipping"
 msgstr "&amp; Giao hàng"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid ", .s_wsale_products_searchbar_input"
+#: model_terms:ir.ui.view,arch_db:website_sale.address
+msgid "/shop/address"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
-msgid "/shop/checkout"
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid ""
+"30-day money-back guarantee<br/>\n"
+"                              Free Shipping in U.S.<br/>\n"
+"                              Buy now, get in 2 days"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "/shop/extra_info"
-msgstr ""
-
-#. module: website_sale
-#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
-msgid "1 year"
-msgstr "1 năm"
-
-#. module: website_sale
-#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_2
-msgid "2 year"
-msgstr "2 năm"
+"Bảo đảm hoàn tiền trong 30 ngày <br/>\n"
+"                    Miễn phí vận chuyển nội thành<br/>\n"
+"                    Đặt ngay, để nhận được hàng trong vòng 2 ngày"
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -130,7 +115,7 @@ msgid ""
 "                            Resume order\n"
 "                        </a>\n"
 "                    </div>\n"
-"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with ${company.name}!</strong></div>\n"
+"                    <div style=\"text-align: center;\"><strong>Thank you for shopping with ${user.company_id.name}!</strong></div>\n"
 "                </td></tr>\n"
 "                <tr><td style=\"text-align:center;\">\n"
 "                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
@@ -189,14 +174,6 @@ msgid "<b>Your order: </b>"
 msgstr "<b>Đơn hàng: </b>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
-msgid ""
-"<br/>\n"
-"                30-day money-back guarantee<br/>\n"
-"                Shipping: 2-3 Business Days"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-arrow-right\"/> Add payment acquirers"
 msgstr "<i class=\"fa fa-arrow-right\"/> Thêm phương thức thanh toán"
@@ -204,6 +181,11 @@ msgstr "<i class=\"fa fa-arrow-right\"/> Thêm phương thức thanh toán"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
 msgid "<i class=\"fa fa-bolt\"/> Buy Now"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "<i class=\"fa fa-cart-plus\"/> Choose number of products"
 msgstr ""
 
 #. module: website_sale
@@ -230,6 +212,11 @@ msgstr ""
 "                                    <span>Quay về giỏ hàng</span>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "<i class=\"fa fa-columns\"/> Number of Columns"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-edit\"/> Edit"
 msgstr "<i class=\"fa fa-edit\"/> Sửa"
@@ -247,6 +234,20 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "<i class=\"fa fa-print\"/> Print"
 msgstr "<i class=\"fa fa-print\"/> In"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "<i class=\"fa fa-search\"/> Products Search Bar"
+msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.header
+msgid ""
+"<i class=\"fa fa-shopping-cart\"/>\n"
+"                    My Cart"
+msgstr ""
+"<i class=\"fa fa-shopping-cart\"/>\n"
+"                    Giỏ hàng của tôi"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -352,34 +353,21 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
-"<span class=\"o_form_label\">Assignment</span>\n"
+"<span class=\"o_form_label\">Assignation</span>\n"
 "                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Phân chia</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Confirmation Email</span>"
-msgstr "<span class=\"o_form_label\">Xác nhận Email</span>"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Invoicing Policy</span>"
-msgstr "<span class=\"o_form_label\">Chính sách lên hóa đơn</span>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">A document to provide</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Chính sách lập hóa đơn</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -493,6 +481,11 @@ msgstr ""
 " tùy trường cụ thể do bạn quyết định."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "A document to provide"
+msgstr "Giấy tờ cần cung cấp"
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
 msgid ""
 "A product can be either a physical product or a service that you sell to "
@@ -527,6 +520,7 @@ msgstr "Giỏ hàng dang dở"
 #. openerp-web
 #: code:addons/website_sale/models/crm_team.py:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
+#: model:ir.actions.act_window,name:website_sale.action_abandoned_orders_ecommerce
 #: model:ir.actions.act_window,name:website_sale.action_view_abandoned_tree
 #: model:ir.ui.menu,name:website_sale.menu_orders_abandoned_orders
 #, python-format
@@ -564,9 +558,11 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_product__accessory_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__accessory_product_ids
 msgid ""
-"Accessories show up when the customer reviews the cart before payment "
-"(cross-sell strategy)."
+"Accessories show up when the customerreviews the cart before payment (cross-"
+"sell strategy)."
 msgstr ""
+"Phụ kiện xuất hiện khi khách hàng kiểm tra lại giỏ hàng trước khi thanh toán"
+" (chiến dịch cross-sell)."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__accessory_product_ids
@@ -584,6 +580,13 @@ msgstr "Số tài khoản"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_quantity
 msgid "Add one"
 msgstr "Thêm một sản phẩm"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Add product suggestions"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -662,8 +665,8 @@ msgstr "Áp dụng giá cụ thể cho mỗi quốc gia, giảm giá, v.v."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
-msgid "Assignment of online orders"
-msgstr ""
+msgid "Assignation of online orders"
+msgstr "Chỉ định đơn đặt hàng trực tuyến"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_product_attribute_action
@@ -690,16 +693,6 @@ msgid "Be aware!"
 msgstr "Cảnh giá!"
 
 #. module: website_sale
-#: model:res.country.group,name:website_sale.benelux
-msgid "BeNeLux"
-msgstr "BeNeLux"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_benelux
-msgid "Benelux"
-msgstr "Benelux"
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
@@ -718,11 +711,6 @@ msgid "Billing Address"
 msgstr "Địa chỉ xuất hoá đơn"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_bins
-msgid "Bins"
-msgstr "Thùng"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
@@ -735,16 +723,6 @@ msgstr ""
 "số tiền) hoặc các sản phẩm miễn phí."
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_boxes
-msgid "Boxes"
-msgstr "Hộp"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_cabinets
-msgid "Cabinets"
-msgstr "Cabin"
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
@@ -755,11 +733,6 @@ msgstr "Chiến dịch"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__can_image_1024_be_zoomed
 msgid "Can Image 1024 be zoomed"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__can_publish
-msgid "Can Publish"
 msgstr ""
 
 #. module: website_sale
@@ -833,11 +806,6 @@ msgid "Category Description"
 msgstr ""
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_furnitures_chairs
-msgid "Chairs"
-msgstr "Ghế"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
 msgid "Children Categories"
 msgstr "Nhóm con"
@@ -848,9 +816,18 @@ msgid "Choose a payment method"
 msgstr "Chọn phương thức thanh toán"
 
 #. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas"
-msgstr "Giáng sinh"
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "Choose number of products"
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Choose the number of products to display"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -895,14 +872,12 @@ msgid "Companies"
 msgstr "Công ty"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+#, python-format
 msgid "Company Name"
 msgstr "Tên Công ty"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_desks_components
-msgid "Components"
-msgstr "Thành phần"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -942,7 +917,7 @@ msgstr "Tính toán phí giao hàng trên đơn hàng"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập cấu hình"
+msgstr "Cấu hình"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -974,7 +949,7 @@ msgstr "Đơn hàng đã xác nhận"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_partner
 msgid "Contact"
-msgstr "Liên hệ"
+msgstr "Danh bạ"
 
 #. module: website_sale
 #. openerp-web
@@ -983,11 +958,6 @@ msgstr "Liên hệ"
 #, python-format
 msgid "Conversion"
 msgstr "Chuyển đổi"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_furnitures_couches
-msgid "Couches"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -1008,17 +978,15 @@ msgstr "Tạo sản phẩm mới"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_uid
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_uid
+#: model:ir.model.fields,field_description:website_sale.field_product_style__create_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__create_uid
 msgid "Created by"
-msgstr "Tạo bởi"
+msgstr "Được tạo bởi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__create_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__create_date
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__create_date
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__create_date
+#: model:ir.model.fields,field_description:website_sale.field_product_style__create_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__create_date
 msgid "Created on"
 msgstr "Thời điểm tạo"
@@ -1064,14 +1032,16 @@ msgid "Default Pricelist"
 msgstr "Bảng giá mặc định"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Default order"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_public_category_action
 msgid "Define a new category"
 msgstr "Định nghĩa loại mới"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Delete"
-msgstr "Xoá"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_config_settings__sale_delivery_settings__internal
@@ -1092,20 +1062,10 @@ msgstr ""
 "chi phí giao hàng"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "Description"
-msgstr "Mô tả"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
 msgstr "Mô tả cho Website"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_desks
-msgid "Desks"
-msgstr "Bàn"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
@@ -1116,7 +1076,7 @@ msgstr "Xác định trình tự hiển thị trên website"
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_digest_digest
 msgid "Digest"
-msgstr "Tiêu"
+msgstr "Tập san"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_digital
@@ -1124,38 +1084,33 @@ msgid "Digital Content"
 msgstr "Nội dung số"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_account_move__display_name
-#: model:ir.model.fields,field_description:website_sale.field_crm_team__display_name
-#: model:ir.model.fields,field_description:website_sale.field_digest_digest__display_name
-#: model:ir.model.fields,field_description:website_sale.field_ir_http__display_name
-#: model:ir.model.fields,field_description:website_sale.field_mail_compose_message__display_name
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "Discard"
+msgstr "Huỷ bỏ"
+
+#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__display_name
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__display_name
-#: model:ir.model.fields,field_description:website_sale.field_product_product__display_name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__display_name
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__display_name
-#: model:ir.model.fields,field_description:website_sale.field_product_template__display_name
-#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__display_name
-#: model:ir.model.fields,field_description:website_sale.field_res_company__display_name
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:website_sale.field_res_country__display_name
-#: model:ir.model.fields,field_description:website_sale.field_res_partner__display_name
-#: model:ir.model.fields,field_description:website_sale.field_sale_order__display_name
-#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__display_name
-#: model:ir.model.fields,field_description:website_sale.field_sale_report__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_page__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__display_name
+#: model:ir.model.fields,field_description:website_sale.field_product_style__display_name
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_track__display_name
-#: model:ir.model.fields,field_description:website_sale.field_website_visitor__display_name
 msgid "Display Name"
 msgstr "Tên hiển thị"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Display a prompt with optional products when adding to cart"
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Display product"
 msgstr ""
 
 #. module: website_sale
@@ -1191,29 +1146,9 @@ msgid "Drag this website block and drop it in your page."
 msgstr "Kéo khối này và thả vào trang của bạn."
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_drawers
-msgid "Drawers"
-msgstr "Ngăn"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
-msgid "E-Commerce Extra Fields"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_website_sale_extra_field
-msgid "E-Commerce Extra Info Shown on product page"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "E-commerce Promotional Code"
 msgstr "Mã khuyến mãi cho E-Commerce"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
-msgid "EUR"
-msgstr "EUR"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1238,10 +1173,13 @@ msgid "Edit this address"
 msgstr "Sửa địa chỉ này"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_form.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_email_account
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Email"
-msgstr "Email"
+msgstr "Tên đăng nhập / Email"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1261,7 +1199,7 @@ msgstr "Email được gửi đến khách hàng sau khi thanh toán"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__embed_code
 msgid "Embed Code"
-msgstr "Mã nhúng"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -1304,29 +1242,9 @@ msgid "FedEx"
 msgstr "FedEx"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__field_id
-msgid "Field"
-msgstr "Trường"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__label
-msgid "Field Label"
-msgstr "Tên trường dữ liệu"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__name
-msgid "Field Name"
-msgstr "Tên trường"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
 msgstr "Từ Website"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_furnitures
-msgid "Furnitures"
-msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -1340,6 +1258,11 @@ msgstr "Tạo hóa đơn từ các đơn đặt hàng đã sẵn sàng để l�
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
 msgstr "Tự động tạo hóa đơn khi thanh toán online được xác nhận"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "Give us your feedback"
+msgstr "Hãy cho chúng tôi phản hồi của bạn"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_public_category__sequence
@@ -1363,6 +1286,11 @@ msgid "Group By"
 msgstr "Nhóm theo"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_style__html_class
+msgid "HTML Classes"
+msgstr "HTML Classes"
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_ir_http
 msgid "HTTP Routing"
 msgstr "HTTP Routing"
@@ -1383,32 +1311,10 @@ msgid "I have a promo code"
 msgstr "Tôi có mã ưu đãi"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_account_move__id
-#: model:ir.model.fields,field_description:website_sale.field_crm_team__id
-#: model:ir.model.fields,field_description:website_sale.field_digest_digest__id
-#: model:ir.model.fields,field_description:website_sale.field_ir_http__id
-#: model:ir.model.fields,field_description:website_sale.field_mail_compose_message__id
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist__id
-#: model:ir.model.fields,field_description:website_sale.field_product_product__id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__id
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__id
-#: model:ir.model.fields,field_description:website_sale.field_product_template__id
-#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line__id
-#: model:ir.model.fields,field_description:website_sale.field_res_company__id
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings__id
-#: model:ir.model.fields,field_description:website_sale.field_res_country__id
-#: model:ir.model.fields,field_description:website_sale.field_res_partner__id
-#: model:ir.model.fields,field_description:website_sale.field_sale_order__id
-#: model:ir.model.fields,field_description:website_sale.field_sale_order_line__id
-#: model:ir.model.fields,field_description:website_sale.field_sale_report__id
-#: model:ir.model.fields,field_description:website_sale.field_website__id
-#: model:ir.model.fields,field_description:website_sale.field_website_page__id
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__id
+#: model:ir.model.fields,field_description:website_sale.field_product_style__id
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__id
-#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter__id
-#: model:ir.model.fields,field_description:website_sale.field_website_track__id
-#: model:ir.model.fields,field_description:website_sale.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
 
@@ -1442,7 +1348,6 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1920
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
 msgid "Image"
 msgstr "Hình ảnh"
 
@@ -1450,25 +1355,25 @@ msgstr "Hình ảnh"
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1024
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_1024
 msgid "Image 1024"
-msgstr "Hình 1024"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_128
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_128
 msgid "Image 128"
-msgstr "Ảnh 128"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_256
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_256
 msgid "Image 256"
-msgstr "Hình 256"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_512
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__image_512
 msgid "Image 512"
-msgstr "Hình 512"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
@@ -1500,14 +1405,7 @@ msgstr "Hóa đơn"
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_account
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Invoicing"
-msgstr "Lên hóa đơn"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__is_published
-#: model_terms:ir.ui.view,arch_db:website_sale.product_product_website_tree_view
-#: model_terms:ir.ui.view,arch_db:website_sale.product_template_view_tree_website_sale
-msgid "Is Published"
-msgstr ""
+msgstr "Xuất hóa đơn"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1522,8 +1420,8 @@ msgstr "Không được chỉnh sửa đơn đặt hàng không ở trạng thá
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_account_move
-msgid "Journal Entry"
-msgstr "Bút toán sổ nhật ký"
+msgid "Journal Entries"
+msgstr "Bút toán phát sinh"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__just_done
@@ -1536,44 +1434,12 @@ msgid "Kpi Website Sale Total Value"
 msgstr ""
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_lamps
-msgid "Lamps"
-msgstr "Đèn"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_account_move____last_update
-#: model:ir.model.fields,field_description:website_sale.field_crm_team____last_update
-#: model:ir.model.fields,field_description:website_sale.field_digest_digest____last_update
-#: model:ir.model.fields,field_description:website_sale.field_ir_http____last_update
-#: model:ir.model.fields,field_description:website_sale.field_mail_compose_message____last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_image____last_update
-#: model:ir.model.fields,field_description:website_sale.field_product_pricelist____last_update
-#: model:ir.model.fields,field_description:website_sale.field_product_product____last_update
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category____last_update
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon____last_update
-#: model:ir.model.fields,field_description:website_sale.field_product_template____last_update
-#: model:ir.model.fields,field_description:website_sale.field_product_template_attribute_line____last_update
-#: model:ir.model.fields,field_description:website_sale.field_res_company____last_update
-#: model:ir.model.fields,field_description:website_sale.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:website_sale.field_res_country____last_update
-#: model:ir.model.fields,field_description:website_sale.field_res_partner____last_update
-#: model:ir.model.fields,field_description:website_sale.field_sale_order____last_update
-#: model:ir.model.fields,field_description:website_sale.field_sale_order_line____last_update
-#: model:ir.model.fields,field_description:website_sale.field_sale_report____last_update
-#: model:ir.model.fields,field_description:website_sale.field_website____last_update
-#: model:ir.model.fields,field_description:website_sale.field_website_page____last_update
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field____last_update
+#: model:ir.model.fields,field_description:website_sale.field_product_style____last_update
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard____last_update
-#: model:ir.model.fields,field_description:website_sale.field_website_snippet_filter____last_update
-#: model:ir.model.fields,field_description:website_sale.field_website_track____last_update
-#: model:ir.model.fields,field_description:website_sale.field_website_visitor____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
-msgid "Last Month"
-msgstr "Tháng trước"
+msgstr "Sửa lần cuối"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_partner__last_website_so_id
@@ -1584,35 +1450,18 @@ msgstr "Đơn hàng trực tuyến gần nhất"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_uid
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_uid
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_uid
+#: model:ir.model.fields,field_description:website_sale.field_product_style__write_uid
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Cập nhật gần đây bởi"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__write_date
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__write_date
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__write_date
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__write_date
+#: model:ir.model.fields,field_description:website_sale.field_product_style__write_date
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
-msgid "Last Week"
-msgstr "Tuần trước"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
-msgid "Last Year"
-msgstr "Năm ngoái"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Left"
-msgstr "Trái"
+msgstr "Cập nhật gần đây vào"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1669,6 +1518,13 @@ msgstr "Quản lý chương trình khuyến mại &amp; phiếu giảm giá"
 
 #. module: website_sale
 #. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Maximum number of products to display"
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Medium"
@@ -1677,7 +1533,7 @@ msgstr "Kênh trung gian"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr "ID tài khoản người bán"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
@@ -1685,14 +1541,8 @@ msgid "Method"
 msgstr "Phương thức"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_multimedia
-msgid "Multimedia"
-msgstr "Đa phương tiện"
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale.js:0
-#: model_terms:ir.ui.view,arch_db:website_sale.header_cart_link
 #, python-format
 msgid "My Cart"
 msgstr "Giỏ hàng"
@@ -1700,6 +1550,7 @@ msgstr "Giỏ hàng"
 #. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#: code:addons/website_sale/static/src/xml/website_sale_form.xml:0
 #: model:ir.model.fields,field_description:website_sale.field_product_image__name
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__name
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -1743,6 +1594,7 @@ msgid "Next <span class=\"fa fa-chevron-right\"/>"
 msgstr "Tiếp theo<span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
 msgstr "Không có giỏ hàng dang dỡ"
@@ -1785,11 +1637,6 @@ msgid "No shipping management on website"
 msgstr "Không quản lý giao hàng trên Website"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "None"
-msgstr "Không dùng"
-
-#. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_acquirer_state__not_done
 msgid "Not done"
 msgstr "Chưa xong"
@@ -1798,11 +1645,6 @@ msgstr "Chưa xong"
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__abandoned_carts_count
 msgid "Number of Abandoned Carts"
 msgstr "Số lượng giỏ hàng chưa hoàn tất"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Number of Columns"
-msgstr "Số lượng cột"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppr
@@ -1815,14 +1657,16 @@ msgid "Number of hours after which the cart is considered abandoned."
 msgstr "Số giờ sau đó thì giỏ hàng được xem là dang dỡ"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Number of products"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_ppg
 msgid "Number of products in the grid on the shop"
 msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.xml:0
+#, python-format
+msgid "OK"
+msgstr "OK"
 
 #. module: website_sale
 #. openerp-web
@@ -1850,8 +1694,8 @@ msgstr "Chỉ các dịch vụ"
 #: code:addons/website_sale/models/product.py:0
 #, python-format
 msgid ""
-"Only the company's websites are allowed.\n"
-"Leave the Company field empty or select a website from that company."
+"Only the company's websites are allowed.                     Leave the "
+"Company field empty or select a website from that company."
 msgstr ""
 
 #. module: website_sale
@@ -1928,8 +1772,31 @@ msgid "Order Total"
 msgstr "Tổng đơn hàng"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "Order by"
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Order by name (A-Z)"
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Order by name (Z-A)"
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Order by price: high to low"
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Order by price: low to high"
 msgstr ""
 
 #. module: website_sale
@@ -1941,7 +1808,7 @@ msgstr ""
 #: model:ir.ui.menu,name:website_sale.menu_orders_orders
 #, python-format
 msgid "Orders"
-msgstr "Các Hoạt động"
+msgstr "Đơn hàng"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1972,11 +1839,6 @@ msgstr "Đơn hàng/Ngày"
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
 msgstr ""
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_website_page
-msgid "Page"
-msgstr "Trang"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -2043,10 +1905,13 @@ msgstr "Thanh toán để nắm bắt"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_user_type
 msgid "Paypal User Type"
-msgstr "Loại người dùng Paypal"
+msgstr ""
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale_form.xml:0
 #: model_terms:ir.ui.view,arch_db:website_sale.address
+#, python-format
 msgid "Phone"
 msgstr "Điện thoại"
 
@@ -2088,7 +1953,6 @@ msgstr "Năm trước"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
 msgid "Price"
 msgstr "Giá"
 
@@ -2139,7 +2003,6 @@ msgid "Product"
 msgstr "Sản phẩm"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_options
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 msgid "Product Category"
 msgstr "Nhóm sản phẩm"
@@ -2166,11 +2029,6 @@ msgid "Product Name"
 msgstr "Tên sản phẩm"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.view_website_sale_website_form
-msgid "Product Page Extra Fields"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product Prices"
 msgstr "Giá bán sản phẩm"
@@ -2181,10 +2039,15 @@ msgid "Product Public Categories"
 msgstr "Danh mục sản phẩm công khai"
 
 #. module: website_sale
+#: model:ir.model,name:website_sale.model_product_style
+msgid "Product Style"
+msgstr "Phong cách sản phẩm"
+
+#. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template
 #: model:ir.model.fields,field_description:website_sale.field_product_image__product_tmpl_id
 msgid "Product Template"
-msgstr "Mẫu sản phẩm"
+msgstr "Bản mẫu sản phẩm"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_template_attribute_line
@@ -2204,7 +2067,7 @@ msgstr "Biến thể sản phẩm"
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.product_catalog_variants
 msgid "Product Variants"
-msgstr "Biến thể Sản phẩm"
+msgstr "Biến thể sản phẩm"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
@@ -2217,14 +2080,14 @@ msgid "Product Views History"
 msgstr ""
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.404
+msgid "Product not found!"
+msgstr "Không tìm thấy sản phẩm!"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Product prices displaying in web catalog"
 msgstr "Giá sản phẩm hiển thị trong danh mục web"
-
-#. module: website_sale
-#: model:ir.model,name:website_sale.model_product_ribbon
-msgid "Product ribbon"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
@@ -2243,14 +2106,21 @@ msgid "Products"
 msgstr "Sản phẩm"
 
 #. module: website_sale
-#: model:ir.actions.server,name:website_sale.dynamic_snippet_products_action
-msgid "Products Dynamic Snippet"
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "Products Search Bar"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__product_count
 msgid "Products Views"
 msgstr ""
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Promote"
+msgstr "Thúc đẩy"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -2275,7 +2145,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_search_view_website
 msgid "Published"
-msgstr "Đã đăng"
+msgstr "Đã công bố"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2319,41 +2189,6 @@ msgid "REVENUE BY"
 msgstr ""
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
-msgid "Rating"
-msgstr "Đánh giá"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_avg
-msgid "Rating Average"
-msgstr "Điểm đánh giá trung bình"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_feedback
-msgid "Rating Last Feedback"
-msgstr "Đánh giá phản hồi cuối cùng"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_image
-msgid "Rating Last Image"
-msgstr "Ảnh đánh giá mới nhất"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_last_value
-msgid "Rating Last Value"
-msgstr "Đánh giá giá trị cuối cùng"
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__rating_count
-msgid "Rating count"
-msgstr "Đánh giá"
-
-#. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_product_template__rating_last_feedback
-msgid "Reason of the rating"
-msgstr "Lí do đánh giá"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
 msgid "Recently viewed Products"
 msgstr ""
@@ -2387,7 +2222,6 @@ msgstr "Báo cáo"
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_id
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
-#: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict publishing to this website."
 msgstr "Hạn chế phát hành cho website này"
 
@@ -2397,47 +2231,24 @@ msgid "Return to Cart"
 msgstr "Quay về giỏ hàng"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.404
+msgid "Return to the product list."
+msgstr "Về Danh mục Sản phẩm."
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Review Order"
 msgstr "Xem đơn hàng"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_product__website_ribbon_id
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_ribbon_id
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Ribbon"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__bg_color
-msgid "Ribbon background color"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html_class
-msgid "Ribbon class"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__html
-msgid "Ribbon html"
-msgstr ""
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_ribbon__text_color
-msgid "Ribbon text color"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Right"
-msgstr "Phải"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__is_seo_optimized
-#: model:ir.model.fields,field_description:website_sale.field_product_template__is_seo_optimized
 msgid "SEO optimized"
 msgstr "Tối ưu SEO"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.products_item
+msgid "Sale"
+msgstr "Bán"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
@@ -2480,24 +2291,8 @@ msgstr "Báo cáo bán hàng"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
-msgid "Sales Since Last Month"
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Week"
-msgstr ""
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
-#, python-format
-msgid "Sales Since Last Year"
-msgstr ""
+msgid "Sales Since Last"
+msgstr "Bán hàng kể từ lần cuối"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_crm_team
@@ -2514,6 +2309,14 @@ msgid "Salesperson"
 msgstr "Nhân viên kinh doanh"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "Save"
+msgstr "Lưu"
+
+#. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_tokens
 msgid "Saved Payment Data"
 msgstr "Dữ liệu thanh toán đã lưu"
@@ -2522,6 +2325,13 @@ msgstr "Dữ liệu thanh toán đã lưu"
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Search Abandoned Sales Orders"
 msgstr "Tìm đơn hàng dang dỡ"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "Search filter to use"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
@@ -2588,22 +2398,10 @@ msgid "Send a recovery email when a cart is abandoned"
 msgstr "Gửi thư phục hồi các đơn hàng dang dỡ"
 
 #. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
-#: model:ir.model.fields,field_description:website_sale.field_product_template__seo_name
-msgid "Seo name"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__sequence
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__sequence
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__sequence
 msgid "Sequence"
 msgstr "Trình tự"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.services
-msgid "Services"
-msgstr "Các dịch vụ"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -2637,9 +2435,9 @@ msgid "Shipping Management"
 msgstr "Quản lý giao hàng"
 
 #. module: website_sale
-#: model:website.menu,name:website_sale.menu_shop
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.products
+#: model:website.menu,name:website_sale.menu_shop
 msgid "Shop"
 msgstr "Sản phẩm & Dịch vụ"
 
@@ -2662,11 +2460,6 @@ msgstr "Cửa hàng - Chọn phương thức thanh toán"
 #: model_terms:ir.ui.view,arch_db:website_sale.products_add_to_cart
 msgid "Shopping cart"
 msgstr "Giỏ hàng"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Show Empty Cart"
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories
@@ -2701,11 +2494,6 @@ msgid "Size Y"
 msgstr "Cỡ Y"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Slanted"
-msgstr ""
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
@@ -2718,6 +2506,11 @@ msgstr "Đã bán"
 #, python-format
 msgid "Some required fields are empty."
 msgstr "Một số trường bắt buộc vẫn đang để trống."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.404
+msgid "Sorry, this product is not available anymore."
+msgstr "Rất tiếc, sản phẩm này không còn nữa."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
@@ -2777,6 +2570,18 @@ msgid "Stripe Secret Key"
 msgstr "Stripe Secret Key"
 
 #. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_style__name
+msgid "Style Name"
+msgstr "Tên phong cách"
+
+#. module: website_sale
+#: model:ir.model.fields,field_description:website_sale.field_product_product__website_style_ids
+#: model:ir.model.fields,field_description:website_sale.field_product_template__website_style_ids
+#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
+msgid "Styles"
+msgstr "Phong cách"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Subtotal:"
 msgstr "Thành tiền:"
@@ -2785,9 +2590,11 @@ msgstr "Thành tiền:"
 #: model:ir.model.fields,help:website_sale.field_product_product__alternative_product_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__alternative_product_ids
 msgid ""
-"Suggest alternatives to your customer (upsell strategy). Those products show"
-" up on the product page."
+"Suggest alternatives to your customer(upsell strategy).Those product show up"
+" on the product page."
 msgstr ""
+"Gợi ý sản phẩm thay thế cho khách hàng (upsell). Những sản phẩm này sẽ hiển "
+"thị trên trang sản phẩm."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.suggested_products_list
@@ -2795,24 +2602,14 @@ msgid "Suggested Accessories:"
 msgstr "Phụ kiện được khuyên dùng:"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "Suggestions"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "TIN / VAT"
 msgstr "Mã số Thuế"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Tag"
-msgstr "Tag"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "Taxes:"
-msgstr "Các loại thuế:"
+msgstr "Các loại Thuế:    "
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_website__all_pricelist_ids
@@ -2823,11 +2620,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.terms
 msgid "Terms &amp;amp; Conditions"
 msgstr "Điều khoản &amp;amp; Điều kiện"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
-msgid "Terms and Conditions"
-msgstr "Điều khoản và Điều kiện"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -2851,8 +2643,12 @@ msgstr ""
 "protected by copyright laws."
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
+msgid "The SEPA QR Code informations are not set correctly."
+msgstr "Thông tin mã QR SEPA không đúng."
+
+#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
-#: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
 msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
 
@@ -2882,12 +2678,16 @@ msgstr ""
 #: model:ir.model.fields,help:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,help:website_sale.field_product_template__public_categ_ids
 msgid ""
-"The product will be available in each mentioned eCommerce category. Go to "
-"Shop > Customize and enable 'eCommerce categories' to view all eCommerce "
-"categories."
+"The product will be available in each mentioned e-commerce category. Go "
+"toShop > Customize and enable 'E-commerce categories' to view all e-commerce"
+" categories."
 msgstr ""
+"Sản phẩm sẽ có trong từng nhóm hàng thương mại điện tử được đề cập. Truy cập"
+" Cửa hàng > Tùy biến và kích hoạt 'Nhóm hàng thương mại điện tử' để xem tất "
+"cả nhóm hàng."
 
 #. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "The time to mark a cart as abandoned can be changed in the settings."
 msgstr ""
@@ -2938,7 +2738,7 @@ msgstr "Mẫu thư này được gợi ý khi bạn gửi thư khôi phục."
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
 msgid ""
 "This is a preview of the recently viewed products by the user.<br/>\n"
-"                Once the user has seen at least one product this snippet will be visible."
+"                    Once the user has seen at least one product this snippet will be visible."
 msgstr ""
 
 #. module: website_sale
@@ -2977,7 +2777,7 @@ msgid "Total number of views on products"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.address
+#: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "True"
 msgstr "Đúng"
 
@@ -2995,13 +2795,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "USPS"
 msgstr "USPS"
-
-#. module: website_sale
-#: model:product.product,uom_name:website_sale.product_product_1
-#: model:product.product,uom_name:website_sale.product_product_1b
-#: model:product.template,uom_name:website_sale.product_product_1_product_template
-msgid "Units"
-msgstr "Cái"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
@@ -3038,11 +2831,6 @@ msgid "Upload a file from your local library."
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "Validate"
-msgstr "Xác nhận"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__video_url
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "Video URL"
@@ -3052,11 +2840,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
 msgstr "Xem giỏ hàng ("
-
-#. module: website_sale
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
-msgid "Visible on current website"
-msgstr "Hiển thị ở website hiện tại"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
@@ -3080,53 +2863,22 @@ msgid "Visitor Product Views History"
 msgstr ""
 
 #. module: website_sale
-#: model:product.product,name:website_sale.product_product_1
-#: model:product.product,name:website_sale.product_product_1b
-#: model:product.template,name:website_sale.product_product_1_product_template
-msgid "Warranty"
-msgstr "Bảo hành"
-
-#. module: website_sale
-#: model:product.product,description_sale:website_sale.product_product_1
-#: model:product.product,description_sale:website_sale.product_product_1b
-#: model:product.template,description_sale:website_sale.product_product_1_product_template
-msgid ""
-"Warranty, issued to the purchaser of an article by its manufacturer, "
-"promising to repair or replace it if necessary within a specified period of "
-"time."
-msgstr ""
-"Bảo hành, cấp cho người mua phiếu bảo hành từ nhà sản xuất, qua đó người mua"
-" sẽ được sửa chữa hoặc thay thế sản phẩm nếu cần thiết trong khoảng thời "
-"gian cụ thể."
-
-#. module: website_sale
-#. openerp-web
-#: code:addons/website_sale/static/src/js/website_sale_validate.js:0
-#, python-format
-msgid "We are waiting for confirmation from the bank or the payment provider"
-msgstr ""
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_searchbar
 msgid "We have amazing products in our shop, check them now !"
 msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website
-#: model:ir.model.fields,field_description:website_sale.field_account_bank_statement_line__website_id
 #: model:ir.model.fields,field_description:website_sale.field_account_move__website_id
-#: model:ir.model.fields,field_description:website_sale.field_account_payment__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_id
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_id
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_id
 #: model:ir.model.fields,field_description:website_sale.field_sale_report__website_id
-#: model:ir.model.fields,field_description:website_sale.field_website_sale_extra_field__website_id
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
-msgstr "Trang web"
+msgstr "Website"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
@@ -3157,13 +2909,7 @@ msgid "Website Shop"
 msgstr "Cửa hàng Website"
 
 #. module: website_sale
-#: model:ir.model,name:website_sale.model_website_snippet_filter
-msgid "Website Snippet Filter"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
 msgid "Website URL"
 msgstr "Địa chỉ website"
 
@@ -3174,32 +2920,26 @@ msgstr ""
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_description
 msgid "Website meta description"
-msgstr "Mô tả website dữ liệu"
+msgstr "Website dữ liệu mô tả"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_keywords
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Từ khóa website dữ liệu"
+msgstr "Website dữ liệu từ khóa"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_title
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_title
 msgid "Website meta title"
-msgstr "Tiêu đề website dữ liệu"
+msgstr "Website dữ liệu tiêu đề"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
-#: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_og_img
 msgid "Website opengraph image"
 msgstr "Hình ảnh trang web"
 
 #. module: website_sale
-#: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id
 #: model:ir.model.fields,help:website_sale.field_account_move__website_id
-#: model:ir.model.fields,help:website_sale.field_account_payment__website_id
 msgid "Website through which this invoice was created."
 msgstr "Hóa đơn được tạo từ trang web."
 
@@ -3266,6 +3006,7 @@ msgid "You left items in your cart!"
 msgstr "Bạn có sản phẩm trong giỏ hàng!"
 
 #. module: website_sale
+#: model_terms:ir.actions.act_window,help:website_sale.action_abandoned_orders_ecommerce
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
@@ -3289,6 +3030,11 @@ msgstr ""
 "                                        <small> hoặc </small>"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
+msgid "Your Reference"
+msgstr "Tham chiếu của bạn"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_lines
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -3306,9 +3052,23 @@ msgid "Zip Code"
 msgstr "Mã Zip"
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "and allow to search in"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "bpost"
 msgstr "bpost"
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "by default"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.coupon_form
@@ -3316,15 +3076,15 @@ msgid "code..."
 msgstr "mã..."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "default"
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "description"
 msgstr ""
 
 #. module: website_sale
-#: code:addons/website_sale/models/website.py:0
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_settings
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_form_view
-#, python-format
 msgid "eCommerce"
 msgstr "thương mại điện tử"
 
@@ -3370,23 +3130,30 @@ msgstr ""
 " sẽ được thay thế bằng giỏ hàng trước đó của bạn."
 
 #. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "image"
+msgstr ""
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "in category \""
 msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
-msgid "item(s))"
-msgstr ""
+msgid "items)"
+msgstr "hạng mục)"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "name (A-Z)"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_sale.product
+msgid "ml-2"
+msgstr "ml-2"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "name (Z-A)"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "mt-2 ml-md-2"
 msgstr ""
 
 #. module: website_sale
@@ -3395,18 +3162,10 @@ msgid "new address"
 msgstr "Địa chỉ mới"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "price (high to low)"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "price (low to high)"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
-msgid "products"
+#. openerp-web
+#: code:addons/website_sale/static/src/xml/website_sale.editor.xml:0
+#, python-format
+msgid "price"
 msgstr ""
 
 #. module: website_sale
@@ -3420,21 +3179,11 @@ msgid "to follow your order."
 msgstr "để theo dõi đơn hàng của bạn."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "⌙ Background"
+#: model_terms:ir.ui.view,arch_db:website_sale.products
+msgid "w-100 w-md-auto mt-2"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "⌙ Mode"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "⌙ Position"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
-msgid "⌙ Text"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_sale.brand_promotion
+msgid "website"
+msgstr "website"

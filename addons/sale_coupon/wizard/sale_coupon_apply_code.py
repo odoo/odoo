@@ -44,7 +44,7 @@ class SaleCouponApplyCode(models.TransientModel):
         else:
             coupon = self.env['coupon.coupon'].search([('code', '=', coupon_code)], limit=1)
             if coupon:
-                error_status = coupon._check_coupon_code(order)
+                error_status = coupon._check_coupon_code(order.date_order.date(), order.partner_id.id, order=order)
                 if not error_status:
                     order._create_reward_line(coupon.program_id)
                     order.applied_coupon_ids += coupon

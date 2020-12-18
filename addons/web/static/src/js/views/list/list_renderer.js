@@ -78,6 +78,7 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+        this.no_open = params.no_open;
     },
     /**
      * Compute columns visilibity. This can't be done earlier as we need the
@@ -291,6 +292,15 @@ var ListRenderer = BasicRenderer.extend({
                 return {name: fieldName, type: self.state.fields[fieldName].type};
             }),
         };
+    },
+    /**
+     * Returns the jQuery node used to update the selection
+     *
+     * @private
+     * @return {jQuery}
+     */
+    _getSelectableRecordCheckboxes: function () {
+        return this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
     },
     /**
      * Adjacent buttons (in the arch) are displayed in a single column. This
@@ -952,6 +962,9 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
+        if (this.no_open && this.mode === "readonly") {
+            $tr.addClass('o_list_no_open');
+        }
         this._setDecorationClasses($tr, this.rowDecorations, record);
         return $tr;
     },
@@ -1171,7 +1184,7 @@ var ListRenderer = BasicRenderer.extend({
         const previousSelection = JSON.stringify(this.selection);
         this.selection = [];
         var self = this;
-        var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+        var $inputs = this._getSelectableRecordCheckboxes();
         var allChecked = $inputs.length > 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
@@ -1380,7 +1393,7 @@ var ListRenderer = BasicRenderer.extend({
     _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click')) {
+        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click') && !this.no_open) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
                 this.trigger_up('open_record', { id: id, target: ev.target });

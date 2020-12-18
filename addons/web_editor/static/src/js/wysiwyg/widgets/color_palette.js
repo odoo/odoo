@@ -6,7 +6,7 @@ const core = require('web.core');
 const session = require('web.session');
 const {ColorpickerWidget} = require('web.Colorpicker');
 const Widget = require('web.Widget');
-const summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
+const summernoteCustomColors = require('web_editor.custom_colors');
 const weUtils = require('web_editor.utils');
 
 const qweb = core.qweb;

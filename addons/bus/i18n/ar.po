@@ -3,22 +3,21 @@
 # 	* bus
 # 
 # Translators:
-# Sherif Abd Ekmoniem <sherif.tsupport@gmail.com>, 2020
-# Mustafa Rawi <mustafa@cubexco.com>, 2020
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2020
-# Akram Alfusayal <akram_ma@hotmail.com>, 2020
-# amrnegm <amrnegm.01@gmail.com>, 2020
-# hoxhe Aits <hoxhe0@gmail.com>, 2020
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2020
-# Shaima Safar <shaima.safar@open-inside.com>, 2020
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2019
+# Akram Alfusayal <akram_ma@hotmail.com>, 2019
+# amrnegm <amrnegm.01@gmail.com>, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Shaima Safar <shaima.safar@open-inside.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +29,11 @@ msgstr ""
 #: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
 msgstr "يمكن للمستخدم امتلاك حالة محادثات فورية واحدة فقط."
+
+#. module: bus
+#: model:ir.model,name:bus.model_ir_autovacuum
+msgid "Automatic Vacuum"
+msgstr "تفريغ تلقائي"
 
 #. module: bus
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
@@ -64,16 +68,12 @@ msgstr "أنشئ في"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
-#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
-#: model:ir.model.fields,field_description:bus.field_res_users__display_name
 msgid "Display Name"
 msgstr "الاسم المعروض"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
-#: model:ir.model.fields,field_description:bus.field_res_partner__id
-#: model:ir.model.fields,field_description:bus.field_res_users__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -87,8 +87,6 @@ msgstr "حالة المحادثات الفورية"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
-#: model:ir.model.fields,field_description:bus.field_res_partner____last_update
-#: model:ir.model.fields,field_description:bus.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
@@ -126,21 +124,6 @@ msgstr "مقطوع"
 #: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
 msgid "Online"
 msgstr "متصل"
-
-#. module: bus
-#. openerp-web
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#, python-format
-msgid "Refresh"
-msgstr ""
-
-#. module: bus
-#. openerp-web
-#: code:addons/bus/static/src/js/web_client_bus.js:0
-#, python-format
-msgid "The page appears to be out of date."
-msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence

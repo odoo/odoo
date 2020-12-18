@@ -70,7 +70,7 @@
         <attribute name="name"/>
         <attribute name="t-att-data-module-id"/>
         <attribute name="t-att-data-module-shortdesc"/>
-        <attribute name="groups">website_slides.group_website_slides_officer</attribute>
+        <attribute name="t-if">env.user.has_group('website_slides.group_website_slides_officer')</attribute>
     </xpath>
 </template>
 

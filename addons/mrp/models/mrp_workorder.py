@@ -34,7 +34,6 @@ class MrpWorkorder(models.Model):
     product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True, check_company=True)
     product_tracking = fields.Selection(related="product_id.tracking")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
-    use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
     production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True)
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,
@@ -614,11 +613,7 @@ class MrpWorkorder(models.Model):
 
     def action_cancel(self):
         self.leave_id.unlink()
-        return self.write({
-            'state': 'cancel',
-            'date_planned_start': False,
-            'date_planned_finished': False,
-        })
+        return self.write({'state': 'cancel'})
 
     def action_replan(self):
         """Replan a work order.

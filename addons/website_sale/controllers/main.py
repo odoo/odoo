@@ -14,7 +14,7 @@ from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import ValidationError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
-from odoo.addons.website.controllers.main import Website
+from odoo.addons.website.controllers import main
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
 _logger = logging.getLogger(__name__)
@@ -118,7 +118,7 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({'id': order.id})
 
 
-class Website(Website):
+class Website(main.Website):
     @http.route()
     def get_switchable_related_views(self, key):
         views = super(Website, self).get_switchable_related_views(key)
@@ -1010,10 +1010,6 @@ class WebsiteSale(http.Controller):
         PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect('/shop/confirmation')
 
-    @http.route(['/shop/terms'], type='http', auth="public", website=True, sitemap=True)
-    def terms(self, **kw):
-        return request.render("website_sale.terms")
-
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
@@ -1257,18 +1253,3 @@ class WebsiteSale(http.Controller):
         if visitor_sudo:
             request.env['website.track'].sudo().search([('visitor_id', '=', visitor_sudo.id), ('product_id', '=', product_id)]).unlink()
         return self._get_products_recently_viewed()
-
-    # --------------------------------------------------------------------------
-    # Website Snippet Filters
-    # --------------------------------------------------------------------------
-
-    @http.route('/website_sale/snippet/options_filters', type='json', auth='user', website=True)
-    def get_dynamic_snippet_filters(self):
-        domain = expression.AND([
-            request.website.website_domain(),
-            ['|', ('filter_id.model_id', '=', 'product.product'), ('action_server_id.model_id.model', '=', 'product.product')]
-        ])
-        filters = request.env['website.snippet.filter'].sudo().search_read(
-            domain, ['id']
-        )
-        return filters

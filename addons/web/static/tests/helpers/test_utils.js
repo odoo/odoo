@@ -98,17 +98,22 @@ odoo.define('web.test_utils', async function (require) {
     }
 
     /**
-     * Calls nextTick. While we have a hybrid implemetation (Owl + legacy), we may
-     * have situations where waiting for a single nextTick isn't enough. For instance,
-     * having a layer of Owl components, above a layer of legacy widgets, above a
-     * layer of Owl components requires two nextTick for the whole hierarchy to be
-     * rendered into the DOM. In those situation, one should use this helper, which
-     * will be removed (alongside all its calls) in the future.
+     * Awaits for an additionnal rendering frame initiated by the Owl
+     * compatibility layer processing.
+     *
+     * By default a simple "nextTick" will handle the rendering of any widget/
+     * component stuctures having at most 1 switch between the type of
+     * entities (Component > Widget or Widget > Component). However more time
+     * must be spent rendering in case we have additionnal switches. In such
+     * cases this function must be used (1 call for each additionnal switch)
+     * since it will be removed along with the compatiblity layer once the
+     * framework has been entirely converted, and using this helper will make
+     * it easier to wipe it from the code base.
      *
      * @returns {Promise}
      */
-    async function owlCompatibilityNextTick() {
-        return nextTick();
+    async function owlCompatibilityExtraNextTick() {
+        return testUtilsDom.returnAfterNextAnimationFrame();
     }
 
     // Loading static files cannot be properly simulated when their real content is
@@ -118,7 +123,6 @@ odoo.define('web.test_utils', async function (require) {
     // to load xml files that are normally lazy loaded by specific widgets).
     await Promise.all([
         session.is_bound,
-        ajax.loadXML('/web/static/src/xml/crash_manager.xml', core.qweb),
         ajax.loadXML('/web/static/src/xml/debug.xml', core.qweb),
         ajax.loadXML('/web/static/src/xml/dialog.xml', core.qweb),
         ajax.loadXML('/web/static/src/xml/translation_dialog.xml', core.qweb),
@@ -158,6 +162,7 @@ odoo.define('web.test_utils', async function (require) {
             toggleFilterMenu: testUtilsControlPanel.toggleFilterMenu,
             toggleAddCustomFilter: testUtilsControlPanel.toggleAddCustomFilter,
             applyFilter: testUtilsControlPanel.applyFilter,
+            addCondition: testUtilsControlPanel.addCondition,
             // GroupByMenu interactions
             toggleGroupByMenu: testUtilsControlPanel.toggleGroupByMenu,
             toggleAddCustomGroup: testUtilsControlPanel.toggleAddCustomGroup,
@@ -262,7 +267,7 @@ odoo.define('web.test_utils', async function (require) {
         makeTestPromiseWithAssert: makeTestPromiseWithAssert,
         nextMicrotaskTick: nextMicrotaskTick,
         nextTick: nextTick,
-        owlCompatibilityNextTick: owlCompatibilityNextTick,
+        owlCompatibilityExtraNextTick,
         prepareTarget: testUtilsCreate.prepareTarget,
         returnAfterNextAnimationFrame: testUtilsDom.returnAfterNextAnimationFrame,
 

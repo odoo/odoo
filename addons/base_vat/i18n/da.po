@@ -3,22 +3,18 @@
 # 	* base_vat
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Morten Schou <ms@msteknik.dk>, 2020
-# Jesper Carstensen <jc@danodoo.dk>, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
-# Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Martin Trigaux, 2019
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,7 +36,7 @@ msgstr ""
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
 msgid "<span class=\"o_vat_label\">VAT</span>"
-msgstr "<span class=\"o_vat_label\">Moms</span>"
+msgstr ""
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -58,20 +54,6 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company__display_name
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__display_name
-msgid "Display Name"
-msgstr "Vis navn"
-
-#. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company__id
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings__id
-#: model:ir.model.fields,field_description:base_vat.field_res_partner__id
-msgid "ID"
-msgstr "ID"
-
-#. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
@@ -81,35 +63,29 @@ msgstr ""
 "nummer ikke kan bekræftes af European VIES."
 
 #. module: base_vat
-#: model:ir.model.fields,field_description:base_vat.field_res_company____last_update
-#: model:ir.model.fields,field_description:base_vat.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:base_vat.field_res_partner____last_update
-msgid "Last Modified on"
-msgstr "Sidst ændret den"
-
-#. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
+#: code:addons/base_vat/models/res_partner.py:188
 #, python-format
 msgid ""
-"The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \n"
-"Note: the expected format is %(format)s"
+"The VAT number [%s] for partner [%s] does not seem to be valid. \n"
+"Note: the expected format is %s"
 msgstr ""
-"Momsnummer [%(vat)s] for partner [%(name)s] ser ikke ud til at være gyldigt. \n"
-"Bemærk: Det forventede format er %(format)s"
+"Momsnummer [%s] for partner [%s] er ikke validt. \n"
+"Note:  Det forventede format er %s"
 
 #. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
+#: code:addons/base_vat/models/res_partner.py:187
 #, python-format
 msgid ""
-"The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT "
-"validation check or did not respect the expected format %(format)s."
+"The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
+"check or did not respect the expected format %s."
 msgstr ""
-"Moms nummeret [%(vat)s] for partneren [%(name)s]  fejlede enten VIES moms "
-"valideringen eller understøtter ikke det forventede format %(format)s."
+"Moms nummeret [%s] for partneren [%s]  fejlede enten VIES moms valideringen "
+"eller understøtter ikke det forventede format %s."
 
 #. module: base_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.company_form_vat
 #: model_terms:ir.ui.view,arch_db:base_vat.view_partner_form
+#: model_terms:ir.ui.view,arch_db:base_vat.view_partner_short_form
 msgid "VAT"
 msgstr "Moms"
 

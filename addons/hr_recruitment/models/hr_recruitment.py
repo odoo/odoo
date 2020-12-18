@@ -358,7 +358,7 @@ class Applicant(models.Model):
     def action_applications_email(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Applications'),
+            'name': _('Job Applications'),
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],

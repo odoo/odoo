@@ -55,6 +55,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
+     * @param {string} [options.fadeout]
+     *        Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear, quickly,
+     *        'medium', 'slow' and 'very_slow' will wait little longer before disappearing, no
+     *        will keep rainbowman on screen until user clicks anywhere outside rainbowman
      * @param {boolean} [options.sequence=1000]
      *        priority sequence of the tour (lowest is first, tours with the same
      *        sequence will be executed in a non deterministic order).
@@ -63,11 +67,10 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      * @param {string|function} [options.rainbowManMessage]
               text or function returning the text displayed under the rainbowman
               at the end of the tour.
-     * @param {string} [options.rainbowManFadeout]
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
      */
-    register() {
+    register: function() {
         var args = Array.prototype.slice.call(arguments);
         var last_arg = args[args.length - 1];
         var name = args[0];
@@ -83,7 +86,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
             rainbowManMessage: options.rainbowManMessage,
-            rainbowManFadeout: options.rainbowManFadeout,
+            fadeout: options.fadeout || 'medium',
             sequence: options.sequence || 1000,
             test: options.test,
             wait_for: options.wait_for || Promise.resolve(),
@@ -424,10 +427,8 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             } else {
                 message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
             }
-            new RainbowMan({
-                message: message,
-                fadeout: this.tours[tour_name].rainbowManFadeout || 'medium',
-            }).appendTo(this.$body);
+            const fadeout = this.tours[tour_name].fadeout;
+            new RainbowMan({message, fadeout}).appendTo(this.$body);
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));

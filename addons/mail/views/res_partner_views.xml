@@ -90,16 +90,6 @@
             </field>
         </record>
 
-        <!--Definition of an email template with an empty body that will be used in partner mailing. Used to give a
-            basis for email recipients, name and to ease the definition of a further elaborated template. -->
-        <record id="email_template_partner" model="mail.template">
-            <field name="name">Partner Mass Mail</field>
-            <field name="model_id" ref="base.model_res_partner"/>
-            <field name="partner_to">${object.id}</field>
-            <field name="auto_delete" eval="True"/>
-            <field name="lang">${object.lang}</field>
-        </record>
-
         <!-- Add mail-defined activity view to standard action on partners to manage activities related to partner model -->
         <record id="base.action_partner_form" model="ir.actions.act_window">
             <field name="view_mode">kanban,tree,form,activity</field>
@@ -120,15 +110,11 @@
             <field name="context" eval="{
                 'default_composition_mode': 'mass_mail',
                 'default_partner_to': '${object.id or \'\'}',
-                'default_use_template': True,
-                'default_template_id': ref('email_template_partner'),
+                'default_use_template': False,
+                'default_no_auto_thread': True,
             }"/>
             <field name="binding_model_id" ref="base.model_res_partner"/>
             <field name="binding_view_types">list</field>
-        </record>
-
-        <record id="email_template_partner" model="mail.template">
-            <field name="ref_ir_act_window" ref="action_partner_mass_mail"/>
         </record>
 
     </data>

@@ -52,13 +52,13 @@ WebsiteNewMenu.include({
 odoo.define('website_sale.editor', function (require) {
 'use strict';
 
-var options = require('web_editor.snippets.options');
+var snippetOptions = require('web_editor.snippets.options');
 var publicWidget = require('web.public.widget');
-const {Class: EditorMenuBar} = require('web_editor.editor');
-const {qweb} = require('web.core');
+const Wysiwyg = require('web_editor.wysiwyg');
+const {qweb, _t} = require('web.core');
 
-EditorMenuBar.include({
-    custom_events: Object.assign(EditorMenuBar.prototype.custom_events, {
+Wysiwyg.include({
+    custom_events: Object.assign(Wysiwyg.prototype.custom_events, {
         get_ribbons: '_onGetRibbons',
         get_ribbon_classes: '_onGetRibbonClasses',
         delete_ribbon: '_onDeleteRibbon',
@@ -88,7 +88,7 @@ EditorMenuBar.include({
     /**
      * @override
      */
-    async save() {
+    async _saveWebsiteContent() {
         const _super = this._super.bind(this);
         await this._saveRibbons();
         return _super(...arguments);
@@ -261,7 +261,17 @@ publicWidget.registry.websiteSaleCurrency = publicWidget.Widget.extend({
      * @private
      */
     _onCurrencyValueClick: function (ev) {
-        $(ev.currentTarget).selectContent();
+        // Because of the Jabberwock Lib implementation and the way it capture the click event.
+        // We have to trigger the selection on the next tick to make it work.
+        const wysiwyg = $('#wrapwrap').data('wysiwyg');
+        ev.preventDefault();
+        ev.stopPropagation();
+        ev.stopImmediatePropagation();
+        const websiteSaleCurrency = async () => {
+            const nodes = wysiwyg.editorHelpers.getNodes(ev.currentTarget.parentElement);
+            wysiwyg.editor.selection.select(nodes[0]);
+        };
+        wysiwyg.execCommand(websiteSaleCurrency);
     },
 });
 
@@ -273,7 +283,7 @@ function reload() {
     }
 }
 
-options.registry.WebsiteSaleGridLayout = options.Class.extend({
+snippetOptions.registry.WebsiteSaleGridLayout = snippetOptions.SnippetOptionWidget.extend({
 
     /**
      * @override
@@ -344,9 +354,9 @@ options.registry.WebsiteSaleGridLayout = options.Class.extend({
     },
 });
 
-options.registry.WebsiteSaleProductsItem = options.Class.extend({
-    xmlDependencies: (options.Class.prototype.xmlDependencies || []).concat(['/website_sale/static/src/xml/website_sale_utils.xml']),
-    events: _.extend({}, options.Class.prototype.events || {}, {
+snippetOptions.registry.WebsiteSaleProductsItem = snippetOptions.SnippetOptionWidget.extend({
+    xmlDependencies: (snippetOptions.SnippetOptionWidget.prototype.xmlDependencies || []).concat(['/website_sale/static/src/xml/website_sale_utils.xml']),
+    events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.events || {}, {
         'mouseenter .o_wsale_soptions_menu_sizes table': '_onTableMouseEnter',
         'mouseleave .o_wsale_soptions_menu_sizes table': '_onTableMouseLeave',
         'mouseover .o_wsale_soptions_menu_sizes td': '_onTableItemMouseEnter',
@@ -693,6 +703,31 @@ options.registry.WebsiteSaleProductsItem = options.Class.extend({
                 y: y,
             },
         }).then(reload);
+    },
+});
+
+snippetOptions.registry.ProductsRecentlyViewed = snippetOptions.SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this.displayNotification({
+            type: 'info',
+            title: '',
+            message: _t('The snippet will be visible once one has seen one product'),
+        });
+    },
+    /**
+     * @override
+     */
+    onTargetShow: async function () {
+        this.$target.removeClass('d-none');
+    },
+    /**
+     * @override
+     */
+    onTargetHide: function () {
+        this.$target.addClass('d-none');
     },
 });
 });

@@ -3,21 +3,17 @@
 # 	* calendar_sms
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Morten Schou <ms@msteknik.dk>, 2020
-# Jesper Carstensen <jc@danodoo.dk>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
-# Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Martin Trigaux, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,19 +24,12 @@ msgstr ""
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_event
 msgid "Calendar Event"
-msgstr "Kalender begivenhed"
+msgstr ""
 
 #. module: calendar_sms
 #: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
 msgid "Calendar Event: Reminder"
-msgstr "Kalender begivenhed: Påmindelse"
-
-#. module: calendar_sms
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
-msgid "Display Name"
-msgstr "Vis navn"
+msgstr ""
 
 #. module: calendar_sms
 #: model:ir.model,name:calendar_sms.model_calendar_alarm
@@ -54,28 +43,16 @@ msgstr "Arrangements notifikations ansvarlig"
 
 #. module: calendar_sms
 #: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
-msgid "Event reminder: ${object.name}, ${object.display_time}"
-msgstr "Begivenheds påmindelse: ${object.name}, ${object.display_time}"
+msgid ""
+"Event reminder: ${object.name} on ${object.start_datetime or "
+"object.start_date}"
+msgstr ""
 
 #. module: calendar_sms
 #: code:addons/calendar_sms/models/calendar.py:0
 #, python-format
-msgid "Event reminder: %(name)s, %(time)s."
-msgstr "Begivenheds påmindelse: %(name)s, %(time)s."
-
-#. module: calendar_sms
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
-msgid "ID"
-msgstr "ID"
-
-#. module: calendar_sms
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm____last_update
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager____last_update
-#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event____last_update
-msgid "Last Modified on"
-msgstr "Sidst ændret den"
+msgid "Event reminder: %s on %s."
+msgstr "Påmindelse om arrangement: %s den %s."
 
 #. module: calendar_sms
 #: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms

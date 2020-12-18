@@ -4552,12 +4552,12 @@ QUnit.module('fields', {}, function () {
 
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
-            // use of owlCompatibilityNextTick because we have an x2many field with a boolean field
+            // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
             // (written in owl), so when we add a line, we sequentially render the list itself
             // (including the boolean field), so we have to wait for the next animation frame, and
             // then we render the control panel (also in owl), so we have to wait again for the
             // next animation frame
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             form.destroy();
         });
 
@@ -4588,12 +4588,12 @@ QUnit.module('fields', {}, function () {
                 },
             });
             await testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
-            // use of owlCompatibilityNextTick because we have an x2many field with a boolean field
+            // use of owlCompatibilityExtraNextTick because we have an x2many field with a boolean field
             // (written in owl), so when we add a line, we sequentially render the list itself
             // (including the boolean field), so we have to wait for the next animation frame, and
             // then we render the control panel (also in owl), so we have to wait again for the
             // next animation frame
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.verifySteps(['onchange', 'onchange']);
             form.destroy();
         });
@@ -6094,7 +6094,7 @@ QUnit.module('fields', {}, function () {
 
             // add a new row (which is invalid at first)
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet)");
             assert.verifySteps(['load_views', 'read', 'onchange']);
@@ -6983,11 +6983,11 @@ QUnit.module('fields', {}, function () {
             });
 
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-            // use of owlCompatibilityNextTick because we have a boolean field (owl) inside the
+            // use of owlCompatibilityExtraNextTick because we have a boolean field (owl) inside the
             // x2many, so an update of the x2many requires to wait for 2 animation frames: one
             // for the list to be re-rendered (with the boolean field) and one for the control
             // panel.
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             await testUtils.dom.click(form.$('.o_field_widget[name=bar] input'));
             assert.notOk(form.$('.o_field_widget[name=bar] input').prop('checked'),
                 "the checkbox should be unticked");
@@ -8532,16 +8532,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -8716,16 +8716,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -9218,12 +9218,12 @@ QUnit.module('fields', {}, function () {
             // resolve the name_create to trigger the onchange, and the reset of p
             prom.resolve();
             await testUtils.nextTick();
-            // use of owlCompatibilityNextTick because we have two sequential updates of the
+            // use of owlCompatibilityExtraNextTick because we have two sequential updates of the
             // fieldX2Many: one because of the onchange, and one because of the click on add a line.
             // As an update requires an update of the ControlPanel, which is an Owl Component, and
             // waits for it, we need to wait for two animation frames before seeing the new line in
             // the DOM
-            await testUtils.owlCompatibilityNextTick();
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, '.o_data_row');
             assert.hasClass(form.$('.o_data_row'), 'o_selected_row');
 

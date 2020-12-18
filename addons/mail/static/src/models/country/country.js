@@ -41,7 +41,9 @@ function factory(dependencies) {
                 'code',
             ],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         name: attr(),
     };
 

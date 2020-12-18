@@ -1,22 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* payment_stripe
+# * payment_stripe
 # 
 # Translators:
-# Piia Paurson <piia@avalah.ee>, 2020
-# Triine Aavik <triine@avalah.ee>, 2020
-# Egon Raamat <egon@avalah.ee>, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
-# Marek Pontus, 2020
-# Martin Aavastik <martin@avalah.ee>, 2020
+# Egon Raamat <egon@avalah.ee>, 2018
+# Eneli Õigus <enelioigus@gmail.com>, 2018
+# Marek Pontus, 2018
+# Martin Aavastik <martin@avalah.ee>, 2018
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2020\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-08-24 09:22+0000\n"
+"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +24,7 @@ msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:9
 #, python-format
 msgid "&times;"
 msgstr "&times;"
@@ -40,70 +38,85 @@ msgid ""
 msgstr ""
 
 #. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "CVC"
+msgstr ""
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "Card number"
+msgstr ""
+
+#. module: payment_stripe
+#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "Cardholder name"
+msgstr ""
+
+#. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
 msgid "Checkout Image URL"
 msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:15
 #, python-format
 msgid "Close"
-msgstr "Sulge"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
-msgid "Display Name"
-msgstr "Kuva nimi"
+msgstr "Kinnitatud"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
+#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:8
 #, python-format
 msgid "Error"
 msgstr "Viga"
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
-msgid "ID"
-msgstr "ID"
-
-#. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid ""
-"If you enable webhooks, this secret is used to verify the electronic "
-"signature of events sent by Stripe to Odoo. Failing to set this field in "
-"Odoo will disable the webhook system for this acquirer entirely."
+#: model_terms:ir.ui.view,arch_db:payment_stripe.stripe_s2s_form
+msgid "Expires (MM / YY)"
 msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:0
+#: code:addons/payment_stripe/static/src/js/stripe.js:33
 #, python-format
-msgid "Just one more second, We are redirecting you to Stripe..."
+msgid "Just one more second, confirming your payment..."
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction____last_update
-msgid "Last Modified on"
-msgstr "Viimati muudetud (millal)"
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Manual Configuration"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
 msgstr "Makse saaja"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
-msgid "Payment Method ID"
-msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
@@ -117,13 +130,18 @@ msgstr "Maksetehing"
 
 #. module: payment_stripe
 #. openerp-web
-#: code:addons/payment_stripe/static/src/js/stripe.js:0
+#: code:addons/payment_stripe/static/src/js/stripe.js:59
 #, python-format
 msgid "Payment error"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_stripe
+#: code:addons/payment_stripe/models/payment.py:174
 #, python-format
 msgid ""
 "Perhaps the problem can be solved by double-checking your credit card "
@@ -136,19 +154,14 @@ msgid "Provider"
 msgstr "Varustaja"
 
 #. module: payment_stripe
-#: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
 msgid "Stripe"
 msgstr "Stripe"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
-msgid "Stripe Payment Intent ID"
-msgstr ""
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
-msgid "Stripe Payment Intent Secret"
-msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
@@ -161,53 +174,30 @@ msgid "Stripe Secret Key"
 msgstr ""
 
 #. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid "Stripe Webhook Secret"
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment.py:172
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment.py:184
 #, python-format
-msgid "Stripe: %(count)s orders found for reference %(reference)s"
+msgid "Stripe: %s orders found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment.py:180
 #, python-format
 msgid "Stripe: no order found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
-#, python-format
-msgid ""
-"Unable to convert Stripe customer for SCA compatibility. Is there at least "
-"one card for this customer in the Stripe backend?"
-msgstr ""
-
-#. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/js/payment_form.js:0
-#, python-format
-msgid "Unable to save card"
-msgstr ""
-
-#. module: payment_stripe
-#. openerp-web
-#: code:addons/payment_stripe/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to add your payment method at the moment. "
-msgstr ""
-
-#. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
+#: code:addons/payment_stripe/models/payment.py:170
 #, python-format
 msgid "We're sorry to report that the transaction has failed."
 msgstr ""
+
+#. module: payment_stripe
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Wire Transfer"
