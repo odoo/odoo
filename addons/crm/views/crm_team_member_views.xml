@@ -7,6 +7,7 @@
         <field name="inherit_id" ref="sales_team.crm_team_member_view_tree"/>
         <field name="arch" type="xml">
             <field name="user_id" position="after">
+                <field name="assignment_enabled" invisible="1"/>
                 <field name="assignment_max"/>
                 <field name="lead_month_count"/>
             </field>
@@ -19,7 +20,9 @@
         <field name="inherit_id" ref="sales_team.crm_team_member_view_kanban"/>
         <field name="arch" type="xml">
             <xpath expr="//div[hasclass('oe_kanban_details')]" position="after">
-                <div class="o_member_assignment">
+                <field name="assignment_enabled" invisible="1"/>
+                <div class="o_member_assignment"
+                    attrs="{'invisible': [('assignment_enabled', '=', False)]}">
                     <field name="assignment_max" invisible="1"/>
                     <field name="lead_month_count" widget="gauge"
                             options="{'max_field': 'assignment_max'}"/>
@@ -34,7 +37,8 @@
         <field name="inherit_id" ref="sales_team.crm_team_member_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='member_partner_info']" position="after">
-                <group name="group_assign">
+                <group name="group_assign" attrs="{'invisible': [('assignment_enabled', '=', False)]}">
+                    <field name="assignment_enabled" invisible="1"/>
                     <label for="lead_month_count"/>
                     <div>
                         <field name="lead_month_count" class="oe_inline"/>

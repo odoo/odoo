@@ -111,7 +111,8 @@
                         <button name="action_assign_leads" type="object"
                             string="Assign Leads"
                             class="oe_highlight"
-                            confirm="This will assign leads to all members. Do you want to proceed?"/>
+                            confirm="This will assign leads to all members. Do you want to proceed?"
+                            attrs="{'invisible': [('assignment_enabled', '=', False)]}"/>
                     </header>
                 </xpath>
                 <xpath expr="//div[@name='options_active']" position="inside">
@@ -147,15 +148,26 @@
                 </xpath>
                 <xpath expr="//group[@name='right']" position="attributes">
                     <attribute name="string">Assignment Rules</attribute>
+                    <attribute name="attrs">{'invisible': [('assignment_enabled', '=', False)]}</attribute>
                 </xpath>
                 <xpath expr="//group[@name='right']" position="inside">
+                    <field name="assignment_enabled" invisible="1"/>
+                    <field name="assignment_auto_enabled" invisible="1"/>
                     <field name="assignment_domain" widget="domain" string="Domain"
-                        options="{'model': 'crm.lead', 'in_dialog': True}"/>
-                    <label for="lead_all_assigned_month_count" string="Assigned Leads Count"/>
-                    <div>
+                        options="{'model': 'crm.lead', 'in_dialog': True}"
+                        attrs="{'invisible': [('assignment_enabled', '=', False)]}"/>
+                    <label for="lead_all_assigned_month_count" string="Assigned Leads Count"
+                        attrs="{'invisible': [('assignment_enabled', '=', False)]}"/>
+                    <div attrs="{'invisible': [('assignment_enabled', '=', False)]}">
                         <field name="lead_all_assigned_month_count" class="oe_inline"/> /
                         <field name="assignment_max" class="oe_inline"/>
                     </div>
+                </xpath>
+                <xpath expr="//field[@name='member_ids']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('assignment_enabled', '=', True)]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='crm_team_member_ids']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('assignment_enabled', '=', False)]}</attribute>
                 </xpath>
             </field>
         </record>
