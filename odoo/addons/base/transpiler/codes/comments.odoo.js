@@ -9,6 +9,10 @@ odoo.define('@tests/comments', function (require) {
    * This is a comment
    */
 
+   /**
+   * This isn't a string
+   */
+
   const Test = __exports.Test = class Test {
     // This is a comment in a class
   };
@@ -23,7 +27,7 @@ odoo.define('@tests/comments', function (require) {
   const x = "this is a // nice string and should be kept";
   const y = "this is a /* nice string and should be kept */";
   const z = "this is a /* nice string and should be kept";
-
+  // This isn't a string
   /*
     comments
    */

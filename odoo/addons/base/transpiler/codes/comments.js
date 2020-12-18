@@ -2,6 +2,9 @@
  * This is a comment
  */
 
+/**
+ * This isn't a string
+ */
 export class Test {
   // This is a comment in a class
 }
@@ -15,7 +18,7 @@ const b = 5; // hello
 const x = "this is a // nice string and should be kept";
 const y = "this is a /* nice string and should be kept */";
 const z = "this is a /* nice string and should be kept";
-
+// This isn't a string
 /*
   comments
  */

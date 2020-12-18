@@ -15,8 +15,8 @@ class TranspilerJS:
 
     def convert(self):
         legacy_odoo_define = self.get_legacy_odoo_define()
-        self.alias_strings()
         self.alias_comments()
+        self.alias_strings()
         self.replace_legacy_default_import()
         self.replace_import()
         self.replace_default_import()
@@ -25,8 +25,8 @@ class TranspilerJS:
         self.replace_variable_export()
         self.replace_list_export()
         self.replace_default()
-        self.unalias_comments()
         self.unalias_strings()
+        self.unalias_comments()
         self.add_odoo_def()
         if legacy_odoo_define:
             self.content += legacy_odoo_define
