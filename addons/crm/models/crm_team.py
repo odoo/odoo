@@ -29,6 +29,7 @@ class Team(models.Model):
     # assignment
     assignment_enabled = fields.Boolean('Lead Assign', compute='_compute_assignment_enabled')
     assignment_auto_enabled = fields.Boolean('Auto Assignment', compute='_compute_assignment_enabled')
+    assignment_optout = fields.Boolean('Skip auto assignment')
     assignment_max = fields.Integer(
         'Lead Capacity', compute='_compute_assignment_max',
         help='Monthly leads for all salesmen belonging to the team')
@@ -188,7 +189,10 @@ class Team(models.Model):
             elif assign_cron.interval_type == 'days':
                 work_days = 2 * assign_cron.interval_number * 1
         work_days = 30 if work_days > 30 else work_days
-        self.env['crm.team'].search([])._action_assign_leads(work_days=work_days)
+        self.env['crm.team'].search([
+            '&', '|', ('use_leads', '=', True), ('use_opportunities', '=', True),
+            ('assignment_optout', '=', False)
+        ])._action_assign_leads(work_days=work_days)
         return True
 
     def action_assign_leads(self, work_days=2):
