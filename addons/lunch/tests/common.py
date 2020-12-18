@@ -1,10 +1,18 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from freezegun import freeze_time
 from odoo.tests import common
 
 
+fakenow = datetime(2021, 1, 29, 12, 20, 0)
+
+@freeze_time(fakenow)
 class TestsCommon(common.TransactionCase):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.fakenow = fakenow
 
     def setUp(self):
         super(TestsCommon, self).setUp()
@@ -28,6 +36,17 @@ class TestsCommon(common.TransactionCase):
             'available_location_ids': [
                 (6, 0, [self.location_office_1.id, self.location_office_2.id])
             ],
+        })
+
+        self.partner_kothai = self.env['res.partner'].create({
+            'name': 'Kothai',
+        })
+
+        self.supplier_kothai = self.env['lunch.supplier'].create({
+            'partner_id': self.partner_kothai.id,
+            'send_by': 'mail',
+            'automatic_email_time': 10,
+            'tz': 'America/New_York',
         })
 
         self.partner_coin_gourmand = self.env['res.partner'].create({
@@ -73,3 +92,21 @@ class TestsCommon(common.TransactionCase):
         self.env['lunch.cashmove'].create({
             'amount': 100,
         })
+
+        self.alert_ny = self.env['lunch.alert'].create({
+            'name': 'New York UTC-5',
+            'mode': 'chat',
+            'notification_time': 10,
+            'notification_moment': 'am',
+            'tz': 'America/New_York',
+            'message': "",
+        }).with_context(tz='America/New_York')
+
+        self.alert_tokyo = self.env['lunch.alert'].create({
+            'name': 'Tokyo UTC+9',
+            'mode': 'chat',
+            'notification_time': 8,
+            'notification_moment': 'am',
+            'tz': 'Asia/Tokyo',
+            'message': "",
+        }).with_context(tz='Asia/Tokyo')
