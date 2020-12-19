@@ -950,7 +950,7 @@ msgstr "Parafuso"
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_byproducts
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "By-Products"
-msgstr "Por Produtos"
+msgstr "Sub-Produtos"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__product_id
@@ -1129,7 +1129,7 @@ msgstr "Calcule com base no tempo rastreado"
 #. module: mrp
 #: model:ir.model,name:mrp.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configurações"
+msgstr "Definições de Configuração"
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menu_mrp_configuration
@@ -1413,8 +1413,8 @@ msgid ""
 "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected."
 msgstr ""
 "Define se você pode consumir mais ou menos componentes do que a quantidade definida no LdM:\n"
-"  * Permitido: permitido para todos os usuários de manufatura.\n"
-"  * Permitido com Aviso: permitido para todos os usuários de manufatura com resumo das diferenças de consumo ao fechar a ordem de produção.\n"
+"  * Permitido: permitido para todos os usuários de produção.\n"
+"  * Permitido com Aviso: permitido para todos os usuários de produção com resumo das diferenças de consumo ao fechar a ordem de produção.\n"
 "  * Bloqueado: apenas um gerente pode fechar um pedido de fabricação quando o consumo LdM não é respeitado."
 
 #. module: mrp
@@ -2499,7 +2499,7 @@ msgstr "Fabricação (1 passo)"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_mto_pull_id
 msgid "Manufacture MTO Rule"
-msgstr "Regra MTO da Manufatura"
+msgstr "Regra de PSE da Produção"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__manufacture_pull_id
@@ -2548,7 +2548,7 @@ msgstr "Fabricado nos últimos 365 dias"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_bom_filter
 #, python-format
 msgid "Manufacturing"
-msgstr "Manufatura"
+msgstr "Produção"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -2618,7 +2618,7 @@ msgid ""
 "Manufacturing operations are processed at Work Centers. A Work Center can be composed of\n"
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc."
 msgstr ""
-"Operações de Manufatura são processadas em Centros de Trabalho. Um Centro de Trabalho pode ser composto de\n"
+"Operações de Produção são processadas em Centros de Trabalho. Um Centro de Trabalho pode ser composto de\n"
 "                trabalhadores e/ou máquinas, eles são usados ​​para custeio, agendamento, planejamento de capacidade, etc."
 
 #. module: mrp
@@ -2628,7 +2628,7 @@ msgid ""
 "                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.\n"
 "                They can be defined via the configuration menu."
 msgstr ""
-"Operações de Manufatura são processadas em Centros de Trabalho. Um Centro de Trabalho pode ser composto de\n"
+"Operações de Produção são processadas em Centros de Trabalho. Um Centro de Trabalho pode ser composto de\n"
 "                trabalhadores e/ou máquinas, eles são usados para custeio, agendamento, planejamento de capacidade, etc.\n"
 "                Eles podem ser definidos através do menu de configuração."
 
@@ -3112,7 +3112,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_mto_pull_id
 msgid "Picking Before Manufacturing MTO Rule"
-msgstr "Separação Antes da Regra de Produção MTO"
+msgstr "Separação Antes da Regra de Produção PSE"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__pbm_type_id
@@ -3838,7 +3838,7 @@ msgstr "Definir a duração manualmente"
 #: model:ir.ui.menu,name:mrp.menu_mrp_config
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "Settings"
-msgstr "Configurações"
+msgstr "Definições"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__show_bom

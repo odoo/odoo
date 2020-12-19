@@ -18,11 +18,11 @@
 # mohammad rahmani <mohammadrahmani2o0@gmail.com>, 2020
 # arya sadeghi <aryasadeghy@gmail.com>, 2020
 # Ali Alikhani <a.alikhani@gmail.com>, 2020
+# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
 # Martin Trigaux, 2020
 # Hamid Darabi, 2020
 # سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
 # Pouya Malekinejad <pouya.malekinejad@gmail.com>, 2020
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
 # Hamed Mohammadi <hamed@dehongi.com>, 2020
 # 
 msgid ""
@@ -100,7 +100,7 @@ msgstr "${object.company_id.name} فاکتور (شماره ${object.name or 'n/a
 msgid ""
 "${object.company_id.name} Payment Receipt (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} رسید پرداخت (شماره ${object.name یا 'n/a' })"
+"${object.company_id.name} رسید پرداخت (شماره ${object.name or 'n/a' })"
 
 #. module: account
 #: code:addons/account/models/account_journal_dashboard.py:0
@@ -156,7 +156,7 @@ msgstr "-> مرور ثبت سندهای جزئی تهاتر شده"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ". شما می‌توانید عددی بزرگتر اینجا بخواهید."
+msgstr ". شما ممکن است عددی بزرگتر اینجا بخواهید."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_15days
@@ -842,7 +842,7 @@ msgstr "<strong>تراز ابتدای دوره</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<strong>Subtotal</strong>"
-msgstr "<strong>زیر جمع</strong>"
+msgstr "<strong>جمع جزء</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -860,7 +860,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "<strong>Total</strong>"
-msgstr "<strong>مجموع</strong>"
+msgstr "<strong>جمع کل</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_account_kanban
@@ -1572,7 +1572,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Add a bank"
-msgstr "اضافه کردن بانک"
+msgstr "افزودن بانک"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_journal_form
@@ -1767,7 +1767,7 @@ msgstr "همه خطوط تهاتر شده"
 #: model:ir.model.fields.selection,name:account.selection__account_print_journal__target_move__posted
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "All Posted Entries"
-msgstr "همه ورودی های ارسال شده"
+msgstr "همه ثبت سندهای ارسال شده"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -2120,7 +2120,7 @@ msgstr "آیتم های تحلیلی"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_line
 msgid "Analytic Line"
-msgstr "سطرتحلیلی"
+msgstr "سطر تحلیلی"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -7307,7 +7307,7 @@ msgstr "ثبت یک یادداشت داخلی"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Looks good. Let's continue."
-msgstr ""
+msgstr "عالی به نظر میاد. بیا ادامه دهیم."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step

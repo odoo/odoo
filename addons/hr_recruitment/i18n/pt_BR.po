@@ -8,7 +8,6 @@
 # falexandresilva <falexandresilva@gmail.com>, 2020
 # Eduardo Aparicio <eduardo.caparica@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
-# Keli Brugalli <kbr@odoo.com>, 2020
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
 # Thiago Alves Cavalcante <thiagoalcav@gmail.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
@@ -681,6 +680,9 @@ msgid ""
 "        % set record = object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)\n"
 "        % if record and record.alias_domain"
 msgstr ""
+"Ao definir um apelido para um cargo, os e-mails enviados para esse endereço criam inscrições automaticamente. Você pode até usar vários rastreadores para obter estatísticas de acordo com a fonte do aplicativo: LinkedIn, Monster, De fato, etc.\n"
+"        % set record = object.env['hr.job'].search([('alias_name', '!=', False)], limit=1)\n"
+"        % if record and record.alias_domain"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -735,7 +737,7 @@ msgstr "Empresa"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configurações"
+msgstr "Definições de Configuração"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_configuration
@@ -864,8 +866,8 @@ msgid ""
 "settings"
 msgstr ""
 "Definir um endereço de contato específico para esse cargo. Se você mantê-lo "
-"vazio , o endereço de e-mail padrão será usado , que está nas configurações "
-"de recursos humanos"
+"vazio , o endereço de e-mail padrão será usado , que está nas definições de "
+"recursos humanos"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.hr_job_stage_act
@@ -2112,7 +2114,7 @@ msgstr "Seqüência"
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_global_settings
 msgid "Settings"
-msgstr "Configurações"
+msgstr "Definições"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis

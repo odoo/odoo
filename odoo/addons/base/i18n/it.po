@@ -19,10 +19,10 @@
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2020
+# Paolo Valier, 2020
 # Fabio Genovese <ing.fabiogenovese@gmail.com>, 2020
 # Luigia Cimmino Caserta <lcc@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
-# Paolo Valier, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
@@ -8623,7 +8623,7 @@ msgstr "Accesso agli indirizzi privati"
 #. module: base
 #: model:res.groups,name:base.group_allow_export
 msgid "Access to export feature"
-msgstr "Accesso alla funzione di esportazione"
+msgstr "Accesso alla funzionalità di esportazione"
 
 #. module: base
 #: code:addons/api.py:0 code:addons/api.py:0
@@ -10985,6 +10985,8 @@ msgid ""
 "Cannot create new '%s' records from their name alone. Please create those "
 "records manually and try importing again."
 msgstr ""
+"Impossibile creare nuovi record \"%s\" solamente dai loro nomi. Crearli "
+"manualmente e provare a reimportarli."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -11115,8 +11117,8 @@ msgid ""
 "Changing the type of a field is not yet supported. Please drop it and create"
 " it again!"
 msgstr ""
-"La modifica del tipo di campo non è ancora possibile. Si prega di "
-"cancellarlo e crearlo di nuovo!"
+"Modifica della tipologia di un campo non ancora supportata, rilasciarlo e "
+"crearlo di nuovo."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__char
@@ -13631,8 +13633,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Duplicating a company is not allowed. Please create a new company instead."
-msgstr ""
-"La duplicazione di un'azienda non è possibile. Creare una nuova azienda."
+msgstr "Non è consentito duplicare un'azienda, crearne invece una nuova."
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_E
@@ -15822,7 +15823,7 @@ msgstr ""
 #: model:ir.module.category,description:base.module_category_sales_sales
 msgid "Helps you handle your quotations, sale orders and invoicing."
 msgstr ""
-"Aiuta nella gestione dei preventivi, ordini di vendita e fatturazione."
+"Aiuta a gestire i preventivi, gli ordini di vendita e la fatturazione."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_attendances
@@ -15884,8 +15885,7 @@ msgid ""
 "Helps you manage your manufacturing processes and generate reports on those "
 "processes."
 msgstr ""
-"Aiuta a gestire i processi di produzione ed a generare i report di questi "
-"processi."
+"Aiuta a gestire i processi di produzione ed a generare i loro resoconti."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_marketing_email_marketing
@@ -15905,8 +15905,8 @@ msgid ""
 "Helps you manage your projects and tasks by tracking them, generating "
 "plannings, etc..."
 msgstr ""
-"Aiuta a migliorare la gestione dei progetti e delle attività da seguire, "
-"pianificare ecc..."
+"Aiuta a gestire i progetti e i lavori monitorandoli, generando "
+"pianificazioni ecc..."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_inventory_purchase
@@ -19702,7 +19702,7 @@ msgid ""
 "No response received. Check server address and port number.\n"
 " %s"
 msgstr ""
-"Nessuna riposta ricevuta. Controllare l'indirizzo del server e il numero di porta.\n"
+"Nessuna risposta ricevuta. Controllare l'indirizzo del server e il numero di porta.\n"
 " %s"
 
 #. module: base
@@ -21310,6 +21310,8 @@ msgid ""
 "Odoo is currently processing a scheduled action.\n"
 "Module operations are not possible at this time, please try again later or contact your system administrator."
 msgstr ""
+"Odoo sta ora elaborando un'azione programmata.\n"
+"Al momento non sono possibili operazioni sui moduli, riprovare più tardi o contattare l'amministratore di sistema."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
@@ -23986,7 +23988,7 @@ msgstr "Configuratore di salario"
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_sale
 msgid "Sale"
-msgstr "Vendita"
+msgstr "Vendite"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_accountant
@@ -26823,7 +26825,7 @@ msgstr ""
 #, python-format
 msgid "Too many login failures, please wait a bit before trying again."
 msgstr ""
-"Troppi errori di accesso, per favore aspetta un po' prima di riprovare."
+"Troppi errori di accesso, attendere qualche istante prima di riprovare."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_hidden_tools
@@ -27917,7 +27919,7 @@ msgstr "Vanuatu"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_variable_revenue
 msgid "Variable Revenue"
-msgstr ""
+msgstr "Entrata variabile"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -28584,6 +28586,7 @@ msgid ""
 "You are not allowed to access '%(document_kind)s' (%(document_model)s) "
 "records."
 msgstr ""
+"Accesso ai record \"%(document_kind)s\" (%(document_model)s) non consentito."
 
 #. module: base
 #: code:addons/base/models/ir_model.py:0
@@ -28750,6 +28753,9 @@ msgid ""
 "\n"
 "(Operation: %(operation)s)"
 msgstr ""
+"Diritti non sufficienti per accedere ai campi \"%(fields)s\" su %(document_kind)s (%(document_model)s). Contattare l'amministratore di sistema.\n"
+"\n"
+"(Operazione: %(operation)s)"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0
@@ -28763,6 +28769,7 @@ msgstr ""
 msgid ""
 "You don't have the rights to export data. Please contact an Administrator."
 msgstr ""
+"Diritti non sufficienti per esportare i dati, contattare un amministratore."
 
 #. module: base
 #: code:addons/base/wizard/base_partner_merge.py:0
