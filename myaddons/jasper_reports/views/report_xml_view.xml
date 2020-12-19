@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="act_report_xml_view" model="ir.ui.view">
+        <field name="name">ir.actions.report.jasper</field>
+        <field name="model">ir.actions.report</field>
+        <field name="inherit_id" ref="base.act_report_xml_view"/>
+        <field name="arch" type="xml">
+            <field name="report_name" position="after">
+                <field name="jasper_output"/>
+                <button string="Update from attachments" name="update" type="object" colspan="2"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="act_report_jasper_file_form" model="ir.ui.view">
+        <field name="name">ir.actions.report.jasper.file.form</field>
+        <field name="model">ir.actions.report.xml.file</field>
+        <field name="arch" type="xml">
+            <form string="Jasper Reports File">
+                <group col="4" colspan="4">
+                    <field name="file" string="Select .jrxml file" filename="filename"/>
+                    <field name="filename"/>
+                    <field name="default"/>
+                </group>
+            </form>
+        </field>
+    </record>
+    <record id="act_report_jasper_file_tree" model="ir.ui.view">
+        <field name="name">ir.actions.report.jasper.file.tree</field>
+        <field name="model">ir.actions.report.xml.file</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="filename"/>
+                <field name="default"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="act_report_jasper_form" model="ir.ui.view">
+        <field name="name">ir.actions.report.jasper.form</field>
+        <field name="model">ir.actions.report</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <form string="Jasper Reports">
+                <group colspan="4" col='4'>
+                    <field name="name"/>
+                    <field name="model_id" required="True" readonly="False"/>
+                    <field name="report_name" string="Report Name"/>
+                    <field name="jasper_output" required="True"/>
+                    <field name="jasper_report" invisible='1'/>
+                </group>
+                <group colspan="4" col='4'>
+                    <field name="attachment"/>
+                    <field name="attachment_use"/>
+                </group>
+                <group colspan="4">
+                    <separator string="Files" colspan="4"/>
+                    <field name="jasper_file_ids" colspan="4" nolabel="1" widget="one2many_list">
+                        <form string="Jasper Reports File">
+                            <group col="4" colspan="4">
+                                <field name="file" filename="filename" string="Upload .jrxml file"/>
+                                <field name="filename"/>
+                                <field name="default"/>
+                            </group>
+                        </form>
+                    </field>
+                    <separator string="Groups" colspan="4"/>
+                    <field name="groups_id" colspan="4" nolabel="1"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="act_report_jasper_tree" model="ir.ui.view">
+        <field name="name">ir.actions.report.jasper.tree</field>
+        <field name="model">ir.actions.report</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="model_id"/>
+                <field name="report_name"/>
+                <field name="jasper_output"/>
+                <field name="attachment"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_action_report_jasper" model="ir.actions.act_window">
+        <field name="name">Jasper Reports</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.actions.report</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'default_jasper_report': True,'jasper_report':True}</field>
+        <field name="domain">[('jasper_report','=',True)]</field>
+    </record>
+    <record id="ir_action_report_jasper_view0" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="ir_action_report_jasper"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="act_report_jasper_tree"/>
+        <field name="sequence">0</field>
+    </record>
+    <record id="ir_action_report_jasper_view1" model="ir.actions.act_window.view">
+        <field name="act_window_id" ref="ir_action_report_jasper"/>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="act_report_jasper_form"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <menuitem action="ir_action_report_jasper"
+        id="menu_ir_action_report_jasper"
+        parent="jasper_reports_menu"/>
+</odoo>

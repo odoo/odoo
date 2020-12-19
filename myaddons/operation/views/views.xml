@@ -1,0 +1,189 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="operation.list">
+            <field name="name">operation list</field>
+            <field name="model">operation.operation</field>
+            <field name="arch" type="xml">
+
+                    <tree>
+                    <header>
+                    <button name="report_missing_book"
+                        string="Report Missing Book"
+                        type="object"/>
+                    </header>
+                    <field name="name"/>
+                    <field name="value"/>
+                    <field name="value2"/>
+                    <field name="is_expired"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="operation_form_view">
+            <field name="name">operation form</field>
+            <field name="model">operation.operation</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                    <button name="report_missing_book"
+                        string="Report Missing Book"
+                        type="object"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                        <field name="name"/>
+                        <field name="value"/>
+                    </group>
+                    <group>
+                        <field name="value2"/>
+                        <field name="is_expired"/>
+                    </group>
+
+                            <group>
+                                <div class="oe_button_box" name="button_box">
+                            <buttton class="oe_stat_button" name="button_sheet_id"
+                            string="SHEET ID" type="object" icon="fa-bars"
+                            />
+                        </div>
+                            </group>
+                        </group>
+
+
+
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="operation.action_window">
+            <field name="name">operation window</field>
+            <field name="res_model">operation.operation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- server action to the one above -->
+
+        <!--<record model="ir.actions.server" id="print_instance">-->
+        <!--    <field name="name">Res Partner Server Action</field>-->
+        <!--    <field name="model_id" ref="model_res_partner"/>-->
+        <!--    <field name="state">code</field>-->
+        <!--    <field name="code">-->
+        <!--        raise Warning(record.name)-->
+        <!--    </field>-->
+        <!--</record>-->
+        <!--# actions.server-->
+        <!--    <record model="ir.actions.server" id="print_instance_server">-->
+        <!--        <field name="name">Res Partner Server Action</field>-->
+        <!--        <field name="model_id" ref="model_operation_operation"/>-->
+        <!--        <field name="state">code</field>-->
+        <!--        <field name="code">-->
+        <!--            action = {-->
+        <!--                "type": "ir.actions.act_window",-->
+        <!--                "view_mode": "form",-->
+        <!--                "res_model": record._name,-->
+        <!--                "res_id": record.id,-->
+        <!--                'target': "new",-->
+        <!--                'flags': {'initial_mode': 'edit'},-->
+        <!--            }-->
+        <!--        </field>-->
+        <!--        </record>-->
+
+        <record id="multi_purchase_quotations_confirm" model="ir.actions.server">
+            <field name="name">Confirm Quotation</field>
+            <field name="model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">action = records.funcname()</field>
+
+
+        </record>
+
+<!--        <record id="multi_purchase_quotations_confirm2" model="ir.actions.server">-->
+<!--            <field name="name">测试api1</field>-->
+<!--            <field name="model_id" ref="operation.model_operation_operation"/>-->
+<!--            <field name="binding_model_id" ref="operation.model_operation_operation"/>-->
+<!--            <field name="binding_view_types">list</field>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">-->
+<!--                action = records.test_test()-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+        <record id="multi_purchase_quotations_confirm3" model="ir.actions.server">
+            <field name="name">批量删除</field>
+            <field name="model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if record.exists():
+                action = records.test_delect()
+            </field>
+        </record>
+
+        <record id="multi_purchase_quotations_confirm4" model="ir.actions.server">
+            <field name="name">test2</field>
+            <field name="model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if record.exists():
+                action = records.test2()
+            </field>
+        </record>
+
+<!--        <record id="multi_purchase_quotations_confirm5" model="ir.actions.server">-->
+<!--            <field name="name">测试api2</field>-->
+<!--            <field name="model_id" ref="operation.model_operation_operation"/>-->
+<!--            <field name="binding_model_id" ref="operation.model_operation_operation"/>-->
+<!--            <field name="binding_view_types">list</field>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">-->
+<!--                if record.exists():-->
+<!--                    action = records.test_api()-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="multi_purchase_quotations_confirm6" model="ir.actions.server">
+            <field name="name">test</field>
+            <field name="model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_model_id" ref="operation.model_operation_operation"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if record.exists():
+                    action = records.test()
+            </field>
+        </record>
+
+
+        <!-- Top menu item -->
+
+        <menuitem name="operation" id="operation.menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Menu 1" id="operation.menu_1" parent="operation.menu_root"/>
+        <menuitem name="Menu 2" id="operation.menu_2" parent="operation.menu_root"/>
+
+        <!-- actions -->
+
+        <menuitem name="List" id="operation.menu_1_list" parent="operation.menu_1"
+                  action="operation.action_window"/>
+
+        <!--    <menuitem name="Server to list" id="operation" parent="operation.menu_2"-->
+        <!--              action="operation.action_server"/>-->
+
+    </data>
+</odoo>

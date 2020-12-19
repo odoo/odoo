@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+        <record id="view_expenses_tree_custom" model="ir.ui.view">
+            <field name="name">hr.expense.tree.custom</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="arch" type="xml">
+                <field name="date" position="after">
+                    <!-- <field name="test_field" groups="product.group_sale_pricelist" readonly="1"/> -->
+                    <field name="test_field"/>
+                </field>
+
+                <!-- xpath the same result -->
+                <!--views/views.xml
+                <xpath expr="//field[@name='date']" position="after">
+                    <field name="test_field" />
+                </xpath>
+                -->
+
+            </field>
+        </record>
+
+        <record id="hr_expense_view_form_custom" model="ir.ui.view">
+            <field name="name">hr.expense.view.form.custom</field>
+            <field name="model">hr.expense</field>
+            <field name="inherit_id" ref="hr_expense.hr_expense_view_form"/>
+            <field name="arch" type="xml">
+                <field name="employee_id" position="after">
+                    <field name="test_field"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,50 @@
+
+<odoo>
+    <data>
+    <record id="view_clean_data_form" model="ir.ui.view">
+        <field name="name">clean.data.wiz.form</field>
+        <field name="model">clean.data</field>
+        <field name="arch" type="xml">
+            <form string="Clean Data">
+                <group>
+                    <group>
+                        <field name="so_do"/>
+                        <field name="po"/>
+                        <field name="all_trans"/>
+                        <field name="inv_pymt"/>
+                        <field name="journals"/>
+                        <field name="cus_ven"/>
+                        <field name="coa"/>
+                        <field name="all_data"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="clean_data" string="Clean Data" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_clean_data_wizard" model="ir.actions.act_window">
+        <field name="name">Clean Data</field>
+        <field name="res_model">clean.data</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="clean_data_menu"
+              name="Clean Data"
+              string="Clean Data"
+              parent="base.menu_administration"
+              sequence="0"/>
+
+    <menuitem id="clean_data_sub_menu"
+              parent="clean_data_menu"
+              action="action_clean_data_wizard"
+              name="Clean Data"
+              string="Clean Data"
+              sequence="1"/>
+    </data>
+
+</odoo>

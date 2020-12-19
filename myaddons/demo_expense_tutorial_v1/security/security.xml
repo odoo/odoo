@@ -1,0 +1,27 @@
+<?xml version="1.0" ?>
+<odoo>
+
+  <record id="module_demo_expense_tutorial" model="ir.module.category">
+    <field name="name">Demo expense tutorial category</field>
+  </record>
+
+  <record id="demo_expense_tutorial_group_user" model="res.groups">
+    <field name="name">User</field>
+    <field name="category_id"
+           ref="module_demo_expense_tutorial"/>
+    <field name="implied_ids"
+           eval="[(4, ref('base.group_user'))]"/>
+  </record>
+
+  <record id="demo_expense_tutorial_group_manager" model="res.groups">
+    <field name="name">Manager</field>
+    <field name="category_id"
+           ref="module_demo_expense_tutorial"/>
+    <field name="implied_ids"
+           eval="[(4, ref('demo_expense_tutorial_group_user'))]"/>
+    <field name="users"
+           eval="[(4, ref('base.user_root')),
+                  (4, ref('base.user_admin'))]"/>
+  </record>
+
+</odoo>

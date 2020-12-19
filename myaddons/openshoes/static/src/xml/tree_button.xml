@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template_02" xml:space="preserve">
+    <t t-extend="ListView.buttons">
+          <t t-jquery="div.o_list_buttons" t-operation="append">
+            <t t-if="widget.modelName == 'openshoes.openshoes'">
+<!--              <button class="btn btn-primary btn-sm o_list_tender_button_create" type="button">数据同步</button>-->
+                <button class="btn btn-primary create_by_xf" type="button">高级查询</button>
+           </t>
+<!--              <button class="btn btn-primary create_by_xf" type="button">高级查询</button>-->
+         </t>
+     </t>
+    </templates>

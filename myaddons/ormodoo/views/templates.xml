@@ -1,0 +1,47 @@
+<odoo>
+    <data>
+        <template id="template">
+            <!-- 拓展Tree视图增加自定义按钮 -->
+            <t t-extend="ListView.buttons">
+                <t t-jquery="button.o_list_button_add" t-operation="after">
+<!--                    <button type="button" class="btn btn-primary o_list_tender_button_say_hello"-->
+<!--                            style="display:inline-block;">Tree:Say Hello-->
+<!--                    </button>-->
+                    <button type="button" class="btn btn-primary o_list_button_add" accesskey="c" data-original-title="" title="">
+                    有没有啊
+                </button>
+                </t>
+
+            </t>
+        </template>
+        <!--        <template id="listing">-->
+        <!--            <ul>-->
+
+        <!--                <t t-if="1">-->
+        <!--                    <p>Test</p>-->
+        <!--                </t>-->
+        <!--                <li t-foreach="objects" t-as="object">-->
+        <!--                    <a t-attf-href="#{ root }/objects/#{ object.id }">-->
+        <!--                        <t t-esc="object.display_name"/>-->
+        <!--                    </a>-->
+        <!--                </li>-->
+        <!--            </ul>-->
+        <!--        </template>-->
+        <!--        <template id="object">-->
+        <!--            <h1>-->
+        <!--                <t t-esc="object.display_name"/>-->
+        <!--            </h1>-->
+        <!--            <dl>-->
+        <!--                <t t-foreach="object._fields" t-as="field">-->
+        <!--                    <dt>-->
+        <!--                        <t t-esc="field"/>-->
+        <!--                    </dt>-->
+        <!--                    <dd>-->
+        <!--                        <t t-esc="object[field]"/>-->
+        <!--                    </dd>-->
+        <!--                </t>-->
+        <!--            </dl>-->
+        <!--        </template>-->
+
+    </data>
+</odoo>

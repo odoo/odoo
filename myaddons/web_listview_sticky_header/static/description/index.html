@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="IE=edge" http-equiv="X-UA-Compatible">
+    <title>Odoo</title>
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+          integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
+    <link href="https://apps.odoocdn.com/web/content/7297172-19e3d31/1/web.assets_frontend.css" rel="stylesheet">
+
+</head>
+<!-- odoo description page css -->
+
+<body>
+<div class="container" id="loempia_tabs">
+    <header>
+        <div class="row justify-content-md-between justify-content-center border-bottom align-items-center py-2 mx-0">
+            <div class="text-center mr-lg-5 mb-3 mb-lg-0">
+                <a class="btn p-2" style="position: relative; overflow: hidden;">
+                    <img alt="ksolves-logo"
+                         src="images/ksolves-logo.png" style="height:30px">
+                </a>
+            </div>
+            <div class="d-flex flex-wrap justify-content-center py-2">
+                <div class="text-center">
+                    <a class="btn btn-sm mb-2 mb-lg-0 p-2" href="https://apps.odoo.com/apps/modules/browse?search=ksolves"
+                       style="font-size: 14px; font-weight: 500; background-color: rgb(32, 48, 56); color: rgb(255, 255, 255); position: relative; overflow: hidden;"
+                       target="_blank"><i
+                            class="fa fa-list-alt mr-1"></i> <span class="d-none d-sm-inline">Ksolves</span> All
+                        Apps</a>
+                </div>
+            </div>
+            <div class="mt-md-0 mt-4 mb-3 mb-lg-0">
+                <span class="btn btn-sm mb-2 mb-lg-0 p-2"
+                      style="font-size: 14px; font-weight: 500; background-color: rgb(32, 48, 56); color: rgb(255, 255, 255); position: relative; overflow: hidden;"><i
+                        class="fa fa-check"></i> Community</span>
+                <span class="btn btn-sm mb-2 mb-lg-0 p-2"
+                      style="font-size: 14px; font-weight: 500; background-color: rgb(32, 48, 56); color: rgb(255, 255, 255); position: relative; overflow: hidden;"><i
+                        class="fa fa-check"></i> Enterprise</span>
+            </div>
+        </div>
+    </header>
+    <div class="row align-items-center justify-content-center py-3 mx-0">
+        <div class="my-4">
+            <div class="text-center">
+                <h1 style="color:#203038; text-decoration:underline">List View Sticky Header</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row align-items-center mb-4">
+        <div class="col-12">
+            <!--            Product Summary-->
+            <h2 class="mb-4 text-justify" style="font-size:24px; color:#3c3c3c">
+                This application ensures that an Odoo user never gets lost in a long list of records again as it sticks
+                the header of Tree View and enhances the user experience by mega folds.</h2>
+            <!--            Hot Features-->
+            <h4 class="font-weight-bold mb-3" style="font-size:24px"><span style="color:#E13B34">Hot</span> Features
+            </h4>
+            <ul class="list-unstyled">
+                <li class="mb-2">
+                    <i class="fa fa-free-code-camp" style="font-size:18px; color:#E13B34"></i>
+                    <span class="font-weight-bold ml-2" style="font-size:18px">
+                    This module enhances the user experience by sticking the header of Tree View so the user will never get lost in a long list of records</span>
+                </li>
+                <li class="mb-2">
+                    <i class="fa fa-free-code-camp" style="font-size:18px; color:#E13B34"></i>
+                    <span class="font-weight-bold ml-2" style="font-size:18px">
+                        Horizontal scrolling of table header now possible on the horizontal scroll</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row mb-4 justify-content-center my-4 mb-md-5">
+        <div class="col-12 col-md-5 mb-4 mb-md-0">
+            <span class="btn py-3 px-5"
+                  style="font-size: 20px; font-weight: 600; background-color: rgb(32, 48, 56); color: rgb(255, 255, 255); position: relative; overflow: hidden;">DEMO AVAILABLE</span>
+        </div>
+        <div class="col-12 col-md-5 text-md-right">
+            <span class="btn py-3 px-5"
+                  style="font-size: 20px; font-weight: 600; background-color: rgb(32, 48, 56); color: rgb(255, 255, 255); position: relative; overflow: hidden;">FREE 90 DAYS SUPPORT</span>
+        </div>
+    </div>
+    <div class="text-center mb-4 mb-md-5">
+        <br>
+    </div>
+    <!-- tab view start -->
+    <div>
+        <div class="justify-content-center d-flex">
+            <!-- Nav pills -->
+            <ul class="nav o_tab_nav"
+                style="border: 1px solid #203038;  border-radius: 6px 6px;overflow:hidden;background-color:transparent">
+                <li class="nav-item" style="border-radius: 6px 0 0 6px;">
+                    <a class="nav-link active px-md-4 list-group-item-beta-dark list-group-item-action"
+                       data-toggle="pill" href="#Setup"
+                       style="border-radius: 6px 0 0 6px; border-right: 1px solid#203038;opacity: 1;padding:16px;">SETUP</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link px-md-4 list-group-item-beta-dark list-group-item-action" data-toggle="pill"
+                       href="#FAQ" style="border-radius: 0px;opacity: 1;padding:16px;">FAQ's</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tab panes -->
+        <div class="tab-content py-5">
+            <div class="tab-pane active" id="Setup">
+                <div class="row">
+                    <div class="col-12 col-md-4">
+                        <ul class="nav o_tab_nav"
+                            style="text-transform: capitalize; font-size: 18px; border-radius: 6px 6px;background-color: transparent">
+                            <li class="nav-item w-100 mb-3">
+                                <a class="nav-link d-flex align-items-center px-3 py-2 list-group-item-beta-dark list-group-item-action active"
+                                   data-toggle="pill" href="#Advance1"
+                                   style="border-radius:30px; border: 1px solid #203038;opacity:1;letter-spacing: inherit;text-transform: capitalize;transition: 0.3s ease-in-out;"><i
+                                        aria-hidden="true" class="fa fa-download mr-2" style="font-size:20px"></i>How it
+                                    Works</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-12 col-md-8 pt-4 pt-md-0">
+                        <div class="tab-content h-100">
+                            <div class="tab-pane active" id="Advance1">
+                                <h4 style="text-decoration:underline">HOW IT WORKS</h4>
+                                <div class="pb-1">
+                                    <div id="SettingsGantt">
+                                        <!-- The slideshow -->
+                                        <!--                                        <div class="carousel-inner">-->
+                                        <div style="font-size:16px;margin-top: 20px;color: #616161;line-height: 1.4;">
+                                            <img src="images/app_screen/StickyHeader.gif" style="max-width:800px;"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="FAQ">
+                <div class="card-body p-0">
+                    <div class="text-center pb-5">
+                        <h2 style="color: #0b3b52; font-weight: 600; font-size: 2.5rem;">Frequently Asked Question</h2>
+                    </div>
+                    <div class="s_faq mx-2 mx-md-5 mb-5">
+                        <div id="accordion">
+                            <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                     style="border: none;">
+                                    <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">Is
+                                        this app compatible with Odoo Enterprise?
+                                    </div>
+                                    <a class="card-link collapsed" data-toggle="collapse" href="#faqOne" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                </div>
+                                <div class="collapse" data-parent="#accordion" id="faqOne">
+                                    <div class="card-body pt-0 pl-4">
+                                        <div style="font-size: 1.4rem; color: #0b3b52;">
+                                            Yes, our app works with Odoo Enterprise as well as Community.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                     style="border: none;">
+                                    <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">Need
+                                        some customization in this app, whom to contact?
+                                    </div>
+                                    <a class="card-link collapsed" data-toggle="collapse" href="#faqTwo" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                </div>
+                                <div class="collapse" data-parent="#accordion" id="faqTwo">
+                                    <div class="card-body pt-0 pl-4">
+                                        <div style="font-size: 1.4rem; color: #0b3b52;">
+                                            Please drop email at sales@ksolves.com or raise a ticket through Odoo store
+                                            itself.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card shadow mb-4" style="border: none; border-left: 10px solid #203038;">
+                                <div class="card-header py-4 pl-4 pr-5 bg-white position-relative d-flex justify-content-between"
+                                     style="border: none;">
+                                    <div class="pr-5" style="font-size: 1.6rem; font-weight: 600; color: #0b3b52;">Do
+                                        you provide any free support?
+                                    </div>
+                                    <a class="card-link collapsed" data-toggle="collapse" href="#faqThree" style="
+                                      width: 48px;
+                                      height: 40px;
+                                      line-height: 11px;
+                                      background-color: rgba(8, 101, 99, 0.1);
+                                      border-radius: 2px;
+                                      padding: 0;
+                                      font-size: 24px;"></a>
+                                </div>
+                                <div class="collapse" data-parent="#accordion" id="faqThree">
+                                    <div class="card-body pt-0 pl-4">
+                                        <div style="font-size: 1.4rem; color: #0b3b52;">
+                                            Yes, we do provide free support for 90 days for any queries or any bug/issue
+                                            fixing.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- tab view / end -->
+    </div>
+
+
+    <section class="card shadow-sm mb-5">
+        <div class="card-body text-center text-white p-0">
+            <div class="py-5 px-4" style="background-color:#0b3b52">
+                <div class="mb-4" style="font-size:2rem">FREE 90 DAYS SUPPORT</div>
+                <div class="px-md-4 px-md-5 mx-md-5">
+                    <p>Ksolves will provide FREE 90 days support for any doubt, queries, and bug fixing (excluding data
+                        recovery) or any type of issues related to this module. This is applicable from the date of
+                        purchase.</p>
+                    <!--                <a href="https://themekernel.kappso.com/web/demo_login" class="btn py-2 px-5 mt-3"-->
+                    <!--                   style="background-color: #e6ecf5; color: #416AA6; border-radius: 80px; font-weight: 600;">Free Demo</a>-->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="mb-5">
+        <div class="text-center p-2 d-flex justify-content-center align-items-center col-lg-9"
+             style="background-color:#0b3b52; margin:auto">
+            <h3 class="font-weight-bold mb-0 mr-3 text-light">Note: </h3>
+            <h5 class="mb-0 text-light" style="margin-top:2px">
+                Extensively Tested on Odoo Vanilla with Ubuntu OS
+            </h5>
+        </div>
+    </section>
+
+    <div class="row pb-sm-5">
+        <h2 class="w-100 text-center mb-3" style="font-weight: 400;">Ksolves Suggested Apps</h2>
+        <div class="text-center w-100 mb-1">
+            <img alt="ksolves" src="images/line.png">
+        </div>
+        <div class="carousel slide pb-5 col-12 col-lg-8 mx-auto" data-ride="carousel" id="demo">
+            <!-- Indicators -->
+            <ul class="carousel-indicators">
+                <li class="active" data-slide-to="0" data-target="#demo" style="background-color: #9d7092;"></li>
+                <li data-slide-to="1" data-target="#demo" style="background-color: #9d7092;"></li>
+            </ul>
+            <!-- The slideshow -->
+            <div class="carousel-inner pt-4 pt-lg-5 ">
+                <div class="carousel-item px-4 active">
+                    <div class="row pb-sm-4 no-lg-gutters">
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block" href="https://apps.odoo.com/apps/modules/12.0/ks_dashboard_ninja/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="dashboard-ninja" src="images/app-logo/dashboard-ninja.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Dashboard <br>
+                                        Ninja</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/modules/12.0/ks_list_view_manager/" style="text-decoration: none;"
+                               target="_blank">
+                                <img alt="list-view-manager" src="images/app-logo/list-view-manager.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">List View <br>
+                                        Manager</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block" href="https://apps.odoo.com/apps/modules/12.0/ks_sticky_pivot_view/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="sticky-pivot-view" src="images/app-logo/sticky-pivot-view.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Sticky <br>Pivot
+                                        View</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/modules/11.0/ks_oneclick_sale_purchase/" style="text-decoration: none;"
+                               target="_blank">
+                                <img alt="list-view-manager" src="images/app-logo/one-click-sale.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">One Click <br>Sale/Purchase
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row pt-3 pb-4 no-gutters">
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/modules/13.0/ks_custom_report/" style="text-decoration: none;"
+                               target="_blank">
+                                <img alt="report_mate" src="images/app-logo/report_mate.png" style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">ReportMate</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block" href="https://apps.odoo.com/apps/modules/12.0/ks_pos_order_notes/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="pos-per-item" src="images/app-logo/pos-per-item.png" style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">POS Per Item
+                                        <br>& Order Note</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/modules/13.0/ks_leaderboard/" style="text-decoration: none;"
+                               target="_blank">
+                                <img alt="leaderboard" src="images/app-logo/leaderboard.png" style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Leaderboard
+                                        Ninja</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block" href="https://apps.odoo.com/apps/modules/12.0/ks_sales_subscription/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="subscription_icon" src="images/app-logo/subscription_icon.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Sale
+                                        Subscriptions</h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item px-4">
+                    <div class="row pb-sm-4 no-gutters">
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/modules/13.0/ks_product_combo/" style="text-decoration: none;"
+                               target="_blank">
+                                <img alt="combo_product" src="images/app-logo/combo_product.png" style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Combo
+                                        Products</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block"
+                               href="https://apps.odoo.com/apps/modules/13.0/ks_multi_company_inventory_transfer/" style="text-decoration: none;" target="_blank">
+                                <img alt="multi_company_inventory" src="images/app-logo/multi_company_inventory.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Multi-Company
+                                        <br>Inventory Transfer</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/modules/13.0/ks_woocommerce/" style="text-decoration: none;"
+                               target="_blank">
+                                <img alt="woocommerce_icon" src="images/app-logo/woocommerce_icon.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Odoo WooCommerce
+                                        <br>Connector</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block" href="https://apps.odoo.com/apps/modules/12.0/ks_office365_contacts/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="Office365 Contacts" src="images/app-logo/office365_contact.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Office 365<br>Contacts
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row pt-3 pb-4 no-gutters">
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/modules/13.0/ks_product_variant_extra_price/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="product_variant_extra_price" src="images/app-logo/pvep.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Product Variant
+                                        <br>Extra Price</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block" href="https://apps.odoo.com/apps/modules/12.0/ks_toggle_switch/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="toggle_switch" src="images/app-logo/toggle_switch.png" style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Toggle <br>Switch
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a href="https://apps.odoo.com/apps/themes/13.0/ks_theme_kinetik/" style="text-decoration: none;"
+                               target="_blank">
+                                <img alt="kinetic_icon" src="images/app-logo/kinetic_icon.png" style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Theme
+                                        Kinetik</h5>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="col-6 col-sm-3 text-center">
+                            <a class="d-block" href="https://apps.odoo.com/apps/modules/12.0/ks_low_stock_alert/"
+                               style="text-decoration: none;" target="_blank">
+                                <img alt="low_stock_alert" src="images/app-logo/low_stock_alert.png"
+                                     style="width: 88px">
+                                <div class="card-body text-center p-0 mt-3 mb-3 mb-lg-0">
+                                    <h5 class="card-text m-0"
+                                        style="min-height:60px; font-size: 16px; font-weight: 600">Low Stock<br>Alert
+                                    </h5>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Left and right controls -->
+            <a class="carousel-control-prev" data-slide="prev" href="#demo" style="left: -5%; width: 60px;">
+                <i class="fa fa-angle-left" style="font-size: 5vw;color: #333;"></i>
+            </a>
+            <a class="carousel-control-next" data-slide="next" href="#demo" style="right: -5%; width: 60px;">
+                <i class="fa fa-angle-right" style="font-size: 5vw;color: #333;"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="row pb-sm-5 px-1 pb-4">
+        <h2 class="w-100 text-center my-3" style="font-weight:400">Ksolves Odoo Services</h2>
+        <div class="text-center w-100 mb-4">
+            <img alt="ksolves" src="images/line.png">
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom:20px">
+            <div class="card text-center bg-info" style="min-height:90px">
+                <div class="pt-4">
+                    <img alt="support"
+                         src="images/support.png">
+                </div>
+                <div class="card-body" style="background-color:transparent !important">
+                    <h5 class="card-title text-white" style="font-size:19px; font-weight:400">Odoo
+                        Implementation</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom:20px">
+            <div class="card text-center" style="min-height:90px; background-color:#2ebeb4">
+                <div class="pt-4">
+                    <img alt="apps" src="images/apps.png">
+                </div>
+                <div class="card-body" style="background-color:transparent !important">
+                    <h5 class="card-title text-white" style="font-size:19px; font-weight:400">Odoo Community
+                        Apps</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom:20px">
+            <div class="card text-center" style="min-height:90px; background-color:#98b1c4">
+                <div class="pt-4">
+                    <img alt="support2"
+                         src="images/support2.png">
+                </div>
+                <div class="card-body" style="background-color:transparent !important">
+                    <h5 class="card-title text-white" style="font-size:19px; font-weight:400">Odoo Support &amp;
+                        Maintenance</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom:20px">
+            <div class="card text-center" style="min-height:90px; background-color:#2f4e6f">
+                <div class="pt-4">
+                    <img alt="custom"
+                         src="images/custom.png">
+                </div>
+                <div class="card-body" style="background-color:transparent !important">
+                    <h5 class="card-title text-white" style="font-size:19px; font-weight:400">Odoo
+                        Customization</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom:20px">
+            <div class="card text-center" style="min-height:90px; background-color:#f89c24">
+                <div class="pt-4">
+                    <img alt="integrated"
+                         src="images/integrated.png">
+                </div>
+                <div class="card-body" style="background-color:transparent !important">
+                    <h5 class="card-title text-white" style="font-size:19px; font-weight:400">Odoo Integration
+                        Services</h5>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-6 col-md-4" style="margin-bottom:20px">
+            <div class="card text-center bg-primary" style="min-height:90px">
+                <div class="pt-4">
+                    <img alt="develop"
+                         src="images/develop.png">
+                </div>
+                <div class="card-body" style="background-color:transparent !important">
+                    <h5 class="card-title text-white" style="font-size:19px; font-weight:400">Odoo Developer
+                        Outsourcing</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="row mx-0 justify-content-sm-between justify-content-center" style="border-top:1px solid black">
+            <div class="mb-sm-0 mb-3">
+                <i class="fa fa-envelope fa-2x" style="margin-right:10px; color:#333"></i>
+                <span style="font-size:18px">sales@ksolves.com</span>
+            </div>
+            <div class="d-none d-sm-block">
+                <div class="bg-white" style="width:50px; height:1px; margin-top:-1px"></div>
+                <div style="height:50px"></div>
+            </div>
+            <div>
+                <i class="fa fa-mobile fa-2x" style="margin-right:10px; color:#333"></i>
+                <span style="font-size:18px">+91 120-4299799&#8236;</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+

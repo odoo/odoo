@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<odoo>
+    <menuitem id="demo_activity_menu"
+      name="Demo Activity"/>
+
+    <record id="action_demo_activity" model="ir.actions.act_window">
+        <field name="name">Activity Demo</field>
+        <field name="res_model">demo.activity</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_demo_activity"
+      name="Activity Demo"
+      action="action_demo_activity"
+      parent="demo_activity_menu" />
+</odoo>
+
+

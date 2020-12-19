@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="search_criteria_import_data_actions_server" model="ir.actions.server">
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="name">订单同步</field>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">action=records.set_search_criteria()</field>
+        </record>
+
+        <!--            产品类别导入-->
+<!--        <record id="run_product_category1" model="ir.actions.server">-->
+<!--            <field name="model_id" ref="model_product_category"/>-->
+<!--            <field name="name">产品类别导入</field>-->
+<!--            <field name="binding_model_id" ref="model_product_category"/>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">action=records.prod_imp()</field>-->
+<!--        </record>-->
+
+
+        <record id="search_criteria_view_form" model="ir.ui.view">
+            <field name="name">search criteria</field>
+            <field name="model">search.criteria</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="start_time"/>
+                        <field name="end_time"/>
+                        <field name="is_order_time"/>
+                    </group>
+
+
+                    <footer>
+                        <button string='确定' name="import_data" type="object" class="btn-primary"/>
+                        <button string="取消" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <!--        <record id="import_data_actions_server" model="ir.actions.server">-->
+        <!--            <field name="model_id" ref="model_sale_order"/>-->
+        <!--            <field name="name">设置搜索条件</field>-->
+        <!--            <field name="binding_model_id" ref="model_sale_order"/>-->
+        <!--            <field name="state">code</field>-->
+        <!--            <field name="code">action=records.set_search_criteria()</field>-->
+        <!--        </record>-->
+    </data>
+</odoo>

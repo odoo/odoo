@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- demo_expense_tutorial App Menu -->
+    <menuitem id="demo_expense_tutorial_menu"
+              name="Demo Expense Tutorial" />
+
+    <!-- Action to open the demo_expense_tutorial -->
+    <record id="action_expense_tutorial" model="ir.actions.act_window">
+        <field name="name">Demo Expense Tutorial Action</field>
+        <field name="res_model">demo.expense.tutorial</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the demo_expense_tutorial -->
+    <menuitem id="menu_expense_tutorial"
+              name="Demo Expense Tutorial"
+	          action="action_expense_tutorial"
+              parent="demo_expense_tutorial_menu" />
+
+    <!-- Action to open the demo_expense_sheet_tutorial -->
+    <record id="action_expense_sheet_tutorial" model="ir.actions.act_window">
+        <field name="name">Demo Expense Sheet Tutorial Action</field>
+        <field name="res_model">demo.expense.sheet.tutorial</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Menu item to open the demo_expense_sheet_tutorial -->
+    <menuitem id="menu_expense_sheet_tutorial"
+              name="Demo Expense Sheet Tutorial"
+	          action="action_expense_sheet_tutorial"
+              parent="demo_expense_tutorial_menu" />
+
+    <!-- Action to open the demo_expense_tutorial_no_craete -->
+    <record id="action_expense_tutorial_no_craete" model="ir.actions.act_window">
+        <field name="name">Demo Expense Tutorial Action No Craete</field>
+        <field name="res_model">demo.expense.tutorial</field>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="view_tree_demo_expense_tutorial_no_create"/>
+    </record>
+
+    <!-- Menu item to open the demo_expense_tutorial_no_craete -->
+    <menuitem id="menu_expense_tutorial_no_craete"
+              name="Demo Expense Tutorial No Create"
+	          action="action_expense_tutorial_no_craete"
+              parent="demo_expense_tutorial_menu" />
+</odoo>

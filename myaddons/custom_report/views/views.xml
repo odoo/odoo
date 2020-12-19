@@ -1,0 +1,85 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="custom_report.list">
+            <field name="name">custom_report list</field>
+            <field name="model">custom.report</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="value"/>
+                    <field name="value2"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="custom_report.action_window">
+            <field name="name">custom_report window</field>
+            <field name="res_model">custom.report</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record model="ir.ui.view" id="factory_form_view">
+            <field name="name">custom_report_from</field>
+            <field name="model">custom.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="name"/>
+                            <field name="value"/>
+                            <field name="value2"/>
+                        </group>
+                        <group>
+                            <field name="rex_id">
+                                <tree>
+                                <field name="sex"/>
+                                <field name="age"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- server action to the one above -->
+        <!--
+            <record model="ir.actions.server" id="custom_report.action_server">
+              <field name="name">custom_report server</field>
+              <field name="model_id" ref="model_custom_report_custom_report"/>
+              <field name="state">code</field>
+              <field name="code">
+                action = {
+                  "type": "ir.actions.act_window",
+                  "view_mode": "tree,form",
+                  "res_model": model._name,
+                }
+              </field>
+            </record>
+        -->
+
+        <!-- Top menu item -->
+
+        <menuitem name="custom_report" id="custom_report.menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Menu 1" id="custom_report.menu_1" parent="custom_report.menu_root"/>
+        <!--    <menuitem name="Menu 2" id="custom_report.menu_2" parent="custom_report.menu_root"/>-->
+
+        <!-- actions -->
+        <menuitem name="List" id="custom_report.menu_1_list" parent="custom_report.menu_1"
+                  action="custom_report.action_window"/>
+        <!--
+
+        <menuitem name="Server to list" id="custom_report" parent="custom_report.menu_2"
+                  action="custom_report.action_server"/>
+    -->
+    </data>
+</odoo>

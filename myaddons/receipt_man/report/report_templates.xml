@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="receipt_man.report_godown_entry_templ">
+            <t t-call="report.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="report.external_layout">
+                        <div class="page">
+                            <h1>标题</h1>
+                            <div class="col-xs-12" style="padding:0;">
+                                <div class="row">
+                                <div class="col-xs-12">
+                                    <div class="col-xs-2">入库单号</div>
+                                    <div class="col-xs-4">
+                                        <t t-esc="doc.name"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-2">采购单号</div>
+                                    <div class="col-xs-4">
+                                        <t t-esc="doc.purchase_order"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-2">供货商</div>
+                                    <div class="col-xs-4">
+                                        <t t-esc="doc.partner"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-2">入库时间</div>
+                                    <div class="col-xs-4">
+                                        <t t-esc="doc.inbound_time"/>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12">
+                                    <div class="col-xs-2">是否已结算</div>
+                                    <div class="col-xs-4">
+                                        <t t-esc="doc.closed"/>
+                                    </div>
+                                </div>
+                            </div>
+                                <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>产品</th>
+                                        <th class="text-right">订单数量</th>
+                                        <th class="text-right">入库数量</th>
+                                        <th>单位</th>
+                                        <th class="text-right">单价</th>
+                                        <th class="text-right">金额</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="sale_tbody">
+                                    <t t-foreach="doc.lines" t-as="l">
+                                        <tr>
+                                            <td>
+                                                <span t-field="l.product"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="l.qty_purchase"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-field="l.qty_stock"/>
+                                            </td>
+                                            <td>
+                                                <span t-field="l.uom"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="l.price_unit"/>
+                                            </td>
+                                            <td class="text-right">
+                                                <span t-esc="l.price"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+<template id="receipt_man.report_godown_entry_templ_cf">
+    <t t-call="report.html_container">
+        <t t-if="len(docs) &gt; 0"><h3>正在打印，请稍候....</h3></t>
+        <t t-if="len(docs) &lt;= 0"><h3>没有可打印数据!</h3></t>
+    </t>
+
+<!--必须先安装cfprint模块，以引入基础类库-->
+<script type="text/javascript">
+var cfprint_addr = "127.0.0.1";   //打印服务器监听地址
+var _delay_close = -1;          //打印完成后关闭窗口的延时时长(毫秒), -1则表示不关闭
+
+/******************************* 康虎云报表与ODOO集成时，模板调用方法 **********************************/
+/*方法3：打印模板在客户端*/
+var _data = {"template": "report_godown_entry_cf.fr3", "ver": 4, "Copies": 1, "Duplex": 0, "Tables":[]};
+/*******************************************************************************************************/
+
+/*
+Odoo中的LOGO是以Base64保存的，所以只需要把Base64中的换行去掉，然后赋值给字段即可。
+为了减少数据传输量，把LOGO单独放一张表，而不是放在循环中与主表记录一起生成多次。
+*/
+//生成公司主信息表数据，这部分主要演示如何向康虎云报表传送图片数据以及如何把时间转换成本地时区时间
+var _tableCompany = {
+    "Name": "Company",
+    "Cols":[
+        { "type": "str", "size": 4, "name": "id", "required": false },
+        { "type": "blob", "size": 0, "name": "logo", "required": false },
+        { "type": "str", "size": 50, "name": "user_name1", "required": false },
+        { "type": "str", "size": 50, "name": "user_name2", "required": false },
+        { "type": "str", "size": 20, "name": "currdate", "required": false },
+    ],
+    "Data":[
+        {
+            "id": "<t t-esc="res_company.id"/>",
+            "logo": "base64/png:<t t-esc="res_company.logo.decode().replace('\n','')"/>",
+            "user_name1": "<t t-esc="user.name" />",
+            "user_name2": "<t t-esc="request.env.user.name" />",
+            "currdate": "<t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/>:<t t-esc="datetime.datetime.now().strftime('%Y-%m-%d %H:%M')"/> ",  /*<t t-usertime="%Y-%m-%d %H:%M:%S" />*/
+        }
+    ]
+}
+
+//生成表结构
+var _tableOrder = {
+    "Name": "GodownEntry",
+    "Cols":[
+        { "type": "str", "size": 10, "name": "company_id", "required": false },
+        { "type": "str", "size": 30, "name": "id", "required": false },
+        { "type": "str", "size": 255, "name": "入库单号", "required": false },
+        { "type": "str", "size": 255, "name": "采购单号", "required": false },
+        { "type": "str", "size": 255, "name": "供货商", "required": false },
+        { "type": "str", "size": 30, "name": "入库时间", "required": false },
+        { "type": "bool", "size": 0, "name": "是否已结算", "required": false },
+    ],
+    "Data":[ ]
+};
+
+var _tableOrderLines = {
+    "Name": "GodownEntryLines",
+    "Cols":[
+        { "type": "str", "size": 30, "name": "godown_entry_id", "required": false },
+        { "type": "str", "size": 30, "name": "产品", "required": false },
+        { "type": "float", "size": 0, "name": "订单数量", "required": false },
+        { "type": "float", "size": 0, "name": "入库数量", "required": false },
+        { "type": "str", "size": 10, "name": "单位", "required": false },
+        { "type": "float", "size": 0, "name": "单价", "required": false },
+        { "type": "float", "size": 0, "name": "金额", "required": false },
+    ],
+    "Data":[ ]
+};
+
+/*生成主表数据*/
+<t t-foreach="docs" t-as="doc">
+_tableOrder.Data.push(
+{
+    "id": "<t t-esc="doc.id"/>",
+    "company_id": "<t t-esc="res_company.id"/>",
+    "入库单号": "<t t-esc="doc.name"/>",
+    "采购单号": "<t t-esc="doc.purchase_order"/>",
+    "供货商": "<t t-esc="doc.partner"/>",
+    "入库时间": "<t t-esc="doc.inbound_time"/>",
+    "是否已结算": "<t t-esc="doc.closed"/>",
+});
+
+/*生成从表数据*/
+    <t t-foreach="doc.lines" t-as="l">
+_tableOrderLines.Data.push(
+{
+    "godown_entry_id": "<t t-esc="doc.id"/>",     //主从表关联字段，对应order表的id
+    "产品": "<t t-esc="l.product.name"/>",
+    "订单数量": "<t t-esc="l.qty_purchase"/>",
+    "入库数量": "<t t-esc="l.qty_stock"/>",
+    "单位": "<t t-esc="l.uom"/>",
+    "单价": "<t t-esc="l.price_unit"/>",
+    "金额": "<t t-esc="l.price"/>",
+});
+    </t>
+</t>
+
+/*数据合并到总的数据对象*/
+_data["Tables"].push(_tableCompany);
+_data["Tables"].push(_tableOrder);
+_data["Tables"].push(_tableOrderLines);
+var _reportData = JSON.stringify(_data);  //转成json字符串
+
+console.log(_reportData);
+//生成数据之后，在cfprint_ext.js中会自动调用进行打印
+
+</script>
+
+</template>
+
+    </data>
+</odoo>

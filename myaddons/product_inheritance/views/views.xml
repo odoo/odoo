@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="openshoes.action_window">
+            <field name="name">月单价</field>
+            <field name="res_model">stock_month.stock_month</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'tree': {'buttons': [{'name': 'My Action', 'classes': 'oe_link btn btn-primary', 'action': 'sync_assets'}]}}</field>
+        </record>
+
+
+
+        <menuitem name="月单价人口" id="stock_month_menu_root"/>
+        <menuitem name="月单价人口2" id="stock_month_menu_root_2" parent="stock_month_menu_root"/>
+    </data>
+</odoo>

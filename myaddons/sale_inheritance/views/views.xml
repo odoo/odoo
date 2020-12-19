@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+    <record id="view_expenses_from_custom" model="ir.ui.view">
+      <field name="name">res.partner.from.custom</field>
+      <field name="model">res.partner</field>
+      <field name="inherit_id" ref="res_partner.res_partner_form"/>
+      <field name="arch" type="xml">
+          <field name="zip" position="after">
+              <!-- <field name="test_field" groups="product.group_sale_pricelist" readonly="1"/> -->
+              <field name="test_field"/>
+          </field>
+
+          <!-- xpath the same result -->
+          <!--views/views.xml
+          <xpath expr="//field[@name='date']" position="after">
+              <field name="test_field" />
+          </xpath>
+          -->
+
+      </field>
+    </record>
+    </data>
+</odoo>

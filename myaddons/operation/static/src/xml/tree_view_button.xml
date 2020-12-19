@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template id="template" xml:space="preserve">
+    <!-- 拓展Tree视图增加自定义按钮 -->
+    <t t-extend="ListView.buttons">
+        <t t-jquery="button.o_list_button_save" t-operation="after">
+            <button type="button" class="btn btn-primary o_list_tender_button_say_hello" style="display:inline-block;">Tree:Say Hello</button>
+        </t>
+    </t>
+    <!-- 拓展Form视图增加自定义按钮 -->
+    <t t-extend="FormView.buttons">
+        <t t-jquery="button.o_form_button_create" t-operation="after">
+            <button type="button" class="btn btn-primary o_list_tender_button_say_hello" style="display:inline-block;">Form:Say Hello</button>
+        </t>
+    </t>
+</template>

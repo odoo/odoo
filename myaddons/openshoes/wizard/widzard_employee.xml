@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="show_message_wizard" model="ir.ui.view">
+            <field name="name">Show Message Wizard</field>
+            <field name="model">message.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <h3>要说Hello吗？</h3>
+                    <footer>
+                        <button name="say_hello" string="Yes" type="object" class="btn-primary"/>
+                        <button string="No" class="btn-primary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

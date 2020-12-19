@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_app_theme_config_settings" model="ir.ui.view">
+            <field name="name">Odoo Customize Settings</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="odooApp Customize Settings" class="oe_form_configuration">
+                    <header>
+                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
+                        <button string="Cancel" type="object" name="cancel" class="oe_link" special="cancel"/>
+                    </header>
+                    <h2>Odoo Customize Setting</h2>
+                    <group string="System Name">
+                        <label for="app_system_name"/>
+                        <div>
+                            <field name="app_system_name"/>
+                            <div>
+                                <a href="https://www.sunpop.cn" target="_blank">Visit our website for more apps and Support. https://www.sunpop.cn</a>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="User Menu">
+                        <div class="row mt16 o_settings_container" name="user_menu_show_hide">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div>
+                                    <field name="app_show_lang"/>
+                                    <label for="app_show_lang"/>
+                                </div>
+                                <div>
+                                    <field name="app_show_debug"/>
+                                    <label for="app_show_debug"/>
+                                </div>
+                                <div>
+                                    <field name="app_show_documentation"/>
+                                    <label for="app_show_documentation"/>
+                                </div>
+                                <div>
+                                    <field name="app_show_documentation_dev"/>
+                                    <label for="app_show_documentation_dev"/>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div>
+                                    <field name="app_show_support"/>
+                                    <label for="app_show_support"/>
+                                </div>
+                                <div>
+                                    <field name="app_show_account"/>
+                                    <label for="app_show_account"/>
+                                </div>
+                                <div invisible="1">
+                                    <field name="app_show_enterprise"/>
+                                    <label for="app_show_enterprise"/>
+                                </div>
+                                <div invisible="1">
+                                    <field name="app_show_share"/>
+                                    <label for="app_show_share"/>
+                                </div>
+                                <div>
+                                    <field name="app_show_poweredby"/>
+                                    <label for="app_show_poweredby"/>
+                                </div>
+                                <div>
+                                    <field name="group_show_author_in_apps"/>
+                                    <label for="group_show_author_in_apps"/>
+                                </div>
+                                <div>
+                                    <field name="module_odoo_referral"/>
+                                    <label for="module_odoo_referral"/>
+                                </div>
+                            </div>
+                        </div>
+                    </group>
+                    <group string="User Menu Content">
+                        <label for="app_documentation_url"/>
+                        <div>
+                            <field name="app_documentation_url"/>
+                        </div>
+                        <label for="app_documentation_dev_url"/>
+                        <div>
+                            <field name="app_documentation_dev_url"/>
+                        </div>
+                        <label for="app_support_url"/>
+                        <div>
+                            <field name="app_support_url"/>
+                        </div>
+                        <label for="app_account_title"/>
+                        <div>
+                            <field name="app_account_title"/>
+                        </div>
+                        <label for="app_account_url"/>
+                        <div>
+                            <field name="app_account_url"/>
+                        </div>
+                        <label for="app_ribbon_name"/>
+                        <div>
+                            <field name="app_ribbon_name"/>
+                            <div>
+                                <span>Set to False to hide</span>
+                            </div>
+                        </div>
+                        <label for="app_enterprise_url"/>
+                        <div>
+                            <field name="app_enterprise_url" class="oe_inline"/>
+                            <button string="Click to set" type="object" name="set_module_url" class="ml8 oe_highlight"/>
+                        </div>
+                    </group>
+                    <div class="mt16 o_settings_container" name="data-clean">
+                        <h2 name="data-clean" class="o_horizontal_separator">Data Cleaning (Be careful to do that!)</h2>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Sale</span>
+                            <button string="Delete All Sales Order" type="object" name="remove_sales"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">POS</span>
+                            <button string="Delete All POS Order" type="object" name="remove_pos" confirm="Please confirm to delete the select data?"
+                                    class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Purchase</span>
+                            <button string="Delete All Purchase Order and Requisition" type="object" name="remove_purchase"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Expense</span>
+                            <button string="Delete All Expense and Sheet" type="object" name="remove_expense"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">MRP</span>
+                            <button string="Delete All Manufacturing Order" type="object" name="remove_mrp"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            |
+                            <button string="Delete All BOM" type="object" name="remove_mrp_bom"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Inventory</span>
+                            <button string="Delete All Move/Picking/Package/Lot" type="object" name="remove_inventory"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Accounting</span>
+                            <button string="Delete All Voucher/Invoice/Bill" type="object" name="remove_account"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Project</span>
+                            <button string="Delete All Project/Task/Forecast" type="object" name="remove_project"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Quality</span>
+                            <button string="Delete All Quality" type="object" name="remove_quality"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            |
+                            <button string="Delete All Quality Setting" type="object" name="remove_quality_setting"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Website And Blog</span>
+                            <button string="Delete All Website/Blog" type="object" name="remove_website"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">Base Models</span>
+                            <button string="Delete All Product" type="object" name="remove_product"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            |
+                            <button string="Delete All Product Attribute" type="object" name="remove_product_attribute"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            |
+                            <button string="Delete All Message" type="object" name="remove_message"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            |
+                            <button string="Delete All Workflow" type="object" name="remove_workflow"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            |
+                            <button string="Clean and reset Account Chart" type="object" name="remove_account_chart"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                            |
+                            <button string="Reset Category And Location Complete Name" type="object" name="reset_cat_loc_name" class="oe_highlight"/>
+                        </div>
+                        <div class="col-12 col-lg-12 mb4">
+                            <span class="col-3 col-lg-2 text-left">All Business</span>
+                            <button string="Delete All MRP/Sale/Purchase/Account/MRP/Inventory/Project/Message/Workflow" type="object" name="remove_all_biz"
+                                    confirm="Please confirm to delete the select data?" class="oe_highlight"/>
+                        </div>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_app_theme_config" model="ir.actions.act_window">
+            <field name="name">Customize Debrand</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.config.settings</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="view_app_theme_config_settings"/>
+            <field name="target">inline</field>
+        </record>
+
+        <menuitem
+                id="menu_app_group"
+                name="odooApp"
+                parent="base.menu_administration"
+                sequence="1"
+                groups="base.group_system"/>
+        <menuitem
+                id="menu_app_theme_config"
+                parent="menu_app_group"
+                sequence="1"
+                action="action_app_theme_config"
+                groups="base.group_system"/>
+        <!--增加导入Demo数据-->
+        <menuitem
+                id="menu_app_demo_data"
+                parent="menu_app_group"
+                sequence="99"
+                action="base.demo_force_install_action"
+                groups="base.group_system"/>
+    </data>
+</odoo>

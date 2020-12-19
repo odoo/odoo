@@ -1,0 +1,190 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+
+        <!--    description = fields.Char('材料编号', required=True)-->
+        <!--    sender = fields.Char('选料人')-->
+        <!--    date = fields.Datetime(string="选择时间", default=fields.Datetime.now)-->
+        <!--    stye = fields.Char('型体')-->
+        <!--    customer = fields.Char('客户货号')-->
+        <!--    code = fields.Char('测试代号')-->
+        <!--    supplier = fields.Char('供方')-->
+        <!--    material = fields.Char('材料名称')-->
+        <!--    qty = fields.Integer('数量')-->
+        <!--    editor = fields.Html('editor')-->
+        <!--    type = fields.Selection(selection=[('sample', '样品'), ('development', '开发'), ('production', '批量')], string="测试性质",-->
+        <!--                            help="选择", default="sample")-->
+        <!--    property_id = fields.One2many('qfirst.test.method', 'pltest_id', string='测试列表')-->
+        <record model="ir.ui.view" id="first_test.list">
+            <field name="name">firstTEST list</field>
+            <field name="model">first_test.first_test</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="description"/>
+                    <field name="sender"/>
+                    <field name="stye"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="first_test.list2">
+            <field name="name">firstTEST list</field>
+            <field name="model">first_test.first_test</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="description"/>
+                                <field name="sender"/>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="stye"/>
+                                <field name="customer"/>
+                                <field name="code"/>
+                            </group>
+
+                            <group>
+                                <field name="supplier"/>
+                                <field name="material"/>
+                                <field name="qty"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+
+                        </group>
+
+                        <notebook>
+                            <page string="待办事项">
+                                <field name="property_id">
+                                    <tree string="待办事项" editable="bottom">
+                                        <control>
+                                            <create name="add_product_control" string="Add a product"/>
+                                            <create name="add_section_control" string="Add a section"/>
+                                            <create name="add_note_control" string="Add a note"/>
+                                        </control>
+                                        <!--                                        editable="bottom"可以在页面内输入-->
+                                        <field name="method"/>
+                                        <field name="property"/>
+                                        <field name="unit"/>
+                                        <field name="reqmt"/>
+                                        <field name="result"/>
+                                    </tree>
+                                </field>
+
+                                <!--                                <group>-->
+                                <!--                                    <field name="property_id"/>-->
+                                <!--                                </group>-->
+                            </page>
+                        </notebook>
+                    </sheet>
+
+                </form>
+
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="property_action_window">
+            <field name="name">first</field>
+            <field name="res_model">first.test.method</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="property_demo_tree_view" model="ir.ui.view">
+            <field name="name">first</field>
+            <field name="model">first.test.method</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="method"/>
+                    <field name="property"/>
+                    <field name="unit"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="property_demo_from_view">
+            <field name="name">first</field>
+            <field name="model">first.test.method</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="method"/>
+                            <field name="property"/>
+                            <field name="unit"/>
+                            <field name="reqmt"/>
+                            <field name="result"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+
+
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="first_test.action_window">
+            <field name="name">firstTEST window</field>
+            <field name="res_model">first_test.first_test</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- server action to the one above -->
+        <!--
+            <record model="ir.actions.server" id="first_test.action_server">
+              <field name="name">firstTEST server</field>
+              <field name="model_id" ref="model_first_test_first_test"/>
+              <field name="state">code</field>
+              <field name="code">
+                action = {
+                  "type": "ir.actions.act_window",
+                  "view_mode": "tree,form",
+                  "res_model": model._name,
+                }
+              </field>
+            </record>
+        -->
+
+        <!-- Top menu item -->
+
+        <menuitem name="firstTEST" id="first_test.menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Menu 1" id="first_test.menu_1" parent="first_test.menu_root"/>
+        <menuitem name="Menu 2" id="first_test.menu_2" parent="first_test.menu_root"/>
+
+        <!-- actions -->
+
+        <menuitem name="List" id="first_test.menu_1_list" parent="first_test.menu_1"
+                  action="first_test.action_window"/>
+        <menuitem name="List" id="first_test.menu_2_list" parent="first_test.menu_1"
+                  action="property_action_window"/>
+        <!--
+        <menuitem name="Server to list" id="first_test" parent="first_test.menu_2"
+                  action="first_test.action_server"/>
+    -->
+        <record id="multi_purchase_quotations_confirm7" model="ir.actions.server">
+            <field name="name">存入数据（excel）</field>
+            <field name="model_id" ref="model_first_test_first_test"/>
+            <field name="binding_model_id" ref="model_demo_activity"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.test2()
+            </field>
+        </record>
+
+
+
+    </data>
+</odoo>

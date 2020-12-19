@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+        <report
+            id="report_godown_entry"
+            string="入库单"
+            model="receipt.godown.entry"
+            report_type="qweb-pdf"
+            file="receipt_man.report_godown_entry_templ"
+            name="receipt_man.report_godown_entry_templ"
+        />
+
+        <report
+            id="report_godown_entry_cf"
+            string="入库单(CFPrint)"
+            model="receipt.godown.entry"
+            report_type="qweb-html"
+            file="receipt_man.report_godown_entry_templ_cf"
+            name="receipt_man.report_godown_entry_templ_cf"
+        />
+  </data>
+</odoo>

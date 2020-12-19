@@ -1,0 +1,16 @@
+<odoo>
+  <data>
+    <record id="app_product_category_search_view" model="ir.ui.view">
+        <field name="name">app.product.category.search</field>
+        <field name="model">product.category</field>
+        <field name="inherit_id" ref="product.product_category_search_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search">
+                <searchpanel view_types="tree,kanban,search">
+                    <field name="parent_id" filter_domain="[('child_id', '!=', False)]"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+  </data>
+</odoo>

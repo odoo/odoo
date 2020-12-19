@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+        <record id="view_wizard_form" model="ir.ui.view">
+            <field name="name">向导</field>
+            <field name="model">xx.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>
+
+                    <footer>
+                        <button name="action_XX" type="object" string="按钮文本" class="oe_highlight"/>
+                        <button string="取消" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard" model="ir.actions.act_window">
+            <field name="name">name</field>
+<!--            <field name="type">ir.actions.act_window</field>-->
+            <field name="res_model">xx.wizard</field>
+<!--            <field name="view_type">form</field>-->
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>

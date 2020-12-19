@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <report id="action2_library_book_report"
+                string="打印"
+                model="pltest.pltest"
+                report_type="qweb-html"
+                name="pltest.report2_library_book_template"
+
+
+        />
+
+
+        <template id="report2_library_book_template">
+            <t t-call="web.html_container">
+
+                    <t t-call="web.external_layout">
+                            <div class="page">
+                            <t t-esc="title2"/>
+                            <h2>Report title</h2>
+                            <p>This object's name is
+                                <t t-esc="data2.name"/>
+                            </p>
+                        </div>
+                    </t>
+                    </t>
+        </template>
+
+    </data>
+</odoo>

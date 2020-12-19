@@ -1,0 +1,18 @@
+<odoo>
+    <data>
+        <report
+                id="custom_report_templates_view"
+                model="custom.report"
+                string="Test Custom"
+                report_type="qweb-html"
+                name="custom_report.custom_report_templates"
+                file="custom_report.custom_report_templates"
+                attachment_use="True"
+                attachment="(object.state in ('open','paid')) and
+        ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        />
+
+
+
+    </data>
+</odoo>

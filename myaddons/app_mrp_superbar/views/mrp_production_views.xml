@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--搜索加 superbar-->
+    <record model="ir.ui.view" id="app_view_mrp_production_filter">
+        <field name="name">app.mrp.production.select</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <searchpanel view_types="tree,kanban,pivot,graph">
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                    <field name="priority"/>
+                    <field name="reservation_state"/>
+                    <field name="state"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+</odoo>

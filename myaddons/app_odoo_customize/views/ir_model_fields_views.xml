@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="app_view_model_fields_tree" model="ir.ui.view">
+        <field name="name">app.ir.model.fields tree</field>
+        <field name="model">ir.model.fields</field>
+        <field name="inherit_id" ref="base.view_model_fields_tree"/>
+        <field name="arch" type="xml">
+            <field name="readonly" position="before">
+                <field name="required"/>
+            </field>
+            <field name="readonly" position="after">
+                <field name="index"/>
+                <field name="copied"/>
+                <field name="tracking"/>
+            </field>
+        </field>
+    </record>
+    <record id="app_view_model_fields_search" model="ir.ui.view">
+        <field name="name">app.ir.ui.view search</field>
+        <field name="model">ir.model.fields</field>
+        <field name="inherit_id" ref="base.view_model_fields_search"/>
+        <field name="arch" type="xml">
+            <field name="name" position="after">
+                <field name="ttype"/>
+                <field name="relation"/>
+            </field>
+        </field>
+    </record>
+</odoo>

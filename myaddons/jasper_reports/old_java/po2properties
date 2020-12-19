@@ -1,0 +1,34 @@
+#!/bin/bash
+
+if [ -z "$JAVA_HOME" ]; then
+	directories="/usr/lib/jvm/java-6-sun-1.6.0.10/bin /usr/lib/j2sdk1.6-sun /usr/lib/j2sdk1.5-sun"
+	for d in $directories; do
+		if [ -d "$d" ]; then
+			export JAVA_HOME="$d"
+		fi
+	done
+fi
+
+export PATH="$JAVA_HOME"/bin:/bin:/usr/bin
+export CLASSPATH=$(ls -1 lib/* | grep jar$ | awk '{printf "%s:", $1}')
+export CLASSPATH="$CLASSPATH":$scriptdir
+
+function help()
+{
+	echo "Syntax: ./po2properties file.po [file.properties]"
+	exit
+}
+
+if [[ -z "$1" ]]; then
+	help
+fi
+
+po=$1	
+
+if [[ -z "$2" ]]; then
+	properties=$(dirname "$1")/$(basename "$1" .po).properties
+else
+	properties="$2"
+fi
+
+msgmerge -p $po $po > $properties

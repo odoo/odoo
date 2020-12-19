@@ -1,0 +1,47 @@
+<odoo>
+  <data>
+<!--    <record id="view_product_category_custom" model="ir.ui.view">-->
+<!--            <field name="name">product.category.from.custom</field>-->
+<!--            &lt;!&ndash;        继承模型id&ndash;&gt;-->
+<!--            <field name="model">product.category</field>-->
+<!--            &lt;!&ndash;        视图id&ndash;&gt;-->
+<!--            <field name="inherit_id" ref="product.product_category_form_view"/>-->
+<!--            <field name="arch" type="xml">-->
+<!--&lt;!&ndash;            <xpath expr="//group[@string='物流']" position="replace">&ndash;&gt;-->
+<!--&lt;!&ndash;                <button name="aaa"&ndash;&gt;-->
+<!--&lt;!&ndash;                            string="新增"&ndash;&gt;-->
+<!--&lt;!&ndash;                            type="object"/>&ndash;&gt;-->
+<!--&lt;!&ndash;            </xpath>&ndash;&gt;-->
+<!--            <xpath expr="//field[@name='parent_id']" position="before">-->
+<!--                    <button name="aaa"-->
+<!--                            string="新增"-->
+<!--                            type="object"/>-->
+<!--            </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+      <record id="view_sy_form" model="ir.ui.view">
+            <field name="name">name</field>
+            <field name="model">sys.sys</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name" string="shiyan"></field>
+                    </group>
+
+                    <footer>
+                        <button string="取消" class="oe_link" special="cancel"/>
+<!--                        type选择object，type  值可以是 workflow, object action   默认是 workflow-->
+<!--                        name是需要定义的方法名-->
+                    </footer>
+                </form>
+            </field>
+        </record>
+      <record id="run_product_category" model="ir.actions.server">
+        <field name="model_id" ref="model_sale_order"/>
+        <field name="name">弹出表单</field>
+        <field name="binding_model_id" ref="model_sale_order" />
+        <field name="state">code</field>
+        <field name="code">action=records.bbb()</field>
+        </record>
+  </data>
+</odoo>

@@ -1,0 +1,218 @@
+<odoo>
+    <data>
+
+
+        <record id="leave_type_tree" model="ir.ui.view">
+            <field name="name">休假配置</field>
+            <field name="model">openshoes.openshoes</field>
+            <field name="arch" type="xml">
+                <tree js_class="bicon_list_view_button">
+                    <field name="name"/>
+                    <field name="type"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="openshoes.action_window">
+            <field name="name">鞋厂</field>
+            <field name="res_model">openshoes.openshoes</field>
+            <field name="view_mode">tree,form,graph,pivot,kanban</field>
+            <field name="context">{'tree': {'buttons': [{'name': 'My Action', 'classes': 'oe_link btn btn-primary', 'action': 'sync_assets'}]}}</field>
+        </record>
+        <!-- explicit list view definition -->
+
+        <record id="openacademy_demo_tree_view" model="ir.ui.view">
+            <field name="name">openacademy</field>
+            <field name="model">openshoes.openshoes</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="c_name"/>
+                    <field name="name"/>
+                    <field name="property_id"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="openacademy_demo_form_view">
+            <field name="name">sss</field>
+            <field name="model">openshoes.openshoes</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="c_name"/>
+                                <field name="name"/>
+                                <field name="type"/>
+                            </group>
+                            <group>
+                                <field name="price"/>
+                                <field name="date_1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="类型">
+                                <field name="property_id"/>
+                            </page>
+                            <page string="没有东西">
+
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="openshoes22_action_window">
+            <field name="name">品牌</field>
+            <field name="res_model">odoo.odoo</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="openshoes22_demo_tree_view" model="ir.ui.view">
+            <field name="name">列表</field>
+            <field name="model">odoo.odoo</field>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="method"/>
+                    <field name="reqmt"/>
+                    <field name="num"/>
+                </tree>
+            </field>
+        </record>
+
+
+<!--        <record id="openshoes_sale_order_view_activity" model="ir.ui.view">-->
+<!--            <field name="name">openshoes openshoes activity</field>-->
+<!--            <field name="model">openshoes.openshoes</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <activity string="openshoes">-->
+<!--                    <templates>-->
+<!--                        <div t-name="activity-box">-->
+<!--                            <div>-->
+<!--                                <field name="price"/>-->
+<!--                                <field name="date_1" muted="1" display="full"/>-->
+<!--                                <field name="name"/>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </templates>-->
+<!--                </activity>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="openshoes_view_sale_order_calendar" model="ir.ui.view">-->
+<!--            <field name="name">openshoes openshoes calendar</field>-->
+<!--            <field name="model">openshoes.openshoes</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <calendar string="openshoes" date_start="date_1" color="state">-->
+<!--                    <field name="price" invisible="1"/>-->
+<!--                    <field name="name"/>-->
+<!--                </calendar>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record model="ir.ui.view" id="openshoes_view_sale_order_graph">
+            <field name="name">openshoes.openshoes.graph</field>
+            <field name="model">openshoes.openshoes</field>
+            <field name="arch" type="xml">
+                <graph string="openshoes" sample="1">
+                    <field name="price"/>
+                    <field name="date_1" type="measure"/>
+                </graph>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="openshoes_view_sale_order_pivot">
+            <field name="name">openshoes.openshoes.pivot</field>
+            <field name="model">openshoes.openshoes</field>
+            <field name="arch" type="xml">
+                <pivot string="openshoes" sample="1">
+                    <field name="price" type="row"/>
+                    <field name="name" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Sales Orders Kanban View  -->
+        <record model="ir.ui.view" id="openshoes_view_sale_order_kanban">
+            <field name="name">openshoes.openshoes.kanban</field>
+            <field name="model">openshoes.openshoes</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile" sample="1">
+                    <field name="price"/>
+                    <field name="name"/>
+                </kanban>
+            </field>
+        </record>
+
+
+
+        <record model="ir.ui.view" id="openshoes22_demo_form_view">
+            <field name="name">方法</field>
+            <field name="model">odoo.odoo</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="method"/>
+                            <field name="property"/>
+                            <field name="num"/>
+                            <field name="reqmt"/>
+
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!--向导-->
+
+        <!--        <record id="act_demo_wizard_view" model="ir.actions.act_window">-->
+        <!--            <field name="name">示例</field>-->
+        <!--            <field name="type">ir.actions.act_window</field>-->
+        <!--            <field name="res_model">openshoes.openshoes</field>-->
+        <!--            <field name="view_mode">form</field>-->
+        <!--            <field name="target">new</field>-->
+        <!--            <field name="binding_model_id" ref="openshoes.openshoes"/>-->
+        <!--            <field name="help" type="html">-->
+        <!--              <p class="oe_view_nocontent_create">-->
+        <!--                &lt;!&ndash; Add Text Here &ndash;&gt;-->
+        <!--              </p><p>-->
+        <!--                &lt;!&ndash; More details about what a user can do with this object will be OK &ndash;&gt;-->
+        <!--              </p>-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <!--		<menuitem id="demo_wizard_menu"-->
+        <!--                  name="示例"-->
+        <!--		          parent="示例"-->
+        <!--                  groups="用户组"-->
+        <!--                  action="act_demo_wizard_view"/>-->
+
+
+        <menuitem name="泉州鞋厂" id="openshoes.menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="鞋厂" id="openshoes.menu_1" parent="openshoes.menu_root"/>
+
+
+        <!-- actions -->
+
+        <menuitem name="List1" id="openshoes.menu_1_list" parent="openshoes.menu_1"
+                  action="openshoes.action_window"/>
+        <!--        <menuitem name="List1" id="openshoes.menu_1_list" parent="openshoes.menu_1"-->
+        <!--                  action="xx_action_wizard"/>-->
+        <!--        <menuitem name="List3" id="openshoes.menu_button_list" parent="openshoes.menu_1"-->
+        <!--                  action="action_wizard"/>-->
+
+        <menuitem name="List2" id="openshoes.menu_2_list" parent="openshoes.menu_1"
+                  action="openshoes22_action_window"/>
+
+        <!--        <menuitem name="List3" id="xx_menu_3_list" parent="openshoes.menu_1"-->
+        <!--                  action="xx_action_wizard"/>-->
+
+    </data>
+</odoo>

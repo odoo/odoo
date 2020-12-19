@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+<!--        <record id="stock_view_tree_css_custom1" model="ir.ui.view">-->
+<!--            <field name="name">stock.picking</field>-->
+<!--            &lt;!&ndash;        继承模型id&ndash;&gt;-->
+<!--            <field name="model">stock.picking</field>-->
+<!--            &lt;!&ndash;        视图id&ndash;&gt;-->
+<!--            <field name="inherit_id" ref="stock.view_picking_form"/>-->
+
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//field[@name='move_line_ids_without_package']" position="replace">-->
+<!--                    <field name="move_line_ids_without_package"-->
+<!--                                   attrs="{'readonly': ['|', '|', ('show_operations', '=', False), ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}"-->
+<!--                                   context="{'tree_view_ref': 'stock.view_stock_move_line_detailed_operation_tree', 'default_picking_id': id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+
+<!--        <record id="stock_view_tree_css_custom2" model="ir.ui.view">-->
+<!--            <field name="name">stock.move.line</field>-->
+<!--            &lt;!&ndash;        继承模型id&ndash;&gt;-->
+<!--            <field name="model">stock.move.line</field>-->
+<!--            &lt;!&ndash;        视图id&ndash;&gt;-->
+<!--            <field name="inherit_id" ref="stock.view_stock_move_line_detailed_operation_tree"/>-->
+
+<!--            <field name="arch" type="xml">-->
+<!--                <xpath expr="//field[@name='product_id']" position="after">-->
+<!--                    <field name="trademark"/>-->
+<!--                </xpath>-->
+<!--            </field>-->
+<!--        </record>-->
+    </data>
+</odoo>
+<!--stock.move.line.kanban-->

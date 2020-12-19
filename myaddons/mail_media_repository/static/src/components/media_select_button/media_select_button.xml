@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail_media_repository.MediaSelectButton" owl="1">
+        <button class="o_Composer_button o_Composer_buttonAttachmentSelector o_Composer_toolButton btn btn-light fa fa-folder" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Select media" type="button" t-on-click="_onClickSelectMedia"/>
+        <t t-if="state.hasMediaSelectDialog">
+            <Dialog contentClass="'o_MediaSelectDialog'" title="TITLE" size="'medium'" t-ref="dialog"  t-on-dialog-closed="_onDialogCancel">
+                <div class="o_we_existing_attachments o_we_images d-flex flex-wrap w-100 justify-content-between align-items-stretch my-0">
+
+                        <t t-foreach="repository.mediaList" t-as="media" t-key="media.localId">
+                            <t t-call="mail_media_repository.media.image"/>
+                        </t>
+                        <t t-foreach="20">
+                            <div class="o_we_attachment_placeholder"/>
+                        </t>
+                </div>
+                <t t-set-slot="buttons">
+                    <button class="o-ban btn btn-primary" t-on-click="_onDialogOK">OK</button>
+                    <button class="o-cancel btn btn-secondary" t-on-click="_onDialogCancel">Cancel</button>
+                </t>
+            </Dialog>
+        </t>
+    </t>
+
+    <t t-name="mail_media_repository.media.image" owl="1">
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light align-items-center justify-content-center o_library_media_cell" t-att-data-media-id="media.id">
+            <div class="o_we_media_dialog_img_wrapper" t-on-click="_onMediaClick(media)">
+                <img class="img img-fluid o_we_attachment_highlight" t-att-src="media.thumbnail_src" t-att-title="media.tooltip or ''" crossorigin="anonymous"/>
+                <a t-if="media.author" class="o_we_media_author" t-att-href="media.author_link" target="_blank" t-esc="media.author"/>
+            </div>
+        </div>
+    </t>
+</templates>

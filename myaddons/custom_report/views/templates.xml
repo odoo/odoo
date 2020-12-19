@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <template id="custom_report_templates">
+            <t t-call="web.html_container">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Report title</h2>
+                            <p>This object's name is
+                                <span t-esc="docs.rex_id.sex"/>
+                            </p>
+                        </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

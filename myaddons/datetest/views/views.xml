@@ -1,0 +1,198 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+        <!--['order_numbers','customer_abbreviation','season_identification','po_number',-->
+        <!--                'customer_type_number','order_date','Order_type','customer_date','packing_code',-->
+        <!--                'factory_model_number','order_number','pieces_number','pieces_two_number',-->
+        <!--                'total','somxid','soid']-->
+
+
+
+        <!--        <record id="factory_actions_server" model="ir.actions.server">-->
+        <!--            <field name="name">下载excel</field>-->
+        <!--            <field name="model_id" ref="factory.model_factory_data"/>-->
+        <!--            <field name="binding_model_id" ref="factory.model_factory_data"/>-->
+        <!--            <field name="binding_view_types">list</field>-->
+        <!--            <field name="state">code</field>-->
+        <!--            <field name="code">-->
+        <!--                if record.exists():-->
+        <!--                action = records.down_ex()-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="factory_action_window">
+            <field name="name">factory window</field>
+            <field name="res_model">factory.data</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record model="ir.ui.view" id="factory_form_view">
+            <field name="name">factory_from</field>
+            <field name="model">factory.data</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="order_numbers"/>
+                                <field name="customer_abbreviation"/>
+                                <field name="season_identification"/>
+                                <field name="po_number"/>
+                            </group>
+                            <group>
+                                <field name="customer_type_number"/>
+                                <field name="order_date"/>
+<!--                                <field name="Order_type"/>-->
+                                <field name="customer_date"/>
+                            </group>
+<!--                            <group>-->
+<!--                                <field name="packing_code"/>-->
+<!--                                <field name="factory_model_number"/>-->
+<!--                                <field name="order_number"/>-->
+<!--                                <field name="pieces_number"/>-->
+<!--                            </group>-->
+                            <group>
+<!--                                <field name="pieces_two_number"/>-->
+<!--                                <field name="total"/>-->
+<!--                                <field name="somxid"/>-->
+                                <field name="soid"/>
+                            </group>
+                        </group>
+                        <field name="factory_data_from_ids">
+                            <tree editable="bottom">
+                                <field name="mxstatus" optional="show"/>
+                                <field name="packing_code" optional='hide'/>
+                                <field name="factory_data_id" optional='hide'/>
+                                <field name="order_number" optional='show'/>
+                                <field name="pieces_number" optional='hide'/>
+                                <field name="factory_model_number" optional='show'/>
+                                <field name="pieces_two_number" optional='hide'/>
+                                <field name="total" optional='show'/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- server action to the one above -->
+        <!--
+            <record model="ir.actions.server" id="datetest.action_server">
+              <field name="name">datetest server</field>
+              <field name="model_id" ref="model_datetest_datetest"/>
+              <field name="state">code</field>
+              <field name="code">
+                action = {
+                  "type": "ir.actions.act_window",
+                  "view_mode": "tree,form",
+                  "res_model": model._name,
+                }
+              </field>
+            </record>
+        -->
+
+
+        <!--        <record id="print_excel_data_server1" model="ir.actions.server" >-->
+        <!--            <field name="name">存入数据（excel）</field>-->
+        <!--            <field name="model_id" ref="model_factory_data"/>-->
+        <!--            <field name="state">code</field>-->
+        <!--            <field name="code">-->
+        <!--                if record.exists():-->
+        <!--                    action = records.down_ex()-->
+        <!--            </field>-->
+        <!--        </record>-->
+
+        <record id="multi_purchase_quotations_confirm7" model="ir.actions.server">
+            <field name="name">存入数据（excel）2</field>
+            <field name="model_id" ref="model_factory_data"/>
+            <field name="binding_model_id" ref="model_factory_data"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.down_ex()
+            </field>
+        </record>
+
+        <record id="multi_purchase_quotations_confirm8" model="ir.actions.server">
+            <field name="name">存入数据（psql）2</field>
+            <field name="model_id" ref="datetest.model_factory_data"/>
+            <field name="binding_model_id" ref="datetest.model_factory_data"/>
+            <!--            <field name="binding_view_types">list</field>-->
+            <field name="state">code</field>
+            <field name="code">
+                records.ImportData()
+            </field>
+        </record>
+
+        <record id="multi_purchase_quotations_confirm9" model="ir.actions.server">
+            <field name="name">直接存入数据（sql语句）</field>
+            <field name="model_id" ref="datetest.model_factory_data"/>
+            <field name="binding_model_id" ref="datetest.model_factory_data"/>
+            <!--            <field name="binding_view_types">list</field>-->
+            <field name="state">code</field>
+            <field name="code">
+                records.sqlImportData()
+            </field>
+        </record>
+
+
+        <!-- Top menu item -->
+
+        <menuitem name="factory" id="factory_menu_root"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="菜单1" id="factory_menu_1" parent="factory_menu_root"/>
+
+        <!-- actions -->
+
+        <menuitem name="List" id="factory_menu_1_list" parent="factory_menu_1"
+                  action="factory_action_window"/>
+
+         <record model="ir.ui.view" id="factory_list">
+            <field name="name">factory list</field>
+            <field name="model">factory.data</field>
+            <field name="arch" type="xml">
+                <tree limit="5000">
+                   <header>
+                        <button type="action" string="xls导入" class="oe_hightlight"
+                                name="%(datetest.multi_purchase_quotations_confirm8)d" />
+                    </header>
+<!--                    order_numbers  = fields.Char(string="订单编号", required=True, index=True)-->
+<!--    customer_abbreviation = fields.Char(string="客户缩写")-->
+<!--    season_identification = fields.Char(string="季节标识")-->
+<!--    po_number = fields.Text(string="总PO号")-->
+<!--    customer_type_number = fields.Char(string="客户款号")-->
+<!--    order_date= fields.Date(string="下单日期")-->
+<!--    # Order_type = fields.Char(string="订单类型")-->
+<!--    customer_date = fields.Date(string="客户要求交期")-->
+<!--    status = fields.Char(string="比对状态")-->
+<!--    soid = fields.Char(string="soid")-->
+<!--    factory_data_from_ids = fields.One2many('factory.data.from','factory_data_id','订单明细')-->
+                    <field name="order_numbers" optional="show"/>
+
+                    <field name="customer_abbreviation" optional="show"/>
+                    <field name="season_identification" optional="show"/>
+                    <field name="po_number" optional="show"/>
+                    <field name="customer_type_number" optional="show"/>
+                    <field name="order_date" optional="show"/>
+<!--                    <field name="Order_type" optional="show"/>-->
+                    <field name="customer_date" optional="show"/>
+<!--                    <field name="packing_code" optional="hide"/>-->
+<!--                    <field name="factory_model_number" optional="hide"/>-->
+<!--                    <field name="order_number" optional="hide"/>-->
+<!--                    <field name="pieces_number" optional="hide"/>-->
+<!--                    <field name="pieces_two_number" optional="hide"/>-->
+<!--                    <field name="total" optional="hide"/>-->
+<!--                    <field name="somxid" optional="hide"/>-->
+                    <field name="soid" optional="hide"/>
+                </tree>
+            </field>
+        </record>
+
+    </data>
+</odoo>

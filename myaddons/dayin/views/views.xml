@@ -1,0 +1,108 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+
+    <report
+                id="accountant_report"
+                model="property_dayin"
+                string="打印表格"
+                report_type="qweb-pdf"
+                name="accountant.accountant_report"
+                file="accountant.accountant_report"
+                attachment_use="True"
+                attachment="(object.state in ('open','paid')) and
+        ('INV'+(object.number or '').replace('/','')+'.pdf')"
+        />
+
+
+        <template id="accountant_report">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Report title</h2>
+                            <p>This object's name is
+                                <span t-field="o.name"/>
+                            </p>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+
+
+
+    <record model="ir.ui.view" id="dayin.list">
+      <field name="name">dayin list</field>
+      <field name="model">property.dayin</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="method"/>
+        </tree>
+      </field>
+    </record>
+
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="dayin.action_window">
+      <field name="name">dayin window</field>
+      <field name="res_model">property.dayin</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="dayin.action_server">
+      <field name="name">dayin server</field>
+      <field name="model_id" ref="model_dayin_dayin"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+
+    <menuitem name="dayin2" id="dayin.menu_root2"/>
+    <!-- menu categories -->
+    <menuitem name="Menu 1" id="dayin.menu_1" parent="dayin.menu_root2"/>
+<!--    <menuitem name="Menu 2" id="dayin.menu_2" parent="dayin.menu_root"/>-->
+    <!-- actions -->
+    <menuitem name="List" id="dayin.menu_1_list" parent="dayin.menu_1"
+              action="dayin.action_window"/>
+<!--    <menuitem name="Server to list" id="dayin" parent="dayin.menu_2"-->
+<!--              action="dayin.action_server"/>-->
+
+      <record id="multi_purchase_quotations_confirm7" model="ir.actions.server">
+            <field name="name">存入数据（excel）</field>
+            <field name="model_id" ref="model_property_dayin"/>
+            <field name="binding_model_id" ref="model_property_dayin"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.test2()
+            </field>
+        </record>
+
+      <record id="multi_purchase_quotations_confirm8" model="ir.actions.server">
+            <field name="name">存入数据（excel）2</field>
+            <field name="model_id" ref="model_property_dayin"/>
+            <field name="binding_model_id" ref="model_property_dayin"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.test2()
+            </field>
+        </record>
+
+
+  </data>
+</odoo>

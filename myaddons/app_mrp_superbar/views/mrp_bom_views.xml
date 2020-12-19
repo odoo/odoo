@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--搜索加 superbar-->
+    <record model="ir.ui.view" id="view_mrp_bom_filter_superbar">
+        <field name="name">mrp.bom.select.superbar</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.view_mrp_bom_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <searchpanel>
+                    <field name="company_id" groups="base.group_multi_company" icon="fa-building"/>
+                    <field name="type"/>
+                    <field name="routing_id" groups="mrp.group_mrp_routings"/>
+                </searchpanel>
+            </xpath>
+        </field>
+    </record>
+</odoo>

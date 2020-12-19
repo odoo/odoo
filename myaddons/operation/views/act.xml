@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_sale_advance_payment_inv" model="ir.ui.view">
+            <field name="name">Invoice Orders</field>
+            <field name="model">operation.operation</field>
+            <field name="arch" type="xml">
+                <form string="Invoice Sales Order">
+                    <p class="oe_grey">
+                        Invoices will be created in draft so that you can review
+                        them before validation.
+                    </p>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_view_sale_advance_payment_inv" model="ir.actions.act_window">
+            <field name="name">Create invoices</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">operation.operation</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <!-- TODO: check if we need this -->
+<!--            <field name="binding_model_id" ref="sale.model_operation_operation" />-->
+<!--            <field name="binding_view_types">list</field>-->
+        </record>
+
+</odoo>

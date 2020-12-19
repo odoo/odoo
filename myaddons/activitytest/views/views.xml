@@ -1,0 +1,74 @@
+<odoo>
+<!--  <data>-->
+<!--    &lt;!&ndash; explicit list view definition &ndash;&gt;-->
+
+<!--    <record model="ir.ui.view" id="activitytest.list">-->
+<!--      <field name="name">activitytest list</field>-->
+<!--      <field name="model">activitytest.activitytest</field>-->
+<!--      <field name="arch" type="xml">-->
+<!--        <tree>-->
+<!--          <field name="name"/>-->
+<!--          <field name="value"/>-->
+<!--          <field name="value2"/>-->
+<!--        </tree>-->
+<!--      </field>-->
+<!--      </record>-->
+
+<!--    &lt;!&ndash; actions opening views on models &ndash;&gt;-->
+
+<!--    <record model="ir.actions.act_window" id="activitytest.action_window">-->
+<!--      <field name="name">activitytest window</field>-->
+<!--      <field name="res_model">activitytest.activitytest</field>-->
+<!--      <field name="view_mode">tree,form</field>-->
+<!--    </record>-->
+
+
+<!--    &lt;!&ndash; server action to the one above &ndash;&gt;-->
+
+<!--    <record model="ir.actions.server" id="activitytest.action_server">-->
+<!--      <field name="name">activitytest server</field>-->
+<!--      <field name="model_id" ref="model_activitytest_activitytest"/>-->
+<!--      <field name="state">code</field>-->
+<!--      <field name="code">-->
+<!--        action = {-->
+<!--          "type": "ir.actions.act_window",-->
+<!--          "view_mode": "tree,form",-->
+<!--          "res_model": model._name,-->
+<!--        }-->
+<!--      </field>-->
+<!--    </record>-->
+
+<!--    <record id="activitytest2.action_server" model="ir.actions.server">-->
+<!--            <field name="name">存入数据（excel）3</field>-->
+<!--            <field name="model_id" ref="model_activitytest_activitytest"/>-->
+<!--            <field name="binding_model_id" ref="model_activitytest_activitytest"/>-->
+<!--            <field name="binding_view_types">list</field>-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">-->
+<!--                action = {-->
+<!--          "type": "ir.actions.act_window",-->
+<!--          "view_mode": "tree,form",-->
+<!--          "res_model": model._name,-->
+<!--        }-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+<!--    &lt;!&ndash; Top menu item &ndash;&gt;-->
+
+<!--    <menuitem name="activitytest" id="activitytest.menu_root"/>-->
+
+<!--    &lt;!&ndash; menu categories &ndash;&gt;-->
+
+<!--    <menuitem name="Menu 1" id="activitytest.menu_1" parent="activitytest.menu_root"/>-->
+<!--    <menuitem name="Menu 2" id="activitytest.menu_2" parent="activitytest.menu_root"/>-->
+
+<!--    &lt;!&ndash; actions &ndash;&gt;-->
+
+<!--    <menuitem name="List" id="activitytest.menu_1_list" parent="activitytest.menu_1"-->
+<!--              action="activitytest.action_window"/>-->
+<!--    <menuitem name="Server to list" id="activitytest" parent="activitytest.menu_2"-->
+<!--              action="activitytest.action_server"/>-->
+
+<!--  </data>-->
+</odoo>

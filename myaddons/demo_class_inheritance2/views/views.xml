@@ -1,0 +1,86 @@
+<odoo>
+    <data>
+        <record id="view_expenses_from_custom" model="ir.ui.view">
+            <field name="name">res.partner.from.custom</field>
+            <!--        继承模型id-->
+            <field name="model">res.partner</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <!--          <field name="zip" position="after">-->
+                <!--&lt;!&ndash;               <field name="test_field" groups="product.group_sale_pricelist" readonly="1"/> &ndash;&gt;-->
+                <!--              <field name="test_field2"/>-->
+
+                <!--          </field>-->
+
+                <!--          xpath the same result -->
+                <!--          views/views.xml-->
+                <!--          position定位选择器
+                            inside 在内部结尾插入元素
+
+                            replace 替换元素
+
+                            before 在之前插入元素
+
+                            after 在其后插入元素
+
+                            attributes 修改xml的属性-->
+                <!--          after 在其后插入元素-->
+                <!--                <xpath expr="//field[@name='zip']" position="after">-->
+                <!--                    <field name="test_field2" placeholder="after" string="after"/>-->
+                <!--                </xpath>-->
+
+
+                <!--                <xpath expr="//form/sheet[1]" position="after">-->
+                <!--                   <header>-->
+                <!--                    <button name="report_missing_book"-->
+                <!--                        string="Report Missing Book"-->
+                <!--                        type="object"/>-->
+                <!--                    </header>-->
+                <!--                </xpath>-->
+                <!--                replace 替换元素-->
+                <!--                <xpath expr="//field[@name='phone']" position="replace">-->
+                <!--                    <field name="test_field2" placeholder="replace" string="replace"/>-->
+                <!--                </xpath>-->
+                <!--          before 在之前插入元素-->
+                <!--                <xpath expr="//field[@name='zip']" position="before">-->
+                <!--                    <field name="test_field2" placeholder="before" string="before"/>-->
+                <!--                </xpath>-->
+                <!--                <xpath expr="//field[@name='zip']" position="before">-->
+                <!--                        <button type="action" string="xls导入" class="oe_hightlight"-->
+                <!--                                name="%(demo_class_inheritance2.multi_purchase_quotations_confirm99)d" />-->
+<!--                                <xpath expr="//field[@name='zip']" position="before">-->
+<!--                                    <button-->
+<!--                                        name="report_missing_book"-->
+<!--                                        string="Confirm, Receipt and Bill"-->
+<!--                                        type="object"-->
+<!--                                    />-->
+<!--                                </xpath>-->
+                <!--                </xpath>-->
+                <!--inside 在内部结尾插入元素    没搞懂-->
+                <!--                <xpath expr="//field[@name='city']" position="inside">-->
+                <!--                    <field name="test_field2" placeholder="inside" string="inside"/>-->
+                <!--                </xpath>-->
+                <!--                &lt;!&ndash;                attributes 修改xml的属性&ndash;&gt;-->
+<!--                                <xpath expr="//field[@name='phone']" position="attributes">-->
+<!--                                    &lt;!&ndash;                    改成必填选项&ndash;&gt;-->
+<!--                                    <attribute name="required">1</attribute>-->
+<!--                                </xpath>-->
+            </field>
+        </record>
+<!--        <record id="multi_purchase_quotations_confirm99" model="ir.actions.server">-->
+<!--            <field name="name">存入数据（psql）2</field>-->
+<!--            <field name="model_id" ref="demo_class_inheritance2.model_res_partner"/>-->
+<!--            <field name="binding_model_id" ref="demo_class_inheritance2.model_res_partner"/>-->
+<!--            &lt;!&ndash;            <field name="binding_view_types">list</field>&ndash;&gt;-->
+<!--            <field name="state">code</field>-->
+<!--            <field name="code">-->
+
+<!--                records.report_missing_book()-->
+
+<!--            </field>-->
+<!--            &lt;!&ndash;                print(model)&ndash;&gt;-->
+<!--            &lt;!&ndash;                print(recordset)&ndash;&gt;-->
+<!--        </record>-->
+    </data>
+</odoo>

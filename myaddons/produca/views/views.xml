@@ -1,0 +1,114 @@
+<odoo>
+    <data>
+        <record id="view_product_category_custom" model="ir.ui.view">
+            <field name="name">product.category.from.custom</field>
+            <!--        继承模型id-->
+            <field name="model">product.category</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <!--            <xpath expr="//group[@string='物流']" position="replace">-->
+                <!--                <button name="aaa"-->
+                <!--                            string="新增"-->
+                <!--                            type="object"/>-->
+                <!--            </xpath>-->
+                <xpath expr="//field[@name='parent_id']" position="before">
+                    <button name="aaa"
+                            string="新增"
+                            type="object"/>
+                </xpath>
+            </field>
+        </record>
+        <record id="view_sy_form" model="ir.ui.view">
+            <field name="name">name</field>
+            <field name="model">sys.sys</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name" string="shiyan"></field>
+                    </group>
+                    <footer>
+                        <button string="确定" name="shiyan" type="object"></button>
+                        <button string="取消" class="oe_link" special="cancel"/>
+                        <!--                        type选择object，type  值可以是 workflow, object action   默认是 workflow-->
+                        <!--                        name是需要定义的方法名-->
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <record id="run_product_category" model="ir.actions.server">
+            <field name="model_id" ref="model_product_category"/>
+            <field name="name">弹出表单</field>
+            <field name="binding_model_id" ref="model_product_category"/>
+            <field name="state">code</field>
+            <field name="code">action=records.bbb()</field>
+        </record>
+
+
+        <record id="run_product_category1" model="ir.actions.server">
+            <field name="model_id" ref="model_product_category"/>
+            <field name="name">产品类别导入</field>
+            <field name="binding_model_id" ref="model_product_category"/>
+            <field name="state">code</field>
+            <field name="code">action=records.ccc()</field>
+        </record>
+
+
+        <record id="view_product_category_custom11" model="ir.ui.view">
+            <field name="name">product.category.tree.custom</field>
+            <!--        继承模型id-->
+            <field name="model">product.template</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="product.product_template_tree_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='default_code']" position="before">
+                    <field name="color_cn"/>
+                    <field name="color_en"/>
+                    <field name="client_no"/>
+                    <field name="brand"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="view_product_category_custom132" model="ir.ui.view">
+            <field name="name">product.category.form.custom</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+
+                <xpath expr="//field[@name='barcode']" position="after">
+
+                        <field name="color_cn"/>
+                        <field name="color_en"/>
+                        <field name="client_no"/>
+                        <field name="brand"/>
+
+
+                </xpath>
+
+
+            </field>
+        </record>
+
+        <record id="multi_product11" model="ir.actions.server">
+            <field name="name">导入产品</field>
+            <field name="model_id" ref="model_product_template"/>
+            <field name="binding_model_id" ref="model_product_template"/>
+            <!--            <field name="binding_view_types">list</field>-->
+            <field name="state">code</field>
+            <field name="code">
+                action=records.add()
+            </field>
+
+        </record>
+        <!--      <record id="run_product_cat" model="ir.actions.server">-->
+        <!--        <field name="model_id" ref="model_product_template"/>-->
+        <!--        <field name="name">连接</field>-->
+        <!--        <field name="binding_model_id" ref="model_product_template" />-->
+        <!--        <field name="state">code</field>-->
+        <!--        <field name="code">action=records.ccc()</field>-->
+        <!--        </record>-->
+    </data>
+</odoo>

@@ -1,0 +1,303 @@
+<odoo>
+  <data>
+
+        <record model="ir.ui.view" id="product_list">
+            <field name="name">Receipt Product List</field>
+            <field name="model">receipt.product</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="speci"/>
+                    <field name="uom"/>
+                    <field name="price"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="product_form">
+            <field name="name">Receipt Product Form</field>
+            <field name="model">receipt.product</field>
+            <field name="arch" type="xml">
+                <form string="产品">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code"/>
+                                <field name="name"/>
+                                <field name="speci"/>
+                                <field name="uom"/>
+                                <field name="price"/>
+                            </group>
+                            <group>
+                                <field name="image" widget='image'/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="partner_list">
+            <field name="name">Receipt Partner list</field>
+            <field name="model">receipt.partner</field>
+            <field name="arch" type="xml">
+                <tree string="合作伙伴">
+                    <field name="name"/>
+                    <field name="address"/>
+                    <field name="delivery_address"/>
+                    <field name="phone"/>
+                    <field name="website"/>
+                    <field name="logo"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="partner_form">
+            <field name="name">Receipt Partner Form</field>
+            <field name="model">receipt.partner</field>
+            <field name="arch" type="xml">
+                <form string="合作伙伴">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="address"/>
+                                <field name="delivery_address"/>
+                                <field name="phone"/>
+                                <field name="website"/>
+                            </group>
+                            <group>
+                                <field name="logo" widget='image'/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="godown_entry_list">
+            <field name="name">Receipt Godown Entry list</field>
+            <field name="model">receipt.godown.entry</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="purchase_order"/>
+                    <field name="partner"/>
+                    <field name="inbound_time"/>
+                    <field name="closed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="godown_entry_form">
+            <field name="name">Receipt Godown Entry Form</field>
+            <field name="model">receipt.godown.entry</field>
+            <field name="arch" type="xml">
+                <form string="入库单">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="purchase_order"/>
+                                <field name="partner"/>
+                            </group>
+                            <group>
+                                <field name="inbound_time"/>
+                                <field name="closed"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="入库明细">
+                                <field name="lines">
+                                    <tree>
+                                        <field name="product"/>
+                                        <field name="qty_purchase"/>
+                                        <field name="qty_stock"/>
+                                        <field name="uom"/>
+                                        <field name="price_unit"/>
+                                        <field name="price"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="godown_entry_line_list">
+            <field name="name">Receipt Godown Entry Line List</field>
+            <field name="model">receipt.godown.entry.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="godown_entry"/>
+                    <field name="product"/>
+                    <field name="qty_purchase"/>
+                    <field name="qty_stock"/>
+                    <field name="price_unit"/>
+                    <field name="price"/>
+                    <field name="uom"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="godown_entry_line_form">
+            <field name="name">Receipt Godown Entry Line Form</field>
+            <field name="model">receipt.godown.entry.line</field>
+            <field name="arch" type="xml">
+                <form string="入库明细">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="product"/>
+                                <field name="qty_purchase"/>
+                                <field name="qty_stock"/>
+                            </group>
+                            <group>
+                                <field name="price_unit"/>
+                                <field name="price"/>
+                                <field name="uom"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="delivery_order_list">
+            <field name="name">cf_receipt_delivery_order list</field>
+            <field name="model">receipt.delivery.order</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="sale_order"/>
+                    <field name="partner"/>
+                    <field name="outbound_time"/>
+                    <field name="closed"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="delivery_order_form">
+            <field name="name">cf_receipt_delivery_order Form</field>
+            <field name="model">receipt.delivery.order</field>
+            <field name="arch" type="xml">
+                <form string="出货单">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="sale_order"/>
+                                <field name="partner"/>
+                            </group>
+                            <group>
+                                <field name="outbound_time"/>
+                                <field name="closed"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="详情">
+                                <field name="lines">
+                                    <tree>
+                                        <field name="product"/>
+                                        <field name="qty_order"/>
+                                        <field name="qty_outbound"/>
+                                        <field name="uom"/>
+                                        <field name="price_unit"/>
+                                        <field name="price"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="delivery_order_line_list">
+            <field name="name">cf_receipt_delivery_order_line list</field>
+            <field name="model">receipt.delivery.order.line</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="delivery_order"/>
+                    <field name="product"/>
+                    <field name="qty_order"/>
+                    <field name="qty_outbound"/>
+                    <field name="price_unit"/>
+                    <field name="price"/>
+                    <field name="uom"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="delivery_order_line_form">
+            <field name="name">cf_receipt_delivery_order_line Form</field>
+            <field name="model">receipt.delivery.order.line</field>
+            <field name="arch" type="xml">
+                <form string="出货明细">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="product"/>
+                                <field name="qty_order"/>
+                                <field name="qty_outbound"/>
+                            </group>
+                            <group>
+                                <field name="price_unit"/>
+                                <field name="price"/>
+                                <field name="uom"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_window_product">
+            <field name="name">产品</field>
+            <field name="res_model">receipt.product</field>
+            <field name="view_mode">tree,form, kanban</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_window_partner">
+            <field name="name">合作伙伴</field>
+            <field name="res_model">receipt.partner</field>
+            <field name="view_mode">tree,form, kanban</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_window_godown_entry">
+            <field name="name">入库单</field>
+            <field name="res_model">receipt.godown.entry</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_window_delivery_order">
+            <field name="name">出库单</field>
+            <field name="res_model">receipt.delivery.order</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <!-- Top menu item -->
+        <menuitem name="康虎单据通" id="menu_root"/>
+        <!-- menu categories -->
+        <menuitem name="单据管理" id="menu_receipt" parent="menu_root"/>
+        <menuitem name="基础资料" id="menu_base_data" parent="menu_root"/>
+
+        <!-- actions -->
+        <menuitem name="入库单" id="menu_godown_entry_list" parent="menu_receipt" action="action_window_godown_entry" sequence="1"/>
+        <menuitem name="出库单" id="menu_delivery_order_list" parent="menu_receipt" action="action_window_delivery_order" sequence="3"/>
+
+        <menuitem name="产品" id="menu_product_list" parent="menu_base_data" action="action_window_product" sequence="1" />
+        <menuitem name="合作伙伴（客户或供应商）" id="menu_partner_list" parent="menu_base_data" action="action_window_partner" sequence="3"/>
+
+        <menuitem action="base.action_res_users" id="menu_action_res_users" parent="menu_base_data" sequence="5"/>
+        <menuitem action="base.action_res_groups" id="menu_action_res_groups" parent="menu_base_data" groups="base.group_no_one" sequence="7"/>
+        <menuitem action="base.action_res_company_form" id="menu_action_res_company_form" parent="menu_base_data" sequence="9"/>
+
+  </data>
+</odoo>

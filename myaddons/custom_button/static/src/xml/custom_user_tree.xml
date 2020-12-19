@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-name="CustomListView.user_button">
+        <button type="button" class="btn btn-primary o_list_user_button">
+            按钮
+        </button>
+    </t>
+
+    <t t-extend="ListView.buttons" t-name="CustomListView.buttons">
+        <t t-jquery="button.o_list_button_add" t-operation="after">
+             <t t-js="ctx">
+                if (window.odoo._modules.indexOf("base_import") >= 0) {
+                    r.push(context.engine.tools.call(context, 'ImportView.import_button', dict));
+                };
+            </t>
+            <t t-call="CustomListView.user_button"/>
+        </t>
+    </t>
+</templates>

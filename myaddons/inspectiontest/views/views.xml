@@ -1,0 +1,173 @@
+<odoo>
+    <data>
+
+        <!-- actions opening views on models -->
+        <record model="ir.actions.act_window" id="pltest_action_window">
+            <field name="name">皮料测试报告</field>
+            <field name="res_model">pltest.pltest</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+
+        <record id="pltest_demo_tree_view" model="ir.ui.view">
+            <field name="name">Library Book List</field>
+            <field name="model">pltest.pltest</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="description"/>
+                    <field name="property_id"/>
+                    <field name="sender"/>
+                    <field name="stye"/>
+                    <field name="is_expired"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="pltest_demo_from_view">
+            <field name="name">皮类测试 列表</field>
+            <field name="model">pltest.pltest</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="description"/>
+                                <field name="sender"/>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="stye"/>
+                                <field name="customer"/>
+                                <field name="code"/>
+                            </group>
+
+                            <group>
+                                <field name="supplier"/>
+                                <field name="material"/>
+                                <field name="qty"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+
+                        </group>
+
+                        <notebook>
+                            <page string="待办事项">
+                                <field name="property_id">
+                                    <tree string="待办事项" editable="bottom">
+                                        <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section" />
+                                        <create name="add_note_control" string="Add a note" />
+                                    </control>
+                                        <!--                                        editable="bottom"可以在页面内输入-->
+                                        <field name="method"/>
+                                        <field name="property"/>
+                                        <field name="unit"/>
+                                        <field name="reqmt"/>
+                                        <field name="result"/>
+                                    </tree>
+                                </field>
+
+<!--                                <group>-->
+<!--                                    <field name="property_id"/>-->
+<!--                                </group>-->
+                            </page>
+                            <page string="编辑器">
+                                <field name="editor"/>
+                            </page>
+                        </notebook>
+                        <lable>
+
+                        </lable>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+        <record model="ir.actions.act_window" id="property_action_window">
+            <field name="name">方法</field>
+            <field name="res_model">qc.test.method</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="property_demo_tree_view" model="ir.ui.view">
+            <field name="name">方法</field>
+            <field name="model">qc.test.method</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="method"/>
+                    <field name="property"/>
+                    <field name="unit"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="property_demo_from_view">
+            <field name="name">方法</field>
+            <field name="model">qc.test.method</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="method"/>
+                            <field name="property"/>
+                            <field name="unit"/>
+                            <field name="reqmt"/>
+                            <field name="result"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <!-- Search View -->
+        <record id="act_inspection_view_search" model="ir.ui.view">
+            <field name="name">Inspection Search View</field>
+            <field name="model">pltest.pltest</field>
+            <field name="arch" type="xml">
+                <search string="搜索分类">
+                    <field name="description"/>
+                    <field name="sender"/>
+                    <field name="date"/>
+                    <field name="stye"/>
+                    <field name="customer"/>
+                    <field name="code"/>
+                    <field name="supplier"/>
+                    <field name="material"/>
+                    <field name="qty"/>
+                    <separator/>
+                    <filter string="Without Authors" name="without_author" domain="[('sender','=',1)]"/>
+                    <!--                domin 字段 运算符 值-->
+                    <separator/>
+                    <group expand="0" string="分组">
+                        <!--                    <filter name="pltest" string="分类" domain="[]" context="{'group_by:'property_id'}" />-->
+
+                    </group>
+                </search>
+            </field>
+        </record>
+
+
+        <menuitem name="dayin" id="pltest_menu_root1"/>
+        <!--        最外层菜单-->
+
+        <menuitem name="dayin2" id="pltest_menu_root" parent="pltest_menu_root1"/>
+
+        <menuitem name="pltest" id="pltest_menu_1_list" parent="pltest_menu_root"
+                  action="pltest_action_window"/>
+        <!--        <menuitem name="打印报表" id="pltest_menu_2_list" parent="pltest_menu_root"-->
+        <!--                  action="account_invoices"/>-->
+        <menuitem name="property" id="pltest_menu_2_list" parent="pltest_menu_root"
+                  action="property_action_window"/>
+
+        <!--        menuitem  name:取名，id:菜单项的外部id  parent：如果设置了parent 属性，应当为其它菜单项的 外部id，用作新项的父级-->
+        <!--        action:若指定，action属性应当为在打开菜单时所执行动作的外部标识符-->
+    </data>
+</odoo>

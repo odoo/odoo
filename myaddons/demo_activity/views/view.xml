@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_activity_form" model="ir.ui.view">
+          <field name="name">demo.activity.form</field>
+          <field name="model">demo.activity</field>
+          <field eval="25" name="priority"/>
+          <field name="arch" type="xml">
+              <form string="Demo Activity">
+                <header>
+                    <button name="button_activity_schedule" string="_activity schedule" type="object" class="oe_highlight"/>
+                    <button name="button_activity_unlink" string="activity unlink" type="object" class="oe_highlight"/>
+                    <button name="button_activity_feedback" string="activity feedback" type="object" class="oe_highlight"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="employee_id"/>
+                    </group>
+                </sheet>
+
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+
+              </form>
+          </field>
+
+
+    </record>
+
+    <record id="multi_purchase_quotations_confirm7" model="ir.actions.server">
+            <field name="name">存入数据（excel）</field>
+            <field name="model_id" ref="model_demo_activity"/>
+            <field name="binding_model_id" ref="model_demo_activity"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.test2()
+            </field>
+        </record>
+
+    <record id="multi_purchase_quotations_confirm8" model="ir.actions.server">
+            <field name="name">存入数据（excel）2</field>
+            <field name="model_id" ref="model_demo_activity"/>
+            <field name="binding_model_id" ref="model_demo_activity"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.test()
+            </field>
+        </record>
+    <record id="multi_purchase_quotations_confirm9" model="ir.actions.server">
+            <field name="name">存入数据（excel）3</field>
+            <field name="model_id" ref="model_demo_activity"/>
+            <field name="binding_model_id" ref="model_demo_activity"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                records.test()
+            </field>
+        </record>
+
+</odoo>

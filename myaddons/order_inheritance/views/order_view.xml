@@ -1,0 +1,97 @@
+<odoo>
+    <data>
+
+<!--        order_size_seg = fields.Char(string="下单码段")-->
+<!--        season_identification = fields.Char(string="季节标识")-->
+<!--        discount_oder = fields.Char(string="促销订单")-->
+<!--        sync_state = fields.Char(string="同步状态")-->
+<!--        customer_po = fields.Text(string="客户PO号"-->
+        <record id="order_view_from_custom" model="ir.ui.view">
+            <field name="name">sale.order</field>
+            <!--        继承模型id-->
+            <field name="model">sale.order</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='order_details']" position="after">
+                    <group>
+                        <field name="old_order_number"/>
+                        <field name="jh_date"/>
+                        <field name="order_size_seg"/>
+                        <field name="season_identify"/>
+                    </group>
+                     <group>
+                         <field name="discount_oder"/>
+                        <field name="sync_state"/>
+                        <field name="customer_po"/>
+                    </group>
+
+                </xpath>
+            </field>
+        </record>
+
+<!--        <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">-->
+<!--            <field name="context">{'tree': {'buttons': [{'name': '订单同步', 'classes': 'oe_link btn btn-primary', 'action': 'set_search_criteria'}]}}</field>-->
+<!--        </record>-->
+        <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
+            <field name="context">{'tree': {'buttons': [{'name': '订单导入', 'classes': 'oe_link btn btn-primary', 'action': 'order_import_data'},{'name': '订单同步', 'classes': 'oe_link btn btn-primary', 'action': 'set_search_criteria'}]}}</field>
+        </record>
+        <record id="sale.action_orders" model="ir.actions.act_window">
+            <field name="context">{'tree': {'buttons': [{'name': '订单导入', 'classes': 'oe_link btn btn-primary', 'action': 'order_import_data'},{'name': '订单同步', 'classes': 'oe_link btn btn-primary', 'action': 'set_search_criteria'}]}}</field>
+        </record>
+        <record id="sale.product_template_action" model="ir.actions.act_window">
+            <field name="context">{'tree': {'buttons': [{'name': '产品导入', 'classes': 'oe_link btn btn-primary', 'action': 'product_import_data'}]}}</field>
+        </record>
+
+
+        <record id="order_line_view_tree_css_custom" model="ir.ui.view">
+            <field name="name">sale.order</field>
+            <!--        继承模型id-->
+            <field name="model">sale.order</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//tree/field[@name='partner_id']" position="replace">
+                    <field name="partner_id" readonly="1" widget="reference"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="order_line_view_from_custom" model="ir.ui.view">
+            <field name="name">sale.order</field>
+            <!--        继承模型id-->
+            <field name="model">sale.order</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="sale.view_order_form"/>
+
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree/field[@name='name']" position="after">
+                        <field name="order_type"/>
+                        <field name="pack_method"/>
+                        <field name="pieces"/>
+                        <field name="pieces_pairs"/>
+                        <field name="mx_sync_state"/>
+                        <field name="factory_date"/>
+                        <field name="pre_dept"/>
+                        <field name="pre_line"/>
+                        <field name="prod_dept"/>
+                        <field name="prod_line"/>
+                        <field name="batch_no"/>
+                        <field name="lc_no"/>
+                        <field name="plan_started_date"/>
+                        <field name="plan_finished_date"/>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="import_data_actions_server" model="ir.actions.server">
+            <field name="model_id" ref="model_sale_order"/>
+            <field name="name">订单导入</field>
+            <field name="binding_model_id" ref="model_sale_order"/>
+            <field name="state">code</field>
+            <field name="code">action=records.order_import_data()</field>
+        </record>
+    </data>
+</odoo>

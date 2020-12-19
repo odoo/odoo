@@ -1,0 +1,43 @@
+<odoo>
+    <data>
+        <!-- Product attribute value-->
+        <record id="variants_tree_view" model="ir.ui.view">
+            <field name="name">product.attribute.value.tree</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <tree string="Variant Values" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="id" groups="base.group_no_one"/>
+                    <field name="name"/>
+                    <field name="attribute_id"/>
+                    <field name="display_name" readonly="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="app_product_attribute_value_search" model="ir.ui.view">
+            <field name="name">app.product.attribute.value.search</field>
+            <field name="model">product.attribute.value</field>
+            <field name="arch" type="xml">
+                <search string="Search product.attribute.value">
+                    <field name="name" string="Value"/>
+                    <field name="attribute_id" string="Attribute"/>
+                    <searchpanel>
+                        <field name="attribute_id"/>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+        <!--以下功能放到 app_product_variant_pro -->
+        <!--<record id="variants_action" model="ir.actions.act_window">-->
+            <!--<field name="name">Attribute Values</field>-->
+            <!--<field name="type">ir.actions.act_window</field>-->
+            <!--<field name="res_model">product.attribute.value</field>-->
+            <!--<field name="view_mode">tree</field>-->
+        <!--</record>-->
+
+        <!--<menuitem-->
+                <!--action="variants_action" id="menu_variants_action"-->
+                <!--parent="stock.menu_product_in_config_stock" sequence="5" groups="product.group_product_variant"/>-->
+    </data>
+</odoo>

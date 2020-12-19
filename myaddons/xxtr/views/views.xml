@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+        <!-- explicit list view definition -->
+
+        <record model="ir.ui.view" id="xxtr_list">
+            <field name="name">xxtr list</field>
+            <field name="model">xxtr.xxtr</field>
+            <field name="arch" type="xml">
+                <tree>
+
+                    <field name="name"/>
+                    <field name="value"/>
+                    <field name="value2"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- actions opening views on models -->
+
+        <record model="ir.actions.act_window" id="xxtr_action_window">
+            <field name="name">xxtr window</field>
+            <field name="res_model">xxtr.xxtr</field>
+            <field name="view_mode">tree,form</field>
+
+
+        </record>
+
+        <record id="view_wizard_form" model="ir.ui.view">
+            <field name="name">name</field>
+            <field name="model">st.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                        <field name="age"/>
+                    </group>
+
+                    <footer>
+                        <button string="取消" class="oe_link" special="cancel"/>
+                        <!--                        type选择object，type  值可以是 workflow, object action   默认是 workflow-->
+                        <!--                        name是需要定义的方法名-->
+                        <button string="自定义搜索" name="action_tw_base_price_quotation" type="object" class="oe_highlight"
+                        />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_wizard" model="ir.actions.act_window">
+            <field name="name">视图</field>
+            <field name="res_model">st.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem name="向导视图" id="xxtr.menu_root"/>
+
+        <menuitem name="Menu 1" id="xxtr.menu_1" parent="xxtr.menu_root"
+                  action="xxtr_action_window" sequence="1"/>
+
+        <menuitem name="高级搜索" id="xxtr.menu_2" parent="xxtr.menu_root" action="action_wizard" sequence="3"/>
+
+    </data>
+</odoo>

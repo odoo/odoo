@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <!-- Modules list -->
+        <record id="app_module_tree" model="ir.ui.view">
+            <field name="name">app.ir.module.module.tree</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="attributes">
+                    <attribute name="groups"/>
+                </field>
+                <field name="installed_version" position="after">
+                    <field name="latest_version"/>
+                    <field name="local_updatable"/>
+                </field>
+            </field>
+        </record>
+        <!-- Modules search-->
+        <record id="app_view_module_filter" model="ir.ui.view">
+            <field name="name">app.ir.module.module.list.select</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.view_module_filter" />
+            <field name="arch" type="xml">
+                <filter name="not_installed" position="after">
+                    <filter name="is_local_updatable" string="Local updatable" domain="[('local_updatable', '=', True)]"/>
+                </filter>
+            </field>
+        </record>
+        <record id="app_module_form" model="ir.ui.view">
+            <field name="name">app.ir.module.module.form</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_form" />
+            <field name="arch" type="xml">
+                <h3 class="oe_fade" position="attributes">
+                    <attribute name="groups">app_odoo_customize.group_show_author_in_apps</attribute>
+                </h3>
+                <field name="website" position="attributes">
+                    <attribute name="groups">app_odoo_customize.group_show_author_in_apps</attribute>
+                </field>
+            </field>
+        </record>
+    	<record id="app_module_view_kanban" model="ir.ui.view">
+            <field name="name">ir.module.module.kanban.inherit.base</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_view_kanban"/>
+            <field name="arch" type="xml">
+                <!--点击模块看详情-->
+                <xpath expr="//div[hasclass('oe_module_vignette')]" position="attributes" groups="app_odoo_customize.group_show_quick_upgrade">
+                    <attribute name="class">oe_module_vignette oe_kanban_global_click</attribute>
+                </xpath>
+                <!--让模块名更显眼-->
+                <xpath expr="//div[hasclass('oe_module_desc')]//code" position="replace"/>
+                <xpath expr="//div[hasclass('oe_module_desc')]//h4" position="after">
+                    <code><field name="name"/></code>
+                </xpath>
+                <!--显示快速升级-->
+                <xpath expr="//div[hasclass('oe_module_action')]" position="inside" groups="app_odoo_customize.group_show_quick_upgrade">
+                    <button type="object" class="btn btn-default btn-sm float-right" name="button_uninstall_wizard" states="installed">Uninstall</button>
+                    <button type="object" class="btn btn-success btn-sm float-right" name="button_immediate_upgrade" states="installed">Upgrade</button>
+                </xpath>
+                <!--显示导出翻译-->
+                <xpath expr="//div[hasclass('dropdown-menu')]" position="inside">
+                    <a t-if="installed" name="%(app_odoo_customize.action_server_module_multi_get_po)d" type="action" role="menuitem" class="dropdown-item">Export Translation</a>
+                </xpath>
+                <xpath expr="//div[hasclass('oe_module_action')]/a[@target='_blank']" position="replace" groups="app_odoo_customize.group_show_quick_upgrade"/>
+            </field>
+        </record>
+    <!--默认打开可更新模块-->
+        <!--<record id="base.open_module_tree" model="ir.actions.act_window">-->
+            <!--<field name="context">{'search_default_is_local_updatable':1}</field>-->
+        <!--</record>-->
+</odoo>

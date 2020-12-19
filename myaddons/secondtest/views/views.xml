@@ -1,0 +1,64 @@
+<odoo>
+  <data>
+           <record id="secondtest_secondtest_search_view" model="ir.ui.view">
+            <field name="name">secondtest.secondtest.search</field>
+            <field name="model">secondtest.secondtest</field>
+            <field name="arch" type="xml">
+                <search string="Product Categories">
+                    <field name="name" string="Product Categories"/>
+                    <field name="parent_id"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="secondtest_secondtest_form_view" model="ir.ui.view">
+            <field name="name">secondtest_secondtest_form</field>
+            <field name="model">secondtest.secondtest</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <div>
+<!--                            <label for="name" string="Category name" class="oe_edit_only"/>-->
+                            <h1><field name="name" placeholder="e.g. Lamps"/></h1>
+                        </div>
+                        <group name="first" col="2">
+                            <field name="parent_id"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="secondtest_secondtest_list_view" model="ir.ui.view">
+            <field name="name">secondtest.secondtest.list</field>
+            <field name="model">secondtest.secondtest</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree string="Product Categories">
+                    <field name="display_name" string="Product Category"/>
+                </tree>
+            </field>
+        </record>
+        <record id="secondtest_secondtest_action_form" model="ir.actions.act_window">
+            <field name="name">Product Categories</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">secondtest.secondtest</field>
+<!--            <field name="search_view_id" ref="secondtest_secondtest_search_view"/>-->
+<!--            <field name="view_id" ref="secondtest_secondtest_list_view"/>-->
+        </record>
+
+
+           <!-- Top menu item -->
+
+        <menuitem name="不一样的入口" id="secondtest.menu_root_secondtest"/>
+
+        <!-- menu categories -->
+
+        <menuitem name="Menu 1" id="secondtest.menu_1" parent="secondtest.menu_root_secondtest"/>
+        <menuitem name="Menu 2" id="secondtest.menu_2" parent="secondtest.menu_root_secondtest"/>
+
+        <!-- actions -->
+
+<!--        <menuitem name="List" id="operation.menu_1_list2" parent="operation.menu_root1"-->
+<!--                  action="operation.product_category_action_form1"/>-->
+  </data>
+</odoo>

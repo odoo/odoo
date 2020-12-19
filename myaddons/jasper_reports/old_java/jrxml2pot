@@ -1,0 +1,40 @@
+#!/bin/bash
+
+if [ -z "$JAVA_HOME" ]; then
+	directories="/usr/lib/jvm/java-6-sun-1.6.0.10/bin /usr/lib/j2sdk1.6-sun /usr/lib/j2sdk1.5-sun"
+	for d in $directories; do
+		if [ -d "$d" ]; then
+			export JAVA_HOME="$d"
+		fi
+	done
+fi
+
+export PATH="$JAVA_HOME"/bin:/bin:/usr/bin
+export CLASSPATH=$(ls -1 lib/* | grep jar$ | awk '{printf "%s:", $1}')
+export CLASSPATH="$CLASSPATH":$scriptdir
+
+function help()
+{
+	echo "Syntax: ./jrxml2pot file.jrxml [file.pot]"
+	exit
+}
+
+if [[ -z "$1" ]]; then
+	help
+fi
+
+jrxml=$1
+
+if [[ -z "$2" ]]; then
+	pot=$(dirname "$1")/$(basename "$1" .jrxml).pot
+else
+	pot="$2"
+fi
+
+
+tmp=$(mktemp)
+echo "JAVA: $tmp"
+java com.nantic.jasperreports.I18nGetText $jrxml > $tmp
+echo "POT: $pot"
+xgettext --from-code=utf-8 -L Java -ktrl:2 -ktr -ktr:2 -ktrn:1,2 -ktrn:2,3 -o $pot $tmp
+#rm $tmp

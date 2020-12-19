@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Demo Report for Users -->
+    <record id="jasper_user_report_demo" model="ir.actions.report">
+        <field name="name">Jasper User Report</field>
+        <field name="model">res.users</field>
+        <field name="string">Jasper User Report</field>
+        <field name="report_type">jasper</field>
+        <field name="file">jasper_reports/demo/user.jrxml</field>
+        <field name="attachment_use">False</field>
+        <field name="report_name">Jasper User Report</field>
+        <field name="jasper_report">True</field>
+        <field name="model_id" ref="base.model_res_users"/>
+        <field name="binding_model_id" ref="base.model_res_users"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="jasper_user_report_id" model="ir.actions.report.xml.file">
+        <field name="default">True</field>
+        <field name="filename">user.jrxml</field>
+        <field name="report_id" ref="jasper_reports.jasper_user_report_demo"/>
+        <field name="file" type="base64" file="jasper_reports/demo/user.jrxml"/>
+    </record>
+
+    <!-- Demo Report for Sale Order -->
+    <record id="jasper_sale_report_demo" model="ir.actions.report">
+        <field name="name">Jasper Sales Report</field>
+        <field name="model">sale.order</field>
+        <field name="string">Jasper Sales Report</field>
+        <field name="report_type">jasper</field>
+        <field name="file">jasper_reports/demo/sale_order_report.jrxml</field>
+        <field name="attachment_use">False</field>
+        <field name="report_name">Jasper Sales Report</field>
+        <field name="jasper_report">True</field>
+        <field name="model_id" ref="sale.model_sale_order"/>
+        <field name="binding_model_id" ref="sale.model_sale_order"/>
+        <field name="binding_type">report</field>
+    </record>
+
+    <record id="jasper_sale_report_id" model="ir.actions.report.xml.file">
+        <field name="default">True</field>
+        <field name="filename">sale_order_report.jrxml</field>
+        <field name="report_id" ref="jasper_reports.jasper_sale_report_demo"/>
+        <field name="file" type="base64" file="jasper_reports/demo/sale_order_report.jrxml"/>
+    </record>
+
+</odoo>

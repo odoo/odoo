@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <!--定义客户端动作-->
+        <record id="action_echarts_china" model="ir.actions.client">
+            <field name="name">Echarts</field>
+            <field name="tag">activitytest.load_echarts_china</field>
+        </record>
+
+        <!--根菜单绑定动作-->
+        <menuitem id="menu_echarts_china" name="Echarts" action="action_echarts_china" sequence="1"/>
+
+    </data>
+</odoo>

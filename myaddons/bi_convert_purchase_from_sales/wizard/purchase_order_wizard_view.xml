@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+<!-- FORM VIEW  -->
+
+        <record id="view_transientmodel_wizard_form" model="ir.ui.view">
+            <field name="name">transient.form</field>
+            <field name="model">create.purchaseorder</field>
+            <field name="arch" type="xml">
+                <form string="Sale Order">
+                    <p class="oe_grey"> </p>
+                    <group>
+                        <group>
+                            <field name="partner_id" />
+                        </group>
+                        <group>
+                            <field name="date_order" />
+                        </group>
+                    </group>
+         
+                    <group>
+                        <field name="new_order_line_ids" nolabel ="1">
+                        <tree editable="botttom" create = 'false'>
+                            <field name="product_id" />
+                            <field name="name" />
+                            <field name="product_qty" />
+                            <field name="product_uom" groups="uom.group_uom" class="oe_inline"/>
+                        </tree>
+                        </field>
+                    </group>
+                   
+                    <footer>
+                        <button name="action_create_purchase_order" string="Create Purchase Order" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-default" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+<!-- ACTION     -->
+
+        <record id="action_transientmodel_wizard" model="ir.actions.act_window">
+            <field name="name">Create Purchase Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.purchaseorder</field>
+            <field name="binding_view_types">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+</odoo>

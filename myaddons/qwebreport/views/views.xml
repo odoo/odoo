@@ -1,0 +1,197 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record model="ir.ui.view" id="qwebreport.list">
+      <field name="name">qwebreport list</field>
+      <field name="model">qwebreport.qwebreport</field>
+      <field name="arch" type="xml">
+                <tree>
+                    <field name="description"/>
+                    <field name="property_id"/>
+                    <field name="sender"/>
+                    <field name="stye"/>
+                    <field name="is_expired"/>
+                </tree>
+            </field>
+    </record>
+
+
+    <!-- explicit fromm view definition -->
+
+    <record model="ir.ui.view" id="qwebreport_demo_from_view">
+            <field name="name">测试 列表</field>
+            <field name="model">qwebreport.qwebreport</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="description"/>
+                                <field name="sender"/>
+                                <field name="date"/>
+                            </group>
+                            <group>
+                                <field name="stye"/>
+                                <field name="customer"/>
+                                <field name="code"/>
+                            </group>
+
+                            <group>
+                                <field name="supplier"/>
+                                <field name="material"/>
+                                <field name="qty"/>
+                            </group>
+                            <group>
+                                <field name="type"/>
+                            </group>
+
+                        </group>
+
+                        <notebook>
+                            <page string="待办事项">
+                                <field name="property_id">
+                                    <tree string="待办事项">
+                                        <!--                                        editable="bottom"可以在页面内输入-->
+                                        <field name="method"/>
+                                        <field name="property"/>
+                                        <field name="unit"/>
+                                        <field name="reqmt"/>
+                                        <field name="result"/>
+                                    </tree>
+                                </field>
+
+<!--                                <group>-->
+<!--                                    <field name="property_id"/>-->
+<!--                                </group>-->
+                            </page>
+                            <page string="编辑器">
+                                <field name="editor"/>
+                            </page>
+                        </notebook>
+                        <lable>
+
+                        </lable>
+                    </sheet>
+
+                </form>
+            </field>
+        </record>
+
+
+
+
+    <!-- actions opening views on models -->
+
+    <record model="ir.actions.act_window" id="qwebreport.action_window">
+      <field name="name">qwebreport window</field>
+      <field name="res_model">qwebreport.qwebreport</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- server action to the one above -->
+
+<!--    <record model="ir.actions.server" id="qwebreport.action_server">-->
+<!--      <field name="name">qwebreport server</field>-->
+<!--      <field name="model_id" ref="model_qwebreport_qwebreport"/>-->
+<!--      <field name="state">code</field>-->
+<!--      <field name="code">-->
+<!--        action = {-->
+<!--          "type": "ir.actions.act_window",-->
+<!--          "view_mode": "tree,form",-->
+<!--          "res_model": model._name,-->
+<!--        }-->
+<!--      </field>-->
+<!--    </record>-->
+
+
+
+
+
+
+<!--    <record model="ir.actions.act_window" id="property_action_window">-->
+<!--            <field name="name">方法</field>-->
+<!--            <field name="res_model">property.test</field>-->
+<!--            <field name="view_mode">tree,form</field>-->
+<!--        </record>-->
+
+<!--        <record id="property_demo_tree_view" model="ir.ui.view">-->
+<!--            <field name="name">方法</field>-->
+<!--            <field name="model">property.test</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <tree>-->
+<!--                    <field name="method"/>-->
+<!--                    <field name="property"/>-->
+<!--                    <field name="unit"/>-->
+<!--                </tree>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+<!--        <record model="ir.ui.view" id="property_demo_from_view">-->
+<!--            <field name="name">方法</field>-->
+<!--            <field name="model">property.test</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <form>-->
+<!--                    <sheet>-->
+<!--                        <group>-->
+<!--                            <field name="method"/>-->
+<!--                            <field name="property"/>-->
+<!--                            <field name="unit"/>-->
+<!--                            <field name="reqmt"/>-->
+<!--                            <field name="result"/>-->
+<!--                        </group>-->
+<!--                    </sheet>-->
+<!--                </form>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+<!--        &lt;!&ndash; Search View &ndash;&gt;-->
+<!--        <record id="act_inspection_view_search" model="ir.ui.view">-->
+<!--            <field name="name">Inspection Search View</field>-->
+<!--            <field name="model">qwebreport.qwebreport</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                <search string="搜索分类">-->
+<!--                    <field name="description"/>-->
+<!--                    <field name="sender"/>-->
+<!--                    <field name="date"/>-->
+<!--                    <field name="stye"/>-->
+<!--                    <field name="customer"/>-->
+<!--                    <field name="code"/>-->
+<!--                    <field name="supplier"/>-->
+<!--                    <field name="material"/>-->
+<!--                    <field name="qty"/>-->
+<!--                    <separator/>-->
+<!--                    <filter string="Without Authors" name="without_author" domain="[('sender','=',1)]"/>-->
+<!--                    &lt;!&ndash;                domin 字段 运算符 值&ndash;&gt;-->
+<!--                    <separator/>-->
+<!--                    <group expand="0" string="分组">-->
+<!--                        &lt;!&ndash;                    <filter name="pltest" string="分类" domain="[]" context="{'group_by:'property_id'}" />&ndash;&gt;-->
+
+<!--                    </group>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
+
+
+
+
+    <!-- Top menu item -->
+
+    <menuitem name="qwebreport报表" id="qwebreport.menu_root"/>
+
+    <!-- menu categories -->
+
+    <menuitem name="第二级" id="qwebreport.menu_1" parent="qwebreport.menu_root"/>
+<!--    <menuitem name="Menu 2" id="qwebreport.menu_2" parent="qwebreport.menu_root"/>-->
+
+    <!-- actions -->
+
+    <menuitem name="第三级" id="qwebreport.menu_1_list" parent="qwebreport.menu_1"
+              action="qwebreport.action_window"/>
+<!--    <menuitem name="Server to list" id="qwebreport" parent="qwebreport.menu_2"-->
+<!--              action="property_action_window"/>-->
+
+  </data>
+</odoo>

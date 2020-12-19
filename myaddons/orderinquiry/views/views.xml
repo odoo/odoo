@@ -1,0 +1,109 @@
+<odoo>
+    <data>
+
+        <!-- explicit list view definition -->
+
+        <record model="ir.actions.act_window" id="orderinquiry.action_window">
+            <field name="name">订单明细查询</field>
+            <field name="res_model">orderinquiry.orderinquiry</field>
+            <field name="view_mode">tree</field>
+        </record>
+        <record id="action_orderin_orderin" model="ir.actions.act_window">
+            <field name="name">订单查询项</field>
+            <field name="res_model">orderin.orderin</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+        <record id="run_orderinquirys_orderinquiryss" model="ir.actions.server">
+            <field name="model_id" ref="model_orderinquiry_orderinquiry"/>
+            <field name="name">多条件搜索</field>
+            <field name="binding_model_id" ref="model_orderinquiry_orderinquiry"/>
+            <field name="state">code</field>
+            <field name="code">action=records.inquiry()</field>
+        </record>
+
+        <record model="ir.ui.view" id="orderinquiry.list">
+            <field name="name">orderinquiry list</field>
+            <field name="model">orderinquiry.orderinquiry</field>
+            <field name="arch" type="xml">
+                <tree create='false' delete="false" edit="false">
+                    <field name="soid" widget="reference"/>
+                    <field name="order_size_seg" optional="show"/>
+                    <field name="customer_po" optional="show"/>
+
+                    <field name="pack_method" optional="show"/>
+                    <field name="pieces" optional="show"/>
+                    <field name="pieces_pairs" optional="show"/>
+                    <field name="factory_date" optional="show"/>
+                    <field name="pre_dept" optional="show"/>
+                    <field name="pre_line" optional="show"/>
+                    <field name="prod_line" optional="show"/>
+                    <field name="batch_no" optional="show"/>
+                    <field name="lc_no" optional="show"/>
+                    <field name="plan_started_date" optional="show"/>
+                    <field name="plan_finished_date" optional="show"/>
+                    <field name="product_id" widget="reference"/>
+                    <field name="categ_id"/>
+                    <!--              <field name="cate_nam" optional='hide'/>-->
+                    <field name="product_uom_qty"/>
+                    <field name="commitment_date"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="orderinquiry_order_ss">
+            <field name="name">orderinquiry ss</field>
+            <field name="model">orderinquiry.orderinquiry</field>
+            <field name="arch" type="xml">
+                <search string="搜索">
+                    <field name="name" string="订单编号" operator="like"/>
+                    <!--              <field name="soid" string="订单编号关联"/>-->
+                    <field name="customer_po" optional="show"/>
+                    <field name="pre_dept" optional="show"/>
+                    <field name="pre_line" optional="show"/>
+                    <field name="prod_line" optional="show"/>
+                    <field name="batch_no" optional="show"/>
+                    <field name="lc_no" optional="show"/>
+                    <field name="prduct_name" string="产品名"/>
+                    <field name="cate_nam" string="产品类型"/>
+                    <field name="product_uom_qty" string="最少购买数量"/>
+                    <field name="commitment_date" string="送货日期"/>
+
+                </search>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="orderin_orderin_from_view">
+            <field name="name">鞋订单 列表</field>
+            <field name="model">orderin.orderin</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <group>
+                            <!--                           <field name="soid"/>-->
+                            <field name="name"/>
+                            <field name="prduct_name"/>
+                            <field name="cate_nam"/>
+                        </group>
+                        <group>
+                            <field name="product_uom_qty"/>
+                            <field name="commitment_date"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="自定义搜索" name="aaa" type="object" class="oe_highlight"/>
+                        <button string="取消" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+
+        <menuitem id="report_sales_teamssss"
+                  name="订单查询"
+                  parent="sale.sale_order_menu"
+                  action="orderinquiry.action_window"
+                  sequence="100"/>
+
+
+    </data>
+</odoo>

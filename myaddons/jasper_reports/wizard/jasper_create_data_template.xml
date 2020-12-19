@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_pos_box_out" model="ir.ui.view">
+        <field name="name">Create Data Template</field>
+        <field name="model">jasper.create.data.template</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form name="Create Data Template">
+                <group colspan="2">
+                    <field name="model_id"/>
+                    <field name="depth"/>
+                    <field name="data" filename="filename" readonly="1"/>
+                    <field name="filename" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_create_xml" string="Create" type="object" title="Create" role="button" class="oe_highlight">
+                        <i class="fa fa-check" aria-label="Create" aria-hidden="true"/>
+                    </button>
+                    <button special="cancel" string="Close" class="oe_highlight"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_jasper_create_date_template" model="ir.actions.act_window">
+        <field name="name">Create Data Template</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">jasper.create.data.template</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

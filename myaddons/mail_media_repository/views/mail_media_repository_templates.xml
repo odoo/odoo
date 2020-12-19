@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            Integrate Attachment files Selector in the Discuss
+        -->
+        <template id="assets_backend" name="mail attachment selector assets backend" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+
+                <script type="text/javascript" src="/mail_media_repository/static/src/components/composer/composer.js"></script>
+                <script type="text/javascript" src="/mail_media_repository/static/src/components/media_select_button/media_select_button.js"></script>
+
+                <script type="text/javascript" src="/mail_media_repository/static/src/models/attachment/attachment.js"></script>
+                <script type="text/javascript" src="/mail_media_repository/static/src/models/composer/composer.js"></script>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

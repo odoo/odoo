@@ -1,0 +1,34 @@
+<odoo>
+    <data>
+
+
+        <record id="view_expenses_from_custom" model="ir.ui.view">
+            <field name="name">product template</field>
+            <!--        继承模型id-->
+            <field name="model">product.template</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='barcode']" position="after">
+
+                        <field name="color_en"/>
+                        <field name="color_cn"/>
+                        <field name="customer_number"/>
+                        <field name="trademark"/>
+                </xpath>
+            </field>
+        </record>
+<!--                        <searchpanel>-->
+<!--                        <field name="company_id" icon="fa-building" enable_counters="1" />-->
+<!--                        <field name="categ_id" icon="fa-users"  enable_counters="1" expand="1" hierarchize="0"/>-->
+<!--                    </searchpanel>-->
+
+        <record id="import_customer_data_actions_server" model="ir.actions.server">
+            <field name="model_id" ref="model_product_template"/>
+            <field name="name">产品导入</field>
+            <field name="binding_model_id" ref="model_product_template"/>
+            <field name="state">code</field>
+            <field name="code">action=records.product_import_data()</field>
+        </record>
+    </data>
+</odoo>

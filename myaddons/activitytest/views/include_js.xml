@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+         <template id="load_echarts" name="load_echarts" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                // echarts
+<!--                <script type="text/javascript" src="/load_echarts/static/src/js/echarts.min.js"></script>-->
+                // echarts使用中国地图所需的js
+<!--                <script type="text/javascript" src="/load_echarts/static/src/js/china.js"></script>-->
+                // 上面注册动作的js
+                <script type="text/javascript" src="/activitytest/static/src/js/load_echarts.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

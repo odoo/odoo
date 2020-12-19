@@ -1,0 +1,37 @@
+<odoo>
+    <data>
+        <record id="view_expenses_from_custom" model="ir.ui.view">
+            <field name="name">res.partner.from.custom</field>
+            <!--        继承模型id-->
+            <field name="model">res.partner</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="attributes">
+                <attribute name="required">1</attribute>
+            </xpath>
+
+                <xpath expr="//field[@name='zip']" position="before">-->
+                    <button
+                            name="report_missing_book"
+                            string="Confirm, Receipt and Bill"
+                            type="object"
+                    />
+                </xpath>
+            </field>
+        </record>
+
+        <record id="multi_purchase_quotations_confirm99" model="ir.actions.server">
+            <field name="name">存入数据（psql）2</field>
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="binding_model_id" ref="model_res_partner"/>
+            <!--            <field name="binding_view_types">list</field>-->
+            <field name="state">code</field>
+            <field name="code">
+                records.report_missing_book()
+            </field>
+            <!--                print(model)-->
+            <!--                print(recordset)-->
+        </record>
+    </data>
+</odoo>

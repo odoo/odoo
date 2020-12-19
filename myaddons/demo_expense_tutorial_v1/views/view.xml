@@ -1,0 +1,117 @@
+<?xml version="1.0"?>
+<odoo>
+
+  <record id="view_form_demo_expense_tutorial" model="ir.ui.view">
+    <field name="name">Demo Expense Tutorial Form</field>
+    <field name="model">demo.expense.tutorial</field>
+    <field name="arch" type="xml">
+      <form string="Demo Expense Tutorial">
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="button_sheet_id"
+                    string="SHEET ID" type="object"
+                    attrs="{'invisible':[('sheet_id','=', False)]}" icon="fa-bars"/>
+          </div>
+          <group>
+            <field name="name"/>
+            <field name="employee_id"/>
+            <field name="user_id"/>
+            <!-- <field name="tag_ids"/> -->
+            <field name="tag_ids" widget="many2many_tags"/> <!-- widget -->
+            <field name="sheet_id"/>
+            <field name="gender"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_tree_demo_expense_tutorial" model="ir.ui.view">
+    <field name="name">Demo Expense Tutorial List</field>
+    <field name="model">demo.expense.tutorial</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="employee_id"/>
+        <field name="user_id"/>
+        <field name="tag_ids"/>
+        <field name="sheet_id"/>
+      </tree>
+    </field>
+  </record>
+
+
+  <record id="view_form_demo_expense_sheet_tutorial" model="ir.ui.view">
+    <field name="name">Demo Expense Sheet Tutorial Form</field>
+    <field name="model">demo.expense.sheet.tutorial</field>
+    <field name="arch" type="xml">
+      <form string="Demo Expense Sheet Tutorial">
+        <header>
+          <button name="add_demo_expense_record" string="add demo expense record" type="object"/>
+          <button name="link_demo_expense_record" string="link demo expense record" type="object"/>
+          <button name="replace_demo_expense_record" string="replace expense record" type="object"/>
+        </header>
+        <sheet>
+          <div class="oe_button_box" name="button_box">
+            <button class="oe_stat_button" name="button_line_ids"
+                    string="SHEET IDs" type="object"
+                    attrs="{'invisible':[('expense_line_ids','=', False)]}" icon="fa-bars"/>
+          </div>
+          <group>
+            <field name="name"/>
+          </group>
+          <notebook>
+              <page string="Expense">
+                <field name="expense_line_ids" >
+                  <tree>
+                  <!-- <tree editable="top"> -->   <!-- <<<<<<<<<<<< -->
+                  <!-- <tree editable="bottom"> --> <!-- <<<<<<<<<<<< -->
+                    <field name="name"/>
+                    <field name="employee_id"/>
+                    <field name="tag_ids" widget="many2many_tags"/>
+                  </tree>
+                </field>
+              </page>
+          </notebook>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="view_tree_demo_expense_sheet_tutorial" model="ir.ui.view">
+    <field name="name">Demo Expense Sheet Tutorial List</field>
+    <field name="model">demo.expense.sheet.tutorial</field>
+    <field name="arch" type="xml">
+      <tree>
+        <field name="name"/>
+        <field name="expense_line_ids"/>
+      </tree>
+    </field>
+  </record>
+
+  <record id="view_filter_demo_expense_tutorial" model="ir.ui.view">
+    <field name="name">Demo Expense Tutorial Filter</field>
+    <field name="model">demo.expense.tutorial</field>
+    <field name="arch" type="xml">
+        <search string="Demo Expense Tutorial Filter">
+            <field name="name" string="Name"/>
+            <group expand="0" string="Group By">
+              <filter string="Sheet" name="sheet" domain="[]" context="{'group_by': 'sheet_id'}"/>
+              <filter string="Employee" name="employee" domain="[]" context="{'group_by': 'employee_id'}"/>
+            </group>
+        </search>
+    </field>
+  </record>
+
+  <record id="view_tree_demo_expense_tutorial_no_create" model="ir.ui.view">
+    <field name="name">Demo Expense Tutorial List No Create</field>
+    <field name="model">demo.expense.tutorial</field>
+    <field name="arch" type="xml">
+      <tree string="no_create_tree" create="0" delete="false" edit="1" editable="top">
+        <field name="name"/>
+        <field name="employee_id"/>
+      </tree>
+    </field>
+  </record>
+
+</odoo>
