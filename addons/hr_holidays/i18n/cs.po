@@ -497,6 +497,8 @@ msgid ""
 "<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Present but on leave\" name=\"presence_absent_active\">\n"
 "                    </span>"
 msgstr ""
+"<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Present but on leave\" name=\"presence_absent_active\">\n"
+"                    </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_kanban_view_employees_kanban
@@ -505,6 +507,8 @@ msgid ""
 "<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
 "define\" title=\"On Leave\"/>"
 msgstr ""
+"<span class=\"fa fa-plane text-warning\" role=\"img\" aria-label=\"To "
+"define\" title=\"On Leave\"/>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
@@ -1106,7 +1110,7 @@ msgstr "Zrušit"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_departure_wizard__cancel_leaves
 msgid "Cancel Future Leaves"
-msgstr ""
+msgstr "Zrušit budoucí nepřítomnost"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_departure_wizard_view_form
@@ -1788,12 +1792,12 @@ msgstr "Levandulová"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_resource_calendar_leaves__holiday_id
 msgid "Leave Request"
-msgstr "Požadavek na uvolnění"
+msgstr "Požadavek na nepřítomnost."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_status_id
 msgid "Leave Type"
-msgstr "Typ uvolnění"
+msgstr "Typ nepřítomnosti"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leave_validation_type
@@ -1803,7 +1807,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__leaves_taken
 msgid "Leaves Taken"
-msgstr ""
+msgstr "Minutá nepřítomnost"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__color_name__lightblue
@@ -1887,7 +1891,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__max_leaves
 msgid "Max Leaves"
-msgstr ""
+msgstr "Max nepřítomnost"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holiday_status_view_kanban
@@ -2224,7 +2228,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "Only a Time Off Manager can reset other people leaves."
-msgstr ""
+msgstr "Pouze manažer nepřítomnosti může resetovat odchod ostatních lidí."
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -2293,7 +2297,7 @@ msgstr "Nadřazený"
 #. module: hr_holidays
 #: model:hr.leave.type,name:hr_holidays.hr_holiday_status_dv
 msgid "Parental Leaves"
-msgstr "Rodičovské hlídání"
+msgstr "Nadřazená nepřítomnost"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -2384,7 +2388,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_holidays.res_users_view_form
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_employee_form_leave_inherit
 msgid "Remaining leaves"
-msgstr "Zbývající dovolené"
+msgstr "Zbývající nepřítomnost"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_report_to_payslip

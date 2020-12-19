@@ -32,7 +32,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_all_assigned_month_count
 msgid "# Leads/Opps assigned this month"
-msgstr ""
+msgstr "# Müügivihjed/võimalused määratud sel kuul"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__meeting_count
@@ -44,22 +44,22 @@ msgstr "Koosolekute arv"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__number_of_months
 msgid "# Months"
-msgstr ""
+msgstr "# Kuud"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_count
 msgid "# Opportunities"
-msgstr ""
+msgstr "# Võimalused"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_count
 msgid "# Overdue Opportunities"
-msgstr ""
+msgstr "# Hilinenud võimalused"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__lead_unassigned_count
 msgid "# Unassigned Leads"
-msgstr ""
+msgstr "# Määramata müügivihjed"
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_0
@@ -94,7 +94,7 @@ msgstr "%s müügivõimalus"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Create your first opportunity.</b>"
-msgstr ""
+msgstr "<b>Loo oma esimene müügivõimalus.</b>"
 
 #. module: crm
 #. openerp-web
@@ -117,7 +117,7 @@ msgstr "Müügivihje ennustav hindamine"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "<b>Write a few letters</b> to look for a company, or create a new one."
-msgstr ""
+msgstr "<b>Trüki mõned tähed</b>, et otsida ettevõtet või luua uus. "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_partner_kanban_view
@@ -149,6 +149,9 @@ msgid ""
 "    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
+"<p class='o_view_nocontent_smiling_face'>Lisa uusi müügivõimalusi.</p><p>\n"
+"     Sa ei ole ühegi müügitiimi liige, peaksid ennast lisama mõne müügitiimi liikmeks..\n"
+"</p>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -165,11 +168,13 @@ msgid ""
 "<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Leads</span>\n"
 "                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Opportunities</span>"
 msgstr ""
+"<span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', False)]}\">Müügivihjed</span>\n"
+"                        <span class=\"o_stat_text\" attrs=\"{'invisible': [('use_leads', '=', True)]}\">Müüdivõimalused</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_form
 msgid "<span class=\"o_stat_text\"> Leads</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Müügivihjed</span>"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -299,7 +304,7 @@ msgstr "Aktiivne"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__lead_tomerge_ids
 msgid "Active Leads"
-msgstr ""
+msgstr "Aktiivsed müügivihjed"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_ids
@@ -328,7 +333,7 @@ msgstr "Tegevus"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__body
 msgid "Activity Description"
-msgstr ""
+msgstr "Tegevuse kirjeldus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_exception_decoration
@@ -349,7 +354,7 @@ msgstr "Tegevuse tüüp"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Tegevustüübi ikoon"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.crm_team_menu_config_activity_types
@@ -359,7 +364,7 @@ msgstr "Tegevuste tüübid"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Activity by"
-msgstr ""
+msgstr "Tegevuse tegi"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -406,7 +411,7 @@ msgstr "Aliase mudel"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "All set. Let’s <b>Schedule</b> it."
-msgstr ""
+msgstr "Kõik paigas. Alustame <b>Planeerimist</b>."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -452,7 +457,7 @@ msgstr "Määratud (kellele)"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__date_open
 msgid "Assignment Date"
-msgstr ""
+msgstr "Ülesande kuupäev"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__lead_id
@@ -468,7 +473,7 @@ msgstr "Manuste arv"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__automated_probability
 msgid "Automated Probability"
-msgstr ""
+msgstr "Automatiseeritud tõenäosus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_blacklisted
@@ -478,12 +483,12 @@ msgstr "Must nimekiri"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Mustas nimekirjas on mobiiltelefoni number"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Mustas nimekirjas on telefoni number"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -541,7 +546,7 @@ msgstr "CRM etapid"
 #. module: crm
 #: model:ir.model,name:crm.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Kalendrisündmus"
 
 #. module: crm
 #: model:mail.activity.type,name:crm.mail_activity_demo_call_demo
@@ -648,7 +653,7 @@ msgstr "Ettevõtte nimi"
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date
 #: model_terms:ir.ui.view,arch_db:crm.crm_activity_report_view_search
 msgid "Completion Date"
-msgstr ""
+msgstr "Valmimise kuupäev"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_config_settings
@@ -670,12 +675,12 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
-msgstr ""
+msgstr "Õnnitlused, soovime edu nii suurte võimalustega!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Consider leads created as of the"
-msgstr ""
+msgstr "Arvesta müügivihjeid alates"
 
 #. module: crm
 #: model:ir.model,name:crm.model_res_partner
@@ -765,7 +770,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__correct
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__correct
 msgid "Correct"
-msgstr ""
+msgstr "Õige"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
@@ -796,12 +801,12 @@ msgstr "Loo võimalus"
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_recurring_plan_action
 msgid "Create a Recurring Plan"
-msgstr ""
+msgstr "Koostage korduv plaan"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__lead_mining_in_pipeline
 msgid "Create a lead mining request directly from the opportunity pipeline."
-msgstr ""
+msgstr "Loo müügivihje genereerimise taotlus otse võimaluse müügitorus."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__create
@@ -826,7 +831,7 @@ msgstr "Loo müügivõimalus, et alustada müügitoru."
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Create leads from incoming emails"
-msgstr ""
+msgstr "Loo vihjeid sissetulevatest e-kirjadest"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__create_uid
@@ -942,12 +947,12 @@ msgstr "Määra uus kaotuse põhjus"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Define here the Expected Revenue of this Opportunity."
-msgstr ""
+msgstr "Kirjeldage siin selle müügivõimaluse eeldatavad tulud."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Define recurring plans and revenues on Opportunities"
-msgstr "Defineerige korduvad plaanid ja tulud Võimalustes"
+msgstr "Kirjeldage korduvad plaanid ja tulud Võimalustel"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1040,6 +1045,8 @@ msgstr "Dokumentatsioon"
 #, python-format
 msgid "Drag your opportunity to <b>Won</b> when you get the deal. Congrats !"
 msgstr ""
+"Lohista oma müügivõimalus etappi<b>Võidetud</b> kui kokkulepe on saavutatud."
+" Palju õnne!"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1050,7 +1057,7 @@ msgstr "Rippmenüü"
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
 #: model_terms:ir.ui.view,arch_db:crm.quick_create_opportunity_form
 msgid "E.g. Monthly"
-msgstr ""
+msgstr "Nt. Igakuiselt"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -1074,7 +1081,7 @@ msgstr "E-posti alias"
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_email_state
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_state
 msgid "Email Quality"
-msgstr ""
+msgstr "E-posti kvaliteet"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__email_cc
@@ -1185,7 +1192,7 @@ msgstr "Lisainfo"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Extra fields..."
-msgstr ""
+msgstr "Lisaväljad..."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency_field__field_id
@@ -1207,7 +1214,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency_field
 msgid "Fields that can be used for predictive lead scoring computation"
-msgstr ""
+msgstr "Väljad, mida saab kasutada müügivihjete ennustavaks hindamiseks"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_stage__fold
@@ -1252,7 +1259,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner__force_assignment
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__force_assignment
 msgid "Force assignment"
-msgstr ""
+msgstr "Mõju määramine"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -1270,12 +1277,12 @@ msgstr "Tulevased tegevused"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__module_crm_iap_lead
 msgid "Generate new leads based on their country, industries, size, etc."
-msgstr ""
+msgstr "Loo uusi müügivihjeid riigi, valdkonna, suuruse jne alusel."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Generate new leads based on their country, industry, size, etc."
-msgstr ""
+msgstr "Loo uusi müügivihjeid riigi, valdkonna, suuruse jne alusel."
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_lost
@@ -1409,7 +1416,7 @@ msgstr "Importimine ja sünkroniseerimine"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Import Template for Leads & Opportunities"
-msgstr ""
+msgstr "Impordi müügivihjete ja võimaluste mall"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lost_reason_view_search
@@ -1425,7 +1432,7 @@ msgstr "Sissetulevad emailid"
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__email_state__incorrect
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__phone_state__incorrect
 msgid "Incorrect"
-msgstr ""
+msgstr "Ebaõige"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__mobile_blacklisted
@@ -1461,7 +1468,7 @@ msgstr "Kas on võitmise etapp?"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__is_automated_probability
 msgid "Is automated probability?"
-msgstr ""
+msgstr "On automatiseeritud tõenäosus?"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__function
@@ -1577,22 +1584,22 @@ msgstr "Müügivihjete täiendamine"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Generation"
-msgstr ""
+msgstr "Müügivihje loomine"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Lead Mining"
-msgstr ""
+msgstr "Müügivihjete genereerija"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead_scoring_frequency
 msgid "Lead Scoring Frequency"
-msgstr ""
+msgstr "Müügivihje hindamise sagedus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields
 msgid "Lead Scoring Frequency Fields"
-msgstr ""
+msgstr "Müügivihje hindamise sageduse väljad"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_fields_str
@@ -1602,7 +1609,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date
 msgid "Lead Scoring Starting Date"
-msgstr ""
+msgstr "Müügivihje hindamise alustamise kuupäev"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__predictive_lead_scoring_start_date_str
@@ -1613,7 +1620,7 @@ msgstr ""
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Lead or Opportunity"
-msgstr ""
+msgstr "Müügivihje/Võimalus"
 
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lead
@@ -1623,7 +1630,7 @@ msgstr "Müügivihje/võimalus"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_create
 msgid "Lead/Opportunity created"
-msgstr ""
+msgstr "Müügivihje/Võimalus loodud"
 
 #. module: crm
 #: code:addons/crm/models/crm_lost_reason.py:0
@@ -1663,7 +1670,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lost_reason__leads_count
 msgid "Leads Count"
-msgstr ""
+msgstr "Müügivihjete arv"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_calendar_view_leads
@@ -1673,7 +1680,7 @@ msgstr "Müügivihje loomine"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_activity
 msgid "Leads or Opportunities"
-msgstr ""
+msgstr "Müügivihjed või võimalused"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
@@ -1683,7 +1690,7 @@ msgstr "Juhised, mis on mulle määratud"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_case_leads_filter
 msgid "Leads that are not assigned"
-msgstr ""
+msgstr "Müügivihjed, mis ei ole määratud"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.view_crm_lead2opportunity_partner_mass
@@ -1707,7 +1714,7 @@ msgstr "Müügivihjed/võimalused"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__crm_lead_count
 msgid "Leads/Opportunities count"
-msgstr ""
+msgstr "Müügivihjete/Võimaluste arv"
 
 #. module: crm
 #. openerp-web
@@ -1721,7 +1728,7 @@ msgstr "<b>Planeerime tegevuse.</b>"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Let’s have a look at an Opportunity."
-msgstr ""
+msgstr "Vaatame müügivõimalust."
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead2opportunity_partner__action__exist
@@ -1763,7 +1770,7 @@ msgstr "Kaotatud"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__lost_count
 msgid "Lost Count"
-msgstr ""
+msgstr "Kaotuste arv"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_lost_action
@@ -1800,12 +1807,12 @@ msgstr "Tee hinnapakkumine"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Manage Recurring Plans"
-msgstr ""
+msgstr "Halda korduvaid plaane"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_config_settings__generate_lead_from_alias
 msgid "Manual Assignment of Emails"
-msgstr ""
+msgstr "E-kirjade käsitsi määramine"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_form
@@ -1844,7 +1851,7 @@ msgstr "Keskmine"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Meeting scheduled at '%s'<br> Subject: %s <br> Duration: %s hours"
-msgstr ""
+msgstr "Koosolek on kavandatud '%s'<br> Teema: %s <br> Kestus: %s tundi"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.act_crm_opportunity_calendar_event_new
@@ -1978,7 +1985,7 @@ msgstr "Uued müügivhijed/-võimalused"
 #: code:addons/crm/models/crm_team.py:0
 #, python-format
 msgid "New Opportunities"
-msgstr ""
+msgstr "Uued müügivõimalused"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
@@ -2052,7 +2059,7 @@ msgstr "Märkused"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Now, <b>add your Opportunity</b> to your Pipeline."
-msgstr ""
+msgstr "Nüüd, <b>lisa oma müügivõimalus</b> müügitorusse. "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__message_needaction_counter
@@ -2116,7 +2123,7 @@ msgstr "Avatud võimalus"
 #. module: crm
 #: model:ir.model,name:crm.model_crm_lost_reason
 msgid "Opp. Lost Reason"
-msgstr ""
+msgstr "Võimaluste kaotamise põhjused"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_case_form_view_salesteams_opportunity
@@ -2203,7 +2210,7 @@ msgstr "Pakkumine kaotati"
 #: model:mail.message.subtype,name:crm.mt_lead_restored
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_restored
 msgid "Opportunity Restored"
-msgstr ""
+msgstr "Võimalus taastatud"
 
 #. module: crm
 #: model:mail.message.subtype,name:crm.mt_salesteam_lead_stage
@@ -2224,7 +2231,7 @@ msgstr "Pakkumine kaotati"
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_restored
 msgid "Opportunity restored"
-msgstr ""
+msgstr "Võimalus taastatud"
 
 #. module: crm
 #: model:mail.message.subtype,description:crm.mt_lead_won
@@ -2250,17 +2257,17 @@ msgstr "Ettevõte / Kontakt"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Outlook CRM Extension"
-msgstr ""
+msgstr "Outlook CRM laiendus"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_3_years
 msgid "Over 3 years"
-msgstr ""
+msgstr "Üle 3 aasta"
 
 #. module: crm
 #: model:crm.recurring.plan,name:crm.crm_recurring_plan_over_5_years
 msgid "Over 5 years "
-msgstr ""
+msgstr "Üle 5 aasta"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_lead_action_team_overdue_opportunity
@@ -2271,12 +2278,12 @@ msgstr "Hilinenud võimalused"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__opportunities_overdue_amount
 msgid "Overdue Opportunities Revenues"
-msgstr ""
+msgstr "Hilinenud võimaluste tulud"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_team_salesteams_view_kanban
 msgid "Overdue Opportunity"
-msgstr ""
+msgstr "Hilinenud võimalus"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_user_id
@@ -2317,18 +2324,18 @@ msgstr "Telefon"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Telefon lisatud musta nimekirja"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_phone_state
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_state
 msgid "Phone Quality"
-msgstr ""
+msgstr "Telefoni kvaliteet"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_mobile_search
 msgid "Phone/Mobile"
-msgstr ""
+msgstr "Telefon/Mobiil"
 
 #. module: crm
 #: code:addons/crm/models/crm_team.py:0
@@ -2344,7 +2351,7 @@ msgstr "Müügitoru"
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action
 #: model:ir.actions.act_window,name:crm.crm_activity_report_action_team
 msgid "Pipeline Activities"
-msgstr ""
+msgstr "Müügitoru tegevused"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_report_crm_opportunity_salesteam
@@ -2441,7 +2448,7 @@ msgstr "Kvalifitseeritud"
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Ready to boost your sales? Let's have a look at your <b>Pipeline</b>."
-msgstr ""
+msgstr "Kas olete valmis müüki suurendama? Vaatame üle teie<b>Müügitoru</b>."
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_team__alias_force_thread_id
@@ -2451,18 +2458,18 @@ msgstr "Kirje seose ID"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_plan
 msgid "Recurring Plan"
-msgstr ""
+msgstr "Korduv plaan"
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_recurring_plan_action
 #: model:ir.ui.menu,name:crm.crm_recurring_plan_menu_config
 msgid "Recurring Plans"
-msgstr ""
+msgstr "Korduvad plaanid"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_tree_view_oppor
 msgid "Recurring Revenue"
-msgstr ""
+msgstr "Korduv tulu"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue
@@ -2562,7 +2569,7 @@ msgstr "Müügiesindaja"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead2opportunity_partner_mass__user_ids
 msgid "Salespersons"
-msgstr ""
+msgstr "Müügiesindajad"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__phone_sanitized
@@ -2595,7 +2602,7 @@ msgstr "Vali müügivihjed/müügivõimalused"
 #: model:ir.actions.act_window,name:crm.action_lead_mass_mail
 #: model:ir.actions.act_window,name:crm.crm_lead_act_window_compose
 msgid "Send email"
-msgstr ""
+msgstr "Saada e-kiri"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_recurring_plan__sequence
@@ -2613,7 +2620,7 @@ msgstr ""
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_stage_action
 msgid "Set a new stage in your opportunity pipeline"
-msgstr ""
+msgstr "Pange uus etapp oma müügivõimaluste müügitorusse."
 
 #. module: crm
 #: model:ir.actions.act_window,name:crm.crm_config_settings_action
@@ -2654,7 +2661,7 @@ msgstr "Näita ainult pakkumist"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_lead_view_list_activities
 msgid "Snooze 7d"
-msgstr ""
+msgstr "Lükka edasi 7p"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_lost_reason_action
@@ -2749,6 +2756,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tegevuspõhised staatused\n"
+"Üle aja: Tähtaeg on juba möödas\n"
+"Täna: Tegevuse tähtaeg on täna\n"
+"Planeeritud: Tulevased tegevused"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__street
@@ -2843,7 +2854,7 @@ msgstr ""
 #. module: crm
 #: model:ir.model.constraint,message:crm.constraint_crm_recurring_plan_check_number_of_months
 msgid "The number of month can't be negative."
-msgstr ""
+msgstr "Kuude arv ei saa olla negatiivne"
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_team__alias_user_id
@@ -2869,8 +2880,8 @@ msgid ""
 "The success rate is computed based on the stage, but you can add more fields"
 " in the statistical analysis."
 msgstr ""
-"Edukus määratakse etappide alusel, saate lisada väljasid juurde statistilise"
-" analüüsi jaoks "
+"Hinnang määratakse etapi põhiselt, kuid saate lisada rohkem väljasid "
+"statistilise analüüsi jaoks "
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.crm_case_kanban_view_leads
@@ -2883,7 +2894,7 @@ msgstr "See riba võimaldab filtreerida võimalusi ajastatud tegevuste põhjal."
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "This bar also allows you to switch stage."
-msgstr ""
+msgstr "See riba võimaldab teil ka etappi vahetada."
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3026,6 +3037,8 @@ msgid ""
 "Turn emails received in your Outlook mailbox into leads and log their "
 "content as internal notes."
 msgstr ""
+"Muuda Outlooki postkasti saabunud kirjad müügivihjeteks ja täiendage "
+"sisemiste märkmetega. "
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_type
@@ -3079,12 +3092,12 @@ msgstr "Lugemata sõnumite loendur"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
 msgid "Update Probabilities"
-msgstr ""
+msgstr "Uuenda tõenäosusi"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__use_leads
 msgid "Use Leads"
-msgstr ""
+msgstr "Kasuta müügivihjeid"
 
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
@@ -3138,6 +3151,8 @@ msgid ""
 "Use this button to update the probabilities of all leads. This can take up "
 "to several minutes depending on how many there are."
 msgstr ""
+"Kasutage seda nuppu, et värskendada kõikide müügivihjete tõenäosust. See "
+"võib võtta aega mõned minutid, olenevalt nende arvust."
 
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__user_login
@@ -3222,7 +3237,7 @@ msgstr "Võidetud"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead_scoring_frequency__won_count
 msgid "Won Count"
-msgstr ""
+msgstr "Võitude arv"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_res_users__target_sales_won

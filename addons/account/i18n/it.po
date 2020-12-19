@@ -4878,7 +4878,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
 msgid "Display Type"
-msgstr "Tipo visualizzato"
+msgstr "Tipo di visualizzazione"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_template__description
@@ -5272,7 +5272,7 @@ msgstr "Atteso un piano dei conti"
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__expense
 #, python-format
 msgid "Expense"
-msgstr "Nota spese"
+msgstr "Uscite"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_product_category__property_account_expense_categ_id
@@ -7150,7 +7150,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue_value
 msgid "Kpi Account Total Revenue Value"
-msgstr "KPI contabilità - Valore totale dei ricavi"
+msgstr "KPI contabilità - Valore totale delle entrate"
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -9221,6 +9221,8 @@ msgid ""
 "Please go on the %s journal and define a Profit Account. This account will "
 "be used to record cash difference."
 msgstr ""
+"Andare nel registro %s e definire un conto utili. Verrà usato per registrare"
+" differenze di cassa."
 
 #. module: account
 #: code:addons/account/models/company.py:0
@@ -9229,8 +9231,8 @@ msgid ""
 "Please install a chart of accounts or create a miscellaneous journal before "
 "proceeding."
 msgstr ""
-"Caricare un piano dei conti o creare un registro \"Operazioni varie\" prima "
-"di procedere."
+"Prima di procedere, installare un piano dei conti o creare un registro per "
+"operazioni varie."
 
 #. module: account
 #: code:addons/account/models/account_cash_rounding.py:0
@@ -10052,18 +10054,18 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_digest_digest__kpi_account_total_revenue
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 msgid "Revenue"
-msgstr "Ricavo"
+msgstr "Entrate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__revenue_accrual_account
 #: model:ir.model.fields,field_description:account.field_res_company__revenue_accrual_account_id
 msgid "Revenue Accrual Account"
-msgstr ""
+msgstr "Conto competenza dei ricavi"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__account_id
 msgid "Revenue/Expense Account"
-msgstr "Conto di gestione"
+msgstr "Conto entrate/uscite"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
@@ -14431,6 +14433,9 @@ msgid ""
 "already been used to make accounting entries. If you really need to do that,"
 " please contact tech support."
 msgstr ""
+"Impossibile ridurre il numero di decimali di una valuta già utilizzata per "
+"effettuare registrazioni contabili. Se è proprio necessario, contattare il "
+"supporto tecnico."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0

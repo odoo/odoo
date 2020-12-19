@@ -11,8 +11,8 @@
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
 # Algo Kärp <algokarp@gmail.com>, 2020
-# atriine <triine@avalah.ee>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
+# atriine <triine@avalah.ee>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
+"Last-Translator: atriine <triine@avalah.ee>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,22 +43,27 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "(Total:"
-msgstr ""
+msgstr "(Kokku:"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for employee:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Töötaja tööaja "
+"arvestusleht:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for project:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Projekti ajaarvestusleht:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "<em class=\"font-weight-normal text-muted\">Timesheets for task:</em>"
 msgstr ""
+"<em class=\"font-weight-normal text-muted\">Ülesannete "
+"ajaarvestuslehed:</em>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
@@ -85,7 +90,7 @@ msgstr "<span class=\"o_label\">Tööaja arvestuslehed</span>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_invoice_form
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Salvestatud</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.hr_employee_view_form_inherit_timesheet
@@ -98,6 +103,8 @@ msgid ""
 "<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Sub-tasks Hours Spent</span>\n"
 "                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Sub-tasks Days Spent</span>"
 msgstr ""
+"<span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', True)]}\">Alamülesannetele kulunud tunnid</span>\n"
+"                                <span class=\"text-nowrap\" attrs=\"{'invisible' : [('encode_uom_in_days', '=', False)]}\">Alamülesannetele kulunud päevad</span>"
 
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.report_timesheet
@@ -142,7 +149,7 @@ msgstr "<strong>Kestus:</strong>"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "<strong>Round Timesheets</strong>"
-msgstr ""
+msgstr "<strong>Ajaarvestuse ümardamine</strong>"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__analytic_account_active
@@ -212,7 +219,7 @@ msgstr "Kinnitaja"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_ids
 msgid "Associated Timesheets"
-msgstr ""
+msgstr "Seotud ajaarvestuslehed"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_synchro
@@ -262,7 +269,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Create timesheets upon time off validation"
-msgstr ""
+msgstr "Loo puudumiste kinnitamisel ajaarvestusleht"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task_create_timesheet__create_uid
@@ -304,7 +311,7 @@ msgstr "Osakond"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_create_timesheet_view_form
 msgid "Describe your activity..."
-msgstr ""
+msgstr "Kirjelda oma tegevust..."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -363,7 +370,7 @@ msgstr "Kestus (päevades)"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_timesheet_table
 msgid "Duration (Hours)"
-msgstr ""
+msgstr "Kestus (tundides)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_effective
@@ -551,13 +558,13 @@ msgstr "Uusim"
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_project
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_report_by_task
 msgid "No activities found."
-msgstr ""
+msgstr "Tegevusi ei leitud. "
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
 #: model_terms:ir.actions.act_window,help:hr_timesheet.timesheet_action_all
 msgid "No activities found. Let's start a new one!"
-msgstr ""
+msgstr "Tegevusi ei leitud. Loome uue!"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/controllers/portal.py:0
@@ -568,7 +575,7 @@ msgstr "Pole"
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_task__overtime
 msgid "Overtime"
-msgstr ""
+msgstr "Ületunnid"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_report_project_task_user__hours_planned
@@ -606,12 +613,12 @@ msgstr "Projekti ajaühik"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_project
 msgid "Project's Timesheets"
-msgstr ""
+msgstr "Projekti ajaarvestuslehed"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_res_config_settings__module_project_timesheet_holidays
 msgid "Record Time Off"
-msgstr ""
+msgstr "Salvestage puudumisi"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line_by_project
@@ -691,7 +698,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:res.groups,name:hr_timesheet.group_hr_timesheet_user
 msgid "See own timesheets"
-msgstr ""
+msgstr "Kuva oma Tööaja arvestuslehed"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -740,7 +747,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_task
 msgid "Task's Timesheets"
-msgstr ""
+msgstr "Ülesannete ajaarvestuslehed"
 
 #. module: hr_timesheet
 #: model:ir.model,name:hr_timesheet.model_report_project_task_user
@@ -750,7 +757,7 @@ msgstr "Ülesannete analüüs"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.project_task_view_search
 msgid "Tasks in Overtime"
-msgstr ""
+msgstr "Ületunnitöös ülesanded"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/hr_timesheet.py:0
@@ -759,6 +766,8 @@ msgid ""
 "The project you are timesheeting on is not linked to an active analytic "
 "account. Set one on the project configuration."
 msgstr ""
+"Projekt, millele ajaarvestuslehti lisate, ei ole seotud ühegi aktiivse "
+"analüütilise kontoga. Lisage üks projekti seadistusest."
 
 #. module: hr_timesheet
 #: model:ir.model.constraint,message:hr_timesheet.constraint_project_task_create_timesheet_time_positive
@@ -768,7 +777,7 @@ msgstr ""
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_my_timesheets
 msgid "There are no timesheets."
-msgstr ""
+msgstr "Ajaarvestuslehed puuduvad"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -921,7 +930,7 @@ msgstr "Tunnihind (kulu)"
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_graph
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.view_hr_timesheet_line_pivot
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "Tunnihind (kulu)"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,field_description:hr_timesheet.field_project_project__timesheet_encode_uom_id
@@ -964,17 +973,17 @@ msgstr "Tööaja arvestusleht"
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.act_hr_timesheet_report
 msgid "Timesheets By Employee"
-msgstr ""
+msgstr "Töötajapõhine ajaarvestus"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_project
 msgid "Timesheets By Project"
-msgstr ""
+msgstr "Projektipõhine ajaarvestus"
 
 #. module: hr_timesheet
 #: model:ir.actions.act_window,name:hr_timesheet.timesheet_action_report_by_task
 msgid "Timesheets By Task"
-msgstr ""
+msgstr "Ülesannete põhine ajaarvestus"
 
 #. module: hr_timesheet
 #: model:ir.model.fields,help:hr_timesheet.field_project_task__allow_timesheets
@@ -984,7 +993,7 @@ msgstr "Selle ülesande jaoks saab ajaarvestust logida"
 #. module: hr_timesheet
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.portal_subtask_timesheet_tables
 msgid "Timesheets for sub-task:"
-msgstr ""
+msgstr "Alamülesannete ajaarvestuslehed:"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/models/project.py:0
@@ -1046,6 +1055,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_timesheet.res_config_settings_view_form
 msgid "Track your time from anywhere, even offline, with our web/mobile apps"
 msgstr ""
+"Jälgi oma aega igalt pool meie veebi/mobiiliäpiga, isegi offline olles"
 
 #. module: hr_timesheet
 #: model_terms:ir.actions.act_window,help:hr_timesheet.act_hr_timesheet_line
@@ -1058,6 +1068,8 @@ msgid ""
 "Track your working hours by projects every day and invoice this time to your"
 " customers."
 msgstr ""
+"Jälgige igapäevaselt oma projektipõhist tööaega ning arveldage see aeg "
+"kliendile edasi."
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/__init__.py:0
