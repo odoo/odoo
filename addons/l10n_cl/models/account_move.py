@@ -114,7 +114,7 @@ class AccountMove(models.Model):
         if self.company_id.country_id.code == "CL" and self.l10n_latam_use_documents:
             where_string = where_string.replace('journal_id = %(journal_id)s AND', '')
             where_string += ' AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s AND ' \
-                            'company_id = %(company_id)s'
+                            'company_id = %(company_id)s AND move_type IN (\'out_invoice\', \'out_refund\')'
             param['company_id'] = self.company_id.id or False
             param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
         return where_string, param
