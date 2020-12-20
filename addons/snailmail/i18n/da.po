@@ -11,6 +11,7 @@
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:32+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,12 +77,12 @@ msgstr "Annulleret"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the ink used to print documents"
-msgstr ""
+msgstr "Vælg blækket anvendt til at udskrive dokumenter"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Choose the layout to print documents"
-msgstr ""
+msgstr "Vælg layoutet for at udskrive dokumenter"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_color
@@ -196,12 +197,12 @@ msgstr "Valgfri rapport at udskrive og vedhæfte"
 #: code:addons/snailmail/models/snailmail_letter.py:264
 #, python-format
 msgid "Post letter: an error occured."
-msgstr ""
+msgstr "Poster brev: Der opstod en fejl."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.res_config_settings_view_form
 msgid "Postal Printings"
-msgstr ""
+msgstr "Post Udskrifter"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_duplex
@@ -282,7 +283,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "User sending the letter"
-msgstr ""
+msgstr "Bruger der afsender brevet"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -291,6 +292,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Når et brev oprettes, er status 'Afventende'.\n"
+"Hvis brevet afsendes korrekt, overgår status til 'Afsendt'.\n"
+"Hvis ikke, vil det overgå til status 'Fejl', og en fejlmeddelelse vil blive vist i feltet 'Fejl meddelelse'."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:207
