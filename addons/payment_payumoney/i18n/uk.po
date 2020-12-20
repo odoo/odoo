@@ -3,22 +3,40 @@
 # 	* payment_payumoney
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
+# Bohdan Lisnenko, 2018
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:16+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-10-02 14:11+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Відобразити назву"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Останні зміни на"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
@@ -46,7 +64,7 @@ msgstr ""
 #: code:addons/payment_payumoney/models/payment.py:0
 #, python-format
 msgid "PayUmoney: received data for reference %s; multiple orders found"
-msgstr "PayUmoney: отримані дані для довідки%s; знайдено кілька замовлень"
+msgstr "PayUmoney: отримані дані для довідки%s; знайдено декілька замовлень"
 
 #. module: payment_payumoney
 #: code:addons/payment_payumoney/models/payment.py:0
@@ -59,10 +77,8 @@ msgstr "PayUmoney: отримані дані для довідки %s; замо�
 #, python-format
 msgid ""
 "PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
-"shashign (%s)"
+"shasign (%s)"
 msgstr ""
-"PayUmoney: отримані дані з відсутньою довідкою (%s) або pay_id (%s) або "
-"shashign (%s)"
 
 #. module: payment_payumoney
 #: model:ir.model,name:payment_payumoney.model_payment_acquirer

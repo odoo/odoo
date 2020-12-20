@@ -3,15 +3,14 @@
 # 	* crm_iap_lead_enrich
 # 
 # Translators:
-# Martin Trigaux, 2019
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:17+0000\n"
-"PO-Revision-Date: 2019-09-09 12:33+0000\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2019-12-16 11:02+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2019\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -19,42 +18,6 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Language: uk\n"
 "Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != 11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || (n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "(Time Now)"
-msgstr "(Час зараз)"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "<b>Phone :</b>"
-msgstr "<b>Телефон :</b>"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "<b>Timezone : </b>"
-msgstr "<b>Часовий пояс : </b>"
-
-#. module: crm_iap_lead_enrich
-#: model:mail.template,body_html:crm_iap_lead_enrich.mail_template_data_iap_lead_enrich_nocredit
-msgid ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Dear ${object.create_uid.name or 'Madam/Sir'},</p><br/>\n"
-"    <p>Unfortunately, there are no more credits on your IAP Lead Enrichment account.<br/>\n"
-"    You can charge it back from the Settings of the CRM app or from your IAP portal.<br/></p><br/>\n"
-"    <p>Best regards,</p><br/>\n"
-"    <p>Odoo S.A.</p>\n"
-"</div>\n"
-"        "
-msgstr ""
-"<div style=\"margin: 0px; padding: 0px;\">\n"
-"    <p>Шановний(а) ${object.create_uid.name or 'Madam/Sir'},</p><br/>\n"
-"    <p>На вашому рахунку збільшення лідів IAP більше немає кредитів.<br/>\n"
-"    Ви можете стягнути плату з Налаштувань модуля CRM або з вашого порталу IAP.<br/></p><br/>\n"
-"    <p>З найкращими побажаннями,</p><br/>\n"
-"    <p>Odoo S.A.</p>\n"
-"</div>\n"
-"        "
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_notfound
@@ -75,9 +38,9 @@ msgstr ""
 "адресу.</span>"
 
 #. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "<span>Lead enriched based on email address</span>"
-msgstr "<span>Збільшення лідів на основі адреси електронної пошти </span>"
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__show_enrich_button
+msgid "Allow manual enrich"
+msgstr "Дозвольте ручне отримання"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.actions.server,name:crm_iap_lead_enrich.ir_cron_lead_enrichment_ir_actions_server
@@ -87,9 +50,32 @@ msgid "CRM: enrich leads (IAP)"
 msgstr "CRM: збільшіть ліди (IAP)"
 
 #. module: crm_iap_lead_enrich
+#: model:ir.model,name:crm_iap_lead_enrich.model_res_config_settings
+msgid "Config Settings"
+msgstr "Налаштування"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__display_name
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__display_name
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr "Назва для відображення"
+msgstr "Відобразити назву"
+
+#. module: crm_iap_lead_enrich
+#: model:ir.actions.server,name:crm_iap_lead_enrich.action_enrich_mail
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich"
+msgstr "Отримати"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this lead with company data based on the email address"
+msgstr "Отримайте цей лід з даними компанії на основі електронної адреси"
+
+#. module: crm_iap_lead_enrich
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.crm_lead_view_form
+msgid "Enrich this opportunity with company data based on the email address"
+msgstr "Отримайте цю нагоду з даними компанії на основі електронної адреси"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
@@ -102,17 +88,21 @@ msgid "IAP Lead Enrichment API"
 msgstr " API збільшення лідів IAP"
 
 #. module: crm_iap_lead_enrich
-#: model:mail.template,subject:crm_iap_lead_enrich.mail_template_data_iap_lead_enrich_nocredit
-msgid "IAP Lead Enrichment Notification"
-msgstr "Сповіщення збільшення лідів IAP"
+#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+msgid "IAP account"
+msgstr "Рахунок IAP"
 
 #. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__id
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api__id
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings__id
 msgid "ID"
 msgstr "ID"
 
 #. module: crm_iap_lead_enrich
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead____last_update
 #: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_iap_enrich_api____last_update
+#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_res_config_settings____last_update
 msgid "Last Modified on"
 msgstr "Останні зміни на"
 
@@ -123,7 +113,9 @@ msgid "Lead Enrichment based on email address"
 msgstr "Збільшення лідів на основі адреси електронної пошти"
 
 #. module: crm_iap_lead_enrich
+#: code:addons/crm_iap_lead_enrich/models/crm_lead.py:0
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
+#, python-format
 msgid "Lead enriched based on email address"
 msgstr "Збільшення лідів на основі адреси електронної пошти"
 
@@ -131,16 +123,6 @@ msgstr "Збільшення лідів на основі адреси елек�
 #: model:ir.model,name:crm_iap_lead_enrich.model_crm_lead
 msgid "Lead/Opportunity"
 msgstr "Лід/Нагода"
-
-#. module: crm_iap_lead_enrich
-#: model:ir.model.fields,field_description:crm_iap_lead_enrich.field_crm_lead__reveal_id
-msgid "Reveal ID"
-msgstr "Reveal ID"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_with_data
-msgid "Technology Used :"
-msgstr "Технологія використовується :"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model.fields,help:crm_iap_lead_enrich.field_crm_lead__iap_enrich_done
@@ -155,11 +137,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "Your balance for Lead Enrichment is insufficient. Please go to your"
 msgstr "Вашого балансу для збільшення лідів недостатньо. Перейдіть до вашого"
-
-#. module: crm_iap_lead_enrich
-#: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
-msgid "iap account"
-msgstr "рахунок iap"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
