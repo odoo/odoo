@@ -12,6 +12,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2018
 # Sanne Kristensen <sanne@vkdata.dk>, 2018
 # Mads Søndergaard, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -19,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-09 10:31+0000\n"
 "PO-Revision-Date: 2018-08-24 09:25+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -169,7 +170,7 @@ msgstr "Dato"
 #. module: stock_landed_costs
 #: model_terms:ir.actions.act_window,help:stock_landed_costs.stock_landed_cost_type_action
 msgid "Define a new kind of landed cost"
-msgstr ""
+msgstr "Definer en ny slags anskaffelsespris"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__name
@@ -221,7 +222,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__final_cost
 msgid "Final Cost"
-msgstr ""
+msgstr "Endelig Omkostning"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_follower_ids
@@ -241,12 +242,12 @@ msgstr "Følgere (partnere)"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost
 msgid "Former Cost"
-msgstr ""
+msgstr "Tidligere Omkostning"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__former_cost_per_unit
 msgid "Former Cost(Per Unit)"
-msgstr ""
+msgstr "Tidligere Omkostning (Per Enhed)"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search
@@ -327,14 +328,14 @@ msgstr "Landet omkostning navn"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.stock_landed_cost_tree_view
 msgid "Landed Cost Type"
-msgstr ""
+msgstr "Anskaffelsespristype"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.stock_landed_cost_type_action
 #: model:ir.ui.menu,name:stock_landed_costs.menu_stock_landed_cost_type
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.res_config_settings_view_form
 msgid "Landed Cost Types"
-msgstr ""
+msgstr "Anskaffelsespriser"
 
 #. module: stock_landed_costs
 #: model:ir.actions.act_window,name:stock_landed_costs.action_stock_landed_cost
@@ -349,7 +350,7 @@ msgstr "Anskaffelsespriser"
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_form
 msgid "Landed cost are computed based on the purchase unit of measure."
-msgstr ""
+msgstr "Anskaffelsespriser er udregnet baseret på indkøbets måleenhed."
 
 #. module: stock_landed_costs
 #: model:mail.message.subtype,description:stock_landed_costs.mt_stock_landed_cost_open
@@ -411,6 +412,8 @@ msgstr "Ny"
 msgid ""
 "No valuation adjustments lines. You should maybe recompute the landed costs."
 msgstr ""
+"Ingen evaluerings justeringslinjer. Du bør muligvis genudregne "
+"anskaffelsespriserne."
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__message_needaction_counter
@@ -587,6 +590,9 @@ msgid ""
 "only be applied for products with automated inventory valuation and FIFO "
 "costing method."
 msgstr ""
+"Du kan ikke anvende landede omkostninger på de valgte overførsler. Landede "
+"omkostninger kan kun anvendes på produkter med automatiseret inventar "
+"vurdering og FIFO omkostningsmetode."
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_type_form
