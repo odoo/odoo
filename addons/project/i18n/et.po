@@ -1166,7 +1166,7 @@ msgstr "Jälgitud"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Jälgimisel olevad ülesanded"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -2238,12 +2238,12 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_value
 msgid "Rating Last Value"
-msgstr ""
+msgstr "Hinnangu viimane väärtus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Hinnangu pärimise tähtaeg"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
@@ -2578,6 +2578,10 @@ msgid ""
 "Today: Activity date is today\n"
 "Planned: Future activities."
 msgstr ""
+"Tegevuspõhised staatused\n"
+"Üle aja: Tähtaeg on juba möödas\n"
+"Täna: Tegevuse tähtaeg on täna\n"
+"Planeeritud: Tulevased tegevused"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
@@ -2719,6 +2723,7 @@ msgstr "Ülesanne blokeeritud"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
 msgstr ""
+"Ülesanded on töös. Klõpsa peale, et neid blokeerida või märkida tehtuks."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -2766,7 +2771,7 @@ msgstr "Ülesannete analüüs"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "Ülesannete haldus"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -2829,6 +2834,9 @@ msgid ""
 "the project is too restricted. Set the privacy to 'Visible by following "
 "customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Projekti ei saa jagada saajaga/saajatega, kuna projekti privaatsus on liiga "
+"piiratud. Määra privaatsus \"Nähtav jälgitavatele klientidele\" peale, et "
+"see saajatele ligipääsetavaks muuta."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2838,6 +2846,9 @@ msgid ""
 "project is too restricted. Set the privacy of the project to 'Visible by "
 "following customers' in order to make it accessible by the recipient(s)."
 msgstr ""
+"Ülesannet ei saa jagada saajaga/saajatega, kuna projekti privaatsus on liiga"
+" piiratud. Määra privaatsus \"Nähtav jälgitavatele klientidele\" peale, et "
+"see saajatele ligipääsetavaks muuta."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_projects
@@ -2895,7 +2906,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "See etapp on tehtud. Klõpsa peale, et blokeerida või töösse määrata."
 
 #. module: project
 #. openerp-web
@@ -2944,6 +2955,8 @@ msgid ""
 "To get things done, use activities and status on tasks.<br>\n"
 "                    Chat in real time or by email to collaborate efficiently."
 msgstr ""
+"Et asjad tehtud saaks, kasuta tegevusi ja ülesannete staatust.<br>\n"
+"Vestle reaalajas või meili teel, et tagada sujuv koostöö."
 
 #. module: project
 #. openerp-web
@@ -3168,6 +3181,8 @@ msgid ""
 "You cannot delete a project containing tasks. You can either archive it or "
 "first delete all of its tasks."
 msgstr ""
+"Te ei saa kustutada ülesandeid sisaldavat projekti. Te võite selle kas "
+"arhiveerida või esmalt kustutada kõik selle ülesanded."
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all
