@@ -16,6 +16,7 @@
 # Antanas Muliuolis <an.muliuolis@gmail.com>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2019
+# grupoda2 <dmitrijus.ivanovas@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: digitouch UAB <digitouchagencyeur@gmail.com>, 2019\n"
+"Last-Translator: grupoda2 <dmitrijus.ivanovas@gmail.com>, 2020\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -119,6 +120,7 @@ msgstr "<p>Ši kortelė šiuo metu yra susieta su šiais įrašais:<p/>"
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
 msgstr ""
+"<small class=\"text-muted\">(Gali būti taikomi papildomi mokesčiai)</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -772,7 +774,7 @@ msgstr "Klaida:"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Fee"
-msgstr ""
+msgstr "Mokestis"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
@@ -788,7 +790,7 @@ msgstr "Palaikomas mokesčių skaičiavimas"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "Mokesčių kiekis, nustatomas sistemos, nes priklauso nuo surinkėjo"
+msgstr "Mokesčių suma, nustatoma sistemos, nes priklauso nuo surinkėjo"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
@@ -798,12 +800,12 @@ msgstr "Laukas, naudojamas patvirtinimo ir/ar klaidos žinučių saugojimui"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "Fiksuoti vietiniai mokėjimai"
+msgstr "Fiksuoti vietiniai mokesčiai"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr "Fiksuoti tarptautiniai mokėjimai"
+msgstr "Fiksuoti tarptautiniai mokesčiai"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
@@ -1972,7 +1974,7 @@ msgstr "Mums nepavyko nukreipti jūsų į mokėjimo formą."
 #: code:addons/payment/static/src/js/payment_processing.js:0
 #, python-format
 msgid "We are processing your payment, please wait ..."
-msgstr ""
+msgstr "Palaukite, kol apdorojame Jūsų mokėjimus..."
 
 #. module: payment
 #. openerp-web
