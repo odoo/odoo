@@ -2046,6 +2046,60 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('remove inactive filter from calendar sidebar filters', function (assert) {
+        assert.expect(10);
+
+        var calendar = createView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+            '<calendar class="o_calendar_test" ' +
+                'event_open_popup="true" ' +
+                'date_start="start" ' +
+                'date_stop="stop" ' +
+                'all_day="allday" ' +
+                'mode="week" ' +
+                'attendee="partner_ids" ' +
+                'color="partner_id"' +
+                '>' +
+                    '<field name="name"/>' +
+                    '<filter name="user_id" avatar_field="image"/>' +
+                    '<field name="partner_ids" write_model="filter_partner" write_field="partner_id"/>' +
+            '</calendar>',
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'search_read' && args.model === 'event') {
+                    assert.step(args.method);
+                }
+                return this._super.apply(this, arguments);
+            }
+        });
+
+        assert.strictEqual(calendar.$('.fc-event').length, 9,
+            "should display 5 events");
+        assert.strictEqual(calendar.$('.o_calendar_sidebar .o_calendar_filter:first .o_calendar_filter_item').length,
+            3, "should have 3 sidebar filter items");
+        assert.verifySteps(["search_read"]);
+
+        calendar.$('.o_calendar_filter:first .o_calendar_filter_item[data-value=1] input[type=checkbox]').click();
+        assert.strictEqual(calendar.$('.fc-event').length, 5,
+            "should display 5 events");
+        assert.verifySteps(["search_read", "search_read"]);
+
+        calendar.$('.o_calendar_sidebar .o_calendar_filter:first .o_calendar_filter_item[data-value=1] .o_remove').trigger('click');
+        assert.ok($('.modal-footer button.btn:contains(Ok)').length, "should display the confirm message");
+        $('.modal-footer button.btn:contains(Ok)').trigger('click');
+        assert.strictEqual(calendar.$('.o_calendar_sidebar .o_calendar_filter:first .o_calendar_filter_item').length, 2,
+            "should have 2 sidebar filter items");
+        // search_Read should not be called when inactive filter is removed
+        assert.verifySteps(["search_read", "search_read"]);
+
+        calendar.destroy();
+    });
+
     QUnit.test('events starting at midnight', function (assert) {
         assert.expect(2);
 

@@ -155,11 +155,15 @@ var SidebarFilter = Widget.extend(FieldManagerMixin, {
                         args: [[$filter.data('id')]],
                     })
                     .then(function () {
+                        // if filter is already inactive then there is no need to reload model,
+                        // just re-render calendar renderer so sidebar filters are updated.
                         self.trigger_up('changeFilter', {
                             'fieldName': self.fieldName,
                             'id': $filter.data('id'),
                             'active': false,
                             'value': $filter.data('value'),
+                            toRemove: true,
+                            reload: $filter.find('input').is(":checked"),
                         });
                     });
             },

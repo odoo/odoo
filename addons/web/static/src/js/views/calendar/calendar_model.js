@@ -148,6 +148,8 @@ return AbstractModel.extend({
         if (f) {
             if (f.active !== filter.active) {
                 f.active = filter.active;
+            } else if (filter.toRemove) {
+                Filter.filters.splice(Filter.filters.indexOf(f), 1);
             } else {
                 return false;
             }

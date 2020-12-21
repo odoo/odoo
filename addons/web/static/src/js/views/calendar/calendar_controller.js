@@ -191,12 +191,14 @@ var CalendarController = AbstractController.extend({
         this.reload();
     },
     /**
+     * When filter is changed reloads whole calendar view
+     *
      * @private
      * @param {OdooEvent} event
      */
     _onChangeFilter: function (event) {
-        if (this.model.changeFilter(event.data) && !event.data.no_reload) {
-            this.reload();
+        if (this.model.changeFilter(event.data)) {
+            this.update({}, { reload: 'reload' in event.data ? event.data.reload : true });
         }
     },
     /**
