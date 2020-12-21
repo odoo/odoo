@@ -556,13 +556,13 @@ class ComputeOnchange(models.Model):
     @api.depends('foo')
     def _compute_bar(self):
         for record in self:
-            record.bar = record.foo
+            record.bar = (record.foo or "") + "r"
 
     @api.depends('active', 'foo')
     def _compute_baz(self):
         for record in self:
             if record.active:
-                record.baz = record.foo
+                record.baz = (record.foo or "") + "z"
 
     @api.depends('foo')
     def _compute_line_ids(self):
@@ -590,9 +590,14 @@ class ComputeOnchangeLine(models.Model):
     _name = 'test_new_api.compute.onchange.line'
     _description = "Line-like model for test_new_api.compute.onchange"
 
+    record_id = fields.Many2one('test_new_api.compute.onchange', ondelete='cascade')
     foo = fields.Char()
-    record_id = fields.Many2one('test_new_api.compute.onchange',
-                                required=True, ondelete='cascade')
+    bar = fields.Char(compute='_compute_bar')
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for line in self:
+            line.bar = (line.foo or "") + "r"
 
 
 class ComputeDynamicDepends(models.Model):
