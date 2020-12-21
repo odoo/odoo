@@ -5,6 +5,7 @@ import math
 
 from odoo import api, fields, models, _
 from odoo.osv import expression
+from odoo.tools import float_compare
 
 
 class SaleOrder(models.Model):
@@ -41,6 +42,46 @@ class SaleOrder(models.Model):
             # Now convert to the proper unit of measure
             total_time *= sale_order.timesheet_encode_uom_id.factor
             sale_order.timesheet_total_duration = round(total_time)
+
+    def _compute_field_value(self, field):
+        super()._compute_field_value(field)
+        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
+            return
+
+        # Get SOs which their state is not equal to upselling or invoied and if at least a SOL has warning prepaid service upsell set to True and the warning has not already been displayed
+        upsellable_orders = self.filtered(lambda so:
+            so.state == 'sale'
+            and so.invoice_status not in ('upselling', 'invoiced')
+            and (so.user_id or so.partner_id.user_id)  # salesperson needed to assign upsell activity
+        )
+        for order in upsellable_orders:
+            upsellable_lines = order._get_prepaid_service_lines_to_upsell()
+            if upsellable_lines:
+                order._create_upsell_activity()
+                # We want to display only one time the warning for each SOL
+                upsellable_lines.write({'has_displayed_warning_upsell': True})
+
+    def _get_prepaid_service_lines_to_upsell(self):
+        """ Retrieve all sols which need to display an upsell activity warning in the SO
+
+            These SOLs should contain a product which has:
+                - type="service",
+                - service_policy="ordered_timesheet",
+                - service_upsell_warning=True.
+        """
+        self.ensure_one()
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        return self.order_line.filtered(lambda sol:
+            sol.is_service
+            and not sol.has_displayed_warning_upsell  # we don't want to display many times the warning each time we timesheet on the SOL
+            and sol.product_id.service_policy == 'ordered_timesheet'
+            and sol.product_id.service_upsell_warning
+            and float_compare(
+                sol.qty_delivered,
+                sol.product_uom_qty * (sol.product_id.service_upsell_threshold or 1.0),
+                precision_digits=precision
+            ) >= 0
+        )
 
     def action_view_project_ids(self):
         self.ensure_one()
@@ -81,6 +122,7 @@ class SaleOrderLine(models.Model):
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available', compute_sudo=True)
     remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', compute_sudo=True, store=True)
+    has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
 
     def name_get(self):
         res = super(SaleOrderLine, self).name_get()
