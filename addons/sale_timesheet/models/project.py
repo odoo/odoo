@@ -47,6 +47,7 @@ class Project(models.Model):
             ('service_type', '=', 'timesheet'),
             '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
         help='Select a Service product with which you would like to bill your time spent on tasks.',
+        compute="_compute_timesheet_product_id", store=True, readonly=False,
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
 
@@ -237,6 +238,28 @@ class ProjectTask(models.Model):
 
     # TODO: [XBO] remove me in master
     non_allow_billable = fields.Boolean("Non-Billable", help="Your timesheets linked to this task will not be billed.")
+    remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so')
+    remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
+
+    @api.depends('sale_line_id', 'timesheet_ids', 'timesheet_ids.unit_amount')
+    def _compute_remaining_hours_so(self):
+        # TODO This is not yet perfectly working as timesheet.so_line stick to its old value although changed
+        #      in the task From View.
+        timesheets = self.timesheet_ids.filtered(lambda t: t.task_id.sale_line_id in (t.so_line, t._origin.so_line) and t.so_line.remaining_hours_available)
+
+        mapped_remaining_hours = {task._origin.id: task.sale_line_id and task.sale_line_id.remaining_hours or 0.0 for task in self}
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        for timesheet in timesheets:
+            delta = 0
+            if timesheet._origin.so_line == timesheet.task_id.sale_line_id:
+                delta += timesheet._origin.unit_amount
+            if timesheet.so_line == timesheet.task_id.sale_line_id:
+                delta -= timesheet.unit_amount
+            if delta:
+                mapped_remaining_hours[timesheet.task_id._origin.id] += timesheet.so_line.product_uom._compute_quantity(delta, uom_hour)
+
+        for task in self:
+            task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
 
     @api.depends(
         'allow_billable', 'allow_timesheets', 'sale_order_id')
@@ -265,17 +288,25 @@ class ProjectTask(models.Model):
         for task in self:
             task.analytic_account_active = task.analytic_account_active or task.analytic_account_id.active
 
-    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'bill_type', 'pricing_type', 'non_allow_billable')
+    @api.depends('sale_line_id', 'project_id', 'allow_billable', 'non_allow_billable')
     def _compute_sale_order_id(self):
         for task in self:
-            if task.allow_billable and task.bill_type == 'customer_project' and task.pricing_type == 'employee_rate' and task.non_allow_billable:
+            if not task.allow_billable or task.non_allow_billable:
                 task.sale_order_id = False
-            elif task.allow_billable and task.bill_type == 'customer_project':
-                task.sale_order_id = task.project_id.sale_order_id
-            elif task.allow_billable and task.bill_type == 'customer_task':
-                task.sale_order_id = task.sale_line_id.sudo().order_id
-            elif not task.sale_order_id:
-                task.sale_order_id = False
+            elif task.allow_billable:
+                if task.sale_line_id:
+                    task.sale_order_id = task.sale_line_id.sudo().order_id
+                elif task.project_id.sale_order_id:
+                    task.sale_order_id = task.project_id.sale_order_id
+                if task.sale_order_id and not task.partner_id:
+                    task.partner_id = task.sale_order_id.partner_id
+
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id', 'allow_billable')
+    def _compute_sale_line(self):
+        billable_tasks = self.filtered('allow_billable')
+        super(ProjectTask, billable_tasks)._compute_sale_line()
+        for task in billable_tasks.filtered(lambda t: not t.sale_line_id):
+            task.sale_line_id = task._get_last_sol_of_customer()
 
     @api.depends('project_id.sale_line_employee_ids')
     def _compute_is_project_map_empty(self):
@@ -302,22 +333,6 @@ class ProjectTask(models.Model):
             project_dest = self.env['project.project'].browse(values['project_id'])
             if project_dest.bill_type == 'customer_project' and project_dest.pricing_type == 'employee_rate':
                 self.write({'sale_line_id': False})
-        if 'sale_line_id' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
-            so = self.env['sale.order.line'].browse(values['sale_line_id']).order_id
-            if so and not so.analytic_account_id:
-                so.analytic_account_id = self.project_id.analytic_account_id
-            timesheet_ids = self.filtered('allow_timesheets').timesheet_ids.filtered(
-                lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
-            )
-            timesheet_ids.write({'so_line': values['sale_line_id']})
-            if 'project_id' in values:
-
-                # Special case when we edit SOL an project in same time, as we edit SOL of
-                # timesheet lines, function '_get_timesheet' won't find the right timesheet
-                # to edit so we must edit those here.
-                project = self.env['project.project'].browse(values.get('project_id'))
-                if project.allow_timesheets:
-                    timesheet_ids.write({'project_id': values.get('project_id')})
         if 'non_allow_billable' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
             timesheet_ids = self.filtered('allow_timesheets').timesheet_ids.filtered(
                 lambda t: (not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
@@ -334,6 +349,20 @@ class ProjectTask(models.Model):
                         current_timesheet_ids.filtered(lambda t: t.employee_id == employee).write({'project_id': project.id})
 
         return res
+
+    def _get_last_sol_of_customer(self):
+        # Get the last SOL made for the customer in the current task where we need to compute
+        self.ensure_one()
+        if not self.commercial_partner_id or not self.allow_billable:
+            return False
+        domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]
+        if self.project_id.bill_type == 'customer_type' and self.project_sale_order_id:
+            domain.append(('order_id', '=?', self.project_sale_order_id.id))
+        sale_lines = self.env['sale.order.line'].search(domain)
+        for line in sale_lines:
+            if line.remaining_hours_available and line.remaining_hours > 0:
+                return line
+        return False
 
     def action_make_billable(self):
         return {

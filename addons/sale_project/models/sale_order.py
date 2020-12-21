@@ -170,7 +170,7 @@ class SaleOrderLine(models.Model):
         # of a locked sale order.
         if 'product_uom_qty' in values and not self.env.context.get('no_update_planned_hours', False):
             for line in self:
-                if line.task_id:
+                if line.task_id and line.product_id.type == 'service':
                     planned_hours = line._convert_qty_company_hours(line.task_id.company_id)
                     line.task_id.write({'planned_hours': planned_hours})
         return result
