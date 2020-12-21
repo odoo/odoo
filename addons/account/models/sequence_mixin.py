@@ -123,7 +123,7 @@ class SequenceMixin(models.AbstractModel):
     def _get_last_sequence_domain(self, relaxed=False):
         """Get the sql domain to retreive the previous sequence number.
 
-        This function should be overriden by models heriting from this mixin.
+        This function should be overriden by models inheriting from this mixin.
 
         :param relaxed: see _get_last_sequence.
 
