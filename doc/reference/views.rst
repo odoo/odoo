@@ -1573,10 +1573,13 @@ Possible children elements of the list view are:
   ``name``
       the name of a many2one field (on the current model). Custom header will be
       displayed when grouping the view on this field name.
+  ``unfold``
+      if set to "1", group will unfolded by default, group can be unfolded based context
+      for e.g. unfold="context.get('unfold',True)"
 
   .. code-block:: xml
 
-    <groupby name="partner_id">
+    <groupby name="partner_id" unfold="1">
       <field name="name"/> <!-- name of partner_id -->
         <button type="edit" name"edit" string="Edit/>
         <button type="object" name="my_method" string="Button1"
