@@ -53,7 +53,7 @@ class AccountFiscalPosition(models.Model):
         for tax in taxes:
             tax_count = 0
             for t in self.tax_ids:
-                if t.tax_src_id == tax:
+                if t.tax_src_id.id == (tax._origin or tax).id:
                     tax_count += 1
                     if t.tax_dest_id:
                         result |= t.tax_dest_id
