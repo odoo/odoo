@@ -1062,7 +1062,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        var $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_field_email');
         assert.strictEqual($mailtoLink.length, 1,
             "should have a anchor with correct classes");
         assert.strictEqual($mailtoLink.text(), 'yop',
@@ -1082,7 +1082,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_field_email');
         assert.strictEqual($mailtoLink.text(), 'new',
             "new value should be displayed properly");
         assert.hasAttrValue($mailtoLink, 'href', 'mailto:new',
@@ -1106,7 +1106,7 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly as text");
 
-        var $mailtoLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $mailtoLink = list.$('a.o_form_uri.o_field_widget.o_field_email');
         assert.strictEqual($mailtoLink.length, 5,
             "should have anchors with correct classes");
         assert.hasAttrValue($mailtoLink.first(), 'href', 'mailto:yop',
@@ -1126,7 +1126,7 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'new',
             "value should be properly updated");
-        $mailtoLink = list.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        $mailtoLink = list.$('a.o_form_uri.o_field_widget.o_field_email');
         assert.strictEqual($mailtoLink.length, 5,
             "should still have anchors with correct classes");
         assert.hasAttrValue($mailtoLink.first(), 'href', 'mailto:new',
@@ -1152,7 +1152,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        var $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_text_overflow');
+        var $mailtoLink = form.$('a.o_form_uri.o_field_widget.o_field_email');
         assert.strictEqual($mailtoLink.text(), '',
             "the value should be displayed properly");
 
