@@ -308,12 +308,12 @@ class MrpWorkcenterProductivity(models.Model):
             company_id = self.env.company
         return company_id
 
-    production_id = fields.Many2one('mrp.production', string='Manufacturing Order', related='workorder_id.production_id', readonly='True')
-    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True, check_company=True)
+    production_id = fields.Many2one('mrp.production', string='Manufacturing Order', related='workorder_id.production_id', readonly=True)
+    workcenter_id = fields.Many2one('mrp.workcenter', "Work Center", required=True, check_company=True, index=True)
     company_id = fields.Many2one(
         'res.company', required=True, index=True,
         default=lambda self: self._get_default_company_id())
-    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
+    workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True, index=True)
     user_id = fields.Many2one(
         'res.users', "User",
         default=lambda self: self.env.uid)
