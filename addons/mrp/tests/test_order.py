@@ -316,6 +316,22 @@ class TestMrpOrder(TestMrpCommon):
         production = mo_form.save()
         self.assertEqual(production.workorder_ids.duration_expected, 90)
 
+    def test_update_plan_date(self):
+        """Editing the scheduled date after planning the MO should unplan the MO, and adjust the date on the stock moves"""
+        planned_date = datetime(2023, 5, 15, 9, 0)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_4
+        mo_form.bom_id = self.bom_1
+        mo_form.product_qty = 1
+        mo_form.date_planned_start = planned_date
+        mo = mo_form.save()
+        self.assertEqual(mo.move_finished_ids[0].date, datetime(2023, 5, 15, 10, 0))
+        mo.action_confirm()
+        mo.button_plan()
+        with Form(mo) as frm:
+            frm.date_planned_start = datetime(2024, 5, 15, 9, 0)
+        self.assertEqual(mo.move_finished_ids[0].date, datetime(2024, 5, 15, 10, 0))
+
     def test_rounding(self):
         """ Checks we round up when bringing goods to produce and round half-up when producing.
         This implementation allows to implement an efficiency notion (see rev 347f140fe63612ee05e).
