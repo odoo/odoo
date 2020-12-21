@@ -535,7 +535,7 @@
                     <field name="analytic_account_id"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} o_project_tasks oe_kanban_global_click o_has_icon" >
                                 <div class="o_project_kanban_main">
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
@@ -1182,5 +1182,12 @@
             parent="menu_project_report"
             groups="project.group_project_rating"
             sequence="40"/>
+        
+        <record id="action_project_update" model="ir.actions.client">
+            <field name="name">Project's tasks</field>
+            <field name="tag">action_project_updates</field>
+            <field name="res_model">project.task</field>
+            <field name="context">{'project_id':active_id}</field>
+        </record>
 
 </odoo>

@@ -14,4 +14,12 @@
             </tbody>
         </table>
     </t>
+
+    <div t-name="project.ProjectTaskAction" class="o_project_action"></div>
+
+    <div t-name="project.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
+        <xpath expr="//div[hasclass('o_cp_top_left')]" position="inside">
+            <span>Hello World</span>
+        </xpath>
+    </div>
 </templates>
