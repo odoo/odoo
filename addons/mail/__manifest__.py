@@ -25,6 +25,7 @@
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_moderation_views.xml',
+        'views/mail_channel_partner_views.xml',
         'views/mail_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
