@@ -403,6 +403,7 @@ odoo.define('web.test_utils_create', function (require) {
         const defaultAction = {
             res_model: modelName,
             context: {},
+            type: 'ir.actions.act_window',
         };
         const viewOptions = Object.assign({
             action: Object.assign(defaultAction, params.action),
