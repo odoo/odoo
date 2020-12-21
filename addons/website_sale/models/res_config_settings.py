@@ -24,6 +24,8 @@ class ResConfigSettings(models.TransientModel):
     module_website_sale_wishlist = fields.Boolean("Wishlists")
     module_website_sale_comparison = fields.Boolean("Product Comparison Tool")
     module_website_sale_gift_card = fields.Boolean("Gift Card")
+    module_website_sale_loyalty = fields.Boolean("Loyalty Program Module", help="Enables a loyalty program for this website")
+
     module_account = fields.Boolean("Invoicing")
 
     cart_recovery_mail_template = fields.Many2one('mail.template', string='Cart Recovery Email', domain="[('model', '=', 'sale.order')]",
