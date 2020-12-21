@@ -418,12 +418,10 @@ function factory(dependencies) {
             } else if (type === 'moderator') {
                 return this._handleNotificationPartnerModerator(data);
             } else if (type === 'simple_notification') {
-                const escapedTitle = owl.utils.escape(data.title);
                 const escapedMessage = owl.utils.escape(data.message);
                 this.env.services['notification'].notify({
                     message: escapedMessage,
                     sticky: data.sticky,
-                    title: escapedTitle,
                     type: data.warning ? 'warning' : 'danger',
                 });
             } else if (type === 'toggle_star') {
@@ -491,7 +489,6 @@ function factory(dependencies) {
                         this.env._t("You have been invited to: %s"),
                         owl.utils.escape(channel.name)
                     ),
-                    title: this.env._t("Invitation"),
                     type: 'info',
                 });
             }
@@ -690,7 +687,6 @@ function factory(dependencies) {
             channel.update({ isServerPinned: false });
             this.env.services['notification'].notify({
                 message,
-                title: this.env._t("Unsubscribed"),
                 type: 'info',
             });
         }
