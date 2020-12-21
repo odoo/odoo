@@ -6162,8 +6162,11 @@ Fields:
         for name in names:
             snapshot0.fetch(name)
 
-        # determine which field(s) should be triggered an onchange
-        todo = list(names or nametree)
+        # Determine which field(s) should be triggered an onchange. On the first
+        # call, 'names' only contains fields with a default. If 'self' is a new
+        # line in a one2many field, 'names' also contains the one2many's inverse
+        # field, and that field may not be in nametree.
+        todo = list(names) + list(nametree) if first_call else list(names)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
