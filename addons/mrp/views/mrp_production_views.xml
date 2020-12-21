@@ -425,15 +425,6 @@
             </field>
         </record>
 
-        <record id="view_production_gantt" model="ir.ui.view">
-            <field name="name">mrp.production.gantt</field>
-            <field name="model">mrp.production</field>
-            <field name="arch" type="xml">
-                <gantt date_stop="date_finished" date_start="date_start" string="Productions" create="0">
-                </gantt>
-            </field>
-        </record>
-
         <record id="view_production_pivot" model="ir.ui.view">
             <field name="name">mrp.production.pivot</field>
             <field name="model">mrp.production</field>
