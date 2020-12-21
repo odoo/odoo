@@ -80,7 +80,7 @@ class Channel(models.Model):
         ('chat', 'Chat Discussion'),
         ('channel', 'Channel')],
         'Channel Type', default='channel')
-    is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat', default=False)
+    is_chat = fields.Boolean(string='Is a chat', compute='_compute_is_chat')
     description = fields.Text('Description')
     uuid = fields.Char('UUID', size=50, index=True, default=lambda self: str(uuid4()), copy=False)
     email_send = fields.Boolean('Send messages by email', default=False)
@@ -169,12 +169,10 @@ class Channel(models.Model):
         for record in self:
             record.is_member = record in membership_ids
 
+    @api.depends('channel_type')
     def _compute_is_chat(self):
         for record in self:
-            if record.channel_type == 'chat':
-                record.is_chat = True
-            else:
-                record.is_chat = False
+            record.is_chat = record.channel_type == 'chat'
 
     @api.onchange('public')
     def _onchange_public(self):
