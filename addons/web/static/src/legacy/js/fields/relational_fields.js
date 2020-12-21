@@ -663,13 +663,10 @@ var FieldMany2One = AbstractField.extend({
         if (this.limit < values.length) {
             values = this._manageSearchMore(values, value, domain, context);
         }
-        if (!this.can_create) {
-            return values;
-        }
 
         // Additional options...
-        const canQuickCreate = !this.nodeOptions.no_quick_create;
-        const canCreateEdit = !this.nodeOptions.no_create_edit;
+        const canQuickCreate = this.can_create && !this.nodeOptions.no_quick_create;
+        const canCreateEdit = this.can_create && !this.nodeOptions.no_create_edit;
         if (value.length) {
             // "Quick create" option
             const nameExists = results.some((result) => result[1] === value);
@@ -699,7 +696,8 @@ var FieldMany2One = AbstractField.extend({
             // "No results" option
             if (!values.length) {
                 values.push({
-                    label: _t("No results to show..."),
+                    label: _t("No records"),
+                    classname: 'o_m2o_no_result',
                 });
             }
         } else if (!this.value && (canQuickCreate || canCreateEdit)) {
