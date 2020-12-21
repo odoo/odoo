@@ -44,10 +44,11 @@
                                 <field name="sequence_code"/>
                                 <field name="warehouse_id" groups="stock.group_stock_multi_warehouses" force_save="1"/>
                                 <field name="print_label" attrs="{'invisible': [('code', '!=', 'internal')]}"/>
-                                <label for="reservation_method" attrs="{'invisible': [('code', '=', 'incoming')]}"/>
-                                <div class="o_row" attrs="{'invisible': [('code', '=', 'incoming')]}">
-                                    <field name="reservation_method" widget="radio"/>
-                                    <span attrs='{"invisible": [("reservation_method", "!=", "by_date")]}' class="oe_left"><field name="reservation_days_before" style="width: 30px; padding-top: 0px"/> days</span>
+                                <field name="reservation_method" attrs="{'invisible': [('code', '=', 'incoming')]}" widget="radio"/>
+                                <label for="reservation_days_before" string="Reserve before scheduled date" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}"/>
+                                <div class="o_row" attrs="{'invisible': ['|', ('code', '=', 'incoming'), ('reservation_method', '!=', 'by_date')]}">
+                                    <span><field name="reservation_days_before" style="width: 23px;"/> days before/</span>
+                                    <span><field name="reservation_days_before_priority" style="width: 23px;"/> days before when starred</span>
                                 </div>
                             </group>
                             <group>

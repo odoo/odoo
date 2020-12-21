@@ -227,6 +227,7 @@ const ReplenishReport = clientAction.extend({
         rr.on('mouseenter', '.o_report_replenish_change_priority', this._onMouseEnterPriority.bind(this));
         rr.on('mouseleave', '.o_report_replenish_change_priority', this._onMouseLeavePriority.bind(this));
         rr.on('click', '.o_report_replenish_unreserve', this._onClickUnreserve.bind(this));
+        rr.on('click', '.o_report_replenish_reserve', this._onClickReserve.bind(this));
     },
 
     //--------------------------------------------------------------------------
@@ -316,13 +317,26 @@ const ReplenishReport = clientAction.extend({
     _onClickUnreserve: function(ev) {
         const model = ev.target.getAttribute('model');
         const modelId = parseInt(ev.target.getAttribute('model-id'));
-        this._rpc( {
-            model: model,
+        return this._rpc( {
+            model,
             args: [[modelId]],
             method: 'do_unreserve'
-        }).then((result) => {
-            return this._reloadReport();
-        });
+        }).then(() => this._reloadReport());
+    },
+
+    /**
+     * Reserve the specified model/id, then reload this report.
+     *
+     * @returns {Promise}
+     */
+    _onClickReserve: function(ev) {
+        const model = ev.target.getAttribute('model');
+        const modelId = parseInt(ev.target.getAttribute('model-id'));
+        return this._rpc( {
+            model,
+            args: [[modelId]],
+            method: 'action_assign'
+        }).then(() => this._reloadReport());
     }
 
 });

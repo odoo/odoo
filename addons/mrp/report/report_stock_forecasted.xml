@@ -15,10 +15,18 @@
         </xpath>
          <xpath expr="//button[@name='unreserve_link']" position="after">
             <button t-if="line['move_out'] and line['move_out'].raw_material_production_id and line['move_out'].raw_material_production_id.unreserve_visible"
-                class="btn btn-primary o_report_replenish_unreserve"
+                class="btn btn-sm btn-primary o_report_replenish_unreserve"
                 t-attf-model="mrp.production"
                 t-att-model-id="line['move_out'].raw_material_production_id.id">
                 Unreserve
+            </button>
+        </xpath>
+        <xpath expr="//button[@name='reserve_link']" position="after">
+            <button t-if="line['move_out'] and line['move_out'].raw_material_production_id and line['move_out'].raw_material_production_id.reserve_visible"
+                class="btn btn-sm btn-primary o_report_replenish_reserve"
+                t-attf-model="mrp.production"
+                t-att-model-id="line['move_out'].raw_material_production_id.id">
+                Reserve
             </button>
         </xpath>
          <xpath expr="//button[@name='change_priority_link']" position="after">
