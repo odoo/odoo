@@ -3,12 +3,12 @@
 
 from odoo.tests import tagged
 from odoo.addons.mail.tests.common import mail_new_test_user
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, ValidationError, UserError
 from odoo.tools import mute_logger, formataddr
 
 
-class TestChannelAccessRights(TestMailCommon):
+class TestChannelAccessRights(MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -107,7 +107,7 @@ class TestChannelAccessRights(TestMailCommon):
                 trigger_read = partner.with_user(self.user_portal).name
 
 
-class TestChannelFeatures(TestMailCommon):
+class TestChannelFeatures(MailCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -303,7 +303,7 @@ class TestChannelFeatures(TestMailCommon):
 
 
 @tagged('moderation')
-class TestChannelModeration(TestMailCommon):
+class TestChannelModeration(MailCommon):
 
     @classmethod
     def setUpClass(cls):
