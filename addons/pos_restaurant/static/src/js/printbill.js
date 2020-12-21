@@ -28,6 +28,10 @@ var BillScreenWidget = screens.ReceiptScreenWidget.extend({
         this._super();
         this.pos.get_order()._printed = false;
     },
+    print_html: function(){
+        this._super();
+        this.pos.get_order()._printed = false;
+    },
 });
 
 gui.define_screen({name:'bill', widget: BillScreenWidget});
