@@ -2225,7 +2225,7 @@ class MailThread(models.AbstractModel):
 
         model = msg_vals.get('model') if msg_vals else message.model
         model_name = model_description or (self.with_lang().env['ir.model']._get(model).display_name if model else False) # one query for display name
-        recipients_groups_data = self._notify_classify_recipients(partners_data, model_name)
+        recipients_groups_data = self._notify_classify_recipients(partners_data, model_name, msg_vals=msg_vals)
 
         if not recipients_groups_data:
             return True
@@ -2562,7 +2562,7 @@ class MailThread(models.AbstractModel):
             )
         ]
 
-    def _notify_classify_recipients(self, recipient_data, model_name):
+    def _notify_classify_recipients(self, recipient_data, model_name, **kwargs):
         """ Classify recipients to be notified of a message in groups to have
         specific rendering depending on their group. For example users could
         have access to buttons customers should not have in their emails.
@@ -2596,7 +2596,13 @@ class MailThread(models.AbstractModel):
 
         groups = self._notify_get_groups()
 
-        access_link = self._notify_get_action_link('view')
+        link_args = {}
+        msg_vals = kwargs.get('msg_vals')
+        if msg_vals and 'model' in msg_vals and 'res_id' in msg_vals:
+            link_args['model'] = msg_vals.get('model')
+            link_args['res_id'] = msg_vals.get('res_id')
+
+        access_link = self._notify_get_action_link('view', **link_args)
 
         if model_name:
             view_title = _('View %s') % model_name
