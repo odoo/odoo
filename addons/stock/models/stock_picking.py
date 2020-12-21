@@ -365,7 +365,7 @@ class Picking(models.Model):
     show_reserved = fields.Boolean(related='picking_type_id.show_reserved')
     show_lots_text = fields.Boolean(compute='_compute_show_lots_text')
     has_tracking = fields.Boolean(compute='_compute_has_tracking')
-    immediate_transfer = fields.Boolean(default=False)
+    immediate_transfer = fields.Boolean(default=False, copy=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
 
@@ -586,6 +586,12 @@ class Picking(models.Model):
                 picking.message_subscribe([vals.get('partner_id')])
 
         return res
+
+    def copy(self, default=None):
+        ctx = dict(self.env.context)
+        ctx.pop('default_immediate_transfer', None)
+        self = self.with_context(ctx)
+        return super().copy(default)
 
     def write(self, vals):
         if vals.get('picking_type_id') and self.state != 'draft':
