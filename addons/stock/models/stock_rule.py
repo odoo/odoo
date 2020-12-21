@@ -85,7 +85,7 @@ class StockRule(models.Model):
     auto = fields.Selection([
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',
-        default='manual', index=True, required=True,
+        default='manual', required=True,
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
