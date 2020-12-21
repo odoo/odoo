@@ -1960,6 +1960,30 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view, click on m2o dropdown do not close editable row', function (assert) {
+        assert.expect(2);
+
+        var list = createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                    '<field name="m2o"/>' +
+                '</tree>',
+        });
+
+        list.$buttons.find('.o_list_button_add').click();
+        testUtilsDom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        var $dropdown = list.$('.o_selected_row .o_data_cell .o_field_many2one input').autocomplete('widget');
+        testUtilsDom.click($dropdown);
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        testUtilsDom.click($dropdown.find("li:first"));
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        list.destroy();
+    });
+
     QUnit.test('click on a button in a list view', function (assert) {
         assert.expect(9);
 
