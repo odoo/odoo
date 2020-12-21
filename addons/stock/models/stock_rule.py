@@ -483,10 +483,9 @@ class ProcurementGroup(models.Model):
     def _get_moves_to_assign_domain(self, company_id):
         moves_domain = [
             ('state', 'in', ['confirmed', 'partially_available']),
-            ('product_uom_qty', '!=', 0.0)
+            ('product_uom_qty', '!=', 0.0),
+            ('reservation_date', '<=', fields.Date.today())
         ]
-        moves_domain = expression.AND([moves_domain, ['|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
-                                                           ('reservation_date', '<=', fields.Date.today())]])
         if company_id:
             moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
         return moves_domain
@@ -506,7 +505,7 @@ class ProcurementGroup(models.Model):
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
-            order='priority desc, date asc')
+            order='reservation_date, priority desc, date asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:

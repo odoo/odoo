@@ -496,13 +496,14 @@ class StockMove(models.Model):
                     move_lines_commands.append((0, 0, move_line_vals))
             move.write({'move_line_ids': move_lines_commands})
 
-    @api.depends('picking_type_id', 'date')
+    @api.depends('picking_type_id', 'date', 'priority')
     def _compute_reservation_date(self):
         for move in self:
-            if move.state not in ['draft', 'confirmed', 'waiting', 'partially_available']:
-                continue
-            if move.picking_type_id and move.picking_type_id.reservation_method == 'by_date':
-                move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=move.picking_type_id.reservation_days_before)
+            if move.picking_type_id.reservation_method == 'by_date' and move.state in ['draft', 'confirmed', 'waiting', 'partially_available']:
+                days = move.picking_type_id.reservation_days_before
+                if move.priority == '1':
+                    days = move.picking_type_id.reservation_days_before_priority
+                move.reservation_date = fields.Date.to_date(move.date) - timedelta(days=days)
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -1144,6 +1145,9 @@ class StockMove(models.Model):
 
         move_to_confirm.write({'state': 'confirmed'})
         (move_waiting | move_create_proc).write({'state': 'waiting'})
+        # procure_method sometimes changes with certain workflows so just in case, apply to all moves
+        (move_to_confirm | move_waiting | move_create_proc).filtered(lambda m: m.picking_type_id.reservation_method == 'at_confirm')\
+            .write({'reservation_date': fields.Date.today()})
 
         # assign picking in batch for all confirmed move that share the same details
         for moves_ids in to_assign.values():
@@ -1826,8 +1830,9 @@ class StockMove(models.Model):
         domains = []
         for move in self:
             domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
-        static_domain = [('state', 'in', ['confirmed', 'partially_available']), ('procure_method', '=', 'make_to_stock')]
-        reservation_domain = ['|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
-                                   ('reservation_date', '<=', fields.Date.today())]
-        moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains), reservation_domain]))
+        static_domain = [('state', 'in', ['confirmed', 'partially_available']),
+                         ('procure_method', '=', 'make_to_stock'),
+                         ('reservation_date', '<=', fields.Date.today())]
+        moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]),
+                                                         order='reservation_date, priority desc, date asc')
         moves_to_reserve._action_assign()
