@@ -70,7 +70,7 @@ class MrpUnbuild(models.Model):
         string='Processed Disassembly Lines')
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('done', 'Done')], string='Status', default='draft', index=True)
+        ('done', 'Done')], string='Status', default='draft')
     allowed_mo_ids = fields.One2many('mrp.production', compute='_compute_allowed_mo_ids')
 
     @api.depends('company_id', 'product_id')
