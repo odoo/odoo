@@ -2585,6 +2585,33 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one with can_create=false shows no result item when searched something that doesn\'t exist', async function (assert) {
+            assert.expect(2);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch:
+                    `<form string="Partners">
+                    <sheet>
+                        <field name="product_id" can_create="false" can_write="false"/>
+                    </sheet>
+                </form>`,
+            });
+
+            await testUtils.dom.click(form.$('.o_field_many2one input'));
+            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
+                'abc', 'keydown');
+            await testUtils.nextTick();
+            assert.strictEqual($('.ui-autocomplete .o_m2o_dropdown_option:contains(Create)').length, 0,
+                "there shouldn't be any option to search and create");
+            assert.strictEqual($('.ui-autocomplete .ui-menu-item a:contains(No records)').length, 1,
+                "there should be option for 'No records'");
+
+            form.destroy();
+        });
+
         QUnit.test('pressing enter in a m2o in an editable list', async function (assert) {
             assert.expect(8);
             var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
