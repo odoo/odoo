@@ -2863,6 +2863,30 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('editable list view, click on m2o dropdown do not close editable row', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                '<field name="m2o"/>' +
+                '</tree>',
+        });
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        const $dropdown = list.$('.o_selected_row .o_data_cell .o_field_many2one input').autocomplete('widget');
+        await testUtils.dom.click($dropdown);
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        await testUtils.dom.click($dropdown.find("li:first"));
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        list.destroy();
+    });
+
     QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
         const assertions = [
             { field: 'bar', expected: 70, type: 'Boolean' },
