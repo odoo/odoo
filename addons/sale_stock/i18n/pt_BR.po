@@ -40,7 +40,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Existem%s%sdisponíveis em todos os armazéns.\n"
+"Existem %s %s disponíveis em todos os armazéns.\n"
 "\n"
 
 #. module: sale_stock
@@ -50,7 +50,7 @@ msgid ""
 "                Manual actions may be needed."
 msgstr ""
 ".\n"
-"            Ações manuais podem ser requeridas."
+"                Ações manuais podem ser requeridas."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -59,7 +59,7 @@ msgid ""
 "times\"/> Cancelled</span>"
 msgstr ""
 "<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/>Cancelado</span>"
+"times\"/> Cancelado</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -68,7 +68,7 @@ msgid ""
 "clock-o\"/> Preparation</span>"
 msgstr ""
 "<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/>Preparação</span>"
+"clock-o\"/> Preparação</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -77,7 +77,7 @@ msgid ""
 "truck\"/> Shipped</span>"
 msgstr ""
 "<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/>Enviado</span>"
+"truck\"/> Enviado</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -86,7 +86,7 @@ msgid ""
 "clock-o\"/> Partially Available</span>"
 msgstr ""
 "<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/>Parciamente Disponível</span>"
+"clock-o\"/> Parciamente Disponível</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -104,9 +104,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
-"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
-"specific.\" role=\"img\" aria-label=\"Values set here are company-"
-"specific.\" groups=\"base.group_multi_company\"/>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Os valores definidos aqui são específicos da"
+"empresa.\" role=\"img\" aria-label=\"Os valores definidos aqui são específicos da"
+"empresa.\" groups=\"base.group_multi_company\"/>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -144,10 +144,10 @@ msgid ""
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
 "De acordo com a configuração do produto, a quantidade fornecida pode ser calculada automaticamente pelo mecanismo: \n"
-"- Manual: a quantidade é definida manualmente na linha \n"
-"- Analítica De despesas: a quantidade é a soma da quantidade das despesas lançadas \n"
-"- Quadro de horários: a quantidade é a soma das horas registradas nas tarefas vinculadas a esta linha de venda \n"
-"- Movimentos de estoque: a quantidade é proveniente de picking confirmado\n"
+"  - Manual: a quantidade é definida manualmente na linha \n"
+"  - Analítica De despesas: a quantidade é a soma da quantidade das despesas lançadas \n"
+"  - Quadro de horários: a quantidade é a soma das horas registradas nas tarefas vinculadas a esta linha de venda \n"
+"  - Movimentos de estoque: a quantidade é proveniente de picking confirmado\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -162,8 +162,7 @@ msgstr "Análises à partir de Despesas"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr ""
-"Aplicar rotas especiais a partir de pedidos (por exemplo, dropshipping, MTO)"
+msgstr "Aplicar rotas especiais a partir de pedidos (por exemplo, dropshipping, MTO)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
@@ -218,7 +217,7 @@ msgstr "Exibir incoterms no pedido de venda e faturas relacionadas"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr "Exibir incoterms em pedidos & amp; faturas"
+msgstr "Exibir incoterms em pedidos &amp; faturas"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:101
@@ -226,7 +225,7 @@ msgstr "Exibir incoterms em pedidos & amp; faturas"
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
-"Não se esqueça de alterar o parceiro nas seguintes ordens de entrega:%s"
+"Não se esqueça de alterar o parceiro nas seguintes ordens de entrega: %s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -428,7 +427,7 @@ msgid ""
 msgstr ""
 "Aconselha-se a reserva manual de produtos em pedidos de entrega ou a "
 "execução do agendador para gerenciar melhor as prioridades em caso de longos"
-" prazos de entrega ou / e frequentes estoques. Por padrão, o planejador é "
+" prazos de entrega ou/e frequentes estoques. Por padrão, o planejador é "
 "executado automaticamente a cada 24 horas."
 
 #. module: sale_stock
@@ -575,8 +574,7 @@ msgstr ""
 #: code:addons/sale_stock/models/sale_order.py:397
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
-msgstr ""
-"Este produto é empacotado por by %.2f %s. Você deveria vender %.2f %s."
+msgstr "Este produto é embalado por %.2f %s. Você deveria vender %.2f %s."
 
 #. module: sale_stock
 #: selection:sale.order.line,qty_delivered_method:0
@@ -643,7 +641,8 @@ msgid ""
 "You plan to sell %s %s of %s but you only have %s %s available in %s "
 "warehouse."
 msgstr ""
-"Você planeja vender%s%sde %smas você só tem%s%sdiponível em %sarmazén."
+"Você planeja vender %s %s do %s mas só existe(m) %s %s disponível(is) em %s "
+"."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
