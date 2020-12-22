@@ -254,7 +254,7 @@ function prepend_trigger(steps, prepend_text='') {
 
 function registerThemeHomepageTour(name, steps) {
     tour.register(name, {
-        url: "/",
+        url: "/?enable_editor=1",
         sequence: 1010,
         saveAs: "homepage",
     }, prepend_trigger(
