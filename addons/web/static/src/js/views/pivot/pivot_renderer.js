@@ -4,6 +4,7 @@
     const CustomGroupByItem = require('web.CustomGroupByItem');
     const OwlAbstractRenderer = require('web.AbstractRendererOwl');
     const field_utils = require('web.field_utils');
+    const { DEFAULT_INTERVAL } = require('web.searchUtils');
 
     const { useExternalListener, useState, useSubEnv, onMounted, onPatched } = owl.hooks;
 
@@ -17,10 +18,29 @@
          */
         _onApply() {
             const field = this.props.fields.find(f => f.name === this.state.fieldName);
-            this.model.dispatch('createNewGroupBy', field, true);
+            let interval;
+            if (['date', 'datetime'].includes(field.type)) {
+                interval = DEFAULT_INTERVAL;
+            }
+            this.trigger('groupby_menu_selection', { field, interval, customGroup: true });
             this.state.open = false;
         }
+
+        /**
+         * Stops propagation of click event if custom groupby menu is toggled
+         * propagate click event when Apply button is clicked to close dropdown
+         *
+         * @param {OwlEvent} ev
+         */
+        _onToggleCustomGroupbyItem(ev) {
+            if (!ev.target.classList.contains('o_apply_group_by') &&
+                (this.el.contains(ev.target) || this.el.contains(document.activeElement))) {
+                ev.stopPropagation();
+            }
+        }
     }
+
+    PivotCustomGroupByItem.template = "web.PivotCustomGroupByItem";
 
     class PivotGroupByMenu extends GroupByMenu {
 
@@ -32,13 +52,8 @@
          * @override
          */
         get items() {
-            const items = this.model.get('filters', f => f.type === 'groupBy');
-            items.forEach(item => {
-                if (this.props.activeGroupBys.includes(item.fieldName)) {
-                    item.isActive = true;
-                }
-            });
-            return items;
+            const searchGroups = this.model.get('filters', f => f.type === 'groupBy');
+            return this.props.selectionGroupBys(this.props.hasSearchGroups, searchGroups);
         }
 
         //----------------------------------------------------------------------
@@ -55,14 +70,14 @@
                 name: item.fieldName,
             };
             this.trigger('groupby_menu_selection', { field, interval });
-            super._onItemSelected(...arguments);
         }
     }
     PivotGroupByMenu.template = "web.PivotGroupByMenu";
     PivotGroupByMenu.components = { PivotCustomGroupByItem };
     PivotGroupByMenu.props = Object.assign({}, GroupByMenu.props, {
         fields: Object,
-        activeGroupBys: Array,
+        selectionGroupBys: Function,
+        hasSearchGroups: Boolean,
     });
 
     /**
@@ -104,7 +119,8 @@
             useSubEnv({
                 searchModel: this.props.searchModel,
             });
-            this.hasSearchGroups = this.props.searchModel.get('filters', f => f.type === 'groupBy' && !f.customGroup);
+            const searchGroups = this.props.searchModel.get('filters', f => f.type === 'groupBy' && !f.customGroup)
+            this.hasSearchGroups = searchGroups && !!searchGroups.length;
             this.customGroupableFields = this._formatFields(this.props.fields);
 
             onMounted(() => this._updateTooltip());
@@ -220,18 +236,6 @@
 
 
         /**
-         * Handles a click on a menu item in the dropdown to select a groupby.
-         *
-         * @private
-         * @param {Object} field
-         * @param {string} interval
-         */
-        _onClickMenuGroupBy(field, interval) {
-            this.trigger('groupby_menu_selection', { field, interval });
-        }
-
-
-        /**
          * Handles a click on a header node
          *
          * @private
@@ -249,24 +253,7 @@
                     click: 'leftClick'
                 };
             }
-            // when opened header is closed then grouping will be removed from pivot groupbys(col/row/extended groupbys)
-            // callback will be called from opened_header_click handler, it is called to toggle those
-            // groups which are active inside search groupby but we collpse it from pivot view
-            const updatePivotGroupBy = () => {
-                this.props.activeGroupBys;
-                this.pivotGroupBy;
-                if (this.hasSearchGroups) {
-                    const searchGroupBys = this.props.searchModel.get('filters', f => f.type === 'groupBy');
-                    searchGroupBys.forEach(group => {
-                        if (group.isActive && !this.props.activeGroupBys.includes(group.fieldName)) {
-                            // TODO: Do not call rpc when toggling filter here as we do not want trigger query here
-                            // pivot reads data for itself
-                            this.props.searchModel.dispatch('toggleFilter', group.id);
-                        }
-                    });
-                }
-            };
-            this.trigger(cell.isLeaf ? 'closed_header_click' : 'opened_header_click', { cell, type, callback: updatePivotGroupBy });
+            this.trigger(cell.isLeaf ? 'closed_header_click' : 'opened_header_click', { cell, type });
         }
 
         /**

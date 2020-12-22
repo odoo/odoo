@@ -220,12 +220,9 @@
          * @param {CustomEvent} ev
          * @private
          * */
-        _onOpenedHeaderClicked: async function (ev) {
+        _onOpenedHeaderClicked: function (ev) {
             this.model.closeGroup(ev.data.cell.groupId, ev.data.type);
-            await this.update({}, { reload: false });
-            if (ev.data.callback) {
-                ev.data.callback();
-            }
+            this.update({}, { reload: false });
         },
         /**
          * @param {CustomEvent} ev
@@ -268,7 +265,7 @@
             if (interval) {
                 groupBy = groupBy + ':' + interval;
             }
-            this.model.addGroupBy(groupBy, this.selectedGroup.type);
+            this.model.addGroupBy(groupBy, this.selectedGroup.type, ev.data.customGroup);
             await this.model.expandGroup(this.selectedGroup, groupBy);
             this.update({}, { reload: false });
         },

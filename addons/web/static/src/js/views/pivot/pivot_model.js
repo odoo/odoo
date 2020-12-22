@@ -306,11 +306,14 @@ var PivotModel = AbstractModel.extend({
      * @param {string} groupBy
      * @param {'row'|'col'} type
      */
-    addGroupBy: function (groupBy, type) {
+    addGroupBy: function (groupBy, type, customGroup = false) {
         if (type === 'row') {
             this.data.expandedRowGroupBys.push(groupBy);
         } else {
             this.data.expandedColGroupBys.push(groupBy);
+        }
+        if (customGroup) {
+            this.data.customGroupBys.push(groupBy);
         }
     },
     /**
@@ -370,6 +373,9 @@ var PivotModel = AbstractModel.extend({
         } else {
             expandedGroupBys.splice(newGroupBysLength - groupBys.length);
         }
+        this.data.customGroupBys = this.data.customGroupBys.filter((groupBy) => {
+            return expandedGroupBys.includes(groupBy);
+        });
     },
     /**
      * Reload the view with the current rowGroupBys and colGroupBys
@@ -534,14 +540,9 @@ var PivotModel = AbstractModel.extend({
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,
-            selectionGroupBys: this._getSelectionGroupBy(groupBys),
+            selectionGroupBys: this._getSelectionGroupBy.bind(this),
             modelName: this.modelName,
-            activeGroupBys: this._getActiveGroupBys(),
         };
-        // TODO: MSH: add key activeGroupBys, which will call method _getSelectedGroupBys
-        // _getSelectedGroupBys will call this._getGroupBys() and return active groupbys
-        // we will use activeGroupBys while calling <PivotGroupByMenu> in template, will pass
-        // as props and use it in PivotGroupByMenu items getter method to set isActive flag
         if (!raw && state.hasData) {
             state.table = this._getTable();
             state.tree = this.rowGroupTree;
@@ -588,6 +589,7 @@ var PivotModel = AbstractModel.extend({
         this.data = {
             expandedRowGroupBys: [],
             expandedColGroupBys: [],
+            customGroupBys: [],
             domain: this.initialDomain,
             context: _.extend({}, session.user_context, params.context),
             groupedBy: params.context.pivot_row_groupby || params.groupedBy,
@@ -786,15 +788,6 @@ var PivotModel = AbstractModel.extend({
         } else {
             return values[0];
         }
-    },
-    _getActiveGroupBys() {
-        const groupBys = this._getGroupBys();
-        let groupedFieldNames = groupBys.rowGroupBys
-            .concat(groupBys.colGroupBys)
-            .map(function (g) {
-                return g.split(':')[0];
-            });
-        return groupedFieldNames;
     },
     /**
      * Returns the rowGroupBys and colGroupBys arrays that
@@ -1077,26 +1070,62 @@ var PivotModel = AbstractModel.extend({
 
     /**
      * Get the selection needed to display the group by dropdown
+     * if hasSearchGroups is true i.e. searchview has group tag then return all groupable fields
+     * if hasSearchGroups is false then return all fields defined inside searchview group tag
+     *
+     * @param {Boolean} hasSearchGroups
+     * @param {Object[]} searchGroups
      * @returns {Object[]}
      * @private
      */
-    _getSelectionGroupBy: function (groupBys) {
-        let groupedFieldNames = groupBys.rowGroupBys
+    _getSelectionGroupBy: function (hasSearchGroups, searchGroups) {
+        const groupBys = this._getGroupBys();
+
+        const groupedFieldNames = groupBys.rowGroupBys
             .concat(groupBys.colGroupBys)
             .map(function (g) {
                 return g.split(':')[0];
             });
 
-        var fields = Object.keys(this.groupableFields)
-            .map((fieldName, index) => {
-                return {
-                    name: fieldName,
-                    field: this.groupableFields[fieldName],
-                    active: groupedFieldNames.includes(fieldName)
-                }
-            })
-            .sort((left, right) => left.field.string < right.field.string ? -1 : 1);
-        return fields;
+        if (!hasSearchGroups) {
+            const fields = Object.keys(this.groupableFields)
+                .map((fieldName, index) => {
+                    const field = this.groupableFields[fieldName]
+                    return {
+                        description: field.string,
+                        fieldName,
+                        fieldType: field.type,
+                        isActive: groupedFieldNames.includes(fieldName),
+                    };
+                })
+                .sort((left, right) => left.description < right.description ? -1 : 1);
+            return fields;
+        }
+
+        // concat custom items which was previously applied from custom group selection
+        // so that previously added custom group also dispalyed in dropdown
+        this.data.customGroupBys.map((fieldName, index) => {
+            fieldName = fieldName.split(":")[0];
+            const isFieldAvailable = searchGroups.find(f => f.fieldName === fieldName);
+            const field = this.groupableFields[fieldName];
+            if (!isFieldAvailable) {
+                searchGroups.push({
+                    description: field.string,
+                    fieldName,
+                    fieldType: field.type,
+                    groupNumber: 1000, // for instance static 1000
+                    isActive: false,
+                });
+            }
+        });
+
+        // set active groups to search groups
+        searchGroups.forEach(item => {
+            if (groupedFieldNames.includes(item.fieldName)) {
+                item.isActive = true;
+            }
+        });
+        return searchGroups;
     },
 
     /**

@@ -77,11 +77,11 @@ odoo.define('web.GroupByMenu', function (require) {
          */
         _onItemSelected(ev) {
             ev.stopPropagation();
-            const { item, option, withoutFacet } = ev.detail;
+            const { item, option } = ev.detail;
             if (option) {
-                this.model.dispatch('toggleFilterWithOptions', item.id, option.id, withoutFacet);
+                this.model.dispatch('toggleFilterWithOptions', item.id, option.id);
             } else {
-                this.model.dispatch('toggleFilter', item.id, withoutFacet);
+                this.model.dispatch('toggleFilter', item.id);
             }
         }
     }
