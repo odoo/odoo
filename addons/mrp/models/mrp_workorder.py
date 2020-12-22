@@ -511,6 +511,12 @@ class MrpWorkorder(models.Model):
             elif float_compare(quantity_remaining, final_lot_quantity, precision_rounding=rounding) < 0:
                 final_lot_quantity = quantity_remaining
 
+        if not final_lot_quantity and self.production_id.workorder_ids and not self.production_id.workorder_ids.finished_workorder_line_ids and self.production_id.move_finished_ids.filtered(lambda m: m.state == 'done'):
+            # Posted Inventory before workorders completion
+            # this may result in missing workorder lines and blocked MO because
+            # final_lot_quantity is set to 0 while there are still workorders left to finish
+            final_lot_quantity = self.qty_remaining
+
         # final lot line for this lot on this workorder.
         current_lot_lines = self.finished_workorder_line_ids.filtered(lambda line: line.lot_id == self.finished_lot_id)
 
