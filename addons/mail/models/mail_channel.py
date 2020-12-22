@@ -827,6 +827,8 @@ class Channel(models.Model):
             :param partner_ids : list of partner id to add
         """
         partners = self.env['res.partner'].browse(partner_ids)
+        self._invite_check_access(partners)
+
         # add the partner
         for channel in self:
             partners_to_add = partners - channel.channel_partner_ids
@@ -845,6 +847,20 @@ class Channel(models.Model):
 
         # broadcast the channel header to the added partner
         self._broadcast(partner_ids)
+
+    def _invite_check_access(self, partners):
+        """ Check invited partners could match channel access """
+        failed = []
+        if any(channel.public == 'groups' for channel in self):
+            for channel in self.filtered(lambda c: c.public == 'groups'):
+                invalid_partners = [partner for partner in partners if channel.group_public_id not in partner.mapped('user_ids.groups_id')]
+                failed += [(channel, partner) for partner in invalid_partners]
+
+        if failed:
+            raise UserError(
+                _('Following invites are invalid as user groups do not match: %s') %
+                  ', '.join('%s (channel %s)' % (partner.name, channel.name) for channel, partner in failed)
+            )
 
     @api.model
     def channel_set_custom_name(self, channel_id, name=False):
