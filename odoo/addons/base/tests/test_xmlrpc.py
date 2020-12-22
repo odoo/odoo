@@ -74,15 +74,18 @@ class TestXMLRPC(common.HttpCase):
 # really just for the test cursor
 @common.tagged('post_install', '-at_install')
 class TestAPIKeys(common.HttpCase):
-    def setUp(self):
-        super().setUp()
-        self._user = self.env['res.users'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls._user = cls.env['res.users'].create({
             'name': "Bylan",
             'login': 'byl',
             'password': 'ananananan',
             'tz': 'Australia/Eucla',
         })
 
+    def setUp(self):
+        super().setUp()
         # needs a fake request in order to call methods protected with check_identity
         fake_req = DotDict({
             # various things go and access request items
