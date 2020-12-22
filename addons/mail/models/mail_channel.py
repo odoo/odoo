@@ -300,6 +300,29 @@ class Channel(models.Model):
             self.sudo().message_post(body=notification, subtype_xmlid="mail.mt_comment", author_id=partner.id)
         return result
 
+    def _action_add_members(self, partners):
+        """ Private implementation to add members to channels. Done as sudo to
+        avoid ACLs issues with channel partners. """
+        to_create = []
+        for channel in self:
+            channel_new = partners - channel.channel_partner_ids
+            to_create += [
+                {'partner_id': partner.id,
+                 'channel_id': channel.id,
+                } for partner in channel_new]
+        if to_create:
+            self.env['mail.channel.partner'].sudo().create(to_create)
+            self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
+
+    def _action_remove_members(self, partners):
+        """ Private implementation to remove members from channels. Done as sudo
+        to avoid ACLs issues with channel partners. """
+        self.env['mail.channel.partner'].sudo().search([
+            ('partner_id', 'in', partners.ids),
+            ('channel_id', 'in', self.ids)
+        ]).unlink()
+        self.invalidate_cache(fnames=['channel_partner_ids', 'channel_last_seen_partner_ids'])
+
     def _notify_get_groups(self):
         """ All recipients of a message on a channel are considered as partners.
         This means they will receive a minimal email, without a link to access
