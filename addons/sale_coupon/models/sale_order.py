@@ -427,6 +427,33 @@ class SaleOrder(models.Model):
         """
         return self.code_promo_program_id + self.no_code_promo_program_ids + self.applied_coupon_ids.mapped('program_id')
 
+    def _get_invoice_status(self):
+        # Handling of a specific situation: an order contains
+        # a product invoiced on delivery and a promo line invoiced
+        # on order. We would avoid having the invoice status 'to_invoice'
+        # if the created invoice will only contain the promotion line
+        super()._get_invoice_status()
+        for order in self.filtered(lambda order: order.invoice_status == 'to invoice'):
+            paid_lines = order._get_paid_order_lines()
+            if not any(line.invoice_status == 'to invoice' for line in paid_lines):
+                order.invoice_status = 'no'
+
+    def _get_invoiceable_lines(self, final=False):
+        """ Ensures we cannot invoice only reward lines.
+
+        Since promotion lines are specified with service products,
+        those lines are directly invoiceable when the order is confirmed
+        which can result in invoices containing only promotion lines.
+
+        To avoid those cases, we allow the invoicing of promotion lines
+        iff at least another 'basic' lines is also invoiceable.
+        """
+        invoiceable_lines = super()._get_invoiceable_lines(final)
+        reward_lines = self._get_reward_lines()
+        if invoiceable_lines <= reward_lines:
+            return self.env['sale.order.line'].browse()
+        return invoiceable_lines
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
