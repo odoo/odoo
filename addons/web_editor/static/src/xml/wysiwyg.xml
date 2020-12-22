@@ -179,7 +179,7 @@
                 <select class="custom-select o_we_search_select">
                     <option value="all">All</option>
                     <option value="database">My Images</option>
-                    <option value="media-library">Illustrations</option>
+                    <option t-if="widget.options.useMediaLibrary" value="media-library">Illustrations</option>
                 </select>
             </div>
         </t>
