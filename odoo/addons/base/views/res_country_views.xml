@@ -84,7 +84,7 @@
                             <h1><field name="name"/></h1>
                         </div>
                         <group name="country_group">
-                            <field name="country_ids" widget="many2many_tags"/>
+                            <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                         </group>
                     </sheet>
                 </form>
@@ -106,7 +106,7 @@
                 <tree string="State" editable="bottom">
                     <field name="name"/>
                     <field name="code"/>
-                    <field name="country_id" options="{'no_create': True}"/>
+                    <field name="country_id" options="{'no_create': True, 'no_open': True}"/>
                 </tree>
             </field>
         </record>

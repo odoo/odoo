@@ -336,7 +336,7 @@
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="show"/>
+                    <field name="country_id" optional="show" options="{'no_open': True, 'no_create': True}"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="user_id" optional="show"  widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="show"/>
@@ -652,7 +652,7 @@
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="hide"/>
+                    <field name="country_id" optional="hide" options="{'no_open': True, 'no_create': True}"/>
                     <field name="user_id" widget="many2one_avatar_user" optional="show" domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="show"/>
                     <field name="priority" optional="hide"/>

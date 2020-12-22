@@ -239,7 +239,7 @@
                             <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
                                 <field name="auto_popup_timer" class="oe_inline"/> seconds
                             </div>
-                            <field name="country_ids" widget="many2many_tags"/>
+                            <field name="country_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}"/>
                         </group>
                     </sheet>
                 </form>
