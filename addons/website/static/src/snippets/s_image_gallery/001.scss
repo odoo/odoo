@@ -115,10 +115,17 @@
         > .container, > .container-fluid, > .o_container_small {
             height: 100%;
         }
-        &.s_image_gallery_cover .carousel-item > img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        &.s_image_gallery_cover .carousel-item {
+            > a {
+                width: 100%;
+                height: 100%;
+            }
+            > a > img,
+            > img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
         &:not(.s_image_gallery_show_indicators) .carousel {
             ul.carousel-indicators {
