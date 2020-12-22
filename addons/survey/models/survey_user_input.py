@@ -749,7 +749,7 @@ class SurveyUserInputLine(models.Model):
                     answer_score = question_answer.answer_score
                     answer_is_correct = question_answer.is_correct
         # for all other scored question cases, record question answer_score (can be: pos or 0)
-        elif question.is_scored_question:
+        elif question.question_type in ['date', 'datetime', 'numerical_box']:
             answer = vals.get('value_%s' % answer_type)
             if answer_type == 'numerical_box':
                 answer = float(answer)
