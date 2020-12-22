@@ -71,7 +71,6 @@ odoo.define('website_slides.fullscreen', function (require) {
          */
         _setupYoutubePlayer: function (){
             this.player = new YT.Player('youtube-player' + this.slide.id, {
-                host: 'https://www.youtube.com',
                 playerVars: {
                     'autoplay': 1,
                     'origin': window.location.origin
