@@ -684,7 +684,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         if (this._isInDom) {
             for (const handle in this.allFieldWidgets) {
                 this.allFieldWidgets[handle].forEach(widget => {
-                    if (widget.on_attach_callback) {
+                    if (!utils.isComponent(widget.constructor) && widget.on_attach_callback) {
                         widget.on_attach_callback();
                     }
                 });
@@ -694,6 +694,8 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
                     widget.on_attach_callback();
                 }
             });
+            // call on_attach_callback on child components (including field components)
+            WidgetAdapterMixin.on_attach_callback.call(this);
         }
     },
     /**
