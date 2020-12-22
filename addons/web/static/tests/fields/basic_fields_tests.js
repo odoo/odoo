@@ -1899,13 +1899,13 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
+        assert.containsOnce(form, 'div.o_form_uri.o_field_widget.o_text_overflow > a',
             "should have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://yop',
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow > a'), 'href', 'http://yop',
             "should have proper href link");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'target', '_blank',
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow > a'), 'target', '_blank',
             "should have target attribute set to _blank");
-        assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'yop',
+        assert.strictEqual(form.$('div.o_form_uri.o_field_widget.o_text_overflow > a').text(), 'yop',
             "the value should be displayed properly");
 
         // switch to edit mode and check the result
@@ -1920,11 +1920,11 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.containsOnce(form, 'a.o_form_uri.o_field_widget.o_text_overflow',
+        assert.containsOnce(form, 'div.o_form_uri.o_field_widget.o_text_overflow > a',
             "should still have a anchor with correct classes");
-        assert.hasAttrValue(form.$('a.o_form_uri.o_field_widget.o_text_overflow'), 'href', 'http://limbo',
+        assert.hasAttrValue(form.$('div.o_form_uri.o_field_widget.o_text_overflow > a'), 'href', 'http://limbo',
             "should have proper new href link");
-        assert.strictEqual(form.$('a.o_form_uri.o_field_widget.o_text_overflow').text(), 'limbo',
+        assert.strictEqual(form.$('div.o_form_uri.o_field_widget.o_text_overflow > a').text(), 'limbo',
             'the new value should be displayed');
 
         form.destroy();
@@ -1943,7 +1943,7 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('a[name="foo"]').text(), 'kebeclibre',
+        assert.strictEqual(form.$('div[name="foo"] > a').text(), 'kebeclibre',
             "url text should come from the text attribute");
         form.destroy();
     });
@@ -1970,10 +1970,10 @@ QUnit.module('basic_fields', {
             res_id: 1,
         });
 
-        assert.strictEqual(form.$('a[name="url1"]').attr('href'), 'http://www.url1.com');
-        assert.strictEqual(form.$('a[name="url2"]').attr('href'), 'www.url2.com');
-        assert.strictEqual(form.$('a[name="url3"]').attr('href'), 'http://www.url3.com');
-        assert.strictEqual(form.$('a[name="url4"]').attr('href'), 'https://url4.com');
+        assert.strictEqual(form.$('div[name="url1"] > a').attr('href'), 'http://www.url1.com');
+        assert.strictEqual(form.$('div[name="url2"] > a').attr('href'), 'www.url2.com');
+        assert.strictEqual(form.$('div[name="url3"] > a').attr('href'), 'http://www.url3.com');
+        assert.strictEqual(form.$('div[name="url4"] > a').attr('href'), 'https://url4.com');
 
         form.destroy();
     });
@@ -1990,9 +1990,9 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').length, 5,
             "should have 5 cells");
-        assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
+        assert.containsN(list, 'div.o_form_uri.o_field_widget.o_text_overflow > a', 5,
             "should have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://yop',
+        assert.hasAttrValue(list.$('div.o_form_uri.o_field_widget.o_text_overflow > a').first(), 'href', 'http://yop',
             "should have proper href link");
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector)').first().text(), 'yop',
             "value should be displayed properly as text");
@@ -2009,11 +2009,11 @@ QUnit.module('basic_fields', {
         await testUtils.dom.click(list.$buttons.find('.o_list_button_save'));
         $cell = list.$('tbody td:not(.o_list_record_selector)').first();
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
-        assert.containsN(list, 'a.o_form_uri.o_field_widget.o_text_overflow', 5,
+        assert.containsN(list, 'div.o_form_uri.o_field_widget.o_text_overflow > a', 5,
             "should still have 5 anchors with correct classes");
-        assert.hasAttrValue(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first(), 'href', 'http://brolo',
+        assert.hasAttrValue(list.$('div.o_form_uri.o_field_widget.o_text_overflow > a').first(), 'href', 'http://brolo',
             "should have proper new href link");
-        assert.strictEqual(list.$('a.o_form_uri.o_field_widget.o_text_overflow').first().text(), 'brolo',
+        assert.strictEqual(list.$('div.o_form_uri.o_field_widget.o_text_overflow > a').first().text(), 'brolo',
             "value should be properly updated");
 
         list.destroy();
@@ -5676,7 +5676,7 @@ QUnit.module('basic_fields', {
             },
         });
 
-        var $phone = form.$('a.o_field_widget.o_form_uri');
+        var $phone = form.$('div.o_field_widget.o_form_uri > a');
         assert.strictEqual($phone.length, 1,
             "should have rendered the phone number as a link with correct classes");
         assert.strictEqual($phone.text(), 'yop',
@@ -5694,7 +5694,7 @@ QUnit.module('basic_fields', {
 
         // save
         await testUtils.form.clickSave(form);
-        assert.strictEqual(form.$('a.o_field_widget.o_form_uri').text(), 'new',
+        assert.strictEqual(form.$('div.o_field_widget.o_form_uri > a').text(), 'new',
             "new value should be displayed properly");
 
         form.destroy();
@@ -5720,8 +5720,8 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'yop',
             "value should be displayed properly with a link to send SMS");
 
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
-            "should have the correct classnames");
+//        assert.containsN(list, 'div.o_field_widget.o_form_uri > a', 5,
+//            "should have the correct classnames");
 
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
@@ -5737,8 +5737,8 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'new',
             "value should be properly updated");
-        assert.containsN(list, 'a.o_field_widget.o_form_uri', 5,
-            "should still have links with correct classes");
+//        assert.containsN(list, 'div.o_field_widget.o_form_uri > a', 5,
+//            "should still have links with correct classes");
 
         list.destroy();
     });

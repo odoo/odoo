@@ -1601,7 +1601,6 @@ var FieldPhone = FieldEmail.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-
     /**
      * @override
      * @private
@@ -1631,7 +1630,7 @@ var UrlWidget = InputField.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.tagName = this.mode === 'readonly' ? 'a' : 'input';
+        this.tagName = this.mode === 'readonly' ? 'div' : 'input';
         this.websitePath = this.nodeOptions.website_path || false;
     },
 
@@ -1659,17 +1658,20 @@ var UrlWidget = InputField.extend({
      * @override
      * @private
      */
-    _renderReadonly: function () {
-        let href = this.value;
-        if (this.value && !this.websitePath) {
-            const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
-            href = !regex.test(this.value) ? `http://${href}` : href;
-        }
-        this.$el.text(this.attrs.text || this.value)
-            .addClass('o_form_uri o_text_overflow')
-            .attr('target', '_blank')
-            .attr('href', href);
-    },
+      _renderReadonly: function () {
+            let href = this.value;
+            if (this.value && !this.websitePath) {
+                const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
+                href = !regex.test(this.value) ? `http://${href}` : href;
+            }
+            this.$el.addClass("o_form_uri o_text_overflow");
+            const anchor = Object.assign(document.createElement('a'), {
+                text: this.attrs.text || this.value,
+                href: href,
+                target: '_blank',
+            });
+            this.el.appendChild(anchor);
+        },
 
     //--------------------------------------------------------------------------
     // Handlers
