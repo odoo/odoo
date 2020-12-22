@@ -679,3 +679,24 @@ class MailCommon(common.TransactionCase, MailCase):
             name='Chell Gladys', notification_type='email')
         cls.partner_portal = cls.user_portal.partner_id
         return cls.user_portal
+
+    @classmethod
+    def _activate_multi_company(cls):
+        """ Create another company, add it to admin and create an user that
+        belongs to that new company. It allows to test flows with users from
+        different companies. """
+        cls.company_2 = cls.env['res.company'].create({
+            'name': 'Company 2',
+            'email': 'company_2@test.example.com',
+        })
+        cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
+
+        cls.user_employee_c2 = mail_new_test_user(
+            cls.env, login='employee_c2',
+            groups='base.group_user',
+            company_id=cls.company_2.id,
+            name='Enguerrand Employee C2',
+            notification_type='inbox',
+            signature='--\nEnguerrand'
+        )
+        cls.partner_employee_c2 = cls.user_employee_c2.partner_id
