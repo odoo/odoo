@@ -470,6 +470,7 @@ QUnit.module('Views', {
                         };
                         assert.deepEqual(filter.context, expectedContext,
                             "should save the correct context");
+                        return Promise.resolve();
                     },
                 }
             },

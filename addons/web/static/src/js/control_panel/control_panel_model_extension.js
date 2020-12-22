@@ -175,6 +175,8 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 }
             }
             this.labelPromises = [];
+            this.deleteFilterProm = null;
+            this.saveFilterProm = null;
 
             this.referenceMoment = moment();
             this.optionGenerators = getPeriodOptions(this.referenceMoment);
@@ -206,7 +208,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * @override
          */
         async load() {
-            await Promise.all(this.labelPromises);
+            await Promise.all([...this.labelPromises, this.deleteFilterProm, this.saveFilterProm]);
         }
 
         /**
@@ -267,17 +269,18 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * @param {Object} preFilter
          * @returns {Promise}
          */
-        async createNewFavorite(preFilter) {
-            const preFavorite = await this._saveQuery(preFilter);
-            this.clearQuery();
-            const filter = Object.assign(preFavorite, {
-                groupId,
-                id: filterId,
+        createNewFavorite(preFilter) {
+            this.saveFilterProm = this._saveQuery(preFilter).then((preFavorite) => {
+                this.clearQuery();
+                const filter = Object.assign(preFavorite, {
+                    groupId,
+                    id: filterId,
+                });
+                this.state.filters[filterId] = filter;
+                this.state.query.push({ groupId, filterId });
+                groupId++;
+                filterId++;
             });
-            this.state.filters[filterId] = filter;
-            this.state.query.push({ groupId, filterId });
-            groupId++;
-            filterId++;
         }
 
         /**
@@ -354,16 +357,19 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * from the search query.
          * @param {number} filterId
          */
-        async deleteFavorite(filterId) {
+        deleteFavorite(filterId) {
             const { serverSideId } = this.state.filters[filterId];
-            await this.env.dataManager.delete_filter(serverSideId);
-            const index = this.state.query.findIndex(
-                queryElem => queryElem.filterId === filterId
-            );
-            delete this.state.filters[filterId];
-            if (index >= 0) {
-                this.state.query.splice(index, 1);
-            }
+            this.shouldLoad = true;
+            this.deleteFilterProm = this.env.dataManager.delete_filter(serverSideId)
+                .then(() => {
+                    const index = this.state.query.findIndex(
+                        queryElem => queryElem.filterId === filterId
+                    );
+                    delete this.state.filters[filterId];
+                    if (index >= 0) {
+                        this.state.query.splice(index, 1);
+                    }
+                });
         }
 
         /**
@@ -1578,7 +1584,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
          * @param {Object} preFilter
          * @returns {Promise<Object>}
          */
-        async _saveQuery(preFilter) {
+        _saveQuery(preFilter) {
             const groups = this._getGroups();
 
             const userContext = this.env.session.user_context;
@@ -1622,11 +1628,11 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 preFilter.comparison = timeRanges;
             }
             const irFilter = this._favoriteToIrFilter(preFilter);
-            const serverSideId = await this.env.dataManager.create_filter(irFilter);
-
-            preFilter.serverSideId = serverSideId;
-
-            return preFilter;
+            this.shouldLoad = true;
+            return this.env.dataManager.create_filter(irFilter).then((serverSideId) => {
+                preFilter.serverSideId = serverSideId;
+                return preFilter;
+            });
         }
 
         //---------------------------------------------------------------------

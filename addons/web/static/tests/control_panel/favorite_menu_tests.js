@@ -147,6 +147,53 @@ odoo.define('web.favorite_menu_tests', function (require) {
             controlPanel.destroy();
         });
 
+        QUnit.test('save filter with timeout', async function (assert) {
+            assert.expect(2);
+
+            const params = {
+                cpModelConfig: {
+                    fields: this.fields,
+                    searchMenuTypes
+                },
+                cpProps: {
+                    fields: this.fields,
+                    searchMenuTypes,
+                    action: {},
+                },
+                'get-controller-query-params': function (callback) {
+                    callback({
+                        orderedBy: [
+                            { asc: true, name: 'foo' },
+                            { asc: false, name: 'bar' }
+                        ]
+                    });
+                },
+                env: {
+                    dataManager: {
+                        create_filter: async function (filter) {
+                            assert.strictEqual(filter.sort, '["foo","bar desc"]',
+                                'The right format for the string "sort" should be sent to the server'
+                            );
+                            return new Promise(function (resolve) {
+                                setTimeout(resolve, 1); // 1 as serverSideId
+                            });
+                        }
+                    }
+                },
+            };
+
+            const controlPanel = await createControlPanel(params);
+
+            await cpHelpers.toggleFavoriteMenu(controlPanel);
+            await cpHelpers.toggleSaveFavorite(controlPanel);
+            await cpHelpers.editFavoriteName(controlPanel, "aaa");
+            await cpHelpers.saveFavorite(controlPanel);
+
+            assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ["aaa"]);
+
+            controlPanel.destroy();
+        });
+
         QUnit.test('dynamic filters are saved dynamic', async function (assert) {
             assert.expect(3);
 
@@ -270,6 +317,55 @@ odoo.define('web.favorite_menu_tests', function (require) {
                     dataManager: {
                         delete_filter: function () {
                             return Promise.resolve();
+                        }
+                    }
+                },
+            };
+            const controlPanel = await createControlPanel(params);
+
+            await cpHelpers.toggleFavoriteMenu(controlPanel);
+
+            const { domain } = controlPanel.getQuery();
+            assert.deepEqual(domain, [["foo", "=", "qsdf"]]);
+            assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), ["My favorite"]);
+            assert.hasClass(controlPanel.el.querySelector('.o_favorite_menu .o_menu_item > a'), 'selected');
+
+            await cpHelpers.deleteFavorite(controlPanel, 0);
+
+            // confirm deletion
+            await testUtils.dom.click(document.querySelector('div.o_dialog footer button'));
+            assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
+            const itemEls = controlPanel.el.querySelectorAll('.o_favorite_menu .o_menu_item');
+            assert.deepEqual([...itemEls].map(e => e.innerText.trim()), ["Save current search"]);
+
+            controlPanel.destroy();
+        });
+
+        QUnit.test('delete an active favorite with timeout', async function (assert) {
+            assert.expect(6);
+
+            const favoriteFilters = [{
+                context: "{}",
+                domain: "[['foo', '=', 'qsdf']]",
+                id: 7,
+                is_default: true,
+                name: "My favorite",
+                sort: "[]",
+                user_id: [2, "Mitchell Admin"],
+            }];
+            const params = {
+                cpModelConfig: { favoriteFilters, searchMenuTypes },
+                cpProps: { searchMenuTypes, action: {} },
+                search: function (searchQuery) {
+                    const { domain } = searchQuery;
+                    assert.deepEqual(domain, []);
+                },
+                env: {
+                    dataManager: {
+                        delete_filter: function () {
+                            return new Promise(function (resolve) {
+                                setTimeout(resolve);
+                            });
                         }
                     }
                 },
@@ -544,7 +640,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 View: FormView,
                 env: {
                     dataManager: {
-                        create_filter(filter) {
+                        async create_filter(filter) {
                             assert.strictEqual(filter.name, "Awesome Test Customer Filter",
                                 "filter name should be correct");
                         },
