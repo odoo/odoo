@@ -427,7 +427,7 @@
                 <t t-foreach='question.suggested_answer_ids' t-as='label'>
                     <t t-set="item_idx" t-value="label_index"/>
                     <t t-set="answer_selected" t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
-                    <t t-set="is_correct" t-value="label.answer_score > 0.0"/>
+                    <t t-set="is_correct" t-value="label.is_correct"/>
 
                     <!--Used for print mode with corrections -->
                     <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />
@@ -445,8 +445,15 @@
                                t-att-name='question.id'
                                t-att-checked="'checked' if answer_selected else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
-                        <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
-                        <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                        <t t-if="has_correct_answer and answer_selected">
+                            <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
+                            <i t-if="is_correct" class="float-right mt-1 position-relative d-inline fa fa-check-circle"/>
+                            <i t-else="" class="float-right mt-1 position-relative d-inline fa fa-times-circle"/>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
+                            <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                        </t>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </t>
@@ -491,7 +498,7 @@
                     <t t-set="item_idx" t-value="label_index"/>
                     <t t-set="answer_line" t-value="answer_lines.filtered(lambda line: line.suggested_answer_id == label)"/>
                     <t t-set="answer_selected" t-value="answer_line and answer_line.suggested_answer_id.id == label.id"/>
-                    <t t-set="is_correct" t-value="label.answer_score > 0.0"/>
+                    <t t-set="is_correct" t-value="label.is_correct"/>
 
                     <!--Used for print mode with corrections -->
                     <t t-set="answer_class" t-if="not has_correct_answer" t-value="''" />
@@ -507,8 +514,15 @@
                                t-att-checked="'checked' if answer_line else None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ml-2" t-field='label.value'/>
-                        <i class="fa fa-check-square float-right mt-1 position-relative"></i>
-                        <i class="fa fa-square-o float-right mt-1 position-relative"></i>
+                        <t t-if="has_correct_answer and answer_selected">
+                            <!-- While displaying results: change icons to have a check mark for a right answer and a cross for a wrong one -->
+                            <i t-if="is_correct" class="float-right mt-1 position-relative d-inline fa fa-check-circle"/>
+                            <i t-else="" class="float-right mt-1 position-relative d-inline fa fa-times-circle"/>
+                        </t>
+                        <t t-else="">
+                            <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
+                            <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
+                        </t>
                         <t t-call="survey.question_suggested_value_image"/>
                     </label>
                 </t>
@@ -525,8 +539,8 @@
                                t-att-checked="comment_line and 'checked' or None"
                                t-att-data-selection-key="letters[item_idx] if useKeySelection else ''"/>
                         <span class="ml-2" t-field="question.comments_message" />
-                        <i class="fa fa-check-square float-right mt-1 position-relative"></i>
-                        <i class="fa fa-square-o float-right mt-1 position-relative"></i>
+                        <i class="fa fa-check-circle float-right mt-1 position-relative"></i>
+                        <i class="fa fa-circle-thin float-right mt-1 position-relative"></i>
                     </label>
                 </div>
                 <div t-attf-class="o_survey_comment_container mt-3 py-0 px-1 #{'d-none' if not comment_line else ''}">

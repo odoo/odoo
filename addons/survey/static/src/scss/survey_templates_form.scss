@@ -101,6 +101,19 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         }
     }
 
+    div.bg-danger, div.bg-success, div.o_survey_question_skipped {
+        .o_survey_question_char_box,
+        .o_survey_question_date,
+        .o_survey_question_datetime,
+        .o_survey_question_numerical_box,
+        .o_survey_question_text_box {
+            border: 0;
+            color: $white !important;
+            font-weight: $font-weight-bold;
+            height: 2rem;
+        }
+    }
+
     .o_survey_form_date .input-group-append {
         right: 0;
         bottom: 5px;
@@ -118,14 +131,14 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         i {
             top: 0px;
             font-size: large;
-            &.fa-check-circle,&.fa-check-square {
+            &.fa-check-circle {
                 display: none;
             }
         }
 
         &.o_survey_selected i {
             display: none;
-            &.fa-check-circle,&.fa-check-square {
+            &.fa-check-circle {
                 display: inline;
             }
         }
@@ -427,14 +440,16 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         &.bg-success, &.bg-danger {
             opacity: 0.6;
         }
+
         &.o_survey_selected {
             background-color: $gray-600;
             opacity: 1;
         }
-        i.fa-square-o, i.fa-circle-thin {
+        i.fa-circle-thin {
             display: none;
         }
     }
+
     .o_survey_question_matrix {
         th {
             /* important needed to force override bg-primary set on th in the template */
@@ -449,5 +464,13 @@ _::-webkit-full-page-media, _:future, :root .o_survey_wrap {
         i.fa-check-square, i.fa-check-circle, i.o_survey_matrix_empty_checkbox {
             color: $gray-600;
         }
+    }
+
+    .o_survey_question_skipped {
+        background-color: darken($warning, 10%);
+    }
+
+    .o_survey_choice_question_skipped {
+        color: darken($warning, 10%);
     }
 }
