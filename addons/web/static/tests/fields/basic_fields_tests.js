@@ -5720,8 +5720,8 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'yop',
             "value should be displayed properly with a link to send SMS");
 
-//        assert.containsN(list, 'div.o_field_widget.o_form_uri > a', 5,
-//            "should have the correct classnames");
+        assert.containsN(list, 'div.o_field_widget.o_form_uri > a', 5,
+            "should have the correct classnames");
 
         // Edit a line and check the result
         var $cell = list.$('tbody td:not(.o_list_record_selector)').first();
@@ -5737,8 +5737,8 @@ QUnit.module('basic_fields', {
         assert.doesNotHaveClass($cell.parent(), 'o_selected_row', 'should not be in edit mode anymore');
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) a').first().text(), 'new',
             "value should be properly updated");
-//        assert.containsN(list, 'div.o_field_widget.o_form_uri > a', 5,
-//            "should still have links with correct classes");
+        assert.containsN(list, 'div.o_field_widget.o_form_uri > a', 5,
+            "should still have links with correct classes");
 
         list.destroy();
     });
