@@ -75,7 +75,7 @@
                     <span class="badge badge-info ml-1" t-field='question.matrix_subtype'/>
                 </t>
                 <!-- Scoring info -->
-                <t t-if="question.is_scored_question">
+                <t t-if="question.question_type in ['numerical_box', 'date', 'datetime']">
                     <span class="badge badge-success mr-1"><span t-esc="question_data['right_inputs_count']" class="mr-1"/>Correct</span>
                     <t t-if="question.question_type in ['simple_choice', 'multiple_choice']">
                         <span class="badge badge-warning mr-1" t-if="question.question_type == 'multiple_choice'">
@@ -273,17 +273,17 @@
                         <tr t-foreach="question_data['common_lines']" t-as="common_line">
                             <td>
                                 <t t-if="question.question_type == 'numerical_box'">
-                                    <t t-set="right_answer" t-value="question.is_scored_question and common_line[0] == question.answer_numerical_box"/>
+                                    <t t-set="right_answer" t-value="common_line[0] == question.answer_numerical_box"/>
                                     <span t-call="survey.survey_remove_unnecessary_decimals"><t t-set="value_to_format" t-value="common_line[0]"/></span>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>
                                 <t t-elif="question.question_type == 'date'">
-                                    <t t-set="right_answer" t-value="question.is_scored_question and common_line[0] == question.answer_date"/>
+                                    <t t-set="right_answer" t-value="common_line[0] == question.answer_date"/>
                                     <span t-esc="common_line[0]" t-options='{"widget": "date"}'/>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>
                                 <t t-elif="question.question_type == 'datetime'">
-                                    <t t-set="right_answer" t-value="question.is_scored_question and common_line[0] == question.answer_datetime"/>
+                                    <t t-set="right_answer" t-value="common_line[0] == question.answer_datetime"/>
                                     <span t-esc="common_line[0]" t-options='{"widget": "datetime"}'/>
                                     <i t-if="right_answer" class="fa fa-check"/>
                                 </t>

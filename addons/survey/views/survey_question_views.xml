@@ -116,11 +116,11 @@
                             <group>
                                 <group attrs="{'invisible': [('question_type', 'not in', ['char_box', 'numerical_box', 'date', 'datetime'])]}">
                                     <field name="answer_numerical_box" string="Correct Answer"
-                                        attrs="{'invisible': [('question_type', '!=', 'numerical_box')]}" class="oe_inline"/>
+                                        attrs="{'invisible': [('question_type', '!=', 'numerical_box')], 'required': [('is_scored_question', '=', True), ('question_type', '=', 'numerical_box')]}" class="oe_inline"/>
                                     <field name="answer_date" string="Correct Answer"
-                                        attrs="{'invisible': [('question_type', '!=', 'date')]}" class="oe_inline"/>
+                                        attrs="{'invisible': [('question_type', '!=', 'date')], 'required': [('is_scored_question', '=', True), ('question_type', '=', 'date')]}" class="oe_inline"/>
                                     <field name="answer_datetime" string="Correct Answer"
-                                        attrs="{'invisible': [('question_type', '!=', 'datetime')]}" class="oe_inline"/>
+                                        attrs="{'invisible': [('question_type', '!=', 'datetime')], 'required': [('is_scored_question', '=', True), ('question_type', '=', 'datetime')]}" class="oe_inline"/>
 
                                     <field name="validation_email" attrs="{'invisible': [('question_type', '!=', 'char_box')]}"/>
                                     <field name="save_as_email" attrs="{'invisible': ['|', ('validation_email', '=', False), ('question_type', '!=', 'char_box')]}"/>
