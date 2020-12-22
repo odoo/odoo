@@ -19,7 +19,7 @@
                             <field name="name"/>
                             <field name="type"/>
                             <field name="contact_name"/>
-                            <field name="country_id" invisible="context.get('invisible_country', True)"/>
+                            <field name="country_id" invisible="context.get('invisible_country', True)" options="{'no_open': True, 'no_create': True}"/>
                             <field name="email_from"/>
                             <field name="stage_id"/>
                             <field name="user_id"/>

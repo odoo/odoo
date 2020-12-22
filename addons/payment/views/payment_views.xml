@@ -56,7 +56,7 @@
                                         <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
                                     </group>
                                     <group string="Availability" name="availability">
-                                        <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere."/>
+                                        <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere." options="{'no_open': True, 'no_create': True}"/>
                                     </group>
                                     <group string="Payment Followup" name="payment_followup">
                                         <field name="journal_id" context="{'default_type': 'bank'}"
