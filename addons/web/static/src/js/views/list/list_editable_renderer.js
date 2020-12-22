@@ -1805,12 +1805,12 @@ ListRenderer.include({
             return;
         }
 
-        // ignore clicks in modals, except if the list is in a modal, and the
-        // click is performed in that modal
-        var $clickModal = $(event.target).closest('.modal');
-        if ($clickModal.length) {
+        // ignore clicks if there is a modal, except if the list is in the last
+        // (active) modal
+        var $modal = $('.modal:last');
+        if ($modal.length) {
             var $listModal = this.$el.closest('.modal');
-            if ($clickModal.prop('id') !== $listModal.prop('id')) {
+            if ($modal.prop('id') !== $listModal.prop('id')) {
                 return;
             }
         }

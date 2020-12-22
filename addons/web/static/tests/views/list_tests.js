@@ -8206,6 +8206,52 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with many2one: click out does not discard the row', async function (assert) {
+        // In this test, we simulate a long click by manually triggering a mousedown and later on
+        // mouseup and click events
+        assert.expect(5);
+
+        this.data.bar.fields.m2o = {string: "M2O field", type: "many2one", relation: "foo"};
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="o2m">
+                        <tree editable="bottom">
+                            <field name="m2o" required="1"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(form, '.o_data_row');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        assert.containsOnce(form, '.o_data_row');
+
+        // focus and write something in the m2o
+        form.$('.o_field_many2one input').focus().val('abcdef').trigger('keyup');
+        await testUtils.nextTick();
+
+        // then simulate a mousedown outside
+        form.$('.o_field_widget[name="display_name"]').focus().trigger('mousedown');
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal', "should ask confirmation to create a record");
+
+        // trigger the mouseup and the click
+        form.$('.o_field_widget[name="display_name"]').trigger('mouseup').trigger('click');
+        await testUtils.nextTick();
+
+        assert.containsOnce(document.body, '.modal', "modal should still be displayed");
+        assert.containsOnce(form, '.o_data_row', "the row should still be there");
+
+        form.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
