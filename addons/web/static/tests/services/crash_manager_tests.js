@@ -1,12 +1,31 @@
 odoo.define('web.crash_manager_tests', function (require) {
     "use strict";
+    const AbstractView = require('web.AbstractView');
     const CrashManager = require('web.CrashManager').CrashManager;
     const Bus = require('web.Bus');
     const testUtils = require('web.test_utils');
     const core = require('web.core');
     const createActionManager = testUtils.createActionManager;
-    
-QUnit.module('Services', {}, function() {
+    const createView = testUtils.createView;
+
+QUnit.module('Services', {
+    beforeEach: function () {
+        this.viewParams = {
+            View: AbstractView,
+            arch: '<fake/>',
+            data: {
+                fake_model: {
+                    fields: {},
+                    record: [],
+                },
+            },
+            model: 'fake_model',
+            services: {
+                crash_manager: CrashManager,
+            },
+        };
+    }
+}, function() {
 
     QUnit.module('CrashManager');
 
@@ -55,8 +74,35 @@ QUnit.module('Services', {}, function() {
 
         assert.containsNone($, modal_selector, "Warning Modal should be closed");
         assert.verifySteps(['do_action'], "Warning Modal Primary Button Action should be executed");
-        
+
         actionManager.destroy();
     });
+
+    QUnit.test('Do not display same warning twice', async function (assert) {
+        assert.expect(2);
+
+        const view = await createView(this.viewParams);
+        view.call('crash_manager', 'rpc_error', {
+            data: {
+                name: 'odoo.exceptions.UserError',
+                arguments: ['this is test message'],
+            }
+        });
+        await testUtils.nextTick();
+        assert.containsOnce($, '.modal.o_technical_modal.show',
+            "Warning modal should be opened");
+        view.call('crash_manager', 'rpc_error', {
+            data: {
+                name: 'odoo.exceptions.UserError',
+                arguments: ['this is test message'],
+            }
+        });
+        await testUtils.nextTick();
+        assert.containsOnce($, '.modal.o_technical_modal.show',
+            "Warning modal should be opened");
+
+        view.destroy();
+    });
+
 });
 });

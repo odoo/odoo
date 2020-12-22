@@ -98,7 +98,9 @@ var CrashManager = AbstractService.extend({
             'odoo.exceptions.ValidationError': _lt("Validation Error"),
             'odoo.exceptions.Warning': _lt("Warning"),
         };
-
+        // Keeps track of displayed warnings to avoid showing the same error
+        // message twice.
+        this.displayedWarnings = {};
         this.browserDetection = new BrowserDetection();
         this._super.apply(this, arguments);
 
@@ -308,14 +310,19 @@ var CrashManager = AbstractService.extend({
      * @private
      * @param {string} message
      * @param {string} title
-     * @param {Object} options
+     * @param {Object} [options={}]
      */
-    _displayWarning: function (message, title, options) {
-        return new WarningDialog(this, Object.assign({}, options, {
-            title,
-        }), {
-            message,
-        }).open();
+    _displayWarning: function (message, title, options = {}) {
+        const key = message + title;
+        if (!(key in this.displayedWarnings)) {
+            const dialogOptions = { ...options, title };
+            const dialog = new WarningDialog(this, dialogOptions, { message });
+            dialog.on('closed', this, () => {
+                delete this.displayedWarnings[key];
+            });
+            this.displayedWarnings[key] = dialog.open();
+        }
+        return this.displayedWarnings[key];
     },
 });
 
