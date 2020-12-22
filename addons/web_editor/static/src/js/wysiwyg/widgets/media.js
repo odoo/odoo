@@ -143,6 +143,7 @@ var FileWidget = SearchableMediaWidget.extend({
 
         this.options = _.extend({
             mediaWidth: media && media.parentElement && $(media.parentElement).width(),
+            useMediaLibrary: true,
         }, options || {});
 
         this.attachments = [];
@@ -300,6 +301,9 @@ var FileWidget = SearchableMediaWidget.extend({
         domain = domain.concat(this.options.mimetypeDomain);
         if (needle && needle.length) {
             domain.push(['name', 'ilike', needle]);
+        }
+        if (!this.options.useMediaLibrary) {
+            domain.push('!', ['url', '=ilike', '/web_editor/shape/%']);
         }
         domain.push('!', ['name', '=like', '%.crop']);
         domain.push('|', ['type', '=', 'binary'], '!', ['url', '=like', '/%/static/%']);
@@ -758,7 +762,7 @@ var ImageWidget = FileWidget.extend({
                 attachment.thumbnail_src = newURL.pathname + newURL.search;
             }
         });
-        if (this.needle) {
+        if (this.needle && this.options.useMediaLibrary) {
             try {
                 const response = await this._rpc({
                     route: '/web_editor/media_library_search',
