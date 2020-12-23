@@ -47,16 +47,11 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const channel = this.env.models['mail.thread'].create({
-        id: 7,
-        name: "General",
-        model: 'mail.channel',
-    });
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
         isActive: true,
         modelName: 'mail.thread',
-        recordLocalId: channel.localId,
+        recordLocalId: thread.localId,
     });
 
     assert.containsOnce(
@@ -69,22 +64,20 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
 QUnit.test('channel mention suggestion correct data', async function (assert) {
     assert.expect(3);
 
-    this.data['mail.channel'].records.push({ id: 20 });
+    this.data['mail.channel'].records.push({
+        id: 20,
+        name: "General",
+    });
     await this.start();
     const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
-        model: 'mail.channel',
-    });
-    const channel = this.env.models['mail.thread'].create({
-        id: 7,
-        name: "General",
         model: 'mail.channel',
     });
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
         isActive: true,
         modelName: 'mail.thread',
-        recordLocalId: channel.localId,
+        recordLocalId: thread.localId,
     });
 
     assert.containsOnce(
@@ -113,16 +106,11 @@ QUnit.test('channel mention suggestion active', async function (assert) {
         id: 20,
         model: 'mail.channel',
     });
-    const channel = this.env.models['mail.thread'].create({
-        id: 7,
-        name: "General",
-        model: 'mail.channel',
-    });
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
         isActive: true,
         modelName: 'mail.thread',
-        recordLocalId: channel.localId,
+        recordLocalId: thread.localId,
     });
 
     assert.containsOnce(

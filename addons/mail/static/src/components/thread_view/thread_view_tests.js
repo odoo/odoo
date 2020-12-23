@@ -62,25 +62,29 @@ QUnit.module('thread_view_tests.js', {
 QUnit.test('dragover files on thread with composer', async function (assert) {
     assert.expect(1);
 
-    await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    this.data['res.partner'].records.push(
+        {
+            email: "john@example.com",
+            id: 9,
+            name: "John",
+        },
+        {
+            email: "fred@example.com",
+            id: 10,
+            name: "Fred",
+        },
+    );
+    this.data['mail.channel'].records.push({
         channel_type: 'channel',
         id: 100,
-        members: [['insert', [
-            {
-                email: "john@example.com",
-                id: 9,
-                name: "John",
-            },
-            {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
-            },
-        ]]],
-        model: 'mail.channel',
+        members: [this.data.currentPartnerId, 9, 10],
         name: "General",
         public: 'public',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
@@ -107,25 +111,29 @@ QUnit.test('message list desc order', async function (assert) {
             res_id: 100,
         });
     }
-    await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    this.data['res.partner'].records.push(
+        {
+            email: "john@example.com",
+            id: 9,
+            name: "John",
+        },
+        {
+            email: "fred@example.com",
+            id: 10,
+            name: "Fred",
+        },
+    );
+    this.data['mail.channel'].records.push({
         channel_type: 'channel',
         id: 100,
-        members: [['insert', [
-            {
-                email: "john@example.com",
-                id: 9,
-                name: "John",
-            },
-            {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
-            },
-        ]]],
-        model: 'mail.channel',
+        members: [this.data.currentPartnerId,9,10],
         name: "General",
         public: 'public',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
@@ -201,25 +209,29 @@ QUnit.test('message list asc order', async function (assert) {
             res_id: 100,
         });
     }
-    await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    this.data['res.partner'].records.push(
+        {
+            email: "john@example.com",
+            id: 9,
+            name: "John",
+        },
+        {
+            email: "fred@example.com",
+            id: 10,
+            name: "Fred",
+        },
+    );
+    this.data['mail.channel'].records.push({
         channel_type: 'channel',
         id: 100,
-        members: [['insert', [
-            {
-                email: "john@example.com",
-                id: 9,
-                name: "John",
-            },
-            {
-                email: "fred@example.com",
-                id: 10,
-                name: "Fred",
-            },
-        ]]],
-        model: 'mail.channel',
+        members: [this.data.currentPartnerId,9,10],
         name: "General",
         public: 'public',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 100,
+        model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
@@ -445,6 +457,13 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
 QUnit.test('show message subject if thread is mailing channel', async function (assert) {
     assert.expect(3);
 
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 100,
+        mass_mailing: true,
+        name: "General",
+        public: 'public',
+    });
     this.data['mail.message'].records.push({
         body: "not empty",
         channel_ids: [100],
@@ -453,13 +472,9 @@ QUnit.test('show message subject if thread is mailing channel', async function (
         subject: "Salutations, voyageur",
     });
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
-        channel_type: 'channel',
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 100,
-        mass_mailing: true,
         model: 'mail.channel',
-        name: "General",
-        public: 'public',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,

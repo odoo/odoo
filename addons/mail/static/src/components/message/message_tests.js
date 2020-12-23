@@ -120,8 +120,9 @@ QUnit.test('basic rendering', async function (assert) {
 QUnit.test('moderation: as author, moderated channel with pending moderation message', async function (assert) {
     assert.expect(1);
 
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
@@ -144,11 +145,14 @@ QUnit.test('moderation: as author, moderated channel with pending moderation mes
 QUnit.test('moderation: as moderator, moderated channel with pending moderation message', async function (assert) {
     assert.expect(9);
 
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_moderator: true,
+    });
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
-        moderators: [['link', this.env.messaging.currentPartner]],
     });
     const message = this.env.models['mail.message'].create({
         author: [['insert', { id: 7, display_name: "Demo User" }]],
@@ -190,13 +194,15 @@ QUnit.test('moderation: as moderator, moderated channel with pending moderation 
 QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
+    this.data['mail.channel'].records.push({ id: 11 });
     await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['create', {
-            id: 11,
-            model: 'mail.channel',
-        }]],
+        thread: [['link', thread]],
     });
     const message = this.env.models['mail.message'].create({
         id: 10,
@@ -284,13 +290,15 @@ QUnit.test('Notification Error', async function (assert) {
         openResendActionDef.resolve();
     });
 
+    this.data['mail.channel'].records.push({ id: 11 });
     await this.start({ env: { bus } });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
         hasThreadView: true,
-        thread: [['create', {
-            id: 11,
-            model: 'mail.channel',
-        }]],
+        thread: [['link', thread]],
     });
     const message = this.env.models['mail.message'].create({
         id: 10,
@@ -337,18 +345,22 @@ QUnit.test('Notification Error', async function (assert) {
 QUnit.test("'channel_fetch' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
+    this.data['res.partner'].records.push({
+        display_name: "Recipient",
+        id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        members: [this.data.currentPartnerId, 11],
+    });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.env.models['mail.thread'].create({
-        channel_type: 'chat',
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
-        members: [
-            [['link', currentPartner]],
-            [['insert', { id: 11, display_name: "Recipient" }]]
-        ],
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -399,18 +411,22 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
 QUnit.test("'channel_seen' notification received is correctly handled", async function (assert) {
     assert.expect(3);
 
+    this.data['res.partner'].records.push({
+        display_name: "Recipient",
+        id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        members: [this.data.currentPartnerId, 11],
+    });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.env.models['mail.thread'].create({
-        channel_type: 'chat',
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
-        members: [
-            [['link', currentPartner]],
-            [['insert', { id: 11, display_name: "Recipient" }]]
-        ],
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
@@ -460,18 +476,22 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
 QUnit.test("'channel_fetch' notification then 'channel_seen' received  are correctly handled", async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({
+        display_name: "Recipient",
+        id: 11,
+    });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 11,
+        members: [this.data.currentPartnerId, 11],
+    });
     await this.start();
     const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.messaging.currentPartner.id,
         display_name: "Demo User",
     });
-    const thread = this.env.models['mail.thread'].create({
-        channel_type: 'chat',
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
-        members: [
-            [['link', currentPartner]],
-            [['insert', { id: 11, display_name: "Recipient" }]]
-        ],
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({
