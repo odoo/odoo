@@ -98,6 +98,7 @@ const ImageCropWidget = Widget.extend({
             this.$cropperImage.cropper('destroy');
             this.document.removeEventListener('mousedown', this._onDocumentMousedown, {capture: true});
         }
+        this.media.setAttribute('src', this.initialSrc);
         return this._super(...arguments);
     },
 
@@ -124,18 +125,9 @@ const ImageCropWidget = Widget.extend({
             }
         });
         delete this.media.dataset.resizeWidth;
-        this.media.setAttribute('src', await applyModifications(this.media));
+        this.initialSrc = await applyModifications(this.media);
         this.$media.trigger('image_cropped');
-        return this.destroy();
-    },
-    /**
-     * Discards the current cropping session and restores the original image.
-     *
-     * @private
-     */
-    _discard() {
-        this.media.setAttribute('src', this.initialSrc);
-        return this.destroy();
+        this.destroy();
     },
     /**
      * Returns an attribute's value for saving.
@@ -191,7 +183,7 @@ const ImageCropWidget = Widget.extend({
             case 'apply':
                 return this._save();
             case 'discard':
-                return this._discard();
+                return this.destroy();
         }
     },
     /**

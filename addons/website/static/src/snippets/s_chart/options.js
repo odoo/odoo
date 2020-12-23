@@ -3,16 +3,16 @@ odoo.define('website.s_chart_options', function (require) {
 
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
-var snippetOptions = require('web_editor.snippets.options');
+var options = require('web_editor.snippets.options');
 const weUtils = require('web_editor.utils');
 
 var _t = core._t;
 
-snippetOptions.registry.InnerChart = snippetOptions.SnippetOptionWidget.extend({
-    custom_events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.custom_events, {
+options.registry.InnerChart = options.Class.extend({
+    custom_events: _.extend({}, options.Class.prototype.custom_events, {
         'get_custom_colors': '_onGetCustomColors',
     }),
-    events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.events, {
+    events: _.extend({}, options.Class.prototype.events, {
         'click we-button.add_column': '_onAddColumnClick',
         'click we-button.add_row': '_onAddRowClick',
         'click we-button.o_we_matrix_remove_col': '_onRemoveColumnClick',
@@ -157,7 +157,7 @@ snippetOptions.registry.InnerChart = snippetOptions.SnippetOptionWidget.extend({
     _reloadGraph: async function () {
         const jsonValue = this._matrixToChartData();
         if (this.$target[0].dataset.data !== jsonValue) {
-            await this.wysiwyg.withDomMutations(this.$target, () => this.$target[0].dataset.data = jsonValue);
+            this.$target[0].dataset.data = jsonValue;
             await this._refreshPublicWidgets();
         }
     },
@@ -200,7 +200,7 @@ snippetOptions.registry.InnerChart = snippetOptions.SnippetOptionWidget.extend({
      * @returns {HTMLElement}
      */
     _makeDeleteButton: function (...classes) {
-        const rmbuttonEl = snippetOptions.buildElement('we-button', null, {
+        const rmbuttonEl = options.buildElement('we-button', null, {
             classes: ['o_we_text_danger', 'o_we_link', 'fa', 'fa-fw', 'fa-minus', ...classes],
         });
         const newEl = document.createElement('td');

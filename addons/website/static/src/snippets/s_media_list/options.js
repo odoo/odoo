@@ -1,9 +1,9 @@
 odoo.define('website.s_media_list_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-snippetOptions.registry.MediaItemLayout = snippetOptions.SnippetOptionWidget.extend({
+options.registry.MediaItemLayout = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -14,7 +14,7 @@ snippetOptions.registry.MediaItemLayout = snippetOptions.SnippetOptionWidget.ext
      *
      * @see this.selectClass for parameters
      */
-    layout: async function (previewMode, widgetValue, params) {
+    layout: function (previewMode, widgetValue, params) {
         const $image = this.$target.find('.s_media_list_img_wrapper');
         const $content = this.$target.find('.s_media_list_body');
 
@@ -24,8 +24,6 @@ snippetOptions.registry.MediaItemLayout = snippetOptions.SnippetOptionWidget.ext
         }
         $image.addClass(`col-lg-${widgetValue}`);
         $content.addClass(`col-lg-${12 - widgetValue}`);
-
-        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

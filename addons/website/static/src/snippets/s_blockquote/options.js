@@ -1,9 +1,9 @@
 odoo.define('website.s_blockquote_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-snippetOptions.registry.Blockquote = snippetOptions.SnippetOptionWidget.extend({
+options.registry.Blockquote = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -14,7 +14,8 @@ snippetOptions.registry.Blockquote = snippetOptions.SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    display: async function (previewMode, widgetValue, params) {
+    display: function (previewMode, widgetValue, params) {
+
         // Classic
         this.$target.find('.s_blockquote_avatar').toggleClass('d-none', widgetValue !== 'classic');
 
@@ -39,8 +40,6 @@ snippetOptions.registry.Blockquote = snippetOptions.SnippetOptionWidget.extend({
         // Minimalist
         this.$target.find('.s_blockquote_icon').toggleClass('d-none', widgetValue === 'minimalist');
         this.$target.find('footer').toggleClass('d-none', widgetValue === 'minimalist');
-
-        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 });
 });

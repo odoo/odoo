@@ -1,7 +1,7 @@
 odoo.define('website_sale.s_dynamic_snippet_products_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 const s_dynamic_snippet_carousel_options = require('website.s_dynamic_snippet_carousel_options');
 
 const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend({
@@ -27,11 +27,9 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
                 domain: [['module', '=', 'website_sale'], ['model', '=', 'website.snippet.filter']],
                 fields: ['id', 'res_id'],
             }
-        }).then(async (data) => {
-            await this.wysiwyg.withDomMutations(this.$target, () => {
-                this.$target.get(0).dataset.filterId = data[0].res_id;
-                this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
-            });
+        }).then((data) => {
+            this.$target.get(0).dataset.filterId = data[0].res_id;
+            this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[data[0].res_id].limit;
         });
     },
 
@@ -90,7 +88,7 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
 
 });
 
-snippetOptions.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
+options.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
 
 return dynamicSnippetProductsOptions;
 });
