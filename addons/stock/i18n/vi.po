@@ -77,6 +77,16 @@ msgid ""
 " * Done: The transfer has been processed.\n"
 " * Cancelled: The transfer has been cancelled."
 msgstr ""
+" * Dự thảo: Phiếu kho chưa được xác nhận. Chưa được giành trước.\n"
+" * Đợi hoạt động khác: Phiếu kho này đang đợi hoạt động khác hoàn thành rồi mới thực hiện được.\n"
+" * Đang đợi: Phiếu kho đang chờ cho một số sản phẩm có đủ để xử lý.\n"
+"(a) Với quy tắc vận chuyển là \"Càng nhanh càng tốt\": không có sản phẩm nào có thể giành.\n"
+"(b) Với quy tắc vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": vẫn có sản phẩm chưa giành được.\n"
+" * Sẵn sàng: Phiếu kho đã sẵn sàng để xử lý.\n"
+"(a) Với quy tắc vận chuyển là \"Càng nhanh càng tốt\": ít nhất một sản phẩm vẫn chưa có sẵn.\n"
+"(b) Với quy tắc vận chuyển là \"Khi tất cả sản phẩm đều sẵn sàng\": tất cả các sản phẩm phải được giành.\n"
+" * Hoàn tất: Phiếu kho đã được xử lý xong.\n"
+" * Đã hủy: Phiếu kho đã bị hủy."
 
 #. module: stock
 #: model:mail.template,report_name:stock.mail_template_data_delivery_confirmation
@@ -185,6 +195,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Địa điểm nhà cung cấp: Vị trí ảo đại diện cho vị trí nguồn cho các sản phẩm đến từ các nhà cung cấp của bạn\n"
+"* Xem: Vị trí ảo được sử dụng để tạo cấu trúc phân cấp cho kho của bạn, tổng hợp các vị trí con của nó; không thể chứa sản phẩm trực tiếp\n"
+"* Địa điểm nội bộ: Vị trí thực tế trong kho của riêng bạn,\n"
+"* Địa điểm khách hàng: Vị trí ảo đại diện cho vị trí đích cho các sản phẩm được gửi cho khách hàng của bạn\n"
+"* Mất hàng tồn kho: Vị trí ảo đóng vai trò là đối ứng cho các hoạt động kiểm kê được sử dụng để điều chỉnh mức tồn kho(Địa điểm vật lý)\n"
+"* Sản xuất: Vị trí ảo đối ứng cho hoạt động sản xuất: vị trí này tiêu thụ các nguyên liệu và sản xuất thành phẩm\n"
+"* Địa điểm dịch chuyển: Vị trí đối ứng được sử dụng trong các hoạt động kho giữa các công ty hoặc giữa các kho"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -878,7 +895,7 @@ msgstr "Sản phẩm Khả dụng"
 #: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "Số lượng khả dụng phải được đưa về 0 trước khi thay đổi kiểu"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1987,7 +2004,7 @@ msgstr "Hủy bỏ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__display_assign_serial
 msgid "Display Assign Serial"
-msgstr ""
+msgstr "Hiển thị Gán số sê-ri"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__display_complete

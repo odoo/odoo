@@ -31,7 +31,7 @@ msgstr ""
 #. module: repair
 #: model:mail.template,report_name:repair.mail_template_repair_quotation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: repair
 #: model:mail.template,subject:repair.mail_template_repair_quotation
@@ -283,6 +283,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
+"การแปลงระหว่างหน่วยวัดจะเกิดขึ้นได้ก็ต่อเมื่ออยู่ในหมวดหมู่เดียวกัน "
+"การแปลงจะทำตามอัตราส่วน"
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -1027,7 +1029,7 @@ msgstr "กำหนดให้เป็นฉบับร่าง"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Show all records which has next action date is before today"
-msgstr ""
+msgstr "Show all records which has next action date is before today"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
@@ -1163,7 +1165,7 @@ msgstr "จำนวนรวม"
 #. module: repair
 #: model:ir.model,name:repair.model_stock_traceability_report
 msgid "Traceability Report"
-msgstr ""
+msgstr "รายงานการตรวจสอบย้อนกลับ"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__tracking
@@ -1202,7 +1204,7 @@ msgstr "หน่วยวัด"
 #: model:product.product,uom_name:repair.product_service_order_repair
 #: model:product.template,uom_name:repair.product_service_order_repair_product_template
 msgid "Units"
-msgstr ""
+msgstr "หน่วย"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread

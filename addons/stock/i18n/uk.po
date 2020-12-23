@@ -4328,7 +4328,7 @@ msgstr "Додайте кілька елементів для переміщен
 #: code:addons/stock/models/stock_quant.py:92
 #, python-format
 msgid "Please check the following serial number (name, id): "
-msgstr ""
+msgstr "Перевірте наступний серійний номер (name, id): "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -6488,6 +6488,20 @@ msgstr ""
 "отримаєте товари, які ви зараз повертаєте, переконайтеся, щоб <b>змінити</b>"
 " повернене комплектування, аби уникнути логістичних правил, які будуть знову"
 " застосовані (що створить дубльовані операції)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+"Цей товар використовувався принаймні в одному складському переміщенні. Не "
+"рекомендується змінювати тип товару, оскільки це може призвести до "
+"невідповідностей. Кращим рішенням може бути архівування товару та створення "
+"замість нього нового."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity

@@ -2036,7 +2036,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
             line.set_payment_status('waitingCancel');
             self.render_paymentlines();
 
-            payment_terminal.send_payment_cancel(self.pos.get_order(), cid).finally(function () {
+            payment_terminal.send_payment_cancel(self.pos.get_order(), cid).then(function () {
                 line.set_payment_status('retry');
                 self.render_paymentlines();
             });

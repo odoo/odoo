@@ -455,6 +455,31 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        % set doc_name = 'quotation' if object.state in ('draft', 'sent') else 'order'\n"
+"        Bună ziua,\n"
+"        <br/><br/>\n"
+"        \n"
+"        % if ctx.get('proforma'):\n"
+"            Pro forma pentru ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (cu referința: ${object.origin} )\n"
+"            % endif\n"
+"            în valoare de n <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> este disponibilă.\n"
+"        % else:\n"
+"            ${doc_name} <strong>${object.name}</strong>\n"
+"            % if object.origin:\n"
+"                (cu referința ${object.origin} )\n"
+"            % endif\n"
+"            în valoare de <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}</strong> este gata de revizuit.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Nu ezitați să ne contactați dacă aveți întrebări..\n"
+"        <br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3669,12 +3694,12 @@ msgstr "Afișați marjele la comenzi"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Sign &amp; Pay"
-msgstr ""
+msgstr "Semnează și plătește"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Semnează și plătește oferta"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature

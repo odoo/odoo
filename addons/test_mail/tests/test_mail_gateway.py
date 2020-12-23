@@ -57,6 +57,20 @@ class TestEmailParsing(BaseFunctionalTest, MockEmails):
         mail = self.format(test_mail_data.MAIL_EML_ATTACHMENT, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')
         self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail)))
 
+    def test_message_parse_eml_bounce_headers(self):
+        # Test Text/RFC822-Headers MIME content-type
+        msg_id = '<861878175823148.1577183525.736005783081055-openerp-19177-account.invoice@mycompany.example.com>'
+        mail = self.format(
+            test_mail_data.MAIL_EML_ATTACHMENT_BOUNCE_HEADERS,
+            email_from='MAILER-DAEMON@example.com (Mail Delivery System)',
+            to='test_bounce+82240-account.invoice-19177@mycompany.example.com',
+            # msg_id goes to the attachment's Message-Id header
+            msg_id=msg_id,
+        )
+        res = self.env['mail.thread'].message_parse(email.message_from_string(pycompat.to_text(mail), policy=email.policy.SMTP))
+
+        self.assertEqual(res['bounced_msg_id'], [msg_id], "Message-Id is not extracted from Text/RFC822-Headers attachment")
+
     def test_message_parse_attachment_bad_encoding(self):
         # Test that the parsing of mail with bad encoding attachment content-id, can be processed.
         mail = self.format(test_mail_data.MAIL_ATTACHMENT_BAD_ENCODING, email_from='"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>', to='generic@test.com')

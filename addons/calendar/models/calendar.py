@@ -984,8 +984,9 @@ class Meeting(models.Model):
         def ics_datetime(idate, allday=False):
             if idate:
                 if allday:
-                    return idate
+                    return fields.Date.to_date(idate)
                 else:
+                    idate = fields.Datetime.to_datetime(idate)
                     return idate.replace(tzinfo=pytz.timezone('UTC'))
             return False
 

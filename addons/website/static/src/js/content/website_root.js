@@ -102,7 +102,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend({
     _onLangChangeClick: function (ev) {
         ev.preventDefault();
 
-        var $target = $(ev.target);
+        var $target = $(ev.currentTarget);
         // retrieve the hash before the redirect
         var redirect = {
             lang: $target.data('url_code'),

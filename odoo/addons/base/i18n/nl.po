@@ -16,7 +16,7 @@
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Yip132 <yannick.renders@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-23 15:12+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -4056,6 +4056,23 @@ msgid ""
 "* create the data of the document types that exists for the specific country. The document type has a country field\n"
 "\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"In sommige Latijns-Amerikaanse landen, waaronder Argentinië en Chili, worden sommige boekhoudkundige transacties, zoals facturen en facturen van leveranciers, geclassificeerd op basis van documenttypen die zijn gedefinieerd door de belastingautoriteiten van de overheid (in Argentinië, AFIP, Chili, SII).\n"
+"\n"
+"Deze module is bedoeld om te worden uitgebreid met lokalisaties om deze documenttypes te beheren en is een essentiële informatie die moet worden weergegeven in de afgedrukte rapporten en die gemakkelijk moet worden geïdentificeerd, zowel binnen de reeks facturen als binnen de accountverplaatsingen.\n"
+"\n"
+"Elk documenttype heeft zijn eigen regels en volgnummer, dit laatste is geïntegreerd met het factuurnummer en de journaalvolgorde om gemakkelijk te zijn voor de lokalisatiegebruiker. Om deze documenttypen al dan niet te ondersteunen, heeft een Journal een nieuwe optie waarmee u documenten wel of niet kunt gebruiken.\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"Als uw lokalisatie deze logica nodig heeft, moet u deze module als afhankelijkheid toevoegen en in uw lokalisatiemodule uitbreiden:\n"
+"\n"
+"* breid de _localization_use_documents () -methode van het bedrijf uit.\n"
+"* creëer de gegevens van de documenttypes die voor het specifieke land bestaan. Het documenttype heeft een landveld\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ar
@@ -4122,6 +4139,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Functioneel\n"
+"----------\n"
+"\n"
+"Deze module voegt boekhoudfuncties toe voor de Argentijnse lokalisatie, die de minimale configuratie vertegenwoordigen die een bedrijf nodig heeft om in Argentinië te opereren en onder de AFIP (Administración Federal de Ingresos Públicos) voorschriften en richtlijnen.\n"
+"\n"
+"Volg de volgende configuratiestappen voor Productie:\n"
+"\n"
+"1. Ga naar uw bedrijf en configureer uw BTW-nummer en AFIP-verantwoordelijkheidstype\n"
+"2. Ga naar Accountadministratie / Instellingen en stel het rekeningschema in dat u wilt gebruiken.\n"
+"3. Maak uw verkoopdagboeken aan, rekening houdend met AFIP POS-info.\n"
+"\n"
+"Demogegevens voor testen:\n"
+"\n"
+"* Er zijn 3 bedrijven gemaakt, één voor elk AFIP-verantwoordelijkheidstype met het respectieve rekeningschema geïnstalleerd. Kies het bedrijf dat u repareert om tests uit te voeren:\n"
+"\n"
+"* (AR) Verantwoordelijke Inscripto\n"
+"* (AR) Exento\n"
+"* (AR) Monotributo\n"
+"\n"
+"* Journaalverkoop geconfigureerd voor voorgedrukte facturen en Expo-facturen in alle bedrijven\n"
+"* Facturen en andere voorbeelden van documenten die al zijn gevalideerd in het bedrijf “(AR) Responsable Inscripto”\n"
+"* Partnersvoorbeeld voor de verschillende soorten verantwoordelijkheid:\n"
+"\n"
+"* ADHOC (IVA Responsable Inscripto)\n"
+"* Consejo Municipal Rosario (IVA Sujeto Exento)\n"
+"* Gritti (Monotributo)\n"
+"* Cerro Castor. IVA Liberado in Zona Franca\n"
+"* Expresso (Cliente del Exterior)\n"
+"* Odoo (Proveedor del Exterior)\n"
+"\n"
+"Hoogtepunten:\n"
+"\n"
+"* Het rekeningschema wordt niet automatisch geïnstalleerd, elke CoA-sjabloon hangt af van de AFIP-verantwoordelijkheid van het bedrijf, u moet de CoA installeren voor uw behoeften.\n"
+"* Er worden geen verkoopdagboeken gegenereerd bij het installeren van een CoA, u moet uw tijdschriften handmatig configureren.\n"
+"* Het documenttype wordt correct voorgeselecteerd bij het aanmaken van een factuur, afhankelijk van de fiscale verantwoordelijkheid van de uitgever en ontvanger van het document en het gerelateerde journaal.\n"
+"* Er is een CBU-accounttype toegevoegd en ook CBU-validatie\n"
+"\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"Deze module voegt zowel modellen als velden toe die uiteindelijk zullen worden gebruikt voor de elektronische factuurmodule. Hier is een samenvatting van de belangrijkste kenmerken:\n"
+"\n"
+"Stamgegevens:\n"
+"\n"
+"* Rekeningschema: één voor elke AFIP-verantwoordelijkheid die betrekking heeft op een juridische entiteit:\n"
+"\n"
+"* Verantwoordelijke Inscripto (RI)\n"
+"* Exento (EX)\n"
+"* Monotributo (Mono)\n"
+"\n"
+"* Argentijnse belastingen en accountbelastinggroepen (btw-belastingen met de bestaande aliquots en andere soorten)\n"
+"* AFIP-verantwoordelijkheden\n"
+"* Fiscale posities (om belastingen in kaart te brengen)\n"
+"* Soorten juridische documenten in Argentinië\n"
+"* Identificatietypes geldig in Argentinië.\n"
+"* Land-AFIP-codes en land-btw-codes voor rechtspersonen, natuurlijke personen en anderen\n"
+"* Valuta AFIP-codes\n"
+"* Maateenheid AFIP-codes\n"
+"* Partners: Consumidor Final en AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -4292,6 +4370,14 @@ msgid ""
 "are found in other modules that must be installed separately.\n"
 "\n"
 msgstr ""
+"\n"
+"Hardware Poxy\n"
+"=============\n"
+"\n"
+"Met deze module kunt u op afstand randapparatuur gebruiken die op deze server is aangesloten.\n"
+"\n"
+"Deze module bevat alleen het ondersteunende raamwerk. De daadwerkelijke apparaatstuurprogramma's\n"
+"zijn te vinden in andere modules die apart moeten worden geïnstalleerd.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hw_proxy
@@ -6160,6 +6246,12 @@ msgid ""
 "speakers..\n"
 "        "
 msgstr ""
+"\n"
+"SMS-marketing op event track-sprekers\n"
+"======================================\n"
+"\n"
+"Bridge-module die UX-vereisten toevoegt om sms-marketing op evenemententrack te vergemakkelijken\n"
+"luidsprekers .."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_dashboard
@@ -7169,6 +7261,10 @@ msgid ""
 "======================================================================\n"
 "This module applies to companies based in Algeria.\n"
 msgstr ""
+"\n"
+"Dit is de module om het grootboekschema voor Algerije in Odoo te beheren.\n"
+"================================================== ====================\n"
+"Deze module is van toepassing op bedrijven gevestigd in Algerije.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -7286,6 +7382,8 @@ msgid ""
 "This module adds a Twitter scroller building block to the website builder, so that you can display Twitter feeds on any page of your website.\n"
 "    "
 msgstr ""
+"\n"
+"Deze module voegt een Twitter-scroller-bouwsteen toe aan de websitebouwer, zodat je Twitter-feeds op elke pagina van je website kunt weergeven."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_comparison
@@ -7449,6 +7547,8 @@ msgid ""
 "This module allows Employees (and not users) to log in to the Point of Sale application using the fiscal data module\n"
 "    "
 msgstr ""
+"\n"
+"Met deze module kunnen werknemers (en niet gebruikers) inloggen op de kassa-applicatie met behulp van de fiscale gegevensmodule"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -7486,6 +7586,8 @@ msgid ""
 "This module allows to configure commissions for resellers.\n"
 "    "
 msgstr ""
+"\n"
+"Met deze module kunnen commissies voor wederverkopers worden geconfigureerd"
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_automation
@@ -9843,7 +9945,7 @@ msgstr "Consolidatie demogegevens"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_us_consolidation_demo
 msgid "Account Consolidation Demo Data using a Belgium and a US company"
-msgstr ""
+msgstr "Consolidatie demogegevens voor bedrijven in Belgie en USA. "
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__partner_id
@@ -10346,6 +10448,41 @@ msgid ""
 "         user with the same login (and a blank password), then rename this new\n"
 "         user to a username that does not exist in LDAP, and setup its groups\n"
 msgstr ""
+"Voegt ondersteuning toe voor authenticatie met LDAP server. =============================================== \n"
+"Deze module laat gebruikers toe om aan te melden met hun LDAP gebruikersnaam en wachtwoord, en zal automatisch Odoo gebruikers vanuit deze gebruikers aanmaken, direct. \n"
+"\n"
+"**Opmerkingen:** Deze module werkt alleen op servers die de Python ``ldap`` module geïnstalleerd hebben. \n"
+"\n"
+"Configuratie:\n"
+" -------------- \n"
+"Na het installeren van deze module moet u de LDAP parameters configureren in het\n"
+"Configuratie tabblad van de bedrijfsgegevens. Verschillende bedrijven\n"
+"hebben mogelijk verschillende LDAP servers, zolang ze unieke gebruikersnamen hebben (gebruikersnamen moeten uniek zijn in Odoo, zelfs doorheen meerdere bedrijven). \n"
+"\n"
+"Anonieme LDAP binding is ook ondersteund (voor LDAP servers die het toestaan), door simpelweg de LDAP gebruikersnaam en wachtwoord leeg te laten in de LDAP configuratie. Dit staat geen anonieme authenticatie toe voor gebruikers, het is enkel voor het hoofd LDAP account dat gebruikt wordt om te verifiëren of een gebruiker bestaat voor deze te proberen te authenticeren. \n"
+"\n"
+"De connectie beveiligen met STARTTLS is beschikbaar voor LDAP servers die het ondersteunen, door de optie te activeren in de LDAP configuratie. Voor verdere opties om de LDAP te configureren kijkt u best op de ldap.config manpage: manpage:`ldap.conf(5)` \n"
+"\n"
+"Veiligheidsoverwegingen \n"
+"------------------------\n"
+"LDAP wachtwoorden wordt nooit bewaard in de Odoo database, de LDAP server wordt gequeried wanneer een gebruiker zich moet authenticeren. Er gebeurt geen duplicatie van de wachtwoorden, en wachtwoorden worden slechts op één plaats beheerd (voor LDAP gebruikers). \n"
+"\n"
+"Het is ook mogelijk om lokale Odoo gebruikers in uw database te hebben samen met LDAP-geauthenticeerde gebruikers (de administrator is een voor de hand liggend voorbeeld). \n"
+"\n"
+"Dit is hoe het werkt: \n"
+"--------------------- \n"
+"* Het systeem probeert eerst de gebruiker te authenticeren tegen de lokale Odoo database; \n"
+"* Als de authenticatie mislukt (bijvoorbeeld omdat de gebruiker geen lokaal wachtwoord heeft), probeert het systeem vervolgens tegen LDAP te authenticeren;\n"
+"\n"
+"Omdat een LDAP gebruiker standaard geen wachtwoord in de lokale Odoo database heeft opgeslagen (wat betekend geen toegang), mislukt de eerste stap altijd en de LDAP server wordt gequeried om te authenticeren. \n"
+"\n"
+"STARTTLS activeren verzekert u dat de authenticatie query naar de LDAP server geëncrypteerd is. \n"
+"\n"
+"Gebruikersjabloon: \n"
+"-------------- \n"
+"In de LDAP configuratie van uw bedrijfsformulier is het mogelijk om een \"Gebruikersjabloon\" te selecteren. Indien ingesteld zal deze gebruiker gebruikt worden als sjabloon om de lokale gebruikers aan te maken wanneer iemand voor het eerste authenticeert met de LDAP authenticatie. Dit staat pre-configuratie van de standaard groepen en menu's toe voor eerste keer gebruikers. \n"
+"\n"
+"**Waarschuwing:** Indien u een wachtwoord instelt voor de gebruikersjabloon zal dit wachtwoord worden toegewezen aan elke nieuwe LDAP gebruiker, wat effectief een *master password* instelt voor deze gebruiker (tot deze handmatig gewijzigd is). U wilt dit normaal niet. Een gemakkelijke manier om een sjabloongebruiker op te zetten is om in te loggen met een valide LDAP gebruiker, Odoo een lege lokale gebruiker aan te maken met dezelfde login (en een blanco wachtwoord), hernoem vervolgens deze nieuwe gebruiker naar een gebruikersnaam die niet bestaat in LDAP, en zet de groepen op\n"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_administration
@@ -10624,6 +10761,8 @@ msgstr "Staat versturen van SMS naar website bezoeker toe"
 msgid ""
 "Allows to send sms to website visitor if the visitor is linked to a lead."
 msgstr ""
+"Maakt het mogelijk om sms naar de websitebezoeker te sturen als de bezoeker "
+"aan een lead is gekoppeld."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sms
@@ -11944,6 +12083,7 @@ msgstr ""
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
 msgstr ""
+"Kan een taal die momenteel door contacten wordt gebruikt, niet deactiveren."
 
 #. module: base
 #: code:addons/base/models/res_lang.py:0
@@ -15550,7 +15690,7 @@ msgstr "Boekhoudkundige rapporten voor Finland"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_fi
 msgid "Finnish Localization"
-msgstr ""
+msgstr "Fiscale lokalisatie voor Finlans"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__week_start
@@ -18650,7 +18790,7 @@ msgstr "Link module tussen Kassa en Verkopen"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
-msgstr ""
+msgstr "Link module tussen Pos Blackbox Be en Pos HR"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__link_field_id
@@ -18832,7 +18972,7 @@ msgstr "Luxemburg - Boekhoudkundige rapporten"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_reports_electronic
 msgid "Luxembourg - Electronic Accounting Reports"
-msgstr ""
+msgstr "Luxemburg - Elektronische boekhoudverslagen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_saft
@@ -19122,7 +19262,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud_delivery
 msgid "Manage discounts in taxclouds computations with delivery."
-msgstr ""
+msgstr "Beheer kortingen in taxclouds-berekeningen met bezorging."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
@@ -21465,6 +21605,102 @@ msgid ""
 "emails directly into the application.\n"
 "\n"
 msgstr ""
+"Odoo Mass Mailing\n"
+"-----------------\n"
+"\n"
+"Verzend eenvoudig massamails naar uw leads, opportunities of klanten\n"
+"met Odoo <a href=\"https://www.odoo.com/page/mailing#\">e-mailmarketing</a>. Track\n"
+"marketingcampagnes om de conversieratio's te verbeteren. Ontwerp\n"
+"professionele e-mails en hergebruik sjablonen in een paar klikken.\n"
+"\n"
+"Stuur professionele e-mails\n"
+"------------------------\n"
+"\n"
+"Importeer database met prospects of filter op bestaande leads, opportunities en\n"
+"klanten in slechts een paar klikken.\n"
+"\n"
+"Definieer e-mailsjablonen om inhoud of specifiek ontwerp voor uw nieuwsbrief te hergebruiken.\n"
+"Stel verschillende e-mailservers in met hun eigen IP / domein om de openingsratio te optimaliseren.\n"
+"\n"
+"Organiseer marketingcampagnes\n"
+"----------------------------\n"
+"\n"
+"Ontwerp, verzend en volg campagnes met onze <a href=\"https://www.odoo.com/page/mailing\">Lead Automation</a>-app.\n"
+"\n"
+"Ontvang realtime statistieken over campagneprestaties om uw conversie te verbeteren\n"
+"gemist. Houd verzonden, ontvangen, geopende en beantwoorde e-mails bij.\n"
+"\n"
+"Beheer eenvoudig uw marketingcampagnes, discussiegroepen, leads en\n"
+"kansen in één eenvoudig en krachtig platform.\n"
+"\n"
+"Geïntegreerd met Odoo Apps\n"
+"-------------------------\n"
+"\n"
+"Krijg toegang tot massa-mailfuncties van elke Odoo-app om de manier waarop uw\n"
+"gebruikers communiceren.\n"
+"\n"
+"Verzend een sjabloon met e-mails van Odoo <a href=\"https://www.odoo.com/page/mailing\">CRM verkoopkansen</a>, selecteer op basis van leads\n"
+"op marketingsegmenten, <a href=\"https://www.odoo.com/page/recruitment\">vacatures</a> versturen en automatiseren\n"
+"antwoorden aan sollicitanten, hergebruik e-mailsjabloon in de leadautomatiseringsmarketing\n"
+"campagnes.\n"
+"\n"
+"Antwoorden op uw e-mails verschijnen automatisch in de geschiedenis van elk document\n"
+"met de sociale netwerkmodule.\n"
+"\n"
+"Maak uw leaddatabase schoon\n"
+"------------------------\n"
+"\n"
+"Krijg een schone leaddatabase die in de loop van de tijd verbetert met behulp van de prestaties van\n"
+"uw mails. Odoo verwerkt bounce mails efficiënt, markeert foutieve leads\n"
+"dienovereenkomstig en geeft u statistieken over de kwaliteit van uw leads.\n"
+"\n"
+"E-mails met één klik verzenden\n"
+"---------------------\n"
+"\n"
+"De marketingafdeling zal het geweldig vinden om aan campagnes te werken. Maar je kunt ook geven\n"
+"een massamailingfaciliteit met één klik naar alle andere gebruikers op hun eigen prospects of\n"
+"documenten.\n"
+"\n"
+"Selecteer een paar documenten (bijv. Leads, supporttickets, leveranciers, sollicitanten,\n"
+"...) en stuur e-mails met één klik naar hun contacten, waarbij bestaande e-mails opnieuw worden gebruikt\n"
+"Sjablonen.\n"
+"\n"
+"Follow-up van antwoorden\n"
+"--------------------\n"
+"\n"
+"Met de chatter-functie kunt u sneller en efficiënter communiceren met\n"
+"uw klant. Laat automatisch documenten maken (leads, opportunities,\n"
+"taken, ...) op basis van antwoorden op uw massa-mailcampagnes Volg de\n"
+"discussie rechtstreeks op de zakelijke documenten binnen Odoo of via e-mail.\n"
+"\n"
+"Zorg dat alle onderhandelingen en discussies aan het juiste document en\n"
+"Relevante managers worden op de hoogte gebracht van specifieke evenementen.\n"
+"\n"
+"Dashboard-campagnes\n"
+"-------------------\n"
+"\n"
+"Krijg de inzichten die u nodig hebt om een ​​slimmere marketingcampagne te maken. Houd statistieken bij\n"
+"per campagne: bouncepercentages, verzonden mails, beste inhoud, etc. De duidelijke dashboards\n"
+"geeft u een direct overzicht van uw campagneprestaties.\n"
+"\n"
+"Volledig geïntegreerd met andere apps\n"
+"---------------------------------\n"
+"\n"
+"Definieer geautomatiseerde acties (bijv. Een verkoper vragen om te bellen, een e-mail te sturen, ...)\n"
+"op basis van triggers (geen activiteit sinds 20 dagen, een promotionele e-mail beantwoord,\n"
+"enzovoort.)\n"
+"\n"
+"Optimaliseer campagnes van lead tot close, op elk kanaal. Maak slimmere beslissingen\n"
+"over waar u kunt investeren en de impact van uw marketingactiviteiten op uw\n"
+"bedrijfsresultaten.\n"
+"\n"
+"Integreer eenvoudig een contactformulier in uw website. Inzendingen van formulieren creëren leads\n"
+"automatisch in Odoo CRM. Leads kunnen worden gebruikt in marketingcampagnes.\n"
+"\n"
+"Beheer uw <a href=\"https://www.odoo.com/page/crm\">verkoop pijplijn zonder\n"
+"inspanning. Trek leads aan, volg telefoongesprekken en vergaderingen op. Analyseer het\n"
+"kwaliteit van uw leads om weloverwogen beslissingen te nemen en tijd te besparen door te integreren\n"
+"e-mails rechtstreeks naar de applicatie.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports
@@ -22522,7 +22758,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral
 msgid "Odoo referral program"
-msgstr ""
+msgstr "Odoo verwijzingsprogramma"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_odoo_referral_portal
@@ -23284,7 +23520,7 @@ msgstr "POS Adyen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_six
 msgid "POS Six"
-msgstr ""
+msgstr "POS Six"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pad_project
@@ -25292,7 +25528,7 @@ msgstr "Salaris pakket configurator"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_sale_intrastat
 msgid "Sale BE Intrastat Bridge"
-msgstr ""
+msgstr "Verkoop BE Intrastat "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon
@@ -26324,7 +26560,7 @@ msgstr "Standaard"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_saft
 msgid "Standard Audit File for Tax Base module"
-msgstr ""
+msgstr "Standaard auditbestand voor belastinggrondslagmodule"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
@@ -26440,7 +26676,7 @@ msgstr "Voorraad enterprise"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_contract
 msgid "Store employee contracts in the Document app"
-msgstr ""
+msgstr "Sla werknemerscontracten op in de Document-app"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_hr_payroll
@@ -26630,17 +26866,17 @@ msgstr "Zweden"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_reports
 msgid "Sweden - Accounting Reports"
-msgstr ""
+msgstr "Financiele rapportages - Zweden"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se_ocr
 msgid "Sweden - Structured Communication OCR"
-msgstr ""
+msgstr "Zweden - OCR voor gestructureerde communicatie"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_se
 msgid "Swedish - Accounting"
-msgstr ""
+msgstr "Boekhouding - Zweden"
 
 #. module: base
 #: model:res.country,name:base.ch
@@ -28013,7 +28249,7 @@ msgstr "Rondleidingen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mass_mailing_event_track_sms
 msgid "Track Speakers SMS Marketing"
-msgstr ""
+msgstr "Volg Sprekers SMS Marketing"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance
@@ -29283,7 +29519,7 @@ msgstr "Web routing"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_web_cohort
 msgid "Web cohort Test"
-msgstr ""
+msgstr "Web cohort Test"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_translation_search

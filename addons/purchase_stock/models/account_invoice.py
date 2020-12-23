@@ -120,7 +120,7 @@ class AccountMove(models.Model):
                     # Since compute_all still rounds the total, we use an ugly workaround:
                     # multiply then divide the price unit.
                     price_unit *= line.quantity
-                    price_unit = line.tax_ids.with_context(round=False).compute_all(
+                    price_unit = line.tax_ids.with_context(round=False, force_sign=move._get_tax_force_sign()).compute_all(
                         price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.type == 'in_refund')['total_excluded']
                     price_unit /= line.quantity
 

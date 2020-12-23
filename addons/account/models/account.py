@@ -240,7 +240,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    used = fields.Boolean(store=False, search='_search_used')
+    used = fields.Boolean(compute='_compute_used', search='_search_used')
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
@@ -328,6 +328,11 @@ class AccountAccount(models.Model):
             WHERE EXISTS (SELECT * FROM account_move_line aml WHERE aml.account_id = account.id LIMIT 1)
         """)
         return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
+
+    def _compute_used(self):
+        ids = set(self._search_used('=', True)[0][2])
+        for record in self:
+            record.used = record.id in ids
 
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
@@ -1515,17 +1520,27 @@ class AccountTax(models.Model):
 
         return rslt
 
-    def flatten_taxes_hierarchy(self):
+    def flatten_taxes_hierarchy(self, create_map=False):
         # Flattens the taxes contained in this recordset, returning all the
         # children at the bottom of the hierarchy, in a recordset, ordered by sequence.
         #   Eg. considering letters as taxes and alphabetic order as sequence :
         #   [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
+        # If create_map is True, an additional value is returned, a dictionary
+        # mapping each child tax to its parent group
         all_taxes = self.env['account.tax']
+        groups_map = {}
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                all_taxes += tax.children_tax_ids.flatten_taxes_hierarchy()
+                flattened_children = tax.children_tax_ids.flatten_taxes_hierarchy()
+                all_taxes += flattened_children
+                for flat_child in flattened_children:
+                    groups_map[flat_child] = tax
             else:
                 all_taxes += tax
+
+        if create_map:
+            return all_taxes, groups_map
+
         return all_taxes
 
     def get_tax_tags(self, is_refund, repartition_type):
@@ -1561,7 +1576,7 @@ class AccountTax(models.Model):
             company = self[0].company_id
 
         # 1) Flatten the taxes.
-        taxes = self.flatten_taxes_hierarchy()
+        taxes, groups_map = self.flatten_taxes_hierarchy(create_map=True)
 
         # 2) Avoid mixing taxes having price_include=False && include_base_amount=True
         # with taxes having price_include=True. This use case is not supported as the
@@ -1656,9 +1671,12 @@ class AccountTax(models.Model):
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
         sign = 1
-        if base <= 0:
-            base = -base
+        if currency.is_zero(base):
+            sign = self._context.get('force_sign', 1)
+        elif base < 0:
             sign = -1
+        if base < 0:
+            base = -base
 
         # Store the totals to reach when using price_include taxes (only the last price included in row)
         total_included_checkpoints = {}
@@ -1774,6 +1792,7 @@ class AccountTax(models.Model):
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
+                    'group': groups_map.get(tax),
                     'tag_ids': (repartition_line.tag_ids + subsequent_tags).ids,
                     'tax_ids': subsequent_taxes.ids,
                 })

@@ -664,6 +664,8 @@
                         groups="product.group_product_variant"/>
                     <field name="product_tmpl_id" string="Product" readonly="1"
                         invisible="context.get('visible_product_tmpl_id', True)"/>
+                    <field name="product_name" optional="hide"/>
+                    <field name="product_code" optional="hide"/>
                     <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="date_start" optional="hide"/>
                     <field name="date_end" optional="hide"/>
