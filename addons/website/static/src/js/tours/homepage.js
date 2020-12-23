@@ -39,7 +39,7 @@ wTourUtils.registerThemeHomepageTour('homepage', [{
     position: "bottom",
     run: "drag_and_drop #wrap",
 }, {
-    trigger: "button[name=save]",
+    trigger: "button[data-action=save]",
     content: _t("Click the <b>Save</b> button."),
     position: "bottom",
 }, {
@@ -72,7 +72,7 @@ wTourUtils.registerThemeHomepageTour('homepage', [{
     position: "bottom",
     run: "drag_and_drop #wrap",
 }, {
-    trigger: "button[name=save]",
+    trigger: "button[data-action=save]",
     content: _t("Click the <b>Save</b> button."),
     position: "bottom",
 }, {

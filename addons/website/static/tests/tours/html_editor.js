@@ -17,26 +17,12 @@ tour.register('html_editor_multiple_templates', {
             content: "drop a snippet",
             trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail',
             // id starting by 'oe_structure..' will actually create an inherited view
-            run: 'drag_and_drop #oe_structure_test_ui',
-        },
-        {
-            content: "check if the section is dirty",
-            trigger: '#oe_snippets .oe_snippet:has(.s_cover) .oe_snippet_thumbnail:not(.o_we_already_dragging)',
-            run: () => {
-                const wysiwyg = $('#wrapwrap').data('wysiwyg');
-                // Retrieve the editor node.
-                const node = wysiwyg.editorHelpers.getNodes(document.querySelector('#oe_structure_test_ui'))[0];
-                if (node.dirty) {
-                    // As the tour test selectors, add class for the next step
-                    // to test if the node is dirty
-                    $('#oe_structure_test_ui').addClass('o_dirty');
-                }
-            },
+            run: "drag_and_drop #oe_structure_test_ui",
         },
         {
             content: "save the page",
             extra_trigger: '#oe_structure_test_ui.o_dirty',
-            trigger: ".o_we_website_top_actions button[name=save]",
+            trigger: "button[data-action=save]",
         },
         // 2. Edit generic view
         {

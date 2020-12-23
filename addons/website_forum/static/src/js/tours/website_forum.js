@@ -39,33 +39,22 @@ odoo.define("website_forum.tour_forum", function (require) {
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
         auto: true,
-    }, {
+    },
+    {
         trigger: "a:contains(\"Answer\").collapsed",
         content: _t("Click to answer."),
         position: "bottom",
-    }, {
+    },
+    {
         trigger: ".note-editable p",
         content: _t("Put your answer here."),
         position: "bottom",
-        run: async () => {
-            const wysiwyg = $('.note-editable').data('wysiwyg');
-            await wysiwyg.editorHelpers.insertHtml(wysiwyg.editor, 'Test', $('.note-editable p')[0], 'INSIDE');
-        },
+        run: "text",
     }, {
         trigger: "button:contains(\"Post Answer\")",
         extra_trigger: ".note-editable p:not(:containsExact(\"<br>\"))",
         content: _t("Click to post your answer."),
-        run: async (actions) => {
-            // There is a bug when simulating the event. As the value of the
-            // textarea of the form is contained in the wysiwyg editor, the
-            // textarea will be empty before clicking the first time. There is
-            // a handler on the form submission to fill the textarea but we need
-            // to wait for a microtask before we can get the value of the
-            // wysiwyg. Because of the microtask, the textarea will not be set
-            // on time. So we trigger another click on the next tick.
-            actions.auto();
-            setTimeout(actions.auto.bind(actions));
-        }
+        position: "bottom",
     }, {
         extra_trigger: 'div.modal.modal_shown',
         trigger: ".modal-header button.close",
@@ -74,6 +63,5 @@ odoo.define("website_forum.tour_forum", function (require) {
         trigger: ".o_wforum_validate_toggler[data-karma=\"20\"]:first",
         content: _t("Click here to accept this answer."),
         position: "right",
-    }
-    ]);
+    }]);
 });

@@ -141,11 +141,7 @@ var FormController = BasicController.extend({
      * @param {jQuery} [$node]
      */
     renderButtons: function ($node) {
-        var $footer = this.footerToButtons
-            ? this.renderer.$el && this.renderer.$('footer').filter(function () {
-                return !this.closest('.o_field_widget');
-            })
-            : null;
+        var $footer = this.footerToButtons ? this.renderer.$el && this.renderer.$('footer') : null;
         var mustRenderFooterButtons = $footer && $footer.length;
         if ((this.defaultButtons && !this.$buttons) || mustRenderFooterButtons) {
             this.$buttons = $('<div/>');
@@ -284,9 +280,7 @@ var FormController = BasicController.extend({
             return;
         }
         if (this.footerToButtons) {
-            var $footer = this.renderer.$el && this.renderer.$('footer').filter(function () {
-                return !this.closest('.o_field_widget');
-            });
+            var $footer = this.renderer.$el && this.renderer.$('footer');
             if ($footer && $footer.length) {
                 this.$buttons.empty().append($footer);
             }

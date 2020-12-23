@@ -14,8 +14,7 @@ LinkDialog.include({
      */
     start() {
         const ret = this._super(...arguments);
-        const mailWrapperEl = this.__editorEditable.querySelector('.o_mail_wrapper');
-        if (!mailWrapperEl) {
+        if (!$(this.editable).find('.o_mail_wrapper').length) {
             return ret;
         }
 
@@ -28,7 +27,7 @@ LinkDialog.include({
             // refactoring of those mailing themes.
             this.__realMMColors = {};
             const $previewArea = $('<div/>').addClass('o_mail_snippet_general');
-            $(mailWrapperEl).closest('.o_layout').append($previewArea);
+            $(this.editable).find('.o_layout').append($previewArea);
             _.each(['link', 'primary', 'secondary'], type => {
                 const $el = $('<a href="#" class="btn btn-' + type + '"/>');
                 $el.appendTo($previewArea);
@@ -55,15 +54,12 @@ LinkDialog.include({
     //--------------------------------------------------------------------------
 
     /**
-     * FIXME review once the new editor is fixed as the hack does only partially
-     * work in there...
-     *
      * @override
      */
     _adaptPreview() {
         this._super(...arguments);
         if (this.__realMMColors) {
-            var $preview = this.$("#link-preview a:first");
+            var $preview = this.$("#link-preview");
             $preview.css('border-color', '');
             $preview.css('background-color', '');
             $preview.css('color', '');

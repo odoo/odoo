@@ -39,13 +39,12 @@ var MediaDialog = Dialog.extend({
     init: function (parent, options, media) {
         var $media = $(media);
         media = $media[0];
-        var is_backend = parent.$el.hasClass("o_field_widget");
 
         options = _.extend({}, options);
         var onlyImages = options.onlyImages || this.multiImages || (media && ($media.parent().data('oeField') === 'image' || $media.parent().data('oeType') === 'image'));
         options.noDocuments = onlyImages || options.noDocuments;
         options.noIcons = onlyImages || options.noIcons;
-        options.noVideos = onlyImages || options.noVideos || is_backend;
+        options.noVideos = onlyImages || options.noVideos;
 
         this._super(parent, _.extend({}, {
             title: _t("Select a Media"),

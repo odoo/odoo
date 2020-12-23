@@ -4,6 +4,8 @@ odoo.define('wysiwyg.widgets.LinkDialog', function (require) {
 var core = require('web.core');
 var Dialog = require('wysiwyg.widgets.Dialog');
 
+var dom = $.summernote.core.dom;
+var range = $.summernote.core.range;
 
 var _t = core._t;
 
@@ -24,11 +26,9 @@ var LinkDialog = Dialog.extend({
 
     /**
      * @constructor
-     * @param {} [options.props.text]
-     * @param {} [options.props.className]
      */
-    init: function (parent, options) {
-        const self = this;
+    init: function (parent, options, editable, linkInfo) {
+        this.options = options || {};
         this._super(parent, _.extend({
             title: _t("Link to"),
         }, this.options));
@@ -43,40 +43,127 @@ var LinkDialog = Dialog.extend({
             // all btn-* classes anyway.
         ];
 
-        // data is used in the dialog template.
-        this.props = options.props || {};
+        this.editable = editable;
+        this.data = linkInfo || {};
+
+        this.data.className = "";
+        this.data.iniClassName = "";
+
+        var r = this.data.range;
+        this.needLabel = !r || (r.sc === r.ec && r.so === r.eo);
+
+        if (this.data.range) {
+            const $link = $(this.data.range.sc).filter("a");
+            this.data.iniClassName = $link.attr("class") || "";
+            this.colorCombinationClass = false;
+            let $node = $link;
+            while ($node.length && !$node.is('body')) {
+                const className = $node.attr('class') || '';
+                const m = className.match(/\b(o_cc\d+)\b/g);
+                if (m) {
+                    this.colorCombinationClass = m[0];
+                    break;
+                }
+                $node = $node.parent();
+            }
+            this.data.className = this.data.iniClassName.replace(/(^|\s+)btn(-[a-z0-9_-]*)?/gi, ' ');
+
+            var is_link = this.data.range.isOnAnchor();
+
+            var sc = r.sc;
+            var so = r.so;
+            var ec = r.ec;
+            var eo = r.eo;
+
+            var nodes;
+            if (!is_link) {
+                if (sc.tagName) {
+                    sc = dom.firstChild(so ? sc.childNodes[so] : sc);
+                    so = 0;
+                } else if (so !== sc.textContent.length) {
+                    if (sc === ec) {
+                        ec = sc = sc.splitText(so);
+                        eo -= so;
+                    } else {
+                        sc = sc.splitText(so);
+                    }
+                    so = 0;
+                }
+                if (ec.tagName) {
+                    ec = dom.lastChild(eo ? ec.childNodes[eo-1] : ec);
+                    eo = ec.textContent.length;
+                } else if (eo !== ec.textContent.length) {
+                    ec.splitText(eo);
+                }
+
+                nodes = dom.listBetween(sc, ec);
+
+                // browsers can't target a picture or void node
+                if (dom.isVoid(sc) || dom.isImg(sc)) {
+                    so = dom.listPrev(sc).length-1;
+                    sc = sc.parentNode;
+                }
+                if (dom.isBR(ec)) {
+                    eo = dom.listPrev(ec).length-1;
+                    ec = ec.parentNode;
+                } else if (dom.isVoid(ec) || dom.isImg(sc)) {
+                    eo = dom.listPrev(ec).length;
+                    ec = ec.parentNode;
+                }
+
+                this.data.range = range.create(sc, so, ec, eo);
+                $(editable).data("range", this.data.range);
+                this.data.range.select();
+            } else {
+                nodes = dom.ancestor(sc, dom.isAnchor).childNodes;
+            }
+
+            if (dom.isImg(sc) && nodes.indexOf(sc) === -1) {
+                nodes.push(sc);
+            }
+            if (nodes.length > 1 || dom.ancestor(nodes[0], dom.isImg)) {
+                var text = "";
+                this.data.images = [];
+                for (var i=0; i<nodes.length; i++) {
+                    if (dom.ancestor(nodes[i], dom.isImg)) {
+                        this.data.images.push(dom.ancestor(nodes[i], dom.isImg));
+                        text += '[IMG]';
+                    } else if (!is_link && nodes[i].nodeType === 1) {
+                        // just use text nodes from listBetween
+                    } else if (!is_link && i===0) {
+                        text += nodes[i].textContent.slice(so, Infinity);
+                    } else if (!is_link && i===nodes.length-1) {
+                        text += nodes[i].textContent.slice(0, eo);
+                    } else {
+                        text += nodes[i].textContent;
+                    }
+                }
+                this.data.text = text;
+            }
+        }
+
+        this.data.text = this.data.text.replace(/[ \t\r\n]+/g, ' ');
 
         this.__editorEditable = this.props.__editorEditable;
-        this.colorCombinationClass = this.props.colorCombinationClass;
 
         var allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         var allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
-        const cleanClassNames = !this.props.initialClassNames ? '' :
-            this.props.initialClassNames
-                .replace(allBtnClassSuffixes, ' ')
-                .replace(allBtnShapes, ' ');
-
-        this.state = {
-            needLabel: !this.props.text || !this.props.text.length || this.props.needLabel,
-            text: this.props.text,
-            images: this.props.images,
-            className: cleanClassNames,
-            url: this.props.url,
-            isNewWindow: this.props.isNewWindow,
-        };
+        this.data.className = this.data.iniClassName
+            .replace(allBtnClassSuffixes, ' ')
+            .replace(allBtnShapes, ' ');
     },
     /**
      * @override
      */
     start: function () {
-        const self = this;
         this.buttonOptsCollapseEl = this.el.querySelector('#o_link_dialog_button_opts_collapse');
 
-        this.$('input.link-style').prop('checked', false).first().prop('checked', true);
-        if (this.props.initialClassNames) {
-            this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option').each(function () {
-                var $option = $(this);
-                if ($option.val() && self.props.initialClassNames.match(new RegExp('(^|btn-| |btn-outline-)' + $option.val()))) {
+        this.$styleInputs = this.$('input.link-style');
+        this.$styleInputs.prop('checked', false).filter('[value=""]').prop('checked', true);
+        if (this.data.iniClassName) {
+            _.each(this.$('input[name="link_style_color"], select[name="link_style_size"] > option, select[name="link_style_shape"] > option'), el => {
+                var $option = $(el);
+                if ($option.val() && this.data.iniClassName.match(new RegExp('(^|btn-| |btn-outline-)' + $option.val()))) {
                     if ($option.is("input")) {
                         $option.prop("checked", true);
                     } else {
@@ -87,19 +174,16 @@ var LinkDialog = Dialog.extend({
                 }
             });
         }
-        if (this.state.url) {
-            var match = /mailto:(.+)/.exec(this.state.url);
-            this.$('input[name="url"]').val(match ? match[1] : this.state.url);
+        if (this.data.url) {
+            var match = /mailto:(.+)/.exec(this.data.url);
+            this.$('input[name="url"]').val(match ? match[1] : this.data.url);
             this._onURLInput();
         }
 
         this._updateOptionsUI();
         this._adaptPreview();
 
-        this.opened(() => {
-            // We need to wait to be sure to trigger focus() the tick after the Event normaliser mess with events
-           setTimeout(() => self.$('input:visible:first').focus(), 0);
-        });
+        this.$('input:visible:first').focus();
 
         return this._super.apply(this, arguments);
     },
@@ -112,21 +196,27 @@ var LinkDialog = Dialog.extend({
      * @override
      */
     save: function () {
-        const data = this._getData();
+        var data = this._getData();
         if (data === null) {
             var $url = this.$('input[name="url"]');
             $url.closest('.form-group').addClass('o_has_error').find('.form-control, .custom-select').addClass('is-invalid');
             $url.focus();
             return Promise.reject();
         }
-
-        this.final_data = {
-            needLabel: this.state.needLabel,
-            text: data.label,
-            url: data.url,
-            isNewWindow: data.isNewWindow,
-            classes: data.classes,
-        };
+        this.data.text = data.label;
+        this.data.url = data.url;
+        var allWhitespace = /\s+/gi;
+        var allStartAndEndSpace = /^\s+|\s+$/gi;
+        var allBtnTypes = /(^|[ ])(btn-secondary|btn-success|btn-primary|btn-info|btn-warning|btn-danger)([ ]|$)/gi;
+        this.data.className = data.classes.replace(allWhitespace, ' ').replace(allStartAndEndSpace, '');
+        if (data.classes.replace(allBtnTypes, ' ')) {
+            this.data.style = {
+                'background-color': '',
+                'color': '',
+            };
+        }
+        this.data.isNewWindow = data.isNewWindow;
+        this.final_data = this.data;
         return this._super.apply(this, arguments);
     },
 
@@ -149,15 +239,7 @@ var LinkDialog = Dialog.extend({
             href: data.url && data.url.length ? data.url : '#',
             class: `${data.classes.replace(/float-\w+/, '')} o_btn_preview`,
         };
-        const $preview = this.$("#link-preview");
-        const $a = $preview.find('a:first');
-        $a.siblings().remove();
-
-        const labels = (data.label && data.label.length) ? data.label.split('\n') : [data.url];
-
-        for (const label of labels) {
-            $preview.append($a.clone().attr(attrs).html(label));
-        }
+        this.$("#link-preview").attr(attrs).html((data.label && data.label.length) ? data.label : data.url);
     },
     /**
      * Get the link's data (url, label and styles).
@@ -168,14 +250,11 @@ var LinkDialog = Dialog.extend({
     _getData: function () {
         var $url = this.$('input[name="url"]');
         var url = $url.val();
-        var label = this.state.text;
-        if (this.state.needLabel) {
-            label = this.$('input[name="label"]').val() || url || '';
-            label = label.replace('<', "&lt;").replace('>', "&gt;");
-        }
-        if (this.state.images) {
-            for (var i = 0; i < this.state.images.length; i++) {
-                label = label.replace(/\[IMG\]/, this.state.images[i]);
+        var label = this.$('input[name="label"]').val() || url;
+
+        if (label && this.data.images) {
+            for (var i = 0; i < this.data.images.length; i++) {
+                label = label.replace('<', "&lt;").replace('>', "&gt;").replace(/\[IMG\]/, this.data.images[i].outerHTML);
             }
         }
 
@@ -189,7 +268,7 @@ var LinkDialog = Dialog.extend({
         const shapes = shape ? shape.split(',') : [];
         const style = ['outline', 'fill'].includes(shapes[0]) ? `${shapes[0]}-` : '';
         const shapeClasses = shapes.slice(style ? 1 : 0).join(' ');
-        const classes = (this.state.className || '') +
+        const classes = (this.data.className || '') +
             (type ? (` btn btn-${style}${type}`) : '') +
             (shapeClasses ? (` ${shapeClasses}`) : '') +
             (size ? (' btn-' + size) : '');

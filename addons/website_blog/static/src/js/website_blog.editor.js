@@ -63,9 +63,8 @@ odoo.define('website_blog.editor', function (require) {
 
 require('web.dom_ready');
 const {qweb, _t} = require('web.core');
-const snippetOptions = require('web_editor.snippets.options');
-require('website.editor.snippets.options');
-var Wysiwyg = require('web_editor.wysiwyg');
+const options = require('web_editor.snippets.options');
+var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 
 if (!$('.website_blog').length) {
     return Promise.reject("DOM doesn't contain '.website_blog'");
@@ -73,8 +72,8 @@ if (!$('.website_blog').length) {
 
 const NEW_TAG_PREFIX = 'new-blog-tag-';
 
-Wysiwyg.include({
-    custom_events: Object.assign({}, Wysiwyg.prototype.custom_events, {
+WysiwygMultizone.include({
+    custom_events: Object.assign({}, WysiwygMultizone.prototype.custom_events, {
         'set_blog_post_updated_tags': '_onSetBlogPostUpdatedTags',
     }),
 
@@ -85,6 +84,13 @@ Wysiwyg.include({
         this._super(...arguments);
         this.blogTagsPerBlogPost = {};
     },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        $('.js_tweet, .js_comment').off('mouseup').trigger('mousedown');
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -93,10 +99,10 @@ Wysiwyg.include({
     /**
      * @override
      */
-    async _saveContent() {
-        return this._super(...arguments).then(() => {
-            return this._saveBlogTags();
-        });
+    async save() {
+        const ret = await this._super(...arguments);
+        await this._saveBlogTags(); // Note: important to be called after save otherwise cleanForSave is not called before
+        return ret;
     },
 
     //--------------------------------------------------------------------------
@@ -144,7 +150,7 @@ Wysiwyg.include({
     },
 });
 
-snippetOptions.registry.many2one.include({
+options.registry.many2one.include({
 
     //--------------------------------------------------------------------------
     // Private
@@ -164,11 +170,12 @@ snippetOptions.registry.many2one.include({
                 $img.css({ width: css.width, height: css.height });
                 $img.attr('src', '/web/image/res.partner/'+self.ID+'/image_1024');
             });
+            setTimeout(function () { $nodes.removeClass('o_dirty'); },0);
         }
     }
 });
 
-snippetOptions.registry.CoverProperties.include({
+options.registry.CoverProperties.include({
     /**
      * @override
      */
@@ -187,8 +194,8 @@ snippetOptions.registry.CoverProperties.include({
     },
 });
 
-snippetOptions.registry.BlogPostTagSelection = snippetOptions.SnippetOptionWidget.extend({
-    xmlDependencies: (snippetOptions.SnippetOptionWidget.prototype.xmlDependencies || [])
+options.registry.BlogPostTagSelection = options.Class.extend({
+    xmlDependencies: (options.Class.prototype.xmlDependencies || [])
         .concat(['/website_blog/static/src/xml/website_blog_tag.xml']),
 
     /**

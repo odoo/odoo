@@ -1,9 +1,9 @@
 odoo.define('website.s_dynamic_snippet_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
+const dynamicSnippetOptions = options.Class.extend({
 
     /**
      *
@@ -34,7 +34,6 @@ const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
         this._super.apply(this, arguments);
         if (params.attributeName === 'filterId' && previewMode === false) {
             this.$target.get(0).dataset.numberOfRecords = this.dynamicFilters[parseInt(widgetValue)].limit;
-            this.updateChangesInWysiwyg();
         }
     },
 
@@ -131,7 +130,7 @@ const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
     },
 });
 
-snippetOptions.registry.dynamic_snippet = dynamicSnippetOptions;
+options.registry.dynamic_snippet = dynamicSnippetOptions;
 
 return dynamicSnippetOptions;
 });

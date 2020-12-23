@@ -3,14 +3,16 @@ odoo.define('website_mass_mailing.editor', function (require) {
 
 var core = require('web.core');
 var rpc = require('web.rpc');
-var snippetOptions = require('web_editor.snippets.options');
+var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
+var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
+var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 
 const qweb = core.qweb;
 var _t = core._t;
 
 
-snippetOptions.registry.mailing_list_subscribe = snippetOptions.SnippetOptionWidget.extend({
+options.registry.mailing_list_subscribe = options.Class.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_button",
     popup_title: _t("Add a Newsletter Subscribe Button"),
 
@@ -39,18 +41,16 @@ snippetOptions.registry.mailing_list_subscribe = snippetOptions.SnippetOptionWid
                     $(dialog).find('.btn-primary').prop('disabled', !data.length);
                     var list_id = self.$target.attr("data-list-id");
                     $(dialog).on('show.bs.modal', function () {
-                        if (list_id !== "0") {
+                        if (list_id !== "0"){
                             $(dialog).find('select').val(list_id);
-                        }
+                        };
                     });
                     return data;
                 });
             },
         });
-        def.then(async function (result) {
-            await self.wysiwyg.withDomMutations(self.$target, () => {
-                self.$target.attr("data-list-id", result.val);
-            });
+        def.then(function (result) {
+            self.$target.attr("data-list-id", result.val);
         });
         return def;
     },
@@ -61,12 +61,12 @@ snippetOptions.registry.mailing_list_subscribe = snippetOptions.SnippetOptionWid
         var self = this;
         this._super();
         this.select_mailing_list('click').guardedCatch(function () {
-            self.getParent()._onRemoveClick($.Event("click"));
+            self.getParent()._onRemoveClick($.Event( "click" ));
         });
     },
 });
 
-snippetOptions.registry.recaptchaSubscribe = snippetOptions.SnippetOptionWidget.extend({
+options.registry.recaptchaSubscribe = options.Class.extend({
     xmlDependencies: ['/google_recaptcha/static/src/xml/recaptcha.xml'],
 
     /**
@@ -99,7 +99,7 @@ snippetOptions.registry.recaptchaSubscribe = snippetOptions.SnippetOptionWidget.
     },
 });
 
-snippetOptions.registry.newsletter_popup = snippetOptions.registry.mailing_list_subscribe.extend({
+options.registry.newsletter_popup = options.registry.mailing_list_subscribe.extend({
     popup_template_id: "editor_new_mailing_list_subscribe_popup",
     popup_title: _t("Add a Newsletter Subscribe Popup"),
 
@@ -107,7 +107,6 @@ snippetOptions.registry.newsletter_popup = snippetOptions.registry.mailing_list_
      * @override
      */
     start: function () {
-        this.$target.data('snippetOption', this);
         this.$target.on('hidden.bs.modal.newsletter_popup_option', () => {
             this.trigger_up('snippet_option_visibility_update', {show: false});
         });
@@ -124,34 +123,25 @@ snippetOptions.registry.newsletter_popup = snippetOptions.registry.mailing_list_
     /**
      * @override
      */
-    onTargetHide: async function () {
+    onTargetHide: function () {
         // Close the modal
         const $modal = this.$('.modal');
         if ($modal.length && $modal.is('.modal_shown')) {
             $modal.modal('hide');
-            this.$target.data('content', $modal.find('.modal-body').html());
-            this.$target.html('');
-
-            await this.updateChangesInWysiwyg();
         }
     },
     /**
      * @override
      */
     cleanForSave: function () {
-        const $content = $(this.$target.data('content'));
-        if ($content.length) {
-            const viewId = parseInt($content.attr('data-oe-id'));
-            const xpath = $content.attr('data-oe-xpath');
-
-            return this._rpc({
-                model: 'ir.ui.view',
-                method: 'save',
-                args: [
-                    viewId,
-                    $content[0].outerHTML,
-                    xpath,
-                ],
+        var self = this;
+        var content = this.$target.data('content');
+        if (content) {
+            this.trigger_up('get_clean_html', {
+                $layout: $('<div/>').html(content),
+                callback: function (html) {
+                    self.$target.data('content', html);
+                },
             });
         }
         this._super.apply(this, arguments);
@@ -180,4 +170,47 @@ snippetOptions.registry.newsletter_popup = snippetOptions.registry.mailing_list_
         });
     },
 });
+
+WysiwygMultizone.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _saveElement: function (outerHTML, recordInfo, editable) {
+        var self = this;
+        var defs = [this._super.apply(this, arguments)];
+        var $popups = $(editable).find('.o_newsletter_popup');
+        _.each($popups, function (popup) {
+            var $popup = $(popup);
+            var content = $popup.data('content');
+            if (content) {
+                defs.push(self._rpc({
+                    route: '/website_mass_mailing/set_content',
+                    params: {
+                        'newsletter_id': parseInt($popup.attr('data-list-id')),
+                        'content': content,
+                    },
+                }));
+            }
+        });
+        return Promise.all(defs);
+    },
+});
+
+WysiwygTranslate.include({
+    /**
+     * @override
+     */
+    start: function () {
+        this.$target.on('click.newsletter_popup_option', '.o_edit_popup', function (ev) {
+            alert(_t('Website popups can only be translated through mailing list configuration in the Email Marketing app.'));
+        });
+        this._super.apply(this, arguments);
+    },
+});
+
 });

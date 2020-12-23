@@ -37,6 +37,13 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         height: var(--o-we-toolbar-height);
     }
 }
+
+.wysiwyg_iframe,
+.note-editor {
+    border: $o-we-border-width solid $o-we-border-color;
+    margin: 0;
+    padding: 0;
+}
 // avoid popover bar over its opened modal
 .note-popover .popover {
     z-index: $o-we-overlay-zindex;
@@ -187,6 +194,16 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 }
 
 // ANIMATIONS
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        transform: translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
 
 @keyframes inputHighlighter {
     from {
@@ -350,11 +367,6 @@ body .modal {
 
         .o_link_dialog_preview {
             border-left: 1px solid gray('200');
-            #link-preview a {
-                &:first-child {
-                    display: none;
-                }
-            }
         }
     }
 
@@ -371,9 +383,7 @@ body .modal {
 
 // Highlight selected image/icon
 %o-we-selected-image {
-    $o-selected-image-color: green;
-    background: $o-selected-image-color;
-    outline: 3px solid $o-selected-image-color;
+    outline: 3px solid rgba(150, 150, 220, 0.3);
 }
 
 img.o_we_selected_image {
@@ -396,6 +406,25 @@ img::selection {
     text-overflow: ellipsis;
     text-align: center;
     background-color: rgba(255, 255, 255, .7);
+}
+
+@include media-breakpoint-down(md) {
+    #web_editor-top-edit {
+        position: initial !important;
+        height: initial !important;
+        top: initial !important;
+        left: initial !important;
+
+        #web_editor-toolbars .popover-body {
+            display: flex;
+            width: 100%;
+            overflow-x: auto;
+
+            .btn-group {
+                position: static;
+            }
+        }
+    }
 }
 
 // User modal in edit mode
@@ -470,295 +499,4 @@ img::selection {
             }
         }
     }
-}
-.wrap_editor {
-    height: 100vh;
-}
-.o_editor_center {
-    flex: 1 1 auto;
-    outline: none;
-}
-
-.o_forum_editor .note-editing-area > div {
-    padding: 3px 5px;
-}
-
-jw-toolbar {
-    display: block;
-    text-align: center;
-
-    jw-group {
-        display: inline-block;
-        margin: 5px 0;
-        &>*:first-child{
-            margin-left:5px;
-        }
-        &>*:last-child{
-            margin-right:5px;
-        }
-    }
-    jw-group jw-separator {
-        margin-top: 0;
-        margin-bottom: 0;
-    }
-
-    span {
-        font-weight: 600;
-        padding: 5px;
-    }
-
-    select, option {
-        padding: 5px 10px;
-    }
-
-    option.label {
-        font-weight: bold;
-    }
-
-    .h1 {
-        font-size: 2em;
-        font-weight: bold;
-    }
-    .h2 {
-        font-size: 1.5em;
-        font-weight: bold;
-    }
-    .h3 {
-        font-size: 1.17em;
-        font-weight: bold;
-    }
-    .h4 {
-        font-size: 1em;
-        font-weight: bold;
-    }
-    .h5 {
-        font-size: 0.83em;
-        font-weight: bold;
-    }
-    .h6 {
-        font-size: 0.67em;
-        font-weight: bold;
-    }
-    input[type=text], input[type=number], select {
-        flex: 0 1 auto;
-        height: 27px;
-        vertical-align: middle;
-        width: $o-we-sidebar-content-field-input-max-width;
-        border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
-        border-radius: $o-we-sidebar-content-field-border-radius;
-
-        &:focus {
-            border-color: $o-we-sidebar-content-field-input-border-color;
-        }
-    }
-    jw-button {
-        width: auto !important;
-        height: 27px;
-        padding: 7px;
-
-        &:hover {
-            background-color: rgb(241, 243, 244);
-            cursor: pointer;
-        }
-
-        &.active {
-            background: #e5e5e5;
-            -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
-            -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
-            box-shadow: inset 0px 0px 5px #c1c1c1;
-            outline: none;
-        }
-    }
-    .jw-primary-button {
-        background-color: #00A09D;
-        color: white;
-    }
-    .jw-danger-button {
-        background-color: #af120c;
-        color: white;
-    }
-}
-
-jw-follow-range jw-toolbar {
-    background-color: #444444;
-    color: #dddddd;
-    border-radius: 30px;
-    margin: -5px 5px 0 5px;
-    padding: 0 5px 0 5px;
-
-    jw-group {
-        margin: 2px;
-    }
-    jw-button {
-        line-height: normal;
-        border-radius: 6px;
-        &:hover {
-            background-color: #777777;
-        }
-        &.active {
-            background-color: #686767;
-            -webkit-box-shadow: inset 0px 0px 5px #777777;
-            -moz-box-shadow: inset 0px 0px 5px #777777;
-            box-shadow: inset 0px 0px 5px #777777;
-        }
-    }
-    &:before {
-        border-color: transparent transparent #444444 transparent;
-        border-width: 9px;
-        left: 30%;
-        bottom: 109%;
-        border-style: solid;
-        content: '';
-        position: absolute;
-    }
-
-    jw-select {
-        > jw-group {
-            display: none;
-            background-color: #444;
-            border-radius: 10px;
-            position: absolute;
-            padding: 5px 10px;
-            z-index: 1000;
-            margin-top: 8px !important;
-            &:before {
-                border-color: transparent transparent #444444 transparent;
-                border-width: 9px;
-                top: -17px;
-                border-style: solid;
-                content: '';
-                position: absolute;
-            }
-            jw-button {
-                display: block;
-                line-height: 28px;
-                height: 35px;
-                text-align: left;
-                color: #C6C6C6;
-                border-bottom-width: 0;
-                &.active {
-                    background-color: #586e71 !important;
-                    box-shadow: none;
-                }
-                &:last-child {
-                    border-bottom-width: 1px;
-                }
-                &:first-child {
-                    margin-left: 0; // We need a stronger selector to overrride previous toolbar css
-                }
-                &.p, &.h1, &.h2, &.h3, &.h4, &.h5, &.h6, &.pre {
-                    line-height: 21px;
-                }
-
-            }
-            .h1 {
-                font-size: 1.5em;
-            }
-            .h2 {
-                font-size: 1.3em;
-            }
-            .h3 {
-                font-size: 1.1em;
-            }
-            .h4 {
-                font-size: 1em;
-            }
-            .h5 {
-                font-size: 0.83em;
-            }
-            .h6 {
-                font-size: 0.67em;
-            }
-        }
-        &[aria-pressed="true"] > jw-group {
-            display: block;
-        }
-    }
-    jw-group[name=textSize] jw-select jw-group jw-button {
-        padding-left: 24px;
-        &.active {
-            &:before {
-                color: #01bad2;
-                content: "";
-                right: auto;
-                left: 18px;
-                font-size: 12px;
-                position: absolute;
-                font-family: FontAwesome;
-            }
-        }
-    }
-    jw-group[name=align] jw-select {
-        &>jw-button {
-            font-family: "FontAwesome" !important;
-            text-align: center;
-            &:before {
-                content: "\f036";
-            }
-            &:after {
-                display: inline-block;
-                margin-left: 2px;
-                vertical-align: 2px;
-                content: "";
-                border-top: 0.3em solid;
-                border-right: 0.3em solid transparent;
-                border-bottom: 0;
-                border-left: 0.3em solid transparent;
-            }
-        }
-        jw-group {
-            padding: 10px;
-            jw-button {
-                margin: 0 4px;
-            }
-        }
-    }
-}
-
-jw-follow-range {
-    z-index: 1050;
-}
-table.table-picker {
-    position: fixed !important;
-}
-
-body jw-devtools {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    z-index: 10000;
-}
-
-.oe_absolute_dropdown {
-    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
-    border-radius: $o-we-sidebar-content-field-border-radius;
-    background-color: $o-we-sidebar-content-field-clickable-bg;
-    color: $o-we-sidebar-content-field-clickable-color;
-
-    padding-left: 0;
-    padding-right: 0;
-
-    a {
-        padding: 0 10px;
-        color: white;
-    }
-
-    .dropdown-menu a {
-        display: block;
-    }
-}
-
-// mobile preview
-
-#jw-iframe, #jw-iframe jw-iframe {
-    position: fixed;
-    height: 100%;
-}
-.note-editable {
-    height: 100%;
-    overflow: auto;
-}
-body .note-editable {
-    height: initial;
-    overflow: initial;
 }
