@@ -1531,7 +1531,10 @@ class Binary(http.Controller):
             if not (width or height):
                 width, height = odoo.tools.image_guess_size_from_field_name(field)
 
-        image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+        try:
+            image_base64 = image_process(image_base64, size=(int(width), int(height)), crop=crop, quality=int(quality))
+        except Exception:
+            return request.not_found()
 
         content = base64.b64decode(image_base64)
         headers = http.set_safe_image_headers(headers, content)
