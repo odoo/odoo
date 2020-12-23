@@ -135,13 +135,18 @@ def new_test_user(env, login='', groups='base.group_user', context=None, **kwarg
 
     groups_id = [(6, 0, [env.ref(g.strip()).id for g in groups.split(',')])]
     create_values = dict(kwargs, login=login, groups_id=groups_id)
+    # automatically generate a name as "Login (groups)" to ease user comprehension
     if not create_values.get('name'):
         create_values['name'] = '%s (%s)' % (login, groups)
-    if not create_values.get('email'):
+    # generate email if not given as most test require an email
+    if 'email' not in create_values:
         if single_email_re.match(login):
             create_values['email'] = login
         else:
             create_values['email'] = '%s.%s@example.com' % (login[0], login[0])
+    # ensure company_id + allowed company constraint works if not given at create
+    if 'company_id' in create_values and 'company_ids' not in create_values:
+        create_values['company_ids'] = [(4, create_values['company_id'])]
 
     return env['res.users'].with_context(**context).create(create_values)
 
