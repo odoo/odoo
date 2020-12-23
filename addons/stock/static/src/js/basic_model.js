@@ -8,7 +8,7 @@ BasicModel.include({
 
     _invalidateCache: function (dataPoint) {
         this._super.apply(this, arguments);
-        if (dataPoint.model === 'stock.warehouse' && !localStorage.getItem('running_tour')) {
+        if (dataPoint.model === 'stock.warehouse' && !localStorage.getItem('running_tour')  && dataPoint._changes === null) {
             this.do_action('reload_context');
         }
     }
