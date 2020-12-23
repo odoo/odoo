@@ -22,7 +22,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
+        default='/',
         copy=False, required=True,
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
@@ -79,6 +79,7 @@ class Repair(models.Model):
         'product.pricelist', 'Pricelist',
         default=lambda self: self.env['product.pricelist'].search([('company_id', 'in', [self.env.company.id, False])], limit=1).id,
         help='Pricelist of the selected partner.', check_company=True)
+    currency_id = fields.Many2one(related='pricelist_id.currency_id')
     partner_invoice_id = fields.Many2one('res.partner', 'Invoicing Address', check_company=True)
     invoice_method = fields.Selection([
         ("none", "No Invoice"),
@@ -195,13 +196,23 @@ class Repair(models.Model):
         else:
             self.location_id = False
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_confirmed(self):
         for order in self:
             if order.state not in ('draft', 'cancel'):
                 raise UserError(_('You can not delete a repair order once it has been confirmed. You must first cancel it.'))
             if order.state == 'cancel' and order.invoice_id and order.invoice_id.posted_before:
                 raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
-        return super().unlink()
+
+    @api.model
+    def create(self, vals):
+        # To avoid consuming a sequence number when clicking on 'Create', we preprend it if the
+        # the name starts with '/'.
+        vals['name'] = vals.get('name') or '/'
+        if vals['name'].startswith('/'):
+            vals['name'] = (self.env['ir.sequence'].next_by_code('repair.order') or '/') + vals['name']
+            vals['name'] = vals['name'][:-1] if vals['name'].endswith('/') and vals['name'] != '/' else vals['name']
+        return super(Repair, self).create(vals)
 
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
@@ -341,6 +352,8 @@ class Repair(models.Model):
                     'invoice_line_ids': [],
                     'fiscal_position_id': fpos.id
                 }
+                if partner_invoice.property_payment_term_id:
+                    invoice_vals['invoice_payment_term_id'] = partner_invoice.property_payment_term_id.id
                 current_invoices_list.append(invoice_vals)
             else:
                 # if group == True: concatenate invoices by partner and currency
@@ -594,9 +607,11 @@ class RepairLine(models.Model):
         index=True, ondelete='cascade', check_company=True)
     company_id = fields.Many2one(
         related='repair_id.company_id', store=True, index=True)
+    currency_id = fields.Many2one(
+        related='repair_id.currency_id')
     type = fields.Selection([
         ('add', 'Add'),
-        ('remove', 'Remove')], 'Type', required=True)
+        ('remove', 'Remove')], 'Type', default='add', required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', required=True, check_company=True,
         domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
@@ -637,9 +652,14 @@ class RepairLine(models.Model):
         help='The status of a repair line is set automatically to the one of the linked repair order.')
 
     @api.constrains('lot_id', 'product_id')
-    def constrain_lot_id(self):
-        for line in self.filtered(lambda x: x.product_id.tracking != 'none' and not x.lot_id):
-            raise ValidationError(_("Serial number is required for operation line with product '%s'") % (line.product_id.name))
+    def _check_product_tracking(self):
+        invalid_lines = self.filtered(lambda x: x.product_id.tracking != 'none' and not x.lot_id)
+        if invalid_lines:
+            products = invalid_lines.product_id
+            raise ValidationError(_(
+                "Serial number is required for operation lines with products: %s",
+                ", ".join(products.mapped('name')),
+            ))
 
     @api.depends('price_unit', 'repair_id', 'product_uom_qty', 'product_id', 'repair_id.invoice_method')
     def _compute_price_subtotal(self):
@@ -729,6 +749,8 @@ class RepairFee(models.Model):
         index=True, ondelete='cascade', required=True)
     company_id = fields.Many2one(
         related="repair_id.company_id", index=True, store=True)
+    currency_id = fields.Many2one(
+        related="repair_id.currency_id")
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,

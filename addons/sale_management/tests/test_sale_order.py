@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.test_sale_common import TestCommonSaleNoChart
+from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.tests import tagged
 
 
-class TestSaleOrder(TestCommonSaleNoChart):
+@tagged('-at_install', 'post_install')
+class TestSaleOrder(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleOrder, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         Pricelist = cls.env['product.pricelist']
         Product = cls.env['product.product']
@@ -103,11 +105,13 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         # create some sale orders
         cls.sale_order = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
         cls.sale_order_no_price_list = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
     def test_01_template_without_pricelist(self):
@@ -125,13 +129,13 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(
             len(self.sale_order_no_price_list.order_line),
             1,
-            "The sale order shall contains the same number of products than"
+            "The sale order shall contains the same number of products as"
             "the quotation template.")
 
         self.assertEqual(
             self.sale_order_no_price_list.order_line[0].product_id.id,
             self.product_1.id,
-            "The sale order shall contains the same products than the"
+            "The sale order shall contains the same products as the"
             "quotation template.")
 
         self.assertEqual(
@@ -143,13 +147,13 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(
             len(self.sale_order_no_price_list.sale_order_option_ids),
             1,
-            "The sale order shall contains the same number of optional products than"
+            "The sale order shall contains the same number of optional products as"
             "the quotation template.")
 
         self.assertEqual(
             self.sale_order_no_price_list.sale_order_option_ids[0].product_id.id,
             self.optional_product.id,
-            "The sale order shall contains the same optional products than the"
+            "The sale order shall contains the same optional products as the"
             "quotation template.")
 
         self.assertEqual(
@@ -169,7 +173,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertEqual(
             self.sale_order_no_price_list.order_line[1].product_id.id,
             self.optional_product.id,
-            "The sale order shall contains the same products than the"
+            "The sale order shall contains the same products as the"
             "quotation template.")
 
         self.assertEqual(

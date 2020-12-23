@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestRecipients
+from odoo.addons.test_mail_full.tests.common import TestMailFullCommon, TestMailFullRecipients
 
 
-class TestSMSComposerComment(TestMailFullCommon, TestRecipients):
+class TestSMSComposerComment(TestMailFullCommon, TestMailFullRecipients):
     """ TODO LIST
 
      * add test for default_res_model / default_res_id and stuff like that;
@@ -519,7 +519,7 @@ class TestSMSComposerMass(TestMailFullCommon):
         # Composer creation with context from a template context action (simulate) - comment (single recipient)
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
-                default_composition_mode='guess',
+                sms_composition_mode='guess',
                 default_res_ids=[test_record_2.id],
                 default_res_id=test_record_2.id,
                 active_ids=[test_record_2.id],
@@ -541,7 +541,7 @@ class TestSMSComposerMass(TestMailFullCommon):
         # Composer creation with context from a template context action (simulate) - mass (multiple recipient)
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
-                default_composition_mode='guess',
+                sms_composition_mode='guess',
                 default_res_ids=[test_record_1.id, test_record_2.id],
                 default_res_id=test_record_1.id,
                 active_ids=[test_record_1.id, test_record_2.id],

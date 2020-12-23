@@ -11,6 +11,7 @@ class AutocompleteInput extends Component {
         }
 
         let args = {
+            autoFocus: true,
             select: (ev, ui) => this._onAutocompleteSelect(ev, ui),
             source: (req, res) => this._onAutocompleteSource(req, res),
             focus: ev => this._onAutocompleteFocus(ev),
@@ -89,7 +90,6 @@ class AutocompleteInput extends Component {
      * @param {Object} ui
      */
     _onAutocompleteSelect(ev, ui) {
-        ev.stopPropagation();
         if (this.props.select) {
             this.props.select(ev, ui);
         }

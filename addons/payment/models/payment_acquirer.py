@@ -6,6 +6,7 @@ import logging
 from datetime import datetime
 from dateutil import relativedelta
 import pprint
+import psycopg2
 
 from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
 from odoo.tools import consteq, float_round, image_process, ustr
@@ -106,7 +107,7 @@ class PaymentAcquirer(models.Model):
              acquirer. Watch out, test and production modes require
              different credentials.""")
     capture_manually = fields.Boolean(string="Capture Amount Manually",
-        help="Capture the amount from Odoo, when the delivery is completed.")
+        help="Capture the amount from Odoo, when the delivery is completed. Use this if you want to charge your customers cards only once you are sure you can ship the goods to them.")
     journal_id = fields.Many2one(
         'account.journal', 'Payment Journal', domain="[('type', 'in', ['bank', 'cash']), ('company_id', '=', company_id)]",
         help="""Journal where the successful transactions will be posted""")
@@ -267,14 +268,23 @@ class PaymentAcquirer(models.Model):
             'sequence': 999,
             'type': 'bank',
             'company_id': self.company_id.id,
-            'default_debit_account_id': account.id,
-            'default_credit_account_id': account.id,
+            'default_account_id': account.id,
             # Show the journal on dashboard if the acquirer is published on the website.
             'show_on_dashboard': self.state == 'enabled',
             # Don't show payment methods in the backend.
             'inbound_payment_method_ids': inbound_payment_method_ids,
             'outbound_payment_method_ids': [],
         }
+
+    def _get_acquirer_journal_domain(self):
+        """Returns a domain for finding a journal corresponding to an acquirer"""
+        self.ensure_one()
+        code_cutoff = self.env['account.journal']._fields['code'].size
+        return [
+            ('name', '=', self.name),
+            ('code', '=', self.name.upper()[:code_cutoff]),
+            ('company_id', '=', self.company_id.id),
+        ]
 
     @api.model
     def _create_missing_journal_for_acquirers(self, company=None):
@@ -284,29 +294,42 @@ class PaymentAcquirer(models.Model):
         (e.g. payment_paypal for Paypal). We can't do that in such modules because we have no guarantee the chart template
         is already installed.
         '''
-        # Search for installed acquirers modules.
+        # Search for installed acquirers modules that have no journal for the current company.
         # If this method is triggered by a post_init_hook, the module is 'to install'.
         # If the trigger comes from the chart template wizard, the modules are already installed.
-        acquirer_modules = self.env['ir.module.module'].search(
-            [('name', 'like', 'payment_%'), ('state', 'in', ('to install', 'installed'))])
-        acquirer_names = [a.name.split('_', 1)[1] for a in acquirer_modules]
-
-        # Search for acquirers having no journal
         company = company or self.env.company
-        acquirers = self.env['payment.acquirer'].search(
-            [('provider', 'in', acquirer_names), ('journal_id', '=', False), ('company_id', '=', company.id)])
+        acquirers = self.env['payment.acquirer'].search([
+            ('module_state', 'in', ('to install', 'installed')),
+            ('journal_id', '=', False),
+            ('company_id', '=', company.id),
+        ])
 
-        journals = self.env['account.journal']
+        # Here we will attempt to first create the journal since the most common case (first
+        # install) is to successfully to create the journal for the acquirer, in the case of a
+        # reinstall (least common case), the creation will fail because of a unique constraint
+        # violation, this is ok as we catch the error and then perform a search if need be
+        # and assign the existing journal to our reinstalled acquirer. It is better to ask for
+        # forgiveness than to ask for permission as this saves us the overhead of doing a select
+        # that would be useless in most cases.
+        Journal = journals = self.env['account.journal']
         for acquirer in acquirers.filtered(lambda l: not l.journal_id and l.company_id.chart_template_id):
-            acquirer.journal_id = self.env['account.journal'].create(acquirer._prepare_account_journal_vals())
-            journals += acquirer.journal_id
+            try:
+                with self.env.cr.savepoint():
+                    journal = Journal.create(acquirer._prepare_account_journal_vals())
+            except psycopg2.IntegrityError as e:
+                if e.pgcode == psycopg2.errorcodes.UNIQUE_VIOLATION:
+                    journal = Journal.search(acquirer._get_acquirer_journal_domain(), limit=1)
+                else:
+                    raise
+            acquirer.journal_id = journal
+            journals += journal
         return journals
 
-    @api.model
-    def create(self, vals):
-        record = super(PaymentAcquirer, self).create(vals)
-        record._check_required_if_provider()
-        return record
+    @api.model_create_multi
+    def create(self, vals_list):
+        records = super(PaymentAcquirer, self).create(vals_list)
+        records._check_required_if_provider()
+        return records
 
     def write(self, vals):
         result = super(PaymentAcquirer, self).write(vals)
@@ -674,7 +697,7 @@ class PaymentTransaction(models.Model):
         self.payment_id = payment
 
         if self.invoice_ids:
-            self.invoice_ids.filtered(lambda move: move.state == 'draft').post()
+            self.invoice_ids.filtered(lambda move: move.state == 'draft')._post()
 
             (payment.line_ids + self.invoice_ids.line_ids)\
                 .filtered(lambda line: line.account_id == payment.destination_account_id and not line.reconciled)\
@@ -814,7 +837,7 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.
         invoices = self.mapped('invoice_ids').filtered(lambda inv: inv.state == 'draft')
-        invoices.post()
+        invoices._post()
 
         # Create & Post the payments.
         for trans in self:
@@ -904,9 +927,8 @@ class PaymentTransaction(models.Model):
         :return: A unique reference for the transaction.
         '''
         if not prefix:
-            if values:
-                prefix = self._compute_reference_prefix(values)
-            else:
+            prefix = self._compute_reference_prefix(values)
+            if not prefix:
                 prefix = 'tx'
 
         # Fetch the last reference
@@ -1091,13 +1113,13 @@ class PaymentTransaction(models.Model):
         return res
 
     def action_capture(self):
-        if any([t.state != 'authorized' for t in self]):
-            raise ValidationError(_('Only transactions having the capture status can be captured.'))
+        if any(t.state != 'authorized' for t in self):
+            raise ValidationError(_('Only transactions having the authorized status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     def action_void(self):
-        if any([t.state != 'authorized' for t in self]):
+        if any(t.state != 'authorized' for t in self):
             raise ValidationError(_('Only transactions having the capture status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()
@@ -1135,7 +1157,6 @@ class PaymentToken(models.Model):
     """
         @TBE: stolen shamelessly from there https://www.paypal.com/us/selfhelp/article/why-is-there-a-$1.95-charge-on-my-card-statement-faq554
         Most of them are ~1.50€s
-        TODO: See this with @AL & @DBO
     """
     VALIDATION_AMOUNTS = {
         'CAD': 2.45,

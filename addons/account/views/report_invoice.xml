@@ -22,29 +22,29 @@
                     </h2>
 
                     <div id="informations" class="row mt32 mb32">
-                        <div class="col-auto mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
                             <strong>Invoice Date:</strong>
                             <p class="m-0" t-field="o.invoice_date"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
                             <strong>Due Date:</strong>
                             <p class="m-0" t-field="o.invoice_date_due"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.invoice_origin" name="origin">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_origin" name="origin">
                             <strong>Source:</strong>
                             <p class="m-0" t-field="o.invoice_origin"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.partner_id.ref" name="customer_code">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.partner_id.ref" name="customer_code">
                             <strong>Customer Code:</strong>
                             <p class="m-0" t-field="o.partner_id.ref"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.ref" name="reference">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.ref" name="reference">
                             <strong>Reference:</strong>
                             <p class="m-0" t-field="o.ref"/>
                         </div>
                     </div>
 
-                    <t t-set="display_discount" t-value="any([l.discount for l in o.invoice_line_ids])"/>
+                    <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
 
                     <table class="table table-sm o_main_table" name="invoice_line_table">
                         <thead>
@@ -132,7 +132,7 @@
                                     </tr>
                                     <t t-foreach="o.amount_by_group" t-as="amount_by_group">
                                         <tr style="">
-                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) == 1 and o.amount_untaxed == amount_by_group[2]">
+                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
                                                 <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>
                                                 <td class="text-right o_price_total">
                                                     <span class="text-nowrap" t-esc="amount_by_group[3]" />
@@ -157,11 +157,34 @@
                                             <span class="text-nowrap" t-field="o.amount_total"/>
                                         </td>
                                     </tr>
+                                    <t t-if="print_with_payments">
+                                        <t t-if="o.payment_state != 'invoicing_legacy'">
+                                            <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                            <t t-foreach="payments_vals" t-as="payment_vals">
+                                                <tr>
+                                                    <td>
+                                                        <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="len(payments_vals) > 0">
+                                                <tr class="border-black">
+                                                    <td><strong>Amount Due</strong></td>
+                                                    <td class="text-right">
+                                                        <span t-field="o.amount_residual"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference">
+                    <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                         Please use the following communication for your payment : <b><span t-field="o.payment_reference"/></b>
                     </p>
                     <p t-if="o.invoice_payment_term_id" name="payment_term">
@@ -173,7 +196,7 @@
                     <p t-if="o.fiscal_position_id.note" name="note">
                         <span t-field="o.fiscal_position_id.note"/>
                     </p>
-                    <p t-if="o.invoice_incoterm_id" name="note">
+                    <p t-if="o.invoice_incoterm_id" name="incoterm">
                         <strong>Incoterm: </strong><span t-field="o.invoice_incoterm_id.code"/> - <span t-field="o.invoice_incoterm_id.name"/>
                     </p>
                     <div id="qrcode" t-if="o.display_qr_code">
@@ -186,37 +209,12 @@
             </t>
         </template>
 
-        <template id="report_invoice_document_with_payments" inherit_id="account.report_invoice_document" primary="True">
-            <xpath expr="//div[@id='total']/div/table" position="inside">
-                <t t-if="o.payment_state != 'invoicing_legacy'">
-                    <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
-                    <t t-foreach="payments_vals" t-as="payment_vals">
-                        <tr>
-                            <td>
-                                <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
-                            </td>
-                            <td class="text-right">
-                                <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                        </tr>
-                    </t>
-                    <t t-if="len(payments_vals) > 0">
-                        <tr class="border-black">
-                            <td><strong>Amount Due</strong></td>
-                            <td class="text-right">
-                                 <span t-field="o.amount_residual"/>
-                            </td>
-                        </tr>
-                    </t>
-                </t>
-            </xpath>
-        </template>
-
         <template id="report_invoice">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                    <t t-call="account.report_invoice_document" t-lang="lang"/>
+                    <t t-if="o._get_name_invoice_report() == 'account.report_invoice_document'"
+                        t-call="account.report_invoice_document" t-lang="lang"/>
                 </t>
             </t>
         </template>
@@ -225,7 +223,9 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                    <t t-call="account.report_invoice_document_with_payments" t-lang="lang"/>
+                    <t t-set="print_with_payments" t-value="True"/>
+                    <t t-if="o._get_name_invoice_report() == 'account.report_invoice_document'"
+                        t-call="account.report_invoice_document" t-lang="lang"/>
                 </t>
             </t>
         </template>

@@ -49,7 +49,7 @@ const DiscussWidget = AbstractAction.extend({
         // control panel attributes
         this.action = action;
         this.actionManager = parent;
-        this.controlPanelModelConfig.modelName = 'mail.message';
+        this.searchModelConfig.modelName = 'mail.message';
         this.discuss = undefined;
         this.options = options;
 
@@ -63,6 +63,7 @@ const DiscussWidget = AbstractAction.extend({
     async willStart() {
         await this._super(...arguments);
         this.env = Component.env;
+        await this.env.messagingCreatedPromise;
         const initActiveId = this.options.active_id ||
             (this.action.context && this.action.context.active_id) ||
             (this.action.params && this.action.params.default_active_id) ||
@@ -163,6 +164,16 @@ const DiscussWidget = AbstractAction.extend({
     },
     /**
      * @private
+     * @returns {boolean}
+     */
+    _shouldHaveInviteButton() {
+        return (
+            this.discuss.thread &&
+            this.discuss.thread.channel_type === 'channel'
+        );
+    },
+    /**
+     * @private
      */
     _showRainbowMan() {
         this.trigger_up('show_effect', {
@@ -175,23 +186,21 @@ const DiscussWidget = AbstractAction.extend({
      */
     _updateControlPanel() {
         // Invite
-        if (
-            this.discuss.thread &&
-            this.discuss.thread.channel_type === 'channel'
-        ) {
+        if (this._shouldHaveInviteButton()) {
             this.$buttons.find('.o_invite').removeClass('o_hidden');
         } else {
             this.$buttons.find('.o_invite').addClass('o_hidden');
         }
         // Mark All Read
         if (
+            this.discuss.threadView &&
             this.discuss.thread &&
             this.discuss.thread === this.env.messaging.inbox
         ) {
             this.$buttons
                 .find('.o_widget_Discuss_controlPanelButtonMarkAllRead')
                 .removeClass('o_hidden')
-                .prop('disabled', this.discuss.threadViewer.messages.length === 0);
+                .prop('disabled', this.discuss.threadView.messages.length === 0);
         } else {
             this.$buttons
                 .find('.o_widget_Discuss_controlPanelButtonMarkAllRead')
@@ -199,13 +208,14 @@ const DiscussWidget = AbstractAction.extend({
         }
         // Unstar All
         if (
+            this.discuss.threadView &&
             this.discuss.thread &&
             this.discuss.thread === this.env.messaging.starred
         ) {
             this.$buttons
                 .find('.o_unstar_all')
                 .removeClass('o_hidden')
-                .prop('disabled', this.discuss.threadViewer.messages.length === 0);
+                .prop('disabled', this.discuss.threadView.messages.length === 0);
         } else {
             this.$buttons
                 .find('.o_unstar_all')
@@ -242,13 +252,16 @@ const DiscussWidget = AbstractAction.extend({
         const $unselectAll = this.$buttons.find('.o_widget_Discuss_controlPanelButtonUnselectAll');
 
         if (
-            this.discuss.threadViewer.checkedMessages.length > 0 ||
-            this.discuss.threadViewer.uncheckedMessages.length > 0
+            this.discuss.threadView &&
+            (
+                this.discuss.threadView.checkedMessages.length > 0 ||
+                this.discuss.threadView.uncheckedMessages.length > 0
+            )
         ) {
             $selectAll.removeClass('o_hidden');
-            $selectAll.toggleClass('disabled', this.discuss.threadViewer.uncheckedMessages.length === 0);
+            $selectAll.toggleClass('disabled', this.discuss.threadView.uncheckedMessages.length === 0);
             $unselectAll.removeClass('o_hidden');
-            $unselectAll.toggleClass('disabled', this.discuss.threadViewer.checkedMessages.length === 0);
+            $unselectAll.toggleClass('disabled', this.discuss.threadView.checkedMessages.length === 0);
         } else {
             $selectAll.addClass('o_hidden');
             $selectAll.addClass('disabled');
@@ -259,8 +272,9 @@ const DiscussWidget = AbstractAction.extend({
         // Moderation Actions
         const $moderationButtons = this.$buttons.find('.o_widget_Discuss_controlPanelButtonModeration');
         if (
-            this.discuss.threadViewer.checkedMessages.length > 0 &&
-            this.discuss.threadViewer.checkedMessages.filter(
+            this.discuss.threadView &&
+            this.discuss.threadView.checkedMessages.length > 0 &&
+            this.discuss.threadView.checkedMessages.filter(
                 message => !message.isModeratedByCurrentPartner
             ).length === 0
         ) {
@@ -306,7 +320,7 @@ const DiscussWidget = AbstractAction.extend({
      * @private
      */
     _onClickMarkAllAsRead() {
-        this.env.models['mail.message'].markAllAsRead({ domain: this.domain });
+        this.env.models['mail.message'].markAllAsRead(this.domain);
     },
     /**
      * @private
@@ -325,7 +339,7 @@ const DiscussWidget = AbstractAction.extend({
      */
     _onClickModerationAccept() {
         this.env.models['mail.message'].moderate(
-            this.discuss.threadViewer.checkedMessages,
+            this.discuss.threadView.checkedMessages,
             'accept'
         );
     },
@@ -347,7 +361,7 @@ const DiscussWidget = AbstractAction.extend({
     _onClickSelectAll() {
         this.env.models['mail.message'].checkAll(
             this.discuss.thread,
-            this.discuss.threadStringifiedDomain
+            this.discuss.stringifiedDomain
         );
     },
     /**
@@ -356,7 +370,7 @@ const DiscussWidget = AbstractAction.extend({
     _onClickUnselectAll() {
         this.env.models['mail.message'].uncheckAll(
             this.discuss.thread,
-            this.discuss.threadStringifiedDomain
+            this.discuss.stringifiedDomain
         );
     },
     /**
@@ -370,7 +384,7 @@ const DiscussWidget = AbstractAction.extend({
      * @param {Object} searchQuery
      */
     _onSearch: function (searchQuery) {
-        this.discuss.threadViewer.update({
+        this.discuss.update({
             stringifiedDomain: JSON.stringify(searchQuery.domain),
         });
     },

@@ -9,20 +9,18 @@ from odoo import models, api, fields, _
 class AccountJournal(models.Model):
     _inherit = 'account.journal'
 
-    @api.model
-    def _prepare_liquidity_account(self, name, company, currency_id, type):
-        '''
-        When preparing the values to use when creating the default debit and credit accounts of a
-        liquidity journal, set the correct tags for the mexican localization.
-        '''
-        res = super(AccountJournal, self)._prepare_liquidity_account(name, company, currency_id, type)
-        if company.country_id.id == self.env.ref('base.mx').id:
-            mx_tags = self.env['account.account'].mx_search_tags(res.get('code', ''))
-            if mx_tags:
-                res.update({
-                    'tag_ids': [(6, 0, [tag.id for tag in mx_tags])]
-                })
-        return res
+    def _prepare_liquidity_account_vals(self, company, code, vals):
+        # OVERRIDE
+        account_vals = super()._prepare_liquidity_account_vals(company, code, vals)
+
+        if company.country_id.code == 'MX':
+            # When preparing the values to use when creating the default debit and credit accounts of a
+            # liquidity journal, set the correct tags for the mexican localization.
+            account_vals.setdefault('tag_ids', [])
+            account_vals['tag_ids'] += [(4, tag_id) for tag_id in self.env['account.account'].mx_search_tags(code).ids]
+
+        return account_vals
+
 
 class AccountAccount(models.Model):
     _inherit = 'account.account'
@@ -46,7 +44,7 @@ class AccountAccount(models.Model):
 
     @api.onchange('code')
     def _onchange_code(self):
-        if self.company_id.country_id.id == self.env.ref('base.mx').id and self.code:
+        if self.company_id.country_id.code == "MX" and self.code:
             tags = self.mx_search_tags(self.code)
             self.tag_ids = tags
 

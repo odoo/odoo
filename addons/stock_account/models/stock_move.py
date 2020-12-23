@@ -21,10 +21,7 @@ class StockMove(models.Model):
 
     def action_get_account_moves(self):
         self.ensure_one()
-        action_ref = self.env.ref('account.action_move_journal_line')
-        if not action_ref:
-            return False
-        action_data = action_ref.read()[0]
+        action_data = self.env['ir.actions.act_window']._for_xml_id('account.action_move_journal_line')
         action_data['domain'] = [('id', 'in', self.account_move_ids.ids)]
         return action_data
 
@@ -237,6 +234,8 @@ class StockMove(models.Model):
         # Init a dict that will group the moves by valuation type, according to `move._is_valued_type`.
         valued_moves = {valued_type: self.env['stock.move'] for valued_type in self._get_valued_types()}
         for move in self:
+            if float_is_zero(move.quantity_done, precision_rounding=move.product_uom.rounding):
+                continue
             for valued_type in self._get_valued_types():
                 if getattr(move, '_is_%s' % valued_type)():
                     valued_moves[valued_type] |= move
@@ -454,7 +453,7 @@ class StockMove(models.Model):
                 'stock_valuation_layer_ids': [(6, None, [svl_id])],
                 'move_type': 'entry',
             })
-            new_account_move.post()
+            new_account_move._post()
 
     def _account_entry_move(self, qty, description, svl_id, cost):
         """ Accounting Valuation Entries """
@@ -471,11 +470,11 @@ class StockMove(models.Model):
         company_from = self._is_out() and self.mapped('move_line_ids.location_id.company_id') or False
         company_to = self._is_in() and self.mapped('move_line_ids.location_dest_id.company_id') or False
 
+        journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
         # Create Journal Entry for products arriving in the company; in case of routes making the link between several
         # warehouse of the same company, the transit location belongs to this company, so we don't need to create accounting entries
         if self._is_in():
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            if location_from and location_from.usage == 'customer':  # goods returned from customer
+            if self._is_returned(valued_type='in'):
                 self.with_company(company_to)._create_account_move_line(acc_dest, acc_valuation, journal_id, qty, description, svl_id, cost)
             else:
                 self.with_company(company_to)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
@@ -483,15 +482,13 @@ class StockMove(models.Model):
         # Create Journal Entry for products leaving the company
         if self._is_out():
             cost = -1 * cost
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
-            if location_to and location_to.usage == 'supplier':  # goods returned to supplier
+            if self._is_returned(valued_type='out'):
                 self.with_company(company_from)._create_account_move_line(acc_valuation, acc_src, journal_id, qty, description, svl_id, cost)
             else:
                 self.with_company(company_from)._create_account_move_line(acc_valuation, acc_dest, journal_id, qty, description, svl_id, cost)
 
         if self.company_id.anglo_saxon_accounting:
             # Creates an account entry from stock_input to stock_output on a dropship move. https://github.com/odoo/odoo/issues/12687
-            journal_id, acc_src, acc_dest, acc_valuation = self._get_accounting_data_for_valuation()
             if self._is_dropshipped():
                 if cost > 0:
                     self.with_company(self.company_id)._create_account_move_line(acc_src, acc_valuation, journal_id, qty, description, svl_id, cost)
@@ -514,3 +511,10 @@ class StockMove(models.Model):
         to the way they mix stock moves with invoices.
         """
         return self.env['account.move']
+
+    def _is_returned(self, valued_type):
+        self.ensure_one()
+        if valued_type == 'in':
+            return self.location_id and self.location_id.usage == 'customer'   # goods returned from customer
+        if valued_type == 'out':
+            return self.location_dest_id and self.location_dest_id.usage == 'supplier'   # goods returned to supplier

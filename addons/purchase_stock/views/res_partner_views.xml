@@ -12,11 +12,14 @@
                         icon="fa-truck"
                         context="{'search_default_partner_id': id}">
                         <div class="o_form_field o_stat_info">
-                            <div class="o_row">
+                            <div class="o_row" attrs="{'invisible': [('on_time_rate', '&lt;', 0)]}">
                                 <span class="o_stat_value">
                                     <field string="On-time Rate" name="on_time_rate" widget="integer"/>
                                 </span>
                                 <span class="o_stat_value">%</span>
+                            </div>
+                            <div class="o_stat_value" attrs="{'invisible': [('on_time_rate', '&gt;=', 0)]}">
+                                No data yet
                             </div>
                             <span class="o_stat_text">On-time Rate</span>
                         </div>

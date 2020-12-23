@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.website</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <div name="event_type_visibility_seats" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" name="event_type_visibility_website">
+                    <div class="o_setting_left_pane">
+                        <field name="website_menu"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="website_menu"/>
+                        <div class="row" name="website_menu">
+                            <div class="col-lg-8 mt16 text-muted">
+                                Check this option to have menus for your event on the
+                                website: registrations, schedule, map, ...
+                            </div>
+                        </div>
+                        <div class="row mt16" name="menu_register_cta"
+                            groups="base.group_no_one">
+                            <label class="col-lg-4" for="menu_register_cta"/> <field name="menu_register_cta"/>
+                        </div>
+                        <div class="row mt16" name="community_menu"
+                            id="community-menu"
+                            attrs="{'invisible': [('website_menu', 'in', (True, False))]}">
+                            <label class="col-lg-4" for="community_menu"/> <field name="community_menu"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

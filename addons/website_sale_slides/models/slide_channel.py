@@ -33,12 +33,11 @@ class Channel(models.Model):
         for channel in self:
             channel.product_sale_revenues = rg_data.get(channel.product_id.id, 0)
 
-    @api.model
-    def create(self, vals):
-        channel = super(Channel, self).create(vals)
-        if channel.enroll == 'payment':
-            channel._synchronize_product_publish()
-        return channel
+    @api.model_create_multi
+    def create(self, vals_list):
+        channels = super(Channel, self).create(vals_list)
+        channels.filtered(lambda channel: channel.enroll == 'payment')._synchronize_product_publish()
+        return channels
 
     def write(self, vals):
         res = super(Channel, self).write(vals)
@@ -47,11 +46,13 @@ class Channel(models.Model):
         return res
 
     def _synchronize_product_publish(self):
+        if not self:
+            return
         self.filtered(lambda channel: channel.is_published and not channel.product_id.is_published).sudo().product_id.write({'is_published': True})
         self.filtered(lambda channel: not channel.is_published and channel.product_id.is_published).sudo().product_id.write({'is_published': False})
 
     def action_view_sales(self):
-        action = self.env.ref('website_sale_slides.sale_report_action_slides').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_sale_slides.sale_report_action_slides")
         action['domain'] = [('product_id', 'in', self.product_id.ids)]
         return action
 

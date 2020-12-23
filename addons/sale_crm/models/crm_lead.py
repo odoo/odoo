@@ -34,12 +34,12 @@ class CrmLead(models.Model):
 
     def action_sale_quotations_new(self):
         if not self.partner_id:
-            return self.env.ref("sale_crm.crm_quotation_partner_action").read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("sale_crm.crm_quotation_partner_action")
         else:
             return self.action_new_quotation()
 
     def action_new_quotation(self):
-        action = self.env.ref("sale_crm.sale_action_quotations_new").read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale_crm.sale_action_quotations_new")
         action['context'] = {
             'search_default_opportunity_id': self.id,
             'default_opportunity_id': self.id,
@@ -56,7 +56,7 @@ class CrmLead(models.Model):
         return action
 
     def action_view_sale_quotation(self):
-        action = self.env.ref('sale.action_quotations_with_onboarding').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
         action['context'] = {
             'search_default_draft': 1,
             'search_default_partner_id': self.partner_id.id,
@@ -71,7 +71,7 @@ class CrmLead(models.Model):
         return action
 
     def action_view_sale_order(self):
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['context'] = {
             'search_default_partner_id': self.partner_id.id,
             'default_partner_id': self.partner_id.id,

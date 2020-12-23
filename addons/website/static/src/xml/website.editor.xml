@@ -2,23 +2,13 @@
 <templates id="template" xml:space="preserve">
     <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">
         <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
-        <p class="lead d-none d-md-block">Let's start designing.</p>
-        <div class="o_tooltip_container d-none d-md-inline-flex fade">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
+        <p class="lead d-none d-md-block">Click on <b>Edit</b> in the top right corner to start designing.</p>
     </div>
     <div t-name="website.leaving_current_page_edition">
         <p>What do you want to do?</p>
         <p class="text-muted">Your current changes will be saved automatically.</p>
     </div>
 
-    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
-    <t t-name="website.editorbar">
-        <div id="web_editor-top-edit">
-            <form class="navbar-form text-muted">
-                <button type="button" class="btn btn-secondary" data-action="cancel" accesskey="j"><i class="fa fa-times"/> Discard</button>
-                <button type="button" class="btn btn-primary" data-action="save" accesskey="s"><i class="fa fa-floppy-o"/> Save</button>
-            </form>
-        </div>
-    </t>
     <!-- Custom checkbox (material-design-like toggle) -->
     <t t-name="website.components.switch">
         <label class="o_switch" t-att-for="id">
@@ -58,12 +48,12 @@
     <!-- Add a Google Font option dialog -->
     <div t-name="website.dialog.addGoogleFont">
         <div class="form-group row">
-            <label class="col-form-label col-md-3" for="google_font_html">Google Font HTML</label>
+            <label class="col-form-label col-md-3" for="google_font_html">Google Font address</label>
             <div class="col-md-9">
                 <textarea id="google_font_html" class="form-control o_input_google_font"
-                    placeholder="&lt;link href='https://fonts.googleapis.com/css?family=Bonbon&amp;display=swap' rel='stylesheet'&gt;" style="height: 100px;"/>
+                    placeholder="https://fonts.google.com/specimen/Roboto" style="height: 100px;"/>
                 <span class="float-right text-muted">
-                    Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the embed code here.
+                    Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the address of the font page here.
                 </span>
             </div>
         </div>
@@ -85,28 +75,55 @@
     </t>
 
     <t t-name="website.color_combination_edition">
-        <div>
-            <we-colorpicker string="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-bg"/>
-            <we-colorpicker string="Text" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-text"/>
-            <we-colorpicker string="Headings" class="o_cc_subheadings_toggler" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-headings"/>
-            <we-row string="Sub-Headings" class="o_cc_subheadings_collapse">
-                <we-colorpicker title="Headings 2" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h2"/>
-                <we-colorpicker title="Headings 3" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h3"/>
-                <we-colorpicker title="Headings 4" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h4"/>
-                <we-colorpicker title="Headings 5" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h5"/>
-                <we-colorpicker title="Headings 6" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h6"/>
-            </we-row>
-            <we-colorpicker string="Links" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-link"/>
-            <we-row string="Main Buttons">
-                <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary"/>
-                <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary-border"/>
-            </we-row>
-            <we-row string="Buttons">
-                <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary"/>
-                <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary-border"/>
-            </we-row>
-        </div>
+        <we-colorpicker string="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-bg"/>
+        <we-colorpicker string="Text" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-text"/>
+        <we-collapse>
+            <we-colorpicker string="Headings" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-headings"/>
+            <we-colorpicker string="Headings 2" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h2"/>
+            <we-colorpicker string="Headings 3" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h3"/>
+            <we-colorpicker string="Headings 4" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h4"/>
+            <we-colorpicker string="Headings 5" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h5"/>
+            <we-colorpicker string="Headings 6" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h6"/>
+        </we-collapse>
+        <we-colorpicker string="Links" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-link"/>
+        <we-row string="Primary Buttons">
+            <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary"/>
+            <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary-border"/>
+        </we-row>
+        <we-row string="Secondary Buttons">
+            <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary"/>
+            <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary-border"/>
+        </we-row>
     </t>
+    <div t-name="website.s_google_map_modal">
+        <p>Use Google Map on your website (Contact Us page, snippets, etc).</p>
+        <div class="form-group row mb-0">
+            <label class="col-sm-2 col-form-label" for="pin_address">API Key</label>
+            <div class="col">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text"><i class="fa fa-key"/></div>
+                    </div>
+                    <input type="text" class="form-control" id="api_key_input"
+                           t-att-value="apiKey or ''"
+                           placeholder="BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"/>
+                </div>
+                <div class="small form-text text-muted">
+                    Hint: How to use Google Map on your website (Contact Us page and as a snippet)
+                    <br/>
+                    <a target="_blank" href="https://console.developers.google.com/flows/enableapi?apiid=maps_backend,static_maps_backend&amp;keyType=CLIENT_SIDE&amp;reusekey=true">
+                        <i class="fa fa-arrow-right"/>
+                        Create a Google Project and Get a Key
+                    </a>
+                    <br/>
+                    <a target="_blank" href="https://cloud.google.com/maps-platform/pricing">
+                        <i class="fa fa-arrow-right"/>
+                        Enable billing on your Google Project
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Theme - custom code -->
     <div t-name="website.custom_code_dialog_content">

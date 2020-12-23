@@ -18,10 +18,6 @@ e.g. button methods. All actions share two mandatory attributes:
 ``name``
     short user-readable description of the action, may be displayed in the
     client's interface
-``binding_model_id``
-    if set, the action is available in the action bar for the given model
-
-    .. note:: For Server Actions, use ``model_id``.
 
 A client can get actions in 4 forms:
 
@@ -36,6 +32,8 @@ A client can get actions in 4 forms:
 *  A dictionary
       treat as a client action descriptor and execute
 
+.. _reference/bindings:
+
 Bindings
 ========
 
@@ -44,6 +42,9 @@ attributes used to present an action in an arbitrary model's contextual menu:
 
 ``binding_model_id``
     specifies which model the action is bound to
+
+    .. note:: For Server Actions, use ``model_id``.
+
 ``binding_type``
     specifies the type of binding, which is mostly which contextual menu the
     action will appear under
@@ -333,17 +334,27 @@ server actions:
 Report Actions (``ir.actions.report``)
 ======================================
 
-Triggers the printing of a report
+Triggers the printing of a report.
+
+If you define your report through a `<record>` instead of a `<report>` tag and
+want the action to show up in the Print menu of the model's views, you will
+also need to specify ``binding_model_id`` from :ref:`reference/bindings`. It's
+not necessary to set ``binding_type`` to ``report``, since
+``ir.actions.report`` will implicitly default to that.
+
 
 ``name`` (mandatory)
-    only useful as a mnemonic/description of the report when looking for one
-    in a list of some sort
+    used as the file name if ``print_report_name`` is not specified.
+    Otherwise, only useful as a mnemonic/description of the report
+    when looking for one in a list of some sort
 ``model`` (mandatory)
     the model your report will be about
 ``report_type`` (default=qweb-pdf)
     either ``qweb-pdf`` for PDF reports or ``qweb-html`` for HTML
 ``report_name`` (mandatory)
-    the name of your report (which will be the name of the PDF output)
+    the name (:term:`external id`) of the qweb template used to render the report
+``print_report_name``
+    python expression defining the name of the report.
 ``groups_id``
     :class:`~odoo.fields.Many2many` field to the groups allowed to view/use
     the current report

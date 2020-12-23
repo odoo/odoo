@@ -7,7 +7,7 @@ import itertools
 import psycopg2
 import pytz
 
-from odoo import api, fields, models, _
+from odoo import api, Command, fields, models, _
 from odoo.tools import ustr
 
 REFERENCING_FIELDS = {None, 'id', '.id'}
@@ -16,13 +16,6 @@ def only_ref_fields(record):
 def exclude_ref_fields(record):
     return {k: v for k, v in record.items() if k not in REFERENCING_FIELDS}
 
-CREATE = lambda values: (0, False, values)
-UPDATE = lambda id, values: (1, id, values)
-DELETE = lambda id: (2, id, False)
-FORGET = lambda id: (3, id, False)
-LINK_TO = lambda id: (4, id, False)
-DELETE_ALL = lambda: (5, False, False)
-REPLACE_WITH = lambda ids: (6, False, ids)
 
 class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process """
@@ -344,7 +337,7 @@ class IrFieldsConverter(models.AbstractModel):
             else:
                 xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
             flush(xml_id=xmlid)
-            id = self.env['ir.model.data'].xmlid_to_res_id(xmlid, raise_if_not_found=False) or None
+            id = self._xmlid_to_record_id(xmlid, RelatedModel)
         elif subfield is None:
             field_type = _(u"name")
             if value == '':
@@ -382,6 +375,31 @@ class IrFieldsConverter(models.AbstractModel):
                 {'field_type': field_type, 'value': value, 'error_message': error_msg},
                 {'moreinfo': action})
         return id, field_type, warnings
+
+    def _xmlid_to_record_id(self, xmlid, model):
+        """ Return the record id corresponding to the given external id,
+        provided that the record actually exists; otherwise return ``None``.
+        """
+        import_cache = self.env.context.get('import_cache', {})
+        result = import_cache.get(xmlid)
+
+        if not result:
+            module, name = xmlid.split('.', 1)
+            query = """
+                SELECT d.model, d.res_id
+                FROM ir_model_data d
+                JOIN "{}" r ON d.res_id = r.id
+                WHERE d.module = %s AND d.name = %s
+            """.format(model._table)
+            self.env.cr.execute(query, [module, name])
+            result = self.env.cr.fetchone()
+
+        if result:
+            res_model, res_id = import_cache[xmlid] = result
+            if res_model != model._name:
+                MSG = "Invalid external ID %s: expected model %r, found %r"
+                raise ValueError(MSG % (xmlid, model._name, res_model))
+            return res_id
 
     def _referencing_subfield(self, record):
         """ Checks the record for the subfields allowing referencing (an
@@ -433,12 +451,19 @@ class IrFieldsConverter(models.AbstractModel):
             warnings.extend(ws)
 
         if self._context.get('update_many2many'):
-            return [LINK_TO(id) for id in ids], warnings
+            return [Command.link(id) for id in ids], warnings
         else:
-            return [REPLACE_WITH(ids)], warnings
+            return [Command.set(ids)], warnings
 
     @api.model
     def _str_to_one2many(self, model, field, records):
+        name_create_enabled_fields = self._context.get('name_create_enabled_fields') or {}
+        prefix = field.name + '/'
+        relative_name_create_enabled_fields = {
+            k[len(prefix):]: v
+            for k, v in name_create_enabled_fields.items()
+            if k.startswith(prefix)
+        }
         commands = []
         warnings = []
 
@@ -460,7 +485,7 @@ class IrFieldsConverter(models.AbstractModel):
                 raise exception
             warnings.append(exception)
 
-        convert = self.for_model(self.env[field.comodel_name])
+        convert = self.with_context(name_create_enabled_fields=relative_name_create_enabled_fields).for_model(self.env[field.comodel_name])
 
         for record in records:
             id = None
@@ -478,10 +503,10 @@ class IrFieldsConverter(models.AbstractModel):
                     writable['id'] = record['id']
 
             if id:
-                commands.append(LINK_TO(id))
-                commands.append(UPDATE(id, writable))
+                commands.append(Command.link(id))
+                commands.append(Command.update(id, writable))
             else:
-                commands.append(CREATE(writable))
+                commands.append(Command.create(writable))
 
         return commands, warnings
 

@@ -18,6 +18,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 from odoo.exceptions import Warning, UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
+from odoo.tools import sql
 
 
 class SlidePartnerRelation(models.Model):
@@ -34,8 +35,9 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
-    def create(self, values):
-        res = super(SlidePartnerRelation, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
         completed = res.filtered('completed')
         if completed:
             completed._set_completed_callback()
@@ -251,7 +253,13 @@ class Slide(models.Model):
     @api.depends('slide_partner_ids.vote')
     @api.depends_context('uid')
     def _compute_user_info(self):
-        slide_data = dict.fromkeys(self.ids, dict({'likes': 0, 'dislikes': 0, 'user_vote': False}))
+        default_stats = {'likes': 0, 'dislikes': 0, 'user_vote': False}
+
+        if not self.ids:
+            self.update(default_stats)
+            return
+
+        slide_data = dict.fromkeys(self.ids, default_stats)
         slide_partners = self.env['slide.slide.partner'].sudo().search([
             ('slide_id', 'in', self.ids)
         ])
@@ -338,7 +346,7 @@ class Slide(models.Model):
                     # embed youtube video
                     query = urls.url_parse(record.url).query
                     query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
+                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -459,12 +467,23 @@ class Slide(models.Model):
         rec.sequence = 0
         return rec
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_already_taken(self):
         if self.question_ids and self.channel_id.channel_partner_ids:
             raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+
+    def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
         super(Slide, self).unlink()
+
+    def toggle_active(self):
+        # archiving/unarchiving a channel does it on its slides, too
+        to_archive = self.filtered(lambda slide: slide.active)
+        res = super(Slide, self).toggle_active()
+        if to_archive:
+            to_archive.filtered(lambda slide: not slide.is_category).is_published = False
+        return res
 
     # ---------------------------------------------------------
     # Mail/Rating
@@ -510,11 +529,19 @@ class Slide(models.Model):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=base_url)._render_field('body_html', slide.ids)[slide.id]
             subject = publish_template._render_field('subject', slide.ids)[slide.id]
+            # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
+            # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
+            # falsy, we don't include it in the 'message_post' call.
+            kwargs = {}
+            reply_to = publish_template._render_field('reply_to', slide.ids)[slide.id]
+            if reply_to:
+                kwargs['reply_to'] = reply_to
             slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,
                 subtype_xmlid='website_slides.mt_channel_slide_published',
                 email_layout_xmlid='mail.mail_notification_light',
+                **kwargs,
             )
         return True
 
@@ -595,7 +622,7 @@ class Slide(models.Model):
             self.env.user.add_karma(karma_to_add)
 
     def action_set_viewed(self, quiz_attempts_inc=False):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as viewed if you are not among its members.'))
 
         return bool(self._action_set_viewed(self.env.user.partner_id, quiz_attempts_inc=quiz_attempts_inc))
@@ -607,11 +634,9 @@ class Slide(models.Model):
             ('slide_id', 'in', self.ids),
             ('partner_id', '=', target_partner.id)
         ])
-        if quiz_attempts_inc:
-            for exsting_slide in existing_sudo:
-                exsting_slide.write({
-                    'quiz_attempts_count': exsting_slide.quiz_attempts_count + 1
-                })
+        if quiz_attempts_inc and existing_sudo:
+            sql.increment_field_skiplock(existing_sudo, 'quiz_attempts_count')
+            SlidePartnerSudo.invalidate_cache(fnames=['quiz_attempts_count'], ids=existing_sudo.ids)
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         return SlidePartnerSudo.create([{
@@ -622,7 +647,7 @@ class Slide(models.Model):
             'vote': 0} for new_slide in new_slides])
 
     def action_set_completed(self):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide as completed if you are not among its members.'))
 
         return self._action_set_completed(self.env.user.partner_id)
@@ -647,7 +672,7 @@ class Slide(models.Model):
         return True
 
     def _action_set_quiz_done(self):
-        if not all(slide.channel_id.is_member for slide in self):
+        if any(not slide.channel_id.is_member for slide in self):
             raise UserError(_('You cannot mark a slide quiz as completed if you are not among its members.'))
 
         points = 0
@@ -720,7 +745,7 @@ class Slide(models.Model):
         url_obj = urls.url_parse(url)
         if url_obj.ascii_host == 'youtu.be':
             return ('youtube', url_obj.path[1:] if url_obj.path else False)
-        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com'):
+        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'www.youtube-nocookie.com'):
             v_query_value = url_obj.decode_query().get('v')
             if v_query_value:
                 return ('youtube', v_query_value)
@@ -795,7 +820,7 @@ class Slide(models.Model):
             error = str(error)
 
         if error == 'keyInvalid':
-            return _('Your Google API key is invalid, please update it into your settings.\nSettings > Website > Features > API Key')
+            return _('Your Google API key is invalid, please update it in your settings.\nSettings > Website > Features > API Key')
 
         return _('Could not fetch data from url. Document or access right not available:\n%s', error)
 

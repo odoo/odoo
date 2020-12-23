@@ -66,13 +66,13 @@ class IrModel(models.Model):
 
     def write(self, vals):
         if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
-            if not all(rec.state == 'manual' for rec in self):
+            if any(rec.state != 'manual' for rec in self):
                 raise UserError(_('Only custom models can be modified.'))
-            if 'is_mail_thread' in vals and not all(rec.is_mail_thread <= vals['is_mail_thread'] for rec in self):
+            if 'is_mail_thread' in vals and any(rec.is_mail_thread > vals['is_mail_thread'] for rec in self):
                 raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
-            if 'is_mail_activity' in vals and not all(rec.is_mail_activity <= vals['is_mail_activity'] for rec in self):
+            if 'is_mail_activity' in vals and any(rec.is_mail_activity > vals['is_mail_activity'] for rec in self):
                 raise UserError(_('Field "Mail Activity" cannot be changed to "False".'))
-            if 'is_mail_blacklist' in vals and not all(rec.is_mail_blacklist <= vals['is_mail_blacklist'] for rec in self):
+            if 'is_mail_blacklist' in vals and any(rec.is_mail_blacklist > vals['is_mail_blacklist'] for rec in self):
                 raise UserError(_('Field "Mail Blacklist" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
             self.flush()

@@ -4,6 +4,7 @@
 
 @mixin o-mail-notification-list-item-layout {
     display: flex;
+    flex: 0 0 auto; // Without this, Safari shrinks parent regardless of child content
     align-items: center;
     padding: map-get($spacers, 1);
 
@@ -143,6 +144,10 @@ $o-mail-notification-list-item-muted-hover-background-color:
     @include o-mail-notification-list-item-bold-style();
     font-size: x-small;
     color: $o-brand-primary;
+}
+
+@mixin o-mail-notification-list-item-image-style {
+    object-fit: cover;
 }
 
 @mixin o-mail-notification-list-item-mark-as-read-style() {

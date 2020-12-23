@@ -1,35 +1,22 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.test_sale_common import TestCommonSaleNoChart
+from odoo.addons.sale.tests.common import TestSaleCommon
 
 
-class TestCommonSalePurchaseNoChart(TestCommonSaleNoChart):
-
-    @classmethod
-    def setUpUsers(cls):
-        super(TestCommonSalePurchaseNoChart, cls).setUpUsers()
-
-        group_salemanager = cls.env.ref('sales_team.group_sale_manager')
-        group_salesman = cls.env.ref('sales_team.group_sale_salesman')
-        cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id])]})
-        cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id])]})
+class TestCommonSalePurchaseNoChart(TestSaleCommon):
 
     @classmethod
-    def setUpServicePurchaseProducts(cls):
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
         uom_unit = cls.env.ref('uom.product_uom_unit')
         uom_dozen = cls.env.ref('uom.product_uom_dozen')
 
-        user_type_income = cls.env.ref('account.data_account_type_direct_costs')
-        cls.account_income_product_purchase = cls.env['account.account'].create({
-            'code': 'INCOME_PROD_PURCHASE',
-            'name': 'Icome - Test Account',
-            'user_type_id': user_type_income.id,
-        })
         # Create category
         cls.product_category_purchase = cls.env['product.category'].create({
             'name': 'Product Category with Income account',
-            'property_account_income_categ_id': cls.account_income_product_purchase.id
+            'property_account_income_categ_id': cls.company_data['default_account_expense'].id
         })
 
         cls.partner_vendor_service = cls.env['res.partner'].create({

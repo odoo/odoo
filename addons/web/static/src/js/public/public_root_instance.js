@@ -1,6 +1,7 @@
 odoo.define('root.widget', function (require) {
 'use strict';
 
+const AbstractService = require('web.AbstractService');
 const env = require('web.public_env');
 var lazyloader = require('web.public.lazyloader');
 var rootData = require('web.public.root');
@@ -10,6 +11,11 @@ var rootData = require('web.public.root');
  */
 owl.config.mode = env.isDebug() ? "dev" : "prod";
 owl.Component.env = env;
+
+/**
+ * Deploy services in the env
+ */
+AbstractService.prototype.deployServices(env);
 
 /**
  * This widget is important, because the tour manager needs a root widget in

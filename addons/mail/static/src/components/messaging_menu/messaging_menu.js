@@ -24,14 +24,14 @@ class MessagingMenu extends Component {
          * item is not considered as a click away from messaging menu in mobile.
          */
         this.id = _.uniqueId('o_messagingMenu_');
-        useStore((...args) => this._useStoreSelector(...args));
-
-        /**
-         * Reference of the new message input in mobile. Useful to include it
-         * and autocomplete menu as "inside" the messaging menu, to prevent
-         * closing the messaging menu otherwise.
-         */
-        this._mobileNewMessageInputRef = useRef('mobileNewMessageInput');
+        useStore(props => {
+            return {
+                isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,
+                isDiscussOpen: this.env.messaging && this.env.messaging.discuss.isOpen,
+                isMessagingInitialized: this.env.isMessagingInitialized(),
+                messagingMenu: this.env.messaging && this.env.messaging.messagingMenu.__state,
+            };
+        });
 
         // bind since passed as props
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
@@ -63,7 +63,7 @@ class MessagingMenu extends Component {
      * @returns {mail.messaging_menu}
      */
     get messagingMenu() {
-        return this.env.messaging.messagingMenu;
+        return this.env.messaging && this.env.messaging.messagingMenu;
     }
 
     /**
@@ -93,22 +93,6 @@ class MessagingMenu extends Component {
     }
 
     //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @private
-     */
-    _useStoreSelector(props) {
-        return {
-            messagingMenu: this.env.messaging.messagingMenu.__state,
-            isDeviceMobile: this.env.messaging.device.isMobile,
-            isDiscussOpen: this.env.messaging.discuss.isOpen,
-            isMessagingInitialized: this.env.messaging.isInitialized,
-        };
-    }
-
-    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -119,23 +103,19 @@ class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
-        // in mobile: keeps the messaging menu open in background
-        // TODO: maybe need to move this to a mobile component?
-        // task-2089887
-        if (
-            this.env.messaging.device.isMobile &&
-            this.env.messaging.chatWindowManager.hasVisibleChatWindows
-        ) {
+        if (!this.env.messaging) {
+            /**
+             * Messaging not created, which means essential models like
+             * messaging menu are not ready, so user interactions are omitted
+             * during this (short) period of time.
+             */
             return;
         }
         // ignore click inside the menu
         if (this.el.contains(ev.target)) {
             return;
         }
-        const input = this._mobileNewMessageInputRef.comp;
-        if (input && input.contains(ev.target)) {
-            return;
-        }
+        // in all other cases: close the messaging menu when clicking outside
         this.messagingMenu.close();
     }
 
@@ -167,6 +147,14 @@ class MessagingMenu extends Component {
     _onClickToggler(ev) {
         // avoid following dummy href
         ev.preventDefault();
+        if (!this.env.messaging) {
+            /**
+             * Messaging not created, which means essential models like
+             * messaging menu are not ready, so user interactions are omitted
+             * during this (short) period of time.
+             */
+            return;
+        }
         this.messagingMenu.toggleOpen();
     }
 
@@ -187,21 +175,7 @@ class MessagingMenu extends Component {
      * @param {integer} ui.item.id
      */
     _onMobileNewMessageInputSelect(ev, ui) {
-        const partnerId = ui.item.id;
-        const partner = this.env.models['mail.partner'].find(partner => partner.id === partnerId);
-        const chat = partner.correspondentThreads.find(thread => thread.channel_type === 'chat');
-        if (chat) {
-            chat.open();
-        } else {
-            this.env.models['mail.thread'].createChannel({
-                autoselect: true,
-                partnerId,
-                type: 'chat',
-            });
-        }
-        if (!this.env.messaging.device.isMobile) {
-            this.messagingMenu.close();
-        }
+        this.env.messaging.openChat({ partnerId: ui.item.id });
     }
 
     /**
@@ -237,20 +211,6 @@ class MessagingMenu extends Component {
     _onSelectMobileNavbarTab(ev) {
         ev.stopPropagation();
         this.messagingMenu.update({ activeTabId: ev.detail.tabId });
-    }
-
-    /**
-     * @private
-     * @param {CustomEvent} ev
-     * @param {Object} ev.detail
-     * @param {mail.thread} ev.detail.thread
-     */
-    _onSelectThread(ev) {
-        ev.stopPropagation();
-        this.env.models['mail.thread'].get(ev.detail.thread).open();
-        if (!this.env.messaging.device.isMobile) {
-            this.messagingMenu.close();
-        }
     }
 
 }

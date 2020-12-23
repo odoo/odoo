@@ -10,7 +10,7 @@
                     </header>
                     <ul class="body">
                         <li>Successfully imported <b><t t-esc="props.report.paid or 0" /></b> paid orders</li>
-                        <li>Successfully  imported <b><t t-esc="props.report.unpaid or 0" /></b> unpaid orders</li>
+                        <li>Successfully imported <b><t t-esc="props.report.unpaid or 0" /></b> unpaid orders</li>
                         <t t-if="unpaidSkipped">
                             <li><b><t t-esc="unpaidSkipped"/></b> unpaid orders could not be imported
                                 <ul>

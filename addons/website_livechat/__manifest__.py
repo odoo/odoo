@@ -24,5 +24,7 @@ Allow website visitors to chat with the collaborators. This module also brings a
     'qweb': [
         'static/src/bugfix/bugfix.xml',
         'static/src/bugfix/public_bugfix.xml',
+        'static/src/components/discuss/discuss.xml',
+        'static/src/components/visitor_banner/visitor_banner.xml',
     ],
 }

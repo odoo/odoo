@@ -201,7 +201,7 @@ class IrAttachment(models.Model):
     def _compute_raw(self):
         for attach in self:
             if attach.store_fname:
-                attach.raw = self._file_read(attach.store_fname)
+                attach.raw = attach._file_read(attach.store_fname)
             else:
                 attach.raw = attach.db_datas
 
@@ -282,7 +282,9 @@ class IrAttachment(models.Model):
 
     def _check_contents(self, values):
         mimetype = values['mimetype'] = self._compute_mimetype(values)
-        xml_like = 'ht' in mimetype or 'xml' in mimetype # hta, html, xhtml, etc.
+        xml_like = 'ht' in mimetype or ( # hta, html, xhtml, etc.
+                'xml' in mimetype and    # other xml (svg, text/xml, etc)
+                not 'openxmlformats' in mimetype)  # exception for Office formats
         user = self.env.context.get('binary_field_real_user', self.env.user)
         force_text = (xml_like and (not user._is_system() or
             self.env.context.get('attachments_mime_plainxml')))
@@ -333,7 +335,7 @@ class IrAttachment(models.Model):
     access_token = fields.Char('Access Token', groups="base.group_user")
 
     # the field 'datas' is computed and may use the other fields below
-    raw = fields.Binary(string="File Content (raw)", compute='_compute_raw', inverse='_inverse_raw', context_dependent=False)
+    raw = fields.Binary(string="File Content (raw)", compute='_compute_raw', inverse='_inverse_raw')
     datas = fields.Binary(string='File Content (base64)', compute='_compute_datas', inverse='_inverse_datas')
     db_datas = fields.Binary('Database Data', attachment=False)
     store_fname = fields.Char('Stored Filename')
@@ -359,7 +361,7 @@ class IrAttachment(models.Model):
             # XDO note: if read on sudo, read twice, one for constraints, one for _inverse_datas as user
             if attachment.type == 'binary' and attachment.url:
                 has_group = self.env.user.has_group
-                if not any([has_group(g) for g in attachment.get_serving_groups()]):
+                if not any(has_group(g) for g in attachment.get_serving_groups()):
                     raise ValidationError("Sorry, you are not allowed to write on this document")
 
     @api.model
@@ -487,11 +489,14 @@ class IrAttachment(models.Model):
         result = [id for id in orig_ids if id in ids]
 
         # If the original search reached the limit, it is important the
-        # filtered record set does so too. When a JS view recieve a
-        # record set whose length is bellow the limit, it thinks it
-        # reached the last page.
-        if len(orig_ids) == limit and len(result) < len(orig_ids):
-            result.extend(self._search(args, offset=offset + len(orig_ids),
+        # filtered record set does so too. When a JS view receive a
+        # record set whose length is below the limit, it thinks it
+        # reached the last page. To avoid an infinite recursion due to the
+        # permission checks the sub-call need to be aware of the number of
+        # expected records to retrieve
+        if len(orig_ids) == limit and len(result) < self._context.get('need', limit):
+            need = self._context.get('need', limit) - len(result)
+            result.extend(self.with_context(need=need)._search(args, offset=offset + len(orig_ids),
                                        limit=limit, order=order, count=count,
                                        access_rights_uid=access_rights_uid)[:limit - len(result)])
 
@@ -570,7 +575,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def action_get(self):
-        return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        return self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
 
     @api.model
     def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):

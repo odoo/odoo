@@ -39,7 +39,7 @@ class ProductTemplate(models.Model):
 
     def action_used_in_bom(self):
         self.ensure_one()
-        action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
         action['domain'] = [('bom_line_ids.product_id', 'in', self.product_variant_ids.ids)]
         return action
 
@@ -48,13 +48,41 @@ class ProductTemplate(models.Model):
             template.mrp_product_qty = float_round(sum(template.mapped('product_variant_ids').mapped('mrp_product_qty')), precision_rounding=template.uom_id.rounding)
 
     def action_view_mos(self):
-        action = self.env.ref('mrp.mrp_production_report').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_production_report")
         action['domain'] = [('state', '=', 'done'), ('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'graph_measure': 'product_uom_qty',
             'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'}
         }
         return action
+
+    def _compute_quantities(self):
+        """ When the product template is a kit, this override computes the fields :
+         - 'virtual_available'
+         - 'qty_available'
+         - 'incoming_qty'
+         - 'outgoing_qty'
+        """
+        product_without_bom = self.browse([])
+        for product_template in self:
+            if not self.env['mrp.bom']._bom_find(product_tmpl=product_template, bom_type='phantom'):
+                product_without_bom |= product_template
+                continue
+            virtual_available = 0
+            qty_available = 0
+            incoming_qty = 0
+            outgoing_qty = 0
+            for product in product_template.product_variant_ids:
+                if self.env['mrp.bom']._bom_find(product=product, bom_type='phantom'):
+                    qty_available += product.qty_available
+                    virtual_available += product.virtual_available
+                    incoming_qty += product.incoming_qty
+                    outgoing_qty += product.outgoing_qty
+            product_template.qty_available = qty_available
+            product_template.virtual_available = virtual_available
+            product_template.incoming_qty = incoming_qty
+            product_template.outgoing_qty = outgoing_qty
+        super(ProductTemplate, product_without_bom)._compute_quantities()
 
 
 class ProductProduct(models.Model):
@@ -97,7 +125,7 @@ class ProductProduct(models.Model):
 
     def action_used_in_bom(self):
         self.ensure_one()
-        action = self.env.ref('mrp.mrp_bom_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_bom_form_action")
         action['domain'] = [('bom_line_ids.product_id', '=', self.id)]
         return action
 
@@ -149,7 +177,9 @@ class ProductProduct(models.Model):
                     # products have 0 qty available.
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                if not qty_per_kit:
+                    continue
                 ratios_virtual_available.append(component.virtual_available / qty_per_kit)
                 ratios_qty_available.append(component.qty_available / qty_per_kit)
                 ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
@@ -163,7 +193,7 @@ class ProductProduct(models.Model):
                 product.free_qty = min(ratios_free_qty) // 1
 
     def action_view_bom(self):
-        action = self.env.ref('mrp.product_open_bom').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.product_open_bom")
         template_ids = self.mapped('product_tmpl_id').ids
         # bom specific to this variant or global to template
         action['context'] = {
@@ -177,3 +207,18 @@ class ProductProduct(models.Model):
         action = self.product_tmpl_id.action_view_mos()
         action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
         return action
+
+    def action_open_quants(self):
+        bom_kits = {}
+        for product in self:
+            bom = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+            if bom:
+                bom_kits[product] = bom
+        components = self - self.env['product.product'].concat(*list(bom_kits.keys()))
+        for product in bom_kits:
+            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
+        res = super(ProductProduct, components).action_open_quants()
+        if bom_kits:
+            res['context']['single_product'] = False
+        return res

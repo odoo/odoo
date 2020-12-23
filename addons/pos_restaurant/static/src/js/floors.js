@@ -2,6 +2,8 @@ odoo.define('pos_restaurant.floors', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');
+const { Gui } = require('point_of_sale.Gui');
+const { posbus } = require('point_of_sale.utils');
 
 // At POS Startup, load the floors, and add them to the pos model
 models.load_models({
@@ -45,9 +47,9 @@ models.load_models({
 // New orders are now associated with the current table, if any.
 var _super_order = models.Order.prototype;
 models.Order = models.Order.extend({
-    initialize: function() {
+    initialize: function(attr,options) {
         _super_order.initialize.apply(this,arguments);
-        if (!this.table) {
+        if (!this.table && !options.json) {
             this.table = this.pos.table;
         }
         this.customer_count = this.customer_count || 1;
@@ -192,16 +194,30 @@ models.PosModel = models.PosModel.extend({
         }
     },
 
-    set_order_on_table: function() {
+    /**
+     * @param {models.Order} order order to set
+     */
+    set_order_on_table: function(order) {
         var orders = this.get_order_list();
         if (orders.length) {
-            this.set_order(orders[0]); // and go to the first one ...
+            order = order ? orders.find((o) => o.uid === order.uid) : null;
+            if (order) {
+                this.set_order(order);
+            } else {
+                // do not mindlessly set the first order in the list.
+                orders = orders.filter(order => !order.finalized);
+                if (orders.length) {
+                    this.set_order(orders[0]);
+                } else {
+                    this.add_new_order();
+                }
+            }
         } else {
             this.add_new_order();  // or create a new order with the current table
         }
     },
 
-    sync_to_server: function(table) {
+    sync_to_server: function(table, order) {
         var self = this;
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
 
@@ -209,7 +225,10 @@ models.PosModel = models.PosModel.extend({
         this._get_from_server(table.id).then(function (server_orders) {
             var orders = self.get_order_list();
             orders.forEach(function(order){
-                if (order.server_id){
+                // We don't remove the validated orders because we still want to see them
+                // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
+                // orders.
+                if (order.server_id && !order.finalized){
                     self.get("orders").remove(order);
                     order.destroy();
                 }
@@ -229,7 +248,7 @@ models.PosModel = models.PosModel.extend({
         }).catch(function(reason){
             self.set_synch('error');
         }).finally(function(){
-            self.set_order_on_table();
+            self.set_order_on_table(order);
         });
     },
 
@@ -247,11 +266,13 @@ models.PosModel = models.PosModel.extend({
      *
      * Switch table and make sure all nececery syncing tasks are done.
      * @param {object} table.
+     * @param {models.Order|undefined} order if provided, set to this order
      */
-    set_table: function(table) {
+    set_table: function(table, order) {
         if(!table){
             this.sync_from_server(table, this.get_order_list(), this.get_order_with_uid());
             this.set_order(null);
+            this.table = null;
         } else if (this.order_to_transfer_to_different_table) {
             var order_ids = this.get_order_with_uid();
 
@@ -262,8 +283,9 @@ models.PosModel = models.PosModel.extend({
             this.set_order(null);
         } else {
             this.table = table;
-            this.sync_to_server(table);
+            this.sync_to_server(table, order);
         }
+        posbus.trigger('table-set');
     },
 
     // if we have tables, we do not load a default order, as the default order will be
@@ -279,9 +301,12 @@ models.PosModel = models.PosModel.extend({
     add_new_order: function() {
         if (this.config.iface_floorplan) {
             if (this.table) {
-                return _super_posmodel.add_new_order.call(this);
+                return _super_posmodel.add_new_order.apply(this, arguments);
             } else {
-                console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                Gui.showPopup('ConfirmPopup', {
+                    title: 'Unable to create order',
+                    body: 'Orders cannot be created when there is no active table in restaurant mode',
+                });
                 return undefined;
             }
         } else {
@@ -293,7 +318,7 @@ models.PosModel = models.PosModel.extend({
     // get the list of unpaid orders (associated to the current table)
     get_order_list: function() {
         var orders = _super_posmodel.get_order_list.call(this);
-        if (!this.config.iface_floorplan) {
+        if (!(this.config && this.config.iface_floorplan)) {
             return orders;
         } else if (!this.table) {
             return [];
@@ -322,7 +347,7 @@ models.PosModel = models.PosModel.extend({
 
     // get customer count at table
     get_customer_count: function(table) {
-        var orders = this.get_table_orders(table);
+        var orders = this.get_table_orders(table).filter(order => !order.finalized);
         var count  = 0;
         for (var i = 0; i < orders.length; i++) {
             count += orders[i].get_customer_count();
@@ -340,9 +365,9 @@ models.PosModel = models.PosModel.extend({
                 this.db.set_order_to_remove_from_server(removed_order);
             }
             if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
-                this.set_order(order_list[index] || order_list[order_list.length -1]);
+                this.set_order(order_list[index] || order_list[order_list.length - 1], { silent: true });
             } else if (order_list.length === 0) {
-                this.set_order(null);
+                this.table ? this.set_order(null) : this.set_table(null);
             }
         } else {
             _super_posmodel.on_removed_order.apply(this,arguments);
@@ -350,6 +375,23 @@ models.PosModel = models.PosModel.extend({
     },
 
 
+});
+
+
+var _super_paymentline = models.Paymentline.prototype;
+models.Paymentline = models.Paymentline.extend({
+    /**
+     * Override this method to be able to show the 'Adjust Authorisation' button
+     * on a validated payment_line and to show the tip screen which allow
+     * tipping even after payment. By default, this returns true for all
+     * non-cash payment.
+     */
+    canBeAdjusted: function() {
+        if (this.payment_method.payment_terminal) {
+            return this.payment_method.payment_terminal.canBeAdjusted(this.cid);
+        }
+        return !this.payment_method.is_cash_count;
+    },
 });
 
 });

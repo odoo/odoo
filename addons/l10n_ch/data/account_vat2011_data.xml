@@ -679,35 +679,72 @@
             <field name="tax_group_id" ref="tax_group_tva_0"/>
         </record>
 
-        <!--# 100% on import !! the tax percentage is 00-->
         <record model="account.tax.template" id="vat_100_import">
-            <field name="name">100% dédouanement TVA</field>
+            <field name="name">Dédouanement TVA (biens et services)</field>
             <field name="description">100% imp.</field>
-            <field name="amount" eval="0.0"/>
-            <field name="amount_type">percent</field>
+            <field name="amount" eval="100"/>
+            <field name="amount_type">division</field>
             <field name="chart_template_id" ref="l10nch_chart_template"/>
             <field name="type_tax_use">purchase</field>
-            <field name="tax_group_id" ref="tax_group_tva_0"/>
+            <field name="tax_group_id" ref="tax_group_tva_100"/>
+            <field name="price_include" eval="1"/>
             <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'plus_report_line_ids': [ref('account_tax_report_line_chtax_400')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('ch_coa_1170'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_chtax_400')],
                 }),
             ]"/>
             <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'base',
-                    'minus_report_line_ids': [ref('account_tax_report_line_chtax_400')],
                 }),
                 (0,0, {
                     'factor_percent': 100,
                     'repartition_type': 'tax',
+                    'account_id': ref('ch_coa_1170'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_chtax_400')],
+                }),
+            ]"/>
+        </record>
+
+        <record model="account.tax.template" id="vat_100_import_invest">
+            <field name="name">Dédouanement TVA (invest. et autres ch.)</field>
+            <field name="description">100% imp.invest.</field>
+            <field name="amount" eval="100"/>
+            <field name="amount_type">division</field>
+            <field name="chart_template_id" ref="l10nch_chart_template"/>
+            <field name="type_tax_use">purchase</field>
+            <field name="tax_group_id" ref="tax_group_tva_100"/>
+            <field name="price_include" eval="1"/>
+            <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ch_coa_1171'),
+                    'plus_report_line_ids': [ref('account_tax_report_line_chtax_405')],
+                }),
+            ]"/>
+            <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'base',
+                }),
+                (0,0, {
+                    'factor_percent': 100,
+                    'repartition_type': 'tax',
+                    'account_id': ref('ch_coa_1171'),
+                    'minus_report_line_ids': [ref('account_tax_report_line_chtax_405')],
                 }),
             ]"/>
         </record>

@@ -56,7 +56,7 @@ class AccountMove(models.Model):
     @api.depends('partner_id')
     def _compute_need_kode_transaksi(self):
         for move in self:
-            move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.type == 'out_invoice' and move.country_code == 'ID'
+            move.l10n_id_need_kode_transaksi = move.partner_id.l10n_id_pkp and not move.l10n_id_tax_number and move.move_type == 'out_invoice' and move.country_code == 'ID'
 
     @api.constrains('l10n_id_kode_transaksi', 'line_ids')
     def _constraint_kode_ppn(self):
@@ -80,7 +80,7 @@ class AccountMove(models.Model):
             elif record.l10n_id_tax_number[2] not in ('0', '1'):
                 raise UserError(_('The third digit of a tax number must be 0 or 1'))
 
-    def post(self):
+    def _post(self, soft=True):
         """Set E-Faktur number after validation."""
         for move in self:
             if move.l10n_id_need_kode_transaksi:
@@ -96,7 +96,7 @@ class AccountMove(models.Model):
                     if not efaktur:
                         raise ValidationError(_('There is no Efaktur number available.  Please configure the range you get from the government in the e-Faktur menu. '))
                     move.l10n_id_tax_number = '%s0%013d' % (str(move.l10n_id_kode_transaksi), efaktur)
-        return super(AccountMove, self).post()
+        return super()._post(soft)
 
     def reset_efaktur(self):
         """Reset E-Faktur, so it can be use for other invoice."""
@@ -125,7 +125,7 @@ class AccountMove(models.Model):
                 raise ValidationError(_('Could not download E-faktur in draft state'))
 
             if record.partner_id.l10n_id_pkp and not record.l10n_id_tax_number:
-                raise ValidationError(_('Connect ') + record.name + _(' with E-faktur to download this report'))
+                raise ValidationError(_('Connect %(move_number)s with E-faktur to download this report', move_number=record.name))
 
         self._generate_efaktur(',')
         return self.download_csv()
@@ -155,12 +155,11 @@ class AccountMove(models.Model):
             street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
 
             invoice_npwp = '000000000000000'
-            if not move.partner_id.vat:
-                if move.partner_id.vat and len(move.partner_id.vat) >= 12:
-                    invoice_npwp = move.partner_id.vat
-                elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
-                    invoice_npwp = move.partner_id.l10n_id_nik
-                invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
+            if move.partner_id.vat and len(move.partner_id.vat) >= 12:
+                invoice_npwp = move.partner_id.vat
+            elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
+                invoice_npwp = move.partner_id.l10n_id_nik
+            invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
 
             # Here all fields or columns based on eTax Invoice Third Party
             eTax['KD_JENIS_TRANSAKSI'] = move.l10n_id_tax_number[0:2] or 0
@@ -281,7 +280,7 @@ class AccountMove(models.Model):
     def _generate_efaktur(self, delimiter):
         if self.filtered(lambda x: not x.l10n_id_kode_transaksi):
             raise UserError(_('Some documents don\'t have a transaction code'))
-        if self.filtered(lambda x: x.type != 'out_invoice'):
+        if self.filtered(lambda x: x.move_type != 'out_invoice'):
             raise UserError(_('Some documents are not Customer Invoices'))
 
         output_head = self._generate_efaktur_invoice(delimiter)

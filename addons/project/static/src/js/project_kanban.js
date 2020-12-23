@@ -65,4 +65,6 @@ KanbanColumn.include({
 });
 
 view_registry.add('project_kanban', ProjectKanbanView);
+
+return ProjectKanbanController;
 });

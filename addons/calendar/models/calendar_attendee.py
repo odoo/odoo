@@ -34,7 +34,7 @@ class Attendee(models.Model):
     common_name = fields.Char('Common name', compute='_compute_common_name', store=True)
     email = fields.Char('Email', related='partner_id.email', help="Email of Invited Person")
     availability = fields.Selection(
-        [('free', 'Free'), ('busy', 'Busy')], 'Free/Busy', readonly=True)
+        [('free', 'Available'), ('busy', 'Busy')], 'Available/Busy', readonly=True)
     access_token = fields.Char('Invitation Token', default=_default_access_token)
     recurrence_id = fields.Many2one('calendar.recurrence', related='event_id.recurrence_id')
 
@@ -107,7 +107,7 @@ class Attendee(models.Model):
         rendering_context.update({
             'colors': colors,
             'ignore_recurrence': ignore_recurrence,
-            'action_id': self.env['ir.actions.act_window'].search([('view_id', '=', calendar_view.id)], limit=1).id,
+            'action_id': self.env['ir.actions.act_window'].sudo().search([('view_id', '=', calendar_view.id)], limit=1).id,
             'dbname': self._cr.dbname,
             'base_url': self.env['ir.config_parameter'].sudo().get_param('web.base.url', default='http://localhost:8069'),
         })
@@ -118,6 +118,7 @@ class Attendee(models.Model):
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
+                attachment_values = []
                 if ics_file:
                     attachment_values = [
                         (0, 0, {'name': 'invitation.ics',

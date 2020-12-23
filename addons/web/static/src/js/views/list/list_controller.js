@@ -7,12 +7,14 @@ odoo.define('web.ListController', function (require) {
  * and bind all extra buttons/pager in the control panel.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
 var Dialog = require('web.Dialog');
 var ListConfirmDialog = require('web.ListConfirmDialog');
 var session = require('web.session');
+const viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -44,12 +46,15 @@ var ListController = BasicController.extend({
      * @param {Object} params
      * @param {boolean} params.editable
      * @param {boolean} params.hasActionMenus
+     * @param {Object[]} [params.headerButtons=[]]: a list of node descriptors
+     *    for controlPanel's action buttons
      * @param {Object} params.toolbarActions
      * @param {boolean} params.noLeaf
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
         this.hasActionMenus = params.hasActionMenus;
+        this.headerButtons = params.headerButtons || [];
         this.toolbarActions = params.toolbarActions || {};
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
@@ -58,13 +63,15 @@ var ListController = BasicController.extend({
         this.fieldChangedPrevented = false;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
-        session.user_has_group('base.group_allow_export').then(has_group => {
-            this.isExportEnable = has_group;
+        this.isExportEnable = false;
+    },
+
+    willStart() {
+        const sup = this._super(...arguments);
+        const acl = session.user_has_group('base.group_allow_export').then(hasGroup => {
+            this.isExportEnable = hasGroup;
         });
-        Object.defineProperty(this, 'mode', {
-            get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
-            set: () => {},
-        });
+        return Promise.all([sup, acl]);
     },
 
     //--------------------------------------------------------------------------
@@ -136,6 +143,35 @@ var ListController = BasicController.extend({
         }
     },
     /**
+     * Renders (and updates) the buttons that are described inside the `header`
+     * node of the list view arch. Those buttons are visible when selecting some
+     * records. They will be appended to the controlPanel's buttons.
+     *
+     * @private
+     */
+    _renderHeaderButtons() {
+        if (this.$headerButtons) {
+            this.$headerButtons.remove();
+            this.$headerButtons = null;
+        }
+        if (!this.headerButtons.length || !this.selectedRecords.length) {
+            return;
+        }
+        const btnClasses = 'btn-primary btn-secondary btn-link btn-success btn-info btn-warning btn-danger'.split(' ');
+        let $elms = $();
+        this.headerButtons.forEach(node => {
+            const $btn = viewUtils.renderButtonFromNode(node);
+            $btn.addClass('btn');
+            if (!btnClasses.some(cls => $btn.hasClass(cls))) {
+                $btn.addClass('btn-secondary');
+            }
+            $btn.on("click", this._onHeaderButtonClicked.bind(this, node));
+            $elms = $elms.add($btn);
+        });
+        this.$headerButtons = $elms;
+        this.$headerButtons.appendTo(this.$buttons);
+    },
+    /**
      * Overrides to update the list of selected records
      *
      * @override
@@ -172,9 +208,9 @@ var ListController = BasicController.extend({
             this.$buttons.toggleClass('o-editing', mode === 'edit');
             const state = this.model.get(this.handle, {raw: true});
             if (state.count) {
-                this.$('.o_list_export_xlsx').show();
+                this.$buttons.find('.o_list_export_xlsx').show();
             } else {
-                this.$('.o_list_export_xlsx').hide();
+                this.$buttons.find('.o_list_export_xlsx').hide();
             }
         }
         this._updateSelectionBox();
@@ -519,6 +555,7 @@ var ListController = BasicController.extend({
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) !== this.handle) {
+            this.mode = mode;
             this.updateButtons(mode);
             return this.renderer.setRowMode(recordID, mode);
         } else {
@@ -586,6 +623,8 @@ var ListController = BasicController.extend({
      * the user to select the whole domain instead of the current page (when the
      * page is selected). This function renders and displays this box when at
      * least one record is selected.
+     * Since header action buttons' display is dependent on the selection, we
+     * refresh them each time the selection is updated.
      *
      * @private
      */
@@ -598,12 +637,14 @@ var ListController = BasicController.extend({
             const state = this.model.get(this.handle, {raw: true});
             this.$selectionBox = $(qweb.render('ListView.selection', {
                 isDomainSelected: this.isDomainSelected,
+                isMobile: config.device.isMobile,
                 isPageSelected: this.isPageSelected,
                 nbSelected: this.selectedRecords.length,
                 nbTotal: state.count,
             }));
             this.$selectionBox.appendTo(this.$buttons);
         }
+        this._renderHeaderButtons();
     },
 
     //--------------------------------------------------------------------------
@@ -798,6 +839,44 @@ var ListController = BasicController.extend({
             ev.data.notifyChange = false;
         }
         this._super.apply(this, arguments);
+    },
+    /**
+     * @private
+     * @param {Object} node the button's node in the xml
+     * @returns {Promise}
+     */
+    async _onHeaderButtonClicked(node) {
+        this._disableButtons();
+        const state = this.model.get(this.handle);
+        try {
+            let resIds;
+            if (this.isDomainSelected) {
+                const limit = session.active_ids_limit;
+                resIds = await this._domainToResIds(state.getDomain(), limit);
+            } else {
+                resIds = this.getSelectedIds();
+            }
+            // add the context of the button node (in the xml) and our custom one
+            // (active_ids and domain) to the action's execution context
+            const actionData = Object.assign({}, node.attrs, {
+                context: state.getContext({ additionalContext: node.attrs.context }),
+            });
+            Object.assign(actionData.context, {
+                active_domain: state.getDomain(),
+                active_id: resIds[0],
+                active_ids: resIds,
+                active_model: state.model,
+            });
+            // load the action with the correct context and record parameters (resIDs, model etc...)
+            const recordData = {
+                context: state.getContext(),
+                model: state.model,
+                resIDs: resIds,
+            };
+            await this._executeButtonAction(actionData, recordData);
+        } finally {
+            this._enableButtons();
+        }
     },
     /**
      * Called when the renderer displays an editable row and the user tries to

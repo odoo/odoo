@@ -379,6 +379,12 @@ $o-wslides-fs-side-width: 300px;
             & + ul {
                 z-index: 0;
             }
+            .o_wslides_js_category_delete {
+                display: none;
+            }
+            &:hover .o_wslides_js_category_delete {
+                display: block;
+            }
         }
 
         .o_text_link {
@@ -552,6 +558,11 @@ $o-wslides-fs-side-width: 300px;
     .tooltip > .arrow::before {
         display: none;
     }
+}
+
+#slide_channel_add_form input[name="channel_type"]:checked + label {
+    border: 4px solid $primary;
+    box-shadow: 3px 3px 5px gray;
 }
 
 // Embed PDFViewer

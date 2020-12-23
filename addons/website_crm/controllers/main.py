@@ -3,10 +3,10 @@
 
 from odoo import http
 from odoo.http import request
-from odoo.addons.website_form.controllers.main import WebsiteForm
+from odoo.addons.website_form.controllers import main
 
 
-class WebsiteForm(WebsiteForm):
+class WebsiteForm(main.WebsiteForm):
 
     def _get_country(self):
         country_code = request.session.geoip and request.session.geoip.get('country_code') or False

@@ -35,6 +35,7 @@
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.backend.scss"/>
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website_visitor_views.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.theme_install.scss"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/backend/button.js"/>
@@ -48,6 +49,7 @@
 
 <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
     <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/tests/dashboard_tests.js"/>
         <script type="text/javascript" src="/website/static/tests/website_tests.js"/>
     </xpath>
 </template>
@@ -75,11 +77,7 @@
     </xpath>
     <xpath expr="//script[last()]" position="after">
         <script type="text/javascript" src="/website/static/src/js/set_view_track.js"/>
-        <script type="text/javascript" src="/website/static/lib/jstz.min.js"/>
         <script type="text/javascript" src="/website/static/src/js/utils.js"/>
-
-        <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"/>
-        <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"/>
 
         <script type="text/javascript" src="/website/static/src/js/content/website_root.js"/>
         <script type="text/javascript" src="/website/static/src/js/content/compatibility.js"/>
@@ -88,7 +86,6 @@
 
         <script type="text/javascript" src="/website/static/src/js/menu/navbar.js"/>
 
-        <script type="text/javascript" src="/website/static/src/js/visitor_timezone.js"/>
         <script type="text/javascript" src="/website/static/src/js/show_password.js"/>
         <script type="text/javascript" src="/website/static/src/js/post_link.js"/>
         <!-- Custom empty file for user javascript -->
@@ -120,9 +117,8 @@
     <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.wysiwyg.scss"/>
     <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.edit_mode.scss"/>
 
-    <script type="text/javascript" src="/website/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/website/static/src/js/editor/mega_menu.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/snippets.editor.js"/>
-    <script type="text/javascript" src="/website/static/src/js/editor/rte.summernote.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/snippets.options.js"/>
     <script type="text/javascript" src="/website/static/src/snippets/s_facebook_page/options.js"/>
     <script type="text/javascript" src="/website/static/src/snippets/s_image_gallery/options.js"/>
@@ -138,19 +134,20 @@
     <script type="text/javascript" src="/website/static/src/snippets/s_table_of_content/options.js"/>
     <script type="text/javascript" src="/website/static/src/snippets/s_timeline/options.js"/>
     <script type="text/javascript" src="/website/static/src/snippets/s_media_list/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_google_map/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_dynamic_snippet/options.js"/>
+    <script type="text/javascript" src="/website/static/src/snippets/s_dynamic_snippet_carousel/options.js"/>
 
-    <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone.js"/>
-    <script type="text/javascript" src="/website/static/src/js/editor/wysiwyg_multizone_translate.js"/>
     <script type="text/javascript" src="/website/static/src/js/editor/widget_link.js"/>
+
+    <script type="text/javascript" src="/website/static/src/js/widgets/media.js"/>
 </template>
 
 <template id="website.assets_editor" name="Website Editor Assets (used in website editor)">
     <t t-call="web._assets_helpers"/>
 
     <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.editor.ui.scss"/>
-
-    <script type="text/javascript" src="/website/static/src/js/editor/editor_menu.js"/>
-    <script type="text/javascript" src="/website/static/src/js/editor/editor_menu_translate.js"/>
+    <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/website.theme_install.scss"/>
 
     <script type="text/javascript" src="/website/static/src/js/menu/content.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/customize.js"/>
@@ -160,8 +157,8 @@
     <script type="text/javascript" src="/website/static/src/js/menu/new_content.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/seo.js"/>
     <script type="text/javascript" src="/website/static/src/js/menu/translate.js"/>
-
-    <script type="text/javascript" src="/website/static/src/js/tours/banner.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/homepage.js"/>
+    <script type="text/javascript" src="/website/static/src/js/tours/tour_utils.js"/>
 
     <script type="text/javascript" src="/website/static/src/js/widgets/ace.js"/>
 </template>

@@ -87,9 +87,6 @@ class MailChannel(models.Model):
                     channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
                 # add the anonymous or partner name
                 channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
-                last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
-                if last_msg:
-                    channel_infos_dict[channel.id]['last_message_date'] = last_msg.date
         return list(channel_infos_dict.values())
 
     @api.model
@@ -100,23 +97,25 @@ class MailChannel(models.Model):
         return values
 
     def _channel_get_livechat_visitor_info(self):
-        partners = self.channel_partner_ids - self.livechat_operator_id
-        if partners:
+        self.ensure_one()
+        # remove active test to ensure public partner is taken into account
+        channel_partner_ids = self.with_context(active_test=False).channel_partner_ids
+        partners = channel_partner_ids - self.livechat_operator_id
+        if not partners:
+            # operator probably testing the livechat with his own user
+            partners = channel_partner_ids
+        first_partner = partners and partners[0]
+        if first_partner and (not first_partner.user_ids or not any(user._is_public() for user in first_partner.user_ids)):
+            # legit non-public partner
             return {
-                'country': partners[0].country_id.name_get() if partners[0].country_id else False,
-                'id': partners[0].id,
-                'name': partners[0].name,
-            }
-        if self.anonymous_name:
-            return {
-                'country': False,
-                'id': False,
-                'name': self.anonymous_name,
+                'country': first_partner.country_id.name_get()[0] if first_partner.country_id else False,
+                'id': first_partner.id,
+                'name': first_partner.name,
             }
         return {
-            'country': False,
+            'country': self.country_id.name_get()[0] if self.country_id else False,
             'id': False,
-            'name': _("Visitor"),
+            'name': self.anonymous_name or _("Visitor"),
         }
 
     def _channel_get_livechat_partner_name(self):
@@ -157,6 +156,10 @@ class MailChannel(models.Model):
             'channel_types': ['livechat'],
             'help': _('See 15 last visited pages')
         }
+
+    def _execute_command_help_message_extra(self):
+        msg = super(MailChannel, self)._execute_command_help_message_extra()
+        return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
 
     def _execute_command_history(self, **kwargs):
         notification = []

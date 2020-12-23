@@ -5,17 +5,19 @@ import os
 import sys
 import time
 
+
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
 import odoo
 from odoo.tools import topological_sort, unique
 from odoo.netsvc import init_logger
 from odoo.tests import standalone_tests
+import odoo.tests.loader
 
-_logger = logging.getLogger('test_module_operations')
+_logger = logging.getLogger('odoo.tests.test_module_operations')
 
 BLACKLIST = {
-    'auth_ldap', 'document_ftp', 'base_gengo', 'website_gengo', 'website_instantclick', 'pad',
+    'auth_ldap', 'document_ftp', 'website_instantclick', 'pad',
     'pad_project', 'note_pad', 'pos_cache', 'pos_blackbox_be', 'payment_test',
 }
 IGNORE = ('hw_', 'theme_', 'l10n_', 'test_', 'payment_')
@@ -119,7 +121,7 @@ def test_scripts(args):
     registry = odoo.registry(args.database)
     for module_name in registry._init_modules:
         # import tests for loaded modules
-        odoo.modules.module.get_test_modules(module_name)
+        odoo.tests.loader.get_test_modules(module_name)
 
     # fetch and filter scripts to test
     funcs = list(unique(

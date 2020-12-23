@@ -104,6 +104,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple >= 0 )', 'Qty Multiple must be greater than or equal to zero.'),
+        ('product_location_check', 'unique (product_id, location_id, company_id)', 'The combination of product and location must be unique.'),
     ]
 
     @api.depends('warehouse_id')
@@ -135,6 +136,7 @@ class StockWarehouseOrderpoint(models.Model):
             dummy, lead_days_description = orderpoint.rule_ids._get_lead_days(orderpoint.product_id)
             orderpoint.json_lead_days_popover = dumps({
                 'title': _('Replenishment'),
+                'icon': 'fa-area-chart',
                 'popoverTemplate': 'stock.leadDaysPopOver',
                 'lead_days_date': fields.Date.to_string(orderpoint.lead_days_date),
                 'lead_days_description': lead_days_description,
@@ -170,7 +172,7 @@ class StockWarehouseOrderpoint(models.Model):
     def _check_product_uom(self):
         ''' Check if the UoM has the same category as the product standard UoM '''
         if any(orderpoint.product_id.uom_id.category_id != orderpoint.product_uom.category_id for orderpoint in self):
-            raise ValidationError(_('You have to select a product unit of measure that is in the same category than the default unit of measure of the product'))
+            raise ValidationError(_('You have to select a product unit of measure that is in the same category as the default unit of measure of the product'))
 
     @api.onchange('location_id')
     def _onchange_location_id(self):
@@ -223,7 +225,7 @@ class StockWarehouseOrderpoint(models.Model):
         self.trigger = 'auto'
         return self.action_replenish()
 
-    @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state')
+    @api.depends('product_id', 'location_id', 'product_id.stock_move_ids', 'product_id.stock_move_ids.state', 'product_id.stock_move_ids.product_uom_qty')
     def _compute_qty(self):
         orderpoints_contexts = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
         for orderpoint in self:
@@ -291,7 +293,7 @@ class StockWarehouseOrderpoint(models.Model):
 
         return replenish report ir.actions.act_window
         """
-        action = self.env.ref('stock.action_orderpoint_replenish').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_orderpoint_replenish")
         action['context'] = self.env.context
         orderpoints = self.env['stock.warehouse.orderpoint'].search([])
         # Remove previous automatically created orderpoint that has been refilled.
@@ -387,6 +389,7 @@ class StockWarehouseOrderpoint(models.Model):
         return {
             'route_ids': self.route_id,
             'date_planned': date_planned,
+            'date_deadline': date or False,
             'warehouse_id': self.warehouse_id,
             'orderpoint_id': self,
             'group_id': group or self.group_id,

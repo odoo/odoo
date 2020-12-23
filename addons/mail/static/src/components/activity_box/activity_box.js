@@ -17,8 +17,10 @@ class ActivityBox extends Component {
         super(...args);
         useStore(props => {
             const chatter = this.env.models['mail.chatter'].get(props.chatterLocalId);
+            const thread = chatter && chatter.thread;
             return {
                 chatter: chatter ? chatter.__state : undefined,
+                thread: thread && thread.__state,
             };
         });
     }

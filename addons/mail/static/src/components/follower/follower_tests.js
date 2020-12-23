@@ -4,11 +4,13 @@ odoo.define('mail/static/src/components/follower/follower_tests.js', function (r
 const components = {
     Follower: require('mail/static/src/components/follower/follower.js'),
 };
+const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
@@ -18,17 +20,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('follower', {}, function () {
 QUnit.module('follower_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createFollowerComponent = async (follower) => {
-            const FollowerComponent = components.Follower;
-            FollowerComponent.env = this.env;
-            this.component = new FollowerComponent(null, { followerLocalId: follower.localId });
-            await this.component.mount(this.widget.el);
+            await createRootComponent(this, components.Follower, {
+                props: { followerLocalId: follower.localId },
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,31 +38,14 @@ QUnit.module('follower_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
-        delete components.Follower.env;
+        afterEach(this);
     },
 });
 
 QUnit.test('base rendering not editable', async function (assert) {
     assert.expect(5);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (route === '/web/image/mail.channel/1/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
 
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -104,14 +89,7 @@ QUnit.test('base rendering not editable', async function (assert) {
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(6);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (route === 'web/image/mail.channel/1/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     const thread = this.env.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
@@ -164,8 +142,8 @@ QUnit.test('click on channel follower details', async function (assert) {
         assert.step('do_action');
         assert.strictEqual(
             payload.action.res_id,
-            1,
-            "The redirect action should redirect to the right res id (1)"
+            10,
+            "The redirect action should redirect to the right res id (10)"
         );
         assert.strictEqual(
             payload.action.res_model,
@@ -178,22 +156,17 @@ QUnit.test('click on channel follower details', async function (assert) {
             "The redirect action should be of type 'ir.actions.act_window'"
         );
     });
-
+    this.data['res.partner'].records.push({ id: 100 });
+    this.data['mail.channel'].records.push({ id: 10 });
     await this.start({
         env: { bus },
-        async mockRPC(route, args) {
-            if (route === 'web/image/mail.channel/1/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
         model: 'res.partner',
     });
     const follower = await this.env.models['mail.follower'].create({
-        channel: [['insert', { id: 1, model: 'mail.channel', name: "channel" }]],
+        channel: [['insert', { id: 10, model: 'mail.channel', name: "channel" }]],
         followedThread: [['link', thread]],
         id: 2,
         isActive: true,
@@ -221,6 +194,7 @@ QUnit.test('click on channel follower details', async function (assert) {
 QUnit.test('click on partner follower details', async function (assert) {
     assert.expect(7);
 
+    const openFormDef = makeDeferred();
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -239,16 +213,11 @@ QUnit.test('click on partner follower details', async function (assert) {
             "ir.actions.act_window",
             "The redirect action should be of type 'ir.actions.act_window'"
         );
+        openFormDef.resolve();
     });
-
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         env: { bus },
-        async mockRPC(route, args) {
-            if (route === 'web/image/res.partner/3/image_128') {
-                return;
-            }
-            return this._super(...arguments);
-        },
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
@@ -261,7 +230,7 @@ QUnit.test('click on partner follower details', async function (assert) {
         isEditable: true,
         partner: [['insert', {
             email: "bla@bla.bla",
-            id: this.env.session.partner_id,
+            id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
         }]],
     });
@@ -278,6 +247,7 @@ QUnit.test('click on partner follower details', async function (assert) {
     );
 
     document.querySelector('.o_Follower_details').click();
+    await openFormDef;
     assert.verifySteps(
         ['do_action'],
         "clicking on follower should redirect to partner form view"
@@ -287,12 +257,60 @@ QUnit.test('click on partner follower details', async function (assert) {
 QUnit.test('click on edit follower', async function (assert) {
     assert.expect(5);
 
+    this.data['res.partner'].records.push({ id: 100, message_follower_ids: [2] });
+    this.data['mail.followers'].records.push({
+        id: 2,
+        is_active: true,
+        is_editable: true,
+        partner_id: this.data.currentPartnerId,
+        res_id: 100,
+        res_model: 'res.partner',
+    });
     await this.start({
         hasDialog: true,
         async mockRPC(route, args) {
-            if (route === 'web/image/res.partner/3/image_128') {
-                return;
+            if (route.includes('/mail/read_subscription_data')) {
+                assert.step('fetch_subtypes');
             }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].create({
+        id: 100,
+        model: 'res.partner',
+    });
+    await thread.refreshFollowers();
+    await this.createFollowerComponent(thread.followers[0]);
+    assert.containsOnce(
+        document.body,
+        '.o_Follower',
+        "should have follower component"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Follower_editButton',
+        "should display an edit button"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Follower_editButton').click());
+    assert.verifySteps(
+        ['fetch_subtypes'],
+        "clicking on edit follower should fetch subtypes"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_FollowerSubtypeList',
+        "A dialog allowing to edit follower subtypes should have been created"
+    );
+});
+
+QUnit.test('edit follower and close subtype dialog', async function (assert) {
+    assert.expect(6);
+
+    this.data['res.partner'].records.push({ id: 100 });
+    await this.start({
+        hasDialog: true,
+        async mockRPC(route, args) {
             if (route.includes('/mail/read_subscription_data')) {
                 assert.step('fetch_subtypes');
                 return [{
@@ -318,7 +336,7 @@ QUnit.test('click on edit follower', async function (assert) {
         isEditable: true,
         partner: [['insert', {
             email: "bla@bla.bla",
-            id: this.env.session.partner_id,
+            id: this.env.messaging.currentPartner.id,
             name: "François Perusse",
         }]],
     });
@@ -339,11 +357,19 @@ QUnit.test('click on edit follower', async function (assert) {
         ['fetch_subtypes'],
         "clicking on edit follower should fetch subtypes"
     );
-
     assert.containsOnce(
         document.body,
         '.o_FollowerSubtypeList',
-        "A dialog allowing to edit follower subtypes should have been created"
+        "dialog allowing to edit follower subtypes should have been created"
+    );
+
+    await afterNextRender(
+        () => document.querySelector('.o_FollowerSubtypeList_closeButton').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_DialogManager_dialog',
+        "follower subtype dialog should be closed after clicking on close button"
     );
 });
 

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from psycopg2 import sql
 
 from odoo import tools
 from odoo import api, fields, models
@@ -110,7 +111,7 @@ SELECT
     fuel_type,
     date_start,
     COST,
-    cost_type
+    'service' as cost_type
 FROM
     service_costs sc
 UNION ALL (
@@ -123,9 +124,13 @@ UNION ALL (
         fuel_type,
         date_start,
         COST,
-        cost_type
+        'contract' as cost_type
     FROM
         contract_costs cc)
 """
         tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (%s)""" % (self._table, query))
+        self.env.cr.execute(
+            sql.SQL("""CREATE or REPLACE VIEW {} as ({})""").format(
+                sql.Identifier(self._table),
+                sql.SQL(query)
+            ))

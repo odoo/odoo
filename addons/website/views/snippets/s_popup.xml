@@ -14,8 +14,8 @@
              role="dialog">
             <div class="modal-dialog d-flex">
                 <div class="modal-content oe_structure">
-                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable">&amp;times;</div>
-                    <section class="s_banner oe_img_bg pt96 pb96"
+                    <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
+                    <section class="s_banner oe_img_bg o_bg_img_center pt96 pb96"
                              data-snippet="s_banner"
                              style="background-image: url('/web/image/website.s_popup_default_image');">
                         <div class="container">
@@ -23,7 +23,7 @@
                                 <div class="col-lg-10 offset-lg-1 text-center o_cc o_cc1 jumbotron pt48 pb48">
                                     <h2><font style="font-size: 62px;">Win $20</font></h2>
                                     <p class="lead">Check out now and get $20 off your first order.</p>
-                                    <a href="#" class="btn btn-primary">New customer</a>
+                                    <a href="#" class="btn btn-primary mb-2">New customer</a>
                                 </div>
                             </div>
                         </div>
@@ -50,15 +50,15 @@
                 <we-button data-select-class="s_popup_size_full" data-name="s_popup_size_full">Full</we-button>
             </we-select>
             <we-row string="Backdrop">
+                <we-checkbox data-name="popup_backdrop_opt"
+                             data-select-class="s_popup_no_backdrop|"
+                             data-set-backdrop="true"
+                             data-no-preview="true"/>
                 <we-colorpicker data-dependencies="popup_backdrop_opt"
                                 data-select-style="true"
                                 data-css-property="background-color"
                                 data-color-prefix="bg-"
                                 data-css-compatible="true"/>
-                <we-checkbox data-name="popup_backdrop_opt"
-                             data-select-class="s_popup_no_backdrop|"
-                             data-set-backdrop="true"
-                             data-no-preview="true"/>
             </we-row>
         </t>
         <t t-set="extra_popup_options">
@@ -71,7 +71,7 @@
                 <we-button data-select-data-attribute="afterDelay" data-name="show_delay">Delay</we-button>
                 <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
             </we-select>
-            <we-input string="Delay"
+            <we-input string="⌙ Delay"
                       data-select-data-attribute=""
                       data-attribute-name="showAfter"
                       data-unit="s"

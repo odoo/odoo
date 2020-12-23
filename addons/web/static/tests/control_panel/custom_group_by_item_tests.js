@@ -2,7 +2,7 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
     "use strict";
 
     const CustomGroupByItem = require('web.CustomGroupByItem');
-    const { Model } = require('web.model');
+    const ActionModel = require('web/static/src/js/views/action_model.js');
     const testUtils = require('web.test_utils');
 
     const { createComponent } = testUtils;
@@ -21,7 +21,7 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
                     ],
                 },
                 env: {
-                    controlPanelModel: new Model(),
+                    searchModel: new ActionModel(),
                 },
             });
 
@@ -43,20 +43,22 @@ odoo.define('web.groupby_menu_generator_tests', function (require) {
         });
 
         QUnit.test('select a field name in Add Custom Group menu properly trigger the corresponding field', async function (assert) {
-            assert.expect(3);
+            assert.expect(4);
 
             const fields = [
                 { sortable: true, name: 'candlelight', string: 'Candlelight', type: 'boolean' },
             ];
-            class MockedControlPanelModel extends Model {
-                createNewGroupBy(field) {
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewGroupBy');
+                    const field = args[0];
                     assert.deepEqual(field, fields[0]);
                 }
             }
-            const controlPanelModel = new MockedControlPanelModel();
+            const searchModel = new MockedSearchModel();
             const cgi = await createComponent(CustomGroupByItem, {
                 props: { fields },
-                env: { controlPanelModel },
+                env: { searchModel },
             });
 
             await testUtils.dom.click(cgi.el.querySelector('.o_generator_menu button.o_add_custom_group_by'));

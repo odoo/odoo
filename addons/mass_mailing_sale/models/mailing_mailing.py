@@ -23,19 +23,19 @@ class MassMailing(models.Model):
         for mass_mailing in self:
             if self.user_has_groups('sales_team.group_sale_salesman') and self.user_has_groups('account.group_account_invoice'):
                 domain = mass_mailing._get_sale_utm_domain() + [('state', 'not in', ['draft', 'cancel'])]
-                moves = self.env['account.move'].search_read(domain, ['amount_untaxed'])
-                mass_mailing.sale_invoiced_amount = sum(i['amount_untaxed'] for i in moves)
+                moves = self.env['account.move'].search_read(domain, ['amount_untaxed_signed'])
+                mass_mailing.sale_invoiced_amount = sum(i['amount_untaxed_signed'] for i in moves)
             else:
                 mass_mailing.sale_invoiced_amount = 0
 
     def action_redirect_to_quotations(self):
-        action = self.env.ref('sale.action_quotations_with_onboarding').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_quotations_with_onboarding")
         action['domain'] = self._get_sale_utm_domain()
         action['context'] = {'create': False}
         return action
 
     def action_redirect_to_invoiced(self):
-        action = self.env.ref('account.action_move_out_invoice_type').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_move_out_invoice_type")
         moves = self.env['account.move'].search(self._get_sale_utm_domain())
         action['context'] = {
             'create': False,

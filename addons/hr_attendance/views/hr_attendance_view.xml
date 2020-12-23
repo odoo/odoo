@@ -111,10 +111,10 @@
         <field name="name">hr.attendance.pivot</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <pivot string="Attendance">
+            <pivot string="Attendance" sample="1">
                 <field name="employee_id" type="row"/>
                 <field name="check_in" type="col"/>
-                <field name="worked_hours" type="measure"/>
+                <field name="worked_hours" type="measure" widget="float_time"/>
             </pivot>
         </field>
     </record>
@@ -123,7 +123,7 @@
         <field name="name">hr.attendance.graph</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <graph string="Attendance">
+            <graph string="Attendance" sample="1">
                 <field name="employee_id"/>
                 <field name="check_in"/>
                 <field name="worked_hours" type="measure"/>
@@ -167,6 +167,11 @@
         <field name="res_model">hr.attendance</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id"></field>  <!-- force empty -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="hr_attendance_action_graph_filtered" model="ir.actions.act_window">
@@ -178,6 +183,11 @@
             'default_department_id': active_id}
         </field>
         <field name="view_id"></field>  <!-- force empty -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="hr_attendance_action_kiosk_mode" model="ir.actions.client">
@@ -210,8 +220,6 @@
     <menuitem id="menu_hr_attendance_view_attendances" name="Attendances" parent="menu_hr_attendance_manage_attendances" sequence="10" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action"/>
 
     <menuitem id="menu_hr_attendance_view_employees_kanban" name="Employees" parent="menu_hr_attendance_manage_attendances" sequence="15" groups="hr_attendance.group_hr_attendance_user" action="hr.open_view_employee_list_my"/>
-
-    <menuitem id="menu_hr_attendance_kiosk_mode" name="Kiosk Mode" parent="menu_hr_attendance_manage_attendances" sequence="20" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_kiosk_mode"/>
 
     <menuitem id="menu_hr_attendance_report" name="Reporting" parent="menu_hr_attendance_root" sequence="30" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_graph"/>
 </odoo>

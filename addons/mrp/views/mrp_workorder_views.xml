@@ -14,13 +14,10 @@
                 <filter string="Late" name="late" domain="[('date_planned_start','&lt;=',time.strftime('%%Y-%%m-%%d'))]"/>
                 <separator/>
                 <filter string="Start Date" name="date_start_filter" date="date_start"/>
-                <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
-                <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <group expand="0" string="Group By...">
+                    <filter string="Work center" name="workcenter" domain="[]" context="{'group_by': 'workcenter_id'}"/>
+                    <filter string="Product" name="product" domain="[]" context="{'group_by': 'product_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -34,11 +31,10 @@
         <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
         <field name="domain">[('operation_id.bom_id', '=', active_id), ('state', '=', 'done')]</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-              No data to display
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
             </p><p>
-              You will get here statistics about the
-              work orders duration related to this routing.
+                Get statistics about the work orders duration related to this routing.
             </p>
         </field>
     </record>
@@ -51,12 +47,11 @@
         <field name="domain">[('production_id', '=', active_id)]</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Start a new work order
+            No work orders to do!
           </p><p>
-            Work Orders are operations to be processed at a Work Center to realize a
-            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
-            they are based on the Routing defined on these ones
-            </p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
         </field>
     </record>
 
@@ -86,10 +81,8 @@
                 <field name="date_finished" optional="hide" readonly="1"/>
                 <field name="duration_expected" widget="float_time"/>
                 <field name="duration" widget="mrp_time_counter"
-                  attrs="{'invisible': ['|', ('production_state','=', 'draft'), ('time_ids', '=', [])]}"/>
-                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
-                    context="{'default_workcenter_id': workcenter_id}"/>
-                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
+                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')" attrs="{'invisible': [('production_state', 'in', ('draft', 'done'))]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
                 <button name="button_pending" type="object" string="Pause" class="btn-warning"
@@ -100,8 +93,10 @@
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked')]}"/>
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '!=', 'blocked')]}"/>
+                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
+                    context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " width="0.1" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
         </field>
     </record>
@@ -113,6 +108,10 @@
         <field name="priority" eval="10"/>
         <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="sample">1</attribute>
+            </xpath>
             <field name="workcenter_id" position="after">
                 <field name="production_id"/>
             </field>
@@ -130,7 +129,6 @@
             <header>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
             </header>
-            <sheet>
                 <div class="oe_button_box" name="button_box">
                     <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
                         <div class="o_field_widget o_stat_info">
@@ -142,25 +140,31 @@
                 <field name="workcenter_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="product_tracking" invisible="1"/>
-                <field name="production_id" invisible="1"/>
                 <field name="product_id" invisible="1"/>
                 <field name="finished_lot_id" invisible="1"/>
                 <field name="qty_producing" invisible="1"/>
-                <group attrs="{'invisible': [('date_planned_start', '=', False)]}">
-                    <label for="date_planned_start" string="Planned Date"/>
-                    <div class="oe_inline">
-                        <field name="date_planned_start" class="mr8 oe_inline" required="True"/>
-                        <strong class="mr8 oe_inline">to</strong>
-                        <field name="date_planned_finished" class="oe_inline" required="True"/>
-                        <field name="show_json_popover" invisible="1"/>
-                        <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
-                    </div>
+                <group>
+                    <group attrs="{'invisible': [('date_planned_start', '=', False)]}">
+                        <label for="date_planned_start" string="Planned Date"/>
+                        <div class="oe_inline">
+                            <field name="date_planned_start" class="mr8 oe_inline" required="True"/>
+                            <strong class="mr8 oe_inline">to</strong>
+                            <field name="date_planned_finished" class="oe_inline" required="True"/>
+                            <field name="show_json_popover" invisible="1"/>
+                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                        </div>
+                        <label for="duration_expected"/>
+                        <div class="o_row">
+                            <field name="duration_expected" widget="float_time"/>
+                            <span>minutes</span>
+                        </div>
+                    </group>
                 </group>
                 <notebook>
                 <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
                     <group>
                         <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id, 'default_workorder_id': id}">
-                            <tree>
+                            <tree editable="bottom">
                                 <field name="date_start"/>
                                 <field name="date_end"/>
                                 <field name="duration" widget="float_time" sum="Total duration"/>
@@ -195,23 +199,23 @@
                     <field name="operation_note" attrs="{'invisible': [('worksheet_type', '!=', 'text')]}"/>
                 </page>
                 </notebook>
-            </sheet>
-            <div class="oe_chatter" groups="mrp.group_mrp_manager">
-                <field name="message_follower_ids"/>
-                <field name="activity_ids"/>
-                <field name="message_ids"/>
-            </div>
             </form>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="mrp_production_workorder_form_view_inherit_gantt">
-        <field name="name">mrp.production.work.order.form.gantt</field>
+    <record id="mrp_production_workorder_form_view_inherit_editable" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.tree</field>
         <field name="model">mrp.workorder</field>
-        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
         <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
         <field name="arch" type="xml">
-            <field name="time_ids" position="replace"/>
+            <xpath expr="//notebook" position="after">
+                <footer>
+                    <button string="Save" special="save" class="btn-primary"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </xpath>
         </field>
     </record>
 
@@ -231,13 +235,6 @@
                 <separator/>
                 <filter string="Late" name="late" domain="['&amp;', ('date_planned_start', '&lt;', current_date), ('state', '=', 'ready')]"
                     help="Production started late"/>
-                <filter invisible="1" string="Late Activities" name="activities_overdue"
-                    domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
-                    help="Show all records which has next action date is before today"/>
-                <filter invisible="1" string="Today Activities" name="activities_today"
-                    domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
-                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                 <group expand="0" string="Group By">
                     <filter string="Work Center" name="work_center" domain="[]" context="{'group_by': 'workcenter_id'}"/>
                     <filter string="Manufacturing Order" name="production" domain="[]" context="{'group_by': 'production_id'}"/>
@@ -252,7 +249,7 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5" delete="0">
+            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5" delete="0" create="0">
                 <field name="workcenter_id" filters="1"/>
                 <field name="production_id"/>
                 <field name="state"/>
@@ -264,9 +261,11 @@
         <field name="name">mrp.production.work.order.graph</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <graph string="Operations">
+            <graph string="Operations" type="bar" stacked="False" sample="1">
                 <field name="production_id"/>
-                <field name="duration" type="measure"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration_unit" type="measure"/>
+                <field name="duration_expected" type="measure"/>
             </graph>
         </field>
     </record>
@@ -275,10 +274,11 @@
         <field name="name">mrp.production.work.order.pivot</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <pivot string="Operations">
+            <pivot string="Operations" sample="1">
                 <field name="date_start"/>
                 <field name="operation_id"/>
-                <field name="duration" type="measure"/>
+                <field name="duration" type="measure" string="Duration (minutes)"/>
+                <field name="duration_unit" type="measure"/>
                 <field name="duration_expected" type="measure"/>
             </pivot>
         </field>
@@ -290,12 +290,13 @@
         <field name="arch" type="xml">
             <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="production_id" create="0" delete="0"
                 progress="progress" plan="0"
-                decoration-danger="'text-danger' in json_popover"
+                decoration-danger="json_popover and 'text-danger' in json_popover"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
+                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
                 color="workcenter_id"
                 display_unavailability="1"
-                form_view_id="%(mrp_production_workorder_form_view_inherit_gantt)d">
+                sample="1"
+                form_view_id="%(mrp_production_workorder_form_view_inherit)d">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
@@ -324,14 +325,14 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="workcenter_id" create="0"
-                delete="0"
+                delete="0" sample="1"
                 progress="progress" plan="0"
-                decoration-danger="'text-danger' in json_popover"
+                decoration-danger="json_popover and 'text-danger' in json_popover"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
+                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
                 color="production_id"
                 display_unavailability="1"
-                form_view_id="mrp_production_workorder_form_view_inherit_gantt">
+                form_view_id="mrp_production_workorder_form_view_inherit">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
@@ -359,7 +360,7 @@
         <field name="name">mrp.production.work.order.kanban</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_mrp_workorder_kanban" create="0">
+            <kanban class="oe_background_grey o_kanban_dashboard o_mrp_workorder_kanban" create="0" sample="1">
                 <field name="name"/>
                 <field name="production_id"/>
                 <field name="state" readonly="1"/>
@@ -418,12 +419,11 @@
         <field name="context">{'search_default_work_center': True, 'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Start a new work order
+            No work orders to do!
           </p><p>
-            Work Orders are operations to be processed at a Work Center to realize a
-            Manufacturing Order. Work Orders are trigerred by Manufacturing Orders,
-            they are based on the Routing defined on these ones
-            </p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
         </field>
     </record>
 
@@ -438,13 +438,10 @@
         <field name="context">{'search_default_production': True, 'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Start a new work order
+            No work orders to do!
           </p><p>
-            To manufacture or assemble products, and use components and
-            finished products you must also handle manufacturing operations.
-            Manufacturing operations are often called Work Orders. The various
-            operations will have different impacts on the costs of
-            manufacturing and planning depending on the available workload.
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
           </p>
         </field>
     </record>
@@ -455,7 +452,7 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
-        <field name="view_id" ref="mrp_production_workorder_form_view_inherit"/>
+        <field name="view_id" ref="mrp_production_workorder_form_view_inherit_editable"/>
     </record>
 
     <record model="ir.actions.act_window" id="mrp_workorder_todo">
@@ -467,10 +464,11 @@
         <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Plan a Manufacturing Order
+            No work orders to do!
           </p><p>
-            Work orders correspond to the different operations, taking place at specific workcenters, which are performed to manufacture a product. Those can be defined in a routing that will be assigned to a bill of material.
-            </p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
         </field>
     </record>
 
@@ -478,8 +476,8 @@
         <field name="name">report.workcenter.load.pivot</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <pivot string="Work Center Loads">
-                <field name="duration_expected" type="measure"/>
+            <pivot string="Work Center Loads" sample="1">
+                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
                 <field name="workcenter_id" type="row"/>
                 <field name="production_date" type="row" interval="day"/>
             </pivot>
@@ -490,10 +488,10 @@
         <field name="name">report.workcenter.load.graph</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <graph string="Work Center load" type="bar">
+            <graph string="Work Center load" type="bar" sample="1">
                 <field name="production_date" interval="day"/>
                 <field name="workcenter_id"/>
-                <field name="duration_expected" type="measure"/>
+                <field name="duration_expected" type="measure" string="Expected Duration (minutes)"/>
             </graph>
         </field>
     </record>
@@ -504,6 +502,11 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id" ref="view_workcenter_load_pivot"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="action_mrp_workcenter_load_report_pivot" model="ir.actions.act_window.view">

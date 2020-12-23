@@ -7,10 +7,12 @@ from odoo.exceptions import UserError, ValidationError
 class AccountPaymentMethod(models.Model):
     _name = "account.payment.method"
     _description = "Payment Methods"
+    _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Char(required=True)  # For internal identification
     payment_type = fields.Selection([('inbound', 'Inbound'), ('outbound', 'Outbound')], required=True)
+    sequence = fields.Integer(help='Used to order Methods in the form view', default=10)
 
 
 class AccountPayment(models.Model):
@@ -98,14 +100,18 @@ class AccountPayment(models.Model):
         store=True, readonly=False,
         compute='_compute_destination_account_id',
         domain="[('user_type_id.type', 'in', ('receivable', 'payable')), ('company_id', '=', company_id)]",
-        check_company=True,
-        help="The payment's currency.")
+        check_company=True)
 
     # == Stat buttons ==
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
         compute='_compute_stat_buttons_from_reconciliation',
         help="Invoices whose journal items have been reconciled with these payments.")
     reconciled_invoices_count = fields.Integer(string="# Reconciled Invoices",
+        compute="_compute_stat_buttons_from_reconciliation")
+    reconciled_bill_ids = fields.Many2many('account.move', string="Reconciled Bills",
+        compute='_compute_stat_buttons_from_reconciliation',
+        help="Invoices whose journal items have been reconciled with these payments.")
+    reconciled_bills_count = fields.Integer(string="# Reconciled Bills",
         compute="_compute_stat_buttons_from_reconciliation")
     reconciled_statement_ids = fields.Many2many('account.move', string="Reconciled Statements",
         compute='_compute_stat_buttons_from_reconciliation',
@@ -123,6 +129,7 @@ class AccountPayment(models.Model):
     require_partner_bank_account = fields.Boolean(
         compute='_compute_show_require_partner_bank',
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
+    country_code = fields.Char(related='company_id.country_id.code')
 
     _sql_constraints = [
         (
@@ -150,7 +157,11 @@ class AccountPayment(models.Model):
         writeoff_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id in (self.journal_id.payment_debit_account_id, self.journal_id.payment_credit_account_id):
+            if line.account_id in (
+                    self.journal_id.default_account_id,
+                    self.journal_id.payment_debit_account_id,
+                    self.journal_id.payment_credit_account_id,
+            ):
                 liquidity_lines += line
             elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
                 counterpart_lines += line
@@ -172,8 +183,8 @@ class AccountPayment(models.Model):
 
         if not self.journal_id.payment_debit_account_id or not self.journal_id.payment_credit_account_id:
             raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts accounts set on the %s journal."
-            ) % self.journal_id.display_name)
+                "You can't create a new payment without an outstanding payments/receipts account set on the %s journal.",
+                self.journal_id.display_name))
 
         # Compute amounts.
         write_off_amount = write_off_line_vals.get('amount', 0.0)
@@ -181,27 +192,19 @@ class AccountPayment(models.Model):
         if self.payment_type == 'inbound':
             # Receive money.
             counterpart_amount = -self.amount
+            write_off_amount *= -1
         elif self.payment_type == 'outbound':
             # Send money.
             counterpart_amount = self.amount
         else:
             counterpart_amount = 0.0
+            write_off_amount = 0.0
 
-        # Manage currency.
-        if self.currency_id == self.company_id.currency_id:
-            # Single-currency.
-            balance = counterpart_amount
-            counterpart_amount_currency = 0.0
-            write_off_balance = write_off_amount
-            write_off_amount_currency = 0.0
-            currency_id = False
-        else:
-            # Multi-currencies.
-            balance = self.currency_id._convert(counterpart_amount, self.company_id.currency_id, self.company_id, self.date)
-            counterpart_amount_currency = counterpart_amount
-            write_off_balance = self.currency_id._convert(write_off_amount, self.company_id.currency_id, self.company_id, self.date)
-            write_off_amount_currency = write_off_amount
-            currency_id = self.currency_id.id
+        balance = self.currency_id._convert(counterpart_amount, self.company_id.currency_id, self.company_id, self.date)
+        counterpart_amount_currency = counterpart_amount
+        write_off_balance = self.currency_id._convert(write_off_amount, self.company_id.currency_id, self.company_id, self.date)
+        write_off_amount_currency = write_off_amount
+        currency_id = self.currency_id.id
 
         if self.is_internal_transfer:
             if self.payment_type == 'inbound':
@@ -285,11 +288,16 @@ class AccountPayment(models.Model):
                 pay.is_reconciled = True
                 pay.is_matched = True
             else:
-                # The journal entry seems reconciled.
                 residual_field = 'amount_residual' if pay.currency_id == pay.company_id.currency_id else 'amount_residual_currency'
+                if pay.journal_id.default_account_id and pay.journal_id.default_account_id in liquidity_lines.account_id:
+                    # Allow user managing payments without any statement lines by using the bank account directly.
+                    # In that case, the user manages transactions only using the register payment wizard.
+                    pay.is_matched = True
+                else:
+                    pay.is_matched = pay.currency_id.is_zero(sum(liquidity_lines.mapped(residual_field)))
+
                 reconcile_lines = (counterpart_lines + writeoff_lines).filtered(lambda line: line.account_id.reconcile)
                 pay.is_reconciled = pay.currency_id.is_zero(sum(reconcile_lines.mapped(residual_field)))
-                pay.is_matched = pay.currency_id.is_zero(sum(liquidity_lines.mapped(residual_field)))
 
     @api.model
     def _get_method_codes_using_bank_account(self):
@@ -404,7 +412,7 @@ class AccountPayment(models.Model):
                 and pay.currency_id:
 
                 if pay.partner_bank_id:
-                    qr_code = pay.partner_bank_id.build_qr_code_url(pay.amount, pay.ref, None, pay.currency_id, pay.partner_id)
+                    qr_code = pay.partner_bank_id.build_qr_code_url(pay.amount, pay.ref, pay.ref, pay.currency_id, pay.partner_id)
                 else:
                     qr_code = None
 
@@ -425,7 +433,14 @@ class AccountPayment(models.Model):
         ''' Retrieve the invoices reconciled to the payments through the reconciliation (account.partial.reconcile). '''
         stored_payments = self.filtered('id')
         if not stored_payments:
+            self.reconciled_invoice_ids = False
+            self.reconciled_invoices_count = 0
+            self.reconciled_bill_ids = False
+            self.reconciled_bills_count = 0
+            self.reconciled_statement_ids = False
+            self.reconciled_statements_count = 0
             return
+
         self.env['account.move'].flush()
         self.env['account.move.line'].flush()
         self.env['account.partial.reconcile'].flush()
@@ -433,30 +448,40 @@ class AccountPayment(models.Model):
         self._cr.execute('''
             SELECT
                 payment.id,
-                ARRAY_AGG(DISTINCT invoice.id) AS invoice_ids
+                ARRAY_AGG(DISTINCT invoice.id) AS invoice_ids,
+                invoice.move_type
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
             JOIN account_move_line line ON line.move_id = move.id
-            JOIN account_partial_reconcile part ON 
-                part.debit_move_id = line.id 
-                OR 
+            JOIN account_partial_reconcile part ON
+                part.debit_move_id = line.id
+                OR
                 part.credit_move_id = line.id
-            JOIN account_move_line counterpart_line ON 
+            JOIN account_move_line counterpart_line ON
                 part.debit_move_id = counterpart_line.id
-                OR 
+                OR
                 part.credit_move_id = counterpart_line.id
             JOIN account_move invoice ON invoice.id = counterpart_line.move_id
-            WHERE line.account_internal_type IN ('receivable', 'payable')
+            JOIN account_account account ON account.id = line.account_id
+            WHERE account.internal_type IN ('receivable', 'payable')
+                AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
                 AND invoice.move_type in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt')
-            GROUP BY payment.id
-        ''')
-        query_res = dict((payment_id, invoice_ids) for payment_id, invoice_ids in self._cr.fetchall())
-
-        for pay in self:
-            invoice_ids = query_res.get(pay.id, [])
-            pay.reconciled_invoice_ids = [(6, 0, invoice_ids)]
-            pay.reconciled_invoices_count = len(invoice_ids)
+            GROUP BY payment.id, invoice.move_type
+        ''', {
+            'payment_ids': tuple(stored_payments.ids)
+        })
+        query_res = self._cr.dictfetchall()
+        self.reconciled_invoice_ids = self.reconciled_invoices_count = False
+        self.reconciled_bill_ids = self.reconciled_bills_count = False
+        for res in query_res:
+            pay = self.browse(res['id'])
+            if res['move_type'] in self.env['account.move'].get_sale_types(True):
+                pay.reconciled_invoice_ids += self.env['account.move'].browse(res.get('invoice_ids', []))
+                pay.reconciled_invoices_count = len(res.get('invoice_ids', []))
+            else:
+                pay.reconciled_bill_ids += self.env['account.move'].browse(res.get('invoice_ids', []))
+                pay.reconciled_bills_count = len(res.get('invoice_ids', []))
 
         self._cr.execute('''
             SELECT
@@ -467,25 +492,39 @@ class AccountPayment(models.Model):
             JOIN account_journal journal ON journal.id = move.journal_id
             JOIN account_move_line line ON line.move_id = move.id
             JOIN account_account account ON account.id = line.account_id
-            JOIN account_partial_reconcile part ON 
-                part.debit_move_id = line.id 
-                OR 
+            JOIN account_partial_reconcile part ON
+                part.debit_move_id = line.id
+                OR
                 part.credit_move_id = line.id
-            JOIN account_move_line counterpart_line ON 
+            JOIN account_move_line counterpart_line ON
                 part.debit_move_id = counterpart_line.id
-                OR 
+                OR
                 part.credit_move_id = counterpart_line.id
             WHERE (account.id = journal.payment_debit_account_id OR account.id = journal.payment_credit_account_id)
+                AND payment.id IN %(payment_ids)s
                 AND line.id != counterpart_line.id
                 AND counterpart_line.statement_id IS NOT NULL
             GROUP BY payment.id
-        ''')
+        ''', {
+            'payment_ids': tuple(stored_payments.ids)
+        })
         query_res = dict((payment_id, statement_ids) for payment_id, statement_ids in self._cr.fetchall())
 
         for pay in self:
             statement_ids = query_res.get(pay.id, [])
             pay.reconciled_statement_ids = [(6, 0, statement_ids)]
             pay.reconciled_statements_count = len(statement_ids)
+
+    # -------------------------------------------------------------------------
+    # ONCHANGE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.onchange('posted_before', 'state', 'journal_id', 'date')
+    def _onchange_journal_date(self):
+        # Before the record is created, the move_id doesn't exist yet, and the name will not be
+        # recomputed correctly if we change the journal or the date, leading to inconsitencies
+        if not self.move_id:
+            self.name = False
 
     # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
@@ -581,6 +620,12 @@ class AccountPayment(models.Model):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):
+
+            # After the migration to 14.0, the journal entry could be shared between the account.payment and the
+            # account.bank.statement.line. In that case, the synchronization will only be made with the statement line.
+            if pay.move_id.statement_line_id:
+                continue
+
             move = pay.move_id
             move_vals_to_write = {}
             payment_vals_to_write = {}
@@ -625,17 +670,17 @@ class AccountPayment(models.Model):
                 else:
                     partner_type = 'supplier'
 
-                liquidity_amount = liquidity_lines.amount_currency if liquidity_lines.currency_id else liquidity_lines.balance
+                liquidity_amount = liquidity_lines.amount_currency
 
                 move_vals_to_write.update({
-                    'currency_id': liquidity_lines.currency_id.id or liquidity_lines.company_currency_id.id,
+                    'currency_id': liquidity_lines.currency_id.id,
                     'partner_id': liquidity_lines.partner_id.id,
                 })
                 payment_vals_to_write.update({
                     'amount': abs(liquidity_amount),
                     'payment_type': 'inbound' if liquidity_amount > 0.0 else 'outbound',
                     'partner_type': partner_type,
-                    'currency_id': liquidity_lines.currency_id.id or liquidity_lines.company_currency_id.id,
+                    'currency_id': liquidity_lines.currency_id.id,
                     'destination_account_id': counterpart_lines.account_id.id,
                     'partner_id': liquidity_lines.partner_id.id,
                 })
@@ -663,9 +708,8 @@ class AccountPayment(models.Model):
             # This allows to create a new payment with custom 'line_ids'.
 
             if writeoff_lines:
-                writeoff_amount_field = 'balance' if pay.currency_id == pay.company_id.currency_id else 'amount_currency'
-                writeoff_amount = sum(writeoff_lines.mapped(writeoff_amount_field))
-                counterpart_amount = counterpart_lines[writeoff_amount_field]
+                writeoff_amount = sum(writeoff_lines.mapped('amount_currency'))
+                counterpart_amount = counterpart_lines['amount_currency']
                 if writeoff_amount > 0.0 and counterpart_amount > 0.0:
                     sign = 1
                 else:
@@ -714,7 +758,7 @@ class AccountPayment(models.Model):
 
     def action_post(self):
         ''' draft -> posted '''
-        self.move_id.post()
+        self.move_id._post(soft=False)
 
     def action_cancel(self):
         ''' draft -> cancelled '''
@@ -745,6 +789,30 @@ class AccountPayment(models.Model):
             action.update({
                 'view_mode': 'list,form',
                 'domain': [('id', 'in', self.reconciled_invoice_ids.ids)],
+            })
+        return action
+
+    def button_open_bills(self):
+        ''' Redirect the user to the bill(s) paid by this payment.
+        :return:    An action on account.move.
+        '''
+        self.ensure_one()
+
+        action = {
+            'name': _("Paid Bills"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'context': {'create': False},
+        }
+        if len(self.reconciled_bill_ids) == 1:
+            action.update({
+                'view_mode': 'form',
+                'res_id': self.reconciled_bill_ids.id,
+            })
+        else:
+            action.update({
+                'view_mode': 'list,form',
+                'domain': [('id', 'in', self.reconciled_bill_ids.ids)],
             })
         return action
 

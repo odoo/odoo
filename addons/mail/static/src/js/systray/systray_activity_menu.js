@@ -136,6 +136,8 @@ var ActivityMenu = Widget.extend({
                 view_mode: 'activity',
                 res_model: targetAction.data('res_model'),
                 domain: domain,
+            }, {
+                clear_breadcrumbs: true,
             });
         }
     },
@@ -172,6 +174,8 @@ var ActivityMenu = Widget.extend({
             search_view_id: [false],
             domain: domain,
             context:context,
+        }, {
+            clear_breadcrumbs: true,
         });
     },
     /**

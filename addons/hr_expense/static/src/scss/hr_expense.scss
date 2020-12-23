@@ -13,6 +13,10 @@
         }
     }
 
+    .o_expense_container {
+        @include o-position-sticky($left: 0px);
+    }
+
     .o_expense_card_last {
         border-right: 0px;
     }
@@ -20,6 +24,15 @@
     .o_expense_purple {
         color: $o-enterprise-color;
     }
+}
+.hr_expense {
+    &.o_list_view, &.o_kanban_view {
+        height: auto;
+        min-height: auto;
+    }
+}
+.hr_expense .o_view_nocontent {
+    top: 10%;
 }
 .o_view_nocontent {
     .o_nocontent_help {

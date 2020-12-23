@@ -36,7 +36,7 @@ PortalComposer.include({
         this.options = _.defaults(this.options, {
             'default_message': false,
             'default_message_id': false,
-            'default_rating_value': false,
+            'default_rating_value': 0.0,
             'force_submit_url': false,
         });
         // star input widget
@@ -72,6 +72,16 @@ PortalComposer.include({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     * @private
+     */
+    _prepareMessageData: function () {
+        return Object.assign(this._super(...arguments) || {}, {
+            'message_id': this.options.default_message_id,
+            'rating_value': this.$input.val()
+        });
+    },
     /**
      * @private
      */
@@ -120,6 +130,24 @@ PortalComposer.include({
             this.set("star_value", parseInt(this.$input.val()));
         }
         this.user_click = false;
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _onSubmitButtonClick: function (ev) {
+        return this._super(...arguments).then((result) => {
+            const $modal = this.$el.closest('#ratingpopupcomposer');
+            $modal.on('hidden.bs.modal', () => {
+              this.trigger_up('reload_rating_popup_composer', result);
+            });
+            $modal.modal('hide');
+        });
     },
 });
 });

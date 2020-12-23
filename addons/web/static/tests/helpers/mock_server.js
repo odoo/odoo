@@ -37,8 +37,18 @@ var MockServer = Class.extend({
             model.records = model.records || [];
 
             for (var i = 0; i < model.records.length; i++) {
-                var record = model.records[i];
-                this._applyDefaults(model, record);
+                const values = model.records[i];
+                // add potentially missing id
+                const id = values.id === undefined
+                    ? this._getUnusedID(modelName) :
+                    values.id;
+                // create a clean object, initial values are passed to write
+                model.records[i] = { id };
+                // ensure initial data goes through proper conversion (x2m, ...)
+                this._applyDefaults(model, values);
+                this._writeRecord(modelName, values, id, {
+                    ensureIntegrity: false,
+                });
             }
         }
 
@@ -95,6 +105,26 @@ var MockServer = Class.extend({
         return fvg;
     },
     /**
+     * Simulates a complete fetch call.
+     *
+     * @param {string} resource
+     * @param {Object} init
+     * @returns {any}
+     */
+    async performFetch(resource, init) {
+        if (this.debug) {
+            console.log(
+                '%c[fetch] request ' + resource, 'color: blue; font-weight: bold;',
+                JSON.parse(JSON.stringify(init))
+            );
+        }
+        const res = await this._performFetch(resource, init);
+        if (this.debug) {
+            console.log('%c[fetch] response' + resource, 'color: blue; font-weight: bold;', res);
+        }
+        return res;
+    },
+    /**
      * Simulate a complete RPC call. This is the main method for this class.
      *
      * This method also log incoming and outgoing data, and stringify/parse data
@@ -136,9 +166,7 @@ var MockServer = Class.extend({
             var message = result && result.message;
             var event = result && result.event;
             var errorString = JSON.stringify(message || false);
-            if (debug) {
-                console.log('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
-            }
+            console.warn('%c[rpc] response (error) ' + route, 'color: orange; font-weight: bold;', JSON.parse(errorString));
             return Promise.reject({message: errorString, event: event || $.Event()});
         });
 
@@ -165,7 +193,8 @@ var MockServer = Class.extend({
             }
             if (!(fieldName in record)) {
                 if ('default' in model.fields[fieldName]) {
-                    record[fieldName] = model.fields[fieldName].default;
+                    const def = model.fields[fieldName].default;
+                    record[fieldName] = typeof def === 'function' ? def.call(this) : def;
                 } else if (_.contains(['one2many', 'many2many'], model.fields[fieldName].type)) {
                     record[fieldName] = [];
                 } else {
@@ -173,6 +202,43 @@ var MockServer = Class.extend({
                 }
             }
         }
+    },
+    /**
+     * Converts an Object representing a record to actual return Object of the
+     * python `onchange` method.
+     * Specifically, it applies `name_get` on many2one's and transforms raw id
+     * list in orm command lists for x2many's.
+     * For x2m fields that add or update records (ORM commands 0 and 1), it is
+     * recursive.
+     *
+     * @private
+     * @param {string} model: the model's name
+     * @param {Object} values: an object representing a record
+     * @returns {Object}
+     */
+    _convertToOnChange(model, values) {
+        Object.entries(values).forEach(([fname, val]) => {
+            const field = this.data[model].fields[fname];
+            if (field.type === 'many2one' && typeof val === 'number') {
+                // implicit name_get
+                const m2oRecord = this.data[field.relation].records.find(r => r.id === val);
+                values[fname] = [val, m2oRecord.display_name];
+            } else if (field.type === 'one2many' || field.type === 'many2many') {
+                // TESTS ONLY
+                // one2many_ids = [1,2,3] is a simpler way to express it than orm commands
+                const isCommandList = val.length && Array.isArray(val[0]);
+                if (!isCommandList) {
+                    values[fname] = [[6, false, val]];
+                } else {
+                    val.forEach(cmd => {
+                        if (cmd[0] === 0 || cmd[0] === 1) {
+                            cmd[2] = this._convertToOnChange(field.relation, cmd[2]);
+                        }
+                    });
+                }
+            }
+        });
+        return values;
     },
     /**
      * helper to evaluate a domain for given field values.
@@ -284,12 +350,14 @@ var MockServer = Class.extend({
                 }
                 modifiers.invisible.push(["state", "not in", states.split(",")]);
             }
+
+            const inListHeader = inTreeView && node.closest('header');
             _.each(modifiersNames, function (a) {
                 var mod = node.getAttribute(a);
                 if (mod) {
                     var pyevalContext = window.py.dict.fromJSON(context || {});
                     var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
-                    if (inTreeView && a === 'invisible') {
+                    if (inTreeView && !inListHeader && a === 'invisible') {
                         modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
@@ -373,9 +441,11 @@ var MockServer = Class.extend({
      * @private
      * @param {string} model a model name
      * @param {any[]} domain
+     * @param {Object} [params={}]
+     * @param {boolean} [params.active_test=true]
      * @returns {Object[]} a list of records
      */
-    _getRecords: function (model, domain) {
+    _getRecords: function (model, domain, { active_test = true } = {}) {
         if (!_.isArray(domain)) {
             throw new Error("MockServer._getRecords: given domain has to be an array.");
         }
@@ -383,7 +453,7 @@ var MockServer = Class.extend({
         var self = this;
         var records = this.data[model].records;
 
-        if ('active' in this.data[model].fields) {
+        if (active_test && 'active' in this.data[model].fields) {
             // add ['active', '=', true] to the domain if 'active' is not yet present in domain
             var activeInDomain = false;
             _.each(domain, function (subdomain) {
@@ -414,18 +484,15 @@ var MockServer = Class.extend({
                 return criterion;
             });
             records = _.filter(records, function (record) {
-                var fieldValues = _.mapObject(record, function (value) {
-                    return value instanceof Array ? value[0] : value;
-                });
-                return self._evaluateDomain(domain, fieldValues);
+                return self._evaluateDomain(domain, record);
             });
         }
 
         return records;
     },
     /**
-     * Helper function, to find an available ID. The current algorithm is to add
-     * all other IDS.
+     * Helper function, to find an available ID. The current algorithm is to
+     * return the currently highest id + 1.
      *
      * @private
      * @param {string} modelName
@@ -433,9 +500,28 @@ var MockServer = Class.extend({
      */
     _getUnusedID: function (modelName) {
         var model = this.data[modelName];
-        return _.reduce(model.records, function (acc, record){
-            return acc + record.id;
-        }, 1);
+        return model.records.reduce((max, record) => {
+            if (!Number.isInteger(record.id)) {
+                return max;
+            }
+            return Math.max(record.id, max);
+        }, 0) + 1;
+    },
+    /**
+     * Simulate a 'call_button' operation from a view.
+     *
+     * @private
+     * @param {Object} param0
+     * @param {Array<integer[]>} param0.args
+     * @param {Object} [param0.kargs]
+     * @param {string} param0.method
+     * @param {string} param0.model
+     * @returns {any}
+     * @throws {Error} in case the call button of provided model/method is not
+     *   implemented.
+     */
+    _mockCallButton({ args, kwargs, method, model }) {
+        throw new Error(`Unimplemented mocked call button on "${model}"/"${method}"`);
     },
     /**
      * Simulate a 'copy' operation, so we simply try to duplicate a record in
@@ -473,7 +559,7 @@ var MockServer = Class.extend({
         var record = {id: id};
         model.records.push(record);
         this._applyDefaults(model, values);
-        this._mockWrite(modelName, [[id], values]);
+        this._writeRecord(modelName, values, id);
         return id;
     },
     /**
@@ -487,7 +573,7 @@ var MockServer = Class.extend({
      *   values
      * @returns {Object}
      */
-    _mockDefaultGet: function (modelName, args, kwargs={}) {
+    _mockDefaultGet: function (modelName, args, kwargs = {}) {
         const fields = args[0];
         const model = this.data[modelName];
         const result = {};
@@ -1123,12 +1209,18 @@ var MockServer = Class.extend({
      */
     _mockNameGet: function (model, args) {
         var ids = args[0];
+        if (!args.length) {
+            throw new Error("name_get: expected one argument");
+        }
+        else if (!ids) {
+            return []
+        }
         if (!_.isArray(ids)) {
             ids = [ids];
         }
         var records = this.data[model].records;
         var names = _.map(ids, function (id) {
-            return [id, _.findWhere(records, {id: id}).display_name];
+            return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, "False"];
         });
         return names;
     },
@@ -1185,29 +1277,60 @@ var MockServer = Class.extend({
      *
      * @private
      * @param {string} model
-     * @param {string|string[]} args a list of field names, or just a field name
+     * @param {Object} args
+     * @param {Object} args[1] the current record data
+     * @param {string|string[]} [args[2]] a list of field names, or just a field name
+     * @param {Object} args[3] the onchange spec
+     * @param {Object} [kwargs]
      * @returns {Object}
      */
-    _mockOnchange: function (model, args) {
+    _mockOnchange: function (model, args, kwargs) {
+        const currentData = args[1];
+        let fields = args[2];
+        const onChangeSpec = args[3];
         var onchanges = this.data[model].onchanges || {};
-        var record = args[1];
-        var fields = args[2];
-        if (!(fields instanceof Array)) {
+
+        if (fields && !(fields instanceof Array)) {
             fields = [fields];
         }
-        var result = {};
-        _.each(fields, function (field) {
+        const firstOnChange = !fields || !fields.length;
+        const onchangeVals = {};
+        let defaultVals;
+        let nullValues;
+        if (firstOnChange) {
+            const fieldsFromView = Object.keys(onChangeSpec).reduce((acc, fname) => {
+                fname = fname.split('.', 1)[0];
+                if (!acc.includes(fname)) {
+                    acc.push(fname);
+                }
+                return acc;
+            }, []);
+            const defaultingFields = fieldsFromView.filter(fname => !(fname in currentData));
+            defaultVals = this._mockDefaultGet(model, [defaultingFields], kwargs);
+            // It is the new semantics: no field in arguments means we are in
+            // a default_get + onchange situation
+            fields = fieldsFromView;
+            nullValues = {};
+            fields.filter(fName => !Object.keys(defaultVals).includes(fName)).forEach(fName => {
+                nullValues[fName] = false;
+            });
+        }
+        Object.assign(currentData, defaultVals);
+        fields.forEach(field => {
             if (field in onchanges) {
-                var changes = _.clone(record);
+                const changes = Object.assign({}, nullValues, currentData);
                 onchanges[field](changes);
-                _.each(changes, function (value, key) {
-                    if (record[key] !== value) {
-                        result[key] = value;
+                Object.entries(changes).forEach(([key, value]) => {
+                    if (currentData[key] !== value) {
+                        onchangeVals[key] = value;
                     }
                 });
             }
         });
-        return {value: result};
+
+        return {
+            value: this._convertToOnChange(model, Object.assign({}, defaultVals, onchangeVals)),
+        };
     },
     /**
      * Simulate a 'read' operation.
@@ -1576,6 +1699,13 @@ var MockServer = Class.extend({
         var fields = args.fields && args.fields.length ? args.fields : _.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;
+        if (args.sort) {
+            // warning: only consider first level of sort
+            args.sort = args.sort.split(',')[0];
+            var fieldName = args.sort.split(' ')[0];
+            var order = args.sort.split(' ')[1];
+            records = this._sortByField(records, args.model, fieldName, order);
+        }
         records = records.slice(offset, args.limit ? (offset + args.limit) : nbRecords);
         var processedRecords = _.map(records, function (r) {
             var result = {};
@@ -1593,13 +1723,6 @@ var MockServer = Class.extend({
             });
             return result;
         });
-        if (args.sort) {
-            // warning: only consider first level of sort
-            args.sort = args.sort.split(',')[0];
-            var fieldName = args.sort.split(' ')[0];
-            var order = args.sort.split(' ')[1];
-            processedRecords = this._sortByField(processedRecords, args.model, fieldName, order);
-        }
         var result = {
             length: nbRecords,
             records: processedRecords,
@@ -1695,6 +1818,16 @@ var MockServer = Class.extend({
         return true;
     },
     /**
+     * Dispatches a fetch call to the correct helper function.
+     *
+     * @param {string} resource
+     * @param {Object} init
+     * @returns {any}
+     */
+    _performFetch(resource, init) {
+        throw new Error("Unimplemented resource: " + resource);
+    },
+    /**
      * Dispatch a RPC call to the correct helper function
      *
      * @see performRpc
@@ -1709,6 +1842,8 @@ var MockServer = Class.extend({
      */
     _performRpc: function (route, args) {
         switch (route) {
+            case '/web/dataset/call_button':
+                return Promise.resolve(this._mockCallButton(args));
             case '/web/action/load':
                 return Promise.resolve(this._mockLoadAction(args));
 
@@ -1727,9 +1862,6 @@ var MockServer = Class.extend({
 
             case 'create':
                 return Promise.resolve(this._mockCreate(args.model, args.args[0]));
-
-            case 'default_get':
-                return Promise.resolve(this._mockDefaultGet(args.model, args.args, args.kwargs));
 
             case 'fields_get':
                 return Promise.resolve(this._mockFieldsGet(args.model, args.args));
@@ -1753,7 +1885,7 @@ var MockServer = Class.extend({
                 return Promise.resolve(this._mockNameSearch(args.model, args.args, args.kwargs));
 
             case 'onchange':
-                return Promise.resolve(this._mockOnchange(args.model, args.args));
+                return Promise.resolve(this._mockOnchange(args.model, args.args, args.kwargs));
 
             case 'read':
                 return Promise.resolve(this._mockRead(args.model, args.args, args.kwargs));
@@ -1849,24 +1981,34 @@ var MockServer = Class.extend({
      * @param {string} model
      * @param {Object} values
      * @param {integer} id
+     * @param {Object} [params={}]
+     * @param {boolean} [params.ensureIntegrity=true] writing non-existing id
+     *  in many2one field will throw if this param is true
      */
-    _writeRecord: function (model, values, id) {
+    _writeRecord: function (model, values, id, { ensureIntegrity = true } = {}) {
         var self = this;
         var record = _.findWhere(this.data[model].records, {id: id});
         for (var field_changed in values) {
             var field = this.data[model].fields[field_changed];
             var value = values[field_changed];
             if (!field) {
-                console.warn("Mock: Can't write on field '" + field_changed + "' on model '" + model + "' (field is undefined)");
-                continue;
+                throw Error(`Mock: Can't write value "${JSON.stringify(value)}" on field "${field_changed}" on record "${model},${id}" (field is undefined)`);
             }
             if (_.contains(['one2many', 'many2many'], field.type)) {
                 var ids = _.clone(record[field_changed]) || [];
+
+                // fallback to command 6 when given a simple list of ids
+                if (
+                    Array.isArray(value) &&
+                    value.reduce((hasOnlyInt, val) => hasOnlyInt && Number.isInteger(val), true)
+                ) {
+                    value = [[6, 0, value]];
+                }
                 // convert commands
-                _.each(value, function (command) {
+                for (const command of value || []) {
                     if (command[0] === 0) { // CREATE
-                        var id = self._mockCreate(field.relation, command[2]);
-                        ids.push(id);
+                        const newId = self._mockCreate(field.relation, command[2]);
+                        ids.push(newId);
                     } else if (command[0] === 1) { // UPDATE
                         self._mockWrite(field.relation, [[command[1]], command[2]]);
                     } else if (command[0] === 2) { // DELETE
@@ -1880,22 +2022,22 @@ var MockServer = Class.extend({
                     } else if (command[0] === 5) { // DELETE ALL
                         ids = [];
                     } else if (command[0] === 6) { // REPLACE WITH
-                        ids = command[2];
+                        // copy array to avoid leak by reference (eg. of default data)
+                        ids = [...command[2]];
                     } else {
-                        console.error('Command ' + JSON.stringify(command) + ' not supported by the MockServer');
+                        throw Error(`Command "${JSON.stringify(value)}" not supported by the MockServer on field "${field_changed}" on record "${model},${id}"`);
                     }
-                });
+                }
                 record[field_changed] = ids;
             } else if (field.type === 'many2one') {
                 if (value) {
                     var relatedRecord = _.findWhere(this.data[field.relation].records, {
                         id: value
                     });
-                    if (!relatedRecord) {
-                        throw new Error("Wrong id for a many2one");
-                    } else {
-                        record[field_changed] = value;
+                    if (!relatedRecord && ensureIntegrity) {
+                        throw Error(`Wrong id "${JSON.stringify(value)}" for a many2one on field "${field_changed}" on record "${model},${id}"`);
                     }
+                    record[field_changed] = value;
                 } else {
                     record[field_changed] = false;
                 }

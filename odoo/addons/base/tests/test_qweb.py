@@ -619,6 +619,7 @@ class TestQWeb(TransactionCase):
             # OrderedDict to ensure JSON mappings are iterated in source order
             # so output is predictable & repeatable
             params = {} if param is None else json.loads(param.text, object_pairs_hook=collections.OrderedDict)
+            params.setdefault('__keep_empty_lines', True)
 
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
@@ -699,6 +700,36 @@ class TestPageSplit(TransactionCase):
             rendered,
             E.div(E.table(E.tr(), E.tr(), E.tr()))
         )
+
+class TestEmptyLines(TransactionCase):
+    arch = '''<t t-name='test'>
+            
+                <div>
+                    
+                </div>
+                
+                
+            </t>'''
+
+    def test_no_empty_lines(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': self.arch
+        })
+        rendered = str(self.env['ir.qweb']._render(t.id), 'utf-8')
+        self.assertFalse(re.compile('^\s+\n').match(rendered))
+        self.assertFalse(re.compile('\n\s+\n').match(rendered))
+
+    def test_keep_empty_lines(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': self.arch
+        })
+        rendered = str(self.env['ir.qweb']._render(t.id, {'__keep_empty_lines': True}), 'utf-8')
+        self.assertTrue(re.compile('^\s+\n').match(rendered))
+        self.assertTrue(re.compile('\n\s+\n').match(rendered))
 
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not

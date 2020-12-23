@@ -2,25 +2,34 @@ $-editor-messages-margin-x: 2%;
 %o-editor-messages {
     width: 100% - $-editor-messages-margin-x * 2; // Need to be forced here to avoid flickering
     margin: 20px $-editor-messages-margin-x;
-    border: 2px dashed $o-we-color-text-normal;
-    padding: 112px 0px;
+    border: 2px dashed #999999;
+    padding: 12px 0px;
     text-align: center;
-    color: $o-we-color-text-normal;
+    color: #999999;
 
     &:before {
         content: attr(data-editor-message);
         display: block;
         font-size: 20px;
+        line-height: 50px; // Useful for the "wizz" animation on snippet click to be more visible
     }
     &:after {
         content: attr(data-editor-sub-message);
         display: block;
     }
 }
+.o_we_snippet_area_animation {
+    animation-delay: 999ms; // Disable it but allow to inherit the animation
+
+    &::before {
+        animation: inherit;
+        animation-delay: 0ms;
+    }
+}
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):hover,
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):hover,
         &.o_editable_date_field_linked {
             box-shadow: $o-brand-odoo 0 0 5px 2px inset;
         }
@@ -28,9 +37,13 @@ $-editor-messages-margin-x: 2%;
     &:focus, &[data-oe-type] {
         min-height: 0.8em;
         min-width: 8px;
-    }
-    &.o_is_inline_editable {
-        display: inline-block;
+
+        // TODO this feature just needs to be reviewed to not have to make
+        // exceptions such as this
+        &#o_footer_scrolltop_wrapper {
+            min-height: 0;
+            min-width: 0;
+        }
     }
     .btn, &.btn {
         -webkit-user-select: auto;
@@ -39,18 +52,17 @@ $-editor-messages-margin-x: 2%;
         user-select: auto;
         cursor: text!important;
     }
-    /* Summernote not Support for placeholder text https://github.com/summernote/summernote/issues/581 */
+    /* The placeholder text will only be visible before the 1st edition,
+       after edition JW will add a br in empty boxes and break this selector */
     &[placeholder]:empty:not(:focus):before {
         content: attr(placeholder);
         opacity: 0.3;
     }
 
     &.oe_structure.oe_empty, &[data-oe-type=html], .oe_structure.oe_empty {
-        &:empty {
+        &#wrap:empty, &#wrap > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             @extend %o-editor-messages;
-            &.oe_structure_small {
-                padding: 15px 0px;
-            }
+            padding: 112px 0px;
         }
         > .oe_drop_zone.oe_insert:not(.oe_vertical):only-child {
             @extend %o-editor-messages;
@@ -135,8 +147,8 @@ table.editorbar-panel {
     }
 }
 
-.editor_enable .js_language_selector {
-    display: none;
+.editor_enable .o_add_language {
+    display: none !important;
 }
 
 // Facebook Page
@@ -149,20 +161,47 @@ table.editorbar-panel {
     }
 }
 
-// s_popup in edit mode
 body.editor_enable.editor_has_snippets {
+    padding-top: 0 !important;
+
     .s_popup .modal {
-        top: var(--o-we-toolbar-height);
+        // s_popup in edit mode
         background-color: transparent;
+
         &.fade .modal-dialog {
             transform: none;
         }
+    }
+
+    #oe_main_menu_navbar + #wrapwrap .o_header_affixed {
+        top: 0;
     }
 }
 
 .editor_has_snippets {
     .o_header_affixed {
-        left: $o-we-sidebar-width !important;
-        top: var(--o-we-toolbar-height) !important;
+        right: $o-we-sidebar-width !important;
+    }
+}
+
+.editor_enable {
+    @if o-website-value('header-template') == 'sidebar' {
+        #wrapwrap > header {
+            @if o-website-value('hamburger-position') != 'right' {
+                right: $o-we-sidebar-width;
+            }
+        }
+    }
+}
+
+//s_dynamic_snippet
+body.editor_enable {
+    .s_dynamic {
+        > * {
+            pointer-events: none;
+        }
+        [data-url] {
+            cursor: inherit;
+        }
     }
 }

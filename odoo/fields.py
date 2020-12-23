@@ -11,6 +11,7 @@ import itertools
 import logging
 import base64
 import binascii
+import enum
 import pytz
 import psycopg2
 
@@ -28,6 +29,9 @@ from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
+
+# hacky-ish way to prevent access to a field through the ORM (except for sudo mode)
+NO_ACCESS='.'
 
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
@@ -219,8 +223,8 @@ class Field(MetaField('DummyField', (object,), {})):
     index = False                       # whether the field is indexed in database
     manual = False                      # whether the field is a custom field
     copy = True                         # whether the field is copied over by BaseModel.copy()
-    depends = None                      # collection of field dependencies
-    depends_context = None              # collection of context key dependencies
+    _depends = None                     # collection of field dependencies
+    _depends_context = None             # collection of context key dependencies
     recursive = False                   # whether self depends on itself
     compute = None                      # compute(recs) computes field on recs
     compute_sudo = False                # whether field should be recomputed as superuser
@@ -255,9 +259,13 @@ class Field(MetaField('DummyField', (object,), {})):
         return type(self)(**kwargs)
 
     def __str__(self):
+        if self.name is None:
+            return "<%s.%s>" % (__name__, type(self).__name__)
         return "%s.%s" % (self.model_name, self.name)
 
     def __repr__(self):
+        if self.name is None:
+            return "<%s.%s>" % (__name__, type(self).__name__)
         return "%s.%s" % (self.model_name, self.name)
 
     ############################################################################
@@ -341,15 +349,21 @@ class Field(MetaField('DummyField', (object,), {})):
         if attrs.get('translate'):
             # by default, translatable fields are context-dependent
             attrs['depends_context'] = attrs.get('depends_context', ()) + ('lang',)
+
+        # parameters 'depends' and 'depends_context' are stored in attributes
+        # '_depends' and '_depends_context', respectively
         if 'depends' in attrs:
-            attrs['depends'] = tuple(attrs['depends'])
+            attrs['_depends'] = tuple(attrs.pop('depends'))
+        if 'depends_context' in attrs:
+            attrs['_depends_context'] = tuple(attrs.pop('depends_context'))
 
         return attrs
 
     def _setup_attrs(self, model, name):
         """ Initialize the field parameter attributes. """
-        # validate extra arguments
-        for key in self.args:
+        attrs = self._get_attrs(model, name)
+        # validate arguments
+        for key in attrs:
             # TODO: improve filter as there are attributes on the class which
             #       are not valid on the field, probably
             if not (hasattr(self, key) or model._valid_field_parameter(self, key)):
@@ -360,8 +374,6 @@ class Field(MetaField('DummyField', (object,), {})):
                     " allow it",
                     model._name, name, key
                 )
-
-        attrs = self._get_attrs(model, name)
         self.__dict__.update(attrs)
 
         # prefetch only stored, column, non-manual and non-deprecated fields
@@ -404,7 +416,10 @@ class Field(MetaField('DummyField', (object,), {})):
 
     def _setup_regular_full(self, model):
         """ Determine the dependencies and inverse field(s) of ``self``. """
-        if self.depends is not None:
+        if self._depends is not None:
+            # the parameter 'depends' has priority over 'depends' on compute
+            self.depends = self._depends
+            self.depends_context = self._depends_context or ()
             return
 
         # determine the functions implementing self.compute
@@ -417,7 +432,7 @@ class Field(MetaField('DummyField', (object,), {})):
 
         # collect depends and depends_context
         depends = []
-        depends_context = list(self.depends_context or ())
+        depends_context = list(self._depends_context or ())
         for func in funcs:
             deps = getattr(func, '_depends', ())
             depends.extend(deps(model) if callable(deps) else deps)
@@ -457,7 +472,9 @@ class Field(MetaField('DummyField', (object,), {})):
             raise TypeError("Type of related field %s is inconsistent with %s" % (self, field))
 
         # determine dependencies, compute, inverse, and search
-        if self.depends is None:
+        if self._depends is not None:
+            self.depends = self._depends
+        else:
             self.depends = ('.'.join(self.related),)
         self.compute = self._compute_related
         if self.inherited or not (self.readonly or field.readonly):
@@ -483,7 +500,9 @@ class Field(MetaField('DummyField', (object,), {})):
                 self.required = True
             self._modules.update(field._modules)
 
-        if field.depends_context:
+        if self._depends_context is not None:
+            self.depends_context = self._depends_context
+        else:
             self.depends_context = field.depends_context
 
     def traverse_related(self, record):
@@ -615,7 +634,13 @@ class Field(MetaField('DummyField', (object,), {})):
                     # recomputations of fields on transient models
                     break
 
-                field = Model._fields[fname]
+                try:
+                    field = Model._fields[fname]
+                except KeyError:
+                    raise ValueError(
+                        f"Wrong @depends on '{self.compute}' (compute method of field {self}). "
+                        f"Dependency field '{fname}' not found in model {model_name}."
+                    )
                 if field is self and index:
                     self.recursive = True
 
@@ -911,28 +936,49 @@ class Field(MetaField('DummyField', (object,), {})):
         # only a single record may be accessed
         record.ensure_one()
 
+        recomputed = False
         if self.compute and (record.id in env.all.tocompute.get(self, ())) \
                 and not env.is_protected(self, record):
             # self must be computed on record
             if self.recursive:
                 recs = record
             else:
-                recs = env.records_to_compute(self)
-                # compute the field on real records only (if 'record' is real)
-                # or new records only (if 'record' is new)
-                recs = recs.filtered(lambda rec: bool(rec.id) == bool(record.id))
+                ids = expand_ids(record.id, env.all.tocompute[self])
+                recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
             try:
                 self.compute_value(recs)
             except (AccessError, MissingError):
                 self.compute_value(record)
+            recomputed = True
 
         try:
             value = env.cache.get(record, self)
 
         except KeyError:
+            # behavior in case of cache miss:
+            #
+            #   on a real record:
+            #       stored -> fetch from database (computation done above)
+            #       not stored and computed -> compute
+            #       not stored and not computed -> default
+            #
+            #   on a new record w/ origin:
+            #       stored and not (computed and readonly) -> fetch from origin
+            #       stored and computed and readonly -> compute
+            #       not stored and computed -> compute
+            #       not stored and not computed -> default
+            #
+            #   on a new record w/o origin:
+            #       stored and computed -> compute
+            #       stored and not computed -> new delegate or default
+            #       not stored and computed -> compute
+            #       not stored and not computed -> default
+            #
             if self.store and record.id:
                 # real record: fetch from database
                 recs = record._in_cache_without(self)
+                if recomputed and self.compute_sudo:
+                    recs = recs.sudo()
                 try:
                     recs._fetch_field(self)
                 except AccessError:
@@ -944,7 +990,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     ]))
                 value = env.cache.get(record, self)
 
-            elif self.store and record._origin:
+            elif self.store and record._origin and not (self.compute and self.readonly):
                 # new record with origin: fetch from origin
                 value = self.convert_to_cache(record._origin[self.name], record)
                 env.cache.set(record, self, value)
@@ -960,7 +1006,14 @@ class Field(MetaField('DummyField', (object,), {})):
                         self.compute_value(recs)
                     except (AccessError, MissingError):
                         self.compute_value(record)
-                    value = env.cache.get(record, self)
+                    try:
+                        value = env.cache.get(record, self)
+                    except CacheMiss:
+                        if self.readonly and not self.store:
+                            raise ValueError("Compute method failed to assign %s.%s" % (record, self.name))
+                        # fallback to null value if compute gives nothing
+                        value = self.convert_to_cache(False, record, validate=False)
+                        env.cache.set(record, self, value)
 
             elif self.type == 'many2one' and self.delegate and not record.id:
                 # parent record of a new record: new record, with the same
@@ -984,10 +1037,11 @@ class Field(MetaField('DummyField', (object,), {})):
                 defaults = record.default_get([self.name])
                 if self.name in defaults:
                     # The null value above is necessary to convert x2many field
-                    # values. For instance, converting [(4, id)] accesses the
-                    # field's current value, then adds the given id. Without an
-                    # initial value, the conversion ends up here to determine
-                    # the field's value, and generates an infinite recursion.
+                    # values. For instance, converting [(Command.LINK, id)]
+                    # accesses the field's current value, then adds the given
+                    # id. Without an initial value, the conversion ends up here
+                    # to determine the field's value, and generates an infinite
+                    # recursion.
                     value = self.convert_to_cache(defaults[self.name], record)
                     env.cache.set(record, self, value)
 
@@ -1018,8 +1072,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # retrieve values in cache, and fetch missing ones
         vals = records.env.cache.get_until_miss(records, self)
         while len(vals) < len(records):
-            # trigger prefetching on remaining records, and continue retrieval
-            remaining = records[len(vals):]
+            # It is important to construct a 'remaining' recordset with the
+            # _prefetch_ids of the original recordset, in order to prefetch as
+            # many records as possible. If not done this way, scenarios such as
+            # [rec.line_ids.mapped('name') for rec in recs] would generate one
+            # query per record in `recs`!
+            remaining = records._browse(records.env, records[len(vals):]._ids, records._prefetch_ids)
             self.__get__(first(remaining), type(remaining))
             vals += records.env.cache.get_until_miss(remaining, self)
 
@@ -1585,7 +1643,7 @@ class Html(_String):
         (only a white list of attributes is accepted, default: ``True``)
     :param bool sanitize_attributes: whether to sanitize attributes
         (only a white list of attributes is accepted, default: ``True``)
-    :param bool sanitize_style: whether to sanitize style attributes (default: ``True``)
+    :param bool sanitize_style: whether to sanitize style attributes (default: ``False``)
     :param bool strip_style: whether to strip style attributes
         (removed and therefore not sanitized, default: ``False``)
     :param bool strip_classes: whether to strip classes attributes (default: ``False``)
@@ -1869,12 +1927,18 @@ class Binary(Field):
     type = 'binary'
 
     prefetch = False                    # not prefetched by default
-    depends_context = ('bin_size',)     # depends on context (content or size)
+    _depends_context = ('bin_size',)    # depends on context (content or size)
     attachment = True                   # whether value is stored in attachment
 
     @property
     def column_type(self):
         return None if self.attachment else ('bytea', 'bytea')
+
+    def _get_attrs(self, model, name):
+        attrs = super(Binary, self)._get_attrs(model, name)
+        if not attrs.get('store', True):
+            attrs['attachment'] = False
+        return attrs
 
     _description_attachment = property(attrgetter('attachment'))
 
@@ -2019,20 +2083,21 @@ class Binary(Field):
         cache.update(records, self, [cache_value] * len(records))
 
         # retrieve the attachments that store the values, and adapt them
-        if self.store:
+        if self.store and any(records._ids):
+            real_records = records.filtered('id')
             atts = records.env['ir.attachment'].sudo()
             if not_null:
                 atts = atts.search([
                     ('res_model', '=', self.model_name),
                     ('res_field', '=', self.name),
-                    ('res_id', 'in', records.ids),
+                    ('res_id', 'in', real_records.ids),
                 ])
             if value:
                 # update the existing attachments
                 atts.write({'datas': value})
                 atts_records = records.browse(atts.mapped('res_id'))
                 # create the missing attachments
-                missing = (records - atts_records).filtered('id')
+                missing = (real_records - atts_records)
                 if missing:
                     atts.create([{
                             'name': self.name,
@@ -2083,7 +2148,18 @@ class Image(Binary):
         super(Image, self).create(new_record_values)
 
     def write(self, records, value):
-        new_value = self._image_process(value)
+        try:
+            new_value = self._image_process(value)
+        except UserError:
+            if not any(records._ids):
+                # Some crap is assigned to a new record. This can happen in an
+                # onchange, where the client sends the "bin size" value of the
+                # field instead of its full value (this saves bandwidth). In
+                # this case, we simply don't assign the field: its value will be
+                # taken from the records' origin.
+                return
+            raise
+
         super(Image, self).write(records, new_value)
         cache_value = self.convert_to_cache(value if self.related else new_value, records)
         records.env.cache.update(records, self, [cache_value] * len(records))
@@ -2548,8 +2624,8 @@ class Many2one(_Relational):
         else:
             id_ = None
 
-        if self.delegate and record and not record.id:
-            # the parent record of a new record is a new record
+        if self.delegate and record and not any(record._ids):
+            # if all records are new, then so is the parent
             id_ = id_ and NewId(id_)
 
         return id_
@@ -2638,9 +2714,13 @@ class Many2one(_Relational):
         """ Remove `records` from the cached values of the inverse fields of `self`. """
         cache = records.env.cache
         record_ids = set(records._ids)
+
+        # align(id) returns a NewId if records are new, a real id otherwise
+        align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
+
         for invf in records._field_inverses[self]:
             corecords = records.env[self.comodel_name].browse(
-                id_ for id_ in cache.get_values(records, self)
+                align(id_) for id_ in cache.get_values(records, self)
             )
             for corecord in corecords:
                 ids0 = cache.get(corecord, invf, None)
@@ -2747,6 +2827,123 @@ class Many2oneReference(Integer):
         return model_ids
 
 
+class Command(enum.IntEnum):
+    """
+    :class:`~odoo.fields.One2many` and :class:`~odoo.fields.Many2many` fields
+    expect a special command to manipulate the relation they implement.
+
+    Internally, each command is a 3-elements tuple where the first element is a
+    mandatory integer that identifies the command, the second element is either
+    the related record id to apply the command on (commands update, delete,
+    unlink and link) either 0 (commands create, clear and set), the third
+    element is either the ``values`` to write on the record (commands create
+    and update) either the new ``ids`` list of related records (command set),
+    either 0 (commands delete, unlink, link, and clear).
+
+    Via Python, we encourage developers craft new commands via the various
+    functions of this namespace. We also encourage developers to use the
+    command identifier constant names when comparing the 1st element of
+    existing commands.
+
+    Via RPC, it is impossible nor to use the functions nor the command constant
+    names. It is required to instead write the literal 3-elements tuple where
+    the first element is the integer identifier of the command.
+    """
+
+    CREATE = 0
+    UPDATE = 1
+    DELETE = 2
+    UNLINK = 3
+    LINK = 4
+    CLEAR = 5
+    SET = 6
+
+    @classmethod
+    def create(cls, values: dict):
+        """
+        Create new records in the comodel using ``values``, link the created
+        records to ``self``.
+
+        In case of a :class:`~odoo.fields.Many2many` relation, one unique
+        new record is created in the comodel such that all records in `self`
+        are linked to the new record.
+
+        In case of a :class:`~odoo.fields.One2many` relation, one new record
+        is created in the comodel for every record in ``self`` such that every
+        record in ``self`` is linked to exactly one of the new records.
+
+        Return the command triple :samp:`(CREATE, 0, {values})`
+        """
+        return (cls.CREATE, 0, values)
+
+    @classmethod
+    def update(cls, id: int, values: dict):
+        """
+        Write ``values`` on the related record.
+
+        Return the command triple :samp:`(UPDATE, {id}, {values})`
+        """
+        return (cls.UPDATE, id, values)
+
+    @classmethod
+    def delete(cls, id: int):
+        """
+        Remove the related record from the database and remove its relation
+        with ``self``.
+
+        In case of a :class:`~odoo.fields.Many2many` relation, removing the
+        record from the database may be prevented if it is still linked to
+        other records.
+
+        Return the command triple :samp:`(DELETE, {id}, 0)`
+        """
+        return (cls.DELETE, id, 0)
+
+    @classmethod
+    def unlink(cls, id: int):
+        """
+        Remove the relation between ``self`` and the related record.
+
+        In case of a :class:`~odoo.fields.One2many` relation, the given record
+        is deleted from the database if the inverse field is set as
+        ``ondelete='cascade'``. Otherwise, the value of the inverse field is
+        set to False and the record is kept.
+
+        Return the command triple :samp:`(UNLINK, {id}, 0)`
+        """
+        return (cls.UNLINK, id, 0)
+
+    @classmethod
+    def link(cls, id: int):
+        """
+        Add a relation between ``self`` and the related record.
+
+        Return the command triple :samp:`(LINK, {id}, 0)`
+        """
+        return (cls.LINK, id, 0)
+
+    @classmethod
+    def clear(cls):
+        """
+        Remove all records from the relation with ``self``. It behaves like
+        executing the `unlink` command on every record.
+
+        Return the command triple :samp:`(CLEAR, 0, 0)`
+        """
+        return (cls.CLEAR, 0, 0)
+
+    @classmethod
+    def set(cls, ids: list):
+        """
+        Replace the current relations of ``self`` by the given ones. It behaves
+        like executing the ``unlink`` command on every removed relation then
+        executing the ``link`` command on every new relation.
+
+        Return the command triple :samp:`(SET, 0, {ids})`
+        """
+        return (cls.SET, 0, ids)
+
+
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
 
@@ -2805,22 +3002,22 @@ class _RelationalMulti(_Relational):
             # modify ids with the commands
             for command in value:
                 if isinstance(command, (tuple, list)):
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         ids.add(comodel.new(command[2], ref=command[1]).id)
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         line = browse(command[1])
                         if validate:
                             line.update(command[2])
                         else:
                             line._update_cache(command[2], validate=False)
                         ids.add(line.id)
-                    elif command[0] in (2, 3):
+                    elif command[0] in (Command.DELETE, Command.UNLINK):
                         ids.discard(browse(command[1]).id)
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         ids.add(browse(command[1]).id)
-                    elif command[0] == 5:
+                    elif command[0] == Command.CLEAR:
                         ids.clear()
-                    elif command[0] == 6:
+                    elif command[0] == Command.SET:
                         ids = OrderedSet(browse(it).id for it in command[2])
                 elif isinstance(command, dict):
                     ids.add(comodel.new(command).id)
@@ -2870,7 +3067,7 @@ class _RelationalMulti(_Relational):
         if isinstance(value, BaseModel) and value._name == self.comodel_name:
             # make result with new and existing records
             inv_names = {field.name for field in record._field_inverses[self]}
-            result = [(6, 0, [])]
+            result = [Command.set([])]
             for record in value:
                 origin = record._origin
                 if not origin:
@@ -2879,7 +3076,7 @@ class _RelationalMulti(_Relational):
                         for name in record._cache
                         if name not in inv_names
                     })
-                    result.append((0, 0, values))
+                    result.append(Command.create(values))
                 else:
                     result[0][2].append(origin.id)
                     if record != origin:
@@ -2889,11 +3086,11 @@ class _RelationalMulti(_Relational):
                             if name not in inv_names and record[name] != origin[name]
                         })
                         if values:
-                            result.append((1, origin.id, values))
+                            result.append(Command.update(origin.id, values))
             return result
 
         if value is False or value is None:
-            return [(5,)]
+            return [Command.clear()]
 
         if isinstance(value, list):
             return value
@@ -2935,13 +3132,13 @@ class _RelationalMulti(_Relational):
 
         for idx, (recs, value) in enumerate(records_commands_list):
             if isinstance(value, tuple):
-                value = [(6, 0, value)]
+                value = [Command.set(value)]
             elif isinstance(value, BaseModel) and value._name == self.comodel_name:
-                value = [(6, 0, value._ids)]
+                value = [Command.set(value._ids)]
             elif value is False or value is None:
-                value = [(5,)]
+                value = [Command.clear()]
             elif isinstance(value, list) and value and not isinstance(value[0], (tuple, list)):
-                value = [(6, 0, tuple(value))]
+                value = [Command.set(tuple(value))]
             if not isinstance(value, list):
                 raise ValueError("Wrong value for %s: %s" % (self, value))
             records_commands_list[idx] = (recs, value)
@@ -3021,6 +3218,15 @@ class One2many(_RelationalMulti):
             domain = domain + [(inverse_field.model_field, '=', records._name)]
         return domain
 
+    def __get__(self, records, owner):
+        if records is not None and self.inverse_name is not None:
+            # force the computation of the inverse field to ensure that the
+            # cache value of self is consistent
+            inverse_field = records.pool[self.comodel_name]._fields[self.inverse_name]
+            if inverse_field.compute:
+                records.env[self.comodel_name].recompute([self.inverse_name])
+        return super().__get__(records, owner)
+
     def read(self, records):
         # retrieve the lines in the comodel
         context = {'active_test': False}
@@ -3085,22 +3291,22 @@ class One2many(_RelationalMulti):
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             to_create.append(dict(command[2], **{inverse: record.id}))
                         allow_full_delete = False
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         comodel.browse(command[1]).write(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         to_delete.append(command[1])
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         unlink(comodel.browse(command[1]))
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         to_inverse.setdefault(recs[-1], set()).add(command[1])
                         allow_full_delete = False
-                    elif command[0] in (5, 6) :
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # do not try to delete anything in creation mode if nothing has been created before
-                        line_ids = command[2] if command[0] == 6 else []
+                        line_ids = command[2] if command[0] == Command.SET else []
                         if not allow_full_delete and not line_ids:
                             continue
                         flush()
@@ -3126,21 +3332,21 @@ class One2many(_RelationalMulti):
 
             for recs, commands in records_commands_list:
                 for command in (commands or ()):
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             link(record, comodel.new(command[2], ref=command[1]))
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         comodel.browse(command[1]).write(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         unlink(comodel.browse(command[1]))
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         unlink(comodel.browse(command[1]))
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         link(recs[-1], comodel.browse(command[1]))
-                    elif command[0] in (5, 6):
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
                         cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == 6 else [])
+                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
         return records
@@ -3165,24 +3371,29 @@ class One2many(_RelationalMulti):
         if self.store:
             inverse = self.inverse_name
 
+            # make sure self's inverse is in cache
+            inverse_field = comodel._fields[inverse]
+            for record in records:
+                cache.update(record[self.name], inverse_field, itertools.repeat(record.id))
+
             for recs, commands in records_commands_list:
                 for command in commands:
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             line = comodel.new(command[2], ref=command[1])
                             line[inverse] = record
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         browse([command[1]]).update(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         browse([command[1]])[inverse] = False
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         browse([command[1]])[inverse] = False
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         browse([command[1]])[inverse] = recs[-1]
-                    elif command[0] in (5, 6):
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
                         cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == 6 else [])
+                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
         else:
@@ -3196,21 +3407,21 @@ class One2many(_RelationalMulti):
 
             for recs, commands in records_commands_list:
                 for command in commands:
-                    if command[0] == 0:
+                    if command[0] == Command.CREATE:
                         for record in recs:
                             link(record, comodel.new(command[2], ref=command[1]))
-                    elif command[0] == 1:
+                    elif command[0] == Command.UPDATE:
                         browse([command[1]]).update(command[2])
-                    elif command[0] == 2:
+                    elif command[0] == Command.DELETE:
                         unlink(browse([command[1]]))
-                    elif command[0] == 3:
+                    elif command[0] == Command.UNLINK:
                         unlink(browse([command[1]]))
-                    elif command[0] == 4:
+                    elif command[0] == Command.LINK:
                         link(recs[-1], browse([command[1]]))
-                    elif command[0] in (5, 6):
+                    elif command[0] in (Command.CLEAR, Command.SET):
                         # assign the given lines to the last record only
                         cache.update(recs, self, [()] * len(recs))
-                        lines = comodel.browse(command[2] if command[0] == 6 else [])
+                        lines = comodel.browse(command[2] if command[0] == Command.SET else [])
                         cache.set(recs[-1], self, lines._ids)
 
         return records
@@ -3460,20 +3671,20 @@ class Many2many(_RelationalMulti):
             for command in (commands or ()):
                 if not isinstance(command, (list, tuple)) or not command:
                     continue
-                if command[0] == 0:
+                if command[0] == Command.CREATE:
                     to_create.append((recs._ids, command[2]))
-                elif command[0] == 1:
+                elif command[0] == Command.UPDATE:
                     comodel.browse(command[1]).write(command[2])
-                elif command[0] == 2:
+                elif command[0] == Command.DELETE:
                     to_delete.append(command[1])
-                elif command[0] == 3:
+                elif command[0] == Command.UNLINK:
                     relation_remove(recs._ids, command[1])
-                elif command[0] == 4:
+                elif command[0] == Command.LINK:
                     relation_add(recs._ids, command[1])
-                elif command[0] in (5, 6):
+                elif command[0] in (Command.CLEAR, Command.SET):
                     # new lines must no longer be linked to records
                     to_create = [(set(ids) - set(recs._ids), vals) for (ids, vals) in to_create]
-                    relation_set(recs._ids, command[2] if command[0] == 6 else ())
+                    relation_set(recs._ids, command[2] if command[0] == Command.SET else ())
 
             if to_create:
                 # create lines in batch, and link them
@@ -3577,28 +3788,28 @@ class Many2many(_RelationalMulti):
             for command in commands:
                 if not isinstance(command, (list, tuple)) or not command:
                     continue
-                if command[0] == 0:
+                if command[0] == Command.CREATE:
                     line_id = comodel.new(command[2], ref=command[1]).id
                     for line_ids in new_relation.values():
                         line_ids.add(line_id)
-                elif command[0] == 1:
+                elif command[0] == Command.UPDATE:
                     line_id = new(command[1])
                     comodel.browse([line_id]).update(command[2])
-                elif command[0] == 2:
+                elif command[0] == Command.DELETE:
                     line_id = new(command[1])
                     for line_ids in new_relation.values():
                         line_ids.discard(line_id)
-                elif command[0] == 3:
+                elif command[0] == Command.UNLINK:
                     line_id = new(command[1])
                     for line_ids in new_relation.values():
                         line_ids.discard(line_id)
-                elif command[0] == 4:
+                elif command[0] == Command.LINK:
                     line_id = new(command[1])
                     for line_ids in new_relation.values():
                         line_ids.add(line_id)
-                elif command[0] in (5, 6):
+                elif command[0] in (Command.CLEAR, Command.SET):
                     # new lines must no longer be linked to records
-                    line_ids = command[2] if command[0] == 6 else ()
+                    line_ids = command[2] if command[0] == Command.SET else ()
                     line_ids = set(new(line_id) for line_id in line_ids)
                     for id_ in recs._ids:
                         new_relation[id_] = set(line_ids)
@@ -3714,4 +3925,4 @@ def apply_required(model, field_name):
 
 # imported here to avoid dependency cycle issues
 from .exceptions import AccessError, MissingError, UserError
-from .models import check_pg_name, BaseModel, NewId, IdType
+from .models import check_pg_name, BaseModel, NewId, IdType, expand_ids, PREFETCH_MAX

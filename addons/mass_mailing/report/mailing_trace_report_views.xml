@@ -4,13 +4,13 @@
             <field name="name">mailing.trace.report.view.pivot</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <pivot string="Mass Mailing Statistics" disable_linking="True">
-                    <field name="campaign" type="row"/>
+                <pivot string="Mass Mailing Statistics" disable_linking="True" sample="1">
+                    <field name="name" type="row"/>
                     <field name="sent" type="measure"/>
                     <field name="delivered" type="measure"/>
                     <field name="opened" type="measure"/>
                     <field name="bounced" type="measure"/>
-                    <field name="replied" type="measure"/>
+                    <field name="replied" type="measure" invisible="0"/>
                     <field name="clicked" type="measure"/>
                 </pivot>
             </field>
@@ -20,9 +20,10 @@
             <field name="name">mailing.trace.report.view.graph</field>
             <field name="model">mailing.trace.report</field>
             <field name="arch" type="xml">
-                <graph string="Mass Mailing Statistics">
-                    <field name="campaign"/>
+                <graph string="Mass Mailing Statistics" sample="1" disable_linking="1">
+                    <field name="name"/>
                     <field name="sent" type="measure"/>
+                    <field name="replied" invisible="0"/>
                 </graph>
             </field>
         </record>
@@ -39,8 +40,8 @@
                         <field name="scheduled_date"/>
                     </group>
                     <group expand="1" string="Group By...">
-                        <filter string="Mass Mailing Campaign" name="mass_mailing_campaign"
-                            domain="[]" context="{'group_by':'campaign'}"/>
+                        <filter string="Mass Mailing Campaign" domain="[]" name="mass_mailing_campaign"
+                            context="{'group_by':'campaign'}" groups="mass_mailing.group_mass_mailing_campaign"/>
                         <filter string="State" domain="[]" name="state"
                             context="{'group_by':'state'}"/>
                         <filter string="Sent By" domain="[]" name="sent_by"

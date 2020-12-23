@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import models, api
-from odoo.addons import iap
+from odoo.addons.iap.tools import iap_tools
 
 
 class IapEnrichAPI(models.AbstractModel):
@@ -17,7 +17,7 @@ class IapEnrichAPI(models.AbstractModel):
         params['account_token'] = account.account_token
         params['dbuuid'] = dbuuid
         base_url = self.env['ir.config_parameter'].sudo().get_param('enrich.endpoint', self._DEFAULT_ENDPOINT)
-        return iap.jsonrpc(base_url + local_endpoint, params=params, timeout=300)
+        return iap_tools.iap_jsonrpc(base_url + local_endpoint, params=params, timeout=300)
 
     @api.model
     def _request_enrich(self, lead_emails):

@@ -88,7 +88,9 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
                     }
                     break;
             }
+            el.setAttribute('data-anchor', true);
         });
+        this.trigger_up('widgets_start_request', {$target: $bsSidenav});
     },
     /**
      * extract text of menu title for sidebar

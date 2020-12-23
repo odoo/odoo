@@ -31,6 +31,9 @@
                 </form>
             </field>
         </record>
-        <act_window name="System Parameters" res_model="ir.config_parameter" id="ir_config_list_action"/>
+        <record id="ir_config_list_action" model="ir.actions.act_window">
+            <field name="name">System Parameters</field>
+            <field name="res_model">ir.config_parameter</field>
+        </record>
         <menuitem id="ir_config_menu" name="System Parameters" parent="menu_ir_property" action="ir_config_list_action"/>
 </odoo>

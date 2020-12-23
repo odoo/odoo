@@ -88,6 +88,7 @@ QUnit.module('fields', {}, function () {
                 },
                 partner_type: {
                     fields: {
+                        display_name: { string: "Partner Type", type: "char" },
                         name: { string: "Partner Type", type: "char" },
                         color: { string: "Color index", type: "integer" },
                     },
@@ -266,7 +267,7 @@ QUnit.module('fields', {}, function () {
                 data: this.data,
                 arch: '<form string="Partners">' +
                     '<field name="int_field"/>' +
-                    '<field name="trululu"  context="{\'blip\':int_field}"/>' +
+                    '<field name="trululu"  context="{\'blip\':int_field}" options=\'{"always_reload": True}\'/>' +
                     '</form>',
                 mockRPC: function (route, args) {
                     if (args.method === 'name_get') {
@@ -1184,6 +1185,31 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('form: quick create for field that returns false after name_create call', async function (assert) {
+            assert.expect(3);
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                mockRPC: function (route, args) {
+                    const result = this._super.apply(this, arguments);
+                    if (args.method === 'name_create') {
+                        assert.step('name_create');
+                        // Resolve the name_create call to false. This is possible if
+                        // _rec_name for the model of the field is unassigned.
+                        return Promise.resolve(false);
+                    }
+                    return result;
+                },
+            });
+            await testUtils.fields.many2one.searchAndClickItem('trululu', { search: 'beam' });
+            assert.verifySteps(['name_create'], 'attempt to name_create');
+            assert.strictEqual(form.$(".o_input_dropdown input").val(), "",
+                "the input should contain no text after search and click")
+            form.destroy();
+        });
+
         QUnit.test('list: quick create then save directly', async function (assert) {
             assert.expect(8);
 
@@ -1368,6 +1394,8 @@ QUnit.module('fields', {}, function () {
         QUnit.test('list in form: create with one2many with many2one', async function (assert) {
             assert.expect(1);
 
+            this.data.partner.fields.p.default = [[0, 0, { display_name: 'new record', p: [] }]];
+
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -1383,13 +1411,8 @@ QUnit.module('fields', {}, function () {
                     '</sheet>' +
                     '</form>',
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({ p: [[0, 0, { display_name: 'new record' }]] });
-                    } else if (args.method === 'name_get') {
-                        // This should not be called at all and thus is not accounted for
-                        // in the assert.expect. If this is called, you broke this test.
-                        assert.notOk(_.str.startsWith(args.args[0][0], 'virtual_'),
-                            "should not call name_get for the m2o inside o2m which has no value");
+                    if (args.method === 'name_get') {
+                        throw new Error('Nameget should not be called');
                     }
                     return this._super.apply(this, arguments);
                 },
@@ -1407,6 +1430,10 @@ QUnit.module('fields', {}, function () {
             // which is stupid, but this happens, so we have to handle it
             assert.expect(1);
 
+            this.data.partner.fields.p.default = [
+                [0, 0, { display_name: 'new record', trululu: false, p: [] }]
+            ];
+
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -1422,13 +1449,8 @@ QUnit.module('fields', {}, function () {
                     '</sheet>' +
                     '</form>',
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({ p: [[0, 0, { display_name: 'new record', trululu: false }]] });
-                    } else if (args.method === 'name_get') {
-                        // This should not be called at all and thus is not accounted for
-                        // in the assert.expect. If this is called, you broke this test.
-                        assert.notOk(_.str.startsWith(args.args[0][0], 'virtual_'),
-                            "should not call name_get for the m2o inside o2m which has no value");
+                    if (args.method === 'name_get') {
+                        throw new Error('Nameget should not be called');
                     }
                     return this._super.apply(this, arguments);
                 },
@@ -1447,6 +1469,10 @@ QUnit.module('fields', {}, function () {
             // abandonned, since it has been added (even though it is a new record).
             assert.expect(8);
 
+            this.data.partner.fields.p.default = [
+                [0, 0, { display_name: 'new record', trululu: false, p: [] }]
+            ];
+
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -1461,12 +1487,6 @@ QUnit.module('fields', {}, function () {
                     '</field>' +
                     '</sheet>' +
                     '</form>',
-                mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({ p: [[0, 0, { display_name: 'new record', trululu: false }]] });
-                    }
-                    return this._super.apply(this, arguments);
-                },
             });
 
             assert.strictEqual($('tr.o_data_row').length, 1,
@@ -1499,9 +1519,13 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('list in form: name_get with unique ids (default_get)', async function (assert) {
-            assert.expect(2);
+            assert.expect(1);
 
             this.data.partner.records[0].display_name = "MyTrululu";
+            this.data.partner.fields.p.default = [
+                [0, 0, { trululu: 1, p: [] }],
+                [0, 0, { trululu: 1, p: [] }]
+            ];
 
             var form = await createView({
                 View: FormView,
@@ -1517,17 +1541,8 @@ QUnit.module('fields', {}, function () {
                     '</sheet>' +
                     '</form>',
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({
-                            p: [
-                                [0, 0, { trululu: 1 }],
-                                [0, 0, { trululu: 1 }]
-                            ]
-                        });
-                    }
                     if (args.method === 'name_get') {
-                        assert.deepEqual(args.args[0], _.uniq(args.args[0]),
-                            "should not have duplicates in name_get rpc");
+                        throw new Error('should not call name_get');
                     }
                     return this._super.apply(this, arguments);
                 },
@@ -1541,6 +1556,11 @@ QUnit.module('fields', {}, function () {
 
         QUnit.test('list in form: show name of many2one fields in multi-page (default_get)', async function (assert) {
             assert.expect(4);
+
+            this.data.partner.fields.p.default = [
+                [0, 0, { display_name: 'record1', trululu: 1, p: [] }],
+                [0, 0, { display_name: 'record2', trululu: 2, p: [] }]
+            ];
 
             var form = await createView({
                 View: FormView,
@@ -1556,17 +1576,6 @@ QUnit.module('fields', {}, function () {
                     '</field>' +
                     '</sheet>' +
                     '</form>',
-                mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({
-                            p: [
-                                [0, 0, { display_name: 'record1', trululu: 1 }],
-                                [0, 0, { display_name: 'record2', trululu: 2 }]
-                            ]
-                        });
-                    }
-                    return this._super.apply(this, arguments);
-                },
             });
 
             assert.strictEqual(form.$('td.o_data_cell').first().text(),
@@ -1595,6 +1604,7 @@ QUnit.module('fields', {}, function () {
             var M2O_DELAY = relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY;
             relationalFields.FieldMany2One.prototype.AUTOCOMPLETE_DELAY = 0;
 
+            this.data.partner.fields.product_id.default = 37;
             this.data.partner.onchanges = {
                 product_id: function (obj) {
                     if (obj.product_id === 37) {
@@ -1616,14 +1626,6 @@ QUnit.module('fields', {}, function () {
                     '</tree>' +
                     '</field>' +
                     '</form>',
-                mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({
-                            product_id: 37,
-                        });
-                    }
-                    return this._super.apply(this, arguments);
-                },
             });
 
             // check that there is a record in the editable list with empty string as required field
@@ -1834,17 +1836,12 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('list in form: default_get with x2many create', async function (assert) {
-            assert.expect(5);
-
+            assert.expect(3);
+            this.data.partner.fields.timmy.default = [
+                [0, 0, { display_name: 'brandon is the new timmy', name: 'brandon' }]
+            ];
             var displayName = 'brandon is the new timmy';
             this.data.partner.onchanges.timmy = function (obj) {
-                assert.deepEqual(
-                    obj.timmy,
-                    [
-                        [6, false, []],
-                        [0, obj.timmy[1][1], { display_name: displayName, name: 'brandon' }]
-                    ],
-                    "should have properly created the x2many command list");
                 obj.int_field = obj.timmy.length;
             };
 
@@ -1863,15 +1860,18 @@ QUnit.module('fields', {}, function () {
                     '</sheet>' +
                     '</form>',
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({ timmy: [[0, 0, { display_name: 'brandon is the new timmy', name: 'brandon' }]] });
-                    }
                     if (args.method === 'create') {
                         assert.deepEqual(args.args[0], {
                             int_field: 2,
                             timmy: [
                                 [6, false, []],
-                                [0, args.args[0].timmy[1][1], { display_name: displayName, name: 'brandon' }],
+                                // LPE TODO 1 taskid-2261084: remove this entire comment including code snippet
+                                // when the change in behavior has been thoroughly tested.
+                                // We can't distinguish a value coming from a default_get
+                                // from one coming from the onchange, and so we can either store and
+                                // send it all the time, or never.
+                                // [0, args.args[0].timmy[1][1], { display_name: displayName, name: 'brandon' }],
+                                [0, args.args[0].timmy[1][1], { display_name: displayName }],
                             ],
                         }, "should send the correct values to create");
                     }
@@ -1881,7 +1881,7 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual($('td.o_data_cell:first').text(), 'brandon is the new timmy',
                 "should have created the new record in the m2m with the correct name");
-            assert.strictEqual($('input.o_field_integer').val(), '2',
+            assert.strictEqual($('input.o_field_integer').val(), '1',
                 "should have called and executed the onchange properly");
 
             // edit the subrecord and save
@@ -1894,17 +1894,9 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('list in form: default_get with x2many create and onchange', async function (assert) {
-            assert.expect(2);
+            assert.expect(1);
 
-            this.data.partner.onchanges.turtles = function (obj) {
-                assert.deepEqual(
-                    obj.turtles,
-                    [
-                        [4, 2, false],
-                        [4, 3, false],
-                    ],
-                    "should have properly created the x2many command list");
-            };
+            this.data.partner.fields.turtles.default = [[6, 0, [2, 3]]];
 
             var form = await createView({
                 View: FormView,
@@ -1921,9 +1913,6 @@ QUnit.module('fields', {}, function () {
                     '</sheet>' +
                     '</form>',
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
-                        return Promise.resolve({ turtles: [[6, 0, [2, 3]]] });
-                    }
                     if (args.method === 'create') {
                         assert.deepEqual(args.args[0].turtles, [
                             [4, 2, false],
@@ -2162,14 +2151,14 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 mockRPC: function (route, args) {
                     count++;
-                    if (args.method === 'name_get' && args.args[0][0] === 2) {
+                    if (args.method === 'name_get' && args.args[0] === 2) {
                         return Promise.resolve([[2, "hello world\nso much noise"]]);
                     }
                     return this._super(route, args);
                 },
             });
 
-            assert.strictEqual(count, 3, "should have done 3 rpcs (default_get, onchange, name_get)");
+            assert.strictEqual(count, 2, "should have done 2 rpcs (onchange and name_get)");
             assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'hello world',
                 "should have taken the correct display name");
             form.destroy();
@@ -2276,7 +2265,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
             'new partner', ['keyup', 'blur']);
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
-            assert.strictEqual($('.modal .modal-body').text().trim(), "Do you want to create new partner as a new Product?");
+            assert.strictEqual($('.modal .modal-body').text().trim(), "Create new partner as a new Product?");
 
             form.destroy();
         });
@@ -2376,19 +2365,23 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            // cancel the many2one creation with Cancel button
-            form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+            // cancel the many2one creation with Discard button
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
             await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
 
-            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Cancel)'));
+            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Discard)'));
             assert.strictEqual($('.modal').length, 0, "the modal should be closed");
             assert.strictEqual(form.$('.o_field_many2one input').val(), "",
                 'the many2one should not set a value as its creation has been cancelled (with Cancel button)');
 
             // cancel the many2one creation with Close button
-            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-                'new product', ['keyup', 'blur']);
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
+            await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
             await testUtils.dom.click($('.modal .modal-header button'));
             assert.strictEqual(form.$('.o_field_many2one input').val(), "",
@@ -2400,25 +2393,50 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.many2one.clickItem('product_id','o');
             assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone", "should have selected xphone");
 
-            form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
             await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
 
-            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Cancel)'));
+            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Discard)'));
             assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
                 'should have restored the many2one with its previous selected value (xphone)');
 
             // confirm the many2one creation
-            form.$('.o_field_many2one input').focus().val('new partner').trigger('keyup').trigger('blur');
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
             await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
 
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary:contains(Create and edit)'));
-            await testUtils.nextTick();
+            await testUtils.dom.click($('.modal .modal-footer .btn-primary:contains(Create)'));
             assert.strictEqual($('.modal .o_form_view').length, 1,
                 'a new modal should be opened and contain a form view');
 
             await testUtils.dom.click($('.modal .o_form_button_cancel'));
+
+            form.destroy();
+        });
+
+        QUnit.test("select a many2one value by focusing out", async function (assert) {
+            assert.expect(3);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form><field name="product_id"/></form>`,
+            });
+
+            form.$('.o_field_many2one input').focus().val('xph').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
+            await testUtils.nextTick();
+
+            assert.containsNone(document.body, '.modal');
+            assert.strictEqual(form.$('.o_field_many2one input').val(), 'xphone');
+            assert.containsOnce(form, '.o_external_button');
 
             form.destroy();
         });
@@ -2871,7 +2889,7 @@ QUnit.module('fields', {}, function () {
             });
 
             assert.verifySteps([
-                'default_get',
+                'onchange',
                 'name_search', // to display results in the dropdown
                 'load_views', // list view in dialog
                 '/web/dataset/search_read', // to display results in the dialog
@@ -2925,7 +2943,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click($('.modal .o_cp_searchview .o_facet_remove'));
 
             assert.verifySteps([
-                'default_get',
+                'onchange',
                 'name_search', // empty search, triggered when the user clicks in the input
                 'name_search', // to display results in the dropdown
                 'name_search', // to get preselected ids matching the search
@@ -3038,7 +3056,7 @@ QUnit.module('fields', {}, function () {
                 $modal.find('tbody tr').first(), { position: 'top' });
 
             assert.verifySteps([
-                'default_get',
+                'onchange',
                 'name_search', // to display results in the dropdown
                 'load_views', // list view in dialog
                 '/web/dataset/search_read', // to display results in the dialog
@@ -3304,13 +3322,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -3397,13 +3418,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -3493,7 +3517,7 @@ QUnit.module('fields', {}, function () {
                 { id: 1, user_id: 17, },
                 { id: 2, user_id: 19, },
                 { id: 3, user_id: 17, },
-                { id: 3, user_id: false, },
+                { id: 4, user_id: false, },
             ];
             const list = await createView({
                 View: ListView,

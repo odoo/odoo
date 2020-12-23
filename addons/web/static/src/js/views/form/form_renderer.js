@@ -5,7 +5,6 @@ var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
-const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
@@ -14,7 +13,7 @@ var qweb = core.qweb;
 // symbol used as key to set the <field> node id on its widget
 const symbol = Symbol('form');
 
-var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
+var FormRenderer = BasicRenderer.extend({
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
@@ -40,6 +39,11 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         this.idsForLabels = {};
         this.lastActivatedFieldIndex = -1;
         this.alertFields = {};
+        // The form renderer doesn't render invsible fields (invisible="1") by
+        // default, to speed up the rendering. However, we sometimes have to
+        // display them (e.g. in Studio, in "show invisible" mode). This flag
+        // allows to disable this optimization.
+        this.renderInvisible = false;
     },
     /**
      * @override
@@ -47,30 +51,6 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     start: function () {
         this._applyFormSizeClass();
         return this._super.apply(this, arguments);
-    },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        WidgetAdapterMixin.destroy.call(this);
-    },
-    /**
-     * Called each time the form view is attached into the DOM
-     */
-    on_attach_callback: function () {
-        WidgetAdapterMixin.on_attach_callback.call(this);
-        this._isInDom = true;
-        _.invoke(this.widgets, 'on_attach_callback');
-        this._super.apply(this, arguments);
-    },
-    /**
-     * Called each time the renderer is detached from the DOM.
-     */
-    on_detach_callback: function () {
-        WidgetAdapterMixin.on_detach_callback.call(this);
-        this._isInDom = false;
-        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -308,6 +288,28 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+
+    /**
+     * Activates the first visible tab from a given list of tab objects. The
+     * first tab having an "autofocus" attribute set will be focused in
+     * priority.
+     *
+     * @private
+     * @param {Object[]} tabs
+     */
+    _activateFirstVisibleTab(tabs) {
+        const visibleTabs = tabs.filter(
+            (tab) => !tab.$header.hasClass("o_invisible_modifier")
+        );
+        const autofocusTab = visibleTabs.findIndex(
+            (tab) => tab.node.attrs.autofocus === "autofocus"
+        );
+        const tabToFocus = visibleTabs[Math.max(0, autofocusTab)];
+        if (tabToFocus) {
+            tabToFocus.$header.find('.nav-link').addClass('active');
+            tabToFocus.$page.addClass('active');
+        }
+    },
     /**
      * @override
      */
@@ -499,6 +501,17 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         return [2, 2, 2, 4][config.device.size_class] || 7;
     },
     /**
+     * Do not render a field widget if it is always invisible.
+     *
+     * @override
+     */
+    _renderFieldWidget(node) {
+        if (!this.renderInvisible && node.attrs.modifiers.invisible === true) {
+            return $();
+        }
+        return this._super(...arguments);
+    },
+    /**
      * @private
      * @param {Object} node
      * @returns {jQueryElement}
@@ -546,16 +559,16 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      */
     _renderHeaderButtons: function (node) {
         var self = this;
-        var $buttons = $('<div>', {class: 'o_statusbar_buttons'});
+        var buttons = [];
         _.each(node.children, function (child) {
             if (child.tag === 'button') {
-                $buttons.append(self._renderHeaderButton(child));
+                buttons.push(self._renderHeaderButton(child));
             }
             if (child.tag === 'widget') {
-                $buttons.append(self._renderTagWidget(child));
+                buttons.push(self._renderTagWidget(child));
             }
         });
-        return $buttons;
+        return this._renderStatusbarButtons(buttons);
     },
     /**
      * @private
@@ -745,6 +758,16 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     },
     /**
      * @private
+     * @param {Array} buttons
+     * @return {jQueryElement}
+     */
+    _renderStatusbarButtons: function (buttons) {
+        var $statusbarButtons = $('<div>', {class: 'o_statusbar_buttons'});
+        buttons.forEach(button => $statusbarButtons.append(button));
+        return $statusbarButtons;
+    },
+    /**
+     * @private
      * @param {Object} page
      * @param {string} page_id
      * @returns {jQueryElement}
@@ -851,6 +874,11 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      * @returns {jQueryElement}
      */
     _renderTagLabel: function (node) {
+        if (!this.renderInvisible && node.tag === 'field' &&
+            node.attrs.modifiers.invisible === true) {
+            // skip rendering of invisible fields/labels
+            return $();
+        }
         var self = this;
         var text;
         let fieldName;
@@ -911,7 +939,6 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         var self = this;
         var $headers = $('<ul class="nav nav-tabs">');
         var $pages = $('<div class="tab-content">');
-        var autofocusTab = -1;
         // renderedTabs is used to aggregate the generated $headers and $pages
         // alongside their node, so that their modifiers can be registered once
         // all tabs have been rendered, to ensure that the first visible tab
@@ -920,9 +947,6 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
             var pageID = _.uniqueId('notebook_page_');
             var $header = self._renderTabHeader(child, pageID);
             var $page = self._renderTabPage(child, pageID);
-            if (autofocusTab === -1 && child.attrs.autofocus === 'autofocus') {
-                autofocusTab = index;
-            }
             self._handleAttributes($header, child);
             $headers.append($header);
             $pages.append($page);
@@ -932,11 +956,6 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
                 node: child,
             };
         });
-        if (renderedTabs.length) {
-            var tabToFocus = renderedTabs[Math.max(0, autofocusTab)];
-            tabToFocus.$header.find('.nav-link').addClass('active');
-            tabToFocus.$page.addClass('active');
-        }
         // register the modifiers for each tab
         _.each(renderedTabs, function (tab) {
             self._registerModifiers(tab.node, self.state, tab.$header, {
@@ -946,13 +965,12 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
                     if (modifiers.invisible && $link.hasClass('active')) {
                         $link.removeClass('active');
                         tab.$page.removeClass('active');
-                        var $firstVisibleTab = $headers.find('li:not(.o_invisible_modifier):first() > a');
-                        $firstVisibleTab.addClass('active');
-                        $pages.find($firstVisibleTab.attr('href')).addClass('active');
+                        self.inactiveNotebooks.push(renderedTabs);
                     }
                 },
             });
         });
+        this._activateFirstVisibleTab(renderedTabs);
         var $notebookHeaders = $('<div class="o_notebook_headers">').append($headers);
         var $notebook = $('<div class="o_notebook">').append($notebookHeaders, $pages);
         $notebook[0].dataset.name = node.attrs.name || '_default_';
@@ -1007,6 +1025,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         // render the form and evaluate the modifiers
         var defs = [];
         this.defs = defs;
+        this.inactiveNotebooks = [];
         var $form = this._renderNode(this.arch).addClass(this.className);
         delete this.defs;
 
@@ -1019,15 +1038,23 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
             if (self.lastActivatedFieldIndex >= 0) {
                 self._activateNextFieldWidget(self.state, self.lastActivatedFieldIndex);
             }
-            if (self._isInDom) {
-                _.forEach(self.allFieldWidgets, function (widgets){
-                    _.invoke(widgets, 'on_attach_callback');
-                });
-                _.invoke(self.widgets, 'on_attach_callback');
-            }
         }).guardedCatch(function () {
             $form.remove();
         });
+    },
+    /**
+     * This method is overridden to activate the first notebook page if the
+     * current active page is invisible due to modifiers. This is done after
+     * all modifiers are applied on all page elements.
+     *
+     * @override
+     */
+    async _updateAllModifiers() {
+        await this._super(...arguments);
+        for (const tabs of this.inactiveNotebooks) {
+            this._activateFirstVisibleTab(tabs);
+        }
+        this.inactiveNotebooks = [];
     },
     /**
      * Updates the form's $el with new content.

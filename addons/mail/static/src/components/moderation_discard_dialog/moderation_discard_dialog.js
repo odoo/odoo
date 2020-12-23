@@ -3,7 +3,9 @@ odoo.define('mail/static/src/components/moderation_discard_dialog/moderation_dis
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
-const Dialog = require('web.OwlDialog');
+const components = {
+    Dialog: require('web.OwlDialog'),
+};
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -38,7 +40,7 @@ class ModerationDiscardDialog extends Component {
     /**
      * @returns {string}
      */
-    getText() {
+    getBody() {
         if (this.messages.length === 1) {
             return this.env._t("You are going to discard 1 message.");
         }
@@ -55,6 +57,13 @@ class ModerationDiscardDialog extends Component {
         return this.props.messageLocalIds.map(localId =>
             this.env.models['mail.message'].get(localId)
         );
+    }
+
+    /**
+     * @returns {string}
+     */
+    getTitle() {
+        return this.env._t("Confirmation");
     }
 
     //--------------------------------------------------------------------------
@@ -79,7 +88,7 @@ class ModerationDiscardDialog extends Component {
 }
 
 Object.assign(ModerationDiscardDialog, {
-    components: { Dialog },
+    components,
     props: {
         messageLocalIds: {
             type: Array,

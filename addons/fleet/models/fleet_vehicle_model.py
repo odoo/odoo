@@ -45,7 +45,9 @@ class FleetVehicleModelBrand(models.Model):
     name = fields.Char('Make', required=True)
     image_128 = fields.Image("Logo", max_width=128, max_height=128)
     model_count = fields.Integer(compute="_compute_model_count", string="", store=True)
+    model_ids = fields.One2many('fleet.vehicle.model', 'brand_id')
 
+    @api.depends('model_ids')
     def _compute_model_count(self):
         Model = self.env['fleet.vehicle.model']
         for record in self:

@@ -57,8 +57,13 @@ class WebsiteVisitor(models.Model):
             operator = self.env.user
             country = visitor.country_id
             visitor_name = "%s (%s)" % (visitor.display_name, country.name) if country else visitor.display_name
+            channel_partner_to_add = [(4, operator.partner_id.id)]
+            if visitor.partner_id:
+                channel_partner_to_add.append((4, visitor.partner_id.id))
+            else:
+                channel_partner_to_add.append((4, self.env.ref('base.public_partner').id))
             mail_channel_vals_list.append({
-                'channel_partner_ids':  [(4, operator.partner_id.id)],
+                'channel_partner_ids': channel_partner_to_add,
                 'livechat_channel_id': visitor.website_id.channel_id.id,
                 'livechat_operator_id': self.env.user.partner_id.id,
                 'channel_type': 'livechat',
@@ -73,6 +78,25 @@ class WebsiteVisitor(models.Model):
         if mail_channel_vals_list:
             mail_channels = self.env['mail.channel'].create(mail_channel_vals_list)
             # Open empty chatter to allow the operator to start chatting with the visitor.
-            mail_channels_info = mail_channels.channel_info('channel_minimize')
+            values = {
+                'fold_state': 'open',
+                'is_minimized': True,
+            }
+            mail_channels_uuid = mail_channels.mapped('uuid')
+            domain = [('partner_id', '=', self.env.user.partner_id.id), ('channel_id.uuid', 'in', mail_channels_uuid)]
+            channel_partners = self.env['mail.channel.partner'].search(domain)
+            channel_partners.write(values)
+            mail_channels_info = mail_channels.channel_info('send_chat_request')
+            notifications = []
             for mail_channel_info in mail_channels_info:
-                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info)
+                notifications.append([(self._cr.dbname, 'res.partner', operator.partner_id.id), mail_channel_info])
+            self.env['bus.bus'].sendmany(notifications)
+
+    def _link_to_partner(self, partner, update_values=None):
+        """ Adapt partner in members of related livechats """
+        if partner:
+            self.mail_channel_ids.channel_partner_ids = [
+                (3, self.env.ref('base.public_partner').id),
+                (4, partner.id),
+            ]
+        super(WebsiteVisitor, self)._link_to_partner(partner, update_values=update_values)

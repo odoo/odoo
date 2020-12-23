@@ -2,7 +2,6 @@ odoo.define('lunch.LunchListView', function (require) {
 "use strict";
 
 var LunchListController = require('lunch.LunchListController');
-var LunchModel = require('lunch.LunchModel');
 var LunchListRenderer = require('lunch.LunchListRenderer');
 
 var core = require('web.core');
@@ -14,7 +13,6 @@ var _lt = core._lt;
 var LunchListView = ListView.extend({
     config: _.extend({}, ListView.prototype.config, {
         Controller: LunchListController,
-        Model: LunchModel,
         Renderer: LunchListRenderer,
     }),
     display_name: _lt('Lunch List'),
@@ -26,10 +24,11 @@ var LunchListView = ListView.extend({
     /**
      * @override
      */
-    _getViewDomain: function (parent) {
-        const model = this.getModel(parent);
-        return model.getLocationDomain();
+    _createSearchModel(params, extraExtensions = {}) {
+        Object.assign(extraExtensions, { Lunch: {} });
+        return this._super(params, extraExtensions);
     },
+
 });
 
 view_registry.add('lunch_list', LunchListView);

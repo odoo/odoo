@@ -90,7 +90,7 @@ class PurchaseRequisition(models.Model):
         ])
         if any(requisitions):
             title = _("Warning for %s", self.vendor_id.name)
-            message = _("There is already an open blanket order for this supplier. We suggest you to use to complete this open blanket order instead of creating a new one.")
+            message = _("There is already an open blanket order for this supplier. We suggest you complete this open blanket order, instead of creating a new one.")
             warning = {
                 'title': title,
                 'message': message
@@ -114,7 +114,7 @@ class PurchaseRequisition(models.Model):
 
     def action_in_progress(self):
         self.ensure_one()
-        if not all(obj.line_ids for obj in self):
+        if not self.line_ids:
             raise UserError(_("You cannot confirm agreement '%s' because there is no product line.", self.name))
         if self.type_id.quantity_copy == 'none' and self.vendor_id:
             for requisition_line in self.line_ids:
@@ -152,9 +152,12 @@ class PurchaseRequisition(models.Model):
                 requisition_line.supplier_info_ids.unlink()
         self.write({'state': 'done'})
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_draft_or_cancel(self):
         if any(requisition.state not in ('draft', 'cancel') for requisition in self):
             raise UserError(_('You can only delete draft requisitions.'))
+
+    def unlink(self):
         # Draft requisitions could have some requisition lines.
         self.mapped('line_ids').unlink()
         return super(PurchaseRequisition, self).unlink()
@@ -187,7 +190,7 @@ class PurchaseRequisitionLine(models.Model):
                 ('product_id', '=', vals.get('product_id')),
                 ('name', '=', res.requisition_id.vendor_id.id),
             ])
-            if not any([s.purchase_requisition_id for s in supplier_infos]):
+            if not any(s.purchase_requisition_id for s in supplier_infos):
                 res.create_supplier_info()
             if vals['price_unit'] <= 0.0:
                 raise UserError(_('You cannot confirm the blanket order without price.'))

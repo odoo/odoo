@@ -208,7 +208,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
     def test_holiday_user_draft_his_leave(self):
         """
             Should be able to draft his own leave
-            whatever the holidays_status_id
+            whatever the holiday_status_id
         """
         for i, status in enumerate(self.draft_status):
             values = {
@@ -434,18 +434,6 @@ class TestAccessRightsCreate(TestHrHolidaysAccessRightsCommon):
             'holiday_status_id': self.leave_type.id,
         }
         self.request_leave(self.user_hruser_id, datetime.today() + relativedelta(days=5), 1, values)
-
-    @mute_logger('odoo.models.unlink', 'odoo.addons.mail.models.mail_mail')
-    def test_holidays_user_create_batch(self):
-        """ A holidays user cannot create a leave in bacth mode (by company, by department, by tag)"""
-        values = {
-            'name': 'Hol10',
-            'holiday_status_id': self.leave_type.id,
-            'holiday_type': 'company',
-            'mode_company_id': 1,
-        }
-        with self.assertRaises(AccessError):
-            self.request_leave(self.user_hruser_id, datetime.today() + relativedelta(days=5), 1, values)
 
     # hr_holidays.group_hr_holidays_manager
 

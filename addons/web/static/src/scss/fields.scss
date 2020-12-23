@@ -176,6 +176,9 @@
         .o_colorpicker > ul {
             @include o-tag-colorpicker;
             white-space: normal;
+            li > .o_hide_in_kanban label {
+                line-height: $o-line-height-base;
+            }
         }
 
         @for $size from 1 through length($o-colors) {
@@ -275,7 +278,13 @@
 
     // Handle widget
     &.o_row_handle {
-        cursor: ns-resize;
+        cursor: grab;
+        color: #adb5bd;
+        text-align: center;
+        width: 100%;
+        &:hover {
+            color: #666666;
+        }
     }
 
     &.o_field_selection_badge {
@@ -467,7 +476,7 @@
         color: $o-brand-primary;
         font-weight: $badge-font-weight;
         text-align: center;
-        padding-right: 100px;
+        padding-right: 6rem;
         word-break: break-word;
         .o_clipboard_button {
             @include o-position-absolute($top: 0, $right: 0);
@@ -480,6 +489,10 @@
                 padding-top: 2px;
                 height: 100%;
             }
+        }
+        &.o_field_copy_url {
+            cursor: pointer;
+            padding-left: 3px;
         }
     }
 
@@ -496,8 +509,10 @@
         border: 0;
         font-size: 12px;
         user-select: none;
-        background-color: rgba(lightgray, 0.5);;
+        background-color: rgba(lightgray, 0.5);
         font-weight: 500;
+        @include o-text-overflow;
+        transition: none; // remove transition to prevent badges from flickering at reload
     }
 }
 

@@ -8,4 +8,4 @@ declaration.
 
 Signed,
 
-Fekete Mihai mihai.fekete@forestandbiomass.ro https://github.com/feketemihai
+Fekete Mihai feketemihai@gmail.com https://github.com/feketemihai

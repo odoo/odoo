@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import re
+from lxml import etree
 
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
@@ -24,6 +26,10 @@ class Project(models.Model):
     total_timesheet_time = fields.Integer(
         compute='_compute_total_timesheet_time',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
+    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days')
+
+    def _compute_encode_uom_in_days(self):
+        self.encode_uom_in_days = self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
 
     @api.depends('analytic_account_id')
     def _compute_allow_timesheets(self):
@@ -74,7 +80,8 @@ class Project(models.Model):
     def _init_data_analytic_account(self):
         self.search([('analytic_account_id', '=', False), ('allow_timesheets', '=', True)])._create_analytic_account()
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_entries(self):
         """
         If some projects to unlink have some timesheets entries, these
         timesheets entries must be unlinked first.
@@ -90,7 +97,6 @@ class Project(models.Model):
             raise RedirectWarning(
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_project').id,
                 _('See timesheet entries'), {'active_ids': projects_with_timesheets.ids})
-        return super(Project, self).unlink()
 
 
 class Task(models.Model):
@@ -106,6 +112,13 @@ class Task(models.Model):
     overtime = fields.Float(compute='_compute_progress_hours', store=True)
     subtask_effective_hours = fields.Float("Sub-tasks Hours Spent", compute='_compute_subtask_effective_hours', store=True, help="Time spent on the sub-tasks (and their own sub-tasks) of this task.")
     timesheet_ids = fields.One2many('account.analytic.line', 'task_id', 'Timesheets')
+    encode_uom_in_days = fields.Boolean(compute='_compute_encode_uom_in_days', default=lambda self: self._uom_in_days())
+
+    def _uom_in_days(self):
+        return self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day')
+
+    def _compute_encode_uom_in_days(self):
+        self.encode_uom_in_days = self._uom_in_days()
 
     @api.depends('project_id.analytic_account_id.active')
     def _compute_analytic_account_active(self):
@@ -180,7 +193,10 @@ class Task(models.Model):
         if self.env.context.get('hr_timesheet_display_remaining_hours'):
             name_mapping = dict(super().name_get())
             for task in self:
-                if task.allow_timesheets and task.planned_hours > 0:
+                if task.allow_timesheets and task.planned_hours > 0 and task.encode_uom_in_days:
+                    days_left = _("(%s days remaining)") % task._convert_hours_to_days(task.remaining_hours)
+                    name_mapping[task.id] = name_mapping.get(task.id, '') + " ‒ " + days_left
+                elif task.allow_timesheets and task.planned_hours > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
                     hours_left = _(
                         "(%(sign)s%(hours)s:%(minutes)s remaining)",
@@ -197,9 +213,23 @@ class Task(models.Model):
         """ Set the correct label for `unit_amount`, depending on company UoM """
         result = super(Task, self)._fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
         result['arch'] = self.env['account.analytic.line']._apply_timesheet_label(result['arch'])
+
+        if view_type == 'tree' and self.env.company.timesheet_encode_uom_id == self.env.ref('uom.product_uom_day'):
+            result['arch'] = self._apply_time_label(result['arch'])
         return result
 
-    def unlink(self):
+    @api.model
+    def _apply_time_label(self, view_arch):
+        doc = etree.XML(view_arch)
+        encoding_uom = self.env.company.timesheet_encode_uom_id
+        for node in doc.xpath("//field[@widget='timesheet_uom'][not(@string)] | //field[@widget='timesheet_uom_no_toggle'][not(@string)]"):
+            name_with_uom = re.sub(_('Hours') + "|Hours", encoding_uom.name or '', self._fields[node.get('name')]._description_string(self.env), flags=re.IGNORECASE)
+            node.set('string', name_with_uom)
+
+        return etree.tostring(doc, encoding='unicode')
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_entries(self):
         """
         If some tasks to unlink have some timesheets entries, these
         timesheets entries must be unlinked first.
@@ -215,4 +245,8 @@ class Task(models.Model):
             raise RedirectWarning(
                 warning_msg, self.env.ref('hr_timesheet.timesheet_action_task').id,
                 _('See timesheet entries'), {'active_ids': tasks_with_timesheets.ids})
-        return super(Task, self).unlink()
+
+    def _convert_hours_to_days(self, time):
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        uom_day = self.env.ref('uom.product_uom_day')
+        return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)

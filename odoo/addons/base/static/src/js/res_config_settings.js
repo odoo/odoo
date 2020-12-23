@@ -46,6 +46,17 @@ var BaseSettingRenderer = FormRenderer.extend({
     },
 
     /**
+     * @override
+     */
+    displayTranslationAlert: function () {
+        // Translation alerts are disabled for res.config.settings:
+        // those are designed to warn user to translate field he just changed, but
+        // * in res.config.settings almost all fields marked as changed (because
+        //   it's not a usual record and all values are set via default_get)
+        // * page is reloaded after saving, so those alerts would be visible
+        //   only for short time after clicking Save
+    },
+    /**
      * initialize modules list.
      * remove module that restricted in groups
      * data contains
@@ -297,7 +308,7 @@ var BaseSettingController = FormController.extend({
             var recordID = ev.data.recordID;
             var _super = this._super;
             var args = arguments;
-            this._discardChanges(recordID).then(function () {
+            this._discardChanges(recordID, { noAbandon: true }).then(function () {
                 _super.apply(self, args);
             });
         } else {
@@ -307,17 +318,16 @@ var BaseSettingController = FormController.extend({
 
 });
 
-var BaseSettingsModel = BasicModel.extend({
-    /**
-     * @override
-     */
-    save: function (recordID) {
-        var self = this;
-        return this._super.apply(this, arguments).then(function (result) {
-            // we remove here the res_id, because the record should still be
-            // considered new.  We want the web client to always perform a
-            // default_get to fetch the settings anew.
-            delete self.localData[recordID].res_id;
+const BaseSettingsModel = BasicModel.extend({
+    save(recordID, options) {
+        const savePoint = options && options.savePoint;
+        return this._super.apply(this, arguments).then(result => {
+            if (!savePoint && this.localData[recordID].model === 'res.config.settings') {
+                // we remove here the res_id, because the record should still be
+                // considered new.  We want the web client to always perform a
+                // onchange to fetch the settings anew.
+                delete this.localData[recordID].res_id;
+            }
             return result;
         });
     },

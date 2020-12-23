@@ -490,7 +490,7 @@ var DateTimePicker = function ($, moment) {
         DateTimePicker.prototype._change = function _change(e) {
             var val = $(e.target).val().trim(),
                 parsedDate = val ? this._parseInputDate(val) : null;
-            this._setValue(parsedDate);
+            this._setValue(parsedDate, 0); // Odoo FIX: if a valid date is replaced by an invalid one, lib will crash, see https://github.com/tempusdominus/bootstrap-4/issues/223
             e.stopImmediatePropagation();
             return false;
         };
@@ -2092,9 +2092,11 @@ var TempusDominusBootstrap4 = function ($) {
                 daysViewHeader.eq(2).addClass('disabled');
             }
 
-            currentDate = this._viewDate.clone().startOf('M').startOf('w').startOf('d');
             // !! ODOO FIX START !!
             var now = this.getMoment();
+            // currentDate = this._viewDate.clone().startOf('M').startOf('w').startOf('d');
+            // avoid issue of safari + DST at midnight
+            currentDate = this._viewDate.clone().startOf('M').startOf('w').add(12, 'hours');
             // !! ODOO FIX END !!
 
             for (i = 0; i < 42; i++) {

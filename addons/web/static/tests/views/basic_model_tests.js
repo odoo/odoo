@@ -36,6 +36,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
                 product: {
                     fields: {
+                        display_name: { string: "Product Display Name", type: "char" },
                         name: { string: "Product Name", type: "char" },
                         category: { string: "Category M2M", type: 'many2many', relation: 'partner_type' },
                         active: {string: "Active", type: 'boolean', default: true},
@@ -80,7 +81,9 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.module('BasicModel');
 
         QUnit.test('can process x2many commands', async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
+
+            this.data.partner.fields.product_ids.default = [[0, 0, { category: [] }]];
 
             const form = await createView({
                 View: FormView,
@@ -110,22 +113,16 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    if (args.method === 'default_get' && args.model === 'partner') {
-                        return Promise.resolve({
-                            product_ids: [
-                                [0, 0, {category: []}],
-                            ]
-                        });
-                    }
                     return this._super.apply(this, arguments);
                 },
             });
 
             assert.verifySteps([
                 'load_views',
-                'default_get',
+                'onchange',
             ]);
             assert.containsOnce(form, '.o_field_x2many_list', 'should have rendered a x2many list');
+            assert.containsOnce(form, '.o_data_row', 'should have added 1 record as default');
             assert.containsOnce(form, '.o_field_x2many_list_row_add', 'should have rendered a x2many add row on list');
             form.destroy();
         });
@@ -690,7 +687,7 @@ odoo.define('web.basic_model_tests', function (require) {
             model.destroy();
         });
 
-        QUnit.test('can make a default_record, no onchange', async function (assert) {
+        QUnit.test('can make a default_record with the help of onchange', async function (assert) {
             assert.expect(5);
 
             this.params.context = {};
@@ -713,8 +710,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
             assert.deepEqual(record.data.category.data, [], "m2m default should be []");
 
-            assert.verifySteps(['default_get'],
-                "there should be default_get");
+            assert.verifySteps(['onchange']);
 
             model.destroy();
         });
@@ -755,7 +751,7 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('can make a default_record with default relational values', async function (assert) {
-            assert.expect(7);
+            assert.expect(6);
 
             this.data.partner.fields.product_id.default = 37;
             this.data.partner.fields.product_ids.default = [
@@ -804,8 +800,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.category.res_ids, [12, 14],
                 "m2m default should be [12, 14]");
 
-            assert.verifySteps(['default_get', 'name_get'],
-                "there should be default_get and name_get");
+            assert.verifySteps(['onchange']);
 
             model.destroy();
         });
@@ -871,7 +866,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 "should have fetched correct name");
             assert.strictEqual(record.data.other_product_id.data.display_name, "xpad",
                 "should have fetched correct name");
-            assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: default_get and 1 name_get");
+            assert.strictEqual(rpcCount, 1, "should have done 1 rpc: onchange");
             model.destroy();
         });
 
@@ -1401,26 +1396,23 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('default_get: fetch many2one with default (empty & not) inside x2manys', async function (assert) {
-            assert.expect(4);
+            assert.expect(3);
 
+            this.data.partner.fields.category_m2o = {
+                type: 'many2one',
+                relation: 'partner_type',
+            };
             this.data.partner.fields.o2m = {
                 string: "O2M", type: 'one2many', relation: 'partner', default: [
                     [6, 0, []],
-                    [0, 0, { category: false }],
-                    [0, 0, { category: 12 }],
+                    [0, 0, { category_m2o: false, o2m: [] }],
+                    [0, 0, { category_m2o: 12, o2m: [] }],
                 ],
             };
-            this.data.partner.fields.category.type = 'many2one';
 
             var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
-                mockRPC: function (route, args) {
-                    if (args.method === 'name_get' && args.model === 'partner_type') {
-                        assert.deepEqual(args.args, [[12]], "should name_get on category 12");
-                    }
-                    return this._super(route, args);
-                },
             });
 
             var params = {
@@ -1432,7 +1424,7 @@ odoo.define('web.basic_model_tests', function (require) {
                             relatedFields: this.data.partner.fields,
                             fieldsInfo: {
                                 list: {
-                                    category: {
+                                    category_m2o: {
                                         relatedFields: { display_name: {} },
                                     },
                                 },
@@ -1449,9 +1441,9 @@ odoo.define('web.basic_model_tests', function (require) {
             var resultID = await model.load(params);
             var record = model.get(resultID);
             assert.strictEqual(record.data.o2m.count, 2, "o2m field should contain 2 records");
-            assert.strictEqual(record.data.o2m.data[0].data.category, false,
+            assert.strictEqual(record.data.o2m.data[0].data.category_m2o, false,
                 "first category field should be empty");
-            assert.strictEqual(record.data.o2m.data[1].data.category.data.display_name, "gold",
+            assert.strictEqual(record.data.o2m.data[1].data.category_m2o.data.display_name, "gold",
                 "second category field should have been correctly fetched");
 
             model.destroy();
@@ -2037,8 +2029,9 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('has a proper evaluation context', async function (assert) {
-            assert.expect(1);
+            assert.expect(6);
 
+            const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
             this.params.fieldNames = Object.keys(this.data.partner.fields);
             this.params.res_id = 1;
 
@@ -2048,8 +2041,24 @@ odoo.define('web.basic_model_tests', function (require) {
             });
 
             var resultID = await model.load(this.params);
-            var record = model.get(resultID);
-            assert.deepEqual(record.evalContext, {
+            const { evalContext } = model.get(resultID);
+            assert.strictEqual(typeof evalContext.datetime, "object");
+            assert.strictEqual(typeof evalContext.relativedelta, "object");
+            assert.strictEqual(typeof evalContext.time, "object");
+            assert.strictEqual(typeof evalContext.context_today, "function");
+            assert.strictEqual(typeof evalContext.tz_offset, "function");
+            const blackListedKeys = [
+                "time",
+                "datetime",
+                "relativedelta",
+                "context_today",
+                "tz_offset",
+            ];
+            // Remove uncomparable values from the evaluation context
+            for (const key of blackListedKeys) {
+                delete evalContext[key];
+            }
+            assert.deepEqual(evalContext, {
                 active: true,
                 active_id: 1,
                 active_ids: [1],
@@ -2058,6 +2067,8 @@ odoo.define('web.basic_model_tests', function (require) {
                 category: [12],
                 current_company_id: false,
                 current_date: moment().format('YYYY-MM-DD'),
+                today: moment().format('YYYY-MM-DD'),
+                now: moment().utc().format('YYYY-MM-DD HH:mm:ss'),
                 date: "2017-01-25",
                 display_name: "first partner",
                 foo: "blip",
@@ -2070,6 +2081,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 x_active: true,
             }, "should use the proper eval context");
             model.destroy();
+            unpatchDate();
         });
 
         QUnit.test('x2manys in contexts and domains are correctly evaluated', async function (assert) {
@@ -2175,8 +2187,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             var recordID = await model.load(this.params);
             recordID = await model.reload(recordID);
-            assert.verifySteps(['default_get', 'default_get'],
-                "two default_get RPCs should have been done");
+            assert.verifySteps(['onchange', 'onchange']);
             var record = model.get(recordID);
             assert.strictEqual(record.data.product_id, false,
                 "m2o default value should be false");

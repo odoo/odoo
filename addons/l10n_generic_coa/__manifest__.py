@@ -4,7 +4,7 @@
 {
     'name': 'Generic - Accounting',
     'version': '1.1',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 This is the base module to manage the generic accounting chart in Odoo.
 ==============================================================================

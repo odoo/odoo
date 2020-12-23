@@ -75,7 +75,7 @@
                     </h3>
 
                     <table class="table table-sm" t-if="o.move_raw_ids">
-                        <t t-set="has_product_barcode" t-value="any(o.move_raw_ids.filtered(lambda x: x.product_id.barcode))"/>
+                        <t t-set="has_product_barcode" t-value="any(m.product_id.barcode for m in o.move_raw_ids)"/>
                         <thead>
                             <tr>
                                 <th>Product</th>
@@ -90,7 +90,7 @@
                                         <span t-field="raw_line.product_id"/>
                                     </td>
                                     <td t-attf-class="{{ 'text-right' if not has_product_barcode else '' }}">
-                                        <span t-esc="raw_line.product_uom_qty"/>
+                                        <span t-field="raw_line.product_uom_qty"/>
                                         <span t-field="raw_line.product_uom" groups="uom.group_uom"/>
                                     </td>
                                     <td t-if="has_product_barcode" width="15%" class="text-center">
@@ -183,22 +183,5 @@
             </t>
         </div>
     </t>
-</template>
-
-<template id="production_message">
-    <t t-if="move.move_id.raw_material_production_id">
-        <t t-set="message">Consumed</t>
-    </t>
-    <t t-if="move.move_id.production_id">
-        <t t-set="message">Produced</t>
-    </t>
-    <strong><t t-esc="message"/> quantity has been updated.</strong>
-</template>
-
-<template id="track_production_move_template">
-    <div>
-        <t t-call="mrp.production_message"/>
-        <t t-call="stock.message_body"/>
-    </div>
 </template>
 </odoo>

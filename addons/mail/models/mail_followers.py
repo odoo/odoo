@@ -4,7 +4,7 @@
 from collections import defaultdict
 import itertools
 
-from odoo import api, fields, models
+from odoo import api, fields, models, Command
 
 
 class Followers(models.Model):
@@ -193,7 +193,7 @@ FROM mail_channel channel WHERE channel.id IN %s """
             res = []
         return res
 
-    def _get_subscription_data(self, doc_data, pids, cids, include_pshare=False):
+    def _get_subscription_data(self, doc_data, pids, cids, include_pshare=False, include_active=False):
         """ Private method allowing to fetch follower data from several documents of a given model.
         Followers can be filtered given partner IDs and channel IDs.
 
@@ -202,6 +202,7 @@ FROM mail_channel channel WHERE channel.id IN %s """
         :param pids: optional partner to filter; if None take all, otherwise limitate to pids
         :param cids: optional channel to filter; if None take all, otherwise limitate to cids
         :param include_pshare: optional join in partner to fetch their share status
+        :param include_active: optional join in partner to fetch their active flag
 
         :return: list of followers data which is a list of tuples containing
           follower ID,
@@ -210,6 +211,7 @@ FROM mail_channel channel WHERE channel.id IN %s """
           channel ID (void if partner_id),
           followed subtype IDs,
           share status of partner (void id channel_id, returned only if include_pshare is True)
+          active flag status of partner (void id channel_id, returned only if include_active is True)
         """
         # base query: fetch followers of given documents
         where_clause = ' OR '.join(['fol.res_model = %s AND fol.res_id IN %s'] * len(doc_data))
@@ -231,17 +233,20 @@ FROM mail_channel channel WHERE channel.id IN %s """
             where_clause += "AND (%s)" % " OR ".join(sub_where)
 
         query = """
-SELECT fol.id, fol.res_id, fol.partner_id, fol.channel_id, array_agg(subtype.id)%s
+SELECT fol.id, fol.res_id, fol.partner_id, fol.channel_id, array_agg(subtype.id)%s%s
 FROM mail_followers fol
 %s
 LEFT JOIN mail_followers_mail_message_subtype_rel fol_rel ON fol_rel.mail_followers_id = fol.id
 LEFT JOIN mail_message_subtype subtype ON subtype.id = fol_rel.mail_message_subtype_id
 WHERE %s
-GROUP BY fol.id%s""" % (
+GROUP BY fol.id%s%s""" % (
             ', partner.partner_share' if include_pshare else '',
-            'LEFT JOIN res_partner partner ON partner.id = fol.partner_id' if include_pshare else '',
+            ', partner.active' if include_active else '',
+            'LEFT JOIN res_partner partner ON partner.id = fol.partner_id' if (include_pshare or include_active) else '',
             where_clause,
-            ', partner.partner_share' if include_pshare else '')
+            ', partner.partner_share' if include_pshare else '',
+            ', partner.active' if include_active else ''
+        )
         self.env.cr.execute(query, tuple(where_params))
         return self.env.cr.fetchall()
 
@@ -356,30 +361,30 @@ GROUP BY fol.id%s""" % (
                     new.setdefault(res_id, list()).append({
                         'res_model': res_model,
                         'partner_id': partner_id,
-                        'subtype_ids': [(6, 0, partner_subtypes[partner_id])],
+                        'subtype_ids': [Command.set(partner_subtypes[partner_id])],
                     })
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
                     new_sids = set(partner_subtypes[partner_id]) - set(sids)
                     old_sids = set(sids  if sids[0] is not None else []) - set(partner_subtypes[partner_id])
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update[fol_id] = {'subtype_ids': [Command.link(sid) for sid in new_sids]}
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update[fol_id] = {'subtype_ids': [Command.unlink(sid) for sid in old_sids]}
             for channel_id in set(channel_ids or []):
                 if channel_id not in doc_cids[res_id]:
                     new.setdefault(res_id, list()).append({
                         'res_model': res_model,
                         'channel_id': channel_id,
-                        'subtype_ids': [(6, 0, channel_subtypes[channel_id])],
+                        'subtype_ids': [Command.set(channel_subtypes[channel_id])],
                     })
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[2] == channel_id), (False, []))
                     new_sids = set(channel_subtypes[channel_id]) - set(sids)
                     old_sids = set(sids) - set(channel_subtypes[channel_id])
                     if fol_id and new_sids:
-                        update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
+                        update[fol_id] = {'subtype_ids': [Command.link(sid) for sid in new_sids]}
                     if fol_id and old_sids and existing_policy == 'replace':
-                        update[fol_id] = {'subtype_ids': [(3, sid) for sid in old_sids]}
+                        update[fol_id] = {'subtype_ids': [Command.unlink(sid) for sid in old_sids]}
 
         return new, update

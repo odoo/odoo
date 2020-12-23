@@ -23,7 +23,7 @@ class TestAccountMovePartnerCount(AccountTestInvoicingCommon):
                 'partner_id': self.partner_a.id,
                 'invoice_line_ids': [(0, 0, {'name': 'aaaa', 'price_unit': 100.0})],
             },
-        ]).post()
+        ]).action_post()
 
         self.assertEqual(self.partner_a.supplier_rank, 1)
         self.assertEqual(self.partner_a.customer_rank, 1)

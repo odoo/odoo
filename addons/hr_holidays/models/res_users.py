@@ -15,6 +15,7 @@ class User(models.Model):
     is_absent = fields.Boolean(related='employee_id.is_absent')
     allocation_used_display = fields.Char(related='employee_id.allocation_used_display')
     allocation_display = fields.Char(related='employee_id.allocation_display')
+    hr_icon_display = fields.Selection(related='employee_id.hr_icon_display')
 
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights.
@@ -31,6 +32,7 @@ class User(models.Model):
             'is_absent',
             'allocation_used_display',
             'allocation_display',
+            'hr_icon_display',
         ]
         init_res = super(User, self).__init__(pool, cr)
         # duplicate list to avoid modifying the original reference

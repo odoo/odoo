@@ -8,6 +8,7 @@ import lxml
 import random
 import re
 import threading
+import werkzeug.urls
 from ast import literal_eval
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
@@ -48,6 +49,17 @@ class MassMailing(models.Model):
     @api.model
     def default_get(self, fields):
         vals = super(MassMailing, self).default_get(fields)
+
+        # field sent by the calendar view when clicking on a date block
+        # we use it to setup the scheduled date of the created mailing.mailing
+        default_calendar_date = self.env.context.get('default_calendar_date')
+        if default_calendar_date and ('schedule_type' in fields and 'schedule_date' in fields) \
+           and fields.Datetime.from_string(default_calendar_date) > fields.Datetime.now():
+            vals.update({
+                'schedule_type': 'scheduled',
+                'schedule_date': default_calendar_date
+            })
+
         if 'contact_list_ids' in fields and not vals.get('contact_list_ids') and vals.get('mailing_model_id'):
             if vals.get('mailing_model_id') == self.env['ir.model']._get('mailing.list').id:
                 mailing_list = self.env['mailing.list'].search([], limit=2)
@@ -65,14 +77,25 @@ class MassMailing(models.Model):
             return False
 
     active = fields.Boolean(default=True, tracking=True)
-    subject = fields.Char('Subject', help='Subject of emails to send', required=True, translate=True)
+    subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=True)
+    preview = fields.Char(
+        'Preview', translate=True,
+        help='Catchy preview sentence that encourages recipients to open this email.\n'
+             'In most inboxes, this is displayed next to the subject.\n'
+             'Keep it empty if you prefer the first characters of your email content to appear instead.')
     email_from = fields.Char(string='Send From', required=True,
         default=lambda self: self.env.user.email_formatted)
     sent_date = fields.Datetime(string='Sent Date', copy=False)
-    schedule_date = fields.Datetime(string='Scheduled for', tracking=True)
+
+    schedule_type = fields.Selection([('now', 'Send now'), ('scheduled', 'Send on')], string='Schedule',
+        default='now', required=True, readonly=True, states={'draft': [('readonly', False)]})
+    schedule_date = fields.Datetime(string='Scheduled for', tracking=True, readonly=True, states={'draft': [('readonly', False)]},
+        compute='_compute_schedule_date', store=True, copy=True)
+    calendar_date = fields.Datetime('Calendar Date', compute='_compute_calendar_date', store=True, copy=False,
+        help="Technical field for the calendar view.")
     # don't translate 'body_arch', the translations are only on 'body_html'
     body_arch = fields.Html(string='Body', translate=False)
-    body_html = fields.Html(string='Body converted to be send by mail', sanitize_attributes=False)
+    body_html = fields.Html(string='Body converted to be sent by mail', sanitize_attributes=False)
     attachment_ids = fields.Many2many('ir.attachment', 'mass_mailing_ir_attachments_rel',
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
@@ -142,7 +165,10 @@ class MassMailing(models.Model):
 
     def _compute_total(self):
         for mass_mailing in self:
-            mass_mailing.total = len(mass_mailing.sudo()._get_recipients())
+            total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
+            if mass_mailing.contact_ab_pc < 100:
+                total = int(total / 100.0 * mass_mailing.contact_ab_pc)
+            mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
@@ -151,8 +177,7 @@ class MassMailing(models.Model):
             LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
             GROUP BY stats.mass_mailing_id
-        """, (tuple(self.ids), ))
-
+        """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
         mapped_data = dict([(m['id'], 100 * m['nb_clicks'] / m['nb_mails']) for m in mass_mailing_data])
         for mass_mailing in self:
@@ -160,6 +185,14 @@ class MassMailing(models.Model):
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
+        for key in (
+            'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
+            'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+        ):
+            self[key] = False
+        if not self.ids:
+            return
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
@@ -238,21 +271,42 @@ class MassMailing(models.Model):
             else:
                 mailing.mailing_domain = repr(mailing._get_default_mailing_domain())
 
+    @api.depends('schedule_type')
+    def _compute_schedule_date(self):
+        for mailing in self:
+            if mailing.schedule_type == 'now' or not mailing.schedule_date:
+                mailing.schedule_date = False
+
+    @api.depends('state', 'schedule_date', 'sent_date', 'next_departure')
+    def _compute_calendar_date(self):
+        for mailing in self:
+            if mailing.state == 'done':
+                mailing.calendar_date = mailing.sent_date
+            elif mailing.state == 'in_queue':
+                mailing.calendar_date = mailing.next_departure
+            elif mailing.state == 'sending':
+                mailing.calendar_date = fields.Datetime.now()
+            else:
+                mailing.calendar_date = False
+
     # ------------------------------------------------------
     # ORM
     # ------------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        if values.get('subject') and not values.get('name'):
-            values['name'] = "%s %s" % (values['subject'], datetime.strftime(fields.datetime.now(), tools.DEFAULT_SERVER_DATETIME_FORMAT))
-        if values.get('body_html'):
-            values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
-        return super(MassMailing, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        now = fields.Datetime.now()
+        for values in vals_list:
+            if values.get('subject') and not values.get('name'):
+                values['name'] = "%s %s" % (values['subject'], now)
+            if values.get('body_html'):
+                values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+        return super().create(vals_list)
 
     def write(self, values):
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+
         return super(MassMailing, self).write(values)
 
     @api.returns('self', lambda value: value.id)
@@ -297,17 +351,17 @@ class MassMailing(models.Model):
             'context': ctx,
         }
 
+    def action_launch(self):
+        return self.action_put_in_queue()
+
     def action_schedule(self):
-        self.ensure_one()
-        action = self.env.ref('mass_mailing.mailing_mailing_schedule_date_action').read()[0]
-        action['context'] = dict(self.env.context, default_mass_mailing_id=self.id)
-        return action
+        return self.action_put_in_queue()
 
     def action_put_in_queue(self):
         self.write({'state': 'in_queue'})
 
     def action_cancel(self):
-        self.write({'state': 'draft', 'schedule_date': False, 'next_departure': False})
+        self.write({'state': 'draft', 'schedule_date': False, 'schedule_type': 'now', 'next_departure': False})
 
     def action_retry_failed(self):
         failed_mails = self.env['mail.mail'].sudo().search([
@@ -331,7 +385,7 @@ class MassMailing(models.Model):
         return self._action_view_traces_filtered('sent')
 
     def _action_view_traces_filtered(self, view_filter):
-        action = self.env.ref('mass_mailing.mailing_trace_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mass_mailing.mailing_trace_action")
         action['name'] = _('%s Traces') % (self.name)
         action['context'] = {'search_default_mass_mailing_id': self.id,}
         filter_key = 'search_default_filter_%s' % (view_filter)
@@ -497,13 +551,8 @@ class MassMailing(models.Model):
         }
 
     def _get_recipients(self):
-        try:
-            mailing_domain = literal_eval(self.mailing_domain)
-        except:
-            res_ids = []
-            mailing_domain = [('id', 'in', res_ids)]
-        else:
-            res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
+        mailing_domain = self._parse_mailing_domain()
+        res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
         if self.contact_ab_pc < 100:
@@ -525,8 +574,36 @@ class MassMailing(models.Model):
             ('model', '=', self.mailing_model_real),
             ('res_id', 'in', res_ids),
             ('mass_mailing_id', '=', self.id)], ['res_id'])
-        done_res_ids = [record['res_id'] for record in already_mailed]
+        done_res_ids = {record['res_id'] for record in already_mailed}
         return [rid for rid in res_ids if rid not in done_res_ids]
+
+    def _get_unsubscribe_url(self, email_to, res_id):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = werkzeug.urls.url_join(
+            base_url, 'mail/mailing/%(mailing_id)s/unsubscribe?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'res_id': res_id,
+                    'email': email_to,
+                    'token': self._unsubscribe_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
+
+    def _get_view_url(self, email_to, res_id):
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        url = werkzeug.urls.url_join(
+            base_url, 'mailing/%(mailing_id)s/view?%(params)s' % {
+                'mailing_id': self.id,
+                'params': werkzeug.urls.url_encode({
+                    'res_id': res_id,
+                    'email': email_to,
+                    'token': self._unsubscribe_token(res_id, email_to),
+                }),
+            }
+        )
+        return url
 
     def action_send_mail(self, res_ids=None):
         author_id = self.env.user.partner_id.id
@@ -540,7 +617,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': mailing.body_html,
+                'body': self._prepend_preview(self.body_html, self.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
@@ -583,7 +660,7 @@ class MassMailing(models.Model):
             if mass_mailing.medium_id:
                 vals['medium_id'] = mass_mailing.medium_id.id
 
-            res[mass_mailing.id] = self._shorten_links(html, vals, blacklist=['/unsubscribe_from_list'])
+            res[mass_mailing.id] = mass_mailing._shorten_links(html, vals, blacklist=['/unsubscribe_from_list', '/view'])
 
         return res
 
@@ -616,6 +693,7 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
     # STATISTICS
     # ------------------------------------------------------
+
     def _action_send_statistics(self):
         """Send an email to the responsible of each finished mailing with the statistics."""
         self.kpi_mail_required = False
@@ -623,13 +701,18 @@ class MassMailing(models.Model):
         for mailing in self:
             user = mailing.user_id
             mailing = mailing.with_context(lang=user.lang or self._context.get('lang'))
+            mailing_type = mailing._get_pretty_mailing_type()
 
             link_trackers = self.env['link.tracker'].search(
                 [('mass_mailing_id', '=', mailing.id)]
             ).sorted('count', reverse=True)
             link_trackers_body = self.env['ir.qweb']._render(
                 'mass_mailing.mass_mailing_kpi_link_trackers',
-                {'object': mailing, 'link_trackers': link_trackers},
+                {
+                    'object': mailing,
+                    'link_trackers': link_trackers,
+                    'mailing_type': mailing_type,
+                },
             )
 
             rendered_body = self.env['ir.qweb']._render(
@@ -649,7 +732,10 @@ class MassMailing(models.Model):
             )
 
             mail_values = {
-                'subject': _('24H Stats of mailing "%s"') % mailing.subject,
+                'subject': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
+                             mailing_type=self._get_pretty_mailing_type(),
+                             mailing_name=mailing.subject
+                            ),
                 'email_from': user.email_formatted,
                 'email_to': user.email_formatted,
                 'body_html': full_mail,
@@ -665,6 +751,28 @@ class MassMailing(models.Model):
         1, 2 or 3 columns.
         """
         self.ensure_one()
+        mailing_type = self._get_pretty_mailing_type()
+        kpi = {}
+        if self.mailing_type == 'mail':
+            kpi = {
+                'kpi_fullname': _('Engagement on %(expected)i %(mailing_type)s Sent',
+                                  expected=self.expected,
+                                  mailing_type=mailing_type
+                                 ),
+                'kpi_col1': {
+                    'value': f'{self.received_ratio}%',
+                    'col_subtitle': _('RECEIVED (%i)', self.delivered),
+                },
+                'kpi_col2': {
+                    'value': f'{self.opened_ratio}%',
+                    'col_subtitle': _('OPENED (%i)', self.opened),
+                },
+                'kpi_col3': {
+                    'value': f'{self.replied_ratio}%',
+                    'col_subtitle': _('REPLIED (%i)', self.replied),
+                },
+                'kpi_action': None,
+            }
 
         random_tip = self.env['digest.tip'].search(
             [('group_id.category_id', '=', self.env.ref('base.module_category_marketing_email_marketing').id)]
@@ -679,28 +787,19 @@ class MassMailing(models.Model):
         web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         return {
-            'title': _('24H Stats of mailing'),
-            'sub_title': '"%s"' % self.subject,
+            'title': _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
+                       mailing_type=mailing_type,
+                       mailing_name=self.subject
+                       ),
             'top_button_label': _('More Info'),
             'top_button_url': url_join(web_base_url, f'/web#id={self.id}&model=mailing.mailing&view_type=form'),
             'kpi_data': [
+                kpi,
                 {
-                    'kpi_fullname': _('Engagement on %i Emails Sent') % self.sent,
-                    'kpi_action': None,
-                    'kpi_col1': {
-                        'value': f'{self.received_ratio}%',
-                        'col_subtitle': '%s (%i)' % (_('RECEIVED'), self.delivered),
-                    },
-                    'kpi_col2': {
-                        'value': f'{self.opened_ratio}%',
-                        'col_subtitle': '%s (%i)' % (_('OPENED'), self.opened),
-                    },
-                    'kpi_col3': {
-                        'value': f'{self.replied_ratio}%',
-                        'col_subtitle': '%s (%i)' % (_('REPLIED'), self.replied),
-                    },
-                }, {
-                    'kpi_fullname': _('Business Benefits on %i Emails Sent') % self.sent,
+                    'kpi_fullname': _('Business Benefits on %(expected)i %(mailing_type)s Sent',
+                                       expected=self.expected,
+                                       mailing_type=mailing_type
+                                     ),
                     'kpi_action': None,
                     'kpi_col1': {},
                     'kpi_col2': {},
@@ -710,6 +809,10 @@ class MassMailing(models.Model):
             'tips': [random_tip] if random_tip else False,
             'formatted_date': formatted_date,
         }
+
+    def _get_pretty_mailing_type(self):
+        if self.mailing_type == 'mail':
+            return _('Emails')
 
     # ------------------------------------------------------
     # TOOLS
@@ -732,9 +835,15 @@ class MassMailing(models.Model):
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
-        if self.mailing_type == 'mail' and 'opt_out' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([[('opt_out', '=', False)], mailing_domain])
 
+        return mailing_domain
+
+    def _parse_mailing_domain(self):
+        self.ensure_one()
+        try:
+            mailing_domain = literal_eval(self.mailing_domain)
+        except Exception:
+            mailing_domain = [('id', 'in', [])]
         return mailing_domain
 
     def _unsubscribe_token(self, res_id, email):

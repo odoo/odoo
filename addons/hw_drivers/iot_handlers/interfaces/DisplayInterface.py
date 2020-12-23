@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from re import sub, finditer
 import subprocess
 
-from odoo.addons.hw_drivers.controllers.driver import Interface
+from odoo.addons.hw_drivers.interface import Interface
 
 
 class DisplayInterface(Interface):
@@ -29,7 +32,6 @@ class DisplayInterface(Interface):
         if not len(display_devices):
             # No display connected, create "fake" device to be accessed from another computer
             display_devices['distant_display'] = {
-                'identifier': "distant_display",
                 'name': "Distant Display",
             }
 

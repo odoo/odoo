@@ -3,7 +3,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
 
     const Domain = require('web.Domain');
     const CustomFilterItem = require('web.CustomFilterItem');
-    const { Model } = require('web.model');
+    const ActionModel = require('web/static/src/js/views/action_model.js');
     const pyUtils = require('web.py_utils');
     const testUtils = require('web.test_utils');
 
@@ -33,7 +33,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                     fields: this.fields,
                 },
                 env: {
-                    controlPanelModel: new Model(),
+                    searchModel: new ActionModel(),
                 },
             });
 
@@ -70,21 +70,65 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             cfi.destroy();
         });
 
-        QUnit.test('selection field: default and updated value', async function (assert) {
-            assert.expect(2);
+        QUnit.test('custom OR filter presets new condition from preceding', async function (assert) {
+            assert.expect(4);
 
-            let expectedFilters;
-            class MockedControlPanelModel extends Model {
-                createNewFilters(preFilters) {
-                    assert.deepEqual(preFilters, expectedFilters);
-                }
-            }
-            const controlPanelModel = new MockedControlPanelModel();
+            const searchModel = new ActionModel();
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
                 },
-                env: { controlPanelModel },
+                env: { searchModel },
+            });
+
+            // Open custom filter form
+            await cpHelpers.toggleAddCustomFilter(cfi);
+
+            // Retrieve second selectable values for field and operator dropdowns
+            const fieldSecondValue = cfi.el.querySelector('.o_generator_menu_field option:nth-of-type(2)').value;
+            const operatorSecondValue = cfi.el.querySelector('.o_generator_menu_operator option:nth-of-type(2)').value;
+
+            // Check if they really exist…
+            assert.ok(!!fieldSecondValue);
+            assert.ok(!!operatorSecondValue);
+
+            // Add first filter condition
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_field'), fieldSecondValue);
+            await testUtils.fields.editSelect(cfi.el.querySelector('.o_generator_menu_operator'), operatorSecondValue);
+
+            // Add a second conditon on the filter being created
+            await cpHelpers.addCondition(cfi);
+
+            // Check the defaults for field and operator dropdowns
+            assert.strictEqual(
+                cfi.el.querySelector('.o_filter_condition:nth-of-type(2) .o_generator_menu_field').value,
+                fieldSecondValue
+            );
+            assert.strictEqual(
+                cfi.el.querySelector('.o_filter_condition:nth-of-type(2) .o_generator_menu_operator').value,
+                operatorSecondValue
+            );
+
+            cfi.destroy();
+        });
+
+        QUnit.test('selection field: default and updated value', async function (assert) {
+            assert.expect(4);
+
+            let expectedFilters;
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
+                    assert.deepEqual(preFilters, expectedFilters);
+                }
+            }
+            const searchModel = new MockedSearchModel();
+            const cfi = await createComponent(CustomFilterItem, {
+                props: {
+                    fields: this.fields,
+                },
+                env: { searchModel },
             });
 
             // Default value
@@ -112,23 +156,26 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         });
 
         QUnit.test('adding a simple filter works', async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
 
             delete this.fields.date_field;
-            class MockedControlPanelModel extends Model {
-                createNewFilters(preFilters) {
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
                     const preFilter = preFilters[0];
                     assert.strictEqual(preFilter.type, 'filter');
                     assert.strictEqual(preFilter.description, 'Boolean Field is true');
                     assert.strictEqual(preFilter.domain, '[["boolean_field","=",True]]');
                 }
             }
-            const controlPanelModel = new MockedControlPanelModel();
+            const searchModel = new MockedSearchModel();
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
                 },
-                env: { controlPanelModel },
+                env: { searchModel },
             });
 
             await cpHelpers.toggleAddCustomFilter(cfi);
@@ -142,7 +189,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         });
 
         QUnit.test('commit search with an extended proposition with field char does not cause a crash', async function (assert) {
-            assert.expect(6);
+            assert.expect(12);
 
             this.fields.many2one_field = { name: 'many2one_field', string: "Trululu", type: "many2one", searchable: true };
             const expectedDomains = [
@@ -154,8 +201,11 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 [['many2one_field', 'ilike', `\\`]],
             ];
             const testedValues = [`a`, `"a"`, `'a'`, `'`, `"`, `\\`];
-            class MockedControlPanelModel extends Model {
-                createNewFilters(preFilters) {
+
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
                     const preFilter = preFilters[0];
                     // this step combine a tokenization/parsing followed by a string formatting
                     let domain = pyUtils.assembleDomains([preFilter.domain]);
@@ -163,12 +213,12 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                     assert.deepEqual(domain, expectedDomains.shift());
                 }
             }
-            const controlPanelModel = new MockedControlPanelModel();
+            const searchModel = new MockedSearchModel();
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
                 },
-                env: { controlPanelModel },
+                env: { searchModel },
             });
 
             async function testValue(value) {
@@ -186,14 +236,17 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                 await testValue(value);
             }
 
+            delete ActionModel.registry.map.testExtension;
             cfi.destroy();
         });
 
         QUnit.test('custom filter datetime with equal operator', async function (assert) {
-            assert.expect(4);
+            assert.expect(5);
 
-            class MockedControlPanelModel extends Model {
-                createNewFilters(preFilters) {
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
                     const preFilter = preFilters[0];
                     assert.strictEqual(preFilter.description,
                         'DateTime is equal to "02/22/2017 11:00:00"',
@@ -201,9 +254,9 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                     assert.deepEqual(preFilter.domain,
                         '[["date_time_field","=","2017-02-22 15:00:00"]]',
                         "domain should be in UTC format");
+                    }
                 }
-            }
-            const controlPanelModel = new MockedControlPanelModel();
+            const searchModel = new MockedSearchModel();
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
@@ -213,7 +266,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                         return -240;
                     },
                 },
-                env: { controlPanelModel },
+                env: { searchModel },
             });
 
             await cpHelpers.toggleAddCustomFilter(cfi);
@@ -230,10 +283,12 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         });
 
         QUnit.test('custom filter datetime between operator', async function (assert) {
-            assert.expect(4);
+            assert.expect(5);
 
-            class MockedControlPanelModel extends Model {
-                createNewFilters(preFilters) {
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
                     const preFilter = preFilters[0];
                     assert.strictEqual(preFilter.description,
                         'DateTime is between "02/22/2017 11:00:00 and 02/22/2017 17:00:00"',
@@ -244,7 +299,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                         "domain should be in UTC format");
                 }
             }
-            const controlPanelModel = new MockedControlPanelModel();
+            const searchModel = new MockedSearchModel();
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
@@ -254,7 +309,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                         return -240;
                     },
                 },
-                env: { controlPanelModel },
+                env: { searchModel },
             });
 
             await cpHelpers.toggleAddCustomFilter(cfi);
@@ -279,7 +334,7 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                     fields: this.fields,
                 },
                 env: {
-                    controlPanelModel: new Model(),
+                    searchModel: new ActionModel(),
                 },
             });
 
@@ -312,10 +367,12 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         });
 
         QUnit.test('add custom filter with multiple values', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
-            class MockedControlPanelModel extends Model {
-                createNewFilters(preFilters) {
+            class MockedSearchModel extends ActionModel {
+                dispatch(method, ...args) {
+                    assert.strictEqual(method, 'createNewFilters');
+                    const preFilters = args[0];
                     const expected = [
                         {
                             description: 'A date is equal to "01/09/1997"',
@@ -342,12 +399,12 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
                         "Conditions should be in the correct order witht the right values.");
                 }
             }
-            const controlPanelModel = new MockedControlPanelModel();
+            const searchModel = new MockedSearchModel();
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
                 },
-                env: { controlPanelModel },
+                env: { searchModel },
             });
 
             await cpHelpers.toggleAddCustomFilter(cfi);

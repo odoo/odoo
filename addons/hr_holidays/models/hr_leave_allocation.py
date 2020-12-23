@@ -69,7 +69,7 @@ class HolidaysAllocation(models.Model):
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
     number_of_days = fields.Float(
-        'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True,
+        'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True, default=1,
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
@@ -88,7 +88,7 @@ class HolidaysAllocation(models.Model):
         help='This area is automatically filled by the user who validates the allocation')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automaticly filled by the user who validates the allocation with second level (If allocation type need second validation)')
+        help='This area is automatically filled by the user who validates the allocation with second level (If allocation type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
@@ -197,8 +197,15 @@ class HolidaysAllocation(models.Model):
             if period_start <= start_date:
                 period_start = start_date
 
-            worked = holiday.employee_id._get_work_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-            left = holiday.employee_id._get_leave_days_data(period_start, period_end, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+            employee = holiday.employee_id
+            worked = employee._get_work_days_data_batch(
+                period_start, period_end,
+                domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')]
+            )[employee.id]['days']
+            left = employee._get_leave_days_data_batch(
+                period_start, period_end,
+                domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')]
+            )[employee.id]['days']
             prorata = worked / (left + worked) if worked else 0
 
             days_to_give = holiday.number_per_interval
@@ -206,7 +213,7 @@ class HolidaysAllocation(models.Model):
                 # As we encode everything in days in the database we need to convert
                 # the number of hours into days for this we use the
                 # mean number of hours set on the employee's calendar
-                days_to_give = days_to_give / (holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+                days_to_give = days_to_give / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
             values['number_of_days'] = holiday.number_of_days + days_to_give * prorata
             if holiday.accrual_limit > 0:
@@ -222,7 +229,7 @@ class HolidaysAllocation(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.name = allocation.sudo().private_name
             else:
                 allocation.name = '*****'
@@ -230,7 +237,7 @@ class HolidaysAllocation(models.Model):
     def _inverse_description(self):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.sudo().private_name = allocation.name
 
     def _search_description(self, operator, value):
@@ -260,8 +267,10 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
                 allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
-            else:
+            elif allocation.number_of_days:
                 allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            else:
+                allocation.number_of_hours_display = 0.0
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -339,12 +348,14 @@ class HolidaysAllocation(models.Model):
             elif not holiday.holiday_status_id and not holiday._origin.holiday_status_id:
                 holiday.holiday_status_id = default_holiday_status_id
 
-    @api.depends('holiday_status_id', 'allocation_type')
+    @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display')
     def _compute_from_holiday_status_id(self):
         for allocation in self:
+            allocation.number_of_days = allocation.number_of_days_display
+            if allocation.type_request_unit == 'hour':
+                allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+
             # set default values
-            if not allocation.number_of_days and not allocation._origin.number_of_days:
-                allocation.number_of_days = 1
             if not allocation.interval_number and not allocation._origin.interval_number:
                 allocation.interval_number = 1
             if not allocation.number_per_interval and not allocation._origin.number_per_interval:
@@ -360,7 +371,6 @@ class HolidaysAllocation(models.Model):
                     allocation.date_to = new_date_to
 
             if allocation.allocation_type == 'accrual':
-                allocation.number_of_days = 0
                 if allocation.holiday_status_id.request_unit == 'hour':
                     allocation.unit_per_interval = 'hours'
                 else:
@@ -439,11 +449,11 @@ class HolidaysAllocation(models.Model):
         self.add_follower(employee_id)
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_correct_states(self):
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
         for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
             raise UserError(_('You cannot delete an allocation request which is in %s state.') % (state_description_values.get(holiday.state),))
-        return super(HolidaysAllocation, self).unlink()
 
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
@@ -474,7 +484,7 @@ class HolidaysAllocation(models.Model):
 
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
-            raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+            raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to be reset to Draft.'))
         self.write({
             'state': 'draft',
             'first_approver_id': False,

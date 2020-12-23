@@ -192,7 +192,6 @@ class SaleOrderLine(models.Model):
             :rtype: dict
         """
         self.ensure_one()
-        self = self.with_company(self.company_id)
         partner_supplier = supplierinfo.name
         fpos = self.env['account.fiscal.position'].sudo().get_fiscal_position(partner_supplier.id)
         date_order = self._purchase_get_date_order(supplierinfo)

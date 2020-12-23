@@ -4,19 +4,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 // Use css variables to control the default style of the editor so that an
 // external assets bundle can influence it without duplicating the css.
 :root {
-    --o-we-toolbar-height: #{$o-we-toolbar-height};
-
-    --o-we-bg-color: #{$o-we-bg-color};
-    --o-we-bg-color-dark: #{$o-we-bg-color-dark};
-    --o-we-color: #{$o-we-color};
-    --o-we-color-accent: #{$o-we-color};
-
-    --o-we-dropdown-bg-color: #{$o-we-dropdown-bg-color};
-    --o-we-dropdown-color: #{$o-we-dropdown-color};
-
-    --o-we-snippets-bg-color: #{$o-we-bg-color};
-    --o-we-snippets-bg-info: #{$o-we-color-info};
-    --o-we-snippets-color: #{$o-we-color};
+    @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
 }
 
 // EDITOR TOP BAR AND POPOVER
@@ -24,27 +12,18 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     max-width: 350px;
     left: 50% !important;
     transform: translate(-50%, 0);
+
     .popover-body {
         white-space: normal;
-    }
-}
-
-.editor_enable {
-    padding-top: var(--o-we-toolbar-height) !important;
-    .note-popover .popover .popover-body {
-        height: var(--o-we-toolbar-height);
-    }
-    .note-popover .popover  {
-        transform: none;
     }
 }
 
 #web_editor-top-edit {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    z-index: $o-we-zindex;
+    z-index: $o-we-zindex + 1;
     height: var(--o-we-toolbar-height);
-    background-color: var(--o-we-bg-color);
+    background-color: $o-we-bg;
 
     .note-popover .popover {
         top: 0 !important;
@@ -52,14 +31,11 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         right: 0 !important;
         border: none !important;
         max-width: none;
+        transform: none;
     }
-}
-
-.wysiwyg_iframe,
-.note-editor {
-    border: $o-we-border-width solid $o-we-border-color;
-    margin: 0;
-    padding: 0;
+    .note-popover .popover .popover-body {
+        height: var(--o-we-toolbar-height);
+    }
 }
 // avoid popover bar over its opened modal
 .note-popover .popover {
@@ -69,7 +45,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 .panel-heading.note-toolbar {
     padding-bottom: 0;
     border-bottom: $o-we-border-width solid $o-we-border-color;
-    background-color: var(--o-we-bg-color);
+    background-color: $o-we-bg;
+    color: $o-we-color;
     font-family: $o-we-font-family;
 
     // Main layout of buttons
@@ -89,22 +66,25 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     // Active buttons and opened dropdowns
     .btn {
         padding: 0.5em 0.75em !important;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
-        color: var(--o-we-color);
+        border-left: $o-we-item-border-width solid $o-we-item-border-color;
+        border-right: $o-we-item-border-width solid $o-we-item-border-color;
+        background: $o-we-sidebar-content-field-clickable-bg;
+        color: inherit;
         font-size: $o-we-font-size !important;
 
-        &.active {
-            background-color: var(--o-we-bg-color-dark);
-            color: var(--o-we-color-accent);
-        }
-
-        &:hover {
-            color: var(--o-we-color-accent);
-        }
-
+        &.active,
         &:focus, &:active, &:focus:active {
             @extend %we-active-button;
+        }
+
+        // This element should have been removed but still exists in 13.0 by
+        // mistake. This takes advantage of it to restore the color preview
+        // feature which disappeared and cannot be fixed as in 12.0.
+        // TODO fix the right way in 14.0.
+        > .caret {
+            display: block;
+            @include o-position-absolute(auto, 0, 0, 0);
+            border-bottom: 2px solid transparent;
         }
     }
     .btn-group.show {
@@ -115,24 +95,20 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             content: '';
             @include o-position-absolute(100%, $o-we-border-width, auto, $o-we-border-width);
             height: $o-we-border-width;
-            background-color: var(--o-we-dropdown-bg-color);
         }
     }
     %we-active-button {
-        border-left-color: $o-we-border-color;
-        border-right-color: $o-we-border-color;
-        background: var(--o-we-dropdown-bg-color);
+        background: $o-we-sidebar-content-field-pressed-bg;
+        color: $o-we-sidebar-content-field-pressed-color;
         box-shadow: none !important;
         outline: none !important;
     }
     .dropdown-menu {
-        margin-top: 0;
-        border: $o-we-border-width solid $o-we-border-color;
-        border-top-color: transparent;
-        border-radius: 0;
-        background-color: var(--o-we-dropdown-bg-color);
-        color: var(--o-we-dropdown-color);
-        box-shadow: none;
+        margin-top: $o-we-dropdown-spacing;
+        padding: 0;
+        border: $o-we-dropdown-border-width solid $o-we-dropdown-border-color;
+        background-color: $o-we-dropdown-bg;
+        box-shadow: $o-we-dropdown-shadow;
     }
     .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
         min-width: 0;
@@ -141,14 +117,47 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         display: block;
         max-width: none;
         overflow: visible;
-        color: var(--o-we-color);
+        margin-top: 0;
+        padding: 0 1em;
+        border: none;
+        background: none;
+        background-clip: padding-box;
+        background-color: $o-we-dropdown-item-bg;
+        color: $o-we-dropdown-item-color;
+        line-height: $o-we-dropdown-item-height;
 
-        &:hover {
-            background-color: var(--o-we-bg-color) !important;
-            color: var(--o-we-color-accent) !important;
+        &:not(.d-none) ~ .dropdown-item {
+            // Use a border-top instead of a margin-top as when the
+            // mouse goes from one select button to another, the
+            // option preview should switch from the first button's
+            // option to the second one without reset to selected
+            // state in between.
+            border-top: $o-we-dropdown-item-spacing solid transparent;
+        }
 
+        &.active {
+            color: $o-we-dropdown-item-active-color;
+        }
+    }
+    li > .dropdown-item {
+        border-top: $o-we-dropdown-item-spacing solid transparent;
+    }
+
+    .note-style {
+        .dropdown-item {
             > * {
-                color: inherit !important;
+                display: inline;;
+            }
+            &, > * {
+                line-height: 2;
+            }
+            &[data-value="blockquote"] {
+                padding-top: 0.5em;
+                padding-bottom: 0.5em;
+
+                > * {
+                    display: block;
+                }
             }
         }
     }
@@ -159,7 +168,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         max-width: 150px;
     }
     .note-color-palette div .note-color-btn {
-        border-color: var(--o-we-dropdown-bg-color);
+        border-color: $o-we-dropdown-bg;
     }
     .note-custom-color-palette .note-color-row {
         height: auto!important;
@@ -169,7 +178,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             width: 20px;
             padding: 0;
             margin: 0;
-            border: 1px solid var(--o-we-dropdown-bg-color);
+            border: 1px solid $o-we-dropdown-bg;
         }
     }
 }
@@ -178,16 +187,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 }
 
 // ANIMATIONS
-@keyframes fadeInDownSmall {
-    0% {
-        opacity: 0;
-        transform: translate(0, -5px);
-    }
-    100% {
-        opacity: 1;
-        transform: translate(0, 0);
-    }
-}
 
 @keyframes inputHighlighter {
     from {
@@ -221,9 +220,12 @@ body .modal {
                 min-height: 300px;
             }
 
-            .o_we_images > .o_existing_attachment_cell img {
-                max-width: 100%;
-                background-image: url("/web_editor/static/src/img/transparent.png");
+            .o_we_images > .o_existing_attachment_cell .o_we_media_dialog_img_wrapper {
+                @extend %o-preview-alpha-background;
+
+                &, > img {
+                    width: 100%;
+                }
             }
 
             .o_existing_attachment_cell {
@@ -231,14 +233,10 @@ body .modal {
                 margin: 1px;
 
                 .o_existing_attachment_optimize, .o_existing_attachment_remove {
-                    background-color: scale-color($card-border-color, $alpha: -50%);
-                    text-shadow: 0 0 1px white;
+                    background-color: rgba(white, 0.4);
                     opacity: 0;
                     cursor: pointer;
-
-                    &:hover {
-                        background-color: $card-border-color;
-                    }
+                    transition: color 0.2s ease;
                 }
 
                 .o_existing_attachment_optimize {
@@ -248,6 +246,7 @@ body .modal {
 
                 .o_existing_attachment_remove {
                     @include o-position-absolute($top: 0, $right: 0);
+                    z-index: 1;
                     border-radius: 0 0 0 2px;
                     &:hover {
                         color: $o-we-color-danger;
@@ -332,6 +331,10 @@ body .modal {
                         }
                     }
                 }
+
+                #video-suggestion > .o_sample_video {
+                    cursor: pointer;
+                }
             }
         }
     }
@@ -347,6 +350,11 @@ body .modal {
 
         .o_link_dialog_preview {
             border-left: 1px solid gray('200');
+            #link-preview a {
+                &:first-child {
+                    display: none;
+                }
+            }
         }
     }
 
@@ -363,7 +371,9 @@ body .modal {
 
 // Highlight selected image/icon
 %o-we-selected-image {
-    outline: 3px solid rgba(150, 150, 220, 0.3);
+    $o-selected-image-color: green;
+    background: $o-selected-image-color;
+    outline: 3px solid $o-selected-image-color;
 }
 
 img.o_we_selected_image {
@@ -378,29 +388,14 @@ img.o_we_selected_image {
 img::selection {
     background: transparent;
 }
-
-.fa.mx-auto,
-img.o_we_custom_image.mx-auto {
-    display: block;
-}
-
-@include media-breakpoint-down(md) {
-    #web_editor-top-edit {
-        position: initial !important;
-        height: initial !important;
-        top: initial !important;
-        left: initial !important;
-
-        #web_editor-toolbars .popover-body {
-            display: flex;
-            width: 100%;
-            overflow-x: auto;
-
-            .btn-group {
-                position: static;
-            }
-        }
-    }
+.o_we_media_author {
+    font-size: 11px;
+    @include o-position-absolute($bottom: 0, $left: 0, $right: 0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .7);
 }
 
 // User modal in edit mode
@@ -409,7 +404,7 @@ img.o_we_custom_image.mx-auto {
         top: 40px;
         right: 0;
         bottom: 0;
-        left: $o-we-sidebar-width;
+        right: $o-we-sidebar-width;
         width: auto;
         height: auto;
 
@@ -459,13 +454,9 @@ img.o_we_custom_image.mx-auto {
         button:not(.btn), label {
             margin: 0;
             border: none;
-            border-right: 1px solid var(--o-we-bg-color-dark);
-            background-color: var(--o-we-bg-color);
-            color: var(--o-we-color);
-
-            &:hover {
-                background-color: var(--o-we-bg-color-dark);
-            }
+            border-right: 1px solid $o-we-bg;
+            background-color: $o-we-bg;
+            color: $o-we-color;
 
             &:first-child {
                 border-top-left-radius: 0.25rem;
@@ -479,4 +470,295 @@ img.o_we_custom_image.mx-auto {
             }
         }
     }
+}
+.wrap_editor {
+    height: 100vh;
+}
+.o_editor_center {
+    flex: 1 1 auto;
+    outline: none;
+}
+
+.o_forum_editor .note-editing-area > div {
+    padding: 3px 5px;
+}
+
+jw-toolbar {
+    display: block;
+    text-align: center;
+
+    jw-group {
+        display: inline-block;
+        margin: 5px 0;
+        &>*:first-child{
+            margin-left:5px;
+        }
+        &>*:last-child{
+            margin-right:5px;
+        }
+    }
+    jw-group jw-separator {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+
+    span {
+        font-weight: 600;
+        padding: 5px;
+    }
+
+    select, option {
+        padding: 5px 10px;
+    }
+
+    option.label {
+        font-weight: bold;
+    }
+
+    .h1 {
+        font-size: 2em;
+        font-weight: bold;
+    }
+    .h2 {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+    .h3 {
+        font-size: 1.17em;
+        font-weight: bold;
+    }
+    .h4 {
+        font-size: 1em;
+        font-weight: bold;
+    }
+    .h5 {
+        font-size: 0.83em;
+        font-weight: bold;
+    }
+    .h6 {
+        font-size: 0.67em;
+        font-weight: bold;
+    }
+    input[type=text], input[type=number], select {
+        flex: 0 1 auto;
+        height: 27px;
+        vertical-align: middle;
+        width: $o-we-sidebar-content-field-input-max-width;
+        border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+        border-radius: $o-we-sidebar-content-field-border-radius;
+
+        &:focus {
+            border-color: $o-we-sidebar-content-field-input-border-color;
+        }
+    }
+    jw-button {
+        width: auto !important;
+        height: 27px;
+        padding: 7px;
+
+        &:hover {
+            background-color: rgb(241, 243, 244);
+            cursor: pointer;
+        }
+
+        &.active {
+            background: #e5e5e5;
+            -webkit-box-shadow: inset 0px 0px 5px #c1c1c1;
+            -moz-box-shadow: inset 0px 0px 5px #c1c1c1;
+            box-shadow: inset 0px 0px 5px #c1c1c1;
+            outline: none;
+        }
+    }
+    .jw-primary-button {
+        background-color: #00A09D;
+        color: white;
+    }
+    .jw-danger-button {
+        background-color: #af120c;
+        color: white;
+    }
+}
+
+jw-follow-range jw-toolbar {
+    background-color: #444444;
+    color: #dddddd;
+    border-radius: 30px;
+    margin: -5px 5px 0 5px;
+    padding: 0 5px 0 5px;
+
+    jw-group {
+        margin: 2px;
+    }
+    jw-button {
+        line-height: normal;
+        border-radius: 6px;
+        &:hover {
+            background-color: #777777;
+        }
+        &.active {
+            background-color: #686767;
+            -webkit-box-shadow: inset 0px 0px 5px #777777;
+            -moz-box-shadow: inset 0px 0px 5px #777777;
+            box-shadow: inset 0px 0px 5px #777777;
+        }
+    }
+    &:before {
+        border-color: transparent transparent #444444 transparent;
+        border-width: 9px;
+        left: 30%;
+        bottom: 109%;
+        border-style: solid;
+        content: '';
+        position: absolute;
+    }
+
+    jw-select {
+        > jw-group {
+            display: none;
+            background-color: #444;
+            border-radius: 10px;
+            position: absolute;
+            padding: 5px 10px;
+            z-index: 1000;
+            margin-top: 8px !important;
+            &:before {
+                border-color: transparent transparent #444444 transparent;
+                border-width: 9px;
+                top: -17px;
+                border-style: solid;
+                content: '';
+                position: absolute;
+            }
+            jw-button {
+                display: block;
+                line-height: 28px;
+                height: 35px;
+                text-align: left;
+                color: #C6C6C6;
+                border-bottom-width: 0;
+                &.active {
+                    background-color: #586e71 !important;
+                    box-shadow: none;
+                }
+                &:last-child {
+                    border-bottom-width: 1px;
+                }
+                &:first-child {
+                    margin-left: 0; // We need a stronger selector to overrride previous toolbar css
+                }
+                &.p, &.h1, &.h2, &.h3, &.h4, &.h5, &.h6, &.pre {
+                    line-height: 21px;
+                }
+
+            }
+            .h1 {
+                font-size: 1.5em;
+            }
+            .h2 {
+                font-size: 1.3em;
+            }
+            .h3 {
+                font-size: 1.1em;
+            }
+            .h4 {
+                font-size: 1em;
+            }
+            .h5 {
+                font-size: 0.83em;
+            }
+            .h6 {
+                font-size: 0.67em;
+            }
+        }
+        &[aria-pressed="true"] > jw-group {
+            display: block;
+        }
+    }
+    jw-group[name=textSize] jw-select jw-group jw-button {
+        padding-left: 24px;
+        &.active {
+            &:before {
+                color: #01bad2;
+                content: "";
+                right: auto;
+                left: 18px;
+                font-size: 12px;
+                position: absolute;
+                font-family: FontAwesome;
+            }
+        }
+    }
+    jw-group[name=align] jw-select {
+        &>jw-button {
+            font-family: "FontAwesome" !important;
+            text-align: center;
+            &:before {
+                content: "\f036";
+            }
+            &:after {
+                display: inline-block;
+                margin-left: 2px;
+                vertical-align: 2px;
+                content: "";
+                border-top: 0.3em solid;
+                border-right: 0.3em solid transparent;
+                border-bottom: 0;
+                border-left: 0.3em solid transparent;
+            }
+        }
+        jw-group {
+            padding: 10px;
+            jw-button {
+                margin: 0 4px;
+            }
+        }
+    }
+}
+
+jw-follow-range {
+    z-index: 1050;
+}
+table.table-picker {
+    position: fixed !important;
+}
+
+body jw-devtools {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    z-index: 10000;
+}
+
+.oe_absolute_dropdown {
+    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+    border-radius: $o-we-sidebar-content-field-border-radius;
+    background-color: $o-we-sidebar-content-field-clickable-bg;
+    color: $o-we-sidebar-content-field-clickable-color;
+
+    padding-left: 0;
+    padding-right: 0;
+
+    a {
+        padding: 0 10px;
+        color: white;
+    }
+
+    .dropdown-menu a {
+        display: block;
+    }
+}
+
+// mobile preview
+
+#jw-iframe, #jw-iframe jw-iframe {
+    position: fixed;
+    height: 100%;
+}
+.note-editable {
+    height: 100%;
+    overflow: auto;
+}
+body .note-editable {
+    height: initial;
+    overflow: initial;
 }

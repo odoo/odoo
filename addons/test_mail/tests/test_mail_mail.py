@@ -90,3 +90,7 @@ class TestMailMailRace(common.TransactionCase):
         mail.unlink()
         self.partner.unlink()
         self.env.cr.commit()
+
+        # because we committed the cursor, the savepoint of the test method is
+        # gone, and this would break TransactionCase cleanups
+        self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)

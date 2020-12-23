@@ -259,6 +259,63 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).mapped('quantity_done')), 20)
         self.assertEqual(sum(mo.move_finished_ids.mapped('quantity_done')), 5)
 
+    def test_update_quantity_3(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
+                (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ]
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 1
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
+        mo_form = Form(production)
+        mo_form.product_qty = 3
+        production = mo_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 165)
+
+    def test_update_quantity_4(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
+                (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
+            ],
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 1
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 40)
+        mo_form = Form(production)
+        mo_form.product_qty = 3
+        production = mo_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
+
     def test_rounding(self):
         """ Checks we round up when bringing goods to produce and round half-up when producing.
         This implementation allows to implement an efficiency notion (see rev 347f140fe63612ee05e).
@@ -634,6 +691,38 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
+    def test_consumption_flexible_2(self):
+        """ Checks the constraints of a strict BOM only apply to the product of the BoM. """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(consumption='flexible', qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        add_product = self.env['product.product'].create({
+            'name': 'additional',
+            'type': 'product',
+        })
+        mo.action_assign()
+
+        mo_form = Form(mo)
+
+        # try adding another line for a bom product to increase the quantity
+        mo_form.qty_producing = 1
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = p1
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = add_product
+        mo = mo_form.save()
+        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.qty_done = 1
+        details_operation_form.save()
+
+        # Won't accept to be done, instead return a wizard
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
     def test_product_produce_9(self):
         """ Checks the production wizard contains lines even for untracked products. """
         serial = self.env['product.product'].create({
@@ -837,13 +926,18 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo)
         mo_form.qty_producing = 3
         self.assertEqual(sum([x['quantity_done'] for x in mo_form.move_raw_ids._records]), 15, 'Update the produce quantity should change the components quantity.')
-        self.assertEqual(sum([x['reserved_availability'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo = mo_form.save()
+        self.assertEqual(sum(mo.move_raw_ids.mapped('reserved_availability')), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo_form = Form(mo)
         mo_form.qty_producing = 4
         self.assertEqual(sum([x['quantity_done'] for x in mo_form.move_raw_ids._records]), 20, 'Update the produce quantity should change the components quantity.')
-        self.assertEqual(sum([x['reserved_availability'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo = mo_form.save()
+        self.assertEqual(sum(mo.move_raw_ids.mapped('reserved_availability')), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo_form = Form(mo)
         mo_form.qty_producing = 1
         self.assertEqual(sum([x['quantity_done'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should change the components quantity.')
-        self.assertEqual(sum([x['reserved_availability'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo = mo_form.save()
+        self.assertEqual(sum(mo.move_raw_ids.mapped('reserved_availability')), 5, 'Update the produce quantity should not change the components reserved quantity.')
         # try adding another product that doesn't belong to the BoM
         with mo_form.move_raw_ids.new() as move:
             move.product_id = self.product_4
@@ -882,7 +976,8 @@ class TestMrpOrder(TestMrpCommon):
         mo2.action_confirm()
 
         mo_form = Form(mo2)
-        mo_form.lot_producing_id = sn
+        with self.assertLogs(level="WARNING"):
+            mo_form.lot_producing_id = sn
         mo2 = mo_form.save()
         with self.assertRaises(UserError):
             mo2.button_mark_done()
@@ -1023,6 +1118,20 @@ class TestMrpOrder(TestMrpCommon):
         details_operation_form.save()
         mo2.button_mark_done()
 
+    def test_product_produce_12(self):
+        """ Checks that, the production is robust against deletion of finished move."""
+
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        # remove the finished move from the available to be updated
+        mo.move_finished_ids._action_done()
+        mo.button_mark_done()
+
     def test_product_produce_uom(self):
         """ Produce a finished product tracked by serial number. Set another
         UoM on the bom. The produce wizard should keep the UoM of the product (unit)
@@ -1118,3 +1227,283 @@ class TestMrpOrder(TestMrpCommon):
 
         # Check Mo is created or not
         self.assertTrue(mo, "Mo is created")
+
+    def test_immediate_validate_1(self):
+        """ In a production with a single available move raw, clicking on mark as done without filling any
+        quantities should open a wizard asking to process all the reservation (so, the whole move).
+        """
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
+        mo.action_assign()
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(mo.move_raw_ids.mapped('state'), ['done', 'done'])
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1, 1])
+        self.assertEqual(mo.move_finished_ids.state, 'done')
+        self.assertEqual(mo.move_finished_ids.quantity_done, 1)
+
+    def test_immediate_validate_2(self):
+        """ In a production with a single available move raw, clicking on mark as done after filling quantity
+        for a stock move only will trigger an error as qty_producing is left to 0."""
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
+        mo.action_assign()
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.qty_done = 1
+        details_operation_form.save()
+        with self.assertRaises(UserError):
+            res_dict = mo.button_mark_done()
+
+    def test_immediate_validate_3(self):
+        """ In a production with a serial number tracked product. Check that the immediate production only creates
+        one unit of finished product. Test with reservation."""
+        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=2, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
+        mo.action_assign()
+        action = mo.button_mark_done()
+        self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        action = wizard.process()
+        self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        action = wizard.action_backorder()
+        self.assertEqual(mo.qty_producing, 1)
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1, 1])
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(mo_backorder.product_qty, 1)
+        self.assertEqual(mo_backorder.move_raw_ids.mapped('product_uom_qty'), [1, 1])
+
+    def test_immediate_validate_4(self):
+        """ In a production with a serial number tracked product. Check that the immediate production only creates
+        one unit of finished product. Test without reservation."""
+        mo, bom, p_final, p1, p2 = self.generate_mo(tracking_final='serial', qty_final=2, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
+        action = mo.button_mark_done()
+        self.assertEqual(action.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        action = wizard.process()
+        self.assertEqual(action.get('res_model'), 'mrp.production.backorder')
+        wizard = Form(self.env[action['res_model']].with_context(action['context'])).save()
+        action = wizard.action_backorder()
+        self.assertEqual(mo.qty_producing, 1)
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1, 1])
+        self.assertEqual(len(mo.procurement_group_id.mrp_production_ids), 2)
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        self.assertEqual(mo_backorder.product_qty, 1)
+        self.assertEqual(mo_backorder.move_raw_ids.mapped('product_uom_qty'), [1, 1])
+
+    def test_immediate_validate_5(self):
+        """Validate three productions at once."""
+        mo1, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
+        mo1.action_assign()
+        mo2_form = Form(self.env['mrp.production'])
+        mo2_form.product_id = p_final
+        mo2_form.bom_id = bom
+        mo2_form.product_qty = 1
+        mo2 = mo2_form.save()
+        mo2.action_confirm()
+        mo2.action_assign()
+        mo3_form = Form(self.env['mrp.production'])
+        mo3_form.product_id = p_final
+        mo3_form.bom_id = bom
+        mo3_form.product_qty = 1
+        mo3 = mo3_form.save()
+        mo3.action_confirm()
+        mo3.action_assign()
+        mos = mo1 | mo2 | mo3
+        res_dict = mos.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(mos.move_raw_ids.mapped('state'), ['done'] * 6)
+        self.assertEqual(mos.move_raw_ids.mapped('quantity_done'), [1] * 6)
+        self.assertEqual(mos.move_finished_ids.mapped('state'), ['done'] * 3)
+        self.assertEqual(mos.move_finished_ids.mapped('quantity_done'), [1] * 3)
+
+    def test_immediate_validate_6(self):
+        """In a production for a tracked product, clicking on mark as done without filling any quantities should
+        pop up the immediate transfer wizard. Processing should choose a new lot for the finished product. """
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1, tracking_final='lot')
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location_components, 5.0)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location_components, 5.0)
+        mo.action_assign()
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(mo.move_raw_ids.mapped('state'), ['done'] * 2)
+        self.assertEqual(mo.move_raw_ids.mapped('quantity_done'), [1] * 2)
+        self.assertEqual(mo.move_finished_ids.state, 'done')
+        self.assertEqual(mo.move_finished_ids.quantity_done, 1)
+        self.assertTrue(mo.move_finished_ids.move_line_ids.lot_id != False)
+
+    def test_immediate_validate_uom(self):
+        """In a production with a different uom than the finished product one, the
+        immediate production wizard should fill the correct quantities. """
+        p_final = self.env['product.product'].create({
+            'name': 'final',
+            'type': 'product',
+        })
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': p_final.id,
+            'product_tmpl_id': p_final.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'consumption': 'flexible',
+            'bom_line_ids': [(0, 0, {'product_id': component.id, 'product_qty': 1})]
+        })
+        self.env['stock.quant']._update_available_quantity(component, self.stock_location_components, 25.0)
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.bom_id = bom
+        mo_form.product_uom_id = self.uom_dozen
+        mo_form.product_qty = 1
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.action_assign()
+        res_dict = mo.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+        self.assertEqual(mo.move_raw_ids.state, 'done')
+        self.assertEqual(mo.move_raw_ids.quantity_done, 12)
+        self.assertEqual(mo.move_finished_ids.state, 'done')
+        self.assertEqual(mo.move_finished_ids.quantity_done, 1)
+        self.assertEqual(component.qty_available, 13)
+
+    def test_copy(self):
+        """ Check that copying a done production, create all the stock moves"""
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
+        mo.action_confirm()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        mo_copy = mo.copy()
+        self.assertTrue(mo_copy.move_raw_ids)
+        self.assertTrue(mo_copy.move_finished_ids)
+        mo_copy.action_confirm()
+        mo_form = Form(mo_copy)
+        mo_form.qty_producing = 1
+        mo_copy = mo_form.save()
+        mo_copy.button_mark_done()
+        self.assertEqual(mo_copy.state, 'done')
+
+    def test_product_produce_different_uom(self):
+        """ Check that for products tracked by lots,
+        with component product UOM different from UOM used in the BOM,
+        we do not create a new move line due to extra reserved quantity
+        caused by decimal rounding conversions.
+        """
+
+        # the overall decimal accuracy is set to 3 digits
+        precision = self.env.ref('product.decimal_product_uom')
+        precision.digits = 3
+
+        # define L and ml, L has rounding .001 but ml has rounding .01
+        # when producing e.g. 187.5ml, it will be rounded to .188L
+        categ_test = self.env['uom.category'].create({'name': 'Volume Test'})
+
+        uom_L = self.env['uom.uom'].create({
+            'name': 'Test Liters',
+            'category_id': categ_test.id,
+            'uom_type': 'reference',
+            'rounding': 0.001
+        })
+
+        uom_ml = self.env['uom.uom'].create({
+            'name': 'Test ml',
+            'category_id': categ_test.id,
+            'uom_type': 'smaller',
+            'rounding': 0.01,
+            'factor_inv': 0.001,
+        })
+
+        # create a product component and the final product using the component
+        product_comp = self.env['product.product'].create({
+            'name': 'Product Component',
+            'type': 'product',
+            'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'uom_id': uom_L.id,
+            'uom_po_id': uom_L.id,
+        })
+
+        product_final = self.env['product.product'].create({
+            'name': 'Product Final',
+            'type': 'product',
+            'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'uom_id': uom_L.id,
+            'uom_po_id': uom_L.id,
+        })
+
+        # the products are tracked by lot, so we go through _generate_consumed_move_line
+        lot_final = self.env['stock.production.lot'].create({
+            'name': 'Lot Final',
+            'product_id': product_final.id,
+            'company_id': self.env.company.id,
+        })
+
+        lot_comp = self.env['stock.production.lot'].create({
+            'name': 'Lot Component',
+            'product_id': product_comp.id,
+            'company_id': self.env.company.id,
+        })
+
+        # update the quantity on hand for Component, in a lot
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(product_comp, self.stock_location, 1, lot_id=lot_comp)
+
+        # create a BOM for Final, using Component
+        test_bom = self.env['mrp.bom'].create({
+            'product_id': product_final.id,
+            'product_tmpl_id': product_final.product_tmpl_id.id,
+            'product_uom_id': uom_L.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_comp.id,
+                'product_qty': 375.00,
+                'product_uom_id': uom_ml.id
+            })],
+        })
+
+        # create a MO for this BOM
+        mo_product_final_form = Form(self.env['mrp.production'])
+        mo_product_final_form.product_id = product_final
+        mo_product_final_form.product_uom_id = uom_L
+        mo_product_final_form.bom_id = test_bom
+        mo_product_final_form.product_qty = 0.5
+        mo_product_final_form = mo_product_final_form.save()
+
+        mo_product_final_form.action_confirm()
+        mo_product_final_form.action_assign()
+        self.assertEqual(mo_product_final_form.reservation_state, 'assigned')
+
+        # produce
+        res_dict = mo_product_final_form.button_mark_done()
+        self.assertEqual(res_dict.get('res_model'), 'mrp.immediate.production')
+        wizard = Form(self.env[res_dict['res_model']].with_context(res_dict['context'])).save()
+        wizard.process()
+
+        # check that in _generate_consumed_move_line,
+        # we do not create an extra move line because
+        # of a conversion 187.5ml = 0.188L
+        # thus creating an extra line with 'product_uom_qty': 0.5
+        self.assertEqual(len(mo_product_final_form.move_raw_ids.move_line_ids), 1, 'One move line should exist for the MO.')

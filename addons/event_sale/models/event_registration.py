@@ -10,12 +10,12 @@ class EventRegistration(models.Model):
 
     is_paid = fields.Boolean('Is Paid')
     # TDE FIXME: maybe add an onchange on sale_order_id
-    sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade', copy=False)
+    sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False)
     payment_status = fields.Selection(string="Payment Status", selection=[
             ('to_pay', 'Not Paid'),
             ('paid', 'Paid'),
-            ('free', 'Free'),
+            ('free', 'Free Admission'),
         ], compute="_compute_payment_status", compute_sudo=True)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False, store=True)
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False, store=True)
@@ -38,21 +38,27 @@ class EventRegistration(models.Model):
         for registration in self:
             if registration.sale_order_id.campaign_id:
                 registration.utm_campaign_id = registration.sale_order_id.campaign_id
+            elif not registration.utm_campaign_id:
+                registration.utm_campaign_id = False
 
     @api.depends('sale_order_id')
     def _compute_utm_source_id(self):
         for registration in self:
             if registration.sale_order_id.source_id:
                 registration.utm_source_id = registration.sale_order_id.source_id
+            elif not registration.utm_source_id:
+                registration.utm_source_id = False
 
     @api.depends('sale_order_id')
     def _compute_utm_medium_id(self):
         for registration in self:
             if registration.sale_order_id.medium_id:
                 registration.utm_medium_id = registration.sale_order_id.medium_id
+            elif not registration.utm_medium_id:
+                registration.utm_medium_id = False
 
     def action_view_sale_order(self):
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action['views'] = [(False, 'form')]
         action['res_id'] = self.sale_order_id.id
         return action

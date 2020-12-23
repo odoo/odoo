@@ -26,10 +26,11 @@ class ResPartner(models.Model):
     def _format_vat_cl(self, values):
         identification_types = [self.env.ref('l10n_latam_base.it_vat').id, self.env.ref('l10n_cl.it_RUT').id,
                                 self.env.ref('l10n_cl.it_RUN').id]
-        partner_country_is_chile = (values.get('country_id') == self.env.ref('base.cl').id) or (
-                    values.get('l10n_latam_identification_type_id') and
-                    self.env['l10n_latam.identification.type'].browse(
-                        values.get('l10n_latam_identification_type_id')).country_id == self.env.ref('base.cl'))
+        country = self.env["res.country"].browse(values.get('country_id'))
+        identification_type = self.env['l10n_latam.identification.type'].browse(
+            values.get('l10n_latam_identification_type_id')
+        )
+        partner_country_is_chile = country.code == "CL" or identification_type.country_id.code == "CL"
         if partner_country_is_chile and \
                 values.get('l10n_latam_identification_type_id') in identification_types and values.get('vat'):
             return stdnum.util.get_cc_module('cl', 'vat').format(values['vat']).replace('.', '').replace(

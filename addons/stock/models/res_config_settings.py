@@ -7,18 +7,13 @@ from odoo import api, fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    module_procurement_jit = fields.Selection([
-        ('1', 'Immediately after sales order confirmation'),
-        ('0', 'Manually or based on automatic scheduler')
-        ], "Reservation", default='0',
-        help="Reserving products manually in delivery orders or by running the scheduler is advised to better manage priorities in case of long customer lead times or/and frequent stock-outs.")
     module_product_expiry = fields.Boolean("Expiration Dates",
         help="Track following dates on lots & serial numbers: best before, removal, end of life, alert. \n Such dates are set automatically at lot/serial number creation based on values set on the product (in days).")
     group_stock_production_lot = fields.Boolean("Lots & Serial Numbers",
         implied_group='stock.group_production_lot')
     group_lot_on_delivery_slip = fields.Boolean("Display Lots & Serial Numbers on Delivery Slips",
         implied_group='stock.group_lot_on_delivery_slip')
-    group_stock_tracking_lot = fields.Boolean("Delivery Packages",
+    group_stock_tracking_lot = fields.Boolean("Packages",
         implied_group='stock.group_tracking_lot')
     group_stock_tracking_owner = fields.Boolean("Consignment",
         implied_group='stock.group_tracking_owner')
@@ -39,6 +34,8 @@ class ResConfigSettings(models.TransientModel):
     module_delivery_usps = fields.Boolean("USPS Connector")
     module_delivery_bpost = fields.Boolean("bpost Connector")
     module_delivery_easypost = fields.Boolean("Easypost Connector")
+    module_quality_control = fields.Boolean("Quality")
+    module_quality_control_worksheet = fields.Boolean("Quality Worksheet")
     group_stock_multi_locations = fields.Boolean('Storage Locations', implied_group='stock.group_stock_multi_locations',
         help="Store products in specific locations of your warehouse (e.g. bins, racks) and to track inventory accordingly.")
 
@@ -58,7 +55,7 @@ class ResConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
+        res = super(ResConfigSettings, self).set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):
             return
@@ -79,9 +76,6 @@ class ResConfigSettings(models.TransientModel):
             active = False
         warehouses.mapped('int_type_id').write({'active': active})
 
-    def execute(self):
-        res = super(ResConfigSettings, self).execute()
-        self.ensure_one()
         if self.group_stock_multi_locations or self.group_stock_production_lot or self.group_stock_tracking_lot:
             picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([
                 ('code', '!=', 'incoming'),

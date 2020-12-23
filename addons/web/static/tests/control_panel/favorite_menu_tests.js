@@ -28,7 +28,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             assert.expect(8);
 
             const params = {
-                cpStoreConfig: { searchMenuTypes },
+                cpModelConfig: { searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes, action: { name: "Action Name" } },
             };
             const controlPanel = await createControlPanel(params);
@@ -40,7 +40,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             assert.containsNone(controlPanel, '.dropdown-divider');
             assert.containsOnce(controlPanel, '.o_add_favorite');
             assert.strictEqual(controlPanel.el.querySelector('.o_add_favorite > button').innerText.trim(),
-                "Save Current Search");
+                "Save current search");
 
             await cpHelpers.toggleSaveFavorite(controlPanel);
             assert.strictEqual(
@@ -61,7 +61,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             assert.expect(11);
 
             const params = {
-                cpStoreConfig: {
+                cpModelConfig: {
                     viewInfo: { fields: this.fields },
                     searchMenuTypes
                 },
@@ -109,8 +109,8 @@ odoo.define('web.favorite_menu_tests', function (require) {
             assert.expect(1);
 
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { fields: this.fields },
+                cpModelConfig: {
+                    fields: this.fields,
                     searchMenuTypes
                 },
                 cpProps: {
@@ -156,10 +156,11 @@ odoo.define('web.favorite_menu_tests', function (require) {
             </search>
         `;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { fields: {}, arch },
+                cpModelConfig: {
+                    fields: {},
+                    arch ,
                     searchMenuTypes,
-                    actionContext: {
+                    context: {
                         search_default_positive: true,
                     }
                 },
@@ -202,8 +203,9 @@ odoo.define('web.favorite_menu_tests', function (require) {
 
             const arch = `<search><field name="foo"/></search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { fields: this.fields, arch },
+                cpModelConfig: {
+                    fields: this.fields,
+                    arch ,
                     searchMenuTypes,
                 },
                 cpProps: {
@@ -258,7 +260,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 user_id: [2, "Mitchell Admin"],
             }];
             const params = {
-                cpStoreConfig: { viewInfo: { favoriteFilters }, searchMenuTypes },
+                cpModelConfig: { favoriteFilters, searchMenuTypes },
                 cpProps: { searchMenuTypes, action: {} },
                 search: function (searchQuery) {
                     const { domain } = searchQuery;
@@ -287,7 +289,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             await testUtils.dom.click(document.querySelector('div.o_dialog footer button'));
             assert.deepEqual(cpHelpers.getFacetTexts(controlPanel), []);
             const itemEls = controlPanel.el.querySelectorAll('.o_favorite_menu .o_menu_item');
-            assert.deepEqual([...itemEls].map(e => e.innerText.trim()), ["Save Current Search"]);
+            assert.deepEqual([...itemEls].map(e => e.innerText.trim()), ["Save current search"]);
 
             controlPanel.destroy();
         });
@@ -305,10 +307,10 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 user_id: [2, "Mitchell Admin"],
             }];
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { favoriteFilters },
+                cpModelConfig: {
+                    favoriteFilters,
                     searchMenuTypes,
-                    actionContext: { search_disable_custom_filters: true }
+                    context: { search_disable_custom_filters: true }
                 },
                 cpProps: { searchMenuTypes, action: {} },
             };
@@ -354,10 +356,12 @@ odoo.define('web.favorite_menu_tests', function (require) {
         `;
             const searchMenuTypes = ['filter', 'groupBy', 'comparison', 'favorite'];
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { favoriteFilters, arch, fields: this.fields },
+                cpModelConfig: {
+                    favoriteFilters,
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: {
+                    context: {
                         search_default_positive: true,
                         search_default_coolName: true,
                         search_default_foo: "a",
@@ -367,7 +371,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 search: function (searchQuery) {
                     const { domain, groupBy, timeRanges } = searchQuery;
                     if (firstSearch) {
-                        assert.deepEqual(domain, [['foo', '=', 'a']]);
+                        assert.deepEqual(domain, [['foo', 'ilike', 'a']]);
                         assert.deepEqual(groupBy, ['date_field:month']);
                         assert.deepEqual(timeRanges, {
                             comparisonId: "previous_period",
@@ -395,7 +399,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             const { domain, groupBy, timeRanges } = controlPanel.getQuery();
             assert.deepEqual(domain, [
                 "&",
-                ["foo", "=", "a"],
+                ["foo", "ilike", "a"],
                 "&",
                 ["date_field", ">=", "2019-01-01"],
                 ["date_field", "<=", "2019-12-31"]
@@ -442,7 +446,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 user_id: [2, "Mitchell Admin"],
             }];
             const params = {
-                cpStoreConfig: { viewInfo: { favoriteFilters }, searchMenuTypes },
+                cpModelConfig: { favoriteFilters, searchMenuTypes },
                 cpProps: { searchMenuTypes, action: {} },
                 'get-controller-query-params': function (callback) {
                     callback();
@@ -573,6 +577,47 @@ odoo.define('web.favorite_menu_tests', function (require) {
 
             await testUtils.fields.editInput(filterNameInput, 'Awesome Test Customer Filter');
             await testUtils.dom.click(document.querySelector('.o_add_favorite button.btn-primary'));
+
+            form.destroy();
+        });
+
+        QUnit.test('modal loads saved search filters', async function (assert) {
+            assert.expect(1);
+            const data = {
+                partner: {
+                    fields: {
+                        bar: { string: "Bar", type: "many2one", relation: 'partner' },
+                    },
+                    // 10 records so that the Search button shows
+                    records: Array.apply(null, Array(10)).map(function(_, i) {
+                        return { id: i, display_name: "Record " + i, bar: 1 };
+                    })
+                },
+            };
+            const form = await createView({
+                arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <field name="bar"/>
+                        </group>
+                    </sheet>
+                </form>`,
+                data,
+                model: 'partner',
+                res_id: 1,
+                View: FormView,
+                interceptsPropagate: {
+                    load_views: function (ev) {
+                        assert.ok(ev.data.options.load_filters, "opening dialog should load the filters");
+                    },
+                },
+            });
+
+            await testUtils.form.clickEdit(form);
+
+            await testUtils.fields.many2one.clickOpenDropdown('bar');
+            await testUtils.fields.many2one.clickItem('bar', 'Search');
 
             form.destroy();
         });

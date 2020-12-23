@@ -144,6 +144,9 @@
             <field name="model">ir.module.module</field>
             <field name="arch" type="xml">
                 <tree decoration-info="state=='to upgrade' or state=='to install'" decoration-danger="state=='uninstalled'" decoration-muted="state=='uninstallable'" create="false" string="Apps">
+                    <header>
+                        <button name="button_immediate_install" type="object" string="Install"/>
+                    </header>
                     <field name="shortdesc"/>
                     <field name="name" groups="base.group_no_one"/>
                     <field name="author"/>

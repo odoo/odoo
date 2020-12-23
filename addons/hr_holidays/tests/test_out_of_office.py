@@ -51,8 +51,10 @@ class TestOutOfOffice(TestHrHolidaysCommon):
             'email_send': False,
             'name': 'test'
         })
-        infos = channel.channel_info()
-        self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_date_end'], leave_date_end)
+        channel_info = channel.channel_info()[0]
+        self.assertFalse(channel_info['members'][0]['out_of_office_date_end'], "current user should not be out of office")
+        self.assertEqual(channel_info['members'][1]['out_of_office_date_end'], leave_date_end, "correspondent should be out of office")
+
 
 @tagged('out_of_office')
 class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDemo):

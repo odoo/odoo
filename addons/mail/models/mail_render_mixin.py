@@ -3,16 +3,16 @@
 
 import babel
 import copy
-import datetime
-import dateutil.relativedelta as relativedelta
 import functools
 import logging
 import re
 
+import dateutil.relativedelta as relativedelta
 from werkzeug import urls
 
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import UserError
+from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -55,7 +55,7 @@ try:
         'str': str,
         'quote': urls.url_quote,
         'urlencode': urls.url_encode,
-        'datetime': datetime,
+        'datetime': safe_eval.datetime,
         'len': len,
         'abs': abs,
         'min': min,
@@ -206,6 +206,28 @@ class MailRenderMixin(models.AbstractModel):
             html = self.env['mail.render.mixin']._replace_local_links(html)
         return html
 
+    @api.model
+    def _prepend_preview(self, html, preview):
+        """ Prepare the email body before sending. Add the text preview at the
+        beginning of the mail. The preview text is displayed bellow the mail
+        subject of most mail client (gmail, outlook...).
+
+        :param html: html content for which we want to prepend a preview
+        :param preview: the preview to add before the html content
+        :return: html with preprended preview
+        """
+        if preview:
+            preview = preview.strip()
+
+        if preview:
+            html_preview = f"""
+                <div style="display:none;font-size:1px;height:0px;width:0px;opacity:0;">
+                  {tools.html_escape(preview)}
+                </div>
+            """
+            return tools.prepend_html_content(html, html_preview)
+        return html
+
     # ------------------------------------------------------------
     # RENDERING
     # ------------------------------------------------------------
@@ -304,6 +326,7 @@ class MailRenderMixin(models.AbstractModel):
         variables = self._render_jinja_eval_context()
         if add_context:
             variables.update(**add_context)
+        safe_eval.check_values(variables)
 
         # TDE CHECKME
         # records = self.env[model].browse(it for it in res_ids if it)  # filter to avoid browsing [None]

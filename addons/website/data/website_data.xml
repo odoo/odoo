@@ -27,6 +27,7 @@
                             <div class="oe_structure">
                                 <section class="s_title parallax s_parallax_is_fixed bg-black-50 pt24 pb24" data-vcss="001" data-snippet="s_title" data-scroll-background-ratio="1">
                                     <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+                                    <div class="o_we_bg_filter bg-black-50"/>
                                     <div class="container">
                                         <h1>Contact us</h1>
                                     </div>
@@ -128,7 +129,7 @@
                                         <td>Interaction History</td>
                                         <td>
                                             <p>
-                                                Users to collect information about your interactions with the website, the pages you've seen,
+                                                Used to collect information about your interactions with the website, the pages you've seen,
                                                 and any specific marketing campaign that brought you to the website.
                                             </p>
                                             <p>We may not be able to provide the best service to you if you reject those cookies, but the website will work.</p>
@@ -239,8 +240,13 @@
             <field name="url">/</field>
             <field name="target">self</field>
         </record>
+        <record id="action_website_edit" model="ir.actions.act_url">
+            <field name="name">Website Edit Mode</field>
+            <field name="url">/?enable_editor=1</field>
+            <field name="target">self</field>
+        </record>
         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_website"/>
+            <field name="action_id" ref="action_website_edit"/>
             <field name="state">open</field>
         </record>
 
@@ -249,8 +255,8 @@
             <field name="public" eval="True"/>
             <field name="name">business_conference.jpg</field>
             <field name="res_model">ir.ui.view</field>
-            <field name="type">binary</field>
-            <field name="datas" type="base64" file="website/static/src/img/library/business_conference.jpg"/>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/library/business_conference.jpg</field>
         </record>
         <record id="website.library_image_01" model="ir.attachment">
             <field name="public" eval="True"/>
@@ -442,6 +448,14 @@
             <field name="type">url</field>
             <field name="res_model">ir.ui.view</field>
             <field name="url">/website/static/src/img/backgrounds/sails.jpg</field>
+        </record>
+
+        <!-- Header default images (to be replaced by themes) -->
+        <record id="website.header_image_1_default_image" model="ir.attachment">
+            <field name="public" eval="True"/>
+            <field name="name">header_image_1_default_image.jpg</field>
+            <field name="type">url</field>
+            <field name="url">/website/static/src/img/snippets_demo/header_image_1_default_image.jpg</field>
         </record>
 
         <!-- Snippets' Default Images (to be replaced by themes) -->
@@ -697,8 +711,70 @@
             <field name="type">url</field>
             <field name="url">/website/static/src/img/snippets_demo/s_popup.jpg</field>
         </record>
+
     </data>
     <data>
+        <!-- Filter for Dynamic Snippet -->
+        <record id="dynamic_snippet_country_filter" model="ir.filters">
+            <field name="name">Countries</field>
+            <field name="model_id">res.country</field>
+            <field name="user_id" eval="False" />
+        </record>
+        <!-- Template for Dynamic Snippet -->
+        <template id="dynamic_filter_template_image_title_footer" name="Image Title Footer Card">
+            <t t-foreach="records" t-as="record">
+                <t t-set="fields" t-value="list(record['fields'].values())"/>
+                <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
+                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                    <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
+                    <div class="card-body">
+                        <h5 t-if="len(fields) > 0" class="card-title">
+                            <t t-raw="fields[0]"/>
+                        </h5>
+                        <div t-if="len(fields) > 1" class="card-text">
+                            <t t-raw="fields[1]"/>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center">
+                        <div t-if="len(fields) > 2" class="card-text">
+                            <t t-raw="fields[2]"/>
+                        </div>
+                        <a t-if="call_to_action" class="btn btn-primary ml-auto" t-att-href="record['fields']['call_to_action_url']">
+                            <i class="fa fa-fw fa-eye"/>
+                        </a>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <template id="dynamic_filter_template_header_image_footer_card" name="Header Image Footer Card">
+            <t t-foreach="records" t-as="record">
+                <t t-set="fields" t-value="list(record['fields'].values())"/>
+                <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
+                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                    <h5 t-if="len(fields) > 0" class="card-header">
+                        <t t-raw="fields[0]"/>
+                    </h5>
+                    <div class="card-body">
+                        <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
+                        <div t-if="len(fields) > 1" class="card-text">
+                            <t t-raw="fields[1]"/>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center">
+                        <div t-if="len(fields) > 2" class="card-text">
+                            <t t-raw="fields[2]"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <!-- Dynamic Snippet Data Source -->
+        <record id="dynamic_snippet_data_source_country" model="website.snippet.filter">
+            <field name="field_names">name,code,image_url:image,phone_code:char</field>
+            <field name="filter_id" ref="website.dynamic_snippet_country_filter"/>
+            <field name="limit" eval="16"/>
+            <field name="name">Countries</field>
+        </record>
         <record id="group_multi_website" model="res.groups">
             <field name="name">Multi-website</field>
             <field name="category_id" ref="base.module_category_hidden"/>

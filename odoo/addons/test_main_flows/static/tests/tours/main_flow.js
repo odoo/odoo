@@ -775,7 +775,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Create Bill', _t('go to Vendor Bills'), ".o_statusbar_status .btn.dropdown-toggle:contains('Purchase Order')"),
-...tour.stepUtils.statusbarButtonsSteps('Validate', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
+...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
 ...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
     trigger: ".modal-footer .btn-primary",
@@ -828,10 +828,10 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('Manufacturing
     content: _t('Edit the production order'),
     extra_trigger: 'body.o_web_client:not(.oe_wait)',
 }, {
-    trigger: ".o_field_widget[name=qty_producing]",
+    trigger: "input[name=qty_producing]",
+    position: 'left',
     content: _t("Produce"),
     run: "text 1",
-    extra_trigger: 'body.o_web_client:not(.oe_wait)',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Mark as Done', _t("Mark as Done"), ".o_statusbar_status .btn.dropdown-toggle:contains('To Close')"),
 {
@@ -940,8 +940,8 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t("Create and View Invoices"),
     position: "bottom",
 },
-...tour.stepUtils.statusbarButtonsSteps('Validate', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
-...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".breadcrumb-item.active:contains('INV/')"),
+...tour.stepUtils.statusbarButtonsSteps('Confirm', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
+...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
     trigger: ".modal-footer .btn-primary",
     content: _t("Validate"),
@@ -955,26 +955,6 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     edition: "enterprise",
     trigger: '.o_app[data-menu-xmlid="account_accountant.menu_accounting"]',
     content: _t('Go to Accounting'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: 'a[data-name=action_configure_bank_journal]',
-    content: _t('Configure Bank Journal'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: '.js_configure_manually',
-    content: _t('Enter manual data for bank account'),
-    position: 'bottom',
-}, {
-    edition: "enterprise",
-    trigger: ".o_field_widget[name=acc_number]",
-    content: _t("Enter an account number"),
-    position: "right",
-    run: "text 867656544",
-}, {
-    trigger: ".modal-footer .btn-primary",
-    content: _t('Save'),
     position: 'bottom',
 }, {
     edition: "enterprise",
@@ -1024,13 +1004,9 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     trigger: ".o_selected_row .o_field_widget[name=partner_id] input",
     content: _t("Write the name of your customer."),
     position: "bottom",
-}, {
-    mobile: true,
-    trigger: ".o_kanban_record .o_kanban_record_title :contains('the_flow.customer')",
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Partner')",
-    content: _t('Save'),
-    position: 'right',
-}, {
+},
+...tour.stepUtils.mobileKanbanSearchMany2X('Partner', 'the_flow.customer'),
+{
     edition: "enterprise",
     trigger: ".o_selected_row .o_field_widget[name=payment_ref]",
     content: _t("Let's enter a name."),

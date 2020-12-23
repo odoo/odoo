@@ -3,6 +3,7 @@ odoo.define('web.KanbanColumn', function (require) {
 
 var config = require('web.config');
 var core = require('web.core');
+var session = require('web.session');
 var Dialog = require('web.Dialog');
 var KanbanRecord = require('web.KanbanRecord');
 var RecordQuickCreate = require('web.kanban_record_quick_create');
@@ -29,7 +30,8 @@ var KanbanColumn = Widget.extend({
         'click .o_kanban_load_more': '_onLoadMore',
         'click .o_kanban_toggle_fold': '_onToggleFold',
         'click .o_column_archive_records': '_onArchiveRecords',
-        'click .o_column_unarchive_records': '_onUnarchiveRecords'
+        'click .o_column_unarchive_records': '_onUnarchiveRecords',
+        'click .o_kanban_config .dropdown-menu': '_onConfigDropdownClicked',
     },
     /**
      * @override
@@ -62,7 +64,8 @@ var KanbanColumn = Widget.extend({
         this.recordsDraggable = options.recordsDraggable;
         this.relation = options.relation;
         this.offset = 0;
-        this.remaining = data.count - this.data_records.length;
+        this.loadMoreCount = data.loadMoreCount;
+        this.loadMoreOffset = data.loadMoreOffset;
         this.canBeFolded = this.folded;
 
         if (options.hasProgressBar) {
@@ -160,7 +163,7 @@ var KanbanColumn = Widget.extend({
         if (this.tooltipInfo) {
             this.$header.find('.o_kanban_header_title').tooltip({}).attr('data-original-title', this.tooltipInfo);
         }
-        if (!this.remaining) {
+        if (!this.loadMoreCount) {
             this.$('.o_kanban_load_more').remove();
         } else {
             this.$('.o_kanban_load_more').html(QWeb.render('KanbanView.LoadMore', {widget: this}));
@@ -296,6 +299,15 @@ var KanbanColumn = Widget.extend({
         this._cancelQuickCreate();
     },
     /**
+     * Prevent from closing the config dropdown when the user clicks on a
+     * disabled item (e.g. 'Fold' in sample mode).
+     *
+     * @private
+     */
+    _onConfigDropdownClicked(ev) {
+        ev.stopPropagation();
+    },
+    /**
      * @private
      * @param {MouseEvent} event
      */
@@ -327,6 +339,7 @@ var KanbanColumn = Widget.extend({
         new view_dialogs.FormViewDialog(this, {
             res_model: this.relation,
             res_id: this.id,
+            context: session.user_context,
             title: _t("Edit Column"),
             on_saved: this.trigger_up.bind(this, 'reload'),
         }).open();
@@ -337,7 +350,7 @@ var KanbanColumn = Widget.extend({
      */
     _onLoadMore: function (event) {
         event.preventDefault();
-        this.trigger_up('kanban_load_more');
+        this.trigger_up('kanban_load_column_records', { loadMoreOffset: this.loadMoreOffset });
     },
     /**
      * @private

@@ -75,7 +75,8 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
             }
         },
         do_action: function (event) {
-            this.do_action(event.data.action, event.data.options || {}).then(function (result) {
+            const actionProm = this.do_action(event.data.action, event.data.options || {});
+            this.menu_dp.add(actionProm).then(function (result) {
                 if (event.data.on_success) {
                     event.data.on_success(result);
                 }

@@ -566,7 +566,7 @@ Database Population
 .. program:: odoo-bin populate
 
 Odoo CLI supports database population features. If the feature is
-:ref:`implemented on a given model<reference/testing/populate/methods>`, it allows automatic data
+:ref:`implemented on a given model <reference/testing/populate/methods>`, it allows automatic data
 generation of the model's records to test your modules in databases containing non-trivial amounts of records.
 
 .. code-block:: console
@@ -679,6 +679,7 @@ Some files are excluded from the count by default:
 - The manifest (:file:`__manifest__.py` or :file:`__openerp__.py`)
 - The contents of the folder :file:`static/lib`
 - The tests defined in the folder :file:`tests` and :file:`static/tests`
+- The migrations scripts defined in the folder :file:`migrations`
 - The XML files declared in the ``demo`` or ``demo_xml`` sections of the manifest
 
 For special cases, a list of files that should be ignored by Odoo Cloc can be defined

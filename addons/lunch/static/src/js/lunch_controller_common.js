@@ -27,7 +27,6 @@ var LunchControllerCommon = {
      */
     init: function () {
         this._super.apply(this, arguments);
-        this.userId = null;
         this.editMode = false;
         this.updated = false;
         this.widgetData = null;
@@ -60,28 +59,14 @@ var LunchControllerCommon = {
             },
         });
     },
-    _fetchWidgetData: function () {
-        var self = this;
-
-        return this._rpc({
+    _fetchWidgetData: async function () {
+        this.widgetData = await this._rpc({
             route: '/lunch/infos',
             params: {
-                user_id: this.userId,
+                user_id: this.searchModel.get('userId'),
                 context: this.context,
             },
-        }).then(function (data) {
-            self.widgetData = data;
-            return self.model._updateLocation(data.user_location[0]);
         });
-    },
-    /**
-     * Override to add the location domain (coming from the LunchWidget)
-     * to the searchDomain (coming from the controlPanel).
-     *
-     * @override
-     */
-    _getViewDomain: async function () {
-        return this.model.getLocationDomain();
     },
     /**
      * Renders and appends the lunch banner widget.
@@ -140,28 +125,14 @@ var LunchControllerCommon = {
         });
     },
     _onLocationChanged: function (ev) {
-        var self = this;
-
         ev.stopPropagation();
-
-        this._rpc({
-            route: '/lunch/user_location_set',
-            params: {
-                user_id: this.userId,
-                location_id: ev.data.locationId,
-                context: this.context,
-            },
-        }).then(function () {
-            self.model._updateLocation(ev.data.locationId).then(function () {
-                self.reload();
-            });
-        });
+        this.searchModel.dispatch('setLocationId', ev.data.locationId);
     },
     _onOpenWizard: function (ev) {
         var self = this;
         ev.stopPropagation();
 
-        var ctx = this.userId ? {default_user_id: this.userId} : {};
+        var ctx = this.searchModel.get('userId') ? {default_user_id: this.searchModel.get('userId')} : {};
 
         var options = {
             on_close: function () {
@@ -197,7 +168,7 @@ var LunchControllerCommon = {
         this._rpc({
             route: '/lunch/pay',
             params: {
-                user_id: this.userId,
+                user_id: this.searchModel.get('userId'),
                 context: this.context,
             },
         }).then(function (isPaid) {
@@ -224,13 +195,7 @@ var LunchControllerCommon = {
     },
     _onUserChanged: function (ev) {
         ev.stopPropagation();
-
-        var self = this;
-
-        this.userId = ev.data.userId;
-        this.model._updateUser(ev.data.userId).then(function () {
-            self.reload();
-        });
+        this.searchModel.dispatch('updateUserId', ev.data.userId);
     },
     _onUnlinkOrder: function (ev) {
         var self = this;
@@ -239,7 +204,7 @@ var LunchControllerCommon = {
         this._rpc({
             route: '/lunch/trash',
             params: {
-                user_id: this.userId,
+                user_id: this.searchModel.get('userId'),
                 context: this.context,
             },
         }).then(function () {

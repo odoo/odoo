@@ -21,21 +21,21 @@ class ThreadNeedactionPreview extends Component {
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
             const mainThreadCache = thread ? thread.mainCache : undefined;
-            let lastNeedactionMessageAuthor;
-            let lastNeedactionMessage;
+            let lastNeedactionMessageAsOriginThreadAuthor;
+            let lastNeedactionMessageAsOriginThread;
             let threadCorrespondent;
             if (thread) {
-                lastNeedactionMessage = mainThreadCache.lastNeedactionMessage;
+                lastNeedactionMessageAsOriginThread = mainThreadCache.lastNeedactionMessageAsOriginThread;
                 threadCorrespondent = thread.correspondent;
             }
-            if (lastNeedactionMessage) {
-                lastNeedactionMessageAuthor = lastNeedactionMessage.author;
+            if (lastNeedactionMessageAsOriginThread) {
+                lastNeedactionMessageAsOriginThreadAuthor = lastNeedactionMessageAsOriginThread.author;
             }
             return {
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                lastNeedactionMessage: lastNeedactionMessage ? lastNeedactionMessage.__state : undefined,
-                lastNeedactionMessageAuthor: lastNeedactionMessageAuthor
-                    ? lastNeedactionMessageAuthor.__state
+                lastNeedactionMessageAsOriginThread: lastNeedactionMessageAsOriginThread ? lastNeedactionMessageAsOriginThread.__state : undefined,
+                lastNeedactionMessageAsOriginThreadAuthor: lastNeedactionMessageAsOriginThreadAuthor
+                    ? lastNeedactionMessageAsOriginThreadAuthor.__state
                     : undefined,
                 thread: thread ? thread.__state : undefined,
                 threadCorrespondent: threadCorrespondent
@@ -64,7 +64,7 @@ class ThreadNeedactionPreview extends Component {
             return this.thread.moduleIcon;
         }
         if (this.thread.correspondent) {
-            return `/web/image/res.partner/${this.thread.correspondent.id}/image_128`;
+            return this.thread.correspondent.avatarUrl;
         }
         if (this.thread.model === 'mail.channel') {
             return `/web/image/mail.channel/${this.thread.id}/image_128`;
@@ -77,11 +77,11 @@ class ThreadNeedactionPreview extends Component {
      *
      * @returns {string}
      */
-    get inlineLastNeedactionMessageBody() {
-        if (!this.thread.lastNeedactionMessage) {
+    get inlineLastNeedactionMessageAsOriginThreadBody() {
+        if (!this.thread.lastNeedactionMessageAsOriginThread) {
             return '';
         }
-        return mailUtils.htmlToTextContentInline(this.thread.lastNeedactionMessage.prettyBody);
+        return mailUtils.htmlToTextContentInline(this.thread.lastNeedactionMessageAsOriginThread.prettyBody);
     }
 
     /**
@@ -105,7 +105,11 @@ class ThreadNeedactionPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.trigger('o-select-thread', { thread: this.thread });
+        this.thread.markNeedactionMessagesAsOriginThreadAsRead();
+        this.thread.open();
+        if (!this.env.messaging.device.isMobile) {
+            this.env.messaging.messagingMenu.close();
+        }
     }
 
     /**
@@ -113,7 +117,7 @@ class ThreadNeedactionPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.thread.markNeedactionMessagesAsRead();
+        this.thread.markNeedactionMessagesAsOriginThreadAsRead();
     }
 
 }

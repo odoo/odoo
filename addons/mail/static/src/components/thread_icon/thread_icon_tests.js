@@ -5,10 +5,11 @@ const components = {
     ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,17 +17,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_icon', {}, function () {
 QUnit.module('thread_icon_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createThreadIcon = async thread => {
-            const ThreadIconComponent = components.ThreadIcon;
-            ThreadIconComponent.env = this.env;
-            this.component = new ThreadIconComponent(null, { threadLocalId: thread.localId });
-            await this.component.mount(this.widget.el);
+            await createRootComponent(this, components.ThreadIcon, {
+                props: { threadLocalId: thread.localId },
+                target: this.widget.el
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -35,56 +36,24 @@ QUnit.module('thread_icon_tests.js', {
 
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.ThreadIcon.env;
+        afterEach(this);
     },
 });
 
 QUnit.test('chat: correspondent is typing', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_direct_message: [{
-                channel_type: 'chat',
-                direct_partner: [{
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    im_status: 'online',
-                    name: "Demo",
-                }],
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    im_status: 'online',
-                    name: 'Demo',
-                }],
-            }],
-        },
+    this.data['res.partner'].records.push({
+        id: 17,
+        im_status: 'online',
+        name: 'Demo',
     });
-    await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 20,
+        members: [this.data.currentPartnerId, 17],
     });
+    await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 &&
         thread.model === 'mail.channel'
@@ -106,8 +75,9 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7,
             is_typing: true,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -127,8 +97,9 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7,
             is_typing: false,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);

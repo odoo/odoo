@@ -66,10 +66,5 @@ odoo.define('pos_restaurant.tour.ProductScreenTourMethods', function (require) {
 
     class ExecuteExt extends Execute {}
 
-    return {
-        Do: DoExt,
-        Check: CheckExt,
-        Execute: ExecuteExt,
-        ProductScreen: createTourMethods('ProductScreen', DoExt, CheckExt, ExecuteExt),
-    };
+    return createTourMethods('ProductScreen', DoExt, CheckExt, ExecuteExt);
 });

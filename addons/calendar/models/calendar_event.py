@@ -3,9 +3,11 @@
 
 from datetime import timedelta
 import math
+from uuid import uuid4
 import babel.dates
 import logging
 import pytz
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models
 from odoo import tools
@@ -78,6 +80,15 @@ class Meeting(models.Model):
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
+    @api.model
+    def _default_videocall_location(self):
+        if self.env.context.get('calendar_no_videocall'):
+            return False
+        jitsi_url = self.env['ir.config_parameter'].sudo().get_param('website_jitsi.jitsi_server_domain', 'meet.jit.si')
+        if not jitsi_url.startswith('http'):
+            jitsi_url = 'https://' + jitsi_url
+        return url_join(jitsi_url, 'odoo-%s' % (uuid4().hex[:12]))
+
     def _find_my_attendee(self):
         """ Return the first attendee where the user connected has been invited
             from all the meeting_ids in parameters.
@@ -107,8 +118,13 @@ class Meeting(models.Model):
         return {'start', 'stop', 'start_date', 'stop_date'}
 
     @api.model
+    def _get_custom_fields(self):
+        all_fields = self.fields_get(attributes=['manual'])
+        return {fname for fname in all_fields if all_fields[fname]['manual']}
+
+    @api.model
     def _get_public_fields(self):
-        return self._get_recurrent_fields() | self._get_time_fields() | {
+        return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as'}
@@ -135,7 +151,7 @@ class Meeting(models.Model):
         time_str = to_text(date.strftime(format_time))
 
         if zallday:
-            display_time = _("AllDay , %(day)s", day=date_str)
+            display_time = _("All Day, %(day)s", day=date_str)
         elif zduration < 24:
             duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
@@ -206,8 +222,9 @@ class Meeting(models.Model):
          ('confidential', 'Only internal users')],
         'Privacy', default='public', required=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
+    videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
     show_as = fields.Selection(
-        [('free', 'Free'),
+        [('free', 'Available'),
          ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
 
     # linked document
@@ -244,6 +261,7 @@ class Meeting(models.Model):
     recurrency = fields.Boolean('Recurrent', help="Recurrent Event")
     recurrence_id = fields.Many2one(
         'calendar.recurrence', string="Recurrence Rule", index=True)
+    follow_recurrence = fields.Boolean(default=False) # Indicates if an event follows the recurrence, i.e. is not an exception
     recurrence_update = fields.Selection([
         ('self_only', "This event"),
         ('future_events', "This and following events"),
@@ -324,7 +342,7 @@ class Meeting(models.Model):
         # its recomputation. To avoid this we manually mark the field as computed.
         duration_field = self._fields['duration']
         self.env.remove_to_compute(duration_field, self)
-        for event in self.filtered('duration'):
+        for event in self:
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
             event.stop = event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
@@ -355,7 +373,7 @@ class Meeting(models.Model):
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
         for meeting in self:
-            if meeting.start and meeting.stop and meeting.stop < meeting.start:
+            if not meeting.allday and meeting.start and meeting.stop and meeting.stop < meeting.start:
                 raise ValidationError(
                     _('The ending date and time cannot be earlier than the starting date and time.') + '\n' +
                     _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
@@ -364,7 +382,7 @@ class Meeting(models.Model):
                       end_datetime=meeting.stop
                     )
                 )
-            if meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
+            if meeting.allday and meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
                 raise ValidationError(
                     _('The ending date cannot be earlier than the starting date.') + '\n' +
                     _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
@@ -559,7 +577,7 @@ class Meeting(models.Model):
                 recurrence_vals += [dict(values, base_event_id=event.id, calendar_event_ids=[(4, event.id)])]
             elif future:
                 to_update |= event.recurrence_id._split_from(event, values)
-        self.recurrency = True
+        self.write({'recurrency': True, 'follow_recurrence': True})
         to_update |= self.env['calendar.recurrence'].create(recurrence_vals)
         return to_update._apply_recurrence()
 
@@ -630,6 +648,10 @@ class Meeting(models.Model):
         if 'partner_ids' in values:
             values['attendee_ids'] = self._attendees_values(values['partner_ids'])
 
+        if (not recurrence_update_setting or recurrence_update_setting == 'self_only' and len(self) == 1) and 'follow_recurrence' not in values:
+            if any({field: values.get(field) for field in self.env['calendar.event']._get_time_fields() if field in values}):
+                values['follow_recurrence'] = False
+
         previous_attendees = self.attendee_ids
 
         recurrence_values = {field: values.pop(field) for field in self._get_recurrent_fields() if field in values}
@@ -663,7 +685,10 @@ class Meeting(models.Model):
         if 'partner_ids' in values:
             (current_attendees - previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         if 'start' in values:
-            (current_attendees & previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_changedate', ignore_recurrence=not update_recurrence)
+            start_date = fields.Datetime.to_datetime(values.get('start'))
+            # Only notify on future events
+            if start_date and start_date >= fields.Datetime.now():
+                (current_attendees & previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_changedate', ignore_recurrence=not update_recurrence)
 
         return True
 
@@ -702,16 +727,18 @@ class Meeting(models.Model):
         recurring_vals = [vals for vals in vals_list if vals.get('recurrency')]
         other_vals = [vals for vals in vals_list if not vals.get('recurrency')]
         events = super().create(other_vals)
+
         for vals in recurring_vals:
 
             recurrence_values = {field: vals.pop(field) for field in recurrence_fields if field in vals}
+            vals['follow_recurrence'] = True
             event = super().create(vals)
             events |= event
             if vals.get('recurrency'):
                 detached_events = event._apply_recurrence_values(recurrence_values)
                 detached_events.active = False
 
-        events.attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
+        events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys() })
 
         # Notify attendees if there is an alarm on the created event, as it might have changed their

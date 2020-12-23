@@ -13,10 +13,10 @@ from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import ValidationError
-from odoo.addons.website.controllers.main import Website
+from odoo.addons.portal.controllers.portal import _build_url_w_params
+from odoo.addons.website.controllers import main
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
-
 _logger = logging.getLogger(__name__)
 
 
@@ -118,7 +118,7 @@ class WebsiteSaleForm(WebsiteForm):
         return json.dumps({'id': order.id})
 
 
-class Website(Website):
+class Website(main.Website):
     @http.route()
     def get_switchable_related_views(self, key):
         views = super(Website, self).get_switchable_related_views(key)
@@ -248,7 +248,7 @@ class WebsiteSale(http.Controller):
 
         Product = request.env['product.template'].with_context(bin_size=True)
 
-        search_product = Product.search(domain)
+        search_product = Product.search(domain, order=self._get_search_order(post))
         website_domain = request.website.website_domain()
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
@@ -263,7 +263,8 @@ class WebsiteSale(http.Controller):
 
         product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
-        products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
+        offset = pager['offset']
+        products = search_product[offset: offset + ppg]
 
         ProductAttribute = request.env['product.attribute']
         if products:
@@ -302,12 +303,17 @@ class WebsiteSale(http.Controller):
             values['main_object'] = category
         return request.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
         if not product.can_access_from_current_website():
             raise NotFound()
 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
+
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
+    def old_product(self, product, category='', search='', **kwargs):
+        # Compatibility pre-v14
+        return request.redirect(_build_url_w_params("/shop/%s" % slug(product), request.params), code=301)
 
     def _prepare_product_values(self, product, category, search, **kwargs):
         add_qty = int(kwargs.get('add_qty', 1))
@@ -549,8 +555,10 @@ class WebsiteSale(http.Controller):
         country = request.env['res.country']
         if data.get('country_id'):
             country = country.browse(int(data.get('country_id')))
-            if 'state_code' in country.get_address_fields() and country.state_ids:
+            if country.state_required:
                 required_fields += ['state_id']
+            if country.zip_required:
+                required_fields += ['zip']
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -830,8 +838,9 @@ class WebsiteSale(http.Controller):
         values['access_token'] = order.access_token
         values['acquirers'] = [acq for acq in acquirers if (acq.payment_flow == 'form' and acq.view_template_id) or
                                     (acq.payment_flow == 's2s' and acq.registration_view_template_id)]
-        values['tokens'] = request.env['payment.token'].search(
-            [('acquirer_id', 'in', acquirers.ids)])
+        values['tokens'] = request.env['payment.token'].search([
+            ('acquirer_id', 'in', acquirers.ids),
+            ('partner_id', 'child_of', order.partner_id.commercial_partner_id.id)])
 
         if order:
             values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
@@ -1001,10 +1010,6 @@ class WebsiteSale(http.Controller):
         PaymentProcessing.remove_payment_transaction(tx)
         return request.redirect('/shop/confirmation')
 
-    @http.route(['/shop/terms'], type='http', auth="public", website=True, sitemap=True)
-    def terms(self, **kw):
-        return request.render("website_sale.terms")
-
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
     def payment_confirmation(self, **post):
         """ End of checkout process controller. Confirmation is basically seing
@@ -1112,7 +1117,9 @@ class WebsiteSale(http.Controller):
         return dict(
             fields=country.get_address_fields(),
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
-            phone_code=country.phone_code
+            phone_code=country.phone_code,
+            zip_required=country.zip_required,
+            state_required=country.state_required,
         )
 
     # --------------------------------------------------------------------------
@@ -1203,7 +1210,7 @@ class WebsiteSale(http.Controller):
         if visitor:
             excluded_products = request.website.sale_get_order().mapped('order_line.product_id.id')
             products = request.env['website.track'].sudo().read_group(
-                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id', 'not in', excluded_products)],
+                [('visitor_id', '=', visitor.id), ('product_id', '!=', False), ('product_id.website_published', '=', True), ('product_id', 'not in', excluded_products)],
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:

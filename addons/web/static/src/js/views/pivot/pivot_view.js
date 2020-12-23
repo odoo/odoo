@@ -67,11 +67,15 @@ odoo.define('web.PivotView', function (require) {
 
             this.arch.children.forEach(field => {
                 let name = field.attrs.name;
-
-                // Remove invisible fields from the measures
+                // Remove invisible fields from the measures if not in additionalMeasures
                 if (field.attrs.invisible && py.eval(field.attrs.invisible)) {
-                    delete measures[name];
-                    return;
+                    if (name in groupableFields) {
+                        delete groupableFields[name];
+                    }
+                    if (!additionalMeasures.includes(name)) {
+                        delete measures[name];
+                        return;
+                    }
                 }
                 if (field.attrs.interval) {
                     name += ':' + field.attrs.interval;

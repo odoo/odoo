@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from odoo import api, models
+from odoo import api, models, SUPERUSER_ID
 
 
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
     def invoice_validate_send_email(self):
+        if self.env.su:
+            # sending mail in sudo was meant for it being sent from superuser
+            self = self.with_user(SUPERUSER_ID)
         for invoice in self.filtered(lambda x: x.move_type == 'out_invoice'):
             # send template only on customer invoice
             # subscribe the partner to the invoice
@@ -21,8 +24,8 @@ class AccountMove(models.Model):
                     )
         return True
 
-    def post(self):
+    def _post(self, soft=True):
         # OVERRIDE
-        res = super(AccountMove, self).post()
-        self.invoice_validate_send_email()
-        return res
+        posted = super()._post(soft)
+        posted.invoice_validate_send_email()
+        return posted

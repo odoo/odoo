@@ -10,12 +10,13 @@ from odoo.http import request
 
 class PortalAccount(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(PortalAccount, self)._prepare_portal_layout_values()
-        invoice_count = request.env['account.move'].search_count([
-            ('move_type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
-        ])
-        values['invoice_count'] = invoice_count
+    def _prepare_home_portal_values(self, counters):
+        values = super()._prepare_home_portal_values(counters)
+        if 'invoice_count' in counters:
+            invoice_count = request.env['account.move'].search_count([
+                ('move_type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
+            ]) if request.env['account.move'].check_access_rights('read', raise_exception=False) else 0
+            values['invoice_count'] = invoice_count
         return values
 
     # ------------------------------------------------------------
@@ -57,7 +58,6 @@ class PortalAccount(CustomerPortal):
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
 
-        archive_groups = self._get_archive_groups('account.move', domain)
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -80,7 +80,6 @@ class PortalAccount(CustomerPortal):
             'invoices': invoices,
             'page_name': 'invoice',
             'pager': pager,
-            'archive_groups': archive_groups,
             'default_url': '/my/invoices',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,

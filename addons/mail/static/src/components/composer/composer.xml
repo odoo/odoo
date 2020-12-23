@@ -38,7 +38,7 @@
                                 <b class="text-muted">To: </b>
                                 <em class="text-muted">Followers of </em>
                                 <b>
-                                    <t t-if="composer.thread">
+                                    <t t-if="composer.thread and composer.thread.name">
                                         &#32;&quot;<t t-esc="composer.thread.name"/>&quot;
                                     </t>
                                     <t t-else="">
@@ -46,7 +46,15 @@
                                     </t>
                                 </b>
                             </small>
+                            <ComposerSuggestedRecipientList
+                                threadLocalId="composer.thread.localId"
+                            />
                         </t>
+                    </div>
+                </t>
+                <t t-if="composer.thread and composer.thread.model === 'mail.channel' and composer.thread.mass_mailing">
+                    <div class="o_Composer_subject">
+                        <input class="o_Composer_subjectInput" type="text" placeholder="Subject" t-on-input="_onInputSubject" t-ref="subject"/>
                     </div>
                 </t>
                 <t t-if="props.hasCurrentPartnerAvatar">
@@ -54,18 +62,28 @@
                         <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt=""/>
                     </div>
                 </t>
-                <div class="o_Composer_coreMain" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
+                <div
+                    class="o_Composer_coreMain"
+                    t-att-class="{
+                        'o-composer-is-compact': props.isCompact,
+                        'o-composer-is-extended': composer.thread and composer.thread.mass_mailing,
+                    }"
+                >
                     <TextInput
                         class="o_Composer_textInput"
                         t-att-class="{
                             'o-composer-is-compact': props.isCompact,
                             'o_Composer_textInput-mobile': env.messaging.device.isMobile,
+                            'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                         }"
                         composerLocalId="composer.localId"
                         hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
-                        hasSendOnEnterEnabled="props.hasTextInputSendOnEnterEnabled"
-                        t-on-o-keydown-enter="_onTextInputKeydownEnter"
+                        isCompact="props.isCompact"
+                        sendShortcuts="props.textInputSendShortcuts"
+                        t-on-o-composer-suggestion-clicked="_onComposerSuggestionClicked"
+                        t-on-o-composer-text-input-send-shortcut="_onComposerTextInputSendShortcut"
                         t-on-paste="_onPasteTextInput"
+                        t-key="composer.localId"
                         t-ref="textInput"
                     />
                     <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': env.messaging.device.isMobile }">
@@ -114,8 +132,10 @@
                         <t t-if="composer.attachments.length > 0">
                             <AttachmentList
                                 class="o_Composer_attachmentList"
+                                t-att-class="{ 'o-composer-is-compact': props.isCompact }"
                                 areAttachmentsEditable="true"
                                 attachmentsDetailsMode="props.attachmentsDetailsMode"
+                                attachmentsImageSize="'small'"
                                 attachmentLocalIds="composer.attachments.map(attachment => attachment.localId)"
                                 showAttachmentsExtensions="props.showAttachmentsExtensions"
                                 showAttachmentsFilenames="props.showAttachmentsFilenames"
@@ -137,9 +157,11 @@
                     t-att-class="{
                         'fa': env.messaging.device.isMobile,
                         'fa-paper-plane-o': env.messaging.device.isMobile,
+                        'o-last': env.messaging.device.isMobile or !props.hasDiscardButton,
                         'o-composer-is-compact': props.isCompact,
+                        'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
-                    t-att-disabled="(!composer.textInputContent and composer.attachments.length === 0) ? 'disabled' : ''"
+                    t-att-disabled="!composer.canPostMessage ? 'disabled' : ''"
                     type="button"
                     t-on-click="_onClickSend"
                 >
@@ -147,7 +169,7 @@
                 </button>
             </t>
             <t t-if="!env.messaging.device.isMobile and props.hasDiscardButton">
-                <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact }" type="button" t-on-click="_onClickDiscard">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="_onClickDiscard">
                     Discard
                 </button>
             </t>

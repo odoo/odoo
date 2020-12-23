@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, _
+from odoo import api, fields, models, _
 
 
 class MailChannel(models.Model):
@@ -33,12 +33,13 @@ class MailChannel(models.Model):
             visitor = channel.livechat_visitor_id
             if visitor:
                 channel_infos_dict[channel.id]['visitor'] = {
-                    'name': visitor.display_name,
+                    'display_name': visitor.display_name,
                     'country_code': visitor.country_id.code.lower() if visitor.country_id else False,
+                    'country_id': visitor.country_id.id,
                     'is_connected': visitor.is_connected,
-                    'history': self._get_visitor_history(visitor),
-                    'website': visitor.website_id.name,
-                    'lang': visitor.lang_id.name,
+                    'history': self.sudo()._get_visitor_history(visitor),
+                    'website_name': visitor.website_id.name,
+                    'lang_name': visitor.lang_id.name,
                     'partner_id': visitor.partner_id.id,
                 }
         return list(channel_infos_dict.values())
@@ -62,6 +63,7 @@ class MailChannel(models.Model):
 
         return message
 
+    @api.returns('mail.message', lambda value: value.id)
     def message_post(self, **kwargs):
         """Override to mark the visitor as still connected.
         If the message sent is not from the operator (so if it's the visitor or

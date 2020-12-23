@@ -6,14 +6,29 @@ const { attr, one2many } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
-    class ActivityType extends dependencies['mail.model'] {}
+    class ActivityType extends dependencies['mail.model'] {
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
+    }
 
     ActivityType.fields = {
         activities: one2many('mail.activity', {
             inverse: 'type',
         }),
         displayName: attr(),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
     };
 
     ActivityType.modelName = 'mail.activity_type';

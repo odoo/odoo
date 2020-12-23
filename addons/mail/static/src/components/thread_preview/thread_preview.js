@@ -59,7 +59,7 @@ class ThreadPreview extends Component {
      */
     image() {
         if (this.thread.correspondent) {
-            return `/web/image/res.partner/${this.thread.correspondent.id}/image_128`;
+            return this.thread.correspondent.avatarUrl;
         }
         return `/web/image/mail.channel/${this.thread.id}/image_128`;
     }
@@ -97,7 +97,10 @@ class ThreadPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.trigger('o-select-thread', { thread: this.thread });
+        this.thread.open();
+        if (!this.env.messaging.device.isMobile) {
+            this.env.messaging.messagingMenu.close();
+        }
     }
 
     /**
@@ -105,7 +108,9 @@ class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.thread.markAsSeen();
+        if (this.thread.lastNonTransientMessage) {
+            this.thread.markAsSeen(this.thread.lastNonTransientMessage);
+        }
     }
 
 }

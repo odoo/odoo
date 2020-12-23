@@ -16,11 +16,7 @@ function factory(dependencies) {
          * Close the messaging menu. Should reset its internal state.
          */
         close() {
-            this.update({
-                activeTabId: 'all',
-                isMobileNewMessageToggled: false,
-                isOpen: false,
-            });
+            this.update({ isOpen: false });
         }
 
         /**
@@ -34,22 +30,28 @@ function factory(dependencies) {
         /**
          * Toggle whether the messaging menu is open or not.
          */
-        async toggleOpen() {
-            if (!this.isOpen) {
-                const inbox = this.env.messaging.inbox;
-                if (!inbox.mainCache.isLoaded && !inbox.mainCache.isLoading) {
-                    // populate some needaction messages on threads.
-                    // FIXME: await necessary due to bug in tests without it
-                    // see task-id 2275999
-                    await this.async(() => inbox.mainCache.loadMessages());
-                }
-            }
+        toggleOpen() {
             this.update({ isOpen: !this.isOpen });
         }
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         */
+        _computeInboxMessagesAutoloader() {
+            if (!this.isOpen) {
+                return;
+            }
+            const inbox = this.env.messaging.inbox;
+            if (!inbox || !inbox.mainCache) {
+                return;
+            }
+            // populate some needaction messages on threads.
+            inbox.mainCache.update({ isCacheRefreshRequested: true });
+        }
 
         /**
          * @private
@@ -61,22 +63,22 @@ function factory(dependencies) {
             }
             const inboxMailbox = this.env.messaging.inbox;
             const unreadChannels = this.env.models['mail.thread'].all(thread =>
-                thread.message_unread_counter > 0 &&
-                thread.model === 'mail.channel'
+                thread.localMessageUnreadCounter > 0 &&
+                thread.model === 'mail.channel' &&
+                thread.isPinned
             );
             let counter = unreadChannels.length;
             if (inboxMailbox) {
                 counter += inboxMailbox.counter;
-            }
-            if (!this.messaging) {
-                // compute after delete
-                return counter;
             }
             if (this.messaging.notificationGroupManager) {
                 counter += this.messaging.notificationGroupManager.groups.reduce(
                     (total, group) => total + group.notifications.length,
                     0
                 );
+            }
+            if (this.messaging.isNotificationPermissionDefault()) {
+                counter++;
             }
             return counter;
         }
@@ -105,6 +107,21 @@ function factory(dependencies) {
             default: 0,
         }),
         /**
+         * Dummy field to automatically load messages of inbox when messaging
+         * menu is open.
+         *
+         * Useful because needaction notifications require fetching inbox
+         * messages to work.
+         */
+        inboxMessagesAutoloader: attr({
+            compute: '_computeInboxMessagesAutoloader',
+            dependencies: [
+                'isOpen',
+                'messagingInbox',
+                'messagingInboxMainCache',
+            ],
+        }),
+        /**
          * Determine whether the mobile new message input is visible or not.
          */
         isMobileNewMessageToggled: attr({
@@ -118,6 +135,12 @@ function factory(dependencies) {
         }),
         messaging: one2one('mail.messaging', {
             inverse: 'messagingMenu',
+        }),
+        messagingInbox: one2one('mail.thread', {
+            related: 'messaging.inbox',
+        }),
+        messagingInboxMainCache: one2one('mail.thread_cache', {
+            related: 'messagingInbox.mainCache',
         }),
     };
 

@@ -2,33 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval, test_python_expr
-from odoo.tools import wrap_module
-from odoo.http import request
 
 import base64
 from collections import defaultdict
-import datetime
 import functools
 import logging
-import time
 
 from pytz import timezone
 
 _logger = logging.getLogger(__name__)
-
-# build dateutil helper, starting with the relevant *lazy* imports
-import dateutil
-import dateutil.parser
-import dateutil.relativedelta
-import dateutil.rrule
-import dateutil.tz
-mods = {'parser', 'relativedelta', 'rrule', 'tz'}
-attribs = {atr for m in mods for atr in getattr(dateutil, m).__all__}
-dateutil = wrap_module(dateutil, mods | attribs)
 
 
 class IrActions(models.Model):
@@ -84,12 +70,13 @@ class IrActions(models.Model):
         return {
             'uid': self._uid,
             'user': self.env.user,
-            'time': time,
-            'datetime': datetime,
-            'dateutil': dateutil,
+            'time': tools.safe_eval.time,
+            'datetime': tools.safe_eval.datetime,
+            'dateutil': tools.safe_eval.dateutil,
             'timezone': timezone,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
+            'Command': Command,
         }
 
     @api.model
@@ -117,7 +104,7 @@ class IrActions(models.Model):
         user_groups = self.env.user.groups_id
         for action_id, action_model, binding_type in cr.fetchall():
             try:
-                action = self.env[action_model].browse(action_id)
+                action = self.env[action_model].sudo().browse(action_id)
                 action_groups = getattr(action, 'groups_id', ())
                 action_model = getattr(action, 'res_model', False)
                 if action_groups and not action_groups & user_groups:
@@ -134,6 +121,36 @@ class IrActions(models.Model):
         if result.get('action'):
             result['action'] = sorted(result['action'], key=lambda vals: vals.get('sequence', 0))
         return result
+
+    @api.model
+    def _for_xml_id(self, full_xml_id):
+        """ Returns the action content for the provided xml_id
+
+        :param xml_id: the namespace-less id of the action (the @id
+                       attribute from the XML file)
+        :return: A read() view of the ir.actions.action safe for web use
+        """
+        record = self.env.ref(full_xml_id)
+        assert isinstance(self.env[record._name], type(self))
+        action = record.sudo().read()[0]
+        return {
+            field: value
+            for field, value in action.items()
+            if field in record._get_readable_fields()
+        }
+
+    def _get_readable_fields(self):
+        """ return the list of fields that are safe to read
+
+        Fetched via /web/action/load or _for_xml_id method
+        Only fields used by the web client should included
+        Accessing content useful for the server-side must
+        be done manually with superuser
+        """
+        return {
+            "binding_model_id", "binding_type", "binding_view_types",
+            "display_name", "help", "id", "name", "type", "xml_id",
+        }
 
 
 class IrActionsActWindow(models.Model):
@@ -232,18 +249,6 @@ class IrActionsActWindow(models.Model):
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result
 
-    @api.model
-    def for_xml_id(self, module, xml_id):
-        """ Returns the act_window object created for the provided xml_id
-
-        :param module: the module the act_window originates in
-        :param xml_id: the namespace-less id of the action (the @id
-                       attribute from the XML file)
-        :return: A read() view of the ir.actions.act_window
-        """
-        record = self.env.ref("%s.%s" % (module, xml_id))
-        return record.read()[0]
-
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
@@ -266,6 +271,17 @@ class IrActionsActWindow(models.Model):
     def _existing(self):
         self._cr.execute("SELECT id FROM %s" % self._table)
         return set(row[0] for row in self._cr.fetchall())
+
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "context", "domain", "filter", "groups_id", "limit", "res_id",
+            "res_model", "search_view", "search_view_id", "target", "view_id",
+            "view_mode", "views",
+            # `flags` is not a real field of ir.actions.act_window but is used
+            # to give the parameters to generate the action
+            "flags"
+        }
 
 
 VIEW_TYPES = [
@@ -306,6 +322,13 @@ class IrActionsActWindowclose(models.Model):
 
     type = fields.Char(default='ir.actions.act_window_close')
 
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            # 'effect' is not a real field of ir.actions.act_window_close but is
+            # used to display the rainbowman
+            "effect"
+        }
+
 
 class IrActionsActUrl(models.Model):
     _name = 'ir.actions.act_url'
@@ -320,6 +343,11 @@ class IrActionsActUrl(models.Model):
     url = fields.Text(string='Action URL', required=True)
     target = fields.Selection([('new', 'New Window'), ('self', 'This Window')],
                               string='Action Target', default='new', required=True)
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "target", "url",
+        }
 
 
 class IrActionsServer(models.Model):
@@ -355,7 +383,8 @@ class IrActionsServer(models.Model):
 #  - records: recordset of all records on which the action is triggered in multi-mode; may be void
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
-#  - Warning: Warning Exception to use with raise
+#  - UserError: Warning Exception to use with raise
+#  - Command: x2Many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model
@@ -421,6 +450,11 @@ class IrActionsServer(models.Model):
         if not self._check_m2m_recursion('child_ids'):
             raise ValidationError(_('Recursion found in child server actions'))
 
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "groups_id", "model_name",
+        }
+
     def _get_runner(self):
         multi = True
         t = type(self)
@@ -463,7 +497,7 @@ class IrActionsServer(models.Model):
         return True
 
     def _run_action_code_multi(self, eval_context):
-        safe_eval(self.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+        safe_eval(self.code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):
@@ -497,7 +531,7 @@ class IrActionsServer(models.Model):
         if self.link_field_id:
             record = self.env[self.model_id.model].browse(self._context.get('active_id'))
             if self.link_field_id.ttype in ['one2many', 'many2many']:
-                record.write({self.link_field_id.name: [(4, res.id)]})
+                record.write({self.link_field_id.name: [Command.link(res.id)]})
             else:
                 record.write({self.link_field_id.name: res.id})
 
@@ -564,12 +598,31 @@ class IrActionsServer(models.Model):
                  return action
         """
         res = False
-        for action in self:
+        for action in self.sudo():
             action_groups = action.groups_id
-            if action_groups and not (action_groups & self.env.user.groups_id):
-                raise AccessError(_("You don't have enough access rights to run this action."))
+            if action_groups:
+                if not (action_groups & self.env.user.groups_id):
+                    raise AccessError(_("You don't have enough access rights to run this action."))
+            else:
+                try:
+                    self.env[action.model_name].check_access_rights("write")
+                except AccessError:
+                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
+                        action.name, self.env.user.login, action.model_name,
+                    )
+                    raise
 
             eval_context = self._get_eval_context(action)
+            records = eval_context.get('record') or eval_context['model']
+            records |= eval_context.get('records') or eval_context['model']
+            if records:
+                try:
+                    records.check_access_rule('write')
+                except AccessError:
+                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
+                        action.name, self.env.user.login, records,
+                    )
+                    raise
 
             runner, multi = action._get_runner()
             if runner and multi:
@@ -596,13 +649,6 @@ class IrActionsServer(models.Model):
                     action.name, action.state
                 )
         return res or False
-
-    def _run_actions(self, ids):
-        """
-            Run server actions with given ids.
-            Allow crons to run specific server actions
-        """
-        return self.browse(ids).run()
 
 
 class IrServerObjectLines(models.Model):
@@ -638,10 +684,10 @@ class IrServerObjectLines(models.Model):
                 try:
                     value = int(value)
                     if not self.env[line.col1.relation].browse(value).exists():
-                        record = self.env[line.col1.relation]._search([], limit=1)
+                        record = list(self.env[line.col1.relation]._search([], limit=1))
                         value = record[0] if record else 0
                 except ValueError:
-                    record = self.env[line.col1.relation]._search([], limit=1)
+                    record = list(self.env[line.col1.relation]._search([], limit=1))
                     value = record[0] if record else 0
                 line.resource_ref = '%s,%s' % (line.col1.relation, value)
             else:
@@ -720,8 +766,7 @@ class IrActionsTodo(models.Model):
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         args = args or []
         if name:
-            action_ids = self._search(expression.AND([[('action_id', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
-            return models.lazy_name_get(self.browse(action_ids).with_user(name_get_uid))
+            return self._search(expression.AND([[('action_id', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
         return super(IrActionsTodo, self)._name_search(name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def action_launch(self):
@@ -797,3 +842,9 @@ class IrActionsActClient(models.Model):
         params_store = doc.find(".//field[@name='params_store']")
         params_store.getparent().remove(params_store)
         return doc
+
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "context", "params", "res_model", "tag", "target",
+        }

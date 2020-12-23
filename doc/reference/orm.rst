@@ -50,11 +50,20 @@ value::
 .. autoclass:: odoo.models.BaseModel()
 
     .. autoattribute:: _auto
+    .. attribute:: _log_access
+
+        Whether the ORM should automatically generate and update the
+        :ref:`reference/fields/automatic/log_access`.
+
+        Defaults to whatever value was set for :attr:`~._auto`.
+
     .. autoattribute:: _table
     .. autoattribute:: _sequence
     .. autoattribute:: _sql_constraints
 
     .. autoattribute:: _register
+    .. autoattribute:: _abstract
+    .. autoattribute:: _transient
 
     .. autoattribute:: _name
     .. autoattribute:: _description
@@ -70,14 +79,6 @@ value::
     .. autoattribute:: _parent_name
     .. autoattribute:: _parent_store
 
-    .. autoattribute:: _abstract
-
-    .. seealso:: :class:`odoo.models.AbstractModel`
-
-    .. autoattribute:: _transient
-
-    .. seealso:: :class:`odoo.models.TransientModel`
-
     .. autoattribute:: _date_name
     .. autoattribute:: _fold_name
 
@@ -91,10 +92,18 @@ Model
 
 .. autoclass:: odoo.models.Model()
 
+      .. autoattribute:: _auto
+      .. autoattribute:: _abstract
+      .. autoattribute:: _transient
+
 TransientModel
 --------------
 
 .. autoclass:: odoo.models.TransientModel()
+
+      .. autoattribute:: _auto
+      .. autoattribute:: _abstract
+      .. autoattribute:: _transient
 
 .. _reference/fields:
 .. _reference/orm/fields:
@@ -211,6 +220,10 @@ Relational Fields
 
 .. autoclass:: Many2many()
 
+.. autoclass:: Command()
+    :members:
+    :undoc-members:
+
 Pseudo-relational fields
 ''''''''''''''''''''''''
 
@@ -293,6 +306,22 @@ it uses the values of other *fields*, it should specify those fields using
             record.discount_value = discount
             record.total = record.value - discount
 
+.. warning::
+
+    While it is possible to use the same compute method for multiple
+    fields, it is not recommended to do the same for the inverse
+    method.
+
+    During the computation of the inverse, **all** fields that use
+    said inverse are protected, meaning that they can't be computed,
+    even if their value is not in the cache.
+
+    If any of those fields is accessed and its value is not in cache,
+    the ORM will simply return a default value of `False` for these fields.
+    This means that the value of the inverse fields (other than the one
+    triggering the inverse method) may not give their correct value and
+    this will probably break the expected behavior of the inverse method.
+
 .. _reference/fields/related:
 
 Related fields
@@ -323,12 +352,32 @@ dependencies are modified.
 
 .. note:: The related fields are computed in sudo mode.
 
+.. warning::
+
+    You cannot chain :class:`~odoo.fields.Many2many` or :class:`~odoo.fields.One2many` fields in ``related`` fields dependencies.
+
+    ``related`` can be used to refer to a :class:`~odoo.fields.One2many` or
+    :class:`~odoo.fields.Many2many` field on another model on the
+    condition that it's done through a ``Many2one`` relation on the current model.
+    ``One2many`` and ``Many2many`` are not supported and the results will not be
+    aggregated correctly::
+
+      m2o_id = fields.Many2one()
+      m2m_ids = fields.Many2many()
+      o2m_ids = fields.One2many()
+
+      # Supported
+      d_ids = fields.Many2many(related="m2o_id.m2m_ids")
+      e_ids = fields.One2many(related="m2o_id.o2m_ids")
+
+      # Won't work: use a custom Many2many computed field instead
+      f_ids = fields.Many2many(related="m2m_ids.m2m_ids")
+      g_ids = fields.One2many(related="o2m_ids.o2m_ids")
+
 .. _reference/fields/automatic:
 
 Automatic fields
 ----------------
-
-.. Documented
 
 .. attribute:: id
 
@@ -338,23 +387,39 @@ Automatic fields
 
     Raise an Error otherwise.
 
-.. todo:: _log_access info
+.. _reference/fields/automatic/log_access:
+
+Access Log fields
+'''''''''''''''''
+
+These fields are automatically set and updated if
+:attr:`~odoo.models.BaseModel._log_access` is enabled. It can be
+disabled to avoid creating or updating those fields on tables for which they are
+not useful.
+
+By default, :attr:`~odoo.models.BaseModel._log_access` is set to the same value
+as :attr:`~odoo.models.BaseModel._auto`
 
 .. attribute:: create_date
 
-    :class:`~odoo.fields.Datetime`
+    Stores when the record was created, :class:`~odoo.fields.Datetime`
 
 .. attribute:: create_uid
 
-    :class:`~odoo.fields.Many2one`
+    Stores *who* created the record, :class:`~odoo.fields.Many2one` to a
+    ``res.users``.
 
 .. attribute:: write_date
 
-    :class:`~odoo.fields.Datetime`
+    Stores when the record was last updated, :class:`~odoo.fields.Datetime`
 
 .. attribute:: write_uid
 
-    :class:`~odoo.fields.Many2one`
+    Stores who last updated the record, :class:`~odoo.fields.Many2one` to a
+    ``res.users``.
+
+.. warning:: :attr:`~odoo.models.BaseModel._log_access` *must* be enabled on
+             :class:`~odoo.models.TransientModel`.
 
 .. _reference/orm/fields/reserved:
 
@@ -954,8 +1019,10 @@ will yield:
     :language: text
     :lines: 13
 
-.. note:: it will also yield the various :ref:`automatic fields
-          <reference/fields/automatic>` unless they've been disabled
+.. note::
+
+    It will also yield the various :ref:`automatic fields
+    <reference/fields/automatic>` unless they've been disabled
 
 Delegation
 ----------
@@ -993,6 +1060,12 @@ and it's possible to write directly on the delegated field:
 
 .. warning:: when using delegation inheritance, methods are *not* inherited,
              only fields
+
+.. warning::
+
+    * `_inherits` is more or less implemented, avoid it if you can;
+    * chained `_inherits` is essentially not implemented, we cannot guarantee anything on the final behavior.
+
 
 Fields Incremental Definition
 -----------------------------

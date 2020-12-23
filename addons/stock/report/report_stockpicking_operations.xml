@@ -59,8 +59,8 @@
                                 </div>
                             </div>
                             <table class="table table-sm" t-if="o.move_line_ids and o.move_ids_without_package">
-                                <t t-set="has_barcode" t-value="any([move_ids_without_package.product_id and move_ids_without_package.product_id.sudo().barcode or move_ids_without_package.package_id for move_ids_without_package in o.move_line_ids])"/>
-                                <t t-set="has_serial_number" t-value="o.move_line_ids.filtered(lambda ml: ml.lot_id or ml.lot_name)" groups="stock.group_production_lot"/>
+                                <t t-set="has_barcode" t-value="any(move_line.product_id and move_line.product_id.sudo().barcode or move_line.package_id for move_line in o.move_line_ids)"/>
+                                <t t-set="has_serial_number" t-value="any(move_line.lot_id or move_line.lot_name for move_line in o.move_line_ids)" groups="stock.group_production_lot"/>
                                 <thead>
                                     <tr>
                                         <th name="th_product">
@@ -85,7 +85,7 @@
                                 </thead>
                                 <tbody>
                                     <t t-foreach="o.move_ids_without_package" t-as="move">
-                                        <!-- In case you come accross duplicated lines, ask NIM or LAP -->
+                                        <!-- In case you come across duplicated lines, ask NIM or LAP -->
                                         <t t-foreach="move.move_line_ids.sorted(key=lambda ml: ml.location_id.id)" t-as="ml">
                                             <tr>
                                                 <td>
@@ -166,29 +166,8 @@
             </t>
         </template>
         <template id="report_picking_type_label">
-            <t t-call="web.basic_layout">
-                <t t-foreach="docs" t-as="o">
-                    <div class="page">
-                        <div class="oe_structure"/>
-                        <div class="row">
-                            <div class="col-12">
-                                <table class="table table-condensed" style="border-bottom: 0px solid white !important;width: 3in;">
-                                    <tr>
-                                      <th style="text-align: center;">
-                                        <span t-field="o.name"/>
-                                      </th>
-                                    </tr>
-                                    <tr>
-                                        <td name="td_pt_barcode" style="text-align: center; vertical-align: middle;" class="col-5">
-                                            <img t-if="o.barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.barcode, 600, 150)" style="width:100%;height:20%;"/>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </t>
-            </t>
+            <t t-set="title">Operation Types</t>
+            <t t-call="stock.report_generic_barcode"/>
         </template>
     </data>
 </odoo>

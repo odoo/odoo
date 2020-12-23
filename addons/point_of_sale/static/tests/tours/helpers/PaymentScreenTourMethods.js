@@ -36,6 +36,18 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
             ];
         }
 
+        clickTipButton() {
+            return [
+                {
+                    trigger: `.payment-buttons .js_tip`,
+                },
+            ];
+        }
+
+        clickInvoiceButton() {
+            return [{ content: 'click invoice button', trigger: '.payment-buttons .js_invoice' }];
+        }
+
         clickValidate() {
             return [
                 {
@@ -47,6 +59,9 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
 
         /**
          * Press the numpad in sequence based on the given space-separated keys.
+         * Note: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
+         * fast inputs. Fast inputs is the case in tours.
+         *
          * @param {String} keys space-separated numpad keys
          */
         pressNumpad(keys) {
@@ -76,6 +91,14 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                     trigger: '.payment-screen .button.back',
                 },
             ];
+        }
+
+        clickTipButton() {
+            return [
+                {
+                    trigger: '.payment-screen .button.js_tip',
+                },
+            ]
         }
     }
 
@@ -112,18 +135,6 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                 {
                     content: `remaining amount is ${amount}`,
                     trigger: `.payment-status-remaining .amount:contains("${amount}")`,
-                    run: () => {},
-                },
-            ];
-        }
-
-        emailButtonIsHighligted(isHighlighted) {
-            return [
-                {
-                    content: `check email button`,
-                    trigger: isHighlighted
-                        ? `.payment-buttons .js_email.highlight`
-                        : `.payment-buttons .js_email:not(:has(.highlight))`,
                     run: () => {},
                 },
             ];
@@ -187,9 +198,18 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
         }
     }
 
-    return {
-        Do,
-        Check,
-        PaymentScreen: createTourMethods('PaymentScreen', Do, Check),
-    };
+    class Execute {
+        pay(method, amount) {
+            const steps = [];
+            steps.push(...this._do.clickPaymentMethod(method));
+            for (let char of amount.split('')) {
+                steps.push(...this._do.pressNumpad(char));
+            }
+            steps.push(...this._check.validateButtonIsHighlighted());
+            steps.push(...this._do.clickValidate());
+            return steps;
+        }
+    }
+
+    return createTourMethods('PaymentScreen', Do, Check, Execute);
 });

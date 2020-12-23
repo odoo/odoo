@@ -3,29 +3,18 @@
     padding-top: 128px;
     padding-bottom: 128px;
     font-family: Roboto, $font-family-sans-serif;
-
-    .o_tooltip_container {
-        transition: opacity 1s linear;
-
-        > .o_tooltip {
-            @include o-position-absolute;
-            position: relative;
-            display: inline-block;
-            margin: 0 8px;
-            opacity: 1;
-            z-index: auto;
-        }
-    }
 }
 
 // INPUTS
+$o-we-switch-size: 2ex !default;
+$o-we-switch-inactive-color: #F7F7F7 !default;
 .o_switch {
     display: flex;
     align-items: center;
     font-weight: normal;
     cursor: pointer;
 
-    >input {
+    > input {
         display: none;
 
         + span {
@@ -36,18 +25,18 @@
             width: $o-we-switch-size * 1.8;
             margin-right: 0.5em;
             display: inline-block;
-            transition: all 0.3s $o-we-md-ease;
+            transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
 
             &:after {
                 content: "";
-                background: $o-we-bg-color;
+                background: white;
                 display: block;
                 width: $o-we-switch-size - 0.2;
                 height: $o-we-switch-size - 0.2;
                 margin-top: 0.1ex;
                 margin-left: 0.1ex;
                 border-radius: 100rem;
-                transition: all 0.3s $o-we-md-ease;
+                transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
                 box-shadow: 0 1px 1px darken($o-we-switch-inactive-color, 35%), inset 0 0 0 1px lighten($o-we-switch-inactive-color, 10%);
             }
         }
@@ -69,5 +58,20 @@
                 background: $o-we-color-danger;
             }
         }
+    }
+}
+
+table jw-toolbar.table-edit {
+    display: block;
+    margin-top: 15px;
+
+    jw-group {
+        height: 27px;
+    }
+    jw-button {
+        display: inline;
+    }
+    jw-divider {
+        display: inline;
     }
 }

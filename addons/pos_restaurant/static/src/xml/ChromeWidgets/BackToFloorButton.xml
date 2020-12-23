@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="BackToFloorButton" owl="1">
-        <span class="order-button floor-button">
+        <span t-if="hasTable" class="order-button floor-button" t-on-click="backToFloorScreen">
             <i class="fa fa-angle-double-left" role="img" aria-label="Back to floor" title="Back to floor" />
             <span> </span>
             <span t-esc="floor.name" />
@@ -13,6 +13,7 @@
                 <span> )</span>
             </span>
         </span>
+        <span t-else=""></span>
     </t>
 
 </templates>

@@ -8,17 +8,19 @@ import logging
 from lxml import etree
 import os
 from pathlib import Path
-import subprocess
-import time
-from threading import Lock
-import usb
-import urllib3
 from queue import Queue, Empty
+import subprocess
+from threading import Lock
+import time
+import urllib3
+from usb import util
 
 from odoo import http, _
-from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
+from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
+from odoo.addons.hw_drivers.driver import Driver
+from odoo.addons.hw_drivers.event_manager import event_manager
+from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices
 
 _logger = logging.getLogger(__name__)
 xlib = ctypes.cdll.LoadLibrary('libX11.so.6')
@@ -29,15 +31,20 @@ class KeyboardUSBDriver(Driver):
     keyboard_layout_groups = []
     available_layouts = []
 
-    def __init__(self, device):
+    def __init__(self, identifier, device):
         if not hasattr(KeyboardUSBDriver, 'display'):
             os.environ['XAUTHORITY'] = "/run/lightdm/pi/xauthority"
             KeyboardUSBDriver.display = xlib.XOpenDisplay(bytes(":0.0", "utf-8"))
 
-        super(KeyboardUSBDriver, self).__init__(device)
-        self._device_type = 'keyboard'
-        self._device_connection = 'direct'
-        self._device_name = self._set_name()
+        super(KeyboardUSBDriver, self).__init__(identifier, device)
+        self.device_connection = 'direct'
+        self.device_name = self._set_name()
+
+        self._actions.update({
+            'update_layout': self._update_layout,
+            'update_is_scanner': self._save_is_scanner,
+            '': self._action_default,
+        })
 
         # from https://github.com/xkbcommon/libxkbcommon/blob/master/test/evdev-scancodes.h
         self._scancode_to_modifier = {
@@ -49,23 +56,15 @@ class KeyboardUSBDriver(Driver):
         }
         self._tracked_modifiers = {modifier: False for modifier in self._scancode_to_modifier.values()}
 
-        self.load_layout()
-
         if not KeyboardUSBDriver.available_layouts:
             KeyboardUSBDriver.load_layouts_list()
         KeyboardUSBDriver.send_layouts_list()
 
-        for device in [evdev.InputDevice(path) for path in evdev.list_devices()]:
-            if (self.dev.idVendor == device.info.vendor) and (self.dev.idProduct == device.info.product):
-                self.input_device = device
+        for evdev_device in [evdev.InputDevice(path) for path in evdev.list_devices()]:
+            if (device.idVendor == evdev_device.info.vendor) and (device.idProduct == evdev_device.info.product):
+                self.input_device = evdev_device
 
-        device_name = self._device_name.lower()
-        if 'barcode' in device_name or 'scanner' in device_name or 'reader' in device_name or self.dev.interface_protocol == '0':
-            self._device_type = 'scanner'
-            self._barcodes = Queue()
-            self._current_barcode = ''
-            self.input_device.grab()
-            self.read_barcode_lock = Lock()
+        self._set_device_type('scanner') if self._is_scanner() else self._set_device_type()
 
     @classmethod
     def supported(cls, device):
@@ -117,34 +116,18 @@ class KeyboardUSBDriver(Driver):
 
     def _set_name(self):
         try:
-            if usb.__version__ == '1.0.0b1':
-                manufacturer = usb.util.get_string(self.dev, 256, self.dev.iManufacturer)
-                product = usb.util.get_string(self.dev, 256, self.dev.iProduct)
-            else:
-                manufacturer = usb.util.get_string(self.dev, self.dev.iManufacturer)
-                product = usb.util.get_string(self.dev, self.dev.iProduct)
+            manufacturer = util.get_string(self.dev, self.dev.iManufacturer)
+            product = util.get_string(self.dev, self.dev.iProduct)
             return ("%s - %s") % (manufacturer, product)
         except ValueError as e:
             _logger.warning(e)
             return _('Unknown input device')
 
-    def action(self, data):
-        if data.get('action', False) == 'update_layout':
-            layout = {
-                'layout': data.get('layout'),
-                'variant': data.get('variant'),
-            }
-            self._change_keyboard_layout(layout)
-            self.save_layout(layout)
-        else:
-            self.data['value'] = ''
-            event_manager.device_changed(self)
-
     def run(self):
-        key_input = self._barcode_scanner_input if self._device_type == "scanner" else self._keyboard_input
-
         try:
             for event in self.input_device.read_loop():
+                if self._stopped.isSet():
+                    break
                 if event.type == evdev.ecodes.EV_KEY:
                     data = evdev.categorize(event)
 
@@ -156,7 +139,7 @@ class KeyboardUSBDriver(Driver):
                         else:
                             self._tracked_modifiers[modifier_name] = bool(data.keystate)  # 1 for keydown, 0 for keyup
                     elif data.keystate == 1:
-                        key_input(data.scancode)
+                        self.key_input(data.scancode)
 
         except Exception as err:
             _logger.warning(err)
@@ -218,6 +201,24 @@ class KeyboardUSBDriver(Driver):
             layout = {'layout': 'us'}
         self._change_keyboard_layout(layout)
 
+    def _action_default(self, data):
+        self.data['value'] = ''
+        event_manager.device_changed(self)
+
+    def _is_scanner(self):
+        """Read the device type from the saved filed and set it as current type.
+        If no file or no device type is found we try to detect it automatically.
+        """
+        device_name = self.device_name.lower()
+        scanner_name = ['barcode', 'scanner', 'reader']
+        is_scanner = any(x in device_name for x in scanner_name) or self.dev.interface_protocol == '0'
+
+        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
+        if file_path.exists():
+            data = json.loads(file_path.read_text())
+            is_scanner = data.get(self.device_identifier, {}).get('is_scanner', is_scanner)
+        return is_scanner
+
     def _keyboard_input(self, scancode):
         """Deal with a keyboard input. Send the character corresponding to the
         pressed key represented by its scancode to the connected Odoo instance.
@@ -248,6 +249,46 @@ class KeyboardUSBDriver(Driver):
             self._current_barcode = ''
         else:
             self._current_barcode += self._scancode_to_char(scancode)
+
+    def _save_is_scanner(self, data):
+        """Save the type of device.
+        We need that in order to keep the selected type of device after a reboot.
+        """
+        is_scanner = {'is_scanner': data.get('is_scanner')}
+        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
+        if file_path.exists():
+            data = json.loads(file_path.read_text())
+        else:
+            data = {}
+        data[self.device_identifier] = is_scanner
+        helpers.write_file('odoo-keyboard-is-scanner.conf', json.dumps(data))
+        self._set_device_type('scanner') if is_scanner.get('is_scanner') else self._set_device_type()
+
+    def _update_layout(self, data):
+        layout = {
+            'layout': data.get('layout'),
+            'variant': data.get('variant'),
+        }
+        self._change_keyboard_layout(layout)
+        self.save_layout(layout)
+
+    def _set_device_type(self, device_type='keyboard'):
+        """Modify the device type between 'keyboard' and 'scanner'
+
+        Args:
+            type (string): Type wanted to switch
+        """
+        if device_type == 'scanner':
+            self.device_type = 'scanner'
+            self.key_input = self._barcode_scanner_input
+            self._barcodes = Queue()
+            self._current_barcode = ''
+            self.input_device.grab()
+            self.read_barcode_lock = Lock()
+        else:
+            self.device_type = 'keyboard'
+            self.key_input = self._keyboard_input
+        self.load_layout()
 
     def _scancode_to_char(self, scancode):
         """Translate a received scancode to a character depending on the
@@ -317,8 +358,8 @@ class KeyboardUSBDriver(Driver):
             except Empty:
                 return ''
 
+proxy_drivers['scanner'] = KeyboardUSBDriver
 
-old_drivers['scanner'] = KeyboardUSBDriver
 
 class KeyboardUSBController(http.Controller):
     @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')

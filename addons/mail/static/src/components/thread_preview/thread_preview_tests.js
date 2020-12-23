@@ -6,10 +6,11 @@ const components = {
 };
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -17,18 +18,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_preview', {}, function () {
 QUnit.module('thread_preview_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createThreadPreviewComponent = async props => {
-            const ThreadPreviewComponent = components.ThreadPreview;
-            ThreadPreviewComponent.env = this.env;
-            this.component = new ThreadPreviewComponent(null, props);
-            delete ThreadPreviewComponent.env;
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            await createRootComponent(this, components.ThreadPreview, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,21 +36,22 @@ QUnit.module('thread_preview_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(4);
+    assert.expect(8);
+    this.data['mail.channel'].records.push({
+        id: 11,
+        message_unread_counter: 1,
+    });
+    this.data['mail.message'].records.push({
+        channel_ids: [11],
+        id: 100,
+        model: 'mail.channel',
+        res_id: 11,
+    });
 
     await this.start({
         hasChatWindow: true,
@@ -61,16 +62,20 @@ QUnit.test('mark as read', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
-        message_unread_counter: 1,
         model: 'mail.channel',
     });
     await this.createThreadPreviewComponent({ threadLocalId: thread.localId });
     assert.containsOnce(
         document.body,
         '.o_ThreadPreview_markAsRead',
-        "should have 1 mark as read button"
+        "should have the mark as read button"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadPreview_counter',
+        "should have an unread counter"
     );
 
     await afterNextRender(() =>
@@ -79,6 +84,21 @@ QUnit.test('mark as read', async function (assert) {
     assert.verifySteps(
         ['channel_seen'],
         "should have marked the thread as seen"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ThreadPreview'),
+        'o-muted',
+        "should be muted once marked as read"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ThreadPreview_markAsRead',
+        "should no longer have the mark as read button"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ThreadPreview_counter',
+        "should no longer have an unread counter"
     );
     assert.containsNone(
         document.body,

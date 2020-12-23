@@ -8,29 +8,19 @@ body {
     // Set frontend direction that will be flipped with
     // rtlcss for right-to-left text direction.
     direction: ltr;
-    transition: padding 0.35s;
 }
 body.o_connected_user {
     padding-top: $o-navbar-height!important;
 
     &.o_fullscreen {
-        padding-top: 0 !important;
-
-        &.editor_enable.editor_has_snippets {
-            padding-left: 0 !important;
-        }
-
-        #oe_main_menu_navbar, #web_editor-top-edit {
-            transform: translateY(-100%);
-        }
-
         #oe_snippets {
-            transform: translateX(-100%);
+            transform: translateX(100%);
+        }
+        .o_main_sidebar {
+            transition: width 400ms ease 0s !important;
+            width: 0;
         }
     }
-}
-#oe_main_menu_navbar, #web_editor-top-edit, #oe_snippets {
-    transition: transform 0.35s !important;
 }
 
 // MAIN MENU STYLE (added above navbar.scss)
@@ -39,9 +29,9 @@ body.o_connected_user {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $zindex-modal - 10;
-
     font-family: $o-we-font-family;
     font-size: 14px;
+
     a:hover, a:focus {
         text-decoration: none;
     }
@@ -118,6 +108,18 @@ body.o_connected_user {
     }
 }
 
+// ANIMATIONS
+@keyframes fadeInDownSmall {
+    0% {
+        opacity: 0;
+        transform: translate(0, -5px);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+}
+
 // MODALS
 body .modal {
     &.o_technical_modal {
@@ -164,7 +166,7 @@ body .modal {
                         }
                     }
                     .close {
-                        color: $o-we-color-light;
+                        color: #4e525b;
                     }
                 }
 
@@ -349,6 +351,16 @@ body .modal {
         opacity: 0;
         animation: fadeInDownSmall 1s forwards;
 
+        .o_uninstalled_module {
+            filter: brightness(70%) contrast(60%);
+
+        }
+
+        .module_icon {
+            display: block;
+            margin: auto;
+        }
+
         a {
             display: block;
             font-size: 34px;
@@ -455,5 +467,34 @@ body .modal {
     }
     .fa-check, .fa-eye-slash {
         color: $info;
+    }
+}
+
+.ui-autocomplete.o_website_ui_autocomplete {
+    max-width: 400px;
+    font-size: $o-we-sidebar-font-size;
+    border: none;
+    background-color: $o-we-sidebar-content-field-dropdown-bg;
+    box-shadow: $o-we-sidebar-content-field-dropdown-shadow;
+    > li {
+        border-bottom: $o-we-sidebar-content-field-border-width solid lighten($o-we-sidebar-content-field-dropdown-border-color, 15%);
+        border-radius: $o-we-sidebar-content-field-border-radius;
+        background-color: $o-we-sidebar-content-field-clickable-bg;
+        color: $o-we-sidebar-content-field-clickable-color;
+        &.ui-menu-item {
+            > div {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                line-height: 20px;
+                &.ui-state-active {
+                    border: $o-we-sidebar-content-field-dropdown-border-width solid transparent;
+                    background-color: $o-we-sidebar-content-field-dropdown-item-bg-hover;
+                }
+            }
+        }
+        &.ui-autocomplete-category {
+            background-color: $o-we-bg-lighter;
+        }
     }
 }

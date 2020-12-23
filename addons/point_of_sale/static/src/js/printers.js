@@ -3,6 +3,7 @@ odoo.define('point_of_sale.Printer', function (require) {
 
 var Session = require('web.Session');
 var core = require('web.core');
+const { Gui } = require('point_of_sale.Gui');
 var _t = core._t;
 
 // IMPROVEMENT: This is too much. We can get away from this class.
@@ -68,7 +69,7 @@ var PrinterMixin = {
             }
             // rpc call is okay but printing failed because
             // IoT box can't find a printer.
-            if (!sendPrintResult) {
+            if (!sendPrintResult || sendPrintResult.result === false) {
                 this.receipt_queue.length = 0;
                 return this.printResultGenerator.IoTResultError();
             }

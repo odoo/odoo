@@ -132,6 +132,10 @@
             max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
         }
 
+        .o_field_x2many .o_list_table .o_handle_cell .o_row_handle {
+            padding: 0.3rem;
+        }
+
         @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
             .o_row {
                 > .o_field_widget, > div {
@@ -191,6 +195,10 @@
                 margin: $o-statusbar-buttons-vmargin 3px $o-statusbar-buttons-vmargin 0;
                 padding-top: 2px;
                 padding-bottom: 2px;
+
+                > .o_button_icon {
+                    margin-right: $o-statbutton-spacing;
+                }
             }
         }
 
@@ -218,17 +226,13 @@
                 &:last-child {
                     padding-left: $o-horizontal-padding - 1;
                     border-left: 1px solid gray('400');
+                    &.disabled {
+                        border-color: gray('300');
+                    }
                 }
 
                 &:active {
                     box-shadow: none;
-                }
-
-                &.disabled {
-                    opacity: 1.0;
-                    color: $text-muted;
-                    pointer-events: none;
-                    border-left: 1px solid gray('300');
                 }
 
                 &:not(:first-child):before, &:not(:first-child):after {
@@ -272,6 +276,13 @@
                 }
             }
 
+            > .o_arrow_button, > .dropdown-menu > .o_arrow_button {
+                &.disabled {
+                    opacity: 1.0;
+                    color: $text-muted;
+                    pointer-events: none;
+                }
+            }
         }
 
         // Touch device mode
@@ -816,11 +827,31 @@
 // Overridden style when form view in modal
 .modal .modal-dialog {
     .o_form_view {
+        .o_statusbar_buttons > .btn {
+            /**
+             * Override to prevent the status bar from increasing height when
+             * inside dialog due to the original margin on those buttons. This
+             * prevents the other status buttons, those on the far right of the
+             * bar, from having a gap between their bottom and the bottom border
+             * of the status bar itself.
+             */
+            margin-top: 2px;
+            margin-bottom: 2px;
+        }
+
         .o_form_sheet_bg {
             padding: 0;
 
-            > * {
-                margin: 0;
+            > .o_form_statusbar, > .alert {
+                /**
+                 * Override to prevent the status bar from overflowing on its
+                 * far right. The original value is a negative margin that
+                 * is supposed to compensate unwanted padding of the original
+                 * view but the view inside dialog already has this padding
+                 * removed.
+                 */
+                margin-left: 0;
+                margin-right: 0;
             }
 
             > .o_form_sheet {
@@ -828,6 +859,13 @@
                 width: 100%;
                 margin: 0 auto;
                 max-width: none;
+                /**
+                 * Override to prevent double border, because the borders of the
+                 * dialog itself or the borders of other surrounding elements
+                 * (status bar, dialog footer) already act as a border for the
+                 * sheet when inside dialog.
+                 */
+                border: none;
             }
         }
     }

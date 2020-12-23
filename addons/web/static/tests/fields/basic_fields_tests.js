@@ -24,6 +24,9 @@ var _t = core._t;
 // Base64 images for testing purpose
 const MY_IMAGE = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==';
 const PRODUCT_IMAGE = 'R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7';
+const FR_FLAG_URL = '/base/static/img/country_flags/fr.png';
+const EN_FLAG_URL = '/base/static/img/country_flags/gb.png';
+
 
 QUnit.module('fields', {}, function () {
 
@@ -89,8 +92,8 @@ QUnit.module('basic_fields', {
                     qux: false,
                     selection: 'done',
                 },
-                {id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859, m2o: 1, m2m: []},
-                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, m2o: 1, m2m: [1], currency_id: 1}],
+                {id: 3, bar: true, foo: "gnap", int_field: 80, qux: -3.89859},
+                {id: 5, bar: false, foo: "blop", int_field: -4, qux: 9.1, currency_id: 1}],
                 onchanges: {},
             },
             product: {
@@ -117,6 +120,7 @@ QUnit.module('basic_fields', {
             },
             currency: {
                 fields: {
+                    digits: { string: "Digits" },
                     symbol: {string: "Currency Sumbol", type: "char", searchable: true},
                     position: {string: "Currency Position", type: "char", searchable: true},
                 },
@@ -471,6 +475,91 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_field_widget[name=bar] i.text-muted:not(.o_toggle_button_success)').length,
             1, "should be gray");
         assert.verifySteps(['write']);
+
+        form.destroy();
+    });
+
+    QUnit.module('FieldNumeric');
+
+    QUnit.test('numeric field: fields with keydown on numpad decimal key', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner.fields.float_factor_field = { string: "Float Factor", type: 'float_factor' };
+        this.data.partner.records[0].float_factor_field = 9.99;
+
+        this.data.partner.fields.float_time_field = { string: "Float Time", type: 'float_time' };
+        this.data.partner.records[0].float_time_field = 9.99;
+
+        this.data.partner.fields.monetary = { string: "Monetary", type: 'monetary' };
+        this.data.partner.records[0].monetary = 9.99;
+        this.data.partner.records[0].currency_id = 1;
+
+        this.data.partner.fields.percentage = { string: "Percentage", type: 'percentage' };
+        this.data.partner.records[0].percentage = .99;
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <field name="float_factor_field" options="{'factor': 0.5}"/>
+                    <field name="qux"/>
+                    <field name="float_time_field"/>
+                    <field name="int_field"/>
+                    <field name="monetary"/>
+                    <field name="currency_id" invisible="1"/>
+                    <field name="percentage"/>
+                </form>
+            `,
+            res_id: 1,
+            translateParameters: {
+                decimal_point: "🇧🇪",
+            },
+        });
+
+        // Record edit mode
+        await testUtilsDom.click(form.el.querySelector('.o_form_button_edit'));
+
+        // Get all inputs
+        const floatFactorField = form.el.querySelector('.o_input[name="float_factor_field"]');
+        const floatInput = form.el.querySelector('.o_input[name="qux"]');
+        const floatTimeInput = form.el.querySelector('.o_input[name="float_time_field"]');
+        const integerInput = form.el.querySelector('.o_input[name="int_field"]');
+        const monetaryInput = form.el.querySelector('.o_input[name="monetary"]');
+        const percentageInput = form.el.querySelector('.o_input[name="percentage"]');
+
+        // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
+        // Numpad "comma" is specific to some countries (Brazil...)
+        floatFactorField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatFactorField.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatFactorField.value.endsWith('🇧🇪🇧🇪'));
+
+        floatInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatInput.value.endsWith('🇧🇪🇧🇪'));
+
+        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        floatTimeInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(floatTimeInput.value.endsWith('🇧🇪🇧🇪'));
+
+        integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        integerInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(integerInput.value.endsWith('🇧🇪🇧🇪'));
+
+        monetaryInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        monetaryInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(monetaryInput.querySelector('input.o_input') .value.endsWith('🇧🇪🇧🇪'));
+
+        percentageInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: '.' }));
+        percentageInput.dispatchEvent(new KeyboardEvent('keydown', { code: 'NumpadDecimal', key: ',' }));
+        await testUtils.nextTick();
+        assert.ok(percentageInput.querySelector('input.o_input').value.endsWith('🇧🇪🇧🇪'));
 
         form.destroy();
     });
@@ -2888,6 +2977,131 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    /**
+     * Same tests than for Image fields, but for Char fields with image_url widget.
+     */
+    QUnit.module('FieldChar-ImageUrlWidget', {
+        beforeEach: function () {
+            // specific sixth partner data for image_url widget tests
+            this.data.partner.records.push({id: 6, bar: false, foo: FR_FLAG_URL, int_field: 5, qux: 0.0, timmy: []});
+        },
+    });
+
+    QUnit.test('image fields are correctly rendered', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/> ' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route, args) {
+                if (route === FR_FLAG_URL) {
+                    assert.ok(true, "the correct route should have been called.");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.hasClass(form.$('div[name="foo"]'), 'o_field_image',
+            "the widget should have the correct class");
+        assert.containsOnce(form, 'div[name="foo"] > img',
+            "the widget should contain an image");
+        assert.hasClass(form.$('div[name="foo"] > img'), 'img-fluid',
+            "the image should have the correct class");
+        assert.hasAttrValue(form.$('div[name="foo"] > img'), 'width', "90",
+            "the image should correctly set its attributes");
+        assert.strictEqual(form.$('div[name="foo"] > img').css('max-width'), "90px",
+            "the image should correctly set its attributes");
+        form.destroy();
+    });
+
+    QUnit.test('image_url widget in subviews are loaded correctly', async function (assert) {
+        assert.expect(6);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'char'};
+        this.data.partner_type.records[0].image = EN_FLAG_URL;
+        this.data.partner.records[5].timmy = [12];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/>' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="display_name"/>' +
+                        '</tree>' +
+                        '<form>' +
+                            '<field name="image" widget="image_url"/>' +
+                        '</form>' +
+                    '</field>' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route) {
+                if (route === FR_FLAG_URL) {
+                    assert.step("The view's image should have been fetched");
+                    return 'wow';
+                }
+                if (route === EN_FLAG_URL) {
+                    assert.step("The dialog's image should have been fetched");
+                    return;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(["The view's image should have been fetched"]);
+
+        assert.containsOnce(form, 'tr.o_data_row',
+            'There should be one record in the many2many');
+
+        // Actual flow: click on an element of the m2m to get its form view
+        await testUtils.dom.click(form.$('tbody td:contains(gold)'));
+        assert.strictEqual($('.modal').length, 1,
+            'The modal should have opened');
+        assert.verifySteps(["The dialog's image should have been fetched"]);
+
+        form.destroy();
+    });
+
+    QUnit.test('image fields in x2many list are loaded correctly', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner_type.fields.image = {name: 'image', type: 'char'};
+        this.data.partner_type.records[0].image = EN_FLAG_URL;
+        this.data.partner.records[5].timmy = [12];
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="timmy" widget="many2many">' +
+                        '<tree>' +
+                            '<field name="image" widget="image_url"/>' +
+                        '</tree>' +
+                    '</field>' +
+                '</form>',
+            res_id: 6,
+            async mockRPC(route) {
+                if (route === EN_FLAG_URL) {
+                    assert.ok(true, "The list's image should have been fetched");
+                    return;
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        assert.containsOnce(form, 'tr.o_data_row',
+            'There should be one record in the many2many');
+
+        form.destroy();
+    });
+
     QUnit.module('JournalDashboardGraph', {
         beforeEach: function () {
             _.extend(this.data.partner.fields, {
@@ -3350,6 +3564,54 @@ QUnit.module('basic_fields', {
 
         form.el.dispatchEvent(new Event('scroll'));
         assert.isNotVisible($('.daterangepicker:first'), "date range picker should be closed");
+
+        form.destroy();
+    });
+
+    QUnit.test('Datetime field manually input value should send utc value to server', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.datetime_end = { string: 'Datetime End', type: 'datetime' };
+        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                    <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+                </form>`,
+            res_id: 1,
+            session: {
+                getTZOffset: function () {
+                    return 330;
+                },
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'write') {
+                    assert.deepEqual(args.args[1], { datetime: '2017-02-08 06:00:00' });
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // check date display correctly in readonly
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 15:30:00',
+            "the start date should be correctly displayed in readonly");
+        assert.strictEqual(form.$('.o_field_date_range:last').text(), '03/13/2017 05:30:00',
+            "the end date should be correctly displayed in readonly");
+
+        // edit form
+        await testUtils.form.clickEdit(form);
+        // update input for Datetime
+        await testUtils.fields.editInput(form.$('.o_field_date_range:first'), '02/08/2017 11:30:00');
+        // save form
+        await testUtils.form.clickSave(form);
+
+        assert.strictEqual(form.$('.o_field_date_range:first').text(), '02/08/2017 11:30:00',
+            "the start date should be correctly displayed in readonly after manual update");
 
         form.destroy();
     });
@@ -3891,6 +4153,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field: hit enter should update value', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        const year = (new Date()).getFullYear();
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '01/08');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '01/08/' + year);
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '08/01');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '08/01/' + year);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', async function (assert) {
@@ -4323,13 +4615,13 @@ QUnit.module('basic_fields', {
 
         await testUtils.form.clickCreate(form);
         testUtils.dom.openDatepicker(form.$('.o_datepicker'));
-        $.each($('.day:last-child(),.day:nth-child(2)'), function (index, value) {
+        $.each($('.day:last-child,.day:nth-child(2)'), function (index, value) {
             assert.hasClass(value, 'disabled', 'first and last days must be disabled');
         });
         // the assertions below could be replaced by a single hasClass classic on the jQuery set using the idea
         // All not <=> not Exists. But we want to be sure that the set is non empty. We don't have an helper
         // function for that.
-        $.each($('.day:not(:last-child()):not(:nth-child(2))'), function (index, value) {
+        $.each($('.day:not(:last-child):not(:nth-child(2))'), function (index, value) {
             assert.doesNotHaveClass(value, 'disabled', 'other days must stay clickable');
         });
         form.destroy();
@@ -4370,20 +4662,20 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) span'), 'text-bf text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) span'), 'text-bf text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'text-bf text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'text-bf text-danger');
 
         list.destroy();
         unpatchDate();
     });
 
     QUnit.test('remaining_days widget on a date field in form view', async function (assert) {
-        assert.expect(6);
+        assert.expect(4);
 
         const unpatchDate = patchDate(2017, 9, 8, 15, 35, 11); // October 8 2017, 15:35:11
         this.data.partner.records = [
@@ -4401,16 +4693,11 @@ QUnit.module('basic_fields', {
         assert.strictEqual(form.$('.o_field_widget').text(), 'Today');
         assert.hasClass(form.$('.o_field_widget'), 'text-bf text-warning');
 
-        // in edit mode, this widget should behave like a regular date(time) widget
+        // in edit mode, this widget should not be editable.
         await testUtils.form.clickEdit(form);
 
         assert.hasClass(form.$('.o_form_view'), 'o_form_editable');
-        assert.containsOnce(form, '.o_datepicker');
-        assert.strictEqual(form.$('.o_datepicker_input').val(), '10/08/2017');
-
-        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
-
-        assert.containsOnce(document.body, '.bootstrap-datetimepicker-widget:visible');
+        assert.containsOnce(form, 'div.o_field_widget[name=date]');
 
         form.destroy();
         unpatchDate();
@@ -4428,7 +4715,7 @@ QUnit.module('basic_fields', {
             { id: 5, datetime: '2017-10-05 04:00:00' }, // - 3 days
             { id: 6, datetime: '2018-02-08 04:00:00' }, // + 4 months (diff >= 100 days)
             { id: 7, datetime: '2017-06-08 04:00:00' }, // - 4 months (diff >= 100 days)
-            { id: 6, datetime: false },
+            { id: 8, datetime: false },
         ];
 
         const list = await createView({
@@ -4452,13 +4739,13 @@ QUnit.module('basic_fields', {
 
         assert.strictEqual(list.$('.o_data_cell:nth(0) .o_field_widget').attr('title'), '10/08/2017');
 
-        assert.hasClass(list.$('.o_data_cell:nth(0) span'), 'text-bf text-warning');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(2) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(4) span'), 'text-bf text-danger');
-        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) span'), 'text-bf text-warning text-danger');
-        assert.hasClass(list.$('.o_data_cell:nth(6) span'), 'text-bf text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(0) div'), 'text-bf text-warning');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(1) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(2) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(3) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(4) div'), 'text-bf text-danger');
+        assert.doesNotHaveClass(list.$('.o_data_cell:nth(5) div'), 'text-bf text-warning text-danger');
+        assert.hasClass(list.$('.o_data_cell:nth(6) div'), 'text-bf text-danger');
 
         list.destroy();
         unpatchDate();
@@ -5341,6 +5628,29 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('float_toggle widget in kanban view(readonly) with option force_button', async function (assert) {
+        assert.expect(2);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban>' +
+                    '<templates><t t-name="kanban-box">' +
+                        '<div>' +
+                        '<field name="qux" widget="float_toggle" options="{\'force_button\': true}"/>' +
+                        '</div>' +
+                    '</t>' +
+                '</templates></kanban>',
+            domain: [['id', 'in', [1]]],
+        });
+        assert.containsOnce(kanban, 'button.o_field_float_toggle', "should have rendered toggle button");
+        const value = kanban.$('button.o_field_float_toggle').text();
+        await testUtils.dom.click(kanban.$('button.o_field_float_toggle'));
+        assert.notEqual(kanban.$('button.o_field_float_toggle').text(), value, "qux field value should be changed");
+        kanban.destroy();
+    });
+
 
     QUnit.module('PhoneWidget');
 
@@ -5671,6 +5981,25 @@ QUnit.module('basic_fields', {
         list.destroy();
     });
 
+    QUnit.test('priority widget with readonly attribute', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="selection" widget="priority" readonly="1"/>
+                </form>`,
+            res_id: 2,
+        });
+
+        assert.containsN(form, '.o_field_widget.o_priority span', 2,
+            "stars of priority widget should rendered with span tag if readonly");
+
+        form.destroy();
+    });
 
     QUnit.module('StateSelection Widget');
 
@@ -7447,7 +7776,7 @@ QUnit.module('basic_fields', {
     });
 
     QUnit.test('FieldBadge component with decoration-xxx attributes', async function (assert) {
-        assert.expect(3);
+        assert.expect(6);
 
         const list = await createView({
             View: ListView,
@@ -7459,6 +7788,12 @@ QUnit.module('basic_fields', {
                     <field name="foo" widget="badge" decoration-danger="selection == 'done'" decoration-warning="selection == 'blocked'"/>
                 </list>`,
         });
+
+        assert.containsN(list, '.o_field_badge[name="foo"]', 5);
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');
+        assert.containsOnce(list, '.o_field_badge[name="foo"].bg-warning-light');
+
+        await list.reload();
 
         assert.containsN(list, '.o_field_badge[name="foo"]', 5);
         assert.containsOnce(list, '.o_field_badge[name="foo"].bg-danger-light');

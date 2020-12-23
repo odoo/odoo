@@ -244,18 +244,18 @@ class TranslationToolsTestCase(BaseCase):
 
 
 class TestTranslation(TransactionCase):
-
-    def setUp(self):
-        super(TestTranslation, self).setUp()
-        lang = self.env['res.lang']._activate_lang('fr_FR')
-        self.env.ref('base.module_base')._update_translations(['fr_FR'])
-        self.customers = self.env['res.partner.category'].create({'name': 'Customers'})
-        self.env['ir.translation'].create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env.ref('base.module_base')._update_translations(['fr_FR'])
+        cls.customers = cls.env['res.partner.category'].create({'name': 'Customers'})
+        cls.env['ir.translation'].create({
             'type': 'model',
             'name': 'res.partner.category,name',
-            'module':'base',
+            'module': 'base',
             'lang': 'fr_FR',
-            'res_id': self.customers.id,
+            'res_id': cls.customers.id,
             'value': 'Clients',
             'state': 'translated',
         })
@@ -396,10 +396,10 @@ class TestTranslation(TransactionCase):
         self.assertEqual(translation_fr.src, 'Customers', "Did not set English version as source")
 
 class TestTranslationWrite(TransactionCase):
-
-    def setUp(self):
-        super().setUp()
-        self.category = self.env['res.partner.category'].create({'name': 'Reblochon'})
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.category = cls.env['res.partner.category'].create({'name': 'Reblochon'})
 
     def test_01_en(self):
         langs = self.env['res.lang'].get_installed()
@@ -437,7 +437,7 @@ class TestTranslationWrite(TransactionCase):
 
     def test_03_fr_single(self):
         self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.users'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
         self.env.ref('base.lang_en').active = False
 
         langs = self.env['res.lang'].get_installed()
@@ -483,7 +483,7 @@ class TestTranslationWrite(TransactionCase):
     def test_04_fr_multi_no_en(self):
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.lang']._activate_lang('es_ES')
-        self.env['res.users'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+        self.env['res.partner'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
         self.env.ref('base.lang_en').active = False
 
         langs = self.env['res.lang'].get_installed()
@@ -596,11 +596,12 @@ class TestTranslationWrite(TransactionCase):
 
 
 class TestXMLTranslation(TransactionCase):
-    def setUp(self):
-        super(TestXMLTranslation, self).setUp()
-        self.env['res.lang']._activate_lang('fr_FR')
-        self.env['res.lang']._activate_lang('nl_NL')
-        self.env.ref('base.module_base')._update_translations(['fr_FR', 'nl_NL'])
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.lang']._activate_lang('fr_FR')
+        cls.env['res.lang']._activate_lang('nl_NL')
+        cls.env.ref('base.module_base')._update_translations(['fr_FR', 'nl_NL'])
 
     def create_view(self, archf, terms, **kwargs):
         view = self.env['ir.ui.view'].create({

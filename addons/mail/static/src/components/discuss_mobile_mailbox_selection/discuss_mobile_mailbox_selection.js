@@ -73,8 +73,12 @@ class DiscussMobileMailboxSelection extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        const { mailbox } = ev.currentTarget.dataset;
-        this.discuss.threadViewer.update({ thread: [['link', mailbox]] });
+        const { mailboxLocalId } = ev.currentTarget.dataset;
+        const mailbox = this.env.models['mail.thread'].get(mailboxLocalId);
+        if (!mailbox) {
+            return;
+        }
+        mailbox.open();
     }
 
 }

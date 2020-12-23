@@ -108,12 +108,12 @@
             action="action_analytic_default_list"
             parent="account.menu_analytic_accounting"/>
 
-        <act_window
-            name="Analytic Rules"
-            id="analytic_rule_action_user"
-            res_model="account.analytic.default"
-            binding_model="res.users"
-            binding_views="form"
-            context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
-            groups="analytic.group_analytic_accounting"/>
+        <record id="analytic_rule_action_user" model="ir.actions.act_window">
+            <field name="name">Analytic Rules</field>
+            <field name="res_model">account.analytic.default</field>
+            <field name="context">{'search_default_user_id': [active_id], 'default_user_id': active_id}</field>
+            <field name="binding_model_id" ref="base.model_res_users"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+        </record>
 </odoo>

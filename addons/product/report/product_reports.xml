@@ -1,62 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <report
-            id="report_product_label"
-            string="Product Label (PDF)"
-            model="product.product"
-            report_type="qweb-pdf"
-            name="product.report_productlabel"
-            file="product.report_productlabel"
-            print_report_name="'Products Labels - %s' % (object.name)"
-        />
+        <record id="report_product_label" model="ir.actions.report">
+            <field name="name">Product Label (PDF)</field>
+            <field name="model">product.product</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product.report_productlabel</field>
+            <field name="report_file">product.report_productlabel</field>
+            <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="report_product_template_label"
-            string="Product Label (PDF)"
-            model="product.template"
-            report_type="qweb-pdf"
-            name="product.report_producttemplatelabel"
-            file="product.report_producttemplatelabel"
-            print_report_name="'Products Labels - %s' % (object.name)"
-        />
+        <record id="report_product_template_label" model="ir.actions.report">
+            <field name="name">Product Label (PDF)</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product.report_producttemplatelabel</field>
+            <field name="report_file">product.report_producttemplatelabel</field>
+            <field name="print_report_name">'Products Labels - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="report_product_product_barcode"
-            string="Product Barcode (PDF)"
-            model="product.product"
-            report_type="qweb-pdf"
-            name="product.report_productbarcode"
-            file="product.report_productbarcode"
-            print_report_name="'Products barcode - %s' % (object.name)"
-        />
+        <record id="report_product_product_barcode" model="ir.actions.report">
+            <field name="name">Product Barcode (PDF)</field>
+            <field name="model">product.product</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product.report_productbarcode</field>
+            <field name="report_file">product.report_productbarcode</field>
+            <field name="print_report_name">'Products barcode - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="report_product_template_barcode"
-            string="Product Barcode (PDF)"
-            model="product.template"
-            report_type="qweb-pdf"
-            name="product.report_producttemplatebarcode"
-            file="product.report_producttemplatebarcode"
-            print_report_name="'Products barcode - %s' % (object.name)"
-        />
+        <record id="report_product_template_barcode" model="ir.actions.report">
+            <field name="name">Product Barcode (PDF)</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product.report_producttemplatebarcode</field>
+            <field name="report_file">product.report_producttemplatebarcode</field>
+            <field name="print_report_name">'Products barcode - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="report_product_packaging"
-            string="Product Packaging (PDF)"
-            model="product.packaging"
-            report_type="qweb-pdf"
-            name="product.report_packagingbarcode"
-            file="product.report_packagingbarcode"
-            print_report_name="'Products packaging - %s' % (object.name)"/>
+        <record id="report_product_packaging" model="ir.actions.report">
+            <field name="name">Product Packaging (PDF)</field>
+            <field name="model">product.packaging</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product.report_packagingbarcode</field>
+            <field name="report_file">product.report_packagingbarcode</field>
+            <field name="print_report_name">'Products packaging - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="product.model_product_packaging"/>
+            <field name="binding_type">report</field>
+        </record>
 
-        <report
-            id="action_report_pricelist"
-            string="Pricelist"
-            model="product.product"
-            report_type="qweb-pdf"
-            name="product.report_pricelist"
-            file="product.report_pricelist"
-            menu="False"/>
+        <record id="action_report_pricelist" model="ir.actions.report">
+            <field name="name">Pricelist</field>
+            <field name="model">product.product</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">product.report_pricelist</field>
+            <field name="report_file">product.report_pricelist</field>
+        </record>
     </data>
 </odoo>

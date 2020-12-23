@@ -27,7 +27,7 @@ var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
-const { sprintf } = require("web.utils");
+const { sprintf, toBoolElse } = require("web.utils");
 
 const { escape } = owl.utils;
 var _t = core._t;
@@ -54,17 +54,7 @@ var M2ODialog = Dialog.extend({
                     this.trigger_up('quick_create', { value: this.value });
                 },
             }, {
-                text: _t('Create and edit'),
-                classes: 'btn-primary',
-                close: true,
-                click: function () {
-                    this.trigger_up('search_create_popup', {
-                        view_type: 'form',
-                        value: this.value,
-                    });
-                },
-            }, {
-                text: _t('Cancel'),
+                text: _t('Discard'),
                 close: true,
             }],
         });
@@ -96,7 +86,6 @@ var FieldMany2One = AbstractField.extend({
         'closed_unset': '_onDialogClosedUnset',
         'field_changed': '_onFieldChanged',
         'quick_create': '_onQuickCreate',
-        'search_create_popup': '_onSearchCreatePopup',
     }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
@@ -145,6 +134,9 @@ var FieldMany2One = AbstractField.extend({
         this._autocompleteSources = [];
         // Add default search method for M20 (name_search)
         this._addAutocompleteSource(this._search, {placeholder: _t('Loading...'), order: 1});
+
+        // list of last autocomplete suggestions
+        this.suggestions = [];
 
         // use a DropPrevious to properly handle related record quick creations,
         // and store a createDef to be able to notify the environment that there
@@ -260,6 +252,7 @@ var FieldMany2One = AbstractField.extend({
         }
         this.$input.autocomplete({
             source: function (req, resp) {
+                self.suggestions = [];
                 _.each(self._autocompleteSources, function (source) {
                     // Resets the results for this source
                     source.results = [];
@@ -274,7 +267,8 @@ var FieldMany2One = AbstractField.extend({
                         Promise.resolve(source.method.call(self, search)).then(function (results) {
                             source.results = results;
                             source.loading = false;
-                            resp(self._concatenateAutocompleteResults());
+                            self.suggestions = self._concatenateAutocompleteResults();
+                            resp(self.suggestions);
                         });
                     }
                 });
@@ -771,7 +765,13 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _onInputFocusout: function () {
-        if (this.can_create && this.floating) {
+        if (!this.floating) {
+            return;
+        }
+        const firstValue = this.suggestions.find(s => s.id);
+        if (firstValue) {
+            this.reinitialize(firstValue.id);
+        } else if (this.can_create) {
             new M2ODialog(this, this.string, this.$input.val()).open();
         }
     },
@@ -826,14 +826,6 @@ var FieldMany2One = AbstractField.extend({
      */
     _onQuickCreate: function (event) {
         this._quickCreate(event.data.value);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onSearchCreatePopup: function (event) {
-        var data = event.data;
-        this._searchCreatePopup(data.view_type, false, this._createContext(data.value));
     },
 });
 
@@ -1210,12 +1202,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 return this.renderer.confirmUpdate(state, command.id, fieldNames, ev.initialEvent);
             }
         }
-        return this._super.apply(this, arguments).then(() => {
-            if (this.view) {
-                this._renderButtons();
-                this._updateControlPanel();
-            }
-        });
+        return this._super.apply(this, arguments);
     },
 
     /**
@@ -1348,7 +1335,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 columnInvisibleFields: this.currentColInvisibleFields,
                 keepWidths: true,
             }).then(() => {
-                this._updateControlPanel({ size: this.value.count });
+                return this._updateControlPanel({ size: this.value.count });
             });
         }
         var arch = this.view.arch;
@@ -1365,6 +1352,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 addCreateLine: this._hasCreateLine(),
                 addTrashIcon: this._hasTrashIcon(),
                 isMany2Many: this.isMany2Many,
+                no_open: this.isReadonly && toBoolElse(arch.attrs.no_open || '', false),
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
@@ -1460,9 +1448,16 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
      */
     _updateControlPanel: function (pagingState) {
         if (this._controlPanelWrapper) {
+            this._renderButtons();
+            const pagerProps = Object.assign(this.pagingState, pagingState, {
+                // sometimes, we temporarily want to increase the pager limit
+                // (for instance, when we add a new record on a page that already
+                // contains the maximum number of records)
+                limit: Math.max(this.value.limit, this.value.data.length),
+            });
             const newProps = {
                 cp_content: { $buttons: this.$buttons },
-                pager: Object.assign(this.pagingState, pagingState),
+                pager: pagerProps,
             };
             return this._controlPanelWrapper.update(newProps);
         }
@@ -1851,16 +1846,6 @@ var FieldOne2Many = FieldX2Many.extend({
                     var index = 0;
                     if (self.editable !== 'top') {
                         index = self.value.data.length - 1;
-                        // we consider that a new record, created in the bottom,
-                        // does not count as a record worth mentioning in the
-                        // pager, at least not until the line has been saved.
-                        // We prevent the pager from increasing its size, which
-                        // means that the pager is not displayed when we just
-                        // reach the limit.  For example, if limit is 3, if we
-                        // have 3 records, and we click on add, we will see the
-                        // 4 records on the same page, but we do not want a
-                        // pager.
-                        self._updateControlPanel({ size: self.value.count - 1 });
                     }
                     var newID = self.value.data[index].id;
                     self.renderer.editRecord(newID);
@@ -1923,6 +1908,7 @@ var FieldOne2Many = FieldX2Many.extend({
             parentID: this.value.id,
             viewInfo: this.view,
             deletable: this.activeActions.delete && params.deletable && this.canDelete,
+            disable_multiple_selection: params.disable_multiple_selection,
         }));
     },
 
@@ -1983,6 +1969,7 @@ var FieldOne2Many = FieldX2Many.extend({
         } else {
             this._openFormDialog({
                 context: data.context && data.context[0],
+                disable_multiple_selection: data.disable_multiple_selection,
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });
                 },
@@ -2959,11 +2946,7 @@ var FieldSelection = AbstractField.extend({
                 style: disabled ? "display: none" : "",
             }));
         }
-        var value = this.value;
-        if (this.field.type === 'many2one' && value) {
-            value = value.data.id;
-        }
-        this.$el.val(JSON.stringify(value));
+        this.$el.val(JSON.stringify(this._getRawValue()));
     },
     /**
      * @override
@@ -2971,6 +2954,14 @@ var FieldSelection = AbstractField.extend({
      */
     _renderReadonly: function () {
         this.$el.empty().text(this._formatValue(this.value));
+        this.$el.attr('raw-value', this._getRawValue());
+    },
+    _getRawValue: function() {
+        var raw_value = this.value;
+        if (this.field.type === 'many2one' && raw_value) {
+            raw_value = raw_value.data.id;
+        }
+        return raw_value;
     },
     /**
      * @override
@@ -3050,10 +3041,39 @@ var FieldRadio = FieldSelection.extend({
 
     /**
      * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.mode === 'edit' && this.$input || this.$el;
+    },
+
+    /**
+     * @override
      * @returns {boolean} always true
      */
     isSet: function () {
         return true;
+    },
+
+    /**
+     * Returns the currently-checked radio button, or the first one if no radio
+     * button is checked.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        var checked = this.$("[checked='true']");
+        return checked.length ? checked : this.$("[data-index='0']");
+    },
+
+    /**
+     * Associates the 'for' attribute to the radiogroup, instead of the selected
+     * radio button.
+     *
+     * @param {string} id
+     */
+    setIDForLabel: function (id) {
+        this.$el.attr('id', id);
     },
 
     //--------------------------------------------------------------------------
@@ -3073,11 +3093,14 @@ var FieldRadio = FieldSelection.extend({
             currentValue = this.value;
         }
         this.$el.empty();
+        this.$el.attr('role', 'radiogroup')
+            .attr('aria-label', this.string);
         _.each(this.values, function (value, index) {
             self.$el.append(qweb.render('FieldRadio.button', {
                 checked: value[0] === currentValue,
                 id: self.unique_id + '_' + value[0],
                 index: index,
+                name: self.unique_id,
                 value: value,
             }));
         });
@@ -3245,13 +3268,17 @@ var FieldReference = FieldMany2One.extend({
         // needs to be copied as it is an unmutable object
         this.field = _.extend({}, this.field);
 
-        this._setState();
+        this.resetOnAnyFieldChange = this.resetOnAnyFieldChange || this.nodeOptions.model_field;
+        this._setState(false);
     },
     /**
      * @override
      */
     start: function () {
-        this.$('select').val(this.field.relation);
+        this.modelName = this.field.relation;
+        if (this.el.querySelector('select')) {
+            this.el.querySelector('select').value = this.modelName;
+        }
         return this._super.apply(this, arguments);
     },
 
@@ -3288,7 +3315,21 @@ var FieldReference = FieldMany2One.extend({
         }
         return value && value.data && value.data.display_name || '';
     },
-
+    /**
+     * Apply the model contained in the option model_field
+     * and re-initialize the record if the model change.
+     * @param {boolean} initRecord :true, re-initialize the record if the model changes.
+     *                              Necessary for wizards.
+     */
+    _applyModelField: function (initRecord) {
+        let resourceRef = this.record.specialData[this.name];
+        if (resourceRef) {
+            if (initRecord && resourceRef.hasChanged) {
+                this.reinitialize(false);
+            }
+            this.modelName = resourceRef.modelName;
+        }
+    },
     /**
      * Add a select in edit mode (for the model).
      *
@@ -3297,15 +3338,16 @@ var FieldReference = FieldMany2One.extend({
     _renderEdit: function () {
         this._super.apply(this, arguments);
 
-        if (this.$('select').val()) {
+        if (this.modelName) {
             this.$('.o_input_dropdown').show();
-            this.$el.addClass('o_row'); // this class is used to display the two
-                                        // components (select & input) on the same line
+            if (!this.nodeOptions.model_field) {
+                // this class is used to display the two components (select & input) on the same line
+                this.$el.addClass('o_row');
+            }
         } else {
             // hide the many2one if the selection is empty
             this.$('.o_input_dropdown').hide();
         }
-
     },
     /**
      * @override
@@ -3313,9 +3355,10 @@ var FieldReference = FieldMany2One.extend({
      */
     _reset: function () {
         this._super.apply(this, arguments);
-        var value = this.$('select').val();
-        this._setState();
-        this.$('select').val(this.value && this.value.model || value);
+        this._setState(true);
+        if (this.el.querySelector('select')) {
+            this.el.querySelector('select').value = this.modelName;
+        }
     },
     /**
      * Set `relation` key in field properties.
@@ -3330,14 +3373,18 @@ var FieldReference = FieldMany2One.extend({
     /**
      * @private
      */
-    _setState: function () {
+    _setState: function (initRecord) {
         if (this.field.type === 'char') {
             // in this case, the value is stored in specialData instead
             this.value = this.record.specialData[this.name];
         }
-
-        if (this.value) {
-            this._setRelation(this.value.model);
+        if (this.nodeOptions.model_field) {
+            this._applyModelField(initRecord);
+        } else if (this.value && this.value.model) {
+            this.modelName = this.value.model;
+        }
+        if (this.modelName) {
+            this._setRelation(this.modelName);
         }
     },
     /**
@@ -3348,7 +3395,7 @@ var FieldReference = FieldMany2One.extend({
         value = value || {};
         // we need to specify the model for the change in basic_model
         // the value is then now a dict with id, display_name and model
-        value.model = this.$('select').val();
+        value.model = this.modelName;
         return this._super(value, options);
     },
 
@@ -3362,9 +3409,9 @@ var FieldReference = FieldMany2One.extend({
      * @private
      */
     _onSelectionChange: function () {
-        var value = this.$('select').val();
+        this.modelName = this.el.querySelector('select').value || '';
         this.reinitialize(false);
-        this._setRelation(value);
+        this._setRelation(this.modelName);
     },
 });
 

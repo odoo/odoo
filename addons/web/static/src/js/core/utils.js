@@ -501,6 +501,20 @@ var utils = {
         return value.prototype instanceof owl.Component;
     },
     /**
+     * Checks if a keyboard event concerns
+     * the numpad decimal separator key.
+     *
+     * Some countries may emit a comma instead
+     * of a period when this key get pressed.
+     * More info: https://www.iso.org/schema/isosts/v1.0/doc/n-cdf0.html
+     *
+     * @param {KeyboardEvent} ev
+     * @returns {boolean}
+     */
+    isNumpadDecimalSeparatorKey(ev) {
+        return ['.', ','].includes(ev.key) && ev.code === 'NumpadDecimal';
+    },
+    /**
      * Returns whether the given anchor is valid.
      *
      * This test is useful to prevent a crash that would happen if using an invalid
@@ -570,6 +584,31 @@ var utils = {
     lpad: function (str, size) {
         str = "" + str;
         return new Array(size - str.length + 1).join('0') + str;
+    },
+    /**
+     * @param {any[]} arr
+     * @param {Function} fn
+     * @returns {any[]}
+     */
+    partitionBy(arr, fn) {
+        let lastGroup = false;
+        let lastValue;
+        return arr.reduce((acc, cur) => {
+            let curVal = fn(cur);
+            if (lastGroup) {
+                if (curVal === lastValue) {
+                    lastGroup.push(cur);
+                } else {
+                    lastGroup = false;
+                }
+            }
+            if (!lastGroup) {
+                lastGroup = [cur];
+                acc.push(lastGroup);
+            }
+            lastValue = curVal;
+            return acc;
+        }, []);
     },
     /**
      * Patch a class and return a function that remove the patch
@@ -704,17 +743,20 @@ var utils = {
      *
      * @param {any[]} array
      * @param {string | function} [criterion]
+     * @param {('asc' | 'desc')} [order='asc'] sort by ascending if order is 'asc' else descending
      */
-    sortBy: function (array, criterion) {
+    sortBy: function (array, criterion, order = 'asc') {
         const extract = _getExtractorFrom(criterion);
         return array.slice().sort((elA, elB) => {
             const a = extract(elA);
             const b = extract(elB);
+            let result;
             if (isNaN(a) && isNaN(b)) {
-                return a > b ? 1 : a < b ? -1 : 0;
+                result = a > b ? 1 : a < b ? -1 : 0;
             } else {
-                return a - b;
+                result = a - b;
             }
+            return order === 'asc' ? result : -result;
         });
     },
     /**
@@ -973,8 +1015,10 @@ var utils = {
             '&',
             ['res_model', '=', 'ir.ui.view'],
             '|',
+            '|',
             ['name', '=like', '%.assets\_%.css'],
             ['name', '=like', '%.assets\_%.js'],
+            ['name', '=like', '%.report_assets\_%.css'],
         ];
     },
 };

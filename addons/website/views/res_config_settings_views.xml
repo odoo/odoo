@@ -40,7 +40,7 @@
                         <div class="row mt16 o_settings_container" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
                             <div class="col-12 o_setting_box" id="website_action_setting" style="margin-left: 30px; margin-bottom: 16px;">
                                 <button name="website_go_to" type="object" string="Go to Website" class="btn btn-primary" icon="fa-globe"/>
-                                <button name="install_theme_on_current_website" type="object" string="Choose a theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
+                                <button name="install_theme_on_current_website" type="object" string="Pick a Theme" class="ml-2 btn btn-primary" icon="fa-paint-brush"/>
                                 <button name="%(website.action_website_add_features)d" type="action" string="Add features" class="ml-2 btn btn-secondary" icon="fa-plus"/>
                             </div>
                             <div class="col-12 col-lg-6 o_setting_box" id="domain_setting">
@@ -290,7 +290,7 @@
                                         </div>
                                     </div>
                                     <div attrs="{'invisible': [('has_google_analytics', '=', False)]}">
-                                        <a href="https://www.odoo.com/documentation/user/13.0/website/optimize/google_analytics.html"
+                                        <a href="https://www.odoo.com/documentation/user/14.0/website/optimize/google_analytics.html"
                                                 class="oe_link" target="_blank">
                                             <i class="fa fa-arrow-right"/>
                                             How to get my Tracking ID
@@ -388,7 +388,7 @@
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'website'}</field>
+            <field name="context">{'module' : 'website', 'bin_size': False}</field>
         </record>
 
         <menuitem id="menu_website_global_configuration" parent="menu_website_configuration"

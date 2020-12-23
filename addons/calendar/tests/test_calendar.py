@@ -258,7 +258,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
         """
         Check that mail are sent to the attendees on event creation
         Check that mail are sent to the added attendees on event edit
-        Check that mail are NOT sent to the attendees when detaching a recurring event
+        Check that mail are NOT sent to the attendees when the event date is past
         """
 
         def _test_one_mail_per_attendee(self, partners):
@@ -274,7 +274,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.env['res.partner'].create({'name': 'testuser1', 'email': u'alice@example.com'}),
         ]
         partner_ids = [(6, False, [p.id for p in partners]),]
-        now = fields.Datetime.now()
+        now = fields.Datetime.context_timestamp(partners[0], fields.Datetime.now())
         m = self.CalendarEvent.create({
             'name': "mailTest1",
             'allday': False,
@@ -301,4 +301,17 @@ class TestCalendar(SavepointCaseWithUserDemo):
         })
 
         # more email should be sent
+        _test_one_mail_per_attendee(self, partners)
+
+        # create a new event in the past
+        self.CalendarEvent.create({
+            'name': "NOmailTest",
+            'allday': False,
+            'recurrency': False,
+            'partner_ids': partner_ids,
+            'start': fields.Datetime.to_string(now - timedelta(days=10)),
+            'stop': fields.Datetime.to_string(now - timedelta(days=9)),
+        })
+
+        # no more email should be sent
         _test_one_mail_per_attendee(self, partners)

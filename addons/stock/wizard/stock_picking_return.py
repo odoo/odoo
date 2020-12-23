@@ -77,11 +77,14 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
-        quantity = stock_move.product_qty - sum(
-            stock_move.move_dest_ids
-            .filtered(lambda m: m.state in ['partially_available', 'assigned', 'done'])
-            .mapped('move_line_ids.product_qty')
-        )
+        quantity = stock_move.product_qty
+        for move in stock_move.move_dest_ids:
+            if move.origin_returned_move_id and move.origin_returned_move_id != stock_move:
+                continue
+            if move.state in ('partially_available', 'assigned'):
+                quantity -= sum(move.move_line_ids.mapped('product_qty'))
+            elif move.state in ('done'):
+                quantity -= move.product_qty
         quantity = float_round(quantity, precision_rounding=stock_move.product_uom.rounding)
         return {
             'product_id': stock_move.product_id.id,
@@ -97,7 +100,7 @@ class ReturnPicking(models.TransientModel):
             'product_uom': return_line.product_id.uom_id.id,
             'picking_id': new_picking.id,
             'state': 'draft',
-            'date_expected': fields.Datetime.now(),
+            'date': fields.Datetime.now(),
             'location_id': return_line.move_id.location_dest_id.id,
             'location_dest_id': self.location_id.id or return_line.move_id.location_id.id,
             'picking_type_id': new_picking.picking_type_id.id,
@@ -178,7 +181,7 @@ class ReturnPicking(models.TransientModel):
             'search_default_assigned': False,
             'search_default_confirmed': False,
             'search_default_ready': False,
-            'search_default_late': False,
+            'search_default_planning_issues': False,
             'search_default_available': False,
         })
         return {

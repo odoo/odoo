@@ -70,15 +70,19 @@ class Dialog extends Component {
      * @param {MouseEvent} ev
      */
     _onClickGlobal(ev) {
-        if (this._componentRef.el.contains(ev.target)) {
+        if (this._componentRef.el && this._componentRef.el.contains(ev.target)) {
             return;
         }
         // TODO: this should be child logic (will crash if child doesn't have isCloseable!!)
         // task-2092965
-        if (this._componentRef.comp.isCloseable && !this._componentRef.comp.isCloseable()) {
+        if (
+            this._componentRef.comp &&
+            this._componentRef.comp.isCloseable &&
+            !this._componentRef.comp.isCloseable()
+        ) {
             return;
         }
-        this.dialog.close();
+        this.dialog.delete();
     }
 
     /**
@@ -87,7 +91,7 @@ class Dialog extends Component {
      */
     _onKeydownDocument(ev) {
         if (ev.key === 'Escape') {
-            this.dialog.close();
+            this.dialog.delete();
         }
     }
 

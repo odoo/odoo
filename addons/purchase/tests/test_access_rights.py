@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo.tests.common import SavepointCase
-from odoo.exceptions import AccessError
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import Form, tagged
+from odoo.exceptions import AccessError
 
 
 @tagged('post_install', '-at_install')
-class TestPurchaseInvoice(SavepointCase):
+class TestPurchaseInvoice(AccountTestInvoicingCommon):
+
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Create a users
         group_purchase_user = cls.env.ref('purchase.group_purchase_user')
@@ -66,7 +66,7 @@ class TestPurchaseInvoice(SavepointCase):
         purchase_order.action_create_invoice()
         invoice = purchase_order.invoice_ids
         with self.assertRaises(AccessError):
-            invoice.post()
+            invoice.action_post()
 
     def test_read_purchase_order(self):
         """ Check that a purchase user can read all purchase order and 'in' invoices"""

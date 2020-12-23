@@ -17,11 +17,13 @@ class SaleOrder(models.Model):
         'project.project', 'Project', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
         help='Select a non billable project on which tasks can be created.')
     project_ids = fields.Many2many('project.project', compute="_compute_project_ids", string='Projects', copy=False, groups="project.group_project_user", help="Projects used in this sales order.")
+    project_overview = fields.Boolean('Show Project Overview', compute='_compute_project_overview')
+    project_count = fields.Integer(string='Number of Projects', compute='_compute_project_ids', groups='project.group_project_user')
 
     @api.depends('order_line.product_id.project_id')
     def _compute_tasks_ids(self):
         for order in self:
-            order.tasks_ids = self.env['project.task'].search([('sale_line_id', 'in', order.order_line.ids)])
+            order.tasks_ids = self.env['project.task'].search(['|', ('sale_line_id', 'in', order.order_line.ids), ('sale_order_id', '=', order.id)])
             order.tasks_count = len(order.tasks_ids)
 
     @api.depends('order_line.product_id.service_tracking')
@@ -33,6 +35,12 @@ class SaleOrder(models.Model):
                 service_tracking == 'task_in_project' for service_tracking in order.order_line.mapped('product_id.service_tracking')
             )
 
+    @api.depends('project_ids')
+    def _compute_project_overview(self):
+        for order in self:
+            billable_projects = order.project_ids.filtered('sale_line_id')
+            order.project_overview = len(order.project_ids) == 1 and len(billable_projects) == 1 and billable_projects.project_overview
+
     @api.depends('order_line.product_id', 'order_line.project_id')
     def _compute_project_ids(self):
         for order in self:
@@ -40,6 +48,7 @@ class SaleOrder(models.Model):
             projects |= order.order_line.mapped('project_id')
             projects |= order.project_id
             order.project_ids = projects
+            order.project_count = len(projects)
 
     @api.onchange('project_id')
     def _onchange_project_id(self):
@@ -50,8 +59,13 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super()._action_confirm()
-        self.mapped('order_line').sudo() \
-            .with_company(self.company_id)._timesheet_service_generation()
+        if len(self.company_id) == 1:
+            # All orders are in the same company
+            self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
+        else:
+            # Orders from different companies are confirmed together
+            for order in self:
+                order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
         return result
 
     def action_view_task(self):
@@ -61,18 +75,19 @@ class SaleOrder(models.Model):
         form_view_id = self.env.ref('project.view_task_form2').id
 
         action = {'type': 'ir.actions.act_window_close'}
-
         task_projects = self.tasks_ids.mapped('project_id')
         if len(task_projects) == 1 and len(self.tasks_ids) > 1:  # redirect to task of the project (with kanban stage, ...)
-            action = self.with_context(active_id=task_projects.id).env.ref(
-                'project.act_project_project_2_project_task_all').read()[0]
-            action['domain'] = [('project_id', '=', task_projects.id)]
+            action = self.with_context(active_id=task_projects.id).env['ir.actions.actions']._for_xml_id(
+                'project.act_project_project_2_project_task_all')
+            action['domain'] = [('id', 'in', self.tasks_ids.ids)]
             if action.get('context'):
                 eval_context = self.env['ir.actions.actions']._get_eval_context()
                 eval_context.update({'active_id': task_projects.id})
-                action['context'] = safe_eval(action['context'], eval_context)
+                action_context = safe_eval(action['context'], eval_context)
+                action_context.update(eval_context)
+                action['context'] = action_context
         else:
-            action = self.env.ref('project.action_view_task').read()[0]
+            action = self.env["ir.actions.actions"]._for_xml_id("project.action_view_task")
             action['context'] = {}  # erase default context to avoid default filter
             if len(self.tasks_ids) > 1:  # cross project kanban task
                 action['views'] = [[False, 'kanban'], [list_view_id, 'tree'], [form_view_id, 'form'], [False, 'graph'], [False, 'calendar'], [False, 'pivot']]
@@ -86,16 +101,22 @@ class SaleOrder(models.Model):
 
     def action_view_project_ids(self):
         self.ensure_one()
+        if len(self.project_ids) == 1 and self.project_overview:
+            return self.project_id.action_view_account_analytic_line()
+
         view_form_id = self.env.ref('project.edit_project').id
         view_kanban_id = self.env.ref('project.view_project_kanban').id
         action = {
             'type': 'ir.actions.act_window',
             'domain': [('id', 'in', self.project_ids.ids)],
-            'views': [(view_kanban_id, 'kanban'), (view_form_id, 'form')],
             'view_mode': 'kanban,form',
             'name': _('Projects'),
             'res_model': 'project.project',
         }
+        if len(self.project_ids) == 1:
+            action.update({'views': [(view_form_id, 'form')], 'res_id': self.project_ids.id})
+        else:
+            action['views'] = [(view_kanban_id, 'kanban'), (view_form_id, 'form')]
         return action
 
     def write(self, values):
@@ -147,9 +168,9 @@ class SaleOrderLine(models.Model):
         # changing the ordered quantity should change the planned hours on the
         # task, whatever the SO state. It will be blocked by the super in case
         # of a locked sale order.
-        if 'product_uom_qty' in values:
+        if 'product_uom_qty' in values and not self.env.context.get('no_update_planned_hours', False):
             for line in self:
-                if line.task_id:
+                if line.task_id and line.product_id.type == 'service':
                     planned_hours = line._convert_qty_company_hours(line.task_id.company_id)
                     line.task_id.write({'planned_hours': planned_hours})
         return result
@@ -197,6 +218,7 @@ class SaleOrderLine(models.Model):
             # duplicating a project doesn't set the SO on sub-tasks
             project.tasks.filtered(lambda task: task.parent_id != False).write({
                 'sale_line_id': self.id,
+                'sale_order_id': self.order_id,
             })
         else:
             project = self.env['project.project'].create(values)

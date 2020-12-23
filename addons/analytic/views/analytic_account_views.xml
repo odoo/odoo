@@ -99,7 +99,7 @@
                   Click to add a new analytic account group.
               </p>
               <p>
-                  This allows to classify your analytic accounts.
+                  This allows you to classify your analytic accounts.
               </p>
             </field>
         </record>
@@ -316,7 +316,7 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="account_id"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="tag_ids"/>
                     <filter string="Date" name="date" date="date"/>
                     <group string="Group By..." expand="0" name="groupby">
                         <filter string="Analytic Account" name="account_id" context="{'group_by': 'account_id'}"/>
@@ -330,7 +330,7 @@
             <field name="name">account.analytic.line.graph</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <graph string="Analytic Entries">
+                <graph string="Analytic Entries" sample="1">
                     <field name="account_id" type="row"/>
                     <field name="unit_amount" type="measure"/>
                     <field name="amount" type="measure"/>
@@ -342,7 +342,7 @@
             <field name="name">account.analytic.line.pivot</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <pivot string="Analytic Entries" >
+                <pivot string="Analytic Entries" sample="1">
                     <field name="account_id" type="row"/>
                     <field name="unit_amount" type="measure"/>
                     <field name="amount" type="measure"/>

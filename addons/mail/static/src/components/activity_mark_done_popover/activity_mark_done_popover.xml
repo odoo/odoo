@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.ActivityMarkDonePopover" owl="1">
-        <div class="o_ActivityMarkDonePopover">
+        <div class="o_ActivityMarkDonePopover" t-on-keydown="_onKeydown">
             <t t-if="activity">
                 <textarea class="form-control o_ActivityMarkDonePopover_feedback" rows="3" placeholder="Write Feedback" t-ref="feedbackTextarea"/>
                 <div class="o_ActivityMarkDonePopover_buttons">

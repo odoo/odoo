@@ -1,9 +1,9 @@
 odoo.define('website.s_blockquote_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-options.registry.Blockquote = options.Class.extend({
+snippetOptions.registry.Blockquote = snippetOptions.SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -14,8 +14,7 @@ options.registry.Blockquote = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    display: function (previewMode, widgetValue, params) {
-
+    display: async function (previewMode, widgetValue, params) {
         // Classic
         this.$target.find('.s_blockquote_avatar').toggleClass('d-none', widgetValue !== 'classic');
 
@@ -23,21 +22,25 @@ options.registry.Blockquote = options.Class.extend({
         const $blockquote = this.$target.find('.s_blockquote_content');
         if (widgetValue === 'cover') {
             $blockquote.css({"background-image": "url('/web/image/website.s_blockquote_cover_default_image')"});
-            $blockquote.css({"background-position": "50% 50%"});
-            $blockquote.addClass('oe_img_bg');
-            if (this.$target.find('.s_blockquote_filter').length == 0) {
-                $blockquote.wrapInner('<div class="s_blockquote_filter bg-white-50"/>');
+            $blockquote.addClass('oe_img_bg o_bg_img_center');
+            if (!$blockquote.find('.o_we_bg_filter').length) {
+                const bgFilterEl = document.createElement('div');
+                bgFilterEl.classList.add('o_we_bg_filter', 'bg-white-50');
+                $blockquote.prepend(bgFilterEl);
             }
         } else {
             $blockquote.css({"background-image": ""});
             $blockquote.css({"background-position": ""});
-            $blockquote.removeClass('oe_img_bg');
-            $blockquote.find('.s_blockquote_filter').contents().unwrap();
+            $blockquote.removeClass('oe_img_bg o_bg_img_center');
+            $blockquote.find('.o_we_bg_filter').remove();
+            $blockquote.find('.s_blockquote_filter').contents().unwrap(); // Compatibility
         }
 
         // Minimalist
         this.$target.find('.s_blockquote_icon').toggleClass('d-none', widgetValue === 'minimalist');
         this.$target.find('footer').toggleClass('d-none', widgetValue === 'minimalist');
+
+        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 });
 });

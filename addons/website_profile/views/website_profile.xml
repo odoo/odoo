@@ -344,13 +344,11 @@
                     t-att-alt="(next_rank_id.name if next_rank_id else user.rank_id.name) + ' badge'"
                     t-att-style="'max-width: ' + (img_max_width if img_max_width else '50%;')"/>
                 <h4 class=" mb-0">
-                    "
                     <span t-if="next_rank_id" t-field="next_rank_id.name"/>
                     <span t-else="" t-field="user.rank_id.name"/>
-                    "
                 </h4>
                 <small>
-                    <span class="font-weight-bold text-primary" t-field="user.karma"/>/
+                    <span class="font-weight-bold text-primary" t-field="user.karma"/> /
                     <span t-if="next_rank_id" class="font-weight-bold" t-field="next_rank_id.karma_min"/>
                     <span t-else="" class="font-weight-bold" t-field="user.rank_id.karma_min"/>
                      xp
@@ -413,7 +411,7 @@
                 <div class="row justify-content-between" t-if="ranks">
                     <div class="col-12 col-md-6 col-lg-5">
                         <h1>Ranks</h1>
-                        <p class="lead mb-4">Keep learning with <t t-esc="user.company_id.name"/>. Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks.</p>
+                        <p class="lead mb-4">Keep learning with <t t-esc="website.company_id.name"/>. Collect points on the forum or on the eLearning platform. Those points will make you reach new ranks.</p>
                         <h5>How do I earn badges?</h5>
                         <p>When you finish a course or reach milestones, you're awarded badges.</p>
                         <h5>How do I score more points?</h5>
@@ -597,10 +595,9 @@
             <t t-if="user['karma_gain']">
                 <span class="badge badge-pill badge-success d-inline">+ <t t-esc="user['karma_gain']"/> XP</span>
                 <span class="text-muted pl-2 pr-3">
-                    <t t-if="group_by == 'week'">Weekly </t>
-                    <t t-elif="group_by == 'month'">Monthly </t>
+                    <t t-if="group_by == 'week'">this week</t>
+                    <t t-elif="group_by == 'month'">this month</t>
                     <t t-else="">All time </t>
-                    gain
                 </span>
             </t>
         </td>
@@ -641,14 +638,14 @@
         <t t-set="done_alert_classes" t-value="done_alert_classes if done_alert_classes else 'alert alert-success alert-dismissable'"/>
 
         <div t-if="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
-            <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <button type="button" class="close validation_email_close" data-dismiss="alert" aria-label="Close">×</button>
             It appears your email has not been verified.<br/>
             <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url">
                 <span t-esc="send_validation_email_message"/>
             </a>
         </div>
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
-            <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+            <button type="button" class="close validated_email_close" data-dismiss="alert" aria-label="Close">×</button>
             <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
             <span t-esc="additional_validated_email_message"/>
         </div>

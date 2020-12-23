@@ -1,7 +1,7 @@
 odoo.define('google_calendar.calendar_tests', function (require) {
 "use strict";
 
-var { GoogleCalendarView } = require('google_calendar.CalendarView');
+var GoogleCalendarView = require('calendar.CalendarView');
 var testUtils = require('web.test_utils');
 
 var createCalendarView = testUtils.createCalendarView;
@@ -70,7 +70,7 @@ QUnit.module('Google Calendar', {
 }, function () {
 
     QUnit.test('sync google calendar', async function (assert) {
-        assert.expect(8);
+        assert.expect(9);
 
         var calendar = await createCalendarView({
             View: GoogleCalendarView,
@@ -78,7 +78,7 @@ QUnit.module('Google Calendar', {
             data: this.data,
             arch:
             '<calendar class="o_calendar_test" '+
-                'js_class="google_sync_calendar" '+
+                'js_class="attendee_calendar" '+
                 'date_start="start" '+
                 'date_stop="stop" '+
                 'mode="month">'+
@@ -96,6 +96,8 @@ QUnit.module('Google Calendar', {
                     return Promise.resolve({status: 'need_refresh'});
                 } else if (route === '/web/dataset/call_kw/calendar.event/search_read') {
                     assert.step(route);
+                } else if (route === '/microsoft_calendar/sync_data') {
+                    return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
             },
@@ -103,12 +105,14 @@ QUnit.module('Google Calendar', {
 
         assert.containsN(calendar, '.fc-event', 3, "should display 3 events on the month");
 
-        await testUtils.dom.click(calendar.$('.o_google_sync_button'));
+        await testUtils.dom.click(calendar.$('.o_calendar_button_next'));
+        await testUtils.dom.click(calendar.$('.o_calendar_button_prev'));
 
         assert.verifySteps([
             '/google_calendar/sync_data',
             '/web/dataset/call_kw/calendar.event/search_read',
             '/google_calendar/sync_data',
+            '/web/dataset/call_kw/calendar.event/search_read',
             '/google_calendar/sync_data',
             '/web/dataset/call_kw/calendar.event/search_read',
         ], 'should do a search_read before and after the call to sync_data');

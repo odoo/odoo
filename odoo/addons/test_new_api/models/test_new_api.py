@@ -3,7 +3,7 @@
 
 import datetime
 
-from odoo import models, fields, api, _
+from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
 
 
@@ -170,6 +170,7 @@ class Message(models.Model):
         if operator not in ('=', '!=', '<', '<=', '>', '>=', 'in', 'not in'):
             return []
         # retrieve all the messages that match with a specific SQL query
+        self.flush(['body'])
         query = """SELECT id FROM "%s" WHERE char_length("body") %s %%s""" % \
                 (self._table, operator)
         self.env.cr.execute(query, (value,))
@@ -244,7 +245,7 @@ class MultiLine(models.Model):
 
     multi = fields.Many2one('test_new_api.multi', ondelete='cascade')
     name = fields.Char()
-    partner = fields.Many2one('res.partner')
+    partner = fields.Many2one(related='multi.partner', store=True)
     tags = fields.Many2many('test_new_api.multi.tag')
 
 
@@ -379,9 +380,10 @@ class Related(models.Model):
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
-class ComputeProtected(models.Model):
-    _name = 'test_new_api.compute.protected'
-    _description = 'Test New API Compute Protected'
+
+class ComputeReadonly(models.Model):
+    _name = 'test_new_api.compute.readonly'
+    _description = 'Model with a computed readonly field'
 
     foo = fields.Char(default='')
     bar = fields.Char(compute='_compute_bar', store=True)
@@ -391,9 +393,10 @@ class ComputeProtected(models.Model):
         for record in self:
             record.bar = record.foo
 
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
-    _description = 'Test New API Compute Inversse'
+    _description = 'Model with a computed inversed field'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
@@ -520,6 +523,19 @@ class ComputeCascade(models.Model):
             record.baz = "<%s>" % (record.bar or "")
 
 
+class ComputeReadWrite(models.Model):
+    _name = 'test_new_api.compute.readwrite'
+    _description = 'Model with a computed non-readonly field'
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True, readonly=False)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
+
+
 class ComputeOnchange(models.Model):
     _name = 'test_new_api.compute.onchange'
     _description = "Compute method as an onchange"
@@ -540,13 +556,13 @@ class ComputeOnchange(models.Model):
     @api.depends('foo')
     def _compute_bar(self):
         for record in self:
-            record.bar = record.foo
+            record.bar = (record.foo or "") + "r"
 
     @api.depends('active', 'foo')
     def _compute_baz(self):
         for record in self:
             if record.active:
-                record.baz = record.foo
+                record.baz = (record.foo or "") + "z"
 
     @api.depends('foo')
     def _compute_line_ids(self):
@@ -556,7 +572,7 @@ class ComputeOnchange(models.Model):
             if any(line.foo == record.foo for line in record.line_ids):
                 continue
             # add a line with the same value as 'foo'
-            record.line_ids = [(0, 0, {'foo': record.foo})]
+            record.line_ids = [Command.create({'foo': record.foo})]
 
     @api.depends('foo')
     def _compute_tag_ids(self):
@@ -574,9 +590,62 @@ class ComputeOnchangeLine(models.Model):
     _name = 'test_new_api.compute.onchange.line'
     _description = "Line-like model for test_new_api.compute.onchange"
 
+    record_id = fields.Many2one('test_new_api.compute.onchange', ondelete='cascade')
     foo = fields.Char()
-    record_id = fields.Many2one('test_new_api.compute.onchange',
-                                required=True, ondelete='cascade')
+    bar = fields.Char(compute='_compute_bar')
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for line in self:
+            line.bar = (line.foo or "") + "r"
+
+
+class ComputeDynamicDepends(models.Model):
+    _name = 'test_new_api.compute.dynamic.depends'
+    _description = "Computed field with dynamic dependencies"
+
+    name1 = fields.Char()
+    name2 = fields.Char()
+    name3 = fields.Char()
+    full_name = fields.Char(compute='_compute_full_name')
+
+    def _get_full_name_fields(self):
+        # the fields to use are stored in a config parameter
+        depends = self.env['ir.config_parameter'].get_param('test_new_api.full_name', '')
+        return depends.split(',') if depends else []
+
+    @api.depends(lambda self: self._get_full_name_fields())
+    def _compute_full_name(self):
+        fnames = self._get_full_name_fields()
+        for record in self:
+            record.full_name = ", ".join(filter(None, (record[fname] for fname in fnames)))
+
+
+class ComputeUnassigned(models.Model):
+    _name = 'test_new_api.compute.unassigned'
+    _description = "Model with computed fields left unassigned"
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar')
+    bare = fields.Char(compute='_compute_bare', readonly=False)
+    bars = fields.Char(compute='_compute_bars', store=True)
+    bares = fields.Char(compute='_compute_bares', readonly=False, store=True)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bare(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bars(self):
+        pass
+
+    @api.depends('foo')
+    def _compute_bares(self):
+        pass
 
 
 class ModelBinary(models.Model):
@@ -1037,3 +1106,101 @@ class SelectionNonStored(models.Model):
         ('foo', "Foo"),
         ('bar', "Bar"),
     ], store=False)
+
+
+# Special classes to ensure the correct usage of a shared cache amongst users.
+# See the method test_shared_cache_computed_field
+class SharedCacheComputeParent(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_parent'
+    _description = 'model_shared_cache_compute_parent'
+
+    name = fields.Char(string="Task Name")
+    line_ids = fields.One2many(
+        'test_new_api.model_shared_cache_compute_line', 'parent_id', string="Timesheets")
+    total_amount = fields.Integer(compute='_compute_total_amount', store=True, compute_sudo=True)
+
+    @api.depends('line_ids.amount')
+    def _compute_total_amount(self):
+        for parent in self:
+            parent.total_amount = sum(parent.line_ids.mapped('amount'))
+
+
+class ShareCacheComputeLine(models.Model):
+    _name = 'test_new_api.model_shared_cache_compute_line'
+    _description = 'model_shared_cache_compute_line'
+
+    parent_id = fields.Many2one('test_new_api.model_shared_cache_compute_parent')
+    amount = fields.Integer()
+    user_id = fields.Many2one('res.users', default= lambda self: self.env.user)  # Note: There is an ir.rule about this.
+
+
+class ComputeContainer(models.Model):
+    _name = _description = 'test_new_api.compute.container'
+
+    name = fields.Char()
+    member_ids = fields.One2many('test_new_api.compute.member', 'container_id')
+
+
+class ComputeMember(models.Model):
+    _name = _description = 'test_new_api.compute.member'
+
+    name = fields.Char()
+    container_id = fields.Many2one('test_new_api.compute.container', compute='_compute_container', store=True)
+
+    @api.depends('name')
+    def _compute_container(self):
+        container = self.env['test_new_api.compute.container']
+        for member in self:
+            member.container_id = container.search([('name', '=', member.name)], limit=1)
+
+
+class ComputeEditable(models.Model):
+    _name = _description = 'test_new_api.compute_editable'
+
+    line_ids = fields.One2many('test_new_api.compute_editable.line', 'parent_id')
+
+    @api.onchange('line_ids')
+    def _onchange_line_ids(self):
+        for line in self.line_ids:
+            # even if 'same' is not in the view, it should be the same as 'value'
+            line.count += line.same
+
+
+class ComputeEditableLine(models.Model):
+    _name = _description = 'test_new_api.compute_editable.line'
+
+    parent_id = fields.Many2one('test_new_api.compute_editable')
+    value = fields.Integer()
+    same = fields.Integer(compute='_compute_same', store=True)
+    edit = fields.Integer(compute='_compute_edit', store=True, readonly=False)
+    count = fields.Integer()
+
+    @api.depends('value')
+    def _compute_same(self):
+        for line in self:
+            line.same = line.value
+
+    @api.depends('value')
+    def _compute_edit(self):
+        for line in self:
+            line.edit = line.value
+
+
+class ConstrainedUnlinks(models.Model):
+    _name = 'test_new_api.model_constrained_unlinks'
+    _description = 'Model with unlink override that is constrained'
+
+    foo = fields.Char()
+    bar = fields.Integer()
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_bar_gt_five(self):
+        for rec in self:
+            if rec.bar and rec.bar > 5:
+                raise ValueError("Nooooooooo bar can't be greater than five!!")
+
+    @api.ondelete(at_uninstall=True)
+    def _unlink_except_prosciutto(self):
+        for rec in self:
+            if rec.foo and rec.foo == 'prosciutto':
+                raise ValueError("You didn't say if you wanted it crudo or cotto...")

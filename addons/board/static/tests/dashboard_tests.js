@@ -840,7 +840,7 @@ QUnit.test('save a action domain to dashboard', async function (assert) {
     var filter_domain = ["display_name", "ilike", "b"];
 
     // The filter domain already contains the view domain, but is always added by dashboard..,
-    var expected_domain = ['&', '&', view_domain, view_domain, filter_domain];
+    var expected_domain = ['&', view_domain, '&', view_domain, filter_domain];
 
     var actionManager = await createActionManager({
         data: this.data,

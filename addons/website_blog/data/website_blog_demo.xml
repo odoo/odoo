@@ -74,6 +74,7 @@
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_2')])]"/>
+            <field name="visits">246</field>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_2.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
             <field name="content"><![CDATA[
 <section class="container">
@@ -120,6 +121,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="blog_id" ref="blog_blog_1"/>
             <field name="author_id" ref="base.partner_demo"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_1')])]"/>
+            <field name="visits">467</field>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_3.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
@@ -172,6 +174,7 @@ People who live on the island have never even seen this remarkable scenery unles
             <field name="blog_id" ref="blog_blog_2"/>
             <field name="author_id" ref="base.partner_admin"/>
             <field name="tag_ids" eval="[(6, 0, [ref('blog_tag_5')])]"/>
+            <field name="visits">453</field>
             <field name="is_published" eval="True"/>
             <field name="published_date" eval="(datetime.now()-relativedelta(days=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
             <field name="cover_properties">{"background-image": "url('/website_blog/static/src/img/cover_4.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "text_align_class": "text-center", "opacity": "0.2"}</field>

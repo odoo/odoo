@@ -8,15 +8,6 @@ registerInstancePatchModel('mail.messaging', 'mail_bot/static/src/models/messagi
     // Public
     //----------------------------------------------------------------------
 
-    /**
-     * @returns {boolean}
-     */
-    isNotificationPermissionDefault() {
-        const windowNotification = this.env.browser.Notification;
-        return windowNotification
-            ? windowNotification.permission === 'default'
-            : false;
-    },
 });
 
 });

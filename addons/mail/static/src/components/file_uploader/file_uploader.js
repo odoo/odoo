@@ -36,7 +36,7 @@ class FileUploader extends Component {
      */
     async uploadFiles(files) {
         await this._unlinkExistingAttachments(files);
-        this._createTemporaryAttachments(files);
+        this._createUploadingAttachments(files);
         await this._performUpload(files);
         this._fileInputRef.el.value = '';
     }
@@ -81,11 +81,11 @@ class FileUploader extends Component {
      * @private
      * @param {FileList|Array} files
      */
-    _createTemporaryAttachments(files) {
+    _createUploadingAttachments(files) {
         for (const file of files) {
             this._createAttachment({
                 filename: file.name,
-                isTemporary: true,
+                isUploading: true,
                 name: file.name
             });
         }
@@ -97,14 +97,30 @@ class FileUploader extends Component {
      */
     async _performUpload(files) {
         for (const file of files) {
-            const response = await window.fetch('/web/binary/upload_attachment', {
-                method: 'POST',
-                body: this._createFormData(file),
-            });
-            let html = await response.text();
-            const template = document.createElement('template');
-            template.innerHTML = html.trim();
-            window.eval(template.content.firstChild.textContent);
+            const uploadingAttachment = this.env.models['mail.attachment'].find(attachment =>
+                attachment.isUploading &&
+                attachment.filename === file.name
+            );
+            if (!uploadingAttachment) {
+                // Uploading attachment no longer exists.
+                // This happens when an uploading attachment is being deleted by user.
+                continue;
+            }
+            try {
+                const response = await this.env.browser.fetch('/web/binary/upload_attachment', {
+                    method: 'POST',
+                    body: this._createFormData(file),
+                    signal: uploadingAttachment.uploadingAbortController.signal,
+                });
+                let html = await response.text();
+                const template = document.createElement('template');
+                template.innerHTML = html.trim();
+                window.eval(template.content.firstChild.textContent);
+            } catch (e) {
+                if (e.name !== 'AbortError') {
+                    throw e;
+                }
+            }
         }
     }
 
@@ -142,12 +158,12 @@ class FileUploader extends Component {
                     type: 'danger',
                     message: owl.utils.escape(error),
                 });
-                const relatedTemporaryAttachments = this.env.models['mail.attachment']
+                const relatedUploadingAttachments = this.env.models['mail.attachment']
                     .find(attachment =>
                         attachment.filename === filename &&
-                        attachment.isTemporary
+                        attachment.isUploading
                     );
-                for (const attachment of relatedTemporaryAttachments) {
+                for (const attachment of relatedUploadingAttachments) {
                     attachment.delete();
                 }
                 return;

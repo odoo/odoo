@@ -128,12 +128,14 @@ def init_logger():
     # ignore deprecation warnings from invalid escape (there's a ton and it's
     # pretty likely a super low-value signal)
     warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
+    # recordsets are both sequence and set so trigger warning despite no issue
+    warnings.filterwarnings('ignore', r'^Sampling from a set', category=DeprecationWarning, module='odoo')
     # ignore a bunch of warnings we can't really fix ourselves
     for module in [
-        'setuptools.depends',# older setuptools version using imp
+        'babel.util', # deprecated parser module, no release yet
         'zeep.loader',# zeep using defusedxml.lxml
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
-        'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
+        'ofxparse',# ofxparse importing ABC from collections
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 

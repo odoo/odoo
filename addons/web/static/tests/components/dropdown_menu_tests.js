@@ -68,6 +68,62 @@ odoo.define('web.dropdown_menu_tests', function (require) {
             dropdown.destroy();
         });
 
+        QUnit.test('only one dropdown rendering at same time (owl vs bootstrap dropdown)', async function (assert) {
+            assert.expect(12);
+
+            const bsDropdown = document.createElement('div');
+            bsDropdown.innerHTML = `<div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" 
+                        data-toggle="dropdown" aria-expanded="false">
+                    BS Dropdown button
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">BS Action</a>
+                </div>
+            </div>`;
+            document.body.append(bsDropdown);
+
+            const dropdown = await createComponent(DropdownMenu, {
+                props: {
+                    items: this.items,
+                    title: "Dropdown",
+                },
+            });
+
+            await testUtils.dom.click(dropdown.el.querySelector('button'));
+
+            assert.hasClass(dropdown.el.querySelector('.dropdown-menu'), 'show');
+            assert.doesNotHaveClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
+
+            assert.isVisible(dropdown.el.querySelector('.dropdown-menu'),
+                "owl dropdown menu should be visible");
+            assert.isNotVisible(bsDropdown.querySelector('.dropdown-menu'),
+                "bs dropdown menu should not be visible");
+
+            await testUtils.dom.click(bsDropdown.querySelector('.btn.dropdown-toggle'));
+
+            assert.doesNotHaveClass(dropdown.el, 'show');
+            assert.containsNone(dropdown.el, '.dropdown-menu',
+                "owl dropdown menu should not be set inside the dom");
+
+            assert.hasClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
+            assert.isVisible(bsDropdown.querySelector('.dropdown-menu'),
+                "bs dropdown menu should be visible");
+
+            await testUtils.dom.click(document.body);
+
+            assert.doesNotHaveClass(dropdown.el, 'show');
+            assert.containsNone(dropdown.el, '.dropdown-menu',
+                "owl dropdown menu should not be set inside the dom");
+
+            assert.doesNotHaveClass(bsDropdown.querySelector('.dropdown-menu'), 'show');
+            assert.isNotVisible(bsDropdown.querySelector('.dropdown-menu'),
+                "bs dropdown menu should not be visible");
+
+            bsDropdown.remove();
+            dropdown.destroy();
+        });
+
         QUnit.test('click on an item without options should toggle it', async function (assert) {
             assert.expect(7);
 
@@ -336,6 +392,49 @@ odoo.define('web.dropdown_menu_tests', function (require) {
 
             assert.containsOnce(parent, '.o_dropdown_menu');
             assert.containsOnce(parent, '.o_dropdown.first .o_dropdown_menu');
+
+            parent.destroy();
+        });
+
+        QUnit.test("dropdown doesn't get close on mousedown inside and mouseup outside dropdown", async function (assert) {
+            // In this test, we simulate a case where the user clicks inside a dropdown menu item
+            // (e.g. in the input of the 'Save current search' item in the Favorites menu), keeps
+            // the click pressed, moves the cursor outside the dropdown and releases the click
+            // (i.e. mousedown and focus inside the item, mouseup and click outside the dropdown).
+            // In this case, we want to keep the dropdown menu open.
+            assert.expect(5);
+
+            const items = this.items;
+            class Parent extends owl.Component {
+                constructor() {
+                    super(...arguments);
+                    this.items = items;
+                }
+            }
+            Parent.components = { DropdownMenu };
+            Parent.template = owl.tags.xml`
+                <div>
+                    <DropdownMenu class="first" title="'First'" items="items"/>
+                </div>`;
+            const parent = new Parent();
+            await parent.mount(testUtils.prepareTarget(), { position: "first-child" });
+
+            const menu = parent.el.querySelector(".o_dropdown");
+            assert.doesNotHaveClass(menu, "show", "dropdown should not be open");
+
+            await testUtils.dom.click(menu.querySelector("button"));
+            assert.hasClass(menu, "show", "dropdown should be open");
+
+            const firstItemEl = menu.querySelector(".o_menu_item > a");
+            // open options menu
+            await testUtils.dom.click(firstItemEl);
+            assert.hasClass(firstItemEl.querySelector("i"), "o_icon_right fa fa-caret-down");
+
+            // force the focus inside the dropdown item and click outside
+            firstItemEl.parentElement.querySelector(".o_menu_item_options .o_item_option a").focus();
+            await testUtils.dom.triggerEvents(parent.el, "click");
+            assert.hasClass(menu, "show", "dropdown should still be open");
+            assert.hasClass(firstItemEl.querySelector("i"), "o_icon_right fa fa-caret-down");
 
             parent.destroy();
         });

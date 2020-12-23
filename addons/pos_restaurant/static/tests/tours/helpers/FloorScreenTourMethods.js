@@ -72,9 +72,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
             return [
                 {
                     content: `change shape to '${shape}'`,
-                    trigger: `.edit-button .button-option${
-                        shape === 'round' ? '.square' : '.round'
-                    }`,
+                    trigger: `.edit-button .button-option${shape === 'round' ? '.square' : '.round'}`,
                 },
             ];
         }
@@ -122,6 +120,32 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
                 {
                     content: `number of seats in table '${table}' is '${val}'`,
                     trigger: `.floor-map .tables .table .label:contains("${table}") ~ .table-seats:contains("${val}")`,
+                    run: function () {},
+                },
+            ];
+        }
+        orderCountSyncedInTableIs(table, count) {
+            return [
+                {
+                    trigger: `.floor-map .table .order-count:contains("${count}") ~ .label:contains("${table}")`,
+                    run: function () {},
+                },
+            ];
+        }
+        isShown() {
+            return [
+                {
+                    trigger: '.floor-map',
+                    run: function () {},
+                },
+            ];
+        }
+        tableIsNotSelected(name) {
+            return [
+                {
+                    content: `table '${name}' is not selected`,
+                    trigger: `.floor-map .table:not(.selected) .label:contains("${name}")`,
+                    run: function () {},
                 },
             ];
         }
@@ -129,10 +153,5 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
 
     class Execute {}
 
-    return {
-        Do,
-        Check,
-        Execute,
-        FloorScreen: createTourMethods('FloorScreen', Do, Check, Execute),
-    };
+    return createTourMethods('FloorScreen', Do, Check, Execute);
 });

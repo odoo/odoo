@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
 import uuid
 from collections import defaultdict
 
@@ -8,8 +9,10 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import AccessError
 from odoo.osv import expression
+
+_logger = logging.getLogger(__name__)
 
 
 class ChannelUsersRelation(models.Model):
@@ -38,21 +41,16 @@ class ChannelUsersRelation(models.Model):
             mapped_data.setdefault(item['channel_id'][0], dict())
             mapped_data[item['channel_id'][0]][item['partner_id'][0]] = item['__count']
 
-        partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
+        completed_records = self.env['slide.channel.partner']
         for record in self:
             record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
             record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
-            if not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
-                record.completed = True
-                partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
+            if not record.completed and record.channel_id.active and record.completed_slides_count >= record.channel_id.total_slides:
+                completed_records += record
 
-        partner_karma = {partner_id: karma_to_add
-                         for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0}
-
-        if partner_karma:
-            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
-            for user in users:
-                users.add_karma(partner_karma[user.partner_id.id])
+        if completed_records:
+            completed_records._set_as_completed()
+            completed_records._send_completed_mail()
 
     def unlink(self):
         """
@@ -70,6 +68,58 @@ class ChannelUsersRelation(models.Model):
         if removed_slide_partner_domain:
             self.env['slide.slide.partner'].search(removed_slide_partner_domain).unlink()
         return super(ChannelUsersRelation, self).unlink()
+
+    def _set_as_completed(self):
+        """ Set record as completed and compute karma gains """
+        partner_karma = dict.fromkeys(self.mapped('partner_id').ids, 0)
+        for record in self:
+            record.completed = True
+            partner_karma[record.partner_id.id] += record.channel_id.karma_gen_channel_finish
+
+        partner_karma = {
+            partner_id: karma_to_add
+            for partner_id, karma_to_add in partner_karma.items() if karma_to_add > 0
+        }
+
+        if partner_karma:
+            users = self.env['res.users'].sudo().search([('partner_id', 'in', list(partner_karma.keys()))])
+            for user in users:
+                users.add_karma(partner_karma[user.partner_id.id])
+
+    def _send_completed_mail(self):
+        """ Send an email to the attendee when he has successfully completed a course. """
+        template_to_records = dict()
+        for record in self:
+            template = record.channel_id.completed_template_id
+            if template:
+                records = template_to_records.setdefault(template, self.env['slide.channel.partner'])
+                records += record
+
+        for template, records in template_to_records.items():
+            record_email_values = template.generate_email(self.ids, ['subject', 'body_html', 'email_from', 'partner_to'])
+
+        mail_mail_values = []
+        for record in self:
+            email_values = record_email_values.get(record.id)
+            if not email_values or not email_values.get('partner_ids'):
+                continue
+
+            email_values.update(
+                author_id=record.channel_id.user_id.partner_id.id or self.env.company.partner_id.id,
+                auto_delete=True,
+                recipient_ids=[(4, pid) for pid in email_values['partner_ids']],
+            )
+            email_values['body_html'] = template._render_encapsulate(
+                'mail.mail_notification_light', email_values['body_html'],
+                add_context={
+                    'message': self.env['mail.message'].sudo().new(dict(body=email_values['body_html'], record_name=record.channel_id.name)),
+                    'model_description': _('Completed Course')  # tde fixme: translate into partner lang
+                }
+            )
+            mail_mail_values.append(email_values)
+
+        if mail_mail_values:
+            self.env['mail.mail'].sudo().create(mail_mail_values)
 
 
 class Channel(models.Model):
@@ -96,8 +146,8 @@ class Channel(models.Model):
     description_short = fields.Text('Short Description', translate=True, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
-        ('documentation', 'Documentation'), ('training', 'Training')],
-        string="Course type", default="documentation", required=True)
+        ('training', 'Training'), ('documentation', 'Documentation')],
+        string="Course type", default="training", required=True)
     sequence = fields.Integer(default=10, help='Display order')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
     color = fields.Integer('Color Index', default=0, help='Used to decorate kanban view')
@@ -115,8 +165,17 @@ class Channel(models.Model):
     promote_strategy = fields.Selection([
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
-        ('most_viewed', 'Most Viewed')],
-        string="Featured Content", default='latest', required=True)
+        ('most_viewed', 'Most Viewed'),
+        ('specific', 'Specific'),
+        ('none', 'None')],
+        string="Promoted Content", default='latest', required=False,
+        help='Depending the promote strategy, a slide will appear on the top of the course\'s page :\n'
+             ' * Latest Published : the slide created last.\n'
+             ' * Most Voted : the slide which has to most votes.\n'
+             ' * Most Viewed ; the slide which has been viewed the most.\n'
+             ' * Specific : You choose the slide to appear.\n'
+             ' * None : No slides will be shown.\n')
+    promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
@@ -131,18 +190,21 @@ class Channel(models.Model):
     rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1), compute_sudo=True)
     # configuration
     allow_comment = fields.Boolean(
-        "Allow rating on Course", default=False,
+        "Allow rating on Course", default=True,
         help="If checked it allows members to either:\n"
              " * like content and post comments on documentation course;\n"
              " * post comment and review on training course;")
     publish_template_id = fields.Many2one(
         'mail.template', string='New Content Email',
-        help="Email template to send slide publication through email",
+        help="Email attendees once a new content is published",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_published'))
     share_template_id = fields.Many2one(
         'mail.template', string='Share Template',
         help="Email template used when sharing a slide",
         default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.slide_template_shared'))
+    completed_template_id = fields.Many2one(
+        'mail.template', string='Completion Email', help="Email attendees once they've finished the course",
+        default=lambda self: self.env['ir.model.data'].xmlid_to_res_id('website_slides.mail_template_channel_completed'))
     enroll = fields.Selection([
         ('public', 'Public'), ('invite', 'On Invitation')],
         default='public', string='Enroll Policy', required=True,
@@ -375,9 +437,9 @@ class Channel(models.Model):
         else:
             query = """
                 UPDATE %(table_name)s
-                SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
-                WHERE %(column_name)s IS NULL
-            """ % {'table_name': self._table, 'column_name': column_name}
+                SET access_token = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
+                WHERE access_token IS NULL
+            """ % {'table_name': self._table}
             self.env.cr.execute(query)
 
     @api.model
@@ -414,15 +476,28 @@ class Channel(models.Model):
         return res
 
     def toggle_active(self):
-        # archiving/unarchiving a channel does it on its slides, too
+        """ Archiving/unarchiving a channel does it on its slides, too.
+        1. When archiving
+        We want to be archiving the channel FIRST.
+        So that when slides are archived and the recompute is triggered,
+        it does not try to mark the channel as "completed".
+        That happens because it counts slide_done / slide_total, but slide_total
+        will be 0 since all the slides for the course have been archived as well.
+
+        2. When un-archiving
+        We want to archive the channel LAST.
+        So that when it recomputes stats for the channel and completion, it correctly
+        counts the slides_total by counting slides that are already un-archived. """
+
         to_archive = self.filtered(lambda channel: channel.active)
         to_activate = self.filtered(lambda channel: not channel.active)
-        res = super(Channel, self).toggle_active()
         if to_archive:
+            super(Channel, to_archive).toggle_active()
+            to_archive.is_published = False
             to_archive.mapped('slide_ids').action_archive()
         if to_activate:
             to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
-        return res
+            super(Channel, to_activate).toggle_active()
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):
@@ -443,7 +518,7 @@ class Channel(models.Model):
     # ---------------------------------------------------------
 
     def action_redirect_to_members(self, state=None):
-        action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_channel_partner_action")
         action['domain'] = [('channel_id', 'in', self.ids)]
         if len(self) == 1:
             action['display_name'] = _('Attendees of %s', self.name)
@@ -467,7 +542,7 @@ class Channel(models.Model):
             default_channel_id=self.id,
             default_use_template=bool(template),
             default_template_id=template and template.id or False,
-            notif_layout='mail.mail_notification_light',
+            notif_layout='website_slides.mail_notification_channel_invite',
         )
         return {
             'type': 'ir.actions.act_window',
@@ -590,7 +665,7 @@ class Channel(models.Model):
             self.env['slide.channel.partner'].sudo().search(removed_channel_partner_domain).unlink()
 
     def action_view_slides(self):
-        action = self.env.ref('website_slides.slide_slide_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.slide_slide_action")
         action['context'] = {
             'search_default_published': 1,
             'default_channel_id': self.id
@@ -599,7 +674,7 @@ class Channel(models.Model):
         return action
 
     def action_view_ratings(self):
-        action = self.env.ref('website_slides.rating_rating_action_slide_channel').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("website_slides.rating_rating_action_slide_channel")
         action['name'] = _('Rating of %s') % (self.name)
         action['domain'] = [('res_id', 'in', self.ids)]
         return action

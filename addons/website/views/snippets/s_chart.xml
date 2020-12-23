@@ -23,11 +23,10 @@
     <xpath expr="." position="inside">
         <div data-js="InnerChart" string="Chart"
             data-selector=".s_chart">
-            <we-colorpicker string="Background Color"
-                data-select-style="true"
-                data-css-property="background-color"
-                data-color-prefix="bg-"/>
-            <we-select string="Type" data-attribute-name="type" data-attribute-default-value="bar" data-no-preview="true">
+            <we-row string="Background">
+                <t t-call="web_editor.snippet_options_background_color_widget"/>
+            </we-row>
+            <we-select string="Type" data-attribute-name="type" data-attribute-default-value="bar">
                 <we-button data-select-data-attribute="bar" data-name="bar_chart_opt">Bar Vertical</we-button>
                 <we-button data-select-data-attribute="horizontalBar" data-name="horizontal_bar_chart_opt">Bar Horizontal</we-button>
                 <we-button data-select-data-attribute="line">Line</we-button>
@@ -37,7 +36,7 @@
             </we-select>
             <we-checkbox string="Stacked" data-name="stacked_chart_opt" data-dependencies="bar_chart_opt, horizontal_bar_chart_opt"
                         data-select-data-attribute="false|true" data-attribute-name="stacked" data-no-preview="true"/>
-            <we-select string="Legend" data-attribute-name="legendPosition" data-attribute-default-value="top" data-no-preview="true">
+            <we-select string="Legend" data-attribute-name="legendPosition" data-attribute-default-value="top">
                 <we-button data-select-data-attribute="none">None</we-button>
                 <we-button data-select-data-attribute="top">Top</we-button>
                 <we-button data-select-data-attribute="left">Left</we-button>
@@ -49,10 +48,10 @@
                 <table>
                     <tr>
                         <th/>
-                        <th><we-button class="fa fa-fw fa-plus add_column"/></th>
+                        <th><we-button class="add_column fa fa-fw fa-plus o_we_link o_we_text_success d-inline-block"/></th>
                     </tr>
                     <tr>
-                        <th><we-button class="fa fa-fw fa-plus add_row"/></th>
+                        <th><we-button class="add_row fa fa-fw fa-plus o_we_link o_we_text_success d-inline-block"/></th>
                     </tr>
                 </table>
             </we-matrix>

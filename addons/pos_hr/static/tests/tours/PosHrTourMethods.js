@@ -63,5 +63,5 @@ odoo.define('pos_hr.tour.PosHrTourMethods', function (require) {
         }
     }
 
-    return { Do, Check, Execute, PosHr: createTourMethods('PosHr', Do, Check, Execute) };
+    return createTourMethods('PosHr', Do, Check, Execute);
 });

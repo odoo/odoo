@@ -71,7 +71,7 @@
                                 </li>
                             </ul>
                             </p>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -90,7 +90,7 @@
                                     <field name="parent_product_tmpl_id" invisible="1" />
                                     <field name="possible_bom_product_template_attribute_value_ids" invisible="1"/>
                                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}" groups="uom.group_uom"/>
-                                    <field name="bom_product_template_attribute_value_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" groups="product.group_product_variant"/>
+                                    <field name="bom_product_template_attribute_value_ids" optional="hide" widget="many2many_tags" options="{'no_create': True}" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}" groups="product.group_product_variant"/>
                                     <field name="allowed_operation_ids" invisible="1"/>
                                     <field name="operation_id" groups="mrp.group_mrp_routings" optional="hidden" attrs="{'column_invisible': [('parent.type','not in', ('normal', 'phantom'))]}" options="{'no_quick_create':True,'no_create_edit':True}"/>
                                 </tree>
@@ -98,12 +98,12 @@
                         </page>
                         <page string="Operations"
                             name="operations"
-                            attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
+                            attrs="{'invisible': [('type', 'not in',('normal','phantom'))]}"
                             groups="mrp.group_mrp_routings">
                                 <field name="operation_ids"
                                     attrs="{'invisible': [('type','not in',('normal','phantom'))]}"
                                     groups="mrp.group_mrp_routings"
-                                    context="{'default_company_id': company_id}"/>
+                                    context="{'default_company_id': company_id, 'default_product_tmpl_ids': [product_tmpl_id]}"/>
                         </page>
                         <page string="By-products"
                             name="by_products"
@@ -151,10 +151,10 @@
                     <field name="product_tmpl_id"/>
                     <field name="code" optional="show"/>
                     <field name="type"/>
-                    <field name="product_id" groups="product.group_product_variant" optional="show"/>
+                    <field name="product_id" groups="product.group_product_variant" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="product_qty" optional="show"/>
-                    <field name="product_uom_id" groups="uom.group_uom" optional="show" string="Unit of Measure"/>
+                    <field name="product_qty" optional="hide"/>
+                    <field name="product_uom_id" groups="uom.group_uom" optional="hide" string="Unit of Measure"/>
                 </tree>
             </field>
         </record>
@@ -214,7 +214,7 @@
             <field name="context">{'default_company_id': allowed_company_ids[0]}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a bill of materials
+                No bill of materials found. Let's create one!
               </p><p>
                 Bills of materials allow you to define the list of required raw
                 materials used to make a finished product; through a manufacturing

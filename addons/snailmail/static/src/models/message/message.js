@@ -48,7 +48,7 @@ registerInstancePatchModel('mail.message', 'snailmail/static/src/models/message.
             action: 'snailmail.snailmail_letter_missing_required_fields_action',
             options: {
                 additional_context: {
-                    letter_id: letterIds[0],
+                    default_letter_id: letterIds[0],
                 },
             },
         });

@@ -1,4 +1,4 @@
-odoo.define('point_of_sale.SelectionPopup', function(require) {
+odoo.define('point_of_sale.SelectionPopup', function (require) {
     'use strict';
 
     const { useState } = owl.hooks;
@@ -26,16 +26,10 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
          */
         constructor() {
             super(...arguments);
-            this.list = useState([...this.props.list]);
+            this.state = useState({ selectedId: this.props.list.find((item) => item.isSelected) });
         }
         selectItem(itemId) {
-            for (let item of this.list) {
-                if (item.id === itemId) {
-                    item.isSelected = true;
-                } else {
-                    item.isSelected = false;
-                }
-            }
+            this.state.selectedId = itemId;
             this.confirm();
         }
         /**
@@ -44,7 +38,7 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
          * @override
          */
         getPayload() {
-            const selected = this.props.list.find(item => item.isSelected);
+            const selected = this.props.list.find((item) => this.state.selectedId === item.id);
             return selected && selected.item;
         }
     }

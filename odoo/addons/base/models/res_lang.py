@@ -48,6 +48,17 @@ class Lang(models.Model):
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
 
+    @api.depends('code', 'flag_image')
+    def _compute_field_flag_image_url(self):
+        for lang in self:
+            if lang.flag_image:
+                lang.flag_image_url = f"/web/image/res.lang/{lang.id}/flag_image"
+            else:
+                lang.flag_image_url = f"/base/static/img/country_flags/{lang.code.lower().rsplit('_')[-1]}.png"
+
+    flag_image = fields.Image("Image")
+    flag_image_url = fields.Char(compute=_compute_field_flag_image_url)
+
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique(code)', 'The code of the language must be unique !'),
@@ -78,7 +89,7 @@ class Lang(models.Model):
                     'Provided as the thousand separator in each case.')
         for lang in self:
             try:
-                if not all(isinstance(x, int) for x in json.loads(lang.grouping)):
+                if any(not isinstance(x, int) for x in json.loads(lang.grouping)):
                     raise ValidationError(warning)
             except Exception:
                 raise ValidationError(warning)
@@ -209,9 +220,14 @@ class Lang(models.Model):
     @api.model
     @tools.ormcache()
     def get_available(self):
-        """ Return the available languages as a list of (code, name) sorted by name. """
+        """ Return the available languages as a list of (code, url_code, name,
+            active) sorted by name.
+        """
         langs = self.with_context(active_test=False).search([])
-        return sorted([(lang.code, lang.url_code, lang.name) for lang in langs], key=itemgetter(2))
+        return langs.get_sorted()
+
+    def get_sorted(self):
+        return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self], key=itemgetter(2))
 
     @tools.ormcache('self.id')
     def _get_cached_values(self):
@@ -229,7 +245,7 @@ class Lang(models.Model):
     @api.model
     @tools.ormcache('code')
     def _lang_code_to_urlcode(self, code):
-        for c, urlc, name in self.get_available():
+        for c, urlc, name, *_ in self.get_available():
             if c == code:
                 return urlc
         return self._lang_get(code).url_code
@@ -262,8 +278,10 @@ class Lang(models.Model):
         if 'code' in vals and any(code != vals['code'] for code in lang_codes):
             raise UserError(_("Language code cannot be modified."))
         if vals.get('active') == False:
-            if self.env['res.users'].search([('lang', 'in', lang_codes)]):
+            if self.env['res.users'].search_count([('lang', 'in', lang_codes)]):
                 raise UserError(_("Cannot deactivate a language that is currently used by users."))
+            if self.env['res.partner'].search_count([('lang', 'in', lang_codes)]):
+                raise UserError(_("Cannot deactivate a language that is currently used by contacts."))
             # delete linked ir.default specifying default partner's language
             self.env['ir.default'].discard_values('res.partner', 'lang', lang_codes)
 
@@ -272,7 +290,8 @@ class Lang(models.Model):
         self.clear_caches()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=True)
+    def _unlink_except_default_lang(self):
         for language in self:
             if language.code == 'en_US':
                 raise UserError(_("Base Language 'en_US' can not be deleted."))
@@ -281,6 +300,9 @@ class Lang(models.Model):
                 raise UserError(_("You cannot delete the language which is the user's preferred language."))
             if language.active:
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
+
+    def unlink(self):
+        for language in self:
             self.env['ir.translation'].search([('lang', '=', language.code)]).unlink()
         self.clear_caches()
         return super(Lang, self).unlink()

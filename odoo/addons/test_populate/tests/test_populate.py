@@ -47,6 +47,7 @@ class TestPopulate(common.TransactionCase):
         self.assertEqual(records.mapped('some_ref')[5:20], [
             1, 0, 2, 4, 4, 3, 4, 1, 2, 2, 2, 4, 4, 1, 2
         ])
+        self.assertEqual(records.mapped('sequence')[:20], [6, 10, 1, 1, 1, 3, 8, 9, 1, 5, 9, 5, 7, 3, 5, 3, 6, 4, 9, 2])  # Test randint
 
     @mute_logger('odoo.cli.populate')
     def test_populate_inherit(self):

@@ -39,6 +39,7 @@
     <template id="assets_wysiwyg" inherit_id="website.assets_wysiwyg" name="Shop Wysiwyg Editor">
         <xpath expr="//link[last()]" position="after">
             <link rel="stylesheet" type="text/scss" href="/website_sale/static/src/scss/website_sale.editor.scss"/>
+            <script type="text/javascript" src="/website_sale/static/src/snippets/s_dynamic_snippet_products/options.js"/>
         </xpath>
     </template>
 
@@ -72,23 +73,143 @@
         </xpath>
     </template>
 
-    <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
-        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
-            <t t-set="website_sale_order" t-value="website.sale_get_order()" />
-            <t t-set="show_cart" t-value="true"/>
-            <li class="nav-item divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-            <li t-attf-class="nav-item o_wsale_my_cart #{not show_cart and 'd-none'}">
-                <a href="/shop/cart" class="nav-link">
-                    <i class="fa fa-shopping-cart"></i>
-                    My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
-                </a>
-            </li>
+    <template id="header_cart_link" name="Header Cart Link">
+        <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+        <t t-set="show_cart" t-value="true"/>
+        <li t-attf-class="#{_item_class} divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
+        <li t-attf-class="o_wsale_my_cart #{not show_cart and 'd-none'} #{_item_class}">
+            <a href="/shop/cart" t-attf-class="#{_link_class}">
+                <i t-if="_icon" class="fa fa-shopping-cart"/>
+                <span t-if="_text">My Cart</span>
+                <sup class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or '0'" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
+            </a>
+        </li>
+    </template>
+
+    <template id="header_hide_empty_cart_link" inherit_id="website_sale.header_cart_link" name="Header Hide Empty Cart link" active="False">
+        <xpath expr="//t[@t-set='show_cart']" position="after">
+            <t t-set="show_cart" t-value="show_cart and website_sale_order and website_sale_order.cart_quantity" />
         </xpath>
     </template>
 
-    <template id="hide_cart_if_empty" inherit_id="website_sale.header" name="Hide Cart If Empty">
-        <xpath expr="//t[@t-set='show_cart']" position="after">
-            <t t-set="show_cart" t-value="show_cart and website_sale_order and website_sale_order.cart_quantity" />
+    <template id="template_header_default" inherit_id="website.template_header_default">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item mx-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger" inherit_id="website.template_header_hamburger">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_vertical" inherit_id="website.template_header_vertical">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_sidebar" inherit_id="website.template_header_sidebar">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_slogan" inherit_id="website.template_header_slogan">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-lg-auto'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_contact" inherit_id="website.template_header_contact">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_minimalist" inherit_id="website.template_header_minimalist">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link ml-3'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_boxed" inherit_id="website.template_header_boxed">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_centered_logo" inherit_id="website.template_header_centered_logo">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_image" inherit_id="website.template_header_image">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger_full" inherit_id="website.template_header_hamburger_full">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_magazine" inherit_id="website.template_header_magazine">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
         </xpath>
     </template>
 
@@ -140,7 +261,8 @@
             <div class="card-body p-1 oe_product_image">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                 <a t-att-href="product_href" class="d-block h-100" itemprop="url">
-                    <span t-field="product.image_1920"
+                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
+                    <span t-field="image_holder.image_1920"
                         t-options="{'widget': 'image', 'preview_image': 'image_1024' if product_image_big else 'image_256'}"
                         class="d-flex h-100 justify-content-center align-items-center"/>
                 </a>
@@ -209,7 +331,7 @@
         <t t-call="website.layout">
             <t t-set="additional_title">Shop</t>
             <div id="wrap" class="js_sale">
-                <div class="oe_structure" id="oe_structure_website_sale_products_1"/>
+                <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_1"/>
                 <div class="container oe_website_sale">
                     <div class="products_pager form-inline flex-md-nowrap justify-content-between justify-content-md-center">
                         <t t-call="website_sale.search">
@@ -273,11 +395,11 @@
                             </t>
                         </div>
                     </div>
-                    <div class="products_pager form-inline justify-content-center mt-3">
+                    <div class="products_pager form-inline justify-content-center py-3">
                         <t t-call="website.pager"/>
                     </div>
                 </div>
-                <div class="oe_structure mb32" id="oe_structure_website_sale_products_2"/>
+                <div class="oe_structure oe_empty" id="oe_structure_website_sale_products_2"/>
             </div>
         </t>
     </template>
@@ -431,7 +553,7 @@
                                     <ul class="nav nav-pills flex-column">
                                         <t t-foreach="a.value_ids" t-as="v">
                                             <li class="nav-item">
-                                                <label style="margin: 0 20px;" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
+                                                <label style="padding: 0.25rem 0rem; margin: 0" t-attf-class="nav-link#{' active' if v.id in attrib_set else ''}">
                                                     <input type="checkbox" name="attrib" t-att-value="'%s-%s' % (a.id,v.id)" t-att-checked="'checked' if v.id in attrib_set else None" />
                                                     <span style="font-weight: normal" t-field="v.name" />
                                                 </label>
@@ -461,7 +583,7 @@
         </xpath>
     </template>
 
-    <!-- /shop/product product page -->
+    <!-- /shop/product page -->
     <template id="product_edit_options" inherit_id="website.user_navbar" name="Edit Product Options">
         <xpath expr="//li[@id='edit-page-menu']" position="after">
             <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'website_sale.product_template_action_website'" />
@@ -550,22 +672,22 @@
                                 </div>
                             </div>
                             <hr />
-                            <t t-call="website_sale.product_custom_text"/>
                         </div>
                     </div>
                 </section>
-                <div itemprop="description" t-field="product.website_description" class="oe_structure mt16" id="product_full_description" />
+                <div itemprop="description" t-field="product.website_description" class="oe_structure oe_empty mt16" id="product_full_description"/>
             </div>
         </t>
     </template>
 
-    <!-- Dedicated template to not prevent updates on main view -->
-    <template id="product_custom_text" name="Product Custom Text">
-        <p class="text-muted">
-            30-day money-back guarantee<br/>
-            Free Shipping in U.S.<br/>
-            Buy now, get in 2 days
-        </p>
+    <template id="product_custom_text" inherit_id="website_sale.product" active="True" customize_show="True" name="Terms and Conditions">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <p class="text-muted">
+                <a href="/terms">Terms and Conditions</a><br/>
+                30-day money-back guarantee<br/>
+                Shipping: 2-3 Business Days
+            </p>
+        </xpath>
     </template>
 
     <template inherit_id='website_sale.product' id="product_picture_magnify" customize_show="True" name="Image Zoom">
@@ -760,7 +882,9 @@
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect" t-valuef="/shop/extra_info"/>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
@@ -1007,7 +1131,7 @@
                     </t>
                 </span>
                 <a role="button" class="btn btn-primary" href="/shop/cart">
-                       View Cart (<t t-esc="website_sale_order.cart_quantity" /> items)
+                       View Cart (<t t-esc="website_sale_order.cart_quantity" /> item(s))
                      </a>
             </div>
         </t>
@@ -1079,7 +1203,9 @@
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect" t-valuef="/shop/checkout"/>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
@@ -1188,6 +1314,7 @@
                     <div class="row">
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
+                                <t t-set="hide_coupon">True</t>
                                 <t t-set="redirect" t-valuef="/shop/address"/>
                             </t>
                         </div>
@@ -1206,16 +1333,16 @@
                                     <h2 class="o_page_header mt8">Shipping Address </h2>
                                 </t>
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
-                                    <div class="alert alert-warning" role="alert">
+                                    <div class="alert alert-warning" role="alert" t-if="not only_services">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p t-if="not only_services" groups="sale.group_delivery_invoice_address">
+                                        <p  groups="sale.group_delivery_invoice_address">
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
                                     </div>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
-                                    <h4 class="text-danger" t-esc="err" />
+                                    <h5 class="text-danger" t-esc="err" />
                                 </t>
                                 <form action="/shop/address" method="post" class="checkout_autoformat">
                                     <div class="form-row">
@@ -1326,14 +1453,20 @@
     <template id="address_b2b" inherit_id="address" name="Show b2b fields" customize_show="True">
         <xpath expr="//div[@id='div_phone']" position="after">
             <div class="w-100"/>
+            <t t-set='vat_warning' t-value="'vat' in checkout and checkout['vat'] and not can_edit_vat" />
             <t t-if="mode == ('new', 'billing') or (mode == ('edit', 'billing') and (can_edit_vat or 'vat' in checkout and checkout['vat']))">
-                <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6">
+                <div t-attf-class="form-group #{error.get('company_name') and 'o_has_error' or ''} col-lg-6 mb-0">
                     <label class="col-form-label font-weight-normal label-optional" for="company_name">Company Name</label>
-                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                    <input type="text" name="company_name" t-attf-class="form-control #{error.get('company_name') and 'is-invalid' or ''}" t-att-value="'commercial_company_name' in checkout and checkout['commercial_company_name'] or 'company_name' in checkout and checkout['company_name']" t-att-readonly="'1' if vat_warning else None" />
+                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing company name is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                 </div>
-                <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat">
+                <div t-attf-class="form-group #{error.get('vat') and 'o_has_error' or ''} col-lg-6 div_vat mb-0">
                     <label class="col-form-label font-weight-normal label-optional" for="vat">TIN / VAT </label>
-                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" t-att-title="'Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.' if 'vat' in checkout and checkout['vat'] and not can_edit_vat else None" />
+                    <input type="text" name="vat" t-attf-class="form-control #{error.get('vat') and 'is-invalid' or ''}" t-att-value="'vat' in checkout and checkout['vat']" t-att-readonly="'1' if vat_warning else None"/>
+                    <small t-if="vat_warning" class="form-text text-muted d-block d-lg-none">Changing VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
+                </div>
+                <div t-if="vat_warning" class="col-12 d-none d-lg-block mb-1">
+                    <small class="form-text text-muted">Changing company name or VAT number is not allowed once document(s) have been issued for your account. Please contact us directly for this operation.</small>
                 </div>
             </t>
         </xpath>
@@ -1497,7 +1630,7 @@
             <div class="custom-control custom-checkbox float-right mt-2 oe_accept_cgv_button">
                 <input type="checkbox" id="checkbox_cgv" class="custom-control-input"/>
                 <label for="checkbox_cgv" class="custom-control-label">
-                    I agree to the <a target="_BLANK" href="/shop/terms">terms &amp; conditions</a>
+                    I agree to the <a target="_BLANK" href="/terms">terms &amp; conditions</a>
                 </label>
             </div>
         </xpath>
@@ -1680,7 +1813,7 @@
             <attribute name="name"/>
             <attribute name="t-att-data-module-id"/>
             <attribute name="t-att-data-module-shortdesc"/>
-            <attribute name="groups">sales_team.group_sale_manager</attribute>
+            <attribute name="t-if">env.user.has_group('sales_team.group_sale_manager')</attribute>
         </xpath>
     </template>
 
@@ -1693,47 +1826,6 @@
                 <span t-field="line.name" />
             </t>
         </xpath>
-    </template>
-
-    <template id="terms" name="Terms &amp; Conditions">
-        <t t-call="website.layout">
-          <div id="wrap">
-              <div class="oe_structure" id="oe_structure_website_sale_terms_1">
-                <section class="s_title" data-vcss="001">
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-lg-12">
-                        <h1 class="text-center">Terms &amp;amp; Conditions</h1>
-                        <div class="card s_well clearfix">
-                            <div class="card-body">
-                                <ul>
-                                    <li>The <b>Intellectual Property</b> disclosure will inform users that the contents, logo and other visual media you created is your property and is protected by copyright laws.</li>
-                                    <li>A <b>Termination</b> clause will inform that users’ accounts on your website and mobile app or users’ access to your website and mobile (if users can’t have an account with you) can be terminated in case of abuses or at your sole discretion.</li>
-                                    <li>A <b>Governing Law</b> will inform users which laws govern the agreement. This should the country in which your company is headquartered or the country from which you operate your web site and mobile app.</li>
-                                    <li>A <b>Links To Other Web Sites</b> clause will inform users that you are not responsible for any third party web sites that you link to. This kind of clause will generally inform users that they are responsible for reading and agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies of these third parties.</li>
-                                    <li>If your website or mobile apps allows users to create content and make that content public to other users, a <b>Content</b> section will inform users that they own the rights to the content they have created.<br/>The “Content” clause usually mentions that users must give you (the website or mobile app developer) a license so that you can share this content on your website/mobile app and to make it available to other users.<br/>Because the content created by users is public to other users, a DMCA notice clause (or Copyright Infringement ) section is helpful to inform users and copyright authors that, if any content is found to be a copyright infringement, you will respond to any DMCA take down notices received and you will take down the content.</li>
-                                    <li>A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to use your service, they’re also agreeing to not do certain things. This can be part of a very long and thorough list in your Terms and Conditions agreements so as to encompass the most amount of negative uses.</li>
-                               </ul>
-                               <small class="text-muted float-right">Source: https://termsfeed.com/blog/sample-terms-and-conditions-template</small>
-                           </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-                <section class="s_text_block" data-snippet="s_text_block">
-                  <div class="container">
-                    <div class="row">
-                      <div class="col-lg-12 mb16 mt16">
-                        <p style='white-space:pre' t-esc="website.company_id.invoice_terms"/>
-                      </div>
-                    </div>
-                  </div>
-                </section>
-              </div>
-              <div class="oe_structure" id="oe_structure_website_sale_terms_2"/>
-          </div>
-        </t>
     </template>
 
     <template id="website_sale.shop_product_carousel" name="Shop Product Carousel">
@@ -1769,4 +1861,44 @@
             </div>
         </div>
     </template>
+
+
+    <record id="view_website_sale_website_form" model="ir.ui.view">
+        <field name="name">website_sale.website.form</field>
+        <field name="model">website</field>
+        <field name="inherit_id" ref="website.view_website_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Product Page Extra Fields" groups="base.group_no_one">
+                    <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="field_id"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="False" customize_show="True" name="Show Extra Fields">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <hr/>
+            <p class="text-muted">
+                <t t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product[field.name]'>
+                    <b><t t-esc='field.label'/>: </b>
+                    <t t-if='field.field_id.ttype != "binary"'>
+                        <span t-esc='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
+                    </t>
+                    <t t-else=''>
+                        <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>
+                            <i class='fa fa-file'></i>
+                        </a>
+                    </t>
+                    <br/>
+                </t>
+            </p>
+        </xpath>
+    </template>
+
 </odoo>

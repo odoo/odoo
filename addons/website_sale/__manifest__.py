@@ -1,7 +1,7 @@
 {
     'name': 'eCommerce',
     'category': 'Website/Website',
-    'sequence': 55,
+    'sequence': 50,
     'summary': 'Sell your products online',
     'website': 'https://www.odoo.com/page/e-commerce',
     'version': '1.0',
@@ -20,7 +20,8 @@
         'views/sale_order_views.xml',
         'views/crm_team_views.xml',
         'views/templates.xml',
-        'views/snippets.xml',
+        'views/snippets/snippets.xml',
+        'views/snippets/s_dynamic_snippet_products.xml',
         'views/snippets/s_products_searchbar.xml',
         'views/res_config_settings_views.xml',
         'views/digest_views.xml',
@@ -32,5 +33,6 @@
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'application': True,
+    'pre_init_hook': 'pre_init_hook',
     'uninstall_hook': 'uninstall_hook',
 }

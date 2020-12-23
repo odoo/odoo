@@ -13,11 +13,11 @@ Index: addons/openacademy/wizard.py
 -        string="Session", required=True)
 +        string="Session", required=True, default=_default_session)
      attendee_ids = fields.Many2many('res.partner', string="Attendees")
-Index: addons/openacademy/views/openacademy.xml
+Index: foo/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml
-+++ addons/openacademy/views/openacademy.xml
-@@ -223,4 +223,24 @@
+--- foo.orig/openacademy/views/openacademy.xml
++++ foo/openacademy/views/openacademy.xml
+@@ -220,4 +220,25 @@
                    parent="openacademy_menu"
                    action="session_list_action"/>
  
@@ -34,11 +34,12 @@ Index: addons/openacademy/views/openacademy.xml
 +            </field>
 +        </record>
 +
-+        <act_window id="launch_session_wizard"
-+                    name="Add Attendees"
-+                    binding_model="openacademy.session"
-+                    res_model="openacademy.wizard"
-+                    view_mode="form"
-+                    target="new"/>
++        <record id="launch_session_wizard" model="ir.actions.act_window">
++            <field name="name">Add Attendees</field>
++            <field name="res_model">openacademy.wizard</field>
++            <field name="view_mode">form</field>
++            <field name="target">new</field>
++            <field name="binding_model_id" ref="model_openacademy_session"/>
++        </record>
 +
  </odoo>

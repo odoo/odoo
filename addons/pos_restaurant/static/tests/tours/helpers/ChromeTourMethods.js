@@ -29,8 +29,5 @@ odoo.define('pos_restaurant.tour.ChromeTourMethods', function (require) {
 
     class Execute {}
 
-    return {
-        Do: DoExt,
-        Chrome: createTourMethods('Chrome', DoExt, Check, Execute),
-    };
+    return createTourMethods('Chrome', DoExt, Check, Execute);
 });

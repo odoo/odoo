@@ -9,6 +9,7 @@ business objects.
 from operator import itemgetter
 
 from odoo.tests.common import TransactionCase, Form
+from odoo import Command
 
 
 class TestBasic(TransactionCase):
@@ -227,10 +228,13 @@ class TestM2M(TransactionCase):
         self.assertEqual(f.count, 1)
 
     def test_m2m_changed(self):
+        r1 = self.env['test_testing_utilities.m2o'].create({'name': "A"})
+        r2 = self.env['test_testing_utilities.m2o'].create({'name': "B"})
+
         Sub = self.env['test_testing_utilities.sub2']
         a = Sub.create({'name': 'a'})
         b = Sub.create({'name': 'b'})
-        c = Sub.create({'name': 'c'})
+        c = Sub.create({'name': 'c', 'm2o_ids': [Command.set([r1.id, r2.id])]})
         d = Sub.create({'name': 'd'})
 
         f = Form(self.env['test_testing_utilities.f'])
@@ -248,7 +252,7 @@ class TestM2M(TransactionCase):
         a = Sub.create({'name': 'a'})
         b = Sub.create({'name': 'b'})
         r = self.env['test_testing_utilities.g'].create({
-            'm2m': [(6, 0, a.ids)]
+            'm2m': [Command.set(a.ids)]
         })
 
         f = Form(r)
@@ -374,13 +378,13 @@ class TestO2M(TransactionCase):
 
         with f.subs.edit(index=0) as s:
             self.assertEqual(s.v, 5)
-            self.assertEqual(s.value, False)
+            self.assertEqual(s.value, 2)
 
         r = f.save()
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("5", 0, 5)]
+            [("5", 2, 5)]
         )
 
     def test_o2m_inner_default(self):
@@ -435,7 +439,7 @@ class TestO2M(TransactionCase):
         view) can't be written to
         """
         r = self.env['test_testing_utilities.parent'].create({
-            'subs': [(0, 0, {})]
+            'subs': [Command.create({})]
         })
         f = Form(r, view='test_testing_utilities.o2m_parent_readonly')
 
@@ -590,26 +594,26 @@ class TestNestedO2M(TransactionCase):
             # qty_producing=0 (onchange)
             # qty_produced=0 (computed)
             'move_raw_ids': [
-                (0, 0, {
+                Command.create({
                     'product_id': product2,
                     # quantity_done=0 (computed)
-                    'move_line_ids': [(0, 0, {
+                    'move_line_ids': [Command.create({
                         'product_id': product2,
                         'product_uom_qty': 1.0,
                         'qty_done': 0.0 # -> 1.0
                     })] # -> new line with qty=0, qty_done=2
                 }),
-                (0, 0, {
+                Command.create({
                     'product_id': product1,
                     'unit_factor': 4,
-                    'move_line_ids': [(0, 0, {
+                    'move_line_ids': [Command.create({
                         'product_id': product1,
                         'product_uom_qty': 4.0,
                         'qty_done': 0.0 # -> 4.0
                     })] # -> new line with qty=0, qty_done=8
                 })
             ],
-            'move_finished_ids': [(0, 0, {'product_id': product0})]
+            'move_finished_ids': [Command.create({'product_id': product0})]
             # -> new line with qty=0, qty_done=3
         })
         form = Form(obj)
@@ -635,26 +639,26 @@ class TestNestedO2M(TransactionCase):
             # qty_producing=0 (onchange)
             # qty_produced=0 (computed)
             'move_raw_ids': [
-                (0, 0, {
+                Command.create({
                     'product_id': product2,
                     # quantity_done=0 (computed)
-                    'move_line_ids': [(0, 0, {
+                    'move_line_ids': [Command.create({
                         'product_id': product2,
                         'product_uom_qty': 1.0,
                         'qty_done': 0.0 # -> 1.0
                     })] # -> new line with qty=0, qty_done=2
                 }),
-                (0, 0, {
+                Command.create({
                     'product_id': product1,
                     'unit_factor': 4,
-                    'move_line_ids': [(0, 0, {
+                    'move_line_ids': [Command.create({
                         'product_id': product1,
                         'product_uom_qty': 4.0,
                         'qty_done': 0.0 # -> 4.0
                     })] # -> new line with qty=0, qty_done=8
                 })
             ],
-            'move_finished_ids': [(0, 0, {'product_id': product0})]
+            'move_finished_ids': [Command.create({'product_id': product0})]
             # -> new line with qty=0, qty_done=3
         })
         form = Form(obj)
@@ -666,6 +670,32 @@ class TestNestedO2M(TransactionCase):
         # Check that this new product is not updated by qty_producing
         form.qty_producing = 2
         form.save()
+
+    def test_remove(self):
+        """ onchanges can remove o2m records which haven't been loaded yet due
+        to lazy loading of o2ms. The removal information should still be
+        retained, otherwise due to the stateful update system we end up
+        retaining records we don't even know exist.
+        """
+        # create structure with sub-sub-children
+        r = self.env['o2m_changes_parent'].create({
+            'name': "A",
+            'line_ids': [
+                Command.create({
+                    'name': 'line 1',
+                    'v': 42,
+                    'line_ids': [Command.create({'v': 1, 'vv': 1})],
+                })
+            ]
+        })
+
+        with Form(r) as f:
+            f.name = 'B'
+
+        self.assertEqual(len(r.line_ids), 1)
+        self.assertEqual(len(r.line_ids.line_ids), 1)
+        self.assertEqual(r.line_ids.line_ids.v, 0)
+        self.assertEqual(r.line_ids.line_ids.vv, 0)
 
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
@@ -737,7 +767,7 @@ class TestEdition(TransactionCase):
         c = Sub.create({'name': 'c'})
 
         r = self.env['test_testing_utilities.f'].create({
-            'm2m': [(6, 0, (a | b | c).ids)]
+            'm2m': [Command.set((a | b | c).ids)]
         })
 
         with Form(r) as f:

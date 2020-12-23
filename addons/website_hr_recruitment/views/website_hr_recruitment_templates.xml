@@ -7,6 +7,12 @@
     </xpath>
 </template>
 
+<template id="job_edit_options" inherit_id="website.user_navbar" name="Edit Job Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'hr.job'" t-set="action" t-value="'hr_recruitment.action_hr_job'"/>
+    </xpath>
+</template>
+
 <template id="index" name="Jobs">
     <t t-call="website.layout">
         <div id="wrap" class="o_website_hr_recruitment_jobs_list bg-100">
@@ -251,11 +257,11 @@
                         <h6 class="s_rating_title">Customer Relationship</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
                             </span>
                             <span class="s_rating_inactive_icons text-primary">
                             </span>
@@ -265,11 +271,11 @@
                         <h6 class="s_rating_title">Personal Evolution</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
                             </span>
                             <span class="s_rating_inactive_icons text-primary">
                             </span>
@@ -279,13 +285,13 @@
                         <h6 class="s_rating_title">Autonomy</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
                             </span>
                             <span class="s_rating_inactive_icons text-primary">
-                                <i class="fa fa-fw fa-star-o"/>
+                                <i class="fa fa-star-o"/>
                             </span>
                         </div>
                     </div>
@@ -293,13 +299,13 @@
                         <h6 class="s_rating_title">Administrative Work</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
                             </span>
                             <span class="s_rating_inactive_icons text-primary">
-                                <i class="fa fa-fw fa-star-o"/>
-                                <i class="fa fa-fw fa-star-o"/>
-                                <i class="fa fa-fw fa-star-o"/>
+                                <i class="fa fa-star-o"/>
+                                <i class="fa fa-star-o"/>
+                                <i class="fa fa-star-o"/>
                             </span>
                         </div>
                     </div>
@@ -307,11 +313,11 @@
                         <h6 class="s_rating_title">Technical Expertise</h6>
                         <div class="s_rating_icons o_not_editable">
                             <span class="s_rating_active_icons text-primary">
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
-                                <i class="fa fa-fw fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
+                                <i class="fa fa-star"/>
                             </span>
                             <span class="s_rating_inactive_icons text-primary">
                             </span>
@@ -602,7 +608,7 @@
         <attribute name="name"/>
         <attribute name="t-att-data-module-id"/>
         <attribute name="t-att-data-module-shortdesc"/>
-        <attribute name="groups">hr_recruitment.group_hr_recruitment_manager</attribute>
+        <attribute name="t-if">is_designer</attribute>
     </xpath>
 </template>
 

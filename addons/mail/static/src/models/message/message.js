@@ -4,7 +4,8 @@ odoo.define('mail/static/src/models/message/message.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { addLink, parseAndTransform } = require('mail.utils');
+const { clear } = require('mail/static/src/model/model_field_command.js');
+const { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
 
@@ -63,16 +64,14 @@ function factory(dependencies) {
                 data2.body = data.body;
             }
             if ('channel_ids' in data && data.channel_ids) {
-                // AKU FIXME: side-effect of calling convert...
-                const channelList = [];
-                for (const channelId of data.channel_ids) {
-                    const channel = this.env.models['mail.thread'].insert({
-                        id: channelId,
-                        model: 'mail.channel',
-                    });
-                    channelList.push(channel);
-                }
-                data2.serverChannels = [['replace', channelList]];
+                const channels = data.channel_ids
+                    .map(channelId =>
+                        this.env.models['mail.thread'].findFromIdentifyingData({
+                            id: channelId,
+                            model: 'mail.channel',
+                        })
+                    ).filter(channel => !!channel);
+                data2.serverChannels = [['replace', channels]];
             }
             if ('date' in data && data.date) {
                 data2.date = moment(str_to_datetime(data.date));
@@ -199,6 +198,46 @@ function factory(dependencies) {
                 kwargs: kwargs,
             });
         }
+        /**
+         * Performs the `message_fetch` RPC on `mail.message`.
+         *
+         * @static
+         * @param {Array[]} domain
+         * @param {integer} [limit]
+         * @param {integer[]} [moderated_channel_ids]
+         * @param {Object} [context]
+         * @returns {mail.message[]}
+         */
+        static async performRpcMessageFetch(domain, limit, moderated_channel_ids, context) {
+            const messagesData = await this.env.services.rpc({
+                model: 'mail.message',
+                method: 'message_fetch',
+                kwargs: {
+                    context,
+                    domain,
+                    limit,
+                    moderated_channel_ids,
+                },
+            }, { shadow: true });
+            const messages = this.env.models['mail.message'].insert(messagesData.map(
+                messageData => this.env.models['mail.message'].convertData(messageData)
+            ));
+            // compute seen indicators (if applicable)
+            for (const message of messages) {
+                for (const thread of message.threads) {
+                    if (thread.model !== 'mail.channel' || thread.channel_type === 'channel') {
+                        // disabled on non-channel threads and
+                        // on `channel` channels for performance reasons
+                        continue;
+                    }
+                    this.env.models['mail.message_seen_indicator'].insert({
+                        channelId: thread.id,
+                        messageId: message.id,
+                    });
+                }
+            }
+            return messages;
+        }
 
         /**
          * @static
@@ -277,6 +316,13 @@ function factory(dependencies) {
         }
 
         /**
+         * Refreshes the value of `dateFromNow` field to the "current now".
+         */
+        refreshDateFromNow() {
+            this.update({ dateFromNow: this._computeDateFromNow() });
+        }
+
+        /**
          * Action to initiate reply to current message in Discuss Inbox. Assumes
          * that Discuss and Inbox are already opened.
          */
@@ -316,6 +362,23 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
+        /**
+         * @returns {string}
+         */
+        _computeDateFromNow() {
+            if (!this.date) {
+                return clear();
+            }
+            return timeFromNow(this.date);
+        }
+
+        /**
          * @returns {boolean}
          */
         _computeFailureNotifications() {
@@ -337,10 +400,34 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeIsCurrentPartnerAuthor() {
-            return (
+            return !!(
                 this.author &&
                 this.messagingCurrentPartner &&
                 this.messagingCurrentPartner === this.author
+            );
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsBodyEqualSubtypeDescription() {
+            if (!this.body || !this.subtype_description) {
+                return false;
+            }
+            const inlineBody = htmlToTextContentInline(this.body);
+            return inlineBody.toLowerCase() === this.subtype_description.toLowerCase();
+        }
+
+        /**
+         * @private
+         */
+        _computeIsEmpty() {
+            return (
+                (!this.body || htmlToTextContentInline(this.body) === '') &&
+                this.attachments.length === 0 &&
+                this.tracking_value_ids.length === 0 &&
+                !this.subtype_description
             );
         }
 
@@ -362,27 +449,6 @@ function factory(dependencies) {
          */
         _computeMessaging() {
             return [['link', this.env.messaging]];
-        }
-
-        /**
-         * @private
-         * @returns {mail.thread[]}
-         */
-        _computeNonOriginThreads() {
-            const nonOriginThreads = this.serverChannels.filter(thread => thread !== this.originThread);
-            if (this.isHistory) {
-                nonOriginThreads.push(this.env.messaging.history);
-            }
-            if (this.isNeedaction) {
-                nonOriginThreads.push(this.env.messaging.inbox);
-            }
-            if (this.isStarred) {
-                nonOriginThreads.push(this.env.messaging.starred);
-            }
-            if (this.env.messaging.moderation && this.isModeratedByCurrentPartner) {
-                nonOriginThreads.push(this.env.messaging.moderation);
-            }
-            return [['replace', nonOriginThreads]];
         }
 
         /**
@@ -425,19 +491,23 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         _computeThreads() {
-            const threads = [...this.nonOriginThreads];
+            const threads = [...this.serverChannels];
+            if (this.isHistory) {
+                threads.push(this.env.messaging.history);
+            }
+            if (this.isNeedaction) {
+                threads.push(this.env.messaging.inbox);
+            }
+            if (this.isStarred) {
+                threads.push(this.env.messaging.starred);
+            }
+            if (this.env.messaging.moderation && this.isModeratedByCurrentPartner) {
+                threads.push(this.env.messaging.moderation);
+            }
             if (this.originThread) {
                 threads.push(this.originThread);
             }
             return [['replace', threads]];
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const Message = this.env.models['mail.message'];
-            return `${Message.modelName}_${data.id}`;
         }
 
     }
@@ -460,9 +530,19 @@ function factory(dependencies) {
         }),
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
+            readonly: true,
         }),
         date: attr({
             default: moment(),
+        }),
+        /**
+         * States the time elapsed since date up to now.
+         */
+        dateFromNow: attr({
+            compute: '_computeDateFromNow',
+            dependencies: [
+                'date',
+            ],
         }),
         email_from: attr(),
         failureNotifications: one2many('mail.notification', {
@@ -474,13 +554,56 @@ function factory(dependencies) {
             default: false,
             dependencies: ['isModeratedByCurrentPartner'],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isCurrentPartnerAuthor: attr({
             compute: '_computeIsCurrentPartnerAuthor',
             default: false,
             dependencies: [
                 'author',
                 'messagingCurrentPartner',
+            ],
+        }),
+        /**
+         * States whether `body` and `subtype_description` contain similar
+         * values.
+         *
+         * This is necessary to avoid displaying both of them together when they
+         * contain duplicate information. This will especially happen with
+         * messages that are posted automatically at the creation of a record
+         * (messages that serve as tracking messages). They do have hard-coded
+         * "record created" body while being assigned a subtype with a
+         * description that states the same information.
+         *
+         * Fixing newer messages is possible by not assigning them a duplicate
+         * body content, but the check here is still necessary to handle
+         * existing messages.
+         *
+         * Limitations:
+         * - A translated subtype description might not match a non-translatable
+         *   body created by a user with a different language.
+         * - Their content might be mostly but not exactly the same.
+         */
+        isBodyEqualSubtypeDescription: attr({
+            compute: '_computeIsBodyEqualSubtypeDescription',
+            default: false,
+            dependencies: [
+                'body',
+                'subtype_description',
+            ],
+        }),
+        /**
+         * Determine whether the message has to be considered empty or not.
+         *
+         * An empty message has no text, no attachment and no tracking value.
+         */
+        isEmpty: attr({
+            compute: '_computeIsEmpty',
+            dependencies: [
+                'attachments',
+                'body',
+                'tracking_value_ids',
             ],
         }),
         isModeratedByCurrentPartner: attr({
@@ -548,25 +671,6 @@ function factory(dependencies) {
             related: 'messaging.starred',
         }),
         moderation_status: attr(),
-        /**
-         * List of non-origin threads that this message is linked to. This field
-         * is read-only.
-         */
-        nonOriginThreads: many2many('mail.thread', {
-            compute: '_computeNonOriginThreads',
-            dependencies: [
-                'isHistory',
-                'isModeratedByCurrentPartner',
-                'isNeedaction',
-                'isStarred',
-                'messagingHistory',
-                'messagingInbox',
-                'messagingModeration',
-                'messagingStarred',
-                'originThread',
-                'serverChannels',
-            ],
-        }),
         notifications: one2many('mail.notification', {
             inverse: 'message',
             isCausal: true,
@@ -578,7 +682,9 @@ function factory(dependencies) {
         /**
          * Origin thread of this message (if any).
          */
-        originThread: many2one('mail.thread'),
+        originThread: many2one('mail.thread', {
+            inverse: 'messagesAsOriginThread',
+        }),
         originThreadIsModeratedByCurrentPartner: attr({
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',
@@ -602,20 +708,29 @@ function factory(dependencies) {
         threads: many2many('mail.thread', {
             compute: '_computeThreads',
             dependencies: [
+                'isHistory',
+                'isModeratedByCurrentPartner',
+                'isNeedaction',
+                'isStarred',
+                'messagingHistory',
+                'messagingInbox',
+                'messagingModeration',
+                'messagingStarred',
                 'originThread',
-                'nonOriginThreads',
+                'serverChannels',
             ],
             inverse: 'messages',
         }),
         tracking_value_ids: attr({
             default: [],
         }),
-
         /**
-         * All channels that this message is linked to (from server message
-         * format).
+         * All channels containing this message on the server.
+         * Equivalent of python field `channel_ids`.
          */
-        serverChannels: many2many('mail.thread'),
+        serverChannels: many2many('mail.thread', {
+            inverse: 'messagesAsServerChannel',
+        }),
     };
 
     Message.modelName = 'mail.message';

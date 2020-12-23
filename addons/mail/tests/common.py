@@ -169,6 +169,15 @@ class MockEmail(common.BaseCase):
     # GATEWAY ASSERTS
     # ------------------------------------------------------------
 
+    def _find_sent_mail_wemail(self, email_to):
+        for email in self._mails:
+            if set(email['email_to']) == set([email_to]):
+                break
+        else:
+            raise AssertionError('sent mail not found for email_to %s' % (email_to))
+        return email
+
+
     def _find_mail_mail_wpartners(self, recipients, status, mail_message=None, author=None):
         for mail in self._new_mails:
             if author is not None and mail.author_id != author:
@@ -325,7 +334,7 @@ class MailCase(MockEmail):
     def flush_tracking(self):
         """ Force the creation of tracking values. """
         self.env['base'].flush()
-        self.cr.precommit()
+        self.cr.precommit.run()
 
     # ------------------------------------------------------------
     # MAIL MOCKS
@@ -636,7 +645,7 @@ class MailCase(MockEmail):
                 self.assertEqual(1, 0)
 
 
-class MailCommon(common.SavepointCase, MailCase):
+class MailCommon(common.TransactionCase, MailCase):
     """ Almost-void class definition setting the savepoint case + mock of mail.
     Used mainly for class inheritance in other applications and test modules. """
 

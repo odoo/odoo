@@ -48,7 +48,6 @@ except ImportError:
     psutil = None
 
 import odoo
-from odoo import fields
 from .service.server import memory_info
 from .service import security, model as service_model
 from .sql_db import flush_env
@@ -308,11 +307,15 @@ class WebRequest(object):
         # WARNING: do not inline or it breaks: raise...from evaluates strictly
         # LTR so would first remove traceback then copy lack of traceback
         new_cause = Exception().with_traceback(exception.__traceback__)
+        new_cause.__cause__ = exception.__cause__
         # tries to provide good chained tracebacks, just re-raising exception
         # generates a weird message as stacks just get concatenated, exceptions
         # not guaranteed to copy.copy cleanly & we want `exception` as leaf (for
         # callers to check & look at)
         raise exception.with_traceback(None) from new_cause
+
+    def _is_cors_preflight(self, endpoint):
+        return False
 
     def _call_function(self, *args, **kwargs):
         request = self
@@ -349,7 +352,7 @@ class WebRequest(object):
                 # flush here to avoid triggering a serialization error outside
                 # of this context, which would not retry the call
                 flush_env(self._cr)
-                self._cr.precommit()
+                self._cr.precommit.run()
             return result
 
         if self.db:
@@ -381,18 +384,20 @@ class WebRequest(object):
         """
         return self.session.db if not self.disable_db else None
 
-    def csrf_token(self, time_limit=3600):
+    def csrf_token(self, time_limit=None):
         """ Generates and returns a CSRF token for the current session
 
-        :param time_limit: the CSRF token should only be valid for the
-                           specified duration (in second), by default 1h,
+        :param time_limit: the CSRF token validity period (in seconds), or
                            ``None`` for the token to be valid as long as the
-                           current user's session is.
+                           current user session is (the default)
         :type time_limit: int | None
         :returns: ASCII token string
         """
         token = self.session.sid
-        max_ts = '' if not time_limit else int(time.time() + time_limit)
+
+        # if no `time_limit` => distant 1y expiry (31536000) so max_ts acts as salt, e.g. vs BREACH
+        max_ts = int(time.time() + (time_limit or 31536000))
+
         msg = '%s%s' % (token, max_ts)
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         assert secret, "CSRF protection requires a configured database secret"
@@ -753,11 +758,14 @@ class HttpRequest(WebRequest):
         except werkzeug.exceptions.HTTPException as e:
             return e
 
+    def _is_cors_preflight(self, endpoint):
+        return request.httprequest.method == 'OPTIONS' and endpoint and endpoint.routing.get('cors')
+
     def dispatch(self):
-        if request.httprequest.method == 'OPTIONS' and request.endpoint and request.endpoint.routing.get('cors'):
+        if self._is_cors_preflight(request.endpoint):
             headers = {
                 'Access-Control-Max-Age': 60 * 60 * 24,
-                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept'
+                'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept, Authorization'
             }
             return Response(status=200, headers=headers)
 
@@ -773,7 +781,7 @@ class HttpRequest(WebRequest):
 
 Odoo URLs are CSRF-protected by default (when accessed with unsafe
 HTTP methods). See
-https://www.odoo.com/documentation/13.0/reference/http.html#csrf for
+https://www.odoo.com/documentation/14.0/reference/http.html#csrf for
 more details.
 
 * if this endpoint is accessed through Odoo via py-QWeb form, embed a CSRF
@@ -975,36 +983,45 @@ class OpenERPSession(sessions.Session):
                 return self.__setitem__(k, v)
         object.__setattr__(self, k, v)
 
-    def authenticate(self, db, login=None, password=None, uid=None):
+    def authenticate(self, db, login=None, password=None):
         """
         Authenticate the current user with the given db, login and
         password. If successful, store the authentication parameters in the
-        current session and request.
-
-        :param uid: If not None, that user id will be used instead the login
-                    to authenticate the user.
+        current session and request, unless multi-factor-authentication
+        is activated. In that case, that last part will be done by
+        :ref:`finalize`.
         """
 
-        if uid is None:
-            wsgienv = request.httprequest.environ
-            env = dict(
-                base_location=request.httprequest.url_root.rstrip('/'),
-                HTTP_HOST=wsgienv['HTTP_HOST'],
-                REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-            )
-            uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
-        else:
-            security.check(db, uid, password)
+        wsgienv = request.httprequest.environ
+        env = dict(
+            interactive=True,
+            base_location=request.httprequest.url_root.rstrip('/'),
+            HTTP_HOST=wsgienv['HTTP_HOST'],
+            REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
+        )
+        uid = odoo.registry(db)['res.users'].authenticate(db, login, password, env)
+        self.pre_uid = uid
+
         self.rotate = True
         self.db = db
-        self.uid = uid
         self.login = login
-        self.session_token = uid and security.compute_session_token(self, request.env)
-        request.uid = uid
         request.disable_db = False
 
-        if uid: self.get_context()
+        user = request.env(user=uid)['res.users'].browse(uid)
+        if not user._mfa_url():
+            self.finalize()
+
         return uid
+
+    def finalize(self):
+        """ Finalizes a partial session, should be called on MFA validation to
+        convert a partial / pre-session into a full-fledged "logged-in" one
+        """
+        self.rotate = True
+        request.uid = self.uid = self.pop('pre_uid')
+        user = request.env(user=self.uid)['res.users'].browse(self.uid)
+        self.session_token = user._compute_session_token(self.sid)
+        self.get_context()
 
     def check_security(self):
         """

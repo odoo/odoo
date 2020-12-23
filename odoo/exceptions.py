@@ -47,9 +47,11 @@ class RedirectWarning(Exception):
     :param int action_id: id of the action where to perform the redirection
     :param str button_text: text to put on the button that will trigger
         the redirection.
+    :param dict additional_context: parameter passed to action_id.
+           Can be used to limit a view to active_ids for example.
     """
-    def __init__(self, message, action, button_text):
-        super().__init__(message, action, button_text)
+    def __init__(self, message, action, button_text, additional_context=None):
+        super().__init__(message, action, button_text, additional_context)
 
     # using this RedirectWarning won't crash if used as an UserError
     @property
@@ -123,9 +125,9 @@ class ValidationError(UserError):
 # Warning.
 
 class except_orm(UserError):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, name, value=None):
         warnings.warn("except_orm is a deprecated alias to UserError.", DeprecationWarning)
-        super().__init__(*args, **kwargs)
+        super().__init__(f"{name}: {value}")
 
 class Warning(UserError):
     def __init__(self, *args, **kwargs):

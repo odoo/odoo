@@ -1,30 +1,28 @@
 odoo.define("website_sale_product_TESTurator.tour_shop_custom_attribute_value", function (require) {
 "use strict";
-/**
- * Add custom steps to handle the optional products modal introduced
- * by the product TESTurator module.
- */
+
 var tour = require('web_tour.tour');
-require('website_sale.tour_shop_custom_attribute_value');
-
 var optionVariantImage;
-var addCartStepIndex = _.findIndex(tour.tours.shop_custom_attribute_value.steps, function (step) {
-    return (step.id === 'add_cart_step');
-});
 
-tour.tours.shop_custom_attribute_value.steps.splice(addCartStepIndex + 1, 0, {
-    trigger: 'div:contains(Custom TEST: Wood)',
-    extra_trigger: '.js_product.in_cart.main_product',
-    run: function (){} // checks that Yep, it's wood!
+tour.register("a_shop_custom_attribute_value", {
+    url: "/shop?search=Customizable Desk",
+    test: true,
+}, [{
+        content: "click on Customizable Desk",
+        trigger: '.oe_product_cart a:contains("Customizable Desk (TEST)")',
 }, {
-    trigger: 'button.js_add_cart_json:has(i.fa-plus)',
+    trigger: 'a.js_add_cart_json:has(i.fa-plus)',
     run: 'click',
 }, {
-    trigger: 'div.oe_striked_price span:contains(750)',
+    trigger: 'span.text-danger span:contains(750)',
     run: function (){}, // check
 }, {
-    trigger: 'span.oe_price span:contains(600)',
+    trigger: 'b.oe_price span:contains(600)',
     run: function (){}, // check
+}, {
+    id: 'add_cart_step',
+    trigger: 'a:contains(Add to Cart)',
+    run: 'click',
 }, {
     trigger: '.oe_optional_products_modal .js_product:eq(1) div:contains("Conference Chair (TEST) (Steel)")',
     run: function () {
@@ -64,6 +62,6 @@ tour.tours.shop_custom_attribute_value.steps.splice(addCartStepIndex + 1, 0, {
 }, {
     trigger: 'button:has(span:contains(Proceed to Checkout))',
     run: 'click',
-});
+}]);
 
 });

@@ -5,11 +5,12 @@ const components = {
     ThreadTextualTypingStatus: require('mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
+    beforeEach,
+    createRootComponent,
     nextAnimationFrame,
-    start: utilsStart,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -17,22 +18,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_textual_typing_status', {}, function () {
 QUnit.module('thread_textual_typing_status_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createThreadTextualTypingStatusComponent = async thread => {
-            const ThreadTextualTypingStatusComponent = components.ThreadTextualTypingStatus;
-            ThreadTextualTypingStatusComponent.env = this.env;
-            this.component = new ThreadTextualTypingStatusComponent(null, {
-                threadLocalId: thread.localId,
+            await createRootComponent(this, components.ThreadTextualTypingStatus, {
+                props: { threadLocalId: thread.localId },
+                target: this.widget.el,
             });
-            await afterNextRender(() => this.component.mount(this.widget.el));
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -40,50 +36,19 @@ QUnit.module('thread_textual_typing_status_tests.js', {
         };
     },
     async afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.ThreadTextualTypingStatus.env;
+        afterEach(this);
     },
 });
 
 QUnit.test('receive other member typing status "is typing"', async function (assert) {
     assert.expect(2);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
+    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.data['mail.channel'].records.push({
+        id: 20,
+        members: [this.data.currentPartnerId, 17],
     });
-    await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
-    });
+    await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 &&
         thread.model === 'mail.channel'
@@ -100,8 +65,9 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7,
             is_typing: true,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -116,35 +82,12 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
 QUnit.test('receive other member typing status "is typing" then "no longer is typing"', async function (assert) {
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
+    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.data['mail.channel'].records.push({
+        id: 20,
+        members: [this.data.currentPartnerId, 17],
     });
-    await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
-    });
+    await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 &&
         thread.model === 'mail.channel'
@@ -161,8 +104,9 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7,
             is_typing: true,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -177,8 +121,9 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7,
             is_typing: false,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -193,34 +138,12 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
 QUnit.test('assume other member typing status becomes "no longer is typing" after 60 seconds without any updated typing status', async function (assert) {
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
+    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.data['mail.channel'].records.push({
+        id: 20,
+        members: [this.data.currentPartnerId, 17],
     });
     await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
         hasTimeControl: true,
     });
     const thread = this.env.models['mail.thread'].find(thread =>
@@ -239,8 +162,9 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7,
             is_typing: true,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -262,34 +186,12 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
 QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer of assuming no longer typing', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'demo@odoo.com',
-                    id: 7,
-                    name: 'Demo',
-                }],
-                name: "General",
-            }],
-        },
+    this.data['res.partner'].records.push({ id: 17, name: 'Demo' });
+    this.data['mail.channel'].records.push({
+        id: 20,
+        members: [this.data.currentPartnerId, 17],
     });
     await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
         hasTimeControl: true,
     });
     const thread = this.env.models['mail.thread'].find(thread =>
@@ -308,8 +210,9 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 7,
             is_typing: true,
+            partner_id: 17,
+            partner_name: "Demo",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -324,8 +227,9 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
     await this.env.testUtils.advanceTime(50 * 1000);
     const typingData = {
         info: 'typing_status',
-        partner_id: 7,
         is_typing: true,
+        partner_id: 17,
+        partner_name: "Demo",
     };
     const notification = [[false, 'mail.channel', 20], typingData];
     this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -348,43 +252,16 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
 QUnit.test('receive several other members typing status "is typing"', async function (assert) {
     assert.expect(6);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                channel_type: 'channel',
-                id: 20,
-                is_pinned: true,
-                members: [{
-                    email: 'admin@odoo.com',
-                    id: 3,
-                    name: 'Admin',
-                }, {
-                    email: 'other10@odoo.com',
-                    id: 10,
-                    name: 'Other10',
-                }, {
-                    email: 'other11@odoo.com',
-                    id: 11,
-                    name: 'Other11',
-                }, {
-                    email: 'other12@odoo.com',
-                    id: 12,
-                    name: 'Other12',
-                }],
-                name: "General",
-            }],
-        },
+    this.data['res.partner'].records.push(
+        { id: 10, name: 'Other10' },
+        { id: 11, name: 'Other11' },
+        { id: 12, name: 'Other12' }
+    );
+    this.data['mail.channel'].records.push({
+        id: 20,
+        members: [this.data.currentPartnerId, 10, 11, 12],
     });
-    await this.start({
-        env: {
-            session: {
-                name: 'Admin',
-                partner_display_name: 'Your Company, Admin',
-                partner_id: 3,
-                uid: 2,
-            },
-        },
-    });
+    await this.start();
     const thread = this.env.models['mail.thread'].find(thread =>
         thread.id === 20 &&
         thread.model === 'mail.channel'
@@ -401,8 +278,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 10,
             is_typing: true,
+            partner_id: 10,
+            partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -417,8 +295,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 11,
             is_typing: true,
+            partner_id: 11,
+            partner_name: "Other11",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -433,8 +312,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 12,
             is_typing: true,
+            partner_id: 12,
+            partner_name: "Other12",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -449,8 +329,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 10,
             is_typing: false,
+            partner_id: 10,
+            partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -465,8 +346,9 @@ QUnit.test('receive several other members typing status "is typing"', async func
     await afterNextRender(() => {
         const typingData = {
             info: 'typing_status',
-            partner_id: 10,
             is_typing: true,
+            partner_id: 10,
+            partner_name: "Other10",
         };
         const notification = [[false, 'mail.channel', 20], typingData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);

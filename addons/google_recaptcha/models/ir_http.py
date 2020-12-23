@@ -21,7 +21,7 @@ class Http(models.AbstractModel):
         """
         ip_addr = request.httprequest.remote_addr
         token = request.params.pop('recaptcha_token_response', False)
-        recaptcha_result = request.env['ir.http']._verify_recaptcha_token(ip_addr, token, 'website_form')
+        recaptcha_result = request.env['ir.http']._verify_recaptcha_token(ip_addr, token, action)
         if recaptcha_result in ['is_human', 'no_secret']:
             return True
         if recaptcha_result == 'wrong_secret':

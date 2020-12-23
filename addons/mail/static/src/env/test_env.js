@@ -1,7 +1,6 @@
 odoo.define('mail/static/src/env/test_env.js', function (require) {
 'use strict';
 
-const ModelManager = require('mail/static/src/model/model_manager.js');
 const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const { nextTick } = require('mail/static/src/utils/utils.js');
 
@@ -13,28 +12,16 @@ const { EventBus } = owl.core;
  * @returns {Object}
  */
 function addMessagingToEnv(providedEnv = {}) {
-
-    const defaultEnv = Object.assign({}, providedEnv, {
-        session: Object.assign({
-            is_bound: Promise.resolve(),
-            name: 'Admin',
-            partner_display_name: 'Your Company, Admin',
-            partner_id: 3,
-            uid: 2,
-            url: s => s,
-        }, providedEnv.session)
-    });
-
-    let env = Object.assign({
-        loadingBaseDelayDuration: defaultEnv.loadingBaseDelayDuration || 0,
-    }, defaultEnv);
+    const env = Object.assign(providedEnv);
 
     /**
      * Messaging store
      */
     const store = new Store({
         env,
-        state: {},
+        state: {
+            messagingRevNumber: 0,
+        },
     });
 
     /**
@@ -69,10 +56,19 @@ function addMessagingToEnv(providedEnv = {}) {
             }
             return this.messaging.isInitialized;
         },
+        /**
+         * States whether the environment is in QUnit test or not.
+         *
+         * Useful to prevent some behaviour in QUnit tests, like applying
+         * style of attachment that uses url.
+         */
+        isQUnitTest: true,
+        loadingBaseDelayDuration: providedEnv.loadingBaseDelayDuration || 0,
         messaging: undefined,
+        messagingCreatedPromise: makeDeferred(),
         messagingInitializedDeferred: makeDeferred(),
         messagingBus: new EventBus(),
-        modelManager: new ModelManager(),
+        modelManager: undefined,
         store,
     });
 

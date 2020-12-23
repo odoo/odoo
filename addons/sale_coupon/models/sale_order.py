@@ -52,6 +52,8 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_cancel()
         self.generated_coupon_ids.write({'state': 'expired'})
         self.applied_coupon_ids.write({'state': 'new'})
+        self.applied_coupon_ids.sales_order_id = False
+        self.recompute_coupon_lines()
         return res
 
     def action_draft(self):
@@ -65,9 +67,9 @@ class SaleOrder(models.Model):
 
     def _is_reward_in_order_lines(self, program):
         self.ensure_one()
-        return self.order_line.filtered(lambda line:
-            line.product_id == program.reward_product_id and
-            line.product_uom_qty >= program.reward_product_quantity)
+        order_quantity = sum(self.order_line.filtered(lambda line:
+            line.product_id == program.reward_product_id).mapped('product_uom_qty'))
+        return order_quantity >= program.reward_product_quantity
 
     def _is_global_discount_already_applied(self):
         applied_programs = self.no_code_promo_program_ids + \
@@ -78,21 +80,22 @@ class SaleOrder(models.Model):
     def _get_reward_values_product(self, program):
         price_unit = self.order_line.filtered(lambda line: program.reward_product_id == line.product_id)[0].price_reduce
 
-        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._is_valid_product(x.product_id))
+        order_lines = (self.order_line - self._get_reward_lines()).filtered(lambda x: program._get_valid_products(x.product_id))
         max_product_qty = sum(order_lines.mapped('product_uom_qty')) or 1
+        total_qty = sum(self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).mapped('product_uom_qty'))
         # Remove needed quantity from reward quantity if same reward and rule product
-        if program._is_valid_product(program.reward_product_id):
+        if program._get_valid_products(program.reward_product_id):
             # number of times the program should be applied
             program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
             # multipled by the reward qty
             reward_product_qty = program.reward_product_quantity * program_in_order
             # do not give more free reward than products
-            reward_product_qty = min(reward_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
+            reward_product_qty = min(reward_product_qty, total_qty)
             if program.rule_minimum_amount:
                 order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
-            reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
+            reward_product_qty = min(max_product_qty, total_qty)
 
         reward_qty = min(int(int(max_product_qty / program.rule_min_quantity) * program.reward_product_quantity), reward_product_qty)
         # Take the default taxes on the reward product, mapped with the fiscal position
@@ -132,7 +135,7 @@ class SaleOrder(models.Model):
     def _get_reward_values_discount(self, program):
         if program.discount_type == 'fixed_amount':
             return [{
-                'name': _("Discount: ") + program.name,
+                'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
                 'price_unit': - self._get_reward_values_discount_fixed_amount(program),
                 'product_uom_qty': 1.0,
@@ -150,7 +153,7 @@ class SaleOrder(models.Model):
                     taxes = self.fiscal_position_id.map_tax(line.tax_id)
 
                     reward_dict[line.tax_id] = {
-                        'name': _("Discount: ") + program.name,
+                        'name': _("Discount: %s", program.name),
                         'product_id': program.discount_line_product_id.id,
                         'price_unit': - discount_line_amount,
                         'product_uom_qty': 1.0,
@@ -174,14 +177,12 @@ class SaleOrder(models.Model):
                     else:
                         taxes = self.fiscal_position_id.map_tax(line.tax_id)
 
-                        tax_name = ""
-                        if len(taxes) == 1:
-                            tax_name = " - " + _("On product with following tax: ") + ', '.join(taxes.mapped('name'))
-                        elif len(taxes) > 1:
-                            tax_name = " - " + _("On product with following taxes: ") + ', '.join(taxes.mapped('name'))
-
                         reward_dict[line.tax_id] = {
-                            'name': _("Discount: ") + program.name + tax_name,
+                            'name': _(
+                                "Discount: %(program)s - On product with following taxes: %(taxes)s",
+                                program=program.name,
+                                taxes=", ".join(taxes.mapped('name')),
+                            ),
                             'product_id': program.discount_line_product_id.id,
                             'price_unit': - discount_line_amount,
                             'product_uom_qty': 1.0,
@@ -229,7 +230,7 @@ class SaleOrder(models.Model):
         if coupon:
             coupon.write({'state': 'reserved'})
         else:
-            coupon = self.env['coupon.coupon'].create({
+            coupon = self.env['coupon.coupon'].sudo().create({
                 'program_id': program.id,
                 'state': 'reserved',
                 'partner_id': self.partner_id.id,
@@ -240,31 +241,44 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
+        template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
-            for coupon in self.generated_coupon_ids:
-                self.message_post_with_template(
-                    template.id, composition_mode='comment',
-                    model='coupon.coupon', res_id=coupon.id,
-                    email_layout_xmlid='mail.mail_notification_light',
-                )
+            for order in self:
+                for coupon in order.generated_coupon_ids:
+                    order.message_post_with_template(
+                        template.id, composition_mode='comment',
+                        model='coupon.coupon', res_id=coupon.id,
+                        email_layout_xmlid='mail.mail_notification_light',
+                    )
 
     def _get_applicable_programs(self):
         """
         This method is used to return the valid applicable programs on given order.
-        param: order - The sale order for which method will get applicable programs.
         """
         self.ensure_one()
-        programs = self.env['coupon.program'].search([
-        ])._filter_programs_from_common_rules(self)
-        if self.promo_code:
-            programs._filter_promo_programs_with_code(self)
+        programs = self.env['coupon.program'].with_context(
+            no_outdated_coupons=True,
+        ).search([
+            ('company_id', 'in', [self.company_id.id, False]),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
+        ], order="id")._filter_programs_from_common_rules(self)
+        # no impact code...
+        # should be programs = programs.filtered if we really want to filter...
+        # if self.promo_code:
+        #     programs._filter_promo_programs_with_code(self)
         return programs
 
     def _get_applicable_no_code_promo_program(self):
         self.ensure_one()
-        programs = self.env['coupon.program'].search([
+        programs = self.env['coupon.program'].with_context(
+            no_outdated_coupons=True,
+            applicable_coupon=True,
+        ).search([
             ('promo_code_usage', '=', 'no_code_needed'),
+            '|', ('rule_date_from', '=', False), ('rule_date_from', '<=', self.date_order),
+            '|', ('rule_date_to', '=', False), ('rule_date_to', '>=', self.date_order),
+            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
 
@@ -285,6 +299,9 @@ class SaleOrder(models.Model):
         programs = order._get_applicable_no_code_promo_program()
         programs = programs._keep_only_most_interesting_auto_applied_global_discount_program()
         for program in programs:
+            # VFE REF in master _get_applicable_no_code_programs already filters programs
+            # why do we need to reapply this bunch of checks in _check_promo_code ????
+            # We should only apply a little part of the checks in _check_promo_code...
             error_status = program._check_promo_code(order, False)
             if not error_status.get('error'):
                 if program.promo_applicability == 'on_next_order':
@@ -351,30 +368,39 @@ class SaleOrder(models.Model):
         self.ensure_one()
         order = self
 
-        applicable_programs = order._get_applicable_no_code_promo_program() + order._get_applicable_programs() + order._get_valid_applied_coupon_program()
-        applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
-        applied_programs = order._get_applied_programs_with_rewards_on_current_order() + order._get_applied_programs_with_rewards_on_next_order()
+        applied_programs = order._get_applied_programs()
+        applicable_programs = self.env['coupon.program']
+        if applied_programs:
+            applicable_programs = order._get_applicable_programs() + order._get_valid_applied_coupon_program()
+            applicable_programs = applicable_programs._keep_only_most_interesting_auto_applied_global_discount_program()
         programs_to_remove = applied_programs - applicable_programs
-        products_to_remove = programs_to_remove.mapped('discount_line_product_id')
 
+        reward_product_ids = applied_programs.discount_line_product_id.ids
         # delete reward line coming from an archived coupon (it will never be updated/removed when recomputing the order)
-        invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in (applied_programs).mapped('discount_line_product_id').ids)
+        invalid_lines = order.order_line.filtered(lambda line: line.is_reward_line and line.product_id.id not in reward_product_ids)
 
-        # Invalid generated coupon for which we are not eligible anymore ('expired' since it is specific to this SO and we may again met the requirements)
-        self.generated_coupon_ids.filtered(lambda coupon: coupon.program_id.discount_line_product_id.id in products_to_remove.ids).write({'state': 'expired'})
-        # Reset applied coupons for which we are not eligible anymore ('valid' so it can be use on another )
-        coupons_to_remove = order.applied_coupon_ids.filtered(lambda coupon: coupon.program_id in programs_to_remove)
-        coupons_to_remove.write({'state': 'new'})
-
-        # Unbind promotion and coupon programs which requirements are not met anymore
         if programs_to_remove:
+            product_ids_to_remove = programs_to_remove.discount_line_product_id.ids
+
+            if product_ids_to_remove:
+                # Invalid generated coupon for which we are not eligible anymore ('expired' since it is specific to this SO and we may again met the requirements)
+                self.generated_coupon_ids.filtered(lambda coupon: coupon.program_id.discount_line_product_id.id in product_ids_to_remove).write({'state': 'expired'})
+
+            # Reset applied coupons for which we are not eligible anymore ('valid' so it can be use on another )
+            coupons_to_remove = order.applied_coupon_ids.filtered(lambda coupon: coupon.program_id in programs_to_remove)
+            coupons_to_remove.write({'state': 'new'})
+
+            # Unbind promotion and coupon programs which requirements are not met anymore
             order.no_code_promo_program_ids -= programs_to_remove
             order.code_promo_program_id -= programs_to_remove
-        if coupons_to_remove:
-            order.applied_coupon_ids -= coupons_to_remove
 
-        # Remove their reward lines
-        invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in products_to_remove.ids)
+            if coupons_to_remove:
+                order.applied_coupon_ids -= coupons_to_remove
+
+            # Remove their reward lines
+            if product_ids_to_remove:
+                invalid_lines |= order.order_line.filtered(lambda line: line.product_id.id in product_ids_to_remove)
+
         invalid_lines.unlink()
 
     def _get_applied_programs_with_rewards_on_current_order(self):
@@ -389,6 +415,17 @@ class SaleOrder(models.Model):
     def _get_applied_programs_with_rewards_on_next_order(self):
         return self.no_code_promo_program_ids.filtered(lambda p: p.promo_applicability == 'on_next_order') + \
             self.code_promo_program_id.filtered(lambda p: p.promo_applicability == 'on_next_order')
+
+    def _get_applied_programs(self):
+        """Returns all applied programs on current order:
+
+        Expected to return same result than:
+
+            self._get_applied_programs_with_rewards_on_current_order()
+            +
+            self._get_applied_programs_with_rewards_on_next_order()
+        """
+        return self.code_promo_program_id + self.no_code_promo_program_ids + self.applied_coupon_ids.mapped('program_id')
 
 
 class SaleOrderLine(models.Model):
@@ -439,9 +476,11 @@ class SaleOrderLine(models.Model):
         if 'product_id' in fnames:
             Program = self.env['coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
+            field_total_order_count = Program._fields['total_order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
+            programs |= self.env.cache.get_records(Program, field_total_order_count)
             if programs:
                 products = self.filtered('is_reward_line').mapped('product_id')
                 for program in programs:
                     if program.discount_line_product_id in products:
-                        self.env.cache.invalidate([(field_order_count, program.ids)])
+                        self.env.cache.invalidate([(field_order_count, program.ids), (field_total_order_count, program.ids)])

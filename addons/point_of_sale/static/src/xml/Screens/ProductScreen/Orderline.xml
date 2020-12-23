@@ -4,9 +4,9 @@
     <t t-name="Orderline" owl="1">
         <li t-on-click="selectLine" class="orderline" t-att-class="addedClasses">
             <span class="product-name">
-                <t t-esc="props.line.get_product().display_name"/>
+                <t t-esc="props.line.get_full_product_name()"/>
                 <span> </span>
-                <t t-if="props.line.get_product().tracking!=='none'">
+                <t t-if="props.line.get_product().tracking!=='none' &amp;&amp; (env.pos.picking_type.use_create_lots || env.pos.picking_type.use_existing_lots)">
                     <t t-if="props.line.has_valid_product_lot()">
                         <i  t-on-click.stop="lotIconClicked"
                             class="oe_link_icon fa fa-list oe_icon line-lot-icon oe_green"
@@ -60,6 +60,15 @@
                     </li>
                 </t>
             </ul>
+            <t t-if="props.line.get_lot_lines()">
+                <ul class="info-list">
+                    <t t-foreach="props.line.get_lot_lines()" t-as="lot">
+                        <li>
+                            SN <t t-esc="lot.attributes['lot_name']"/>
+                        </li>
+                    </t>
+                </ul>
+            </t>
         </li>
     </t>
 

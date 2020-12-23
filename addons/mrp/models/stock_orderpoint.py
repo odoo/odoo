@@ -24,7 +24,11 @@ class StockWarehouseOrderpoint(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'title': _('The following replenishment order has been generated'),
-                    'message': '<a href="#action=%d&id=%d&model=mrp.production" target="_blank">%s</a>' % (action.id, production.id, production.name),
+                    'message': '%s',
+                    'links': [{
+                        'label': production.name,
+                        'url': f'#action={action.id}&id={production.id}&model=mrp.production'
+                    }],
                     'sticky': False,
                 }
             }

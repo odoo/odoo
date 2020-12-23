@@ -151,10 +151,6 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
         <data>
-            <xpath expr="//button[@name='preview_invoice']" position="after">
-                <button name="post" type="object" icon="fa-envelope-o" class="btn btn-primary" string="Resend"
-                        attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', '!=', 'invalid')]}"/>
-            </xpath>
             <xpath expr="//field[@name='move_type']" position="before">
                 <div class="alert alert-success" role="alert"
                      attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('l10n_it_send_state', 'not in', ['delivered', 'delivered_accepted', 'delivered_refused', 'delivered_expired', 'failed_delivery'])]}">

@@ -24,6 +24,15 @@ class Mailing(models.Model):
     mailing_type = fields.Selection(selection_add=[
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
+
+    # 'sms_subject' added to override 'subject' field (string attribute should be labelled "Title" when mailing_type == 'sms').
+    # 'sms_subject' should have the same helper as 'subject' field when 'mass_mailing_sms' installed.
+    # otherwise 'sms_subject' will get the old helper from 'mass_mailing' module.
+    # overriding 'subject' field helper in this model is not working, since the helper will keep the new value
+    # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).                    
+    sms_subject = fields.Char('Title', help='For an email, the subject your recipients will see in their inbox.\n'
+                              'For an SMS, the internal title of the message.',
+                              related='subject', translate=True, readonly=False)
     # sms options
     body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
@@ -34,7 +43,7 @@ class Mailing(models.Model):
         'Unregistered IAP account', compute='_compute_sms_has_iap_failure',
         help='UX Field to propose to Register the SMS IAP account')
     sms_force_send = fields.Boolean(
-        'Send Directly', help='Use at your own risks.')
+        'Send Directly', help='Immediately send the SMS Mailing instead of queuing up. Use at your own risk.')
     # opt_out_link
     sms_allow_unsubscribe = fields.Boolean('Include opt-out link', default=False)
 
@@ -75,19 +84,19 @@ class Mailing(models.Model):
 
 
     # --------------------------------------------------
-    # BUSINESS / VIEWS ACTIONS
+    # ORM OVERRIDES
     # --------------------------------------------------
 
-    def action_put_in_queue_sms(self):
-        res = self.action_put_in_queue()
-        if self.sms_force_send:
-            self.action_send_mail()
-        return res
+    @api.model
+    def create(self, values):
+        # Get subject from "sms_subject" field when SMS installed (used to build the name of record in the super 'create' method)
+        if values.get('mailing_type') == 'sms' and values.get('sms_subject'):
+            values['subject'] = values['sms_subject']
+        return super(Mailing, self).create(values)
 
-    def action_send_now_sms(self):
-        if not self.sms_force_send:
-            self.write({'sms_force_send': True})
-        return self.action_send_mail()
+    # --------------------------------------------------
+    # BUSINESS / VIEWS ACTIONS
+    # --------------------------------------------------
 
     def action_retry_failed(self):
         mass_sms = self.filtered(lambda m: m.mailing_type == 'sms')
@@ -224,8 +233,55 @@ class Mailing(models.Model):
 
             composer = self.env['sms.composer'].with_context(active_id=False).create(mailing._send_sms_get_composer_values(res_ids))
             composer._action_send_sms()
-            mailing.write({'state': 'done', 'sent_date': fields.Datetime.now()})
+            mailing.write({
+                'state': 'done',
+                'sent_date': fields.Datetime.now(),
+                'kpi_mail_required': not mailing.sent_date,
+                })
         return True
+
+    # ------------------------------------------------------
+    # STATISTICS
+    # ------------------------------------------------------
+
+    def _prepare_statistics_email_values(self):
+        """Return some statistics that will be displayed in the mailing statistics email.
+
+        Each item in the returned list will be displayed as a table, with a title and
+        1, 2 or 3 columns.
+        """
+        values = super(Mailing, self)._prepare_statistics_email_values()
+        if self.mailing_type == 'sms':
+            mailing_type = self._get_pretty_mailing_type()
+            values['title'] = _('24H Stats of %(mailing_type)s "%(mailing_name)s"',
+                                mailing_type=mailing_type,
+                                mailing_name=self.subject
+                               )
+            values['kpi_data'][0] = {
+                'kpi_fullname': _('Report for %(expected)i %(mailing_type)s Sent',
+                                  expected=self.expected,
+                                  mailing_type=mailing_type
+                                 ),
+                'kpi_col1': {
+                    'value': f'{self.received_ratio}%',
+                    'col_subtitle': _('RECEIVED (%i)', self.delivered),
+                },
+                'kpi_col2': {
+                    'value': f'{self.clicks_ratio}%',
+                    'col_subtitle': _('CLICKED (%i)', self.clicked),
+                },
+                'kpi_col3': {
+                    'value': f'{self.bounced_ratio}%',
+                    'col_subtitle': _('BOUNCED (%i)', self.bounced),
+                },
+                'kpi_action': None,
+            }
+        return values
+
+    def _get_pretty_mailing_type(self):
+        if self.mailing_type == 'sms':
+            return _('SMS Text Message')
+        return super(Mailing, self)._get_pretty_mailing_type()
 
     # --------------------------------------------------
     # TOOLS
@@ -237,3 +293,13 @@ class Mailing(models.Model):
             mailing_domain = expression.AND([mailing_domain, [('phone_sanitized_blacklisted', '=', False)]])
 
         return mailing_domain
+
+    def convert_links(self):
+        sms_mailings = self.filtered(lambda m: m.mailing_type == 'sms')
+        res = {}
+        for mailing in sms_mailings:
+            tracker_values = mailing._get_link_tracker_values()
+            body = mailing._shorten_links_text(mailing.body_plaintext, tracker_values)
+            res[mailing.id] = body
+        res.update(super(Mailing, self - sms_mailings).convert_links())
+        return res

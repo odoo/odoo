@@ -44,9 +44,8 @@ class TestReplenishWizard(TestStockCommon):
         })
         replenish_wizard.launch_replenishment()
         last_po_id = self.env['purchase.order'].search([
-            ('origin', 'ilike', '%Manual Replenishment%'),
             ('partner_id', '=', self.vendor.id)
-        ])[-1]
+        ], order="id desc", limit=1)
         self.assertTrue(last_po_id, 'Purchase Order not found')
         order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
         self.assertTrue(order_line, 'The product is not in the Purchase Order')
@@ -93,9 +92,7 @@ class TestReplenishWizard(TestStockCommon):
             'warehouse_id': self.wh.id,
         })
         replenish_wizard.launch_replenishment()
-        last_po_id = self.env['purchase.order'].search([
-            ('origin', 'ilike', '%Manual Replenishment%'),
-        ])[-1]
+        last_po_id = self.env['purchase.order'].search([], order="id desc", limit=1)
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 100)
 
@@ -148,9 +145,7 @@ class TestReplenishWizard(TestStockCommon):
             'warehouse_id': self.wh.id,
         })
         replenish_wizard.launch_replenishment()
-        last_po_id = self.env['purchase.order'].search([
-            ('origin', 'ilike', '%Manual Replenishment%'),
-        ])[-1]
+        last_po_id = self.env['purchase.order'].search([], order="id desc", limit=1)
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 100)
 
@@ -193,9 +188,7 @@ class TestReplenishWizard(TestStockCommon):
             'warehouse_id': self.wh.id,
         })
         replenish_wizard.launch_replenishment()
-        last_po_id = self.env['purchase.order'].search([
-            ('origin', 'ilike', '%Manual Replenishment%'),
-        ])[-1]
+        last_po_id = self.env['purchase.order'].search([], order="id desc", limit=1)
         self.assertEqual(last_po_id.partner_id, vendor2)
 
     def test_chose_supplier_4(self):
@@ -241,9 +234,7 @@ class TestReplenishWizard(TestStockCommon):
             'warehouse_id': self.wh.id,
         })
         replenish_wizard.launch_replenishment()
-        last_po_id = self.env['purchase.order'].search([
-            ('origin', 'ilike', '%Manual Replenishment%'),
-        ])[-1]
+        last_po_id = self.env['purchase.order'].search([], order="id desc", limit=1)
 
         self.assertEqual(last_po_id.partner_id, vendor1)
         self.assertEqual(last_po_id.order_line.price_unit, 60)

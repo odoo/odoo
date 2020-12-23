@@ -74,6 +74,7 @@ class TestPartnerAssign(TransactionCase):
         self.assertEqual(lead.partner_assigned_id, partner_uk, "Opportuniy is not assigned nearest partner")
         self.assertTrue(50 < lead.partner_latitude < 55, "Latitude is wrong: 50 < %s < 55" % lead.partner_latitude)
         self.assertTrue(-4 < lead.partner_longitude < -1, "Longitude is wrong: -4 < %s < -1" % lead.partner_longitude)
+        self.assertTrue(lead.date_partner_assign, "Partner Assignment Date should be set")
 
         # I forward this opportunity to its nearest partner.
         context = dict(self.env.context, default_model='crm.lead', default_res_id=lead.id, active_ids=lead.ids)
@@ -148,13 +149,9 @@ class TestPartnerLeadPortal(TestCrmCommon):
             'contact_name': 'Renaud Rutten',
         })
         opportunity = self.env['crm.lead'].browse(data['id'])
-        # TDE FIXME
-        # This test crashed depending on group_use_lead configuration as default team
-        # depends on a default_type that is not propagated but computed separately.
-        # Solving it require some cleaning in crm models, like removing onchanges / default to compute
-        # salesmanteam = self.env['crm.team']._get_default_team_id(user_id=self.user_portal.user_id.id)
+        salesmanteam = self.env['crm.team']._get_default_team_id(user_id=self.user_portal.user_id.id)
 
-        # self.assertEqual(opportunity.team_id, salesmanteam, 'The created opportunity should have the same team as the salesman default team of the opportunity creator.')
+        self.assertEqual(opportunity.team_id, salesmanteam, 'The created opportunity should have the same team as the salesman default team of the opportunity creator.')
         self.assertEqual(opportunity.partner_assigned_id, self.user_portal.partner_id, 'Assigned Partner of created opportunity is the (portal) creator.')
 
     def test_portal_mixin_url(self):

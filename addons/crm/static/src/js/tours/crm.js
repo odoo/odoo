@@ -9,6 +9,7 @@ var _t = core._t;
 tour.register('crm_tour', {
     url: "/web",
     rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
+    sequence: 5,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
     content: _t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.'),
@@ -26,18 +27,20 @@ tour.register('crm_tour', {
     position: 'bottom',
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id']",
-    content: _t('Look for a Contact or create a new one.<br><i>Tip : Did you know you can search by VAT Number as well?</i>'),
-    position: "right",
+    content: _t('<b>Write a few letters</b> to look for a company, or create a new one.'),
+    position: "top",
     run: function (actions) {
         actions.text("Brandon Freeman", this.$anchor.find("input"));
     },
 }, {
-    trigger: ".o_kanban_quick_create .o_field_widget[name='name']",
+    trigger: ".ui-menu-item > a",
     auto: true,
+    in_modal: false,
 }, {
-    trigger: '.o_kanban_quick_create .o_field_monetary[name="planned_revenue"]',
+    trigger: '.o_kanban_quick_create .o_field_monetary[name="expected_revenue"] input',
     content: _t("Define here the Expected Revenue of this Opportunity."),
     position: 'right',
+    run: "text 12.3",
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
     content: _t("Now, <b>add your Opportunity</b> to your Pipeline."),

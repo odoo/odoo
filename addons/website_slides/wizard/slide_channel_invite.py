@@ -28,7 +28,6 @@ class SlideChannelInvite(models.TransientModel):
     partner_ids = fields.Many2many('res.partner', string='Recipients')
     # slide channel
     channel_id = fields.Many2one('slide.channel', string='Slide channel', required=True)
-    channel_url = fields.Char(related="channel_id.website_url", readonly=True)
 
     @api.depends('template_id')
     def _compute_template_values(self):
@@ -107,10 +106,13 @@ class SlideChannelInvite(models.TransientModel):
             except ValueError:
                 _logger.warning('QWeb template %s not found when sending slide channel mails. Sending without layouting.' % (notif_layout))
             else:
+                # could be great to use _notify_prepare_template_context someday
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=mail_values['body_html'], record_name=self.channel_id.name)),
-                    'model_description': self.env['ir.model']._get('website_slides.slide_channel').display_name,
+                    'model_description': self.env['ir.model']._get('slide.channel').display_name,
+                    'record': slide_channel_partner,
                     'company': self.env.company,
+                    'signature': self.channel_id.user_id.signature,
                 }
                 body = template._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
                 mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)

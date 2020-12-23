@@ -16,6 +16,7 @@
                         <field name="sms_number"/>
                         <field name="failure_type" string="Reason"/>
                         <field name="resend" widget="boolean_toggle"/>
+                        <field name="notification_id" invisible="1"/>
                     </tree>
                 </field>
                 <div class="alert alert-warning" role="alert" attrs="{'invisible': [('has_cancel', '=', False)]}">

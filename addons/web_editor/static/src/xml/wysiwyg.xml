@@ -125,7 +125,7 @@
             <t t-call="wysiwyg.widgets.files.submenu"/>
             <div class="form-text o_we_error_text"/>
             <div class="o_we_existing_attachments"/>
-            <div class="mt-4 text-center mx-auto">
+            <div class="mt-4 text-center mx-auto o_we_load_more">
                 <button class="btn btn-primary o_load_more d-none" type="button">Load more...</button>
                 <div class="mt-4 o_load_done_msg d-none">
                     <span><i>All images have been loaded</i></span>
@@ -170,12 +170,17 @@
             <t t-set="searchPlaceholder">Search an image</t>
             <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
             <div class="d-flex justify-content-end flex-grow-1 pr-3">
-                <div t-attf-class="custom-control custom-switch #{__debug__ or 'd-none'}">
+                <div t-attf-class="custom-control custom-switch #{__debug__ and 'd-flex' or 'd-none'} align-items-center mr-2">
                     <input class="o_we_show_optimized ml-2 custom-control-input" type="checkbox" id="o_we_show_optimized_switch"/>
                     <label class="custom-control-label" for="o_we_show_optimized_switch">
                         Show optimized images
                     </label>
                 </div>
+                <select class="custom-select o_we_search_select">
+                    <option value="all">All</option>
+                    <option value="database">My Images</option>
+                    <option value="media-library">Illustrations</option>
+                </select>
             </div>
         </t>
     </t>
@@ -288,13 +293,21 @@
 
     <t t-name="wysiwyg.widgets.image.existing.attachments">
         <div class="o_we_existing_attachments o_we_images d-flex flex-wrap w-100 justify-content-between align-items-stretch my-0">
-            <div t-if="!attachments.length" class="o_nocontent_help">
-                <p class="o_empty_folder_image">No images found.</p>
-                <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
-            </div>
+            <t t-if="!widget.hasContent()">
+                <div t-if="widget.needle" class="o_nocontent_help">
+                    <p class="o_empty_folder_image">No images found.</p>
+                    <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
+                </div>
+                <div t-else="" class="o_we_search_prompt">
+                    <h2>Get the perfect image by searching in our library of copyright free photos and illustrations.</h2>
+                </div>
+            </t>
             <t t-else="">
-                <t t-foreach="attachments" t-as="attachment">
+                <t t-if="['all', 'database'].includes(widget.searchService)" t-foreach="attachments" t-as="attachment">
                     <t t-call="wysiwyg.widgets.image.existing.attachment"/>
+                </t>
+                <t t-if="['all', 'media-library'].includes(widget.searchService)" t-foreach="libraryMedia" t-as="media">
+                    <t t-call="wysiwyg.widgets.image.library_media"/>
                 </t>
                 <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
                 <t t-foreach="20">
@@ -306,13 +319,21 @@
 
     <t t-name="wysiwyg.widgets.image.existing.attachment">
         <t t-set="isOptimized" t-value="!!attachment.original_id"/>
-        <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none'}" t-att-data-id="attachment.id">
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none' or ''} align-items-center justify-content-center" t-att-data-id="attachment.id">
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
-            <div t-attf-class="d-flex align-items-center justify-content-center h-100 w-100">
-                <!-- 256 is 2 * ImageWidget.MIN_ROW_HEIGHT, hopefully the highest display width of any image -->
-                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.image_src}?height=256" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+            <div class="o_we_media_dialog_img_wrapper">
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.thumbnail_src or attachment.image_src}" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
             <span t-if="isOptimized" class="badge badge-success">Optimized</span>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.library_media">
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light align-items-center justify-content-center o_library_media_cell" t-att-data-media-id="media.id">
+            <div class="o_we_media_dialog_img_wrapper">
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{media.thumbnail_url}" t-att-title="media.tooltip or ''" crossorigin="anonymous"/>
+                <a t-if="media.author" class="o_we_media_author" t-att-href="media.author_link" target="_blank" t-esc="media.author"/>
+            </div>
         </div>
     </t>
 
@@ -389,10 +410,10 @@
                     <label class="col-form-label" for="o_video_text">
                         Video code <small>(URL or Embed)</small>
                     </label>
+                    <div class="text-left">
+                        <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
+                    </div>
                     <textarea class="form-control" id="o_video_text" placeholder="Copy-paste your URL or embed code here"/>
-                </div>
-                <div class="text-right">
-                    <small class="text-muted">Accepts <b><i>Youtube</i></b>, <b><i>Vimeo</i></b>, <b><i>Dailymotion</i></b> and <b><i>Youku</i></b> videos</small>
                 </div>
                 <div class="o_video_dialog_options d-none mt-4">
                     <div class="o_youtube_option o_vimeo_option o_dailymotion_option">
@@ -421,6 +442,14 @@
                         <label class="o_switch mb0"><input id="o_video_hide_dm_share" type="checkbox"/><span/>Hide sharing button</label>
                     </div>
                 </div>
+                <t t-if="widget._vimeoPreviewIds || widget._youtubePreviewIds">
+                    <span class="font-weight-bold">Suggestions</span>
+                    <div id="video-suggestion" class="mt-4 d-flex flex-wrap mh-75 overflow-auto">
+                        <t t-foreach="widget._vimeoPreviewIds" t-as="vimeoId">
+                            <div class="o_sample_video w-25 mh-100" t-att-data-vimeo="vimeoId"/>
+                        </t>
+                    </div>
+                </t>
             </div>
             <div class="col-md-6">
                 <div id="video-preview" class="p-3">
@@ -439,10 +468,10 @@
     <div t-name="wysiwyg.widgets.link" class="o_link_dialog">
         <div class="row">
             <form class="col-lg-8">
-                <div t-attf-class="form-group row#{widget.needLabel ? '' : ' d-none'}">
+                <div t-attf-class="form-group row#{widget.state.needLabel ? '' : ' d-none'}">
                     <label class="col-form-label col-md-3" for="o_link_dialog_label_input">Link Label</label>
                     <div class="col-md-9">
-                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.data.text"/>
+                        <input type="text" name="label" class="form-control" id="o_link_dialog_label_input" required="required" t-att-value="widget.state.text"/>
                     </div>
                 </div>
                 <div class="form-group row o_url_input">
@@ -500,7 +529,7 @@
                 <div class="form-group row">
                     <div class="offset-md-3 col-md-9">
                         <label class="o_switch">
-                            <input type="checkbox" name="is_new_window" t-att-checked="widget.data.isNewWindow ? 'checked' : undefined"/>
+                            <input type="checkbox" name="is_new_window" t-att-checked="widget.state.isNewWindow ? 'checked' : undefined"/>
                             <span/>
                             Open in new window
                         </label>
@@ -510,9 +539,9 @@
             <div class="col-lg-4 o_link_dialog_preview">
                 <div class="form-group text-center">
                     <label>Preview</label>
-                    <div t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}"
+                    <div id="link-preview" t-attf-class="#{widget.colorCombinationClass ? ('p-2 ' + widget.colorCombinationClass) : ''}"
                          style="overflow-x: auto; max-width: 100%; max-height: 200px;">
-                        <a href="#" id="link-preview" aria-label="Preview" title="Preview"/>
+                        <a href="#" aria-label="Preview" title="Preview"/>
                     </div>
                 </div>
             </div>

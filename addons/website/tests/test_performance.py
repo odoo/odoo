@@ -19,6 +19,8 @@ EXTRA_REQUEST = 5
 
 class UtilPerf(HttpCase):
     def _get_url_hot_query(self, url):
+        url += ('?' not in url and '?' or '') + '&nocache'
+
         # ensure worker is in hot state
         self.url_open(url)
         self.url_open(url)
@@ -31,8 +33,6 @@ class UtilPerf(HttpCase):
 class TestStandardPerformance(UtilPerf):
     def test_10_perf_sql_img_controller(self):
         self.authenticate('demo', 'demo')
-        url = '/web/image/res.country/4/image'
-        self.assertEqual(self._get_url_hot_query(url), 4)
         url = '/web/image/res.users/2/image_256'
         self.assertEqual(self._get_url_hot_query(url), 7)
 

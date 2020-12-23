@@ -8,30 +8,25 @@ class HrPlanWizard(models.TransientModel):
     _name = 'hr.plan.wizard'
     _description = 'Plan Wizard'
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super(HrPlanWizard, self).default_get(fields_list)
-        if (not fields_list or 'employee_id' in fields_list) and 'employee_id' not in res:
-            if self.env.context.get('active_id'):
-                res['employee_id'] = self.env.context['active_id']
-        return res
-
     plan_id = fields.Many2one('hr.plan', default=lambda self: self.env['hr.plan'].search([], limit=1))
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', required=True,
+        default=lambda self: self.env.context.get('active_id', None),
+    )
 
     def action_launch(self):
         for activity_type in self.plan_id.plan_activity_type_ids:
             responsible = activity_type.get_responsible_id(self.employee_id)
 
             if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
-                activity = self.employee_id.activity_schedule(
+                date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
+                self.employee_id.activity_schedule(
                     activity_type_id=activity_type.activity_type_id.id,
                     summary=activity_type.summary,
                     note=activity_type.note,
-                    user_id=responsible.id
+                    user_id=responsible.id,
+                    date_deadline=date_deadline
                 )
-                activity._onchange_activity_type_id()
-                activity.user_id = responsible.id
 
         return {
             'type': 'ir.actions.act_window',

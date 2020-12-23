@@ -9,7 +9,7 @@ from datetime import datetime
 
 from odoo import api, fields, models, tools, SUPERUSER_ID, _
 from odoo.exceptions import UserError, ValidationError, AccessError
-from odoo.tools import misc
+from odoo.tools import misc, sql
 from odoo.tools.translate import html_translate
 from odoo.addons.http_routing.models.ir_http import slug
 
@@ -34,7 +34,7 @@ class Forum(models.Model):
         ('public', 'Public'),
         ('connected', 'Signed In'),
         ('private', 'Some users')],
-        help="Public: Forum is pubic\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
+        help="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
         default='public')
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
@@ -145,7 +145,13 @@ class Forum(models.Model):
 
     @api.depends('post_ids.state', 'post_ids.views', 'post_ids.child_count', 'post_ids.favourite_count')
     def _compute_forum_statistics(self):
-        result = dict((cid, dict(total_posts=0, total_views=0, total_answers=0, total_favorites=0)) for cid in self.ids)
+        default_stats = {'total_posts': 0, 'total_views': 0, 'total_answers': 0, 'total_favorites': 0}
+
+        if not self.ids:
+            self.update(default_stats)
+            return
+
+        result = dict.fromkeys(self.ids, default_stats)
         read_group_res = self.env['forum.post'].read_group(
             [('forum_id', 'in', self.ids), ('state', 'in', ('active', 'close')), ('parent_id', '=', False)],
             ['forum_id', 'views', 'child_count', 'favourite_count'],
@@ -174,11 +180,14 @@ class Forum(models.Model):
     def _set_default_faq(self):
         self.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": self}).decode('utf-8')
 
-    @api.model
-    def create(self, values):
-        res = super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
-        res._set_default_faq()  # will trigger a write and call update_website_count
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        forums = super(
+            Forum,
+            self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)
+        ).create(vals_list)
+        forums._set_default_faq()  # will trigger a write and call update_website_count
+        return forums
 
     def write(self, vals):
         if 'privacy' in vals:
@@ -264,7 +273,7 @@ class Post(models.Model):
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Closed'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
-    views = fields.Integer('Views', default=0, readonly=True)
+    views = fields.Integer('Views', default=0, readonly=True, copy=False)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
@@ -304,9 +313,9 @@ class Post(models.Model):
     moderator_id = fields.Many2one('res.users', string='Reviewed by', readonly=True)
 
     # closing
-    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True)
-    closed_date = fields.Datetime('Closed on', readonly=True)
+    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason', copy=False)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True, copy=False)
+    closed_date = fields.Datetime('Closed on', readonly=True, copy=False)
 
     # karma calculation and access
     karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights', compute_sudo=False)
@@ -505,14 +514,14 @@ class Post(models.Model):
         return post
 
     @api.model
-    def get_mail_message_access(self, res_ids, operation, model_name=None):
-        # XDO FIXME: to be correctly fixed with new get_mail_message_access and filter access rule
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        # XDO FIXME: to be correctly fixed with new _get_mail_message_access and filter access rule
         if operation in ('write', 'unlink') and (not model_name or model_name == 'forum.post'):
             # Make sure only author or moderator can edit/delete messages
             for post in self.browse(res_ids):
                 if not post.can_edit:
                     raise AccessError(_('%d karma required to edit a post.', post.karma_edit))
-        return super(Post, self).get_mail_message_access(res_ids, operation, model_name=model_name)
+        return super(Post, self)._get_mail_message_access(res_ids, operation, model_name=model_name)
 
     def write(self, vals):
         trusted_keys = ['active', 'is_correct', 'tag_ids']  # fields where security is checked manually
@@ -718,10 +727,13 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_enough_karma(self):
         for post in self:
             if not post.can_unlink:
                 raise AccessError(_('%d karma required to unlink a post.', post.karma_unlink))
+
+    def unlink(self):
         # if unlinking an answer with accepted answer: remove provided karma
         for post in self:
             if post.is_correct:
@@ -780,7 +792,7 @@ class Post(models.Model):
             'date': self.create_date,
         }
         # done with the author user to have create_uid correctly set
-        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_create_nosubscribe=True).message_post(**values)
+        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_create_nosubscribe=True).sudo().message_post(**values).sudo(False)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
@@ -824,7 +836,7 @@ class Post(models.Model):
             'name': _('Re: %s') % (question.name or ''),
         }
         # done with the author user to have create_uid correctly set
-        new_post = self.with_user(post_create_uid).create(post_values)
+        new_post = self.with_user(post_create_uid).sudo().create(post_values).sudo(False)
 
         # delete comment
         comment.unlink()
@@ -850,17 +862,16 @@ class Post(models.Model):
             result.append(comment.unlink())
         return result
 
-    def set_viewed(self):
+    def _set_viewed(self):
         self.ensure_one()
-        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE views = %s and id = %s""", (self.views, self.id,))
-        return True
+        return sql.increment_field_skiplock(self, 'views')
 
     def get_access_action(self, access_uid=None):
         """ Instead of the classic form view, redirect to the post on the website directly """
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
+            'url': '/forum/%s/%s' % (self.forum_id.id, self.id),
             'target': 'self',
             'target_type': 'public',
             'res_id': self.id,
@@ -907,7 +918,7 @@ class Post(models.Model):
         return super(Post, self)._notify_record_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     def _compute_website_url(self):
-        return '/forum/{forum}/question/{post}{anchor}'.format(
+        return '/forum/{forum}/{post}{anchor}'.format(
             forum=slug(self.forum_id),
             post=slug(self),
             anchor=self.parent_id and '#answer_%d' % self.id or ''

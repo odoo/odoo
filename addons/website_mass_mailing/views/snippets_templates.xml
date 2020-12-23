@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="iframe_css_assets_edit" name="CSS assets for wysiwyg iframe content for popup">
+<template id="iframe_css_assets_edit" name="CSS assets for wysiwyg iframe content for popup" groups="base.group_user">
     <t t-call-assets="web.assets_common" t-js="false"/>
     <t t-call-assets="web.assets_frontend" t-js="false"/>
     <t t-call-assets="web_editor.assets_wysiwyg" t-js="false"/>
@@ -14,13 +14,13 @@
 
 <template id="snippets" inherit_id="website.snippets">
     <xpath expr="//t[@id='mass_mailing_newsletter_block_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.png"/>
+        <t t-snippet="website_mass_mailing.s_newsletter_block" t-thumbnail="/website_mass_mailing/static/src/img/snippets_thumbs/s_newsletter_block.svg"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_popup_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.png"/>
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
     </xpath>
     <xpath expr="//t[@id='mass_mailing_newsletter_hook']" position="replace">
-        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.png"/>
+        <t t-snippet="website_mass_mailing.s_newsletter_subscribe_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
     </xpath>
 </template>
 
@@ -55,7 +55,7 @@
 </template>
 
 <template id="s_newsletter_subscribe_popup_content" name="Newsletter Popup Content">
-    <section class="s_text_block oe_img_bg pt88 pb64" data-snippet="s_text_block"
+    <section class="s_text_block oe_img_bg o_bg_img_center pt88 pb64" data-snippet="s_text_block"
              style="background-image: url('/web/image/website.s_cover_default_image'); background-position: 0 100%;">
         <div class="container s_allow_columns">
             <h1 style="text-align: center;">Always <b>First</b>.</h1>

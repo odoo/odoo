@@ -11,6 +11,7 @@ odoo.define('web.CrashManager', function (require) {
 
 const AbstractService = require('web.AbstractService');
 var ajax = require('web.ajax');
+const BrowserDetection = require('web.BrowserDetection');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var ErrorDialogRegistry = require('web.ErrorDialogRegistry');
@@ -47,6 +48,7 @@ var CrashManagerDialog = Dialog.extend({
         this._super.apply(this, [parent, options]);
         this.message = error.message;
         this.traceback = error.traceback;
+        core.bus.off('close_dialogs', this);
     },
 });
 
@@ -88,13 +90,16 @@ var CrashManager = AbstractService.extend({
         active = true;
         this.isConnected = true;
         this.odooExceptionTitleMap = {
+            'odoo.addons.base.models.ir_mail_server.MailDeliveryException': _lt("MailDeliveryException"),
             'odoo.exceptions.AccessDenied': _lt("Access Denied"),
             'odoo.exceptions.AccessError': _lt("Access Error"),
             'odoo.exceptions.MissingError': _lt("Missing Record"),
             'odoo.exceptions.UserError': _lt("User Error"),
             'odoo.exceptions.ValidationError': _lt("Validation Error"),
+            'odoo.exceptions.Warning': _lt("Warning"),
         };
 
+        this.browserDetection = new BrowserDetection();
         this._super.apply(this, arguments);
 
         // crash manager integration
@@ -141,7 +146,17 @@ var CrashManager = AbstractService.extend({
         // promise has been rejected due to a crash
         core.bus.on('crash_manager_unhandledrejection', this, function (ev) {
             if (ev.reason && ev.reason instanceof Error) {
-                var traceback = ev.reason.stack;
+                // Error.prototype.stack is non-standard.
+                // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Error
+                // However, most engines provide an implementation.
+                // In particular, Chrome formats the contents of Error.stack
+                // https://v8.dev/docs/stack-trace-api#compatibility
+                let traceback;
+                if (self.browserDetection.isBrowserChrome()) {
+                    traceback = ev.reason.stack;
+                } else {
+                    traceback = `${_t("Error:")} ${ev.reason.message}\n${ev.reason.stack}`;
+                }
                 self.show_error({
                     type: _t("Odoo Client Error"),
                     message: '',

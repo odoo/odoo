@@ -70,6 +70,20 @@ function factory(dependencies) {
             this.update({ isHiddenMenuOpen: false });
         }
 
+        /**
+         * Closes all chat windows related to the given thread.
+         *
+         * @param {mail.thread} thread
+         * @param {Object} [options]
+         */
+        closeThread(thread, options) {
+            for (const chatWindow of this.chatWindows) {
+                if (chatWindow.thread === thread) {
+                    chatWindow.close(options);
+                }
+            }
+        }
+
         openHiddenMenu() {
             this.update({ isHiddenMenuOpen: true });
         }
@@ -81,55 +95,62 @@ function factory(dependencies) {
                     manager: [['link', this]],
                 });
             }
-            newMessageChatWindow.makeVisible();
-            newMessageChatWindow.unfold();
-            newMessageChatWindow.focus();
+            newMessageChatWindow.makeActive();
         }
 
         /**
          * @param {mail.thread} thread
          * @param {Object} [param1={}]
-         * @param {string} [param1.mode]
+         * @param {boolean} [param1.isFolded=false]
+         * @param {boolean} [param1.makeActive=false]
+         * @param {boolean} [param1.notifyServer=true]
+         * @param {boolean} [param1.replaceNewMessage=false]
          */
-        openThread(thread, { mode } = {}) {
-            let chatWindow = this.env.models['mail.chat_window'].find(chatWindow =>
+        openThread(thread, {
+            isFolded = false,
+            makeActive = false,
+            notifyServer = true,
+            replaceNewMessage = false
+        } = {}) {
+            let chatWindow = this.chatWindows.find(chatWindow =>
                 chatWindow.thread === thread
             );
             if (!chatWindow) {
                 chatWindow = this.env.models['mail.chat_window'].create({
+                    isFolded,
                     manager: [['link', this]],
-                    threadViewer: [['create', {
-                        thread: [['link', thread]],
-                    }]],
+                    thread: [['link', thread]],
                 });
+            } else {
+                chatWindow.update({ isFolded });
             }
-            if (mode === 'last_visible' && !chatWindow.isVisible) {
-                chatWindow.makeVisible();
-                chatWindow.unfold();
-                chatWindow.focus();
-            }
-            if (mode === 'from_new_message') {
-                if (!this.newMessageChatWindow) {
-                    throw new Error('Cannot open thread in chat window in mode "from_new_message" without any new message chat window');
-                }
+            if (replaceNewMessage && this.newMessageChatWindow) {
                 this.swap(chatWindow, this.newMessageChatWindow);
                 this.newMessageChatWindow.close();
-                chatWindow.makeVisible();
-                chatWindow.unfold();
-                chatWindow.focus();
+            }
+            if (makeActive) {
+                // avoid double notify at this step, it will already be done at
+                // the end of the current method
+                chatWindow.makeActive({ notifyServer: false });
+            }
+            // Flux specific: notify server of chat window being opened.
+            if (notifyServer) {
+                const foldState = chatWindow.isFolded ? 'folded' : 'open';
+                thread.notifyFoldStateToServer(foldState);
             }
         }
 
         /**
-         * Shift provided chat window to the left on screen.
+         * Shift provided chat window to previous visible index, which swap visible order of this
+         * chat window and the preceding visible one
          *
          * @param {mail.chat_window} chatWindow
          */
-        shiftLeft(chatWindow) {
+        shiftPrev(chatWindow) {
             const chatWindows = this.allOrdered;
             const index = chatWindows.findIndex(cw => cw === chatWindow);
             if (index === chatWindows.length - 1) {
-                // already left-most
+                // already first one
                 return;
             }
             const otherChatWindow = chatWindows[index + 1];
@@ -141,15 +162,16 @@ function factory(dependencies) {
         }
 
         /**
-         * Shift provided chat window to the right on screen.
+         * Shift provided chat window to next visible index, which swap visible order of this
+         * chat window and the following visible one.
          *
          * @param {mail.chat_window} chatWindow
          */
-        shiftRight(chatWindow) {
+        shiftNext(chatWindow) {
             const chatWindows = this.allOrdered;
             const index = chatWindows.findIndex(cw => cw === chatWindow);
             if (index === 0) {
-                // already right-most
+                // already last one
                 return;
             }
             const otherChatWindow = chatWindows[index - 1];
@@ -254,9 +276,9 @@ function factory(dependencies) {
         _computeLastVisible() {
             const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
             if (!lastVisible) {
-                return [['unlink-all']];
+                return [['unlink']];
             }
-            return [['replace', lastVisible]];
+            return [['link', lastVisible]];
         }
 
         /**
@@ -268,7 +290,7 @@ function factory(dependencies) {
             if (!chatWindow) {
                 return [['unlink']];
             }
-            return [['replace', chatWindow]];
+            return [['link', chatWindow]];
         }
 
         /**
@@ -281,7 +303,7 @@ function factory(dependencies) {
             );
             let amount = 0;
             for (const chatWindow of allHiddenWithThread) {
-                if (chatWindow.thread.message_unread_counter > 0) {
+                if (chatWindow.thread.localMessageUnreadCounter > 0) {
                     amount++;
                 }
             }
@@ -388,7 +410,7 @@ function factory(dependencies) {
             related: 'allOrderedHidden.thread',
         }),
         allOrderedHiddenThreadMessageUnreadCounter: attr({
-            related: 'allOrderedHiddenThread.message_unread_counter',
+            related: 'allOrderedHiddenThread.localMessageUnreadCounter',
         }),
         allOrderedVisible: one2many('mail.chat_window', {
             compute: '_computeAllOrderedVisible',

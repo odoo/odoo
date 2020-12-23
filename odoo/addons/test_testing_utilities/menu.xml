@@ -125,7 +125,7 @@
                 <field name="f2" attrs="{'readonly': [['f1', '=', '63'], ['f3', '=', 5]]}"/>
                 <field name="f3"/>
                 <field name="f4"/>
-                <field name="f5" readonly="1"/>
+                <field name="f5" attrs="{'readonly': 1}"/>
                 <field name="f6" readonly="1" force_save="1"/>
             </form>
         </field>
@@ -148,6 +148,30 @@
                         </page>
                     </notebook>
                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="m2m_change_view" model="ir.ui.view">
+        <field name="name">M2M Change View</field>
+        <field name="model">test_testing_utilities.f</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="m2o"/>
+                <field name="m2m" nolabel="1">
+                    <tree>
+                        <field name="name"/>
+                        <field name="m2o_ids" widget="many2many_tags"/>
+                    </tree>
+                    <form>
+                        <field name="name"/>
+                        <field name="m2o_ids">
+                            <tree>
+                                <field name="name"/>
+                            </tree>
+                        </field>
+                    </form>
+                </field>
             </form>
         </field>
     </record>

@@ -141,18 +141,10 @@ var KanbanRenderer = BasicRenderer.extend({
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
-        this._isInDom = true;
-        _.invoke(this.widgets, 'on_attach_callback');
+        this._super(...arguments);
         if (this.quickCreate) {
             this.quickCreate.on_attach_callback();
         }
-    },
-    /**
-     * Called each time the renderer is detached from the DOM.
-     */
-    on_detach_callback: function () {
-        this._isInDom = false;
-        _.invoke(this.widgets, 'on_detach_callback');
     },
 
     //--------------------------------------------------------------------------
@@ -362,7 +354,7 @@ var KanbanRenderer = BasicRenderer.extend({
             this.$el.sortable({
                 axis: 'x',
                 items: '> .o_kanban_group',
-                handle: '.o_kanban_header_title',
+                handle: '.o_column_title',
                 cursor: 'move',
                 revert: 150,
                 delay: 100,
@@ -469,9 +461,6 @@ var KanbanRenderer = BasicRenderer.extend({
                 self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
                 self.$el.append(fragment);
                 self._toggleNoContentHelper();
-                if (self._isInDom) {
-                    _.invoke(self.widgets, 'on_attach_callback');
-                }
             });
         });
     },
@@ -490,7 +479,7 @@ var KanbanRenderer = BasicRenderer.extend({
         var $noContentHelper = this.$('.o_view_nocontent');
 
         if (displayNoContentHelper && !$noContentHelper.length) {
-            this.$el.append(this._renderNoContentHelper());
+            this._renderNoContentHelper();
         }
         if (!displayNoContentHelper && $noContentHelper.length) {
             $noContentHelper.remove();

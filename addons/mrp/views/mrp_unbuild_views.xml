@@ -33,7 +33,7 @@
                             help="Show all records which has next action date is before today"/>
                         <filter invisible="1" string="Today Activities" name="activities_today"
                             domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                        <filter invisible="1" string="Future Activitie" name="activities_upcoming_all"
+                        <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                             domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     </group>
                     <group expand='0' string='Group by...'>
@@ -197,7 +197,7 @@
         <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Create an unbuild order
+            No unbuild order found
           </p><p>
             An unbuild order is used to break down a finished product into its components.
           </p>

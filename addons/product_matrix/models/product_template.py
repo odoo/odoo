@@ -85,7 +85,7 @@ class ProductTemplateAttributeValue(models.Model):
                     extra_price, {
                         'from_currency': fro_currency,
                         'display_currency': to_currency,
-                        'company_id': company,
+                        'company_id': company.id,
                         }
                     )
             })

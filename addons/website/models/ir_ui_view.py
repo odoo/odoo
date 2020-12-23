@@ -9,7 +9,6 @@ import werkzeug
 from odoo import api, fields, models
 from odoo import tools
 from odoo.addons import website
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
@@ -22,7 +21,6 @@ class View(models.Model):
     _name = "ir.ui.view"
     _inherit = ["ir.ui.view", "website.seo.metadata"]
 
-    customize_show = fields.Boolean("Show As Optional Inherit", default=False)
     website_id = fields.Many2one('website', ondelete='cascade', string="Website")
     page_ids = fields.One2many('website.page', 'view_id')
     first_page_id = fields.Many2one('website.page', string='Website Page', help='First page linked to this view', compute='_compute_first_page_id')
@@ -365,10 +363,11 @@ class View(models.Model):
                     error = werkzeug.exceptions.Forbidden('website_visibility_password_required')
 
             # elif self.visibility == 'restricted_group' and self.groups_id: or if groups_id set from backend
-            try:
-                self._check_view_access()
-            except AccessError:
-                error = werkzeug.exceptions.Forbidden()
+            if self.visibility != 'password':
+                try:
+                    self._check_view_access()
+                except AccessError:
+                    error = werkzeug.exceptions.Forbidden()
 
         if error:
             if do_raise:
@@ -396,7 +395,7 @@ class View(models.Model):
             if values and 'main_object' in values:
                 if request.env.user.has_group('website.group_website_publisher'):
                     func = getattr(values['main_object'], 'get_backend_menu_id', False)
-                    values['backend_menu_id'] = func and func() or self.env.ref('website.menu_website_configuration').id
+                    values['backend_menu_id'] = func and func() or self.env['ir.model.data'].xmlid_to_res_id('website.menu_website_configuration')
 
         if self._context != new_context:
             self = self.with_context(new_context)
@@ -431,13 +430,10 @@ class View(models.Model):
                 ]
 
             qcontext.update(dict(
-                self._context.copy(),
                 main_object=self,
                 website=request.website,
                 is_view_active=request.website.is_view_active,
-                url_for=url_for,
                 res_company=request.website.company_id.sudo(),
-                languages=request.env['res.lang'].get_available(),
                 translatable=translatable,
                 editable=editable,
             ))
@@ -499,14 +495,6 @@ class View(models.Model):
     # --------------------------------------------------------------------------
     # Snippet saving
     # --------------------------------------------------------------------------
-
-    @api.model
-    def _get_default_snippet_thumbnail(self, snippet_class=None):
-        if snippet_class:
-            for path in website.__path__:
-                if os.path.isfile(path + '/static/src/img/snippets_thumbs/%s.png' % snippet_class):
-                    return '/website/static/src/img/snippets_thumbs/%s.png' % snippet_class
-        return super()._get_default_snippet_thumbnail()
 
     @api.model
     def _snippet_save_view_values_hook(self):

@@ -71,13 +71,15 @@ FormRenderer.include({
         // while attempting to extend them.
         this.on('o_chatter_rendered', this, ev => this._onChatterRendered(ev));
         if (this.chatterFields.hasRecordReloadOnMessagePosted) {
-            this.on('o_message_posted', this, ev => this.trigger_up('reload'));
+            this.on('o_message_posted', this, ev => {
+                this.trigger_up('reload', { keepChanges: true });
+            });
         }
         if (this.chatterFields.hasRecordReloadOnAttachmentsChanged) {
-            this.on('o_attachments_changed', this, ev => this.trigger_up('reload'));
+            this.on('o_attachments_changed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
         if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
-            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload'));
+            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
     },
     /**
@@ -85,27 +87,11 @@ FormRenderer.include({
      * @returns {Object}
      */
     _makeChatterContainerProps() {
-        const context = this.record ? this.record.getContext() : {};
-        const activityIds = this.state.data.activity_ids
-            ? this.state.data.activity_ids.res_ids
-            : [];
-        const followerIds = this.state.data.message_follower_ids
-            ? this.state.data.message_follower_ids.res_ids
-            : [];
-        const messageIds = this.state.data.message_ids
-            ? this.state.data.message_ids.res_ids
-            : [];
-        const threadAttachmentCount = this.state.data.message_attachment_count || 0;
         return {
-            activityIds,
-            context,
-            followerIds,
             hasActivities: this.chatterFields.hasActivityIds,
             hasFollowers: this.chatterFields.hasMessageFollowerIds,
-            hasThread: this.chatterFields.hasMessageIds,
-            isAttachmentBoxVisible: this.chatterFields.isActivityBoxVisible,
-            messageIds,
-            threadAttachmentCount,
+            hasMessageList: this.chatterFields.hasMessageIds,
+            isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,
             threadId: this.state.res_id,
             threadModel: this.state.model,
         };
@@ -145,11 +131,10 @@ FormRenderer.include({
      * @override
      */
     _renderNode(node) {
-        if (
-            !this._isFromFormViewDialog &&
-            node.tag === 'div' &&
-            node.attrs.class === 'oe_chatter'
-        ) {
+        if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
+            if (this._isFromFormViewDialog) {
+                return $('<div/>');
+            }
             return this._makeChatterContainerTarget();
         }
         return this._super(...arguments);

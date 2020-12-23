@@ -56,16 +56,16 @@ class AccountMove(models.Model):
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
         # OVERRIDE to group taxes also by product.
         res = super()._get_tax_grouping_key_from_tax_line(tax_line)
-        res['product_id'] = tax_line.product_id.id
+        if tax_line.move_id.journal_id.company_id.country_id.code == 'IN':
+            res['product_id'] = tax_line.product_id.id
         return res
 
     @api.model
     def _get_tax_grouping_key_from_base_line(self, base_line, tax_vals):
         # OVERRIDE to group taxes also by product.
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
-        res.update({
-            'product_id': base_line.product_id.id,
-        })
+        if base_line.move_id.journal_id.company_id.country_id.code == 'IN':
+            res['product_id'] = base_line.product_id.id
         return res
 
     @api.model
@@ -87,12 +87,12 @@ class AccountMove(models.Model):
         """Overwrite in sale"""
         return shipping_partner.vat
 
-    def post(self):
+    def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
-        res = super().post()
+        posted = super()._post(soft)
         gst_treatment_name_mapping = {k: v for k, v in
                              self._fields['l10n_in_gst_treatment']._description_selection(self.env)}
-        for move in self.filtered(lambda m: m.l10n_in_company_country_code == 'IN'):
+        for move in posted.filtered(lambda m: m.l10n_in_company_country_code == 'IN'):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
             if not company_unit_partner.state_id:
@@ -120,4 +120,4 @@ class AccountMove(models.Model):
                 #still state is not set then assumed that transaction is local like PoS so set state of company unit
                 if not move.l10n_in_state_id:
                     move.l10n_in_state_id = company_unit_partner.state_id
-        return res
+        return posted

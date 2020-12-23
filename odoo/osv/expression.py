@@ -119,7 +119,6 @@ import warnings
 import logging
 import traceback
 from functools import partial
-from zlib import crc32
 
 from datetime import date, datetime, time
 import odoo.modules
@@ -226,9 +225,9 @@ def is_false(model, domain):
             stack.append(+1)
         elif token == FALSE_LEAF:
             stack.append(-1)
-        elif token[1] == 'in' and not token[2]:
+        elif token[1] == 'in' and not (isinstance(token[2], Query) or token[2]):
             stack.append(-1)
-        elif token[1] == 'not in' and not token[2]:
+        elif token[1] == 'not in' and not (isinstance(token[2], Query) or token[2]):
             stack.append(+1)
         else:
             stack.append(0)
@@ -339,55 +338,6 @@ def _quote(to_quote):
     return to_quote
 
 
-def generate_table_alias(src_table_alias, joined_tables=[]):
-    """ Generate a standard table alias name. An alias is generated as following:
-        - the base is the source table name (that can already be an alias)
-        - then, each joined table is added in the alias using a 'link field name'
-          that is used to render unique aliases for a given path
-        - returns a tuple composed of the alias, and the full table alias to be
-          added in a from condition with quoting done
-        Examples:
-        - src_table_alias='res_users', join_tables=[]:
-            alias = ('res_users','"res_users"')
-        - src_model='res_users', join_tables=[(res.partner, 'parent_id')]
-            alias = ('res_users__parent_id', '"res_partner" as "res_users__parent_id"')
-
-        :param model src_table_alias: model source of the alias
-        :param list joined_tables: list of tuples
-                                   (dst_model, link_field)
-
-        :return tuple: (table_alias, alias statement for from clause with quotes added)
-    """
-    alias = src_table_alias
-    if not joined_tables:
-        return '%s' % alias, '%s' % _quote(alias)
-    for link in joined_tables:
-        alias += '__' + link[1]
-    # Use an alternate alias scheme if length exceeds the PostgreSQL limit
-    # of 63 characters.
-    if len(alias) >= 64:
-        # We have to fit a crc32 hash and one underscore
-        # into a 63 character alias. The remaining space we can use to add
-        # a human readable prefix.
-        alias_hash = hex(crc32(alias.encode('utf-8')))[2:]
-        ALIAS_PREFIX_LENGTH = 63 - len(alias_hash) - 1
-        alias = "%s_%s" % (
-            alias[:ALIAS_PREFIX_LENGTH], alias_hash)
-    return '%s' % alias, '%s as %s' % (_quote(joined_tables[-1][0]), _quote(alias))
-
-
-def get_alias_from_query(from_query):
-    """ :param string from_query: is something like :
-        - '"res_partner"' OR
-        - '"res_partner" as "res_users__partner_id"''
-    """
-    from_splitted = from_query.split(' as ')
-    if len(from_splitted) > 1:
-        return from_splitted[0].replace('"', ''), from_splitted[1].replace('"', '')
-    else:
-        return from_splitted[0].replace('"', ''), from_splitted[0].replace('"', '')
-
-
 def normalize_leaf(element):
     """ Change a term's operator to some canonical form, simplifying later
         processing. """
@@ -447,24 +397,6 @@ def check_leaf(element, internal=False):
 # SQL utils
 # --------------------------------------------------
 
-def select_from_where(cr, select_field, from_table, where_field, where_ids, where_operator):
-    # todo: merge into parent query as sub-query
-    res = []
-    if where_ids:
-        if where_operator in ['<', '>', '>=', '<=']:
-            cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" %s %%s' % \
-                (select_field, from_table, where_field, where_operator),
-                (where_ids[0],))  # TODO shouldn't this be min/max(where_ids) ?
-            res = [r[0] for r in cr.fetchall()]
-        else:  # TODO where_operator is supposed to be 'in'? It is called with child_of...
-            for i in range(0, len(where_ids), cr.IN_MAX):
-                subids = where_ids[i:i + cr.IN_MAX]
-                cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" IN %%s' % \
-                    (select_field, from_table, where_field), (tuple(subids),))
-                res.extend([r[0] for r in cr.fetchall()])
-    return res
-
-
 def get_unaccent_wrapper(cr):
     if odoo.registry(cr.dbname).has_unaccent:
         return lambda x: "unaccent(%s)" % (x,)
@@ -500,7 +432,7 @@ class expression(object):
         self.expression = distribute_not(normalize_domain(domain))
 
         # this object handles all the joins
-        self.query = Query(['"%s"' % model._table]) if query is None else query
+        self.query = Query(model.env.cr, model._table, model._table_query) if query is None else query
 
         # parse the domain expression
         self.parse()
@@ -583,7 +515,7 @@ class expression(object):
                 return list({
                     rid
                     for name in names
-                    for rid, rname in comodel.name_search(name, [], 'ilike', limit=None)
+                    for rid in comodel._name_search(name, [], 'ilike', limit=None)
                 })
             return list(value)
 
@@ -599,13 +531,13 @@ class expression(object):
                     for rec in left_model.browse(ids)
                 ])
                 if prefix:
-                    return [(left, 'in', left_model.search(doms, order='id').ids)]
+                    return [(left, 'in', left_model._search(doms, order='id'))]
                 return doms
             else:
                 parent_name = parent or left_model._parent_name
                 child_ids = set(ids)
                 while ids:
-                    ids = left_model.search([(parent_name, 'in', ids)], order='id').ids
+                    ids = left_model._search([(parent_name, 'in', ids)], order='id')
                     child_ids.update(ids)
                 return [(left, 'in', list(child_ids))]
 
@@ -710,9 +642,8 @@ class expression(object):
             elif field.inherited:
                 parent_model = model.env[field.related_field.model_name]
                 parent_fname = model._inherits[parent_model._name]
-                parent_alias, _ = self.query.add_join(
-                    (alias, parent_model._table, parent_fname, 'id', parent_fname),
-                    implicit=False, outer=True,
+                parent_alias = self.query.left_join(
+                    alias, parent_fname, parent_model._table, 'id', parent_fname,
                 )
                 push(leaf, parent_model, parent_alias)
 
@@ -737,9 +668,8 @@ class expression(object):
 
             elif len(path) > 1 and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
-                coalias, _ = self.query.add_join(
-                    (alias, comodel._table, path[0], 'id', path[0]),
-                    implicit=False, outer=True,
+                coalias = self.query.left_join(
+                    alias, path[0], comodel._table, 'id', path[0],
                 )
                 push((path[1], operator, right), comodel, coalias)
 
@@ -747,22 +677,19 @@ class expression(object):
                 # use a subquery bypassing access rules and business logic
                 domain = [(path[1], operator, right)] + field.get_domain_list(model)
                 query = comodel.with_context(**field.context)._where_calc(domain)
-                subfrom, subwhere, subparams = query.get_sql()
-                subquery = 'SELECT "{}"."{}" FROM {} WHERE {}'.format(
-                    comodel._table, field.inverse_name, subfrom, subwhere,
-                )
+                subquery, subparams = query.select('"%s"."%s"' % (comodel._table, field.inverse_name))
                 push(('id', 'inselect', (subquery, subparams)), model, alias, internal=True)
 
             elif len(path) > 1 and field.store and field.auto_join:
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False).search([('.'.join(path[1:]), operator, right)], order='id').ids
+                right_ids = comodel.with_context(active_test=False)._search([(path[1], operator, right)], order='id')
                 push((path[0], 'in', right_ids), model, alias)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.with_context(**field.context).search([('.'.join(path[1:]), operator, right)], order='id').ids
+                right_ids = comodel.with_context(**field.context)._search([(path[1], operator, right)], order='id')
                 push((path[0], 'in', right_ids), model, alias)
 
             elif not field.store:
@@ -777,9 +704,10 @@ class expression(object):
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
-                        right = comodel.search([('.'.join(path[1:]), operator, right)], order='id').ids
+                        right = comodel._search([(path[1], operator, right)], order='id')
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
+                    model._flush_search(domain, order='id')
 
                 for elem in normalize_domain(domain):
                     push(elem, model, alias, internal=True)
@@ -800,7 +728,7 @@ class expression(object):
 
             elif field.type == 'one2many':
                 domain = field.get_domain_list(model)
-                inverse_is_int = comodel._fields[field.inverse_name].type == 'integer'
+                inverse_is_int = comodel._fields[field.inverse_name].type in ('integer', 'many2one_reference')
                 unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
 
                 if right is not False:
@@ -808,26 +736,30 @@ class expression(object):
                     if isinstance(right, str):
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
+                        ids2 = comodel._name_search(right, domain or [], op2, limit=None)
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
                         ids2 = [right]
-                    if ids2 and inverse_is_int and domain:
-                        ids2 = comodel.search([('id', 'in', ids2)] + domain, order='id').ids
+                    if inverse_is_int and domain:
+                        ids2 = comodel._search([('id', 'in', ids2)] + domain, order='id')
 
-                    # determine ids1 in model related to ids2
-                    if not ids2:
-                        ids1 = []
-                    elif comodel._fields[field.inverse_name].store:
-                        ids1 = select_from_where(cr, field.inverse_name, comodel._table, 'id', ids2, operator)
+                    if isinstance(ids2, Query) and comodel._fields[field.inverse_name].store:
+                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                        subquery, subparams = ids2.select('"%s"."%s"' % (comodel._table, field.inverse_name))
+                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
+                    elif ids2 and comodel._fields[field.inverse_name].store:
+                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                        subquery = 'SELECT "%s" FROM "%s" WHERE "id" IN %%s' % (field.inverse_name, comodel._table)
+                        subparams = [tuple(ids2)]
+                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
                     else:
+                        # determine ids1 in model related to ids2
                         recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
                         ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
-
-                    # rewrite condition in terms of ids1
-                    op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                    push(('id', op1, ids1), model, alias)
+                        # rewrite condition in terms of ids1
+                        op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                        push(('id', op1, ids1), model, alias)
 
                 else:
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
@@ -853,7 +785,7 @@ class expression(object):
                     # determine ids2 in comodel
                     ids2 = to_ids(right, comodel, leaf)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
-                    ids2 = comodel.search(domain, order='id').ids
+                    ids2 = comodel._search(domain, order='id')
 
                     # rewrite condition in terms of ids2
                     if comodel == model:
@@ -868,17 +800,24 @@ class expression(object):
                         domain = field.get_domain_list(model)
                         op2 = (TERM_OPERATORS_NEGATION[operator]
                                if operator in NEGATIVE_TERM_OPERATORS else operator)
-                        ids2 = [x[0] for x in comodel.name_search(right, domain or [], op2, limit=None)]
+                        ids2 = comodel._name_search(right, domain or [], op2, limit=None)
                     elif isinstance(right, collections.abc.Iterable):
                         ids2 = right
                     else:
                         ids2 = [right]
 
-                    # rewrite condition in terms of ids2
-                    subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
-                    subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
-                    ids2 = tuple(it for it in ids2 if it) or (None,)
-                    push(('id', subop, (subquery, [ids2])), model, alias, internal=True)
+                    if isinstance(ids2, Query):
+                        # rewrite condition in terms of ids2
+                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                        subquery, subparams = ids2.select()
+                        query = 'SELECT "%s" FROM "%s" WHERE "%s" IN (%s)' % (rel_id1, rel_table, rel_id2, subquery)
+                        push(('id', subop, (query, subparams)), model, alias, internal=True)
+                    else:
+                        # rewrite condition in terms of ids2
+                        subop = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                        subquery = 'SELECT "%s" FROM "%s" WHERE "%s" IN %%s' % (rel_id1, rel_table, rel_id2)
+                        ids2 = tuple(it for it in ids2 if it) or (None,)
+                        push(('id', subop, (subquery, [ids2])), model, alias, internal=True)
 
                 else:
                     # rewrite condition to match records with/without relations
@@ -907,13 +846,13 @@ class expression(object):
                             operator = dict_op[operator]
                         elif isinstance(right, list) and operator in ['!=', '=']:  # for domain (FIELD,'=',['value1','value2'])
                             operator = dict_op[operator]
-                        res_ids = [x[0] for x in comodel.with_context(active_test=False).name_search(right, [], operator, limit=None)]
+                        res_ids = comodel.with_context(active_test=False)._name_search(right, [], operator, limit=None)
                         if operator in NEGATIVE_TERM_OPERATORS:
-                            res_ids.append(False)  # TODO this should not be appended if False was in 'right'
+                            res_ids = list(res_ids) + [False]  # TODO this should not be appended if False was in 'right'
                         return left, 'in', res_ids
                     # resolve string-based m2o criterion into IDs
                     if isinstance(right, str) or \
-                            right and isinstance(right, (tuple, list)) and all(isinstance(item, str) for item in right):
+                            isinstance(right, (tuple, list)) and right and all(isinstance(item, str) for item in right):
                         push(_get_expression(comodel, left, right, operator), model, alias)
                     else:
                         # right == [] or right == False and all other cases are handled by __leaf_to_sql()
@@ -986,8 +925,7 @@ class expression(object):
 
         [self.result] = result_stack
         where_clause, where_params = self.result
-        self.query.where_clause.append(where_clause)
-        self.query.where_clause_params.extend(where_params)
+        self.query.add_where(where_clause, where_params)
 
     def __leaf_to_sql(self, leaf, model, alias):
         left, operator, right = leaf
@@ -1028,9 +966,17 @@ class expression(object):
                 else:
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
+            elif isinstance(right, Query):
+                subquery, subparams = right.select()
+                query = '(%s."%s" %s (%s))' % (table_alias, left, operator, subquery)
+                params = subparams
             elif isinstance(right, (list, tuple)):
-                params = [it for it in right if it != False]
-                check_null = len(params) < len(right)
+                if model._fields[left].type == "boolean":
+                    params = [it for it in (True, False) if it in right]
+                    check_null = False in right
+                else:
+                    params = [it for it in right if it != False]
+                    check_null = len(params) < len(right)
                 if params:
                     if left == 'id':
                         instr = ','.join(['%s'] * len(params))

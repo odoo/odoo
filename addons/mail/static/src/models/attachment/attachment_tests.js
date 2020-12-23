@@ -1,24 +1,17 @@
 odoo.define('mail/static/src/models/attachment/attachment_tests.js', function (require) {
 'use strict';
 
-const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
-} = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('models', {}, function () {
 QUnit.module('attachment', {}, function () {
 QUnit.module('attachment_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -26,12 +19,7 @@ QUnit.module('attachment_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        this.env = undefined;
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
+        afterEach(this);
     },
 });
 
@@ -52,7 +40,7 @@ QUnit.test('create (txt)', async function (assert) {
     assert.strictEqual(this.env.models['mail.attachment'].find(attachment => attachment.id === 750), attachment);
     assert.strictEqual(attachment.filename, "test.txt");
     assert.strictEqual(attachment.id, 750);
-    assert.notOk(attachment.isTemporary);
+    assert.notOk(attachment.isUploading);
     assert.strictEqual(attachment.mimetype, 'text/plain');
     assert.strictEqual(attachment.name, "test.txt");
 });

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.meet</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="website_event.event_event_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='is_published']" position="before">
+                <button class="oe_stat_button" context="{'default_event_id': active_id, 'search_default_event_id': active_id}" icon="fa-comments-o" name="%(event_meeting_room_action)d" type="action">
+                    <field name="meeting_room_count" string="Rooms" widget="statinfo"/>
+                </button>
+            </xpath>
+            <xpath expr="//label[@for='community_menu']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='community_menu']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//field[@name='community_menu']" position="after">
+                <field name="meeting_room_allow_creation" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>
+

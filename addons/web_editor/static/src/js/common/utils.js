@@ -32,6 +32,18 @@ const CSS_UNITS_CONVERSION = {
     'rem-px': () => _computePxByRem(),
     'px-rem': () => _computePxByRem(true),
 };
+/**
+ * Colors of the default palette, used for substitution in shapes/illustrations.
+ * key: number of the color in the palette (ie, o-color-<1-5>)
+ * value: color hex code
+ */
+const DEFAULT_PALETTE = {
+    '1': '#3AADAA',
+    '2': '#7C6576',
+    '3': '#F6F6F6',
+    '4': '#FFFFFF',
+    '5': '#383E45',
+};
 
 /**
  * Computes the number of "px" needed to make a "rem" unit. Subsequent calls
@@ -167,10 +179,64 @@ function _computeColorClasses(colorNames, prefix = 'bg-') {
     }
     return classes;
 }
+/**
+ * @param {string} key
+ * @param {CSSStyleDeclaration} [htmlStyle] if not provided, it is computed
+ * @returns {string}
+ */
+function _getCSSVariableValue(key, htmlStyle) {
+    if (htmlStyle === undefined) {
+        htmlStyle = window.getComputedStyle(document.documentElement);
+    }
+    // Get trimmed value from the HTML element
+    let value = htmlStyle.getPropertyValue(`--${key}`).trim();
+    // If it is a color value, it needs to be normalized
+    value = ColorpickerWidget.normalizeCSSColor(value);
+    // Normally scss-string values are "printed" single-quoted. That way no
+    // magic conversation is needed when customizing a variable: either save it
+    // quoted for strings or non quoted for colors, numbers, etc. However,
+    // Chrome has the annoying behavior of changing the single-quotes to
+    // double-quotes when reading them through getPropertyValue...
+    return value.replace(/"/g, "'");
+}
+/**
+ * Normalize a color in case it is a variable name so it can be used outside of
+ * css.
+ *
+ * @param {string} color the color to normalize into a css value
+ * @returns {string} the normalized color
+ */
+function _normalizeColor(color) {
+    if (ColorpickerWidget.isCSSColor(color)) {
+        return color;
+    }
+    return _getCSSVariableValue(color);
+}
+/**
+ * Parse an element's background-image's url.
+ *
+ * @param {string} string a css value in the form 'url("...")'
+ * @returns {string|false} the src of the image or false if not parsable
+ */
+function _getBgImageURL(el) {
+    const string = $(el).css('background-image');
+    const match = string.match(/^url\((['"])(.*?)\1\)$/);
+    if (!match) {
+        return '';
+    }
+    const matchedURL = match[2];
+    // Make URL relative if possible
+    const fullURL = new URL(matchedURL, window.location.origin);
+    if (fullURL.origin === window.location.origin) {
+        return fullURL.href.slice(fullURL.origin.length);
+    }
+    return matchedURL;
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
     CSS_UNITS_CONVERSION: CSS_UNITS_CONVERSION,
+    DEFAULT_PALETTE: DEFAULT_PALETTE,
     computePxByRem: _computePxByRem,
     convertValueToUnit: _convertValueToUnit,
     convertNumericToUnit: _convertNumericToUnit,
@@ -178,5 +244,8 @@ return {
     areCssValuesEqual: _areCssValuesEqual,
     isColorCombinationName: _isColorCombinationName,
     computeColorClasses: _computeColorClasses,
+    getCSSVariableValue: _getCSSVariableValue,
+    normalizeColor: _normalizeColor,
+    getBgImageURL: _getBgImageURL,
 };
 });

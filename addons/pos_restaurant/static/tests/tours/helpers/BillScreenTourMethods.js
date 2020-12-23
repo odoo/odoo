@@ -26,5 +26,5 @@ odoo.define('pos_restaurant.tour.BillScreenTourMethods', function (require) {
         }
     }
 
-    return { Do, Check, BillScreen: createTourMethods('BillScreen', Do, Check) };
+    return createTourMethods('BillScreen', Do, Check);
 });

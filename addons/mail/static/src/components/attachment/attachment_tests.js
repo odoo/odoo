@@ -5,10 +5,11 @@ const components = {
     Attachment: require('mail/static/src/components/attachment/attachment.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,22 +17,18 @@ QUnit.module('components', {}, function () {
 QUnit.module('attachment', {}, function () {
 QUnit.module('attachment_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createAttachmentComponent = async (attachment, otherProps) => {
-            const AttachmentComponent = components.Attachment;
-            AttachmentComponent.env = this.env;
-            this.component = new AttachmentComponent(null, Object.assign({
-                attachmentLocalId: attachment.localId,
-            }, otherProps));
-            await this.component.mount(this.widget.el);
+            const props = Object.assign({ attachmentLocalId: attachment.localId }, otherProps);
+            await createRootComponent(this, components.Attachment, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -39,15 +36,7 @@ QUnit.module('attachment_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.Attachment.env;
+        afterEach(this);
     },
 });
 
@@ -121,7 +110,6 @@ QUnit.test('simplest layout + deletable', async function (assert) {
                     route.includes('/160x160'),
                     "should fetch image with 160x160 pixels ratio");
                 assert.step('fetch_image');
-                return;
             }
             return this._super(...arguments);
         },
@@ -478,14 +466,7 @@ QUnit.test('simplest layout with hover details and filename and extension', asyn
 QUnit.test('auto layout with image', async function (assert) {
     assert.expect(7);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (route.includes('web/image/750')) {
-                return;
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     const attachment = this.env.models['mail.attachment'].create({
         filename: "test.png",
         id: 750,
@@ -544,12 +525,6 @@ QUnit.test('view attachment', async function (assert) {
 
     await this.start({
         hasDialog: true,
-        async mockRPC(route, args) {
-            if (route.includes('web/image/750')) {
-                return;
-            }
-            return this._super(...arguments);
-        },
     });
     const attachment = this.env.models['mail.attachment'].create({
         filename: "test.png",
@@ -563,7 +538,6 @@ QUnit.test('view attachment', async function (assert) {
         isDownloadable: false,
         isEditable: false,
     });
-
     assert.containsOnce(
         document.body,
         '.o_Attachment_image',
@@ -580,6 +554,117 @@ QUnit.test('view attachment', async function (assert) {
         '.o_AttachmentViewer',
         'an attachment viewer should have been opened once attachment image is clicked',
     );
+});
+
+QUnit.test('close attachment viewer', async function (assert) {
+    assert.expect(3);
+
+    await this.start({ hasDialog: true });
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.png",
+        id: 750,
+        mimetype: 'image/png',
+        name: "test.png",
+    });
+
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'hover',
+        isDownloadable: false,
+        isEditable: false,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment_image',
+        "attachment should have an image part"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer',
+        "an attachment viewer should have been opened once attachment image is clicked",
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentViewer_headerItemButtonClose').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Dialog',
+        "attachment viewer should be closed after clicking on close button"
+    );
+});
+
+QUnit.test('clicking on the delete attachment button multiple times should do the rpc only once', async function (assert) {
+    assert.expect(2);
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === "unlink" && args.model === "ir.attachment") {
+                assert.step('attachment_unlink');
+                return;
+            }
+            return this._super(...arguments);
+        },
+    });
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.txt",
+        id: 750,
+        mimetype: 'text/plain',
+        name: "test.txt",
+    });
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'hover',
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_Attachment_actionUnlink').click();
+    });
+
+    await afterNextRender(() => {
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+    });
+    assert.verifySteps(
+        ['attachment_unlink'],
+        "The unlink method must be called once"
+    );
+});
+
+QUnit.test('[technical] does not crash when the viewer is closed before image load', async function (assert) {
+    /**
+     * When images are displayed using `src` attribute for the 1st time, it fetches the resource.
+     * In this case, images are actually displayed (fully fetched and rendered on screen) when
+     * `<image>` intercepts `load` event.
+     *
+     * Current code needs to be aware of load state of image, to display spinner when loading
+     * and actual image when loaded. This test asserts no crash from mishandling image becoming
+     * loaded from being viewed for 1st time, but viewer being closed while image is loading.
+     */
+    assert.expect(1);
+
+    await this.start({ hasDialog: true });
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.png",
+        id: 750,
+        mimetype: 'image/png',
+        name: "test.png",
+    });
+    await this.createAttachmentComponent(attachment);
+    await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
+    const imageEl = document.querySelector('.o_AttachmentViewer_viewImage');
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentViewer_headerItemButtonClose').click()
+    );
+    // Simulate image becoming loaded.
+    let successfulLoad;
+    try {
+        imageEl.dispatchEvent(new Event('load', { bubbles: true }));
+        successfulLoad = true;
+    } catch (err) {
+        successfulLoad = false;
+    } finally {
+        assert.ok(successfulLoad, 'should not crash when the image is loaded');
+    }
 });
 
 });

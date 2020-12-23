@@ -18,6 +18,7 @@
                     <field name="source_currency_id" invisible="1" force_save="1"/>
                     <field name="company_id" invisible="1" force_save="1"/>
                     <field name="partner_id" invisible="1" force_save="1"/>
+                    <field name="country_code" invisible="1" force_save="1"/>
 
                     <field name="show_partner_bank_account" invisible="1"/>
                     <field name="require_partner_bank_account" invisible="1"/>
@@ -27,7 +28,7 @@
 
                     <group>
                         <group name="group1">
-                            <field name="journal_id" widget="selection"/>
+                            <field name="journal_id" widget="selection" required="1"/>
                             <field name="payment_method_id" widget="radio"
                                    required="1"
                                    attrs="{'invisible': [('hide_payment_method', '=', True)]}"/>

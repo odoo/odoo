@@ -84,7 +84,8 @@ class StockRule(models.Model):
             product=product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
-        date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
+        date_planned = self._get_date_planned(product_id, company_id, values)
+        date_deadline = values.get('date_deadline') or date_planned + relativedelta(days=company_id.manufacturing_lead) + relativedelta(days=product_id.produce_delay)
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -95,12 +96,9 @@ class StockRule(models.Model):
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
             'date_deadline': date_deadline,
-            'date_planned_start': date_deadline,
+            'date_planned_start': date_planned,
             'procurement_group_id': False,
-            'delay_alert': self.delay_alert,
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'picking_type_id': self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
             'company_id': company_id.id,
@@ -174,7 +172,7 @@ class ProcurementGroup(models.Model):
                 procurements_without_kit.append(procurement)
         return super(ProcurementGroup, self).run(procurements_without_kit, raise_user_error=raise_user_error)
 
-    def _get_moves_to_assign_domain(self):
-        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain()
+    def _get_moves_to_assign_domain(self, company_id):
+        domain = super(ProcurementGroup, self)._get_moves_to_assign_domain(company_id)
         domain = expression.AND([domain, [('production_id', '=', False)]])
         return domain

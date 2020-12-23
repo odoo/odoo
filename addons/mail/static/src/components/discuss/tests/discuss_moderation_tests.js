@@ -2,10 +2,10 @@ odoo.define('mail/static/src/components/discuss/tests/discuss_moderation_tests.j
 'use strict';
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -13,13 +13,10 @@ QUnit.module('components', {}, function () {
 QUnit.module('discuss', {}, function () {
 QUnit.module('discuss_moderation_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
                 hasDiscuss: true,
@@ -29,41 +26,25 @@ QUnit.module('discuss_moderation_tests.js', {
         };
     },
     afterEach() {
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        utilsAfterEach(this);
+        afterEach(this);
     },
 });
 
-QUnit.test('moderated channel with pending moderation message', async function (assert) {
+QUnit.test('as moderator, moderated channel with pending moderation message', async function (assert) {
     assert.expect(37);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
-        is_moderator: true,
-        moderation_counter: 1,
-        moderation_channel_ids: [20],
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // for consistency, but not used in the scope of this test
+        name: "general", // random name, will be asserted in the test
     });
-    this.data['mail.message'].records = [{
-        author_id: [2, "Someone"],
-        body: "<p>test</p>",
-        channel_ids: [20],
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
-
+    this.data['mail.message'].records.push({
+        body: "<p>test</p>", // random body, will be asserted in the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending moderation
+        res_id: 20, // id of the channel
+    });
     await this.start();
 
     assert.ok(
@@ -317,33 +298,22 @@ QUnit.test('moderated channel with pending moderation message', async function (
     );
 });
 
-QUnit.test('accept pending moderation message', async function (assert) {
+QUnit.test('as moderator, accept pending moderation message', async function (assert) {
     assert.expect(12);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
-        is_moderator: true,
-        moderation_counter: 1,
-        moderation_channel_ids: [20],
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // for consistency, but not used in the scope of this test
+        name: "general", // random name, will be asserted in the test
     });
-    this.data['mail.message'].records = [{
-        author_id: [2, "Someone"],
-        body: "<p>test</p>",
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
-
+    this.data['mail.message'].records.push({
+        body: "<p>test</p>", // random body, will be asserted in the test
+        id: 100, // random unique id, will be asserted during the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending moderation
+        res_id: 20, // id of the channel
+    });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'moderate') {
@@ -437,33 +407,22 @@ QUnit.test('accept pending moderation message', async function (assert) {
     );
 });
 
-QUnit.test('reject pending moderation message (reject with explanation)', async function (assert) {
+QUnit.test('as moderator, reject pending moderation message (reject with explanation)', async function (assert) {
     assert.expect(23);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
-        is_moderator: true,
-        moderation_counter: 1,
-        moderation_channel_ids: [20],
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // for consistency, but not used in the scope of this test
+        name: "general", // random name, will be asserted in the test
     });
-    this.data['mail.message'].records = [{
-        author_id: [2, "Someone"],
-        body: "<p>test</p>",
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
-
+    this.data['mail.message'].records.push({
+        body: "<p>test</p>", // random body, will be asserted in the test
+        id: 100, // random unique id, will be asserted during the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending moderation
+        res_id: 20, // id of the channel
+    });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'moderate') {
@@ -536,9 +495,7 @@ QUnit.test('reject pending moderation message (reject with explanation)', async 
     );
     assert.strictEqual(
         dialog.querySelector('.modal-title').textContent,
-        // TODO FIXME, this should be a proper title "Send explanation to author"
-        // see https://github.com/odoo/owl/issues/670
-        "[object Object]",
+        "Send explanation to author",
         "dialog should have correct title"
     );
 
@@ -615,33 +572,22 @@ QUnit.test('reject pending moderation message (reject with explanation)', async 
     );
 });
 
-QUnit.test('discard pending moderation message (reject without explanation)', async function (assert) {
+QUnit.test('as moderator, discard pending moderation message (reject without explanation)', async function (assert) {
     assert.expect(16);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
-        is_moderator: true,
-        moderation_counter: 1,
-        moderation_channel_ids: [20],
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // for consistency, but not used in the scope of this test
+        name: "general", // random name, will be asserted in the test
     });
-    this.data['mail.message'].records = [{
-        author_id: [2, "Someone"],
-        body: "<p>test</p>",
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
-
+    this.data['mail.message'].records.push({
+        body: "<p>test</p>", // random body, will be asserted in the test
+        id: 100, // random unique id, will be asserted during the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending moderation
+        res_id: 20, // id of the channel
+    });
     await this.start({
         async mockRPC(route, args) {
             if (args.method === 'moderate') {
@@ -694,14 +640,12 @@ QUnit.test('discard pending moderation message (reject without explanation)', as
     );
     assert.strictEqual(
         dialog.querySelector('.modal-title').textContent,
-        // TODO FIXME, this should be a proper title "Confirmation"
-        // see https://github.com/odoo/owl/issues/670
-        "[object Object]",
+        "Confirmation",
         "dialog should have correct title"
     );
     assert.strictEqual(
         dialog.textContent,
-        "[object Object]×You are going to discard 1 message.Do you confirm the action?DiscardCancel",
+        "Confirmation×You are going to discard 1 message.Do you confirm the action?DiscardCancel",
         "should warn the user on discard action"
     );
 
@@ -745,49 +689,15 @@ QUnit.test('discard pending moderation message (reject without explanation)', as
     );
 });
 
-QUnit.test('send message in moderated channel', async function (assert) {
+QUnit.test('as author, send message in moderated channel', async function (assert) {
     assert.expect(4);
 
-    const self = this;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        moderation: true, // channel must be moderated to test the feature
+        name: "general", // random name, will be asserted in the test
     });
-
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_post') {
-                const message = {
-                    id: 100,
-                    author_id: [13, 'Someone'],
-                    body: args.kwargs.body,
-                    channel_ids: [20],
-                    message_type: args.kwargs.message_type,
-                    model: 'mail.channel',
-                    moderation_status: 'pending_moderation',
-                    res_id: 20,
-                };
-                const notificationData = {
-                    type: 'author',
-                    message: message,
-                };
-                const notification = [[false, 'res.partner', 13], notificationData];
-                self.widget.call('bus_service', 'trigger', 'notification', [notification]);
-
-                return message.id;
-            }
-            return this._super(...arguments);
-        },
-    });
-
-    // go to channel 'general'
+    await this.start();
     const channel = document.querySelector(`
         .o_DiscussSidebar_item[data-thread-local-id="${
             this.env.models['mail.thread'].find(thread =>
@@ -801,6 +711,7 @@ QUnit.test('send message in moderated channel', async function (assert) {
         "should display the general channel"
     );
 
+    // go to channel 'general'
     await afterNextRender(() => channel.click());
     assert.containsNone(
         document.body,
@@ -815,12 +726,7 @@ QUnit.test('send message in moderated channel', async function (assert) {
         document.execCommand('insertText', false, "Some Text");
     });
     await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
-    const messagePending = document.querySelector(`
-        .o_Message[data-message-local-id="${
-            this.env.models['mail.message'].find(message => message.id === 100).localId
-        }"]
-        .o_Message_moderationPending
-    `);
+    const messagePending = document.querySelector('.o_Message_moderationPending');
     assert.ok(
         messagePending,
         "should display the pending message with pending info"
@@ -832,30 +738,21 @@ QUnit.test('send message in moderated channel', async function (assert) {
     );
 });
 
-QUnit.test('sent message accepted in moderated channel', async function (assert) {
+QUnit.test('as author, sent message accepted in moderated channel', async function (assert) {
     assert.expect(5);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        moderation: true, // for consistency, but not used in the scope of this test
+        name: "general", // random name, will be asserted in the test
     });
-    this.data['mail.message'].records = [{
-        author_id: [13, "Someone"],
-        body: "<p>test</p>",
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
-
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        id: 100, // random unique id, will be referenced in the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending
+        res_id: 20, // id of the channel
+    });
     await this.start();
 
     const channel = document.querySelector(`
@@ -891,13 +788,8 @@ QUnit.test('sent message accepted in moderated channel', async function (assert)
     // simulate accepted message
     await afterNextRender(() => {
         const messageData = {
-            author_id: [13, "Someone"],
-            body: "<p>test</p>",
-            channel_ids: [20],
             id: 100,
-            model: 'mail.channel',
             moderation_status: 'accepted',
-            res_id: 20,
         };
         const notification = [[false, 'mail.channel', 20], messageData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
@@ -920,30 +812,21 @@ QUnit.test('sent message accepted in moderated channel', async function (assert)
     );
 });
 
-QUnit.test('sent message rejected in moderated channel', async function (assert) {
+QUnit.test('as author, sent message rejected in moderated channel', async function (assert) {
     assert.expect(4);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        moderation: true, // for consistency, but not used in the scope of this test
+        name: "general", // random name, will be asserted in the test
     });
-    this.data['mail.message'].records = [{
-        author_id: [13, "Someone"],
-        body: "<p>test</p>",
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
-
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        id: 100, // random unique id, will be referenced in the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending
+        res_id: 20, // id of the channel
+    });
     await this.start();
 
     const channel = document.querySelector(`
@@ -982,7 +865,7 @@ QUnit.test('sent message rejected in moderated channel', async function (assert)
             type: 'deletion',
             message_ids: [100],
         };
-        const notification = [[false, 'res.partner', 13], notifData];
+        const notification = [[false, 'res.partner', this.env.messaging.currentPartner.id], notifData];
         this.widget.call('bus_service', 'trigger', 'notification', [notification]);
     });
     // check no message
@@ -997,31 +880,18 @@ QUnit.test('as moderator, pending moderation message accessibility', async funct
     // pending moderation message should appear in moderation box and in origin thread
     assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
-        is_moderator: true,
-        moderation_counter: 1,
-        moderation_channel_ids: [20],
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // channel must be moderated to test the feature
     });
-    this.data['mail.message'].records = [{
-        author_id: [2, "Someone"],
-        body: "<p>test</p>",
-        channel_ids: [20],
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
-
+    this.data['mail.message'].records.push({
+        body: "not empty",
+        id: 100, // random unique id, will be referenced in the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending
+        res_id: 20, // id of the channel
+    });
     await this.start();
 
     const thread = this.env.models['mail.thread'].find(thread => thread.id === 20 && thread.model === 'mail.channel');
@@ -1063,29 +933,20 @@ QUnit.test('as moderator, pending moderation message accessibility', async funct
 QUnit.test('as author, pending moderation message should appear in origin thread', async function (assert) {
     assert.expect(1);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        moderation: true, // channel must be moderated to test the feature
+    });
+    this.data['mail.message'].records.push({
+        author_id: this.data.currentPartnerId, // test as author of message
+        body: "not empty",
+        id: 100, // random unique id, will be referenced in the test
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending
+        res_id: 20, // id of the channel
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread => thread.id === 20 && thread.model === 'mail.channel');
-    this.data['mail.message'].records = [{
-        author_id: [this.env.session.partner_id, "Me"],
-        body: "<p>test</p>",
-        channel_ids: [], // server do NOT return channel_id of the message
-        id: 100,
-        model: 'mail.channel',
-        moderation_status: 'pending_moderation',
-        need_moderation: true,
-        res_id: 20,
-    }];
 
     await afterNextRender(() =>
         document.querySelector(`
@@ -1100,108 +961,42 @@ QUnit.test('as author, pending moderation message should appear in origin thread
     );
 });
 
-QUnit.test('new pending moderation message posted by me', async function (assert) {
-    // message should appear in origin thread
-    assert.expect(1);
-
-    const self = this;
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
-    });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'message_post') {
-                // simulate receiving the message
-                const message = {
-                    author_id: [self.env.session.partner_id, "Me"],
-                    body: args.kwargs.body,
-                    channel_ids: [], // server do NOT return channel_id of the message if pending moderation
-                    moderation_status: 'pending_moderation',
-                    id: 2,
-                    message_type: args.kwargs.message_type,
-                    model: 'mail.channel',
-                    subtype_xmlid: args.kwargs.subtype_xmlid,
-                    record_name: 'General',
-                    res_id: 20,
-                };
-                const notifications = [[
-                    ['my-db', 'res.partner', self.env.session.partner_id],
-                    { type: 'author', message },
-                ]];
-                self.widget.call('bus_service', 'trigger', 'notification', notifications);
-            }
-            return this._super(...arguments);
-        }
-    });
-    const thread = this.env.models['mail.thread'].find(thread => thread.id === 20 && thread.model === 'mail.channel');
-    await afterNextRender(() =>
-        document.querySelector(`
-            .o_DiscussSidebar_item[data-thread-local-id="${thread.localId}"]
-        `).click()
-    );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_ComposerTextInput').focus();
-        document.execCommand('insertText', false, "Moderated test");
-    });
-    await afterNextRender(() =>
-        document.querySelector('.o_Composer_buttonSend').click()
-    );
-    const message = this.env.models['mail.message'].find(message => message.id === 2);
-    assert.containsOnce(
-        document.body,
-        `.o_Message[data-message-local-id="${message.localId}"]`,
-        "the pending moderation message should be in the channel"
-    );
-});
-
-QUnit.test('new pending moderation message posted by someone else when moderator', async function (assert) {
+QUnit.test('as moderator, new pending moderation message posted by someone else', async function (assert) {
     // the message should appear in origin thread and moderation box if I moderate it
-    assert.expect(2);
+    assert.expect(3);
 
-    Object.assign(this.data.initMessaging, {
-        channel_slots: {
-            channel_channel: [{
-                id: 20,
-                is_pinned: true,
-                channel_type: "channel",
-                name: "general",
-                moderation: true,
-            }],
-        },
-        is_moderator: true,
-        moderation_channel_ids: [20],
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // channel must be moderated to test the feature
     });
     await this.start();
     const thread = this.env.models['mail.thread'].find(thread => thread.id === 20 && thread.model === 'mail.channel');
+
     await afterNextRender(() =>
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${thread.localId}"]
         `).click()
+    );
+    assert.containsNone(
+        document.body,
+        `.o_Message`,
+        "should have no message in the channel initially"
     );
 
     // simulate receiving the message
     const messageData = {
-        author_id: [10, "Don Diego de la Vega"],
-        body: "hoy !",
+        author_id: [10, 'john doe'], // random id, different than current partner
+        body: "not empty",
         channel_ids: [], // server do NOT return channel_id of the message if pending moderation
-        moderation_status: 'pending_moderation',
-        id: 1,
-        model: 'mail.channel',
-        record_name: 'General',
-        res_id: 20,
+        id: 1, // random unique id
+        model: 'mail.channel', // expected value to link message to channel
+        moderation_status: 'pending_moderation', // message is expected to be pending
+        res_id: 20, // id of the channel
     };
     await afterNextRender(() => {
         const notifications = [[
-            ['my-db', 'res.partner', this.env.session.partner_id],
+            ['my-db', 'res.partner', this.env.messaging.currentPartner.id],
             { type: 'moderator', message: messageData },
         ]];
         this.widget.call('bus_service', 'trigger', 'notification', notifications);
@@ -1224,6 +1019,157 @@ QUnit.test('new pending moderation message posted by someone else when moderator
         document.body,
         `.o_Message[data-message-local-id="${message.localId}"]`,
         "the pending moderation message should be in moderation box"
+    );
+});
+
+QUnit.test('accept multiple moderation messages', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // channel must be moderated to test the feature
+    });
+    this.data['mail.message'].records.push(
+        {
+            body: "not empty",
+            model: 'mail.channel',
+            moderation_status: 'pending_moderation',
+            res_id: 20,
+        },
+        {
+            body: "not empty",
+            model: 'mail.channel',
+            moderation_status: 'pending_moderation',
+            res_id: 20,
+        },
+        {
+            body: "not empty",
+            model: 'mail.channel',
+            moderation_status: 'pending_moderation',
+            res_id: 20,
+        }
+    );
+
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.box_moderation',
+            },
+        },
+    });
+
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        3,
+        "should initially display 3 messages"
+    );
+
+    await afterNextRender(() => {
+        document.querySelectorAll('.o_Message_checkbox')[0].click();
+        document.querySelectorAll('.o_Message_checkbox')[1].click();
+    });
+    assert.containsN(
+        document.body,
+        '.o_Message_checkbox:checked',
+        2,
+        "2 messages should have been checked after clicking on their respective checkbox"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should be displayed as two messages are selected"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept').click()
+    );
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        1,
+        "should display 1 message as the 2 others have been accepted"
+    );
+    assert.hasClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should no longer be displayed as messages have been unselected"
+    );
+});
+
+QUnit.test('accept multiple moderation messages after having accepted other messages', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.channel'].records.push({
+        id: 20, // random unique id, will be used to link message and will be referenced in the test
+        is_moderator: true, // current user is expected to be moderator of channel
+        moderation: true, // channel must be moderated to test the feature
+    });
+    this.data['mail.message'].records.push(
+        {
+            body: "not empty",
+            model: 'mail.channel',
+            moderation_status: 'pending_moderation',
+            res_id: 20,
+        },
+        {
+            body: "not empty",
+            model: 'mail.channel',
+            moderation_status: 'pending_moderation',
+            res_id: 20,
+        },
+        {
+            body: "not empty",
+            model: 'mail.channel',
+            moderation_status: 'pending_moderation',
+            res_id: 20,
+        }
+    );
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.box_moderation',
+            },
+        },
+    });
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        3,
+        "should initially display 3 messages"
+    );
+
+    await afterNextRender(() => {
+        document.querySelectorAll('.o_Message_checkbox')[0].click();
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept').click()
+    );
+    await afterNextRender(() => document.querySelectorAll('.o_Message_checkbox')[0].click());
+    assert.containsOnce(
+        document.body,
+        '.o_Message_checkbox:checked',
+        "a message should have been checked after clicking on its checkbox"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should be displayed as a message is selected"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display only one message left after the two others has been accepted"
+    );
+    assert.hasClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should no longer be displayed as message has been unselected"
     );
 });
 

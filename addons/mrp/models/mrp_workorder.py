@@ -14,7 +14,6 @@ from odoo.tools import float_compare, float_round, format_datetime
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
     _description = 'Work Order'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     def _read_group_workcenter_id(self, workcenters, domain, order):
         workcenter_ids = self.env.context.get('default_workcenter_id')
@@ -35,8 +34,7 @@ class MrpWorkorder(models.Model):
     product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True, check_company=True)
     product_tracking = fields.Selection(related="product_id.tracking")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
-    use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
-    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True)
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True)
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,
         related='production_id.reservation_state', store=True,
@@ -76,13 +74,13 @@ class MrpWorkorder(models.Model):
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        store=True, tracking=True, copy=False)
+        store=True, copy=False)
     date_planned_finished = fields.Datetime(
         'Scheduled End Date',
         compute='_compute_dates_planned',
         inverse='_set_dates_planned',
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
-        store=True, tracking=True, copy=False)
+        store=True, copy=False)
     date_start = fields.Datetime(
         'Start Date', copy=False,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
@@ -95,11 +93,11 @@ class MrpWorkorder(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Expected duration (in minutes)")
     duration = fields.Float(
-        'Real Duration', compute='_compute_duration',
-        readonly=True, store=True)
+        'Real Duration', compute='_compute_duration', inverse='_set_duration',
+        readonly=False, store=True, copy=False)
     duration_unit = fields.Float(
         'Duration Per Unit', compute='_compute_duration',
-        readonly=True, store=True)
+        group_operator="avg", readonly=True, store=True)
     duration_percent = fields.Integer(
         'Duration Deviation (%)', compute='_compute_duration',
         group_operator="avg", readonly=True, store=True)
@@ -194,7 +192,7 @@ class MrpWorkorder(models.Model):
                 if conflicted_dict.get(wo.id):
                     infos.append({
                         'color': 'text-danger',
-                        'msg': _("Planned at the same time than other workorder(s) at %s", wo.workcenter_id.display_name)
+                        'msg': _("Planned at the same time as other workorder(s) at %s", wo.workcenter_id.display_name)
                     })
             color_icon = infos and infos[-1]['color'] or False
             wo.show_json_popover = bool(color_icon)
@@ -221,8 +219,9 @@ class MrpWorkorder(models.Model):
 
     def _set_qty_producing(self):
         for workorder in self:
-            workorder.production_id.qty_producing = workorder.qty_producing
-            workorder.production_id._set_qty_producing()
+            if workorder.qty_producing != 0 and workorder.production_id.qty_producing != workorder.qty_producing:
+                workorder.production_id.qty_producing = workorder.qty_producing
+                workorder.production_id._set_qty_producing()
 
     # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
@@ -239,7 +238,7 @@ class MrpWorkorder(models.Model):
     def _set_dates_planned(self):
         date_from = self[0].date_planned_start
         date_to = self[0].date_planned_finished
-        self.mapped('leave_id').write({
+        self.mapped('leave_id').sudo().write({
             'date_from': date_from,
             'date_to': date_to,
         })
@@ -250,7 +249,7 @@ class MrpWorkorder(models.Model):
             if len(wo.production_id.workorder_ids) == 1:
                 res.append((wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)))
             else:
-                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
+                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo._origin.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
         return res
 
     def unlink(self):
@@ -281,6 +280,42 @@ class MrpWorkorder(models.Model):
             else:
                 order.duration_percent = 0
 
+    def _set_duration(self):
+
+        def _float_duration_to_second(duration):
+            minutes = duration // 1
+            seconds = (duration % 1) * 60
+            return minutes * 60 + seconds
+
+        for order in self:
+            old_order_duation = sum(order.time_ids.mapped('duration'))
+            new_order_duration = order.duration
+            if new_order_duration == old_order_duation:
+                continue
+
+            delta_duration = new_order_duration - old_order_duation
+
+            if delta_duration > 0:
+                date_start = datetime.now() - timedelta(seconds=_float_duration_to_second(delta_duration))
+                self.env['mrp.workcenter.productivity'].create(
+                    order._prepare_timeline_vals(delta_duration, date_start, datetime.now())
+                )
+            else:
+                duration_to_remove = abs(delta_duration)
+                timelines = order.time_ids.sorted(lambda t: t.date_start)
+                timelines_to_unlink = self.env['mrp.workcenter.productivity']
+                for timeline in timelines:
+                    if duration_to_remove <= 0.0:
+                        break
+                    if timeline.duration <= duration_to_remove:
+                        duration_to_remove -= timeline.duration
+                        timelines_to_unlink |= timeline
+                    else:
+                        new_time_line_duration = timeline.duration - duration_to_remove
+                        timeline.date_start = timeline.date_end - timedelta(seconds=_float_duration_to_second(new_time_line_duration))
+                        break
+                timelines_to_unlink.unlink()
+
     @api.depends('duration', 'duration_expected', 'state')
     def _compute_progress(self):
         for order in self:
@@ -298,7 +333,7 @@ class MrpWorkorder(models.Model):
             if order.working_user_ids:
                 order.last_working_user_id = order.working_user_ids[-1]
             elif order.time_ids:
-                order.last_working_user_id = order.time_ids.sorted('date_end')[-1].user_id
+                order.last_working_user_id = order.time_ids.filtered('date_end').sorted('date_end')[-1].user_id if order.time_ids.filtered('date_end') else order.time_ids[-1].user_id
             else:
                 order.last_working_user_id = False
             if order.time_ids.filtered(lambda x: (x.user_id.id == self.env.user.id) and (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
@@ -315,8 +350,11 @@ class MrpWorkorder(models.Model):
     @api.onchange('date_planned_finished')
     def _onchange_date_planned_finished(self):
         if self.date_planned_start and self.date_planned_finished:
-            diff = self.date_planned_finished - self.date_planned_start
-            self.duration_expected = diff.total_seconds() / 60
+            interval = self.workcenter_id.resource_calendar_id.get_work_duration_data(
+                self.date_planned_start, self.date_planned_finished,
+                domain=[('time_type', 'in', ['leave', 'other'])]
+            )
+            self.duration_expected = interval['hours'] * 60
 
     @api.onchange('operation_id')
     def _onchange_operation_id(self):
@@ -327,7 +365,10 @@ class MrpWorkorder(models.Model):
     @api.onchange('date_planned_start', 'duration_expected')
     def _onchange_date_planned_start(self):
         if self.date_planned_start and self.duration_expected:
-            self.date_planned_finished = self.date_planned_start + relativedelta(minutes=self.duration_expected)
+            self.date_planned_finished = self.workcenter_id.resource_calendar_id.plan_hours(
+                self.duration_expected / 60.0, self.date_planned_start,
+                compute_leaves=True, domain=[('time_type', 'in', ['leave', 'other'])]
+            )
 
     @api.onchange('operation_id', 'workcenter_id', 'qty_production')
     def _onchange_expected_duration(self):
@@ -342,8 +383,6 @@ class MrpWorkorder(models.Model):
                     if workorder.state in ('progress', 'done', 'cancel'):
                         raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
                     workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
-        if any(k not in ['time_ids', 'duration_expected', 'next_work_order_id'] for k in values.keys()) and any(workorder.state == 'done' for workorder in self):
-            raise UserError(_('You can not change the finished work order.'))
         if 'date_planned_start' in values or 'date_planned_finished' in values:
             for workorder in self:
                 start_date = fields.Datetime.to_datetime(values.get('date_planned_start')) or workorder.date_planned_start
@@ -426,13 +465,6 @@ class MrpWorkorder(models.Model):
         return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
     def _start_nextworkorder(self):
-        rounding = self.product_id.uom_id.rounding
-        if self.next_work_order_id.state == 'pending' and (
-                (self.operation_id.batch == 'no' and
-                 float_compare(self.qty_production, self.qty_produced, precision_rounding=rounding) <= 0) or
-                (self.operation_id.batch == 'yes' and
-                 float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
-            self.next_work_order_id.state = 'ready'
         if self.state == 'done' and self.next_work_order_id.state == 'pending':
             self.next_work_order_id.state = 'ready'
 
@@ -483,29 +515,13 @@ class MrpWorkorder(models.Model):
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
 
-        # Need a loss in case of the real time exceeding the expected
-        timeline = self.env['mrp.workcenter.productivity']
-        if not self.duration_expected or self.duration < self.duration_expected:
-            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive')], limit=1)
-            if not len(loss_id):
-                raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-        else:
-            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','performance')], limit=1)
-            if not len(loss_id):
-                raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        self.env['mrp.workcenter.productivity'].create(
+            self._prepare_timeline_vals(self.duration, datetime.now())
+        )
         if self.production_id.state != 'progress':
             self.production_id.write({
                 'date_start': datetime.now(),
             })
-        timeline.create({
-            'workorder_id': self.id,
-            'workcenter_id': self.workcenter_id.id,
-            'description': _('Time Tracking: ') + self.env.user.name,
-            'loss_id': loss_id[0].id,
-            'date_start': datetime.now(),
-            'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
-            'company_id': self.company_id.id,
-        })
         if self.state == 'progress':
             return True
         start_date = datetime.now()
@@ -525,8 +541,9 @@ class MrpWorkorder(models.Model):
             vals['leave_id'] = leave.id
             return self.write(vals)
         else:
-            vals['date_planned_start'] = start_date
-            if self.date_planned_finished < start_date:
+            if self.date_planned_start > start_date:
+                vals['date_planned_start'] = start_date
+            if self.date_planned_finished and self.date_planned_finished < start_date:
                 vals['date_planned_finished'] = start_date
             return self.write(vals)
 
@@ -609,7 +626,7 @@ class MrpWorkorder(models.Model):
         return True
 
     def button_done(self):
-        if any([x.state in ('done', 'cancel') for x in self]):
+        if any(x.state in ('done', 'cancel') for x in self):
             raise UserError(_('A Manufacturing Order is already done or cancelled.'))
         self.end_all()
         end_date = datetime.now()
@@ -636,13 +653,13 @@ class MrpWorkorder(models.Model):
 
     def action_see_move_scrap(self):
         self.ensure_one()
-        action = self.env.ref('stock.action_stock_scrap').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_stock_scrap")
         action['domain'] = [('workorder_id', '=', self.id)]
         return action
 
     def action_open_wizard(self):
         self.ensure_one()
-        action = self.env.ref('mrp.mrp_workorder_mrp_production_form').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_workorder_mrp_production_form")
         action['res_id'] = self.id
         return action
 
@@ -651,10 +668,15 @@ class MrpWorkorder(models.Model):
         for wo in self:
             wo.qty_remaining = float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
 
-    def _get_duration_expected(self, alternative_workcenter=False):
+    def _get_duration_expected(self, alternative_workcenter=False, ratio=1):
         self.ensure_one()
         if not self.workcenter_id:
-            return False
+            return self.duration_expected
+        if not self.operation_id:
+            duration_expected_working = (self.duration_expected - self.workcenter_id.time_start - self.workcenter_id.time_stop) * self.workcenter_id.time_efficiency / 100.0
+            if duration_expected_working < 0:
+                duration_expected_working = 0
+            return self.workcenter_id.time_start + self.workcenter_id.time_stop + duration_expected_working * ratio * 100.0 / self.workcenter_id.time_efficiency
         qty_production = self.production_id.product_uom_id._compute_quantity(self.qty_production, self.production_id.product_id.uom_id)
         cycle_number = float_round(qty_production / self.workcenter_id.capacity, precision_digits=0, rounding_method='UP')
         if alternative_workcenter:
@@ -706,6 +728,27 @@ class MrpWorkorder(models.Model):
             round=False
         )
 
+    def _prepare_timeline_vals(self, duration, date_start, date_end=False):
+        # Need a loss in case of the real time exceeding the expected
+        if not self.duration_expected or duration < self.duration_expected:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        else:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        return {
+            'workorder_id': self.id,
+            'workcenter_id': self.workcenter_id.id,
+            'description': _('Time Tracking: %(user)s', user=self.env.user.name),
+            'loss_id': loss_id[0].id,
+            'date_start': date_start,
+            'date_end': date_end,
+            'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
+            'company_id': self.company_id.id,
+        }
+
     def _update_finished_move(self):
         """ Update the finished move & move lines in order to set the finished
         product lot on it as well as the produced quantity. This method get the
@@ -714,7 +757,9 @@ class MrpWorkorder(models.Model):
             lambda move: move.product_id == self.product_id and
             move.state not in ('done', 'cancel')
         )
-        if production_move and production_move.product_id.tracking != 'none':
+        if not production_move:
+            return
+        if production_move.product_id.tracking != 'none':
             if not self.finished_lot_id:
                 raise UserError(_('You need to provide a lot for the finished product.'))
             move_line = production_move.move_line_ids.filtered(
@@ -743,16 +788,6 @@ class MrpWorkorder(models.Model):
                 float_round(self.qty_producing, precision_rounding=rounding)
             )
 
-    def _strict_consumption_check(self):
-        if self.consumption == 'strict':
-            for move in self.move_raw_ids:
-                qty_done = 0.0
-                for line in move.move_line_ids:
-                    qty_done += line.product_uom_id._compute_quantity(line.qty_done, move.product_uom)
-                rounding = move.product_uom_id.rounding
-                if float_compare(qty_done, move.product_uom_qty, precision_rounding=rounding) != 0:
-                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.', move.product_id.name))
-
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been produced """
         if self.product_tracking == 'serial' and self.finished_lot_id:
@@ -764,3 +799,8 @@ class MrpWorkorder(models.Model):
             ])
             if sml:
                 raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
+
+    def _update_qty_producing(self, quantity):
+        self.ensure_one()
+        if self.qty_producing:
+            self.qty_producing = quantity

@@ -5,13 +5,15 @@
 from unittest.mock import patch
 import email.policy
 import email.message
+import re
 import threading
 
-from odoo.tests.common import BaseCase, SavepointCase, TransactionCase
+from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tools import (
     is_html_empty, html_sanitize, append_content_to_html, plaintext2html,
     email_split,
     misc, formataddr,
+    prepend_html_content,
 )
 
 from . import test_mail_examples
@@ -334,6 +336,57 @@ class TestHtmlTools(BaseCase):
         for content in valid_html_samples:
             self.assertFalse(is_html_empty(content))
 
+    def test_prepend_html_content(self):
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><span>content</span><div>test</div></body></html>")
+
+        body = "<div>test</div>"
+        content = "<span>content</span>"
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<span>content</span><div>test</div>")
+
+        body = """
+            <body>
+                <div>test</div>
+            </body>
+        """
+
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<body><span>content</span><div>test</div></body>")
+
+        body = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+
+        content = """
+            <html>
+                <body>
+                    <div>test</div>
+                </body>
+            </html>
+        """
+        result = prepend_html_content(body, content)
+        result = re.sub(r'[\s\t]', '', result)
+        self.assertEqual(result, "<html><body><div>test</div><div>test</div></body></html>")
+
 
 class TestEmailTools(BaseCase):
     """ Test some of our generic utility functions for emails """
@@ -373,7 +426,7 @@ class TestEmailTools(BaseCase):
                     self.assertEqual(formataddr(pair, charset), expected)
 
 
-class EmailConfigCase(SavepointCase):
+class EmailConfigCase(TransactionCase):
     @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
     def test_default_email_from(self, *args):
         """Email from setting is respected."""
@@ -397,37 +450,41 @@ class EmailConfigCase(SavepointCase):
 
 class TestEmailMessage(TransactionCase):
     def test_as_string(self):
-        """Ensure all email sent are bpo-34424 free"""
+        """Ensure all email sent are bpo-34424 and bpo-35805 free"""
+
+        message_truth = (
+            r'From: .+? <joe@example\.com>\r\n'
+            r'To: .+? <joe@example\.com>\r\n'
+            r'Message-Id: <[0-9a-z.-]+@[0-9a-z.-]+>\r\n'
+            r'References: (<[0-9a-z.-]+@[0-9a-z.-]+>\s*)+\r\n'
+            r'\r\n'
+        )
 
         class FakeSMTP:
             """SMTP stub"""
             def __init__(this):
                 this.email_sent = False
 
+            # Python 3 before 3.7.4
             def sendmail(this, smtp_from, smtp_to_list, message_str,
                          mail_options=(), rcpt_options=()):
                 this.email_sent = True
-                message_truth = (
-                    r'From: .+? <joe@example\.com>\r\n'
-                    r'To: .+? <joe@example\.com>\r\n'
-                    r'\r\n'
-                )
                 self.assertRegex(message_str, message_truth)
 
+            # Python 3.7.4+
             def send_message(this, message, smtp_from, smtp_to_list,
                              mail_options=(), rcpt_options=()):
                 message_str = message.as_string()
                 this.email_sent = True
-                message_truth = (
-                    r'From: .+? <joe@example\.com>\r\n'
-                    r'To: .+? <joe@example\.com>\r\n'
-                    r'\r\n'
-                )
                 self.assertRegex(message_str, message_truth)
 
         msg = email.message.EmailMessage(policy=email.policy.SMTP)
         msg['From'] = '"Joé Doe" <joe@example.com>'
         msg['To'] = '"Joé Doe" <joe@example.com>'
+
+        # Message-Id & References fields longer than 77 chars (bpo-35805)
+        msg['Message-Id'] = '<929227342217024.1596730490.324691772460938-example-30661-some.reference@test-123.example.com>'
+        msg['References'] = '<345227342212345.1596730777.324691772483620-example-30453-other.reference@test-123.example.com>'
 
         smtp = FakeSMTP()
         self.patch(threading.currentThread(), 'testing', False)

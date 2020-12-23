@@ -680,6 +680,150 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
             parent.destroy();
         });
 
+        QUnit.test("adapter keeps same el as sub widget (modify)", async function (assert) {
+            assert.expect(7);
+
+            let myWidget;
+            const MyWidget = Widget.extend({
+                events: {
+                    click: "_onClick",
+                },
+                init: function (parent, name) {
+                    myWidget = this;
+                    this._super.apply(this, arguments);
+                    this.name = name;
+                },
+                start: function () {
+                    this.render();
+                },
+                render: function () {
+                    this.$el.text("Click me!");
+                },
+                update: function (name) {
+                    this.name = name;
+                },
+                _onClick: function () {
+                    assert.step(this.name);
+                },
+            });
+            class MyWidgetAdapter extends ComponentAdapter {
+                updateWidget(nextProps) {
+                    return this.widget.update(nextProps.name);
+                }
+                renderWidget() {
+                    this.widget.render();
+                }
+            }
+            class Parent extends Component {
+                constructor() {
+                    super(...arguments);
+                    this.MyWidget = MyWidget;
+                    this.state = useState({
+                        name: "GED",
+                    });
+                }
+            }
+            Parent.template = xml`
+                <MyWidgetAdapter Component="MyWidget" name="state.name"/>
+            `;
+            Parent.components = { MyWidgetAdapter };
+
+            const target = testUtils.prepareTarget();
+            const parent = new Parent();
+            await parent.mount(target);
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "AAB";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "MCM";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            assert.verifySteps(["GED", "AAB", "MCM"]);
+
+            parent.destroy();
+        });
+
+        QUnit.test("adapter keeps same el as sub widget (replace)", async function (assert) {
+            assert.expect(7);
+
+            let myWidget;
+            const MyWidget = Widget.extend({
+                events: {
+                    click: "_onClick",
+                },
+                init: function (parent, name) {
+                    myWidget = this;
+                    this._super.apply(this, arguments);
+                    this.name = name;
+                },
+                start: function () {
+                    this.render();
+                },
+                render: function () {
+                    this._replaceElement("<div>Click me!</div>");
+                },
+                update: function (name) {
+                    this.name = name;
+                },
+                _onClick: function () {
+                    assert.step(this.name);
+                },
+            });
+            class MyWidgetAdapter extends ComponentAdapter {
+                updateWidget(nextProps) {
+                    return this.widget.update(nextProps.name);
+                }
+                renderWidget() {
+                    this.widget.render();
+                }
+            }
+            class Parent extends Component {
+                constructor() {
+                    super(...arguments);
+                    this.MyWidget = MyWidget;
+                    this.state = useState({
+                        name: "GED",
+                    });
+                }
+            }
+            Parent.template = xml`
+                <MyWidgetAdapter Component="MyWidget" name="state.name"/>
+            `;
+            Parent.components = { MyWidgetAdapter };
+
+            const target = testUtils.prepareTarget();
+            const parent = new Parent();
+            await parent.mount(target);
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "AAB";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            parent.state.name = "MCM";
+            await nextTick();
+
+            assert.strictEqual(parent.el, myWidget.el);
+            await testUtils.dom.click(parent.el);
+
+            assert.verifySteps(["GED", "AAB", "MCM"]);
+
+            parent.destroy();
+        });
+
         QUnit.module('WidgetAdapterMixin and ComponentWrapper');
 
         QUnit.test("widget with sub component", async function (assert) {

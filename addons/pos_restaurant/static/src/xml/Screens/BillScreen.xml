@@ -10,7 +10,9 @@
                         <span> </span>
                         <span>Back</span>
                     </span>
-                    <h1>Bill Printing</h1>
+                    <div class="top-content-center">
+                        <h1>Bill Printing</h1>
+                    </div>
                     <span class="button next highlight" t-on-click="confirm">
                         <span>Ok</span>
                         <span> </span>
@@ -24,7 +26,7 @@
                         <span>Print</span>
                     </div>
                     <div class="pos-receipt-container">
-                        <OrderReceipt order="currentOrder" isBill="true"/>
+                        <OrderReceipt order="currentOrder" isBill="true" t-ref="order-receipt"/>
                     </div>
                 </div>
             </div>

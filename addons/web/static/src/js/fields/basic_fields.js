@@ -160,6 +160,14 @@ var DebouncedField = AbstractField.extend({
      * @returns {*}
      */
     _getValue: function () {},
+    /**
+     * Should make an action on lost focus.
+     *
+     * @abstract
+     * @private
+     * @returns {*}
+     */
+    _onBlur: function () {},
 });
 
 var InputField = DebouncedField.extend({
@@ -169,6 +177,7 @@ var InputField = DebouncedField.extend({
     events: _.extend({}, DebouncedField.prototype.events, {
         'input': '_onInput',
         'change': '_onChange',
+        'blur' : '_onBlur',
     }),
 
     /**
@@ -246,6 +255,15 @@ var InputField = DebouncedField.extend({
         return this.$input.val();
     },
     /**
+     * By default this only calls a debounced method to notify the outside world
+     * of the changes if the actual value is not the same than the previous one.
+     * @see _doDebouncedAction
+     */
+    _notifyChanges() {
+        this.isDirty = !this._isLastSetValue(this.$input.val());
+        this._doDebouncedAction();
+    },
+    /**
      * Formats an input element for edit mode. This is in a separate function so
      * extending widgets can use it on their input without having input as tagName.
      *
@@ -262,7 +280,7 @@ var InputField = DebouncedField.extend({
         var inputAttrs = { placeholder: this.attrs.placeholder || "" };
         var inputVal;
         if (this.nodeOptions.isPassword) {
-            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: 'new-password' });
+            inputAttrs = _.extend(inputAttrs, { type: 'password', autocomplete: this.attrs.autocomplete || 'new-password' });
             inputVal = this.value || '';
         } else {
             inputAttrs = _.extend(inputAttrs, { type: 'text', autocomplete: this.attrs.autocomplete || 'none'});
@@ -319,15 +337,13 @@ var InputField = DebouncedField.extend({
         this.lastChangeEvent = event;
     },
     /**
-     * Called when the user is typing text -> By default this only calls a
-     * debounced method to notify the outside world of the changes.
-     * @see _doDebouncedAction
+     * Called when the user is typing text
+     * @see _notifyChanges
      *
      * @private
      */
-    _onInput: function () {
-        this.isDirty = !this._isLastSetValue(this.$input.val());
-        this._doDebouncedAction();
+    _onInput() {
+        this._notifyChanges();
     },
     /**
      * Stops the left/right navigation move event if the cursor is not at the
@@ -508,6 +524,43 @@ var NumericField = InputField.extend({
         }
         return this._super(value, options);
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Replace the decimal separator of the numpad decimal key
+     * by the decimal separator from the user's language setting.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onKeydown(ev) {
+        const kbdEvt = ev.originalEvent;
+        if (kbdEvt && utils.isNumpadDecimalSeparatorKey(kbdEvt)) {
+            const inputField = this.$input[0];
+            const curVal = inputField.value;
+            const from = inputField.selectionStart;
+            const to = inputField.selectionEnd;
+            const point = _t.database.parameters.decimal_point;
+
+            // Make sure the correct decimal separator
+            // from the user's settings is inserted
+            inputField.value = curVal.slice(0, from) + point + curVal.slice(to);
+
+            // Put the user caret at the right place
+            inputField.selectionStart = inputField.selectionEnd = from + point.length;
+
+            // Tell the world we made some changes and
+            // return preventing event default behaviour.
+            this._notifyChanges();
+            kbdEvt.preventDefault();
+            return;
+        }
+
+        return this._super(...arguments);
+    },
 });
 
 var FieldChar = InputField.extend(TranslatableFieldMixin, {
@@ -637,6 +690,15 @@ var FieldDateRange = InputField.extend({
             window.removeEventListener('scroll', this._onScroll, true);
         }
         this._super.apply(this, arguments);
+    },
+    /**
+     * Return the date written in the input, in UTC.
+     *
+     * @private
+     * @returns {Moment|false}
+     */
+    _getValue: function () {
+        return field_utils.parse[this.formatType](this.$input.val(), this.field, { timezone: true });
     },
 
     //--------------------------------------------------------------------------
@@ -863,6 +925,25 @@ var FieldDate = InputField.extend({
         this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Confirm the value on hit enter and re-render
+     *
+     * @private
+     * @override
+     * @param {KeyboardEvent} ev
+     */
+    async _onKeydown(ev) {
+        this._super(...arguments);
+        if (ev.which === $.ui.keyCode.ENTER) {
+            await this._setValue(this.$input.val());
+            this._render();
+        }
+    },
 });
 
 var FieldDateTime = FieldDate.extend({
@@ -925,7 +1006,7 @@ var FieldDateTime = FieldDate.extend({
     },
 });
 
-const RemainingDays = FieldDate.extend({
+const RemainingDays = AbstractField.extend({
     description: _lt("Remaining Days"),
     supportedFieldTypes: ['date', 'datetime'],
 
@@ -940,7 +1021,7 @@ const RemainingDays = FieldDate.extend({
      *
      * @override
      */
-    _renderReadonly() {
+    _render() {
         if (this.value === false) {
             this.$el.removeClass('text-bf text-danger text-warning');
             return;
@@ -1190,7 +1271,8 @@ var FieldFloatToggle = AbstractField.extend({
 
         this.formatType = 'float_factor';
 
-        if (this.mode === 'edit') {
+        // force the button to work in readonly mode
+        if (this.mode === 'edit' || this.nodeOptions.force_button) {
             this.tagName = 'button';
         }
 
@@ -1280,14 +1362,22 @@ var FieldFloatToggle = AbstractField.extend({
      * @param {OdooEvent} ev
      */
     _onClick: function(ev) {
-        if (this.mode === 'edit') {
-            ev.stopPropagation(); // only stop propagation in edit mode
+        // force the button to work in readonly mode
+        if (this.mode === 'edit' || this.nodeOptions.force_button) {
+            ev.stopPropagation();
             var next_val = this._nextValue();
             next_val = field_utils.format['float'](next_val);
             this._setValue(next_val); // will be parsed in _setValue
         }
     },
-
+    /**
+     * For float toggle fields, 0 is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return this.value === 0 || this._super(...arguments);
+    },
 });
 
 var FieldPercentage = FieldFloat.extend({
@@ -1408,7 +1498,7 @@ var ListFieldText = FieldText.extend({
 var HandleWidget = AbstractField.extend({
     description: _lt("Handle"),
     noLabel: true,
-    className: 'o_row_handle fa fa-arrows ui-sortable-handle',
+    className: 'o_row_handle fa fa-sort ui-sortable-handle',
     widthInList: '33px',
     tagName: 'span',
     supportedFieldTypes: ['integer'],
@@ -1660,6 +1750,23 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     className: 'o_field_copy o_text_overflow',
 });
 
+var URLCopyClipboard = FieldChar.extend(CopyClipboard, {
+    description: _lt("Copy to Clipboard"),
+    clipboardTemplate: 'CopyClipboardChar',
+    className: 'o_field_copy o_text_overflow o_field_copy_url',
+    events: _.extend({}, FieldChar.prototype.events, {
+        'click': '_onClick',
+    }),
+
+    _onClick: function(ev) {
+        if(ev.target.className.includes('o_field_copy_url')) {
+            ev.stopPropagation();
+
+            window.open(this.value, '_blank');
+        }
+    }
+});
+
 var AbstractFieldBinary = AbstractField.extend({
     events: _.extend({}, AbstractField.prototype.events, {
         'change .o_input_file': 'on_file_change',
@@ -1870,38 +1977,37 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     _renderReadonly: function () {
         this._super.apply(this, arguments);
 
-        if(this.nodeOptions.zoom) {
-            var unique = this.recordData.__last_update;
-            var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
-            var $img;
-            var imageField = _.find(Object.keys(this.recordData), function(o) {
-                return o.startsWith('image_');
-            });
+        var unique = this.recordData.__last_update;
+        var url = this._getImageUrl(this.model, this.res_id, 'image_1920', unique);
+        var $img;
+        var imageField = _.find(Object.keys(this.recordData), function(o) {
+            return o.startsWith('image_');
+        });
 
-            if(this.nodeOptions.background)
-            {
-                if('tag' in this.nodeOptions) {
-                    this.tagName = this.nodeOptions.tag;
-                }
-
-                if('class' in this.attrs) {
-                    this.$el.addClass(this.attrs.class);
-                }
-
-                const image_field = this.field.manual ? this.name:'image_128';
-                var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
-
-                this.$el.empty();
-                $img = this.$el;
-                $img.css('backgroundImage', 'url(' + urlThumb + ')');
-            } else {
-                $img = this.$('img');
+        if(this.nodeOptions.background)
+        {
+            if('tag' in this.nodeOptions) {
+                this.tagName = this.nodeOptions.tag;
             }
+
+            if('class' in this.attrs) {
+                this.$el.addClass(this.attrs.class);
+            }
+
+            const image_field = this.field.manual ? this.name:'image_128';
+            var urlThumb = this._getImageUrl(this.model, this.res_id, image_field, unique);
+
+            this.$el.empty();
+            $img = this.$el;
+            $img.css('backgroundImage', 'url(' + urlThumb + ')');
+        } else {
+            $img = this.$('img');
+        }
+        if(this.nodeOptions.zoom) {
             var zoomDelay = 0;
             if (this.nodeOptions.zoom_delay) {
                 zoomDelay = this.nodeOptions.zoom_delay;
             }
-
             if(this.recordData[imageField]) {
                 $img.attr('data-zoom', 1);
                 $img.attr('data-zoom-image', url);
@@ -1912,10 +2018,13 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     attach: '.o_content',
                     attachToTarget: true,
                     onShow: function () {
-                        if(this.$zoom.height() < 256 && this.$zoom.width() < 256) {
+                        var zoomHeight = Math.ceil(this.$zoom.height());
+                        var zoomWidth = Math.ceil(this.$zoom.width());
+                        if( zoomHeight < 128 && zoomWidth < 128) {
                             this.hide();
                         }
                         core.bus.on('keydown', this, this.hide);
+                        core.bus.on('click', this, this.hide);
                     },
                     beforeAttach: function () {
                         this.$flyout.css({ width: '512px', height: '512px' });
@@ -1927,11 +2036,61 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     },
 });
 
+var CharImageUrl = AbstractField.extend({
+    className: 'o_field_image',
+    description: _lt("Image"),
+    supportedFieldTypes: ['char'],
+    placeholder: "/web/static/src/img/placeholder.png",
+
+    _renderReadonly: function () {
+        var self = this;
+        const url = this.value;
+        if (url) {
+            var $img = $(qweb.render("FieldBinaryImage-img", {widget: this, url: url}));
+            // override css size attributes (could have been defined in css files)
+            // if specified on the widget
+            const width = this.nodeOptions.size ? this.nodeOptions.size[0] : this.attrs.width;
+            const height = this.nodeOptions.size ? this.nodeOptions.size[1] : this.attrs.height;
+            if (width) {
+                $img.attr('width', width);
+                $img.css('max-width', width + 'px');
+            }
+            if (height) {
+                $img.attr('height', height);
+                $img.css('max-height', height + 'px');
+            }
+            this.$('> img').remove();
+            this.$el.prepend($img);
+
+            $img.one('error', function () {
+                $img.attr('src', self.placeholder);
+                self.displayNotification({
+                    type: 'info',
+                    message: _t("Could not display the specified image url."),
+                });
+            });
+        }
+
+        return this._super.apply(this, arguments);
+    },
+});
+
 var KanbanFieldBinaryImage = FieldBinaryImage.extend({
     // In kanban views, there is a weird logic to determine whether or not a
     // click on a card should open the record in a form view.  This logic checks
     // if the clicked element has click handlers bound on it, and if so, does
     // not open the record (assuming that the click will be handle by someone
+    // else).  In the case of this widget, there are clicks handler but they
+    // only apply in edit mode, which is never the case in kanban views, so we
+    // simply remove them.
+    events: {},
+});
+
+var KanbanCharImageUrl = CharImageUrl.extend({
+    // In kanban views, there is a weird logic to determine whether or not a
+    // click on a card should open the record in a form view.  This logic checks
+    // if the clicked element has click handlers bound on it, and if so, does
+    // not open the record (assuming that the click will be handled by someone
     // else).  In the case of this widget, there are clicks handler but they
     // only apply in edit mode, which is never the case in kanban views, so we
     // simply remove them.
@@ -2136,10 +2295,14 @@ var PriorityWidget = AbstractField.extend({
     // the current implementation of this widget makes it
     // only usable for fields of type selection
     className: "o_priority",
+    attributes: {
+        'role': 'radiogroup',
+    },
     events: {
         'mouseover > a': '_onMouseOver',
         'mouseout > a': '_onMouseOut',
         'click > a': '_onClick',
+        'keydown > a': '_onKeydown',
     },
     supportedFieldTypes: ['selection'],
 
@@ -2155,6 +2318,17 @@ var PriorityWidget = AbstractField.extend({
      */
     isSet: function () {
         return true;
+    },
+
+    /**
+     * Returns the currently-checked star, or the first one if no star is
+     * checked.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        var checked = this.$("[aria-checked='true']");
+        return checked.length ? checked : this.$("[data-index='1']");
     },
 
     //--------------------------------------------------------------------------
@@ -2174,8 +2348,11 @@ var PriorityWidget = AbstractField.extend({
         }) : 0;
         this.$el.empty();
         this.empty_value = this.field.selection[0][0];
+        this.$el.attr('aria-label', this.string);
+        const isReadonly = this.record.evalModifiers(this.attrs.modifiers).readonly;
         _.each(this.field.selection.slice(1), function (choice, index) {
-            self.$el.append(self._renderStar('<a href="#">', index_value >= index+1, index+1, choice[1]));
+            const tag = isReadonly ? '<span>' : '<a href="#">';
+            self.$el.append(self._renderStar(tag, index_value >= index + 1, index + 1, choice[1], index_value));
         });
     },
 
@@ -2186,12 +2363,18 @@ var PriorityWidget = AbstractField.extend({
      * @param {boolean} isFull whether the star is a full star or not
      * @param {integer} index the index of the star in the series
      * @param {string} tip tooltip for this star's meaning
+     * @param {integer} indexValue the index of the last full star or 0
      * @private
      */
-    _renderStar: function (tag, isFull, index, tip) {
+    _renderStar: function (tag, isFull, index, tip, indexValue) {
+        var isChecked = indexValue === index;
+        var defaultFocus = indexValue === 0 && index === 1;
         return $(tag)
+            .attr('role', 'radio')
+            .attr('aria-checked', isChecked)
             .attr('title', tip)
             .attr('aria-label', tip)
+            .attr('tabindex', isChecked || defaultFocus ? 0 : -1)
             .attr('data-index', index)
             .addClass('o_priority_star fa')
             .toggleClass('fa-star', isFull)
@@ -2243,6 +2426,36 @@ var PriorityWidget = AbstractField.extend({
         this.$('.o_priority_star').removeClass('fa-star-o').addClass('fa-star');
         $(event.currentTarget).nextAll().removeClass('fa-star').addClass('fa-star-o');
     },
+
+    /**
+     * Runs the default behavior when <enter> is pressed over a star
+     * (the same as if it was clicked); otherwise forwards event to the widget.
+     *
+     * @param {KeydownEvent} event
+     * @private
+     */
+    _onKeydown: function (event) {
+        if (event.which === $.ui.keyCode.ENTER) {
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
+
+    _onNavigationMove: function (ev) {
+        var $curControl = this.$('a:focus');
+        var $nextControl;
+        if (ev.data.direction === 'right' || ev.data.direction === 'down') {
+            $nextControl = $curControl.next('a');
+        } else if (ev.data.direction === 'left' || ev.data.direction === 'up') {
+            $nextControl = $curControl.prev('a');
+        }
+        if ($nextControl && $nextControl.length) {
+            ev.stopPropagation();
+            $nextControl.focus();
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
 });
 
 var AttachmentImage = AbstractField.extend({
@@ -2274,6 +2487,19 @@ var StateSelectionWidget = AbstractField.extend({
         'click .dropdown-item': '_setSelection',
     },
     supportedFieldTypes: ['selection'],
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Returns the drop down button.
+     *
+     * @override
+     */
+    getFocusableElement: function () {
+        return this.$("a[data-toggle='dropdown']");
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3511,6 +3737,8 @@ return {
     AbstractFieldBinary: AbstractFieldBinary,
     FieldBinaryImage: FieldBinaryImage,
     KanbanFieldBinaryImage: KanbanFieldBinaryImage,
+    CharImageUrl: CharImageUrl,
+    KanbanCharImageUrl: KanbanCharImageUrl,
     FieldBoolean: FieldBoolean,
     BooleanToggle: BooleanToggle,
     FieldChar: FieldChar,
@@ -3545,6 +3773,7 @@ return {
     UrlWidget: UrlWidget,
     TextCopyClipboard: TextCopyClipboard,
     CharCopyClipboard: CharCopyClipboard,
+    URLCopyClipboard: URLCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
     FieldColor: FieldColor,

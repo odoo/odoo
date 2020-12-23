@@ -18,7 +18,7 @@ class Rating(models.Model):
     _order = 'write_date desc'
     _rec_name = 'res_name'
     _sql_constraints = [
-        ('rating_range', 'check(rating >= 0 and rating <= 5)', 'Rating should be between 0 to 5'),
+        ('rating_range', 'check(rating >= 0 and rating <= 5)', 'Rating should be between 0 and 5'),
     ]
 
     @api.depends('res_model', 'res_id')
@@ -125,11 +125,12 @@ class Rating(models.Model):
             else:
                 rating.rating_text = 'no_rating'
 
-    @api.model
-    def create(self, values):
-        if values.get('res_model_id') and values.get('res_id'):
-            values.update(self._find_parent_data(values))
-        return super(Rating, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if values.get('res_model_id') and values.get('res_id'):
+                values.update(self._find_parent_data(values))
+        return super().create(vals_list)
 
     def write(self, values):
         if values.get('res_model_id') and values.get('res_id'):

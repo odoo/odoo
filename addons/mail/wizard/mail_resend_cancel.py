@@ -14,7 +14,7 @@ class MailResendCancel(models.TransientModel):
     @api.depends('model')
     def _compute_help_message(self):
         for wizard in self:
-            wizard.help_message = _("Are you sure you want to discard %s mail delivery failures. You won't be able to re-send these mails later!") % (wizard._context.get('unread_counter'))
+            wizard.help_message = _("Are you sure you want to discard %s mail delivery failures? You won't be able to re-send these mails later!") % (wizard._context.get('unread_counter'))
 
     def cancel_resend_action(self):
         author_id = self.env.user.partner_id.id

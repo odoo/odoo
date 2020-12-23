@@ -6,11 +6,11 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
 from odoo import fields
-from odoo.tests.common import SavepointCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user
 from odoo.addons.mail.tests.common import MailCase
 
 
-class TestEventNotifications(SavepointCase, MailCase):
+class TestEventNotifications(TransactionCase, MailCase):
 
     @classmethod
     def setUpClass(cls):
@@ -54,13 +54,13 @@ class TestEventNotifications(SavepointCase, MailCase):
             'message_type': 'user_notification',
             'subtype': 'mail.mt_note',
         }):
-            self.event.start += relativedelta(days=-1)
+            self.event.start = fields.Datetime.now() + relativedelta(days=1)
 
     def test_message_date_changed(self):
         self.event.write({
             'allday': True,
-            'start_date': date(2019, 10, 15),
-            'stop_date': date(2019, 10, 15),
+            'start_date': fields.Date.today() + relativedelta(days=7),
+            'stop_date': fields.Date.today() + relativedelta(days=8),
         })
         self.event.partner_ids = self.partner
         with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
@@ -68,6 +68,16 @@ class TestEventNotifications(SavepointCase, MailCase):
             'subtype': 'mail.mt_note',
         }):
             self.event.start_date += relativedelta(days=-1)
+
+    def test_message_date_changed_past(self):
+        self.event.write({
+            'allday': True,
+            'start_date': fields.Date.today(),
+            'stop_date': fields.Date.today() + relativedelta(days=1),
+        })
+        self.event.partner_ids = self.partner
+        with self.assertNoNotifications():
+            self.event.write({'start': date(2019, 1, 1)})
 
     def test_message_set_inactive_date_changed(self):
         self.event.write({

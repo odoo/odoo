@@ -8,7 +8,8 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
 
     startSteps();
 
-    ProductScreen.exec.order('Letter Tray', '10');
+    ProductScreen.exec.addOrderline('Letter Tray', '10');
+    ProductScreen.check.selectedOrderlineHas('Letter Tray', '10.0');
     ProductScreen.do.clickPayButton();
     PaymentScreen.check.emptyPaymentlines('52.8');
 
@@ -19,7 +20,9 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     PaymentScreen.check.changeIs('0.0');
     PaymentScreen.check.validateButtonIsHighlighted(false);
     // remove the selected paymentline with multiple backspace presses
-    PaymentScreen.do.pressNumpad('Backspace Backspace Backspace');
+    PaymentScreen.do.pressNumpad('Backspace Backspace');
+    PaymentScreen.check.selectedPaymentlineHas('Cash', '0.00');
+    PaymentScreen.do.pressNumpad('Backspace');
     PaymentScreen.check.emptyPaymentlines('52.8');
 
     // Pay with bank, the selected line should have full amount
@@ -63,11 +66,5 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
     PaymentScreen.check.changeIs('0.0');
     PaymentScreen.check.validateButtonIsHighlighted(true);
 
-    // toggle email button
-    PaymentScreen.do.clickEmailButton();
-    PaymentScreen.check.emailButtonIsHighligted(true);
-    PaymentScreen.do.clickEmailButton();
-    PaymentScreen.check.emailButtonIsHighligted(false);
-
-    Tour.register('PaymentScreenTour', { test: true, url: '/pos/web' }, getSteps());
+    Tour.register('PaymentScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

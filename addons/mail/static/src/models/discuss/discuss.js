@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/discuss.discuss.js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -38,24 +39,35 @@ function factory(dependencies) {
             this.update({ isOpen: false });
         }
 
+        focus() {
+            this.update({ isDoFocus: true });
+        }
+
         /**
          * @param {Event} ev
          * @param {Object} ui
          * @param {Object} ui.item
          * @param {integer} ui.item.id
          */
-        handleAddChannelAutocompleteSelect(ev, ui) {
-            if (ui.item.special) {
-                this.env.models['mail.thread'].createChannel({
-                    autoselect: true,
-                    name: this.addingChannelValue,
-                    public: ui.item.special,
-                    type: 'channel',
-                });
-            } else {
-                this.env.models['mail.thread'].joinChannel(ui.item.id, { autoselect: true });
-            }
+        async handleAddChannelAutocompleteSelect(ev, ui) {
+            const name = this.addingChannelValue;
             this.clearIsAddingItem();
+            if (ui.item.special) {
+                const channel = await this.async(() =>
+                    this.env.models['mail.thread'].performRpcCreateChannel({
+                        name,
+                        privacy: ui.item.special,
+                    })
+                );
+                channel.open();
+            } else {
+                const channel = await this.async(() =>
+                    this.env.models['mail.thread'].performRpcJoinChannel({
+                        channelId: ui.item.id,
+                    })
+                );
+                channel.open();
+            }
         }
 
         /**
@@ -67,10 +79,18 @@ function factory(dependencies) {
             const value = req.term;
             const escapedValue = owl.utils.escape(value);
             this.update({ addingChannelValue: value });
+            const domain = [
+                ['channel_type', '=', 'channel'],
+                ['name', 'ilike', value],
+            ];
+            const fields = ['channel_type', 'name', 'public', 'uuid'];
             const result = await this.async(() => this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_search_to_join',
-                args: [value],
+                model: "mail.channel",
+                method: "search_read",
+                kwargs: {
+                    domain,
+                    fields,
+                },
             }));
             const items = result.map(data => {
                 let escapedName = owl.utils.escape(data.name);
@@ -106,20 +126,7 @@ function factory(dependencies) {
          * @param {integer} ui.item.id
          */
         handleAddChatAutocompleteSelect(ev, ui) {
-            const partnerId = ui.item.id;
-            const partner = this.env.models['mail.partner'].find(partner =>
-                partner.id === partnerId
-            );
-            const chat = partner.correspondentThreads.find(thread => thread.channel_type === 'chat');
-            if (chat) {
-                this.threadViewer.update({ thread: [['link', chat]] });
-            } else {
-                this.env.models['mail.thread'].createChannel({
-                    autoselect: true,
-                    partnerId,
-                    type: 'chat',
-                });
-            }
+            this.env.messaging.openChat({ partnerId: ui.item.id });
             this.clearIsAddingItem();
         }
 
@@ -152,19 +159,43 @@ function factory(dependencies) {
          * is not yet initialized.
          */
         openInitThread() {
-            const [model, id] = this.initActiveId.split('_');
-            const thread = this.env.models['mail.thread'].find(thread =>
-                thread.id === (model !== 'mail.box' ? Number(id) : id) &&
-                thread.model === model
-            );
+            const [model, id] = typeof this.initActiveId === 'number'
+                ? ['mail.channel', this.initActiveId]
+                : this.initActiveId.split('_');
+            const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: model !== 'mail.box' ? Number(id) : id,
+                model,
+            });
             if (!thread) {
                 return;
             }
-            this.threadViewer.update({
-                stringifiedDomain: '[]',
+            thread.open();
+            if (this.env.messaging.device.isMobile && thread.channel_type) {
+                this.update({ activeMobileNavbarTabId: thread.channel_type });
+            }
+        }
+
+
+        /**
+         * Opens the given thread in Discuss, and opens Discuss if necessary.
+         *
+         * @param {mail.thread} thread
+         */
+        async openThread(thread) {
+            this.update({
                 thread: [['link', thread]],
             });
-            thread.open({ resetDiscussDomain: true });
+            this.focus();
+            if (!this.isOpen) {
+                this.env.bus.trigger('do-action', {
+                    action: 'mail.action_discuss',
+                    options: {
+                        active_id: this.threadToActiveId(this),
+                        clear_breadcrumbs: false,
+                        on_reverse_breadcrumb: () => this.close(),
+                    },
+                });
+            }
         }
 
         /**
@@ -184,7 +215,12 @@ function factory(dependencies) {
          */
         replyToMessage(message) {
             this.update({ replyingToMessage: [['link', message]] });
-            this.replyingToMessageOriginThreadComposer.focus();
+            // avoid to reply to a note by a message and vice-versa.
+            // subject to change later by allowing subtype choice.
+            this.replyingToMessageOriginThreadComposer.update({
+                isLog: !message.is_discussion && !message.is_notification
+            });
+            this.focus();
         }
 
         /**
@@ -212,7 +248,7 @@ function factory(dependencies) {
          */
         _computeActiveId() {
             if (!this.thread) {
-                return undefined;
+                return clear();
             }
             return this.threadToActiveId(this.thread);
         }
@@ -230,16 +266,22 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {string}
+         * @returns {boolean}
          */
-        _computeInitActiveId() {
-            if (!this.isOpen) {
-                return this.defaultInitActiveId;
+        _computeHasThreadView() {
+            if (!this.thread || !this.isOpen) {
+                return false;
             }
-            if (this.thread) {
-                return this.threadToActiveId(this.thread);
+            if (
+                this.env.messaging.device.isMobile &&
+                (
+                    this.activeMobileNavbarTabId !== 'mailbox' ||
+                    this.thread.model !== 'mail.box'
+                )
+            ) {
+                return false;
             }
-            return this.initActiveId;
+            return true;
         }
 
         /**
@@ -285,23 +327,33 @@ function factory(dependencies) {
             return [];
         }
 
+
         /**
+         * Only pinned threads are allowed in discuss.
+         *
          * @private
+         * @returns {mail.thread|undefined}
          */
-        _onChangeThreadIsPinned() {
+        _computeThread() {
             let thread = this.thread;
-            // No thread, or thread is being removed
-            // so we display discuss the messaging's Inbox.
-            if (
-                (!thread || !thread.isPinned) &&
-                this.messaging
+            if (this.env.messaging &&
+                this.env.messaging.inbox &&
+                this.env.messaging.device.isMobile &&
+                this.activeMobileNavbarTabId === 'mailbox' &&
+                this.initActiveId !== 'mail.box_inbox' &&
+                !thread
             ) {
-                thread = this.messaging.inbox;
+                // After loading Discuss from an arbitrary tab other then 'mailbox',
+                // switching to 'mailbox' requires to also set its inner-tab ;
+                // by default the 'inbox'.
+                return [['replace', this.env.messaging.inbox]];
             }
-            if (thread && this.threadViewer && thread !== this.thread) {
-                this.threadViewer.update({ thread: [['link', thread]] });
+            if (!thread || !thread.isPinned) {
+                return [['unlink']];
             }
+            return [];
         }
+
     }
 
     Discuss.fields = {
@@ -327,8 +379,17 @@ function factory(dependencies) {
             default: "",
             dependencies: ['isOpen'],
         }),
-        defaultInitActiveId: attr({
-            default: 'mail.box_inbox',
+        /**
+         * Serves as compute dependency.
+         */
+        device: one2one('mail.device', {
+            related: 'messaging.device',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        deviceIsMobile: attr({
+            related: 'device.isMobile',
         }),
         /**
          * Determine if the moderation discard dialog is displayed.
@@ -343,20 +404,28 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether `this.thread` should be displayed.
+         */
+        hasThreadView: attr({
+            compute: '_computeHasThreadView',
+            dependencies: [
+                'activeMobileNavbarTabId',
+                'deviceIsMobile',
+                'isOpen',
+                'thread',
+                'threadModel',
+            ],
+        }),
+        /**
          * Formatted init thread on opening discuss for the first time,
          * when no active thread is defined. Useful to set a thread to
          * open without knowing its local id in advance.
-         * format: <threadModel>_<threadId>
+         * Support two formats:
+         *    {string} <threadModel>_<threadId>
+         *    {int} <channelId> with default model of 'mail.channel'
          */
         initActiveId: attr({
-            compute: '_computeInitActiveId',
             default: 'mail.box_inbox',
-            dependencies: [
-                'isOpen',
-                'thread',
-                'threadId',
-                'threadModel',
-            ],
         }),
         /**
          * Determine whether current user is currently adding a channel from
@@ -375,6 +444,12 @@ function factory(dependencies) {
             compute: '_computeIsAddingChat',
             default: false,
             dependencies: ['isOpen'],
+        }),
+        /**
+         * Determine whether this discuss should be focused at next render.
+         */
+        isDoFocus: attr({
+            default: false,
         }),
         /**
          * Whether the discuss app is open or not. Useful to determine
@@ -401,16 +476,8 @@ function factory(dependencies) {
         messaging: one2one('mail.messaging', {
             inverse: 'discuss',
         }),
-        /**
-         * When a thread changes, or some properties of it change
-         * Computes whether we should display it or change it
-         */
-        onChangeThreadIsPinned: attr({
-            compute: '_onChangeThreadIsPinned',
-            dependencies: [
-                'isThreadPinned',
-                'thread',
-            ],
+        messagingInbox: many2one('mail.thread', {
+            related: 'messaging.inbox',
         }),
         renamingThreads: one2many('mail.thread'),
         /**
@@ -434,10 +501,11 @@ function factory(dependencies) {
         }),
         /**
          * The composer to display for the reply feature in Inbox. It depends
-         * on the message set to be replied, and should be considered read-only.
+         * on the message set to be replied.
          */
         replyingToMessageOriginThreadComposer: one2one('mail.composer', {
             inverse: 'discussAsReplying',
+            readonly: true,
             related: 'replyingToMessageOriginThread.composer',
         }),
         /**
@@ -447,8 +515,27 @@ function factory(dependencies) {
         sidebarQuickSearchValue: attr({
             default: "",
         }),
+        /**
+         * Determines the domain to apply when fetching messages for `this.thread`.
+         * This value should only be written by the control panel.
+         */
+        stringifiedDomain: attr({
+            default: '[]',
+        }),
+        /**
+         * Determines the `mail.thread` that should be displayed by `this`.
+         */
         thread: many2one('mail.thread', {
-            related: 'threadViewer.thread',
+            compute: '_computeThread',
+            dependencies: [
+                'activeMobileNavbarTabId',
+                'deviceIsMobile',
+                'isThreadPinned',
+                'messaging',
+                'messagingInbox',
+                'thread',
+                'threadModel',
+            ],
         }),
         threadId: attr({
             related: 'thread.id',
@@ -456,9 +543,20 @@ function factory(dependencies) {
         threadModel: attr({
             related: 'thread.model',
         }),
+        /**
+         * States the `mail.thread_view` displaying `this.thread`.
+         */
+        threadView: one2one('mail.thread_view', {
+            related: 'threadViewer.threadView',
+        }),
+        /**
+         * Determines the `mail.thread_viewer` managing the display of `this.thread`.
+         */
         threadViewer: one2one('mail.thread_viewer', {
-            autocreate: true,
+            default: [['create']],
+            inverse: 'discuss',
             isCausal: true,
+            readonly: true,
         }),
     };
 

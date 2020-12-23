@@ -6,10 +6,10 @@ import pytz
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class TestRecurrentEvents(SavepointCase):
+class TestRecurrentEvents(TransactionCase):
 
     @classmethod
     def setUpClass(cls):

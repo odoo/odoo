@@ -8,8 +8,8 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
 
-from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo import _, api, Command, fields, models, modules, tools
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
@@ -160,9 +160,9 @@ class Message(models.Model):
 
     @api.model
     def _search_needaction(self, operator, operand):
-        if operator == '=' and operand:
-            return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', False)]
-        return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', True)]
+        is_read = False if operator == '=' and operand else True
+        notification_ids = self.env['mail.notification']._search([('res_partner_id', '=', self.env.user.partner_id.id), ('is_read', '=', is_read)])
+        return [('notification_ids', 'in', notification_ids)]
 
     def _compute_has_error(self):
         error_from_notification = self.env['mail.notification'].sudo().search([
@@ -204,7 +204,7 @@ class Message(models.Model):
                     ('res_id', 'in', self.env.user.moderation_channel_ids.ids)]
 
         # no support for other operators
-        return ValueError(_('Unsupported search filter on moderation status'))
+        raise UserError(_('Unsupported search filter on moderation status'))
 
     # ------------------------------------------------------
     # CRUD / ORM
@@ -514,10 +514,10 @@ class Message(models.Model):
         model_record_ids = _generate_model_record_ids(message_values, document_related_candidate_ids)
         for model, doc_ids in model_record_ids.items():
             DocumentModel = self.env[model]
-            if hasattr(DocumentModel, 'get_mail_message_access'):
-                check_operation = DocumentModel.get_mail_message_access(doc_ids, operation)  ## why not giving model here?
+            if hasattr(DocumentModel, '_get_mail_message_access'):
+                check_operation = DocumentModel._get_mail_message_access(doc_ids, operation)  ## why not giving model here?
             else:
-                check_operation = self.env['mail.thread'].get_mail_message_access(doc_ids, operation, model_name=model)
+                check_operation = self.env['mail.thread']._get_mail_message_access(doc_ids, operation, model_name=model)
             records = DocumentModel.browse(doc_ids)
             records.check_access_rights(check_operation)
             mids = records.browse(doc_ids)._filter_access_rules(check_operation)
@@ -761,7 +761,7 @@ class Message(models.Model):
         partner_id = self.env.user.partner_id.id
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
-        starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
+        starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
         ids = [m.id for m in starred_messages]
         notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
@@ -775,9 +775,9 @@ class Message(models.Model):
         self.check_access_rule('read')
         starred = not self.starred
         if starred:
-            self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [Command.link(self.env.user.partner_id.id)]})
         else:
-            self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
 
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)
@@ -1024,11 +1024,13 @@ class Message(models.Model):
         if moderated_channel_ids:
             # Split load moderated and regular messages, as the ORed domain can
             # cause performance issues on large databases.
-            moderated_messages_dom = [('model', '=', 'mail.channel'),
-                                      ('res_id', 'in', moderated_channel_ids),
-                                      '|',
-                                      ('author_id', '=', self.env.user.partner_id.id),
-                                      ('need_moderation', '=', True)]
+            moderated_messages_dom = [
+                ('model', '=', 'mail.channel'),
+                ('res_id', 'in', moderated_channel_ids),
+                '|',
+                ('author_id', '=', self.env.user.partner_id.id),
+                ('moderation_status', '=', 'pending_moderation'),
+            ]
             messages |= self.search(moderated_messages_dom, limit=limit)
             # Truncate the results to `limit`
             messages = messages.sorted(key='id', reverse=True)[:limit]
@@ -1165,15 +1167,15 @@ class Message(models.Model):
     def _get_reply_to(self, values):
         """ Return a specific reply_to for the document """
         model = values.get('model', self._context.get('default_model'))
-        res_id = values.get('res_id', self._context.get('default_res_id'))
+        res_id = values.get('res_id', self._context.get('default_res_id')) or False
         email_from = values.get('email_from')
         message_type = values.get('message_type')
         records = None
         if self.is_thread_message({'model': model, 'res_id': res_id, 'message_type': message_type}):
             records = self.env[model].browse([res_id])
         else:
-            res_id = False
-        return self.env['mail.thread']._notify_get_reply_to_on_records(default=email_from, records=records)[res_id]
+            records = self.env[model] if model else self.env['mail.thread']
+        return records._notify_get_reply_to(default=email_from)[res_id]
 
     @api.model
     def _get_message_id(self, values):

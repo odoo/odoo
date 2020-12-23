@@ -280,7 +280,7 @@ To install your theme, you just place your theme folder inside addons in your Od
 After that, navigate to the Odoo **Website** module, go to
 :menuselection:`Configuration --> Settings`.
 
-Under **Website** section click the **Choose a theme** button, then hover over
+Under **Website** section click the **Pick a Theme** button, then hover over
 your theme and click **Use this theme**.
 
 Structure of an Odoo page
@@ -763,7 +763,7 @@ We start by adding a new file in our views folder - name it **options.xml** and 
 .. code-block:: xml
 
   <template id="snippet_testimonial_opt" name="Snippet Testimonial Options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='background']" position="after">
+    <xpath expr="//div[@data-js='Box']" position="after">
       <div data-selector=".snippet_testimonial"> <!-- Options group -->
         <div class="dropdown-submenu">
               <a href="#" class="dropdown-item">Your Option</a>
@@ -862,7 +862,7 @@ the following code
 .. code-block:: javascript
 
     odoo.define(function (require) {
-       var options = require('web_editor.snippets.options');       
+       var options = require('web_editor.snippets.options');
    });
 
 Great, we successfully created our javascript editor file. This file will contain all the javascript functions used by our snippets in edit mode. Let’s create a new function for our testimonial snippet using the ``snippet_testimonial_options`` method that we created before.
@@ -870,8 +870,8 @@ Great, we successfully created our javascript editor file. This file will contai
 .. code-block:: javascript
 
    odoo.define(function (require) {
-       var options = require('web_editor.snippets.options');       
-       options.registry.snippet_testimonial_options = options.Class.extend({
+       var snippetOptions = require('web_editor.snippets.options');
+       snippetOptions.registry.snippet_testimonial_options = snippetOptions.SnippetOptionWidget.extend({
            onFocus: function () {
                alert("On focus!")
            },

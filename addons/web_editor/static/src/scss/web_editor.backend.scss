@@ -2,8 +2,13 @@
     position: relative;
     word-wrap: break-word;
 
-    .note-editable {
+    .note-editable, .note-editing-area {
         min-height: 330px;
+    }
+
+    .note-editable {
+        outline: none;
+        flex: 1 1 auto;
         font: inherit !important;
         font-family: inherit !important;
         line-height: inherit !important;

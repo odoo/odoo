@@ -26,10 +26,8 @@ var QWeb = core.qweb;
 // Add mock of method 'retrieve_dashboard' in SampleServer, so that we can have
 // the sample data in empty purchase kanban and list view
 let dashboardValues;
-SampleServer.mockRegistry.add('purchase.order', {
-    retrieve_dashboard: () => {
-        return Object.assign({}, dashboardValues);
-    },
+SampleServer.mockRegistry.add('purchase.order/retrieve_dashboard', () => {
+    return Object.assign({}, dashboardValues);
 });
 
 
@@ -65,7 +63,7 @@ var PurchaseListDashboardRenderer = ListRenderer.extend({
         e.preventDefault();
         var $action = $(e.currentTarget);
         this.trigger_up('dashboard_open_action', {
-            action_name: $action.attr('name')+"_list",
+            action_name: "purchase.purchase_action_dashboard_list",
             action_context: $action.attr('context'),
         });
     },
@@ -180,7 +178,7 @@ var PurchaseKanbanDashboardRenderer = KanbanRenderer.extend({
         e.preventDefault();
         var $action = $(e.currentTarget);
         this.trigger_up('dashboard_open_action', {
-            action_name: $action.attr('name')+"_kanban",
+            action_name: "purchase.purchase_action_dashboard_kanban",
             action_context: $action.attr('context'),
         });
     },

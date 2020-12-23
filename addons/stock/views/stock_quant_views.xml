@@ -35,6 +35,43 @@
         </field>
     </record>
 
+    <record model="ir.ui.view" id="view_stock_quant_form_editable">
+        <field name="name">stock.quant.form.editable</field>
+        <field name="model">stock.quant</field>
+        <field eval="11" name="priority"/>
+        <field name="arch" type="xml">
+            <form string="Inventory Valuation" create="false" edit="false" delete="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="tracking" invisible="1"/>
+                            <field name="product_id" readonly="0" options="{'no_create': True}"/>
+                            <field name="location_id" readonly="0" options="{'no_create': True}"/>
+                            <field name="lot_id" groups="stock.group_production_lot"
+                                attrs="{'readonly': [('tracking', 'not in', ['serial', 'lot'])], 'required': [('tracking', '!=', 'none')]}"
+                                context="{'default_product_id': product_id, 'default_company_id': company_id}"/>
+                            <field name="package_id" readonly="0" groups="stock.group_tracking_lot"/>
+                            <field name="owner_id" readonly="0" groups="stock.group_tracking_owner" options="{'no_create': True}"/>
+                            <field name='company_id' groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <label for="inventory_quantity" string="Quantity On Hand"/>
+                            <div class="o_row">
+                                <field name="inventory_quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                            <label for="reserved_quantity" string="Quantity Reserved"/>
+                            <div class="o_row">
+                                <field name="reserved_quantity"/>
+                                <field name="product_uom_id" groups="uom.group_uom"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="view_stock_quant_form">
         <field name="name">stock.quant.form</field>
         <field name="model">stock.quant</field>
@@ -137,7 +174,7 @@
         <field name="name">stock.quant.pivot</field>
         <field name="model">stock.quant</field>
         <field name="arch" type="xml">
-            <pivot string="Inventory">
+            <pivot string="Inventory" sample="1">
                 <field name="product_id" type="row"/>
                 <field name="location_id" type="col"/>
                 <field name="quantity" type="measure"/>
@@ -149,7 +186,7 @@
         <field name="name">stock.quant.graph</field>
         <field name="model">stock.quant</field>
         <field name="arch" type="xml">
-            <graph string="Stock Quant">
+            <graph string="Stock Quant" sample="1">
                 <field name="location_id"/>
                 <field name="quantity" type="measure"/>
             </graph>
@@ -160,6 +197,7 @@
         <field name="name">Inventory</field>
         <field name="model_id" ref="model_stock_quant"/>
         <field name="state">code</field>
+        <field name="groups_id" eval="[(4, ref('stock.group_stock_user'))]"/>
         <field name="code">
             action = model.with_context(
                 search_default_internal_loc=1,
@@ -213,7 +251,7 @@
                         <h1><field name="name" class="oe_inline"/></h1>
                     </div>
                     <group>
-                        <group>
+                        <group id='stock.package_location_group'>
                             <field name='company_id' groups="base.group_multi_company"/>
                             <field name='owner_id' groups="stock.group_tracking_owner"/>
                             <field name="location_id" options="{'no_create': True}"/>
@@ -238,7 +276,7 @@
         <field name="model">stock.quant.package</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Package">
+            <tree string="Package" sample="1">
                 <field name="display_name"/>
                 <field name="location_id" options="{'no_create': True}"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -250,7 +288,7 @@
         <field name="name">stock.quant.package.kanban</field>
         <field name="model">stock.quant.package</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <templates>
                 <field name="name"/>
                     <t t-name="kanban-box">
@@ -274,7 +312,8 @@
             <p class="o_view_nocontent_smiling_face">
                 Create a new package
             </p><p>
-                Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+                Packages are usually created via transfers (during pack operation) and can contain different products.
+                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again.
             </p>
         </field>
     </record>

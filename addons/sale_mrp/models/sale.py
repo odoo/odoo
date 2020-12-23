@@ -46,6 +46,18 @@ class SaleOrderLine(models.Model):
         """The inventory widget should now be visible in more cases if the product is consumable."""
         super(SaleOrderLine, self)._compute_qty_to_deliver()
         for line in self:
+            # Hide the widget for kits since forecast doesn't support them.
+            boms = self.env['mrp.bom']
+            if line.state == 'sale':
+                boms = line.move_ids.mapped('bom_line_id.bom_id')
+            elif line.state in ['draft', 'sent'] and line.product_id:
+                boms = boms._bom_find(product=line.product_id, company_id=line.company_id.id, bom_type='phantom')
+            relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
+                    (b.product_id == line.product_id or
+                    (b.product_tmpl_id == line.product_id.product_tmpl_id and not b.product_id)))
+            if relevant_bom:
+                line.display_qty_widget = False
+                continue
             if line.state == 'draft' and line.product_type == 'consu':
                 components = line.product_id.get_components()
                 if components and components != [line.product_id.id]:
@@ -57,7 +69,7 @@ class SaleOrderLine(models.Model):
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.mapped('bom_line_id.bom_id')
                 dropship = False
-                if not boms and any([m._is_dropshipped() for m in order_line.move_ids]):
+                if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
                     boms = boms._bom_find(product=order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')
                     dropship = True
                 # We fetch the BoMs of type kits linked to the order_line,
@@ -74,7 +86,7 @@ class SaleOrderLine(models.Model):
                     # the products for this PO will set the qty_delivered. We might need to check the
                     # state of all PO as well... but sale_mrp doesn't depend on purchase.
                     if dropship:
-                        if order_line.move_ids and all([m.state == 'done' for m in order_line.move_ids]):
+                        if order_line.move_ids and all(m.state == 'done' for m in order_line.move_ids):
                             order_line.qty_delivered = order_line.product_uom_qty
                         else:
                             order_line.qty_delivered = 0.0
@@ -91,7 +103,7 @@ class SaleOrderLine(models.Model):
                 # when the product sold is made only of kits. In this case, the BOM of the stock moves
                 # do not correspond to the product sold => no relevant BOM.
                 elif boms:
-                    if all([m.state == 'done' for m in order_line.move_ids]):
+                    if all(m.state == 'done' for m in order_line.move_ids):
                         order_line.qty_delivered = order_line.product_uom_qty
                     else:
                         order_line.qty_delivered = 0.0

@@ -1,6 +1,7 @@
 odoo.define('web.web_client', function (require) {
     'use strict';
 
+    const AbstractService = require('web.AbstractService');
     const env = require('web.env');
     const WebClient = require('web.AbstractWebClient');
     const Chrome = require('point_of_sale.Chrome');
@@ -9,6 +10,8 @@ odoo.define('web.web_client', function (require) {
 
     owl.config.mode = env.isDebug() ? 'dev' : 'prod';
     owl.Component.env = env;
+
+    Registries.Component.add(owl.misc.Portal);
 
     function setupResponsivePlugin(env) {
         const isMobile = () => window.innerWidth <= 768;
@@ -28,15 +31,18 @@ odoo.define('web.web_client', function (require) {
         Registries.Component.freeze();
         await env.session.is_bound;
         env.qweb.addTemplates(env.session.owlTemplates);
+        env.bus = new owl.core.EventBus();
         await owl.utils.whenReady();
         await webClient.setElement(document.body);
         await webClient.start();
+        webClient.isStarted = true;
         const chrome = new (Registries.Component.get(Chrome))(null, { webClient });
         await chrome.mount(document.querySelector('.o_action_manager'));
         await chrome.start();
         configureGui({ component: chrome });
     }
 
+    AbstractService.prototype.deployServices(env);
     const webClient = new WebClient();
     startPosApp(webClient);
     return webClient;

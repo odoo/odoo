@@ -1,5 +1,6 @@
 
 .tooltip {
+    $arrow-size: 6px;
     &.show {
         opacity: 1;
     }
@@ -11,42 +12,104 @@
         color: $o-tooltip-color;
         border-radius: $border-radius;
         box-shadow: 0px 0px 1px 1px $o-brand-secondary;
+        margin: 5px;
+        border-color: $o-tooltip-color;
 
         padding: 5px;
 
         text-align: left;
 
         .oe_tooltip_string {
-            background-color: $o-brand-odoo;
-            color: white;
+            background-color: $o-tooltip-title-background-color;
             font-weight: bold;
-            padding: 5px;
+            padding: 5px 8px;
         }
         .oe_tooltip_help {
             white-space: pre-line;
-            padding: 5px 5px 0;
+            padding: 8px;
+            margin-bottom: 0px;
         }
         .oe_tooltip_technical {
-            padding: 0;
-            margin: 5px 0 5px 20px;
+            padding: 8px;
+            margin: 0 0 0 15px;
             list-style-type: circle;
 
             .oe_tooltip_technical_title {
                 font-weight: bold;
             }
         }
+        .oe_tooltip_help + .oe_tooltip_technical {
+            padding-top: 0px;
+        }
     }
 
-    &.bs-tooltip-top .arrow::before {
-        border-top-color: $o-tooltip-arrow-color!important;
+    .arrow {
+        &::after {
+            content: '';
+            position: absolute;
+        }
     }
-    &.bs-tooltip-bottom .arrow::before {
-        border-bottom-color: $o-tooltip-arrow-color!important;
+
+    &.bs-tooltip-bottom {
+        margin-top: $tooltip-arrow-height;
+        .arrow {
+            top: $tooltip-arrow-height;
+            &::before {
+                border: $arrow-size solid transparent;
+                border-bottom-color: $o-tooltip-color;
+            }
+            &::after {
+                bottom: -1px;
+                border: $arrow-size solid transparent;
+                border-bottom-color: $o-tooltip-title-background-color;
+            }
+        }
     }
-    &.bs-tooltip-left .arrow::before {
-        border-left-color: $o-tooltip-arrow-color!important;
+    &.bs-tooltip-top {
+        margin-bottom: $tooltip-arrow-height;
+        .arrow {
+            bottom: $tooltip-arrow-height;
+            &::before {
+                border: $arrow-size solid transparent;
+                border-top-color: $o-tooltip-color;
+            }
+            &::after {
+                border: $arrow-size solid transparent;
+                border-top-color: $o-tooltip-arrow-color;
+                margin-top: -1px;
+            }
+        }
     }
-    &.bs-tooltip-right .arrow::before {
-        border-right-color: $o-tooltip-arrow-color!important;
+    &.bs-tooltip-left {
+        margin-right: $tooltip-arrow-height;
+        .arrow {
+            right: $tooltip-arrow-height;
+            &::before {
+                border: $arrow-size solid transparent;
+                border-left-color: $o-tooltip-color;
+            }
+            &::after {
+                border: $arrow-size solid transparent;
+                border-left-color: $o-tooltip-arrow-color;
+                margin-left: -1px;
+            }
+        }
+    }
+    &.bs-tooltip-right {
+        margin-left: $tooltip-arrow-height;
+        .arrow {
+            left: $tooltip-arrow-height;
+            &::before,
+            &::after {
+                border: $arrow-size solid transparent;
+                border-right-color: $o-tooltip-color;
+            }
+            &::after {
+                border: $arrow-size solid transparent;
+                border-right-color: $o-tooltip-arrow-color;
+                margin-right: -1px;
+                right: 0px;
+            }
+        }
     }
 }

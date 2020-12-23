@@ -14,7 +14,7 @@
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">['!', ('name', '=like', 'theme_%')]</field>
-            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website')}"/>
+            <field name="context" eval="{'search_default_category_id': ref('base.module_category_website_website'), 'searchpanel_default_category_id': ref('base.module_category_website')}"/>
         </record>
 
 
@@ -76,7 +76,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//form" position="inside">
                     <footer>
-                        <button name="create_and_redirect_to_theme" type="object" string="Choose a theme" class="btn btn-primary" icon="fa-paint-brush"/>
+                        <button name="create_and_redirect_to_theme" type="object" string="Pick a Theme" class="btn btn-primary" icon="fa-paint-brush"/>
                         <button string="Cancel" class="btn btn-secondary" special="cancel"/>
                     </footer>
                 </xpath>
@@ -127,6 +127,8 @@
                                 <field name="website_indexed"/>
                                 <field name="is_published"/>
                                 <field name="date_publish"/>
+                                <field name="cache_time" groups="base.group_no_one"/>
+                                <field name="cache_key_expr" groups="base.group_no_one"/>
                             </group>
                         </group>
                         <label for="menu_ids" string="Related Menu Items"/>
@@ -317,13 +319,15 @@
             <field name="model_id" ref="website.model_website"/>
             <field name="state">code</field>
             <field name="code">action = model.action_dashboard_redirect()</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <record id="ir_actions_server_website_google_analytics" model="ir.actions.server">
-            <field name="name">Website: Dashboard</field>
+            <field name="name">Website: Analytics</field>
             <field name="model_id" ref="website.model_website"/>
             <field name="state">code</field>
-            <field name="code">action = model.env.ref('website.backend_dashboard').read()[0]</field>
+            <field name="code">action = model.env.ref('website.backend_dashboard').sudo().read()[0]</field>
+            <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <!-- Custom module kanban : install button (even if already installed) which -->
@@ -416,7 +420,7 @@
         </record>
 
         <record id="theme_install_kanban_action" model="ir.actions.act_window">
-            <field name="name">Choose a theme for your website</field>
+            <field name="name">Pick a Theme</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_mode">kanban,form</field>
             <field name="view_id" ref="website.theme_view_kanban" />
@@ -439,6 +443,7 @@
         </record>
 
         <record id="theme_install_todo" model="ir.actions.todo">
+            <field name="name">Go to theme</field>
             <field name="action_id" ref="theme_install_act_url"/>
             <field name="sequence">0</field>
         </record>

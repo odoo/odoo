@@ -38,7 +38,6 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             self.sessionShowLeaderboard = self.$el.data('sessionShowLeaderboard');
             self.hasCorrectAnswers = self.$el.data('hasCorrectAnswers');
             // display props
-            self.attendeesCount = self.$el.data('attendeesCount');
             self.showBarChart = self.$el.data('showBarChart');
             self.showTextAnswers = self.$el.data('showTextAnswers');
 
@@ -161,7 +160,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             if (this.isLastQuestion) {
                 this.$('.o_survey_session_navigation_next').addClass('d-none');
             }
-            this.leaderBoard.showLeaderboard(true);
+            this.leaderBoard.showLeaderboard(true, this.isScoredQuestion);
         } else {
             if (!this.isLastQuestion) {
                 this._nextQuestion();
@@ -255,14 +254,14 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             return 'userInputs';
         } else if (this.hasCorrectAnswers && ['question', 'userInputs'].includes(this.currentScreen)) {
             return 'results';
-        } else if (['question', 'userInputs', 'results'].includes(this.currentScreen) &&
-                   this.isScoredQuestion) {
-            return 'leaderboard';
-        } else if (this.sessionShowLeaderboard && this.isLastQuestion) {
-            return 'leaderboardFinal';
-        } else {
-            return 'nextQuestion';
+        } else if (this.sessionShowLeaderboard) {
+            if (['question', 'userInputs', 'results'].includes(this.currentScreen) && this.isScoredQuestion) {
+                return 'leaderboard';
+            } else if (this.isLastQuestion) {
+                return 'leaderboardFinal';
+            }
         }
+        return 'nextQuestion';
     },
 
     /**
@@ -327,15 +326,17 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 self.$el.fadeIn(self.fadeInOutTime, function () {
                     self._startTimer();
                 });
-            } else {
-                // Display last screen
+            } else if (self.sessionShowLeaderboard) {
+                // Display last screen if leaderboard activated
                 self.isLastQuestion = true;
                 self._setupLeaderboard().then(function () {
                     self.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
                     self.$('.o_survey_session_navigation_next').addClass('d-none');
                     self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
-                    self.leaderBoard.showLeaderboard(false);
+                    self.leaderBoard.showLeaderboard(false, false);
                 });
+            } else {
+                self.$('.o_survey_session_close').click();
             }
         });
     },
@@ -381,6 +382,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             route: _.str.sprintf('/survey/session/results/%s', self.surveyAccessToken)
         }).then(function (questionResults) {
             if (questionResults) {
+                self.attendeesCount = questionResults.attendees_count;
+
                 if (self.resultsChart && questionResults.question_statistics_graph) {
                     self.resultsChart.updateChart(JSON.parse(questionResults.question_statistics_graph));
                 } else if (self.textAnswers) {
@@ -449,7 +452,6 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
 
         if (!this.isStartScreen && this.showBarChart) {
             this.resultsChart = new SurveySessionChart(this, {
-                attendeesCount: this.attendeesCount,
                 questionType: this.$el.data('questionType'),
                 answersValidity: this.$el.data('answersValidity'),
                 hasCorrectAnswers: this.hasCorrectAnswers,
@@ -516,7 +518,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
      * - The refresh of results (used for chart/text answers/progress bar)
      */
     _setupIntervals: function () {
-        this.attendeesCount = this.$el.data('attendeesCount');
+        this.attendeesCount = this.$el.data('attendeesCount') ? this.$el.data('attendeesCount') : 0;
 
         if (this.isStartScreen) {
             this.attendeesRefreshInterval = setInterval(this._refreshAttendeesCount.bind(this), 2000);

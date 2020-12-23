@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 from odoo import api, fields, models, _
-
+from odoo.modules.module import get_module_resource
+from odoo.modules.module import get_resource_path
 
 class ResCompany(models.Model):
     _inherit = "res.company"
@@ -33,7 +35,7 @@ class ResCompany(models.Model):
     def action_open_sale_onboarding_payment_acquirer(self):
         """ Called by onboarding panel above the quotation list."""
         self.env.company.get_chart_of_accounts_or_fail()
-        action = self.env.ref('sale.action_open_sale_onboarding_payment_acquirer_wizard').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_open_sale_onboarding_payment_acquirer_wizard")
         return action
 
     def _get_sample_sales_order(self):
@@ -52,9 +54,13 @@ class ResCompany(models.Model):
             # take any existing product or create one
             product = self.env['product.product'].search([], limit=1)
             if len(product) == 0:
+                default_image_path = get_module_resource('product', 'static/img', 'product_product_13-image.png')
                 product = self.env['product.product'].create({
-                    'name': _('Sample Product')
+                    'name': _('Sample Product'),
+                    'active': False,
+                    'image_1920': base64.b64encode(open(default_image_path, 'rb').read())
                 })
+                product.product_tmpl_id.write({'active': False})
             self.env['sale.order.line'].create({
                 'name': _('Sample Order Line'),
                 'product_id': product.id,
@@ -94,7 +100,7 @@ class ResCompany(models.Model):
 
         self.action_close_sale_quotation_onboarding()
 
-        action = self.env.ref('sale.action_orders').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("sale.action_orders")
         action.update({
             'views': [[self.env.ref('sale.view_order_form').id, 'form']],
             'view_mode': 'form',

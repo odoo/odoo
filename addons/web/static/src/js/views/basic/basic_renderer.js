@@ -52,6 +52,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * Called each time the renderer is attached into the DOM.
      */
     on_attach_callback: function () {
+        this._isInDom = true;
         // call on_attach_callback on field widgets
         for (const handle in this.allFieldWidgets) {
             this.allFieldWidgets[handle].forEach(widget => {
@@ -60,6 +61,12 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
                 }
             });
         }
+        // call on_attach_callback on widgets
+        this.widgets.forEach(widget => {
+            if (widget.on_attach_callback) {
+                widget.on_attach_callback();
+            }
+        });
         // call on_attach_callback on child components (including field components)
         WidgetAdapterMixin.on_attach_callback.call(this);
     },
@@ -67,6 +74,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * Called each time the renderer is detached from the DOM.
      */
     on_detach_callback: function () {
+        this._isInDom = false;
         // call on_detach_callback on field widgets
         for (const handle in this.allFieldWidgets) {
             this.allFieldWidgets[handle].forEach(widget => {
@@ -75,6 +83,12 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
                 }
             });
         }
+        // call on_detach_callback on widgets
+        this.widgets.forEach(widget => {
+            if (widget.on_detach_callback) {
+                widget.on_detach_callback();
+            }
+        });
         // call on_detach_callback on child components (including field components)
         WidgetAdapterMixin.on_detach_callback.call(this);
     },
@@ -667,6 +681,20 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         for (const widget of oldWidgets) {
             widget.destroy();
         }
+        if (this._isInDom) {
+            for (const handle in this.allFieldWidgets) {
+                this.allFieldWidgets[handle].forEach(widget => {
+                    if (widget.on_attach_callback) {
+                        widget.on_attach_callback();
+                    }
+                });
+            }
+            this.widgets.forEach(widget => {
+                if (widget.on_attach_callback) {
+                    widget.on_attach_callback();
+                }
+            });
+        }
     },
     /**
      * Instantiates the appropriate AbstractField specialization for the given
@@ -760,22 +788,6 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         });
 
         return $el;
-    },
-    /**
-     * Renders the nocontent helper.
-     *
-     * This method is a helper for renderers that want to display a help
-     * message when no content is available.
-     *
-     * @private
-     * @returns {jQueryElement}
-     */
-    _renderNoContentHelper: function () {
-        var $noContent =
-            $('<div>').html(this.noContentHelp).addClass('o_nocontent_help');
-        return $('<div>')
-            .addClass('o_view_nocontent')
-            .append($noContent);
     },
     /**
      * Instantiate custom widgets

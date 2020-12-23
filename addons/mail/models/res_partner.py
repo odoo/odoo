@@ -25,6 +25,13 @@ class Partner(models.Model):
     # override the field to track the visibility of user
     user_id = fields.Many2one(tracking=True)
 
+    def _compute_im_status(self):
+        super()._compute_im_status()
+        odoobot_id = self.env['ir.model.data'].xmlid_to_res_id('base.partner_root')
+        odoobot = self.env['res.partner'].browse(odoobot_id)
+        if odoobot in self:
+            odoobot.im_status = 'bot'
+
     def _message_get_suggested_recipients(self):
         recipients = super(Partner, self)._message_get_suggested_recipients()
         for partner in self:
@@ -39,6 +46,7 @@ class Partner(models.Model):
             for r in self}
 
     @api.model
+    @api.returns('self', lambda value: value.id)
     def find_or_create(self, email, assert_valid_email=False):
         """ Override to use the email_normalized field. """
         if not email:
@@ -59,7 +67,9 @@ class Partner(models.Model):
         return {
             "id": self.name_get()[0][0],
             "display_name": self.name_get()[0][1],
+            "name": self.name,
             "active": self.active,
+            "im_status": self.im_status,
         }
 
     @api.model
@@ -112,6 +122,12 @@ class Partner(models.Model):
             # Remove duplicates
             partners = [p for p in partners if not len([u for u in users if u['id'] == p['id']])] 
 
+        # add OdooBot even if its partner is archived
+        if len(partners) + len(users) < limit and "odoobot".startswith(search.lower()):
+            odoobot = self.env.ref("base.partner_root")
+            if not any(elem['id'] == odoobot.id for elem in partners):
+                partners.append(odoobot.read(fields)[0])
+
         return [users, partners]
 
     @api.model
@@ -148,4 +164,3 @@ class Partner(models.Model):
             return self.env.cr.dictfetchall()
         else:
             return {}
-

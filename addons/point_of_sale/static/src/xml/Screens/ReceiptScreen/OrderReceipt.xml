@@ -21,7 +21,7 @@
                     <div>Tel:<t t-esc="receipt.company.phone" /></div>
                 </t>
                 <t t-if="receipt.company.vat">
-                    <div>VAT:<t t-esc="receipt.company.vat" /></div>
+                    <div><t t-esc="receipt.company.vat_label"/>:<t t-esc="receipt.company.vat" /></div>
                 </t>
                 <t t-if="receipt.company.email">
                     <div><t t-esc="receipt.company.email" /></div>
@@ -90,6 +90,17 @@
                             </span>
                         </div>
                     </t>
+                    <t t-if="line.pack_lot_lines">
+                        <div class="pos-receipt-left-padding">
+                            <ul>
+                                <t t-foreach="line.pack_lot_lines" t-as="lot">
+                                    <li>
+                                        SN <t t-esc="lot.attributes['lot_name']"/>
+                                    </li>
+                                </t>
+                            </ul>
+                        </div>
+                    </t>
                 </t>
             </div>
 
@@ -124,10 +135,10 @@
 
             <!-- Payment Lines -->
 
-            <t t-foreach="paymentlines" t-as="line" t-key="line.cid">
+            <t t-foreach="receipt.paymentlines" t-as="line" t-key="line.cid">
                 <div>
                     <t t-esc="line.name" />
-                    <span t-esc="env.pos.format_currency_no_symbol(line.get_amount())" class="pos-receipt-right-align"/>
+                    <span t-esc="env.pos.format_currency_no_symbol(line.amount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
             <br/>
@@ -166,7 +177,7 @@
                 <t t-raw="receipt.footer_html" />
             </div>
 
-            <div t-if="!receipt.footer_html and receipt.footer"  class="pos-receipt-center-align">
+            <div t-if="!receipt.footer_html and receipt.footer"  class="pos-receipt-center-align" style="white-space:pre-line">
                 <br/>
                 <t t-esc="receipt.footer" />
                 <br/>
@@ -174,7 +185,7 @@
             </div>
 
             <div class="after-footer">
-                <t t-foreach="paymentlines" t-as="line">
+                <t t-foreach="receipt.paymentlines" t-as="line">
                     <t t-if="line.ticket">
                         <br />
                         <div class="pos-payment-terminal-receipt">

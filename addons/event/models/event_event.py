@@ -102,9 +102,12 @@ class EventEvent(models.Model):
         event_stages = self.env['event.stage'].search([])
         return event_stages[0] if event_stages else False
 
+    def _default_description(self):
+        return self.env['ir.ui.view']._render_template('event.event_default_descripton')
+
     name = fields.Char(string='Event', translate=True, required=True)
     note = fields.Text(string='Note')
-    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False)
+    description = fields.Html(string='Description', translate=html_translate, sanitize_attributes=False, sanitize_form=False, default=_default_description)
     active = fields.Boolean(default=True)
     user_id = fields.Many2one(
         'res.users', string='Responsible', tracking=True,
@@ -156,7 +159,7 @@ class EventEvent(models.Model):
         store=True, readonly=True, compute='_compute_seats')
     seats_expected = fields.Integer(
         string='Number of Expected Attendees',
-        compute_sudo=True, readonly=True, compute='_compute_seats')
+        compute_sudo=True, readonly=True, compute='_compute_seats_expected')
     # Registration fields
     auto_confirm = fields.Boolean(
         string='Autoconfirmation', compute='_compute_from_event_type', readonly=False, store=True,
@@ -167,13 +170,16 @@ class EventEvent(models.Model):
         compute='_compute_event_ticket_ids', readonly=False, store=True)
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
-        help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
+        help="Registrations are open if:\n"
+        "- the event is not ended\n"
+        "- there are seats available on event\n"
+        "- the tickets are sellable (if ticketing is used)")
     event_registrations_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_event_registrations_sold_out', compute_sudo=True,
-        help='Event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out event is sold out.')
+        help='The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.')
     start_sale_date = fields.Date(
         'Start sale date', compute='_compute_start_sale_date',
-        help='If ticketing is used, this is the lowest starting sale date of tickets.')
+        help='If ticketing is used, contains the earliest starting sale date of tickets.')
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
@@ -238,8 +244,11 @@ class EventEvent(models.Model):
             event.update(results.get(event._origin.id or event.id, base_vals))
             if event.seats_max > 0:
                 event.seats_available = event.seats_max - (event.seats_reserved + event.seats_used)
-            seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
-            event.seats_expected = seats_expected
+
+    @api.depends('seats_unconfirmed', 'seats_reserved', 'seats_used')
+    def _compute_seats_expected(self):
+        for event in self:
+            event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
     @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
@@ -373,7 +382,8 @@ class EventEvent(models.Model):
                 event.seats_limited = event.event_type_id.has_seats_limitation
 
             event.auto_confirm = event.event_type_id.auto_confirm
-            event.tag_ids = event.event_type_id.tag_ids
+            if not event.tag_ids and event.event_type_id.tag_ids:
+                event.tag_ids = event.event_type_id.tag_ids
 
     @api.depends('event_type_id')
     def _compute_event_mail_ids(self):
@@ -471,15 +481,18 @@ class EventEvent(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['event.stage'].search([])
 
-    @api.model
-    def create(self, vals):
-        # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
-        vals.update(self._sync_required_computed(vals))
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
+            vals.update(self._sync_required_computed(vals))
 
-        res = super(EventEvent, self).create(vals)
-        if res.organizer_id:
-            res.message_subscribe([res.organizer_id.id])
-        return res
+        events = super(EventEvent, self).create(vals_list)
+        for res in events:
+            if res.organizer_id:
+                res.message_subscribe([res.organizer_id.id])
+        events.flush()
+        return events
 
     def write(self, vals):
         res = super(EventEvent, self).write(vals)

@@ -4,6 +4,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+from odoo.osv import expression
 
 from lxml import etree
 import base64
@@ -18,52 +19,146 @@ class AccountEdiFormat(models.Model):
     _description = 'EDI format'
 
     name = fields.Char()
-    code = fields.Char()
-    hide_on_journal = fields.Selection([('import_export', 'Import/Export'), ('import', 'Import Only')], default='import_export', help='used to hide this EDI format on journals')
+    code = fields.Char(required=True)
 
     _sql_constraints = [
         ('unique_code', 'unique (code)', 'This code already exists')
     ]
 
+
+    ####################################################
+    # Low-level methods
+    ####################################################
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        edi_formats = super().create(vals_list)
+
+        # activate by default on journal
+        journals = self.env['account.journal'].search([])
+        for journal in journals:
+            for edi_format in edi_formats:
+                if edi_format._is_compatible_with_journal(journal):
+                    journal.edi_format_ids += edi_format
+
+        # activate cron
+        if any(edi_format._needs_web_services() for edi_format in edi_formats):
+            self.env.ref('account_edi.ir_cron_edi_network').active = True
+
+        return edi_formats
+
     ####################################################
     # Export method to override based on EDI Format
     ####################################################
 
-    def _export_invoice_to_attachment(self, invoice):
-        """ Create the file content representing the invoice.
+    def _is_required_for_invoice(self, invoice):
+        """ Indicate if this EDI must be generated for the invoice passed as parameter.
 
-        :param invoice: the invoice to encode.
-        :returns: a dictionary (values are compatible to create an ir.attachment)
-        * name : the name of the file
-        * datas : the content of the file,
-        * res_model : 'account.move',
-        * res_id: the id of invoice
-        * mimetype : the mimetype of the attachment
+        :param invoice: An account.move having the invoice type.
+        :returns:       True if the EDI must be generated, False otherwise.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        return True
+
+    def _is_required_for_payment(self, payment):
+        """ Indicate if this EDI must be generated for the payment passed as parameter.
+
+        :param payment: An account.move linked to either an account.payment, either an account.bank.statement.line.
+        :returns:       True if the EDI must be generated, False otherwise.
         """
         # TO OVERRIDE
         self.ensure_one()
         return False
 
-    def _export_invoice_to_embed_to_pdf(self, pdf_content, invoice):
-        """ Create the file content representing the invoice when it's destined
-            to be embed into a pdf.
-            - default: creates the default EDI document (_export_invoice_to_attachment).
-            - Should return False if this EDI format should not be embedded.
-            - Should be overriden only if a specific behavior (for example,
-            include the pdf content inside the file).
+    def _needs_web_services(self):
+        """ Indicate if the EDI must be generated asynchronously through to some web services.
 
-            :param pdf_content: the pdf before any EDI format was added.
-            :param invoice: the invoice to add.
-            :returns: a dictionary or False if this EDI format must not be embedded to pdf.
-            * name : the name of the file
-            * datas : the content of the file,
-            * res_model : 'account.move',
-            * res_id: the id of invoice
-            * mimetype : the mimetype of the attachment
+        :return: True if such a web service is available, False otherwise.
+        """
+        self.ensure_one()
+        return False
+
+    def _is_compatible_with_journal(self, journal):
+        """ Indicate if the EDI format should appear on the journal passed as parameter to be selected by the user.
+        If True, this EDI format will be selected by default on the journal.
+
+        :param journal: The journal.
+        :returns:       True if this format can be enabled by default on the journal, False otherwise.
         """
         # TO OVERRIDE
         self.ensure_one()
-        return self._export_invoice_to_attachment(invoice)
+        return journal.type == 'sale'
+
+    def _is_embedding_to_invoice_pdf_needed(self):
+        """ Indicate if the EDI must be embedded inside the PDF report.
+
+        :returns: True if the documents need to be embedded, False otherwise.
+        """
+        # TO OVERRIDE
+        return False
+
+    def _support_batching(self):
+        """ Indicate if we can send multiple documents in the same time to the web services.
+        If True, the _post_%s_edi methods will get multiple documents in the same time.
+        Otherwise, these methods will be called with only one record at a time.
+
+        :returns: True if batching is supported, False otherwise.
+        """
+        # TO OVERRIDE
+        return False
+
+    def _post_invoice_edi(self, invoices, test_mode=False):
+        """ Create the file content representing the invoice (and calls web services if necessary).
+
+        :param invoices:    A list of invoices to post.
+        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
+        :returns:           A dictionary with the invoice as key and as value, another dictionary:
+        * attachment:       The attachment representing the invoice in this edi_format if the edi was successfully posted.
+        * error:            An error if the edi was not successfully posted.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        return {}
+
+    def _cancel_invoice_edi(self, invoices, test_mode=False):
+        """Calls the web services to cancel the invoice of this document.
+
+        :param invoices:    A list of invoices to cancel.
+        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
+        :returns:           A dictionary with the invoice as key and as value, another dictionary:
+        * success:          True if the invoice was successfully cancelled.
+        * error:            An error if the edi was not successfully cancelled.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        return {invoice: {'success': True} for invoice in invoices}  # By default, cancel succeeds doing nothing.
+
+    def _post_payment_edi(self, payments, test_mode=False):
+        """ Create the file content representing the payment (and calls web services if necessary).
+
+        :param payments:   The payments to post.
+        :param test_mode:   A flag indicating the EDI should only simulate the EDI without sending data.
+        :returns:           A dictionary with the payment as key and as value, another dictionary:
+        * attachment:       The attachment representing the payment in this edi_format if the edi was successfully posted.
+        * error:            An error if the edi was not successfully posted.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        return {}
+
+    def _cancel_payment_edi(self, payments, test_mode=False):
+        """Calls the web services to cancel the payment of this document.
+
+        :param payments:  A list of payments to cancel.
+        :param test_mode: A flag indicating the EDI should only simulate the EDI without sending data.
+        :returns:         A dictionary with the payment as key and as value, another dictionary:
+        * success:        True if the payment was successfully cancelled.
+        * error:          An error if the edi was not successfully cancelled.
+        """
+        # TO OVERRIDE
+        self.ensure_one()
+        return {payment: {'success': True} for payment in payments}  # By default, cancel succeeds doing nothing.
 
     ####################################################
     # Import methods to override based on EDI Format
@@ -129,17 +224,15 @@ class AccountEdiFormat(models.Model):
         """
         attachments = []
         for edi_format in self:
-            try:
-                vals = edi_format._export_invoice_to_embed_to_pdf(pdf_content, invoice)
-            except:
-                continue
-            if vals:
-                attachments.append(vals)
+            attachment = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format).attachment_id
+            if attachment and edi_format._is_embedding_to_invoice_pdf_needed():
+                datas = base64.b64decode(attachment.with_context(bin_size=False).datas)
+                attachments.append({'name': attachment.name, 'datas': datas})
 
         if attachments:
             # Add the attachments to the pdf file
             reader_buffer = io.BytesIO(pdf_content)
-            reader = OdooPdfFileReader(reader_buffer)
+            reader = OdooPdfFileReader(reader_buffer, strict=False)
             writer = OdooPdfFileWriter()
             writer.cloneReaderDocumentRoot(reader)
             for vals in attachments:
@@ -150,23 +243,6 @@ class AccountEdiFormat(models.Model):
             reader_buffer.close()
             buffer.close()
         return pdf_content
-
-    def _create_ir_attachments(self, invoice):
-        """ Create ir.attachment for the EDIs from invoice.
-
-        :param invoice: the invoice to generate the EDI from.
-        :returns: the newly created attachments.
-        """
-        attachment_vals_list = []
-        for edi_format in self:
-            vals = edi_format._export_invoice_to_attachment(invoice)
-            if vals:
-                vals['datas'] = base64.encodebytes(vals['datas'])
-                vals['edi_format_id'] = edi_format._origin.id
-                attachment_vals_list.append(vals)
-        res = self.env['ir.attachment'].create(attachment_vals_list)
-        invoice.edi_document_ids |= res
-        return res
 
     ####################################################
     # Import Internal methods (not meant to be overridden)
@@ -214,7 +290,7 @@ class AccountEdiFormat(models.Model):
         to_process = []
         try:
             buffer = io.BytesIO(content)
-            pdf_reader = OdooPdfFileReader(buffer)
+            pdf_reader = OdooPdfFileReader(buffer, strict=False)
         except Exception as e:
             # Malformed pdf
             _logger.exception("Error when reading the pdf: %s" % e)
@@ -264,11 +340,14 @@ class AccountEdiFormat(models.Model):
         for file_data in self._decode_attachment(attachment):
             for edi_format in self:
                 res = False
-                if file_data['type'] == 'xml':
-                    res = edi_format._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
-                elif file_data['type'] == 'pdf':
-                    res = edi_format._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
-                    file_data['pdf_reader'].stream.close()
+                try:
+                    if file_data['type'] == 'xml':
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'])
+                    elif file_data['type'] == 'pdf':
+                        res = edi_format.with_company(self.env.company)._create_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'])
+                        file_data['pdf_reader'].stream.close()
+                except Exception as e:
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
                     if 'extract_state' in res:
                         # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
@@ -286,11 +365,14 @@ class AccountEdiFormat(models.Model):
         for file_data in self._decode_attachment(attachment):
             for edi_format in self:
                 res = False
-                if file_data['type'] == 'xml':
-                    res = edi_format._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
-                elif file_data['type'] == 'pdf':
-                    res = edi_format._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
-                    file_data['pdf_reader'].stream.close()
+                try:
+                    if file_data['type'] == 'xml':
+                        res = edi_format.with_company(self.env.company)._update_invoice_from_xml_tree(file_data['filename'], file_data['xml_tree'], invoice)
+                    elif file_data['type'] == 'pdf':
+                        res = edi_format.with_company(self.env.company)._update_invoice_from_pdf_reader(file_data['filename'], file_data['pdf_reader'], invoice)
+                        file_data['pdf_reader'].stream.close()
+                except Exception as e:
+                    _logger.exception("Error importing attachment \"%s\" as invoice with format \"%s\"", file_data['filename'], edi_format.name, str(e))
                 if res:
                     if 'extract_state' in res:
                         # Bypass the OCR to prevent overwriting data when an EDI was succesfully imported.
@@ -298,3 +380,75 @@ class AccountEdiFormat(models.Model):
                         res.write({'extract_state': 'done'})
                     return res
         return self.env['account.move']
+
+    ####################################################
+    # Import helpers
+    ####################################################
+
+    def _find_value(self, xpath, xml_element, namespaces=None):
+        element = xml_element.xpath(xpath, namespaces=namespaces)
+        return element[0].text if element else None
+
+    def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None):
+        '''Search all partners and find one that matches one of the parameters.
+
+        :param name:    The name of the partner.
+        :param phone:   The phone or mobile of the partner.
+        :param mail:    The mail of the partner.
+        :param vat:     The vat number of the partner.
+        :returns:       A partner or an empty recordset if not found.
+        '''
+        domains = []
+        for value, domain in (
+            (name, [('name', 'ilike', name)]),
+            (phone, expression.OR([[('phone', '=', phone)], [('mobile', '=', phone)]])),
+            (mail, [('email', '=', mail)]),
+            (vat, [('vat', 'like', vat)]),
+        ):
+            if value is not None:
+                domains.append(domain)
+
+        domain = expression.OR(domains)
+        return self.env['res.partner'].search(domain, limit=1)
+
+    def _retrieve_product(self, name=None, default_code=None, barcode=None):
+        '''Search all products and find one that matches one of the parameters.
+
+        :param name:            The name of the product.
+        :param default_code:    The default_code of the product.
+        :param bracode:         The barcode of the product.
+        :returns:               A product or an empty recordset if not found.
+        '''
+        domains = []
+        for value, domain in (
+            (name, ('name', 'ilike', name)),
+            (default_code, ('default_code', '=', default_code)),
+            (barcode, ('barcode', '=', barcode)),
+        ):
+            if value is not None:
+                domains.append([domain])
+
+        domain = expression.OR(domains)
+        return self.env['product.product'].search(domain, limit=1)
+
+    def _retrieve_tax(self, amount, type_tax_use):
+        '''Search all taxes and find one that matches all of the parameters.
+
+        :param amount:          The amount of the tax.
+        :param type_tax_use:    The type of the tax.
+        :returns:               A tax or an empty recordset if not found.
+        '''
+        domains = [
+            [('amount', '=', float(amount))],
+            [('type_tax_use', '=', type_tax_use)]
+        ]
+
+        return self.env['account.tax'].search(expression.AND(domains), order='sequence ASC', limit=1)
+
+    def _retrieve_currency(self, code):
+        '''Search all currencies and find one that matches the code.
+
+        :param code: The code of the currency.
+        :returns:    A currency or an empty recordset if not found.
+        '''
+        return self.env['res.currency'].search([('name', '=', code.upper())], limit=1)

@@ -25,11 +25,6 @@ tour.register("sale_tour", {
     content: _t("Start by checking your company's data."),
     position: "bottom",
 }, {
-    trigger: ".modal-content input.o_field_widget[name='street'], .modal-content input.o_field_widget[name='street_name']",
-    content: _t("Let's enter the address."),
-    position: "right",
-    run: "text Rainbow street"
-}, {
     trigger: ".modal-content button[name='action_save_onboarding_company_step']",
     content: _t("Looks good. Let's continue."),
     position: "bottom",
@@ -117,7 +112,7 @@ tour.register("sale_quote_tour", {
     },
     ...tour.stepUtils.statusbarButtonsSteps("Send by Email", _t("<b>Send the quote</b> to yourself and check what the customer will receive."), ".o_statusbar_buttons button[name='action_quotation_send']"),
     {
-        trigger: ".modal-content input[name='email']",
+        trigger: ".modal-content div[name='partner_ids']",
         content: _t("Write <b>your own email address</b> here in order to test the flow."),
         run: "text agrolait@example.com"
     },

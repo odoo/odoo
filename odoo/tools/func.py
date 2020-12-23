@@ -16,6 +16,8 @@ class lazy_property(object):
         get it again.
     """
     def __init__(self, fget):
+        assert not fget.__name__.startswith('__'),\
+            "lazy_property does not support mangled names"
         self.fget = fget
 
     def __get__(self, obj, cls):

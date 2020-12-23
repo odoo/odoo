@@ -32,6 +32,20 @@
     </xpath>
 </template>
 
+<!-- Tweak "preview" badge: display Free Preview if payment-based course -->
+<template id="course_slides_list_slide"
+    name="Slide template for a training channel (Sale)"
+    inherit_id="website_slides.course_slides_list_slide">
+    <xpath expr="//a[@t-if='channel.can_upload']/span/span" position="replace">
+        <span t-if="channel.enroll == 'payment'">Free Preview</span>
+        <span t-else="">Preview</span>
+    </xpath>
+    <xpath expr="//t[@t-elif='slide.is_preview and not channel.is_member']/span/span" position="replace">
+        <span t-if="channel.enroll == 'payment'">Free Preview</span>
+        <span t-else="">Preview</span>
+    </xpath>
+</template>
+
 <!-- FULLSCREEN -->
 <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
     <xpath expr="//div[hasclass('o_wslides_fs_main')]" position="attributes">

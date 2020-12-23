@@ -3,6 +3,7 @@
 {
     'name': 'Paypal Payment Acquirer',
     'category': 'Accounting/Payment Acquirers',
+    'sequence': 365,
     'summary': 'Payment Acquirer: Paypal Implementation',
     'version': '1.0',
     'description': """Paypal Payment Acquirer""",

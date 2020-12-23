@@ -4,6 +4,7 @@ import logging
 from lxml import etree
 import os
 import unittest
+import time
 
 import pytz
 import werkzeug
@@ -19,7 +20,8 @@ from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
 
-from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
+from odoo.addons.http_routing.models import ir_http
+from odoo.addons.http_routing.models.ir_http import _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 logger = logging.getLogger(__name__)
@@ -139,14 +141,22 @@ class Http(models.AbstractModel):
 
     @classmethod
     def _register_website_track(cls, response):
-        if getattr(response, 'status_code', 0) != 200 or not hasattr(response, 'qcontext'):
+        if getattr(response, 'status_code', 0) != 200:
             return False
-        main_object = response.qcontext.get('main_object')
-        website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
-        template = response.qcontext.get('response_template')
+
+        template = False
+        if hasattr(response, 'qcontext'):  # classic response
+            main_object = response.qcontext.get('main_object')
+            website_page = getattr(main_object, '_name', False) == 'website.page' and main_object
+            template = response.qcontext.get('response_template')
+        elif hasattr(response, '_cached_page'):
+            website_page, template = response._cached_page, response._cached_template
+
         view = template and request.env['website'].get_template(template)
         if view and view.track:
             request.env['website.visitor']._handle_webpage_dispatch(response, website_page)
+
+        return False
 
     @classmethod
     def _dispatch(cls):
@@ -216,7 +226,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_frontend_langs(cls):
         if get_request_website():
-            return [code for code, _, _ in request.env['res.lang'].get_available()]
+            return [code for code, *_ in request.env['res.lang'].get_available()]
         else:
             return super()._get_frontend_langs()
 
@@ -240,15 +250,52 @@ class Http(models.AbstractModel):
         published_domain = page_domain
         # specific page first
         page = request.env['website.page'].sudo().search(published_domain, order='website_id asc', limit=1)
+
+        # redirect withtout trailing /
+        if not page and req_page != "/" and req_page.endswith("/"):
+            return request.redirect(req_page[:-1])
+
         if page:
             # prefetch all menus (it will prefetch website.page too)
             request.website.menu_id
+
         if page and (request.website.is_publisher() or page.is_visible):
+            need_to_cache = False
+            cache_key = page._get_cache_key(request)
+            if (
+                page.cache_time  # cache > 0
+                and request.httprequest.method == "GET"
+                and request.env.user._is_public()    # only cache for unlogged user
+                and 'nocache' not in request.params  # allow bypass cache / debug
+                and not request.session.debug
+                and len(cache_key) and cache_key[-1] is not None  # nocache via expr
+            ):
+                need_to_cache = True
+                try:
+                    r = page._get_cache_response(cache_key)
+                    if r['time'] + page.cache_time > time.time():
+                        response = werkzeug.Response(r['content'], mimetype=r['contenttype'])
+                        response._cached_template = r['template']
+                        response._cached_page = page
+                        return response
+                except KeyError:
+                    pass
+
             _, ext = os.path.splitext(req_page)
-            return request.render(page.view_id.id, {
+            response = request.render(page.view_id.id, {
                 'deletable': True,
                 'main_object': page,
             }, mimetype=_guess_mimetype(ext))
+
+            if need_to_cache and response.status_code == 200:
+                r = response.render()
+                page._set_cache_response(cache_key, {
+                    'content': r,
+                    'contenttype': response.headers['Content-Type'],
+                    'time': time.time(),
+                    'template': getattr(response, 'qcontext', {}).get('response_template')
+                })
+            return response
         return False
 
     @classmethod
@@ -282,7 +329,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_exception_code_values(cls, exception):
         code, values = super(Http, cls)._get_exception_code_values(exception)
-        if request.website.is_publisher() and isinstance(exception, werkzeug.exceptions.NotFound):
+        if isinstance(exception, werkzeug.exceptions.NotFound) and request.website.is_publisher():
             code = 'page_404'
             values['path'] = request.httprequest.path[1:]
         if isinstance(exception, werkzeug.exceptions.Forbidden) and \
@@ -372,7 +419,7 @@ class Http(models.AbstractModel):
         return session_info
 
 
-class ModelConverter(ModelConverter):
+class ModelConverter(ir_http.ModelConverter):
 
     def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].with_user(uid)

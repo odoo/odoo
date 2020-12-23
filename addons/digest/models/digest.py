@@ -53,7 +53,7 @@ class Digest(models.Model):
             digest.available_fields = ', '.join(kpis_values_fields)
 
     def _get_kpi_compute_parameters(self):
-        return fields.Date.to_string(self._context.get('start_date')), fields.Date.to_string(self._context.get('end_date')), self.env.company
+        return fields.Datetime.to_string(self._context.get('start_datetime')), fields.Datetime.to_string(self._context.get('end_datetime')), self.env.company
 
     def _compute_kpi_res_users_connected_value(self):
         for record in self:
@@ -72,12 +72,13 @@ class Digest(models.Model):
     def _onchange_periodicity(self):
         self.next_run_date = self._get_next_run_date()
 
-    @api.model
-    def create(self, vals):
-        digest = super(Digest, self).create(vals)
-        if not digest.next_run_date:
-             digest.next_run_date = digest._get_next_run_date()
-        return digest
+    @api.model_create_multi
+    def create(self, vals_list):
+        digests = super().create(vals_list)
+        for digest in digests:
+            if not digest.next_run_date:
+                digest.next_run_date = digest._get_next_run_date()
+        return digests
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -112,7 +113,7 @@ class Digest(models.Model):
                 digest.write({'periodicity': 'weekly'})
             digest.next_run_date = digest._get_next_run_date()
 
-    def _action_send_to_user(self, user, tips_count=1):
+    def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
         web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         rendered_body = self.env['mail.render.mixin']._render_template(
@@ -123,14 +124,14 @@ class Digest(models.Model):
             add_context={
                 'title': self.name,
                 'top_button_label': _('Connect'),
-                'top_button_url': url_join(web_base_url, '/web/login'),
+                'top_button_url': web_base_url,
                 'company': user.company_id,
                 'user': user,
                 'tips_count': tips_count,
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
                 'kpi_data': self.compute_kpis(user.company_id, user),
-                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count),
+                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
                 'preferences': self.compute_preferences(user.company_id, user),
             },
             post_process=True
@@ -200,8 +201,8 @@ class Digest(models.Model):
         kpis_actions = self._compute_kpis_actions(company, user)
 
         for col_index, (tf_name, tf) in enumerate(self._compute_timeframes(company)):
-            digest = self.with_context(start_date=tf[0][0], end_date=tf[0][1]).with_user(user).with_company(company)
-            previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1]).with_user(user).with_company(company)
+            digest = self.with_context(start_datetime=tf[0][0], end_datetime=tf[0][1]).with_user(user).with_company(company)
+            previous_digest = self.with_context(start_datetime=tf[1][0], end_datetime=tf[1][1]).with_user(user).with_company(company)
             for index, field_name in enumerate(digest_fields):
                 kpi_values = kpis[index]
                 kpi_values['kpi_action'] = kpis_actions.get(field_name)
@@ -228,7 +229,7 @@ class Digest(models.Model):
         # filter failed KPIs
         return [kpi for kpi in kpis if kpi['kpi_name'] not in invalid_fields]
 
-    def compute_tips(self, company, user, tips_count=1):
+    def compute_tips(self, company, user, tips_count=1, consumed=True):
         tips = self.env['digest.tip'].search([
             ('user_ids', '!=', user.id),
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
@@ -237,7 +238,8 @@ class Digest(models.Model):
             self.env['mail.render.mixin']._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True)[tip.id]
             for tip in tips
         ]
-        tips.user_ids += user
+        if consumed:
+            tips.user_ids += user
         return tip_descriptions
 
     def _compute_kpis_actions(self, company, user):
@@ -257,13 +259,13 @@ class Digest(models.Model):
         if self._context.get('digest_slowdown'):
             preferences.append(_("We have noticed you did not connect these last few days so we've automatically switched your preference to weekly Digests."))
         elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
-            preferences.append('%s <a href="/digest/%s/set_periodicity?periodicity=weekly" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a>' % (
+            preferences.append('<p>%s<br /><a href="/digest/%s/set_periodicity?periodicity=weekly" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>' % (
                 _('Prefer a broader overview ?'),
                 self.id,
                 _('Switch to weekly Digests')
             ))
         if user.has_group('base.group_erp_manager'):
-            preferences.append('%s <a href="/web#view_type=form&amp;model=%s&amp;id=%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a>' % (
+            preferences.append('<p>%s<br /><a href="/web#view_type=form&amp;model=%s&amp;id=%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a></p>' % (
                 _('Want to customize this email?'),
                 self._name,
                 self.id,
@@ -285,21 +287,20 @@ class Digest(models.Model):
         return date.today() + delta
 
     def _compute_timeframes(self, company):
-        now = datetime.utcnow()
+        start_datetime = datetime.utcnow()
         tz_name = company.resource_calendar_id.tz
         if tz_name:
-            now = pytz.timezone(tz_name).localize(now)
-        start_date = now.date()
+            start_datetime = pytz.timezone(tz_name).localize(start_datetime)
         return [
-            (_('Yesterday'), (
-                (start_date + relativedelta(days=-1), start_date),
-                (start_date + relativedelta(days=-2), start_date + relativedelta(days=-1)))
+            (_('Last 24 hours'), (
+                (start_datetime + relativedelta(days=-1), start_datetime),
+                (start_datetime + relativedelta(days=-2), start_datetime + relativedelta(days=-1)))
             ), (_('Last 7 Days'), (
-                (start_date + relativedelta(weeks=-1), start_date),
-                (start_date + relativedelta(weeks=-2), start_date + relativedelta(weeks=-1)))
+                (start_datetime + relativedelta(weeks=-1), start_datetime),
+                (start_datetime + relativedelta(weeks=-2), start_datetime + relativedelta(weeks=-1)))
             ), (_('Last 30 Days'), (
-                (start_date + relativedelta(months=-1), start_date),
-                (start_date + relativedelta(months=-2), start_date + relativedelta(months=-1)))
+                (start_datetime + relativedelta(months=-1), start_datetime),
+                (start_datetime + relativedelta(months=-2), start_datetime + relativedelta(months=-1)))
             )
         ]
 

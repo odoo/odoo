@@ -57,7 +57,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
 
         - Change the stardard price with the new valuation by product unit.
         - Create a manual stock valuation layer with the `added_value` of `self`.
-        - Distribute the `added_value` on the the remaining_value of layers still in stock (with a remaining quantity)
+        - Distribute the `added_value` on the remaining_value of layers still in stock (with a remaining quantity)
         - If the Inventory Valuation of the product category is automated, create
         related account move.
         """
@@ -155,6 +155,6 @@ class StockValuationLayerRevaluation(models.TransientModel):
             })],
         }
         account_move = self.env['account.move'].create(move_vals)
-        account_move.post()
+        account_move._post()
 
         return True

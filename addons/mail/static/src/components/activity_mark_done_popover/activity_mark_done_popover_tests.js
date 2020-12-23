@@ -6,29 +6,31 @@ const components = {
 };
 
 const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    afterEach,
+    afterNextRender,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
+
+const Bus = require('web.Bus');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('activity_mark_done_popover', {}, function () {
 QUnit.module('activity_mark_done_popover_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createActivityMarkDonePopoverComponent = async activity => {
-            const ActivityMarkDonePopoverComponent = components.ActivityMarkDonePopover;
-            ActivityMarkDonePopoverComponent.env = this.env;
-            this.component = new ActivityMarkDonePopoverComponent(null, {
-                activityLocalId: activity.localId,
+            await createRootComponent(this, components.ActivityMarkDonePopover, {
+                props: { activityLocalId: activity.localId },
+                target: this.widget.el,
             });
-            await this.component.mount(this.widget.el);
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,14 +38,7 @@ QUnit.module('activity_mark_done_popover_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 
@@ -55,6 +50,7 @@ QUnit.test('activity mark done popover simplest layout', async function (assert)
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -99,6 +95,7 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
         category: 'not_upload_file',
         force_next: true,
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -134,37 +131,6 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
     );
 });
 
-QUnit.test('activity mark done popover click on discard', async function (assert) {
-    assert.expect(4);
-
-    await this.start();
-    const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-    });
-    await this.createActivityMarkDonePopoverComponent(activity);
-    function onPopoverClose(ev) {
-        assert.step('event_triggered');
-    }
-    document.addEventListener('o-popover-close', onPopoverClose);
-
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover',
-        "Popover component should be present"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover_discardButton',
-        "Popover component should contain the discard button"
-    );
-    document.querySelector('.o_ActivityMarkDonePopover_discardButton').click();
-    assert.verifySteps(['event_triggered'], 'Discard clicked should trigger the right event');
-
-    document.removeEventListener('o-popover-close', onPopoverClose);
-});
-
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
     assert.expect(7);
 
@@ -190,6 +156,7 @@ QUnit.test('activity mark done popover mark done without feedback', async functi
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -225,6 +192,7 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
@@ -241,6 +209,11 @@ QUnit.test('activity mark done popover mark done with feedback', async function 
 QUnit.test('activity mark done popover mark done and schedule next', async function (assert) {
     assert.expect(6);
 
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        assert.step('activity_action');
+        throw new Error("The do-action event should not be triggered when the route doesn't return an action");
+    });
     await this.start({
         async mockRPC(route, args) {
             if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
@@ -249,7 +222,7 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
                 assert.strictEqual(args.args[0].length, 1);
                 assert.strictEqual(args.args[0][0], 12);
                 assert.strictEqual(args.kwargs.feedback, 'This task is done');
-                return;
+                return false;
             }
             if (route === '/web/dataset/call_kw/mail.activity/unlink') {
                 // 'unlink' on non-existing record raises a server crash
@@ -257,21 +230,63 @@ QUnit.test('activity mark done popover mark done and schedule next', async funct
             }
             return this._super(...arguments);
         },
+        env: { bus },
     });
     const activity = this.env.models['mail.activity'].create({
         canWrite: true,
         category: 'not_upload_file',
         id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
     });
     await this.createActivityMarkDonePopoverComponent(activity);
 
     let feedbackTextarea = document.querySelector('.o_ActivityMarkDonePopover_feedback');
     feedbackTextarea.focus();
     document.execCommand('insertText', false, 'This task is done');
-    document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
+    await afterNextRender(() => {
+        document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
+    });
     assert.verifySteps(
         ['action_feedback_schedule_next'],
-        "Mark done and schedule next button should call the right rpc"
+        "Mark done and schedule next button should call the right rpc and not trigger an action"
+    );
+});
+
+QUnit.test('[technical] activity mark done & schedule next with new action', async function (assert) {
+    assert.expect(3);
+
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        assert.step('activity_action');
+        assert.deepEqual(
+            payload.action,
+            { type: 'ir.actions.act_window' },
+            "The content of the action should be correct"
+        );
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (route === '/web/dataset/call_kw/mail.activity/action_feedback_schedule_next') {
+                return { type: 'ir.actions.act_window' };
+            }
+            return this._super(...arguments);
+        },
+        env: { bus },
+    });
+    const activity = this.env.models['mail.activity'].create({
+        canWrite: true,
+        category: 'not_upload_file',
+        id: 12,
+        thread: [['insert', { id: 42, model: 'res.partner' }]],
+    });
+    await this.createActivityMarkDonePopoverComponent(activity);
+
+    await afterNextRender(() => {
+        document.querySelector('.o_ActivityMarkDonePopover_doneScheduleNextButton').click();
+    });
+    assert.verifySteps(
+        ['activity_action'],
+        "The action returned by the route should be executed"
     );
 });
 

@@ -6,7 +6,7 @@ import re
 
 from lxml import etree
 
-from odoo import api, models, _
+from odoo import api, models, _, Command
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import ustr
 
@@ -577,10 +577,10 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 if self[name] == current_settings[name]:
                     continue
                 if int(self[name]):
-                    groups.write({'implied_ids': [(4, implied_group.id)]})
+                    groups.write({'implied_ids': [Command.link(implied_group.id)]})
                 else:
-                    groups.write({'implied_ids': [(3, implied_group.id)]})
-                    implied_group.write({'users': [(3, user.id) for user in groups.users]})
+                    groups.write({'implied_ids': [Command.unlink(implied_group.id)]})
+                    implied_group.write({'users': [Command.unlink(user.id) for user in groups.users]})
 
         # config fields: store ir.config_parameters
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
@@ -599,6 +599,20 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             IrConfigParameter.set_param(icp, value)
 
     def execute(self):
+        """
+        Called when settings are saved.
+
+        This method will call `set_values` and will install/uninstall any modules defined by
+        `module_` Boolean fields and then trigger a web client reload.
+
+        .. warning::
+
+            This method **SHOULD NOT** be overridden, in most cases what you want to override is
+            `~set_values()` since `~execute()` does little more than simply call `~set_values()`.
+
+            The part that installs/uninstalls modules **MUST ALWAYS** be at the end of the
+            transaction, otherwise there's a big risk of registry <-> database desynchronisation.
+        """
         self.ensure_one()
         if not self.env.is_admin():
             raise AccessError(_("Only administrators can change the settings"))

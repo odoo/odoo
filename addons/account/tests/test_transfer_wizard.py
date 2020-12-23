@@ -122,7 +122,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                 }),
             ]
         })
-        cls.move_1.post()
+        cls.move_1.action_post()
 
         cls.move_2 = cls.env['account.move'].create({
             'journal_id': cls.journal.id,
@@ -186,7 +186,7 @@ class TestTransferWizard(AccountTestInvoicingCommon):
                 }),
             ]
         })
-        cls.move_2.post()
+        cls.move_2.action_post()
 
 
     def test_transfer_wizard_reconcile(self):
@@ -196,12 +196,13 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.receivable_account
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         payable_transfer = transfer_move.line_ids.filtered(lambda x: x.account_id == self.payable_account)
@@ -221,26 +222,27 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.accounts[4]
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         groups = {}
         for line in transfer_move.line_ids:
-            key = (line.account_id, line.partner_id or None, line.currency_id or None)
+            key = (line.account_id, line.partner_id or None, line.currency_id)
             self.assertFalse(groups.get(key), "There should be only one line per (account, partner, currency) group in the transfer move.")
             groups[key] = line
 
-        self.assertAlmostEqual(groups[(self.accounts[0], self.partner_a, None)].balance, -800, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[1], None, None)].balance, 500, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[1], self.partner_b, None)].balance, -480, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[2], self.partner_a, None)].balance, 1030, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[0], self.partner_a, self.company_data['currency'])].balance, -800, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[1], None, self.company_data['currency'])].balance, 500, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[1], self.partner_b, self.company_data['currency'])].balance, -480, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[2], self.partner_a, self.company_data['currency'])].balance, 1030, self.company.currency_id.decimal_places)
         self.assertAlmostEqual(groups[(self.accounts[2], self.partner_a, self.test_currency_2)].balance, 512, self.company.currency_id.decimal_places)
-        self.assertAlmostEqual(groups[(self.accounts[3], self.partner_a, None)].balance, -250, self.company.currency_id.decimal_places)
+        self.assertAlmostEqual(groups[(self.accounts[3], self.partner_a, self.company_data['currency'])].balance, -250, self.company.currency_id.decimal_places)
 
 
     def test_transfer_wizard_currency_conversion(self):
@@ -251,12 +253,13 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.test_currency_account
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         destination_line = transfer_move.line_ids.filtered(lambda x: x.account_id == self.test_currency_account)
@@ -273,12 +276,13 @@ class TestTransferWizard(AccountTestInvoicingCommon):
 
         # We use a form to pass the context properly to the depends_context move_line_ids field
         context = {'active_model': 'account.move.line', 'active_ids': active_move_lines.ids}
-        with Form(self.env['account.transfer.wizard'].with_context(context)) as wizard_form:
+        with Form(self.env['account.automatic.entry.wizard'].with_context(context)) as wizard_form:
+            wizard_form.action = 'change_account'
             wizard_form.destination_account_id = self.receivable_account
             wizard_form.journal_id = self.journal
         wizard = wizard_form.save()
 
-        transfer_move_id = wizard.button_transfer()['res_id']
+        transfer_move_id = wizard.do_action()['res_id']
         transfer_move = self.env['account.move'].browse(transfer_move_id)
 
         destination_lines = transfer_move.line_ids.filtered(lambda x: x.account_id == self.receivable_account)

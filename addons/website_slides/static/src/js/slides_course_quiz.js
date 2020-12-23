@@ -567,11 +567,7 @@ odoo.define('website_slides.quiz', function (require) {
             }
             this.quiz.questionsCount++;
             event.data.questionFormWidget.destroy();
-            if (event.data.save_and_new) {
-                this._onCreateQuizClick();
-            } else {
-                this.$('.o_wslides_js_quiz_add_question').removeClass('d-none');
-            }
+            this.$('.o_wslides_js_quiz_add_question').removeClass('d-none');
         },
 
         /**

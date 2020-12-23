@@ -56,7 +56,10 @@ class SaleOrder(models.Model):
             carrier = self.carrier_id
         else:
             name = _('Add a shipping method')
-            carrier = self.with_company(self.company_id).partner_id.property_delivery_carrier_id
+            carrier = (
+                self.with_company(self.company_id).partner_shipping_id.property_delivery_carrier_id
+                or self.with_company(self.company_id).partner_shipping_id.commercial_partner_id.property_delivery_carrier_id
+            )
         return {
             'name': name,
             'type': 'ir.actions.act_window',
@@ -157,7 +160,7 @@ class SaleOrderLine(models.Model):
         for line in self:
             if line.is_delivery:
                 line.order_id.carrier_id = False
-        super(SaleOrderLine, self).unlink()
+        return super(SaleOrderLine, self).unlink()
 
     def _is_delivery(self):
         self.ensure_one()

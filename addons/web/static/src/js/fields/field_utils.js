@@ -329,8 +329,8 @@ function formatX2Many(value) {
  *        the number of digits that should be used, instead of the default
  *        digits precision in the field. Note: if the currency defines a
  *        precision, the currency's one is used.
- * @param {boolean} [options.html=true]
- *        if true, returns a string encoding the html formatted value (with
+ * @param {boolean} [options.forceString=false]
+ *        if false, returns a string encoding the html formatted value (with
  *        whitespace encoded as '&nbsp;')
  * @returns {string}
  */
@@ -338,7 +338,7 @@ function formatMonetary(value, field, options) {
     if (value === false) {
         return "";
     }
-    options = Object.assign({ html: true }, options);
+    options = Object.assign({ forceString: false }, options);
 
     var currency = options.currency;
     if (!currency) {
@@ -361,7 +361,7 @@ function formatMonetary(value, field, options) {
     if (!currency || options.noSymbol) {
         return formatted_value;
     }
-    const ws = options.html ? '&nbsp;' : ' ';
+    const ws = options.forceString ? ' ' : '&nbsp;';
     if (currency.position === "after") {
         return formatted_value + ws + currency.symbol;
     } else {
@@ -414,6 +414,42 @@ function formatSelection(value, field, options) {
 ////////////////////////////////////////////////////////////////////////////////
 
 /**
+ * Smart date inputs are shortcuts to write dates quicker.
+ * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
+ * 
+ * e.g.
+ *   "+1d" or "+1" will return now + 1 day
+ *   "-2w" will return now - 2 weeks
+ *   "+3m" will return now + 3 months
+ *   "-4y" will return now + 4 years
+ *
+ * @param {string} value
+ * @returns {Moment|false} Moment date object
+ */
+function parseSmartDateInput(value) {
+    const units = {
+        d: 'days',
+        m: 'months',
+        w: 'weeks',
+        y: 'years',
+    };
+    const re = new RegExp(`^([+-])(\\d+)([${Object.keys(units).join('')}]?)$`);
+    const match = re.exec(value);
+    if (match) {
+        let date = moment();
+        const offset = parseInt(match[2], 10);
+        const unit = units[match[3] || 'd'];
+        if (match[1] === '+') {
+            date.add(offset, unit);
+        } else {
+            date.subtract(offset, unit);
+        }
+        return date;
+    }
+    return false;
+}
+
+/**
  * Create an Date object
  * The method toJSON return the formated value to send value server side
  *
@@ -431,18 +467,24 @@ function parseDate(value, field, options) {
         return false;
     }
     var datePattern = time.getLangDateFormat();
-    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D');
+    var datePatternWoZero = datePattern.replace('MM', 'M').replace('DD', 'D');
     var date;
-    if (options && options.isUTC) {
-        date = moment.utc(value);
+    const smartDate = parseSmartDateInput(value);
+    if (smartDate) {
+        date = smartDate;
     } else {
-        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
+        if (options && options.isUTC) {
+            value = value.padStart(10, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
+            date = moment.utc(value);
+        } else {
+            date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
+        }
     }
     if (date.isValid()) {
         if (date.year() === 0) {
             date.year(moment.utc().year());
         }
-        if (date.year() >= 1900) {
+        if (date.year() >= 1000){
             date.toJSON = function () {
                 return this.clone().locale('en').format('YYYY-MM-DD');
             };
@@ -476,20 +518,26 @@ function parseDateTime(value, field, options) {
     var pattern1 = datePattern + ' ' + timePattern;
     var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
     var datetime;
-    if (options && options.isUTC) {
-        // phatomjs crash if we don't use this format
-        datetime = moment.utc(value.replace(' ', 'T') + 'Z');
+    const smartDate = parseSmartDateInput(value);
+    if (smartDate) {
+        datetime = smartDate;
     } else {
-        datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
-        if (options && options.timezone) {
-            datetime.add(-session.getTZOffset(datetime), 'minutes');
+        if (options && options.isUTC) {
+            value = value.padStart(19, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
+            // phatomjs crash if we don't use this format
+            datetime = moment.utc(value.replace(' ', 'T') + 'Z');
+        } else {
+            datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
+            if (options && options.timezone) {
+                datetime.add(-session.getTZOffset(datetime), 'minutes');
+            }
         }
     }
     if (datetime.isValid()) {
         if (datetime.year() === 0) {
             datetime.year(moment.utc().year());
         }
-        if (datetime.year() >= 1900) {
+        if (datetime.year() >= 1000) {
             datetime.toJSON = function () {
                 return this.clone().locale('en').format('YYYY-MM-DD HH:mm:ss');
             };

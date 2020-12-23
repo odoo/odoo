@@ -231,7 +231,7 @@ class WebsitePayment(http.Controller):
             partner = request.env['res.partner'].browse([partner_id])
             acquirer_domain = expression.AND([
             acquirer_domain,
-            ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.country_id.id])]
+            ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.sudo().country_id.id])]
         ])
         if acquirer_id:
             acquirers = env['payment.acquirer'].browse(int(acquirer_id))
@@ -246,7 +246,7 @@ class WebsitePayment(http.Controller):
         if partner_id:
             values['pms'] = request.env['payment.token'].search([
                 ('acquirer_id', 'in', acquirers.ids),
-                ('partner_id', '=', partner_id)
+                ('partner_id', 'child_of', partner.commercial_partner_id.id)
             ])
         else:
             values['pms'] = []

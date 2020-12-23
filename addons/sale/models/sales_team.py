@@ -78,15 +78,16 @@ class CrmTeam(models.Model):
                 move.team_id         AS team_id,
                 SUM(-line.balance)   AS amount_untaxed_signed
             FROM account_move move
-            LEFT JOIN account_move_line line ON line.move_id = move.id
+            JOIN account_move_line line ON line.move_id = move.id
+            JOIN account_account account ON account.id = line.account_id
             WHERE move.move_type IN ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')
-            AND move.payment_state IN ('in_payment', 'paid')
+            AND move.payment_state IN ('in_payment', 'paid', 'reversed')
             AND move.state = 'posted'
             AND move.team_id IN %s
             AND move.date BETWEEN %s AND %s
             AND line.tax_line_id IS NULL
             AND line.display_type IS NULL
-            AND line.account_internal_type NOT IN ('receivable', 'payable')
+            AND account.internal_type NOT IN ('receivable', 'payable')
             GROUP BY move.team_id
         '''
         today = fields.Date.today()
@@ -129,7 +130,7 @@ class CrmTeam(models.Model):
 
     def action_primary_channel_button(self):
         if self._context.get('in_sales_app'):
-            return self.env.ref('sale.action_order_report_so_salesteam').read()[0]
+            return self.env["ir.actions.actions"]._for_xml_id("sale.action_order_report_so_salesteam")
         return super(CrmTeam, self).action_primary_channel_button()
 
     def update_invoiced_target(self, value):

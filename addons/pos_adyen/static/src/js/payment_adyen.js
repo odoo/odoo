@@ -43,12 +43,11 @@ var PaymentAdyen = PaymentInterface.extend({
         return Promise.reject(data); // prevent subsequent onFullFilled's from being called
     },
 
-    _call_adyen: function (data) {
-        var self = this;
+    _call_adyen: function (data, operation) {
         return rpc.query({
             model: 'pos.payment.method',
             method: 'proxy_adyen_request',
-            args: [data, this.payment_method.adyen_test_mode, this.payment_method.adyen_api_key],
+            args: [[this.payment_method.id], data, operation],
         }, {
             // When a payment terminal is disconnected it takes Adyen
             // a while to return an error (~6s). So wait 10 seconds
@@ -113,6 +112,12 @@ var PaymentAdyen = PaymentInterface.extend({
 
     _adyen_pay: function () {
         var self = this;
+
+        if (this.pos.get_order().selected_paymentline.amount < 0) {
+            this._show_error(_('Cannot process transactions with negative amount.'));
+            return Promise.resolve();
+        }
+
         var data = this._adyen_pay_data();
 
         return this._call_adyen(data).then(function (data) {
@@ -121,6 +126,7 @@ var PaymentAdyen = PaymentInterface.extend({
     },
 
     _adyen_cancel: function (ignore_error) {
+        var self = this;
         var previous_service_id = this.most_recent_service_id;
         var header = _.extend(this._adyen_common_message_header(), {
             'MessageCategory': 'Abort',
@@ -133,7 +139,6 @@ var PaymentAdyen = PaymentInterface.extend({
                     'AbortReason': 'MerchantAbort',
                     'MessageReference': {
                         'MessageCategory': 'Payment',
-                        'SaleID': header.SaleID,
                         'ServiceID': previous_service_id,
                     }
                 },
@@ -144,7 +149,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
             // Only valid response is a 200 OK HTTP response which is
             // represented by true.
-            if (! ignore_error && data !== true) {
+            if (! ignore_error && data !== "ok") {
                 self._show_error(_('Cancelling the payment failed. Please cancel it manually on the payment terminal.'));
             }
         });
@@ -174,11 +179,7 @@ var PaymentAdyen = PaymentInterface.extend({
         return rpc.query({
             model: 'pos.payment.method',
             method: 'get_latest_adyen_status',
-            args: [this.payment_method.id,
-                   this._adyen_get_sale_id(),
-                   this.payment_method.adyen_terminal_identifier,
-                   this.payment_method.adyen_test_mode,
-                   this.payment_method.adyen_api_key],
+            args: [[this.payment_method.id], this._adyen_get_sale_id()],
         }, {
             timeout: 5000,
             shadow: true,
@@ -207,6 +208,15 @@ var PaymentAdyen = PaymentInterface.extend({
                     var config = self.pos.config;
                     var payment_response = notification.SaleToPOIResponse.PaymentResponse;
                     var payment_result = payment_response.PaymentResult;
+
+                    var cashier_receipt = payment_response.PaymentReceipt.find(function (receipt) {
+                        return receipt.DocumentQualifier == 'CashierReceipt';
+                    });
+
+                    if (cashier_receipt) {
+                        line.set_cashier_receipt(self._convert_receipt_info(cashier_receipt.OutputContent.OutputText));
+                    }
+
                     var customer_receipt = payment_response.PaymentReceipt.find(function (receipt) {
                         return receipt.DocumentQualifier == 'CustomerReceipt';
                     });
@@ -223,6 +233,7 @@ var PaymentAdyen = PaymentInterface.extend({
 
                     line.transaction_id = additional_response.get('pspReference');
                     line.card_type = additional_response.get('cardType');
+                    line.cardholder_name = additional_response.get('cardHolderName') || '';
                     resolve(true);
                 } else {
                     var message = additional_response.get('message');
@@ -232,7 +243,7 @@ var PaymentAdyen = PaymentInterface.extend({
                     if (message.startsWith('108 ')) {
                         resolve(false);
                     } else {
-                        line.set_payment_status('force_done');
+                        line.set_payment_status('retry');
                         reject();
                     }
                 }

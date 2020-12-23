@@ -1,152 +1,180 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <report
-            string="Picking Operations"
-            id="action_report_picking"
-            model="stock.picking"
-            report_type="qweb-pdf"
-            name="stock.report_picking"
-            file="stock.report_picking_operations"
-            print_report_name="'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)"
-        />
-        <report
-            string="Delivery Slip"
-            id="action_report_delivery"
-            model="stock.picking"
-            report_type="qweb-pdf"
-            name="stock.report_deliveryslip"
-            file="stock.report_deliveryslip"
-            print_report_name="'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)"
-        />
-        <report
-            string="Count Sheet"
-            id="action_report_inventory"
-            model="stock.inventory"
-            report_type="qweb-pdf"
-            name="stock.report_inventory"
-            file="stock.report_inventory"
-            print_report_name="'Inventory - %s' % (object.name)"
-        />
-        <report
-            string="Package Barcode with Content"
-            id="action_report_quant_package_barcode"
-            model="stock.quant.package"
-            report_type="qweb-pdf"
-            name="stock.report_package_barcode"
-            file="stock.report_package_barcode"/>
-        <report
-            string="Package Barcode (PDF)"
-            id="action_report_quant_package_barcode_small"
-            model="stock.quant.package"
-            report_type="qweb-pdf"
-            name="stock.report_package_barcode_small"
-            file="stock.report_package_barcode"/>
-        <report
-            string="Location Barcode"
-            id="action_report_location_barcode"
-            model="stock.location"
-            report_type="qweb-pdf"
-            name="stock.report_location_barcode"
-            file="stock.report_location_barcode"
-            print_report_name="'Location - %s' % object.name"
-        />
-        <report
-            string="Lot/Serial Number (PDF)"
-            id="action_report_lot_label"
-            model="stock.production.lot"
-            report_type="qweb-pdf"
-            name="stock.report_lot_label"
-            file="stock.report_lot_label"
-            print_report_name="'Lot-Serial - %s' % object.name"
-        />
-        <report
-            string="Operation type (PDF)"
-            id="action_report_picking_type_label"
-            model="stock.picking.type"
-            report_type="qweb-pdf"
-            name="stock.report_picking_type_label"
-            file="stock.report_picking_type_label"
-            print_report_name="'Operation-type - %s' % object.name"
-        />
-        <report
-            id="action_report_stock_rule"
-            model="product.template"
-            string="Product Routes Report"
-            report_type="qweb-html"
-            name="stock.report_stock_rule"
-            file="stock.report_stock_rule"
-            menu="False"
-        />
-        <report id="label_product_template"
-            model="product.template"
-            string="Product Label (ZPL)"
-            name="stock.label_product_template_view"
-            file="stock.label_product_template_view"
-            report_type="qweb-text"
-        />
-        <report id="label_product_product"
-            model="product.product"
-            string="Product Label (ZPL)"
-            name="stock.label_product_product_view"
-            file="stock.label_product_product_view"
-            report_type="qweb-text"
-            />
-        <report id="label_barcode_product_template"
-            model="product.template"
-            string="Product Barcode (ZPL)"
-            name="stock.label_barcode_product_template_view"
-            file="stock.label_barcode_product_template_view"
-            report_type="qweb-text"
-        />
-        <report id="label_barcode_product_product"
-            model="product.product"
-            string="Product Barcode (ZPL)"
-            name="stock.label_barcode_product_product_view"
-            file="stock.label_barcode_product_product_view"
-            report_type="qweb-text"
-        />
-        <report id="label_lot_template"
-            model="stock.production.lot"
-            string="Lot/Serial Number (ZPL)"
-            name="stock.label_lot_template_view"
-            file="stock.label_lot_template_view"
-            report_type="qweb-text"
-        />
-        <report id="action_label_transfer_template_zpl"
-            model="stock.picking"
-            string="Barcodes (ZPL)"
-            name="stock.label_transfer_template_view_zpl"
-            file="stock.label_transfer_template_view_zpl"
-            report_type="qweb-text"
-        />
-        <report id="action_label_transfer_template_pdf"
-            model="stock.picking"
-            string="Barcodes (PDF)"
-            name="stock.label_transfer_template_view_pdf"
-            file="stock.label_transfer_template_view_pdf"
-            report_type="qweb-pdf"
-        />
-        <report id="label_package_template"
-            model="stock.quant.package"
-            string="Package Barcode (ZPL)"
-            name="stock.label_package_template_view"
-            file="stock.label_package_template_view"
-            report_type="qweb-text"
-        />
-        <report id="label_product_packaging"
-            model="product.packaging"
-            string="Product Packaging (ZPL)"
-            name="stock.label_product_packaging_view"
-            file="stock.label_product_packaging_view"
-            report_type="qweb-text"
-        />
-        <report id="label_picking_type"
-            model="stock.picking.type"
-            string="Operation type (ZPL)"
-            name="stock.label_picking_type_view"
-            file="stock.label_picking_type_view"
-            report_type="qweb-text"
-        />
+        <record id="action_report_picking" model="ir.actions.report">
+            <field name="name">Picking Operations</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_picking</field>
+            <field name="report_file">stock.report_picking_operations</field>
+            <field name="print_report_name">'Picking Operations - %s - %s' % (object.partner_id.name or '', object.name)</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_delivery" model="ir.actions.report">
+            <field name="name">Delivery Slip</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_deliveryslip</field>
+            <field name="report_file">stock.report_deliveryslip</field>
+            <field name="print_report_name">'Delivery Slip - %s - %s' % (object.partner_id.name or '', object.name)</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_inventory" model="ir.actions.report">
+            <field name="name">Count Sheet</field>
+            <field name="model">stock.inventory</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_inventory</field>
+            <field name="report_file">stock.report_inventory</field>
+            <field name="print_report_name">'Inventory - %s' % (object.name)</field>
+            <field name="binding_model_id" ref="model_stock_inventory"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_quant_package_barcode" model="ir.actions.report">
+            <field name="name">Package Barcode with Content</field>
+            <field name="model">stock.quant.package</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_package_barcode</field>
+            <field name="report_file">stock.report_package_barcode</field>
+            <field name="binding_model_id" ref="model_stock_quant_package"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_quant_package_barcode_small" model="ir.actions.report">
+            <field name="name">Package Barcode (PDF)</field>
+            <field name="model">stock.quant.package</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_package_barcode_small</field>
+            <field name="report_file">stock.report_package_barcode</field>
+            <field name="binding_model_id" ref="model_stock_quant_package"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_location_barcode" model="ir.actions.report">
+            <field name="name">Location Barcode</field>
+            <field name="model">stock.location</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_location_barcode</field>
+            <field name="report_file">stock.report_location_barcode</field>
+            <field name="print_report_name">'Location - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_location"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_lot_label" model="ir.actions.report">
+            <field name="name">Lot/Serial Number (PDF)</field>
+            <field name="model">stock.production.lot</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_lot_label</field>
+            <field name="report_file">stock.report_lot_label</field>
+            <field name="print_report_name">'Lot-Serial - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_production_lot"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_picking_type_label" model="ir.actions.report">
+            <field name="name">Operation type (PDF)</field>
+            <field name="model">stock.picking.type</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.report_picking_type_label</field>
+            <field name="report_file">stock.report_picking_type_label</field>
+            <field name="print_report_name">'Operation-type - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_stock_picking_type"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_stock_rule" model="ir.actions.report">
+            <field name="name">Product Routes Report</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">stock.report_stock_rule</field>
+            <field name="report_file">stock.report_stock_rule</field>
+        </record>
+        <record id="label_product_template" model="ir.actions.report">
+            <field name="name">Product Label (ZPL)</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_product_template_view</field>
+            <field name="report_file">stock.label_product_template_view</field>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_product_product" model="ir.actions.report">
+            <field name="name">Product Label (ZPL)</field>
+            <field name="model">product.product</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_product_product_view</field>
+            <field name="report_file">stock.label_product_product_view</field>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_barcode_product_template" model="ir.actions.report">
+            <field name="name">Product Barcode (ZPL)</field>
+            <field name="model">product.template</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_barcode_product_template_view</field>
+            <field name="report_file">stock.label_barcode_product_template_view</field>
+            <field name="binding_model_id" ref="product.model_product_template"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_barcode_product_product" model="ir.actions.report">
+            <field name="name">Product Barcode (ZPL)</field>
+            <field name="model">product.product</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_barcode_product_product_view</field>
+            <field name="report_file">stock.label_barcode_product_product_view</field>
+            <field name="binding_model_id" ref="product.model_product_product"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_lot_template" model="ir.actions.report">
+            <field name="name">Lot/Serial Number (ZPL)</field>
+            <field name="model">stock.production.lot</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_lot_template_view</field>
+            <field name="report_file">stock.label_lot_template_view</field>
+            <field name="binding_model_id" ref="model_stock_production_lot"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_label_transfer_template_zpl" model="ir.actions.report">
+            <field name="name">Barcodes (ZPL)</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_transfer_template_view_zpl</field>
+            <field name="report_file">stock.label_transfer_template_view_zpl</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_label_transfer_template_pdf" model="ir.actions.report">
+            <field name="name">Barcodes (PDF)</field>
+            <field name="model">stock.picking</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">stock.label_transfer_template_view_pdf</field>
+            <field name="report_file">stock.label_transfer_template_view_pdf</field>
+            <field name="binding_model_id" ref="model_stock_picking"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_package_template" model="ir.actions.report">
+            <field name="name">Package Barcode (ZPL)</field>
+            <field name="model">stock.quant.package</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_package_template_view</field>
+            <field name="report_file">stock.label_package_template_view</field>
+            <field name="binding_model_id" ref="model_stock_quant_package"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_product_packaging" model="ir.actions.report">
+            <field name="name">Product Packaging (ZPL)</field>
+            <field name="model">product.packaging</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_product_packaging_view</field>
+            <field name="report_file">stock.label_product_packaging_view</field>
+            <field name="binding_model_id" ref="product.model_product_packaging"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_picking_type" model="ir.actions.report">
+            <field name="name">Operation type (ZPL)</field>
+            <field name="model">stock.picking.type</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">stock.label_picking_type_view</field>
+            <field name="report_file">stock.label_picking_type_view</field>
+            <field name="binding_model_id" ref="model_stock_picking_type"/>
+            <field name="binding_type">report</field>
+        </record>
     </data>
 </odoo>

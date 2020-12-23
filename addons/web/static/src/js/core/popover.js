@@ -16,13 +16,13 @@ odoo.define('web.Popover', function () {
     class Popover extends Component {
         /**
          * @param {Object} props
-         * @param {String} props.position='bottom' 'top', 'bottom', 'left' or 'right'
+         * @param {String} [props.position='bottom']
          * @param {String} [props.title]
          */
         constructor() {
             super(...arguments);
             this.popoverRef = useRef('popover');
-            this.orderedPositions = ['top', 'right', 'bottom', 'left'];
+            this.orderedPositions = ['top', 'bottom', 'left', 'right'];
             this.state = useState({
                 displayed: false,
             });
@@ -99,7 +99,9 @@ odoo.define('web.Popover', function () {
                 return;
             }
 
-            const positionIndex = this.orderedPositions.indexOf(
+            // copy the default ordered position to avoid updating them in place
+            const possiblePositions = [...this.orderedPositions];
+            const positionIndex = possiblePositions.indexOf(
                 this.props.position
             );
 
@@ -110,9 +112,9 @@ odoo.define('web.Popover', function () {
 
             // check if the requested position fits the viewport; if not,
             // try all other positions and find one that does
-            const position = this.orderedPositions
+            const position = possiblePositions
                 .slice(positionIndex)
-                .concat(this.orderedPositions.slice(0, positionIndex))
+                .concat(possiblePositions.slice(0, positionIndex))
                 .map((pos) => positioningData[pos])
                 .find((pos) => {
                     this.popoverRef.el.style.top = `${pos.top}px`;
@@ -127,20 +129,19 @@ odoo.define('web.Popover', function () {
                     );
                 });
 
-            // remove all positioning classes
-            this.orderedPositions.forEach((pos) => {
+            // remove all existing positioning classes
+            possiblePositions.forEach((pos) => {
                 this.popoverRef.el.classList.remove(`o_popover--${pos}`);
             });
 
-            // apply the found position ('position' props or another position
-            // that fits the viewport) if it fits the viewport, otherwise
-            // fallback to 'bottom' if no position fits the viewport
             if (position) {
+                // apply the preferred found position that fits the viewport
                 this.popoverRef.el.classList.add(`o_popover--${position.name}`);
             } else {
-                this.popoverRef.el.style.top = `${positioningData.bottom.top}px`;
-                this.popoverRef.el.style.left = `${positioningData.bottom.left}px`;
-                this.popoverRef.el.classList.add(`o_popover--bottom`);
+                // use the given `position` props because no position fits
+                this.popoverRef.el.style.top = `${positioningData[this.props.position].top}px`;
+                this.popoverRef.el.style.left = `${positioningData[this.props.position].left}px`;
+                this.popoverRef.el.classList.add(`o_popover--${this.props.position}`);
             }
         }
 
@@ -195,6 +196,16 @@ odoo.define('web.Popover', function () {
         }
 
         /**
+         * Popover must recompute its position when children content changes.
+         *
+         * @private
+         * @param {Event} ev
+         */
+        _onPopoverCompute(ev) {
+            this._compute();
+        }
+
+        /**
          * A resize event will need to 'reposition' the popover close to its
          * target.
          *
@@ -223,14 +234,20 @@ odoo.define('web.Popover', function () {
         /**
          * Compute the expected positioning coordinates for each possible
          * positioning based on the target and popover sizes.
+         * In particular the popover must not overflow the viewport in any
+         * direction, it should actually stay at `margin` distance from the
+         * border to look good.
          *
          * @static
          * @param {HTMLElement} popoverElement The popover element
          * @param {HTMLElement} targetElement The target element, to which
          *  the popover will be visually 'bound'
+         * @param {integer} [margin=16] Minimal accepted margin from the border
+         *  of the viewport.
          * @returns {Object}
          */
-        static computePositioningData(popoverElement, targetElement) {
+        static computePositioningData(popoverElement, targetElement, margin = 16) {
+            // set target position, possible position
             const boundingRectangle = targetElement.getBoundingClientRect();
             const targetTop = boundingRectangle.top;
             const targetLeft = boundingRectangle.left;
@@ -238,25 +255,41 @@ odoo.define('web.Popover', function () {
             const targetWidth = targetElement.offsetWidth;
             const popoverHeight = popoverElement.offsetHeight;
             const popoverWidth = popoverElement.offsetWidth;
+            const windowWidth = window.innerWidth || document.documentElement.clientWidth;
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            const leftOffsetForVertical = Math.max(
+                margin,
+                Math.min(
+                    Math.round(targetLeft - (popoverWidth - targetWidth) / 2),
+                    windowWidth - popoverWidth - margin,
+                ),
+            );
+            const topOffsetForHorizontal = Math.max(
+                margin,
+                Math.min(
+                    Math.round(targetTop - (popoverHeight - targetHeight) / 2),
+                    windowHeight - popoverHeight - margin,
+                ),
+            );
             return {
                 top: {
                     name: 'top',
                     top: Math.round(targetTop - popoverHeight),
-                    left: Math.round(targetLeft - (popoverWidth - targetWidth) / 2),
+                    left: leftOffsetForVertical,
                 },
                 right: {
                     name: 'right',
-                    top: Math.round(targetTop - (popoverHeight - targetHeight) / 2),
+                    top: topOffsetForHorizontal,
                     left: Math.round(targetLeft + targetWidth),
                 },
                 bottom: {
                     name: 'bottom',
                     top: Math.round(targetTop + targetHeight),
-                    left: Math.round(targetLeft - (popoverWidth - targetWidth) / 2),
+                    left: leftOffsetForVertical,
                 },
                 left: {
                     name: 'left',
-                    top: Math.round(targetTop - (popoverHeight - targetHeight) / 2),
+                    top: topOffsetForHorizontal,
                     left: Math.round(targetLeft - popoverWidth),
                 },
             };

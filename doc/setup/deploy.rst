@@ -612,15 +612,19 @@ which will generate a 32 characters pseudorandom printable string.
 Supported Browsers
 ==================
 
-Odoo is supported by multiple browsers for each of its versions. No
-distinction is made according to the browser version in order to be
-up-to-date. Odoo is supported on the current browser version. We support
-the following browsers:
+Odoo supports all the major desktop and mobile browsers available on the market,
+as long as they are supported by their publishers.
 
-- Mozilla Firefox
+Here are the supported browsers:
+
 - Google Chrome
-- Safari
+- Mozilla Firefox
 - Microsoft Edge
+- Apple Safari
+
+.. warning:: Please make sure your browser is up-to-date and still supported by
+    its publisher before filing a bug report.
+
 
 .. note::
 

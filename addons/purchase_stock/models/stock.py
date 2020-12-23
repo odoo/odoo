@@ -105,6 +105,10 @@ class StockMove(models.Model):
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return self.purchase_line_id.order_id or res
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
@@ -126,15 +130,12 @@ class StockWarehouse(models.Model):
                     'company_id': self.company_id.id,
                     'route_id': self._find_global_route('purchase_stock.route_warehouse0_buy', _('Buy')).id,
                     'propagate_cancel': self.reception_steps != 'one_step',
-                    'delay_alert': True,
-                    'propagate_date': self.reception_steps != 'one_step',
                 },
                 'update_values': {
                     'active': self.buy_to_resupply,
                     'name': self._format_rulename(location_id, False, 'Buy'),
                     'location_id': location_id.id,
                     'propagate_cancel': self.reception_steps != 'one_step',
-                    'propagate_date': self.reception_steps != 'one_step',
                 }
             }
         })
@@ -179,8 +180,14 @@ class Orderpoint(models.Model):
 
     show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
     supplier_id = fields.Many2one(
-        'product.supplierinfo', string='Vendor', check_company=True,
+        'product.supplierinfo', string='Product Supplier', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+    vendor_id = fields.Many2one(related='supplier_id.name', string="Vendor", store=True)
+
+    @api.depends('product_id.purchase_order_line_ids', 'product_id.purchase_order_line_ids.state')
+    def _compute_qty(self):
+        """ Extend to add more depends values """
+        return super()._compute_qty()
 
     @api.depends('route_id')
     def _compute_show_suppplier(self):
@@ -194,8 +201,7 @@ class Orderpoint(models.Model):
         """ This function returns an action that display existing
         purchase orders of given orderpoint.
         """
-        action = self.env.ref('purchase.purchase_rfq')
-        result = action.read()[0]
+        result = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_rfq')
 
         # Remvove the context since the action basically display RFQ and not PO.
         result['context'] = {}
@@ -218,7 +224,11 @@ class Orderpoint(models.Model):
                 'tag': 'display_notification',
                 'params': {
                     'title': _('The following replenishment order has been generated'),
-                    'message': '<a href="#action=%d&id=%d&model=purchase.order" target="_blank">%s</a>' % (action.id, order.id, order.display_name),
+                    'message': '%s',
+                    'links': [{
+                        'label': order.display_name,
+                        'url': f'#action={action.id}&id={order.id}&model=purchase.order',
+                    }],
                     'sticky': False,
                 }
             }
@@ -268,7 +278,7 @@ class ProductionLot(models.Model):
 
     def action_view_po(self):
         self.ensure_one()
-        action = self.env.ref('purchase.purchase_form_action').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("purchase.purchase_form_action")
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action

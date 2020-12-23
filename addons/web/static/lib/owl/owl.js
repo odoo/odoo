@@ -92,7 +92,10 @@
         }
         notifyCB() { }
         observe(value, parent) {
-            if (value === null || typeof value !== "object" || value instanceof Date) {
+            if (value === null ||
+                typeof value !== "object" ||
+                value instanceof Date ||
+                value instanceof Promise) {
                 // fun fact: typeof null === 'object'
                 return value;
             }
@@ -151,6 +154,439 @@
             } while ((parent = metadata.parent) && parent !== target);
         }
     }
+
+    /**
+     * Owl QWeb Expression Parser
+     *
+     * Owl needs in various contexts to be able to understand the structure of a
+     * string representing a javascript expression.  The usual goal is to be able
+     * to rewrite some variables.  For example, if a template has
+     *
+     *  ```xml
+     *  <t t-if="computeSomething({val: state.val})">...</t>
+     * ```
+     *
+     * this needs to be translated in something like this:
+     *
+     * ```js
+     *   if (context["computeSomething"]({val: context["state"].val})) { ... }
+     * ```
+     *
+     * This file contains the implementation of an extremely naive tokenizer/parser
+     * and evaluator for javascript expressions.  The supported grammar is basically
+     * only expressive enough to understand the shape of objects, of arrays, and
+     * various operators.
+     */
+    //------------------------------------------------------------------------------
+    // Misc types, constants and helpers
+    //------------------------------------------------------------------------------
+    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,eval,void,Math,RegExp,Array,Object,Date".split(",");
+    const WORD_REPLACEMENT = {
+        and: "&&",
+        or: "||",
+        gt: ">",
+        gte: ">=",
+        lt: "<",
+        lte: "<=",
+    };
+    const STATIC_TOKEN_MAP = {
+        "{": "LEFT_BRACE",
+        "}": "RIGHT_BRACE",
+        "[": "LEFT_BRACKET",
+        "]": "RIGHT_BRACKET",
+        ":": "COLON",
+        ",": "COMMA",
+        "(": "LEFT_PAREN",
+        ")": "RIGHT_PAREN",
+    };
+    // note that the space after typeof is relevant. It makes sure that the formatted
+    // expression has a space after typeof
+    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ".split(",");
+    let tokenizeString = function (expr) {
+        let s = expr[0];
+        let start = s;
+        if (s !== "'" && s !== '"') {
+            return false;
+        }
+        let i = 1;
+        let cur;
+        while (expr[i] && expr[i] !== start) {
+            cur = expr[i];
+            s += cur;
+            if (cur === "\\") {
+                i++;
+                cur = expr[i];
+                if (!cur) {
+                    throw new Error("Invalid expression");
+                }
+                s += cur;
+            }
+            i++;
+        }
+        if (expr[i] !== start) {
+            throw new Error("Invalid expression");
+        }
+        s += start;
+        return { type: "VALUE", value: s };
+    };
+    let tokenizeNumber = function (expr) {
+        let s = expr[0];
+        if (s && s.match(/[0-9]/)) {
+            let i = 1;
+            while (expr[i] && expr[i].match(/[0-9]|\./)) {
+                s += expr[i];
+                i++;
+            }
+            return { type: "VALUE", value: s };
+        }
+        else {
+            return false;
+        }
+    };
+    let tokenizeSymbol = function (expr) {
+        let s = expr[0];
+        if (s && s.match(/[a-zA-Z_\$]/)) {
+            let i = 1;
+            while (expr[i] && expr[i].match(/\w/)) {
+                s += expr[i];
+                i++;
+            }
+            if (s in WORD_REPLACEMENT) {
+                return { type: "OPERATOR", value: WORD_REPLACEMENT[s], size: s.length };
+            }
+            return { type: "SYMBOL", value: s };
+        }
+        else {
+            return false;
+        }
+    };
+    const tokenizeStatic = function (expr) {
+        const char = expr[0];
+        if (char && char in STATIC_TOKEN_MAP) {
+            return { type: STATIC_TOKEN_MAP[char], value: char };
+        }
+        return false;
+    };
+    const tokenizeOperator = function (expr) {
+        for (let op of OPERATORS) {
+            if (expr.startsWith(op)) {
+                return { type: "OPERATOR", value: op };
+            }
+        }
+        return false;
+    };
+    const TOKENIZERS = [
+        tokenizeString,
+        tokenizeNumber,
+        tokenizeOperator,
+        tokenizeSymbol,
+        tokenizeStatic,
+    ];
+    /**
+     * Convert a javascript expression (as a string) into a list of tokens. For
+     * example: `tokenize("1 + b")` will return:
+     * ```js
+     *  [
+     *   {type: "VALUE", value: "1"},
+     *   {type: "OPERATOR", value: "+"},
+     *   {type: "SYMBOL", value: "b"}
+     * ]
+     * ```
+     */
+    function tokenize(expr) {
+        const result = [];
+        let token = true;
+        while (token) {
+            expr = expr.trim();
+            if (expr) {
+                for (let tokenizer of TOKENIZERS) {
+                    token = tokenizer(expr);
+                    if (token) {
+                        result.push(token);
+                        expr = expr.slice(token.size || token.value.length);
+                        break;
+                    }
+                }
+            }
+            else {
+                token = false;
+            }
+        }
+        if (expr.length) {
+            throw new Error(`Tokenizer error: could not tokenize "${expr}"`);
+        }
+        return result;
+    }
+    //------------------------------------------------------------------------------
+    // Expression "evaluator"
+    //------------------------------------------------------------------------------
+    /**
+     * This is the main function exported by this file. This is the code that will
+     * process an expression (given as a string) and returns another expression with
+     * proper lookups in the context.
+     *
+     * Usually, this kind of code would be very simple to do if we had an AST (so,
+     * if we had a javascript parser), since then, we would only need to find the
+     * variables and replace them.  However, a parser is more complicated, and there
+     * are no standard builtin parser API.
+     *
+     * Since this method is applied to simple javasript expressions, and the work to
+     * be done is actually quite simple, we actually can get away with not using a
+     * parser, which helps with the code size.
+     *
+     * Here is the heuristic used by this method to determine if a token is a
+     * variable:
+     * - by default, all symbols are considered a variable
+     * - unless the previous token is a dot (in that case, this is a property: `a.b`)
+     * - or if the previous token is a left brace or a comma, and the next token is
+     *   a colon (in that case, this is an object key: `{a: b}`)
+     *
+     * Some specific code is also required to support arrow functions. If we detect
+     * the arrow operator, then we add the current (or some previous tokens) token to
+     * the list of variables so it does not get replaced by a lookup in the context
+     */
+    function compileExprToArray(expr, scope) {
+        scope = Object.create(scope);
+        const tokens = tokenize(expr);
+        for (let i = 0; i < tokens.length; i++) {
+            let token = tokens[i];
+            let prevToken = tokens[i - 1];
+            let nextToken = tokens[i + 1];
+            let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
+            if (token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value)) {
+                if (prevToken) {
+                    if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
+                        isVar = false;
+                    }
+                    else if (prevToken.type === "LEFT_BRACE" || prevToken.type === "COMMA") {
+                        if (nextToken && nextToken.type === "COLON") {
+                            isVar = false;
+                        }
+                    }
+                }
+            }
+            if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
+                if (token.type === "RIGHT_PAREN") {
+                    let j = i - 1;
+                    while (j > 0 && tokens[j].type !== "LEFT_PAREN") {
+                        if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
+                            tokens[j].value = tokens[j].originalValue;
+                            scope[tokens[j].value] = { id: tokens[j].value, expr: tokens[j].value };
+                        }
+                        j--;
+                    }
+                }
+                else {
+                    scope[token.value] = { id: token.value, expr: token.value };
+                }
+            }
+            if (isVar) {
+                token.varName = token.value;
+                if (token.value in scope && "id" in scope[token.value]) {
+                    token.value = scope[token.value].expr;
+                }
+                else {
+                    token.originalValue = token.value;
+                    token.value = `scope['${token.value}']`;
+                }
+            }
+        }
+        return tokens;
+    }
+    function compileExpr(expr, scope) {
+        return compileExprToArray(expr, scope)
+            .map((t) => t.value)
+            .join("");
+    }
+
+    const INTERP_REGEXP = /\{\{.*?\}\}/g;
+    //------------------------------------------------------------------------------
+    // Compilation Context
+    //------------------------------------------------------------------------------
+    class CompilationContext {
+        constructor(name) {
+            this.code = [];
+            this.variables = {};
+            this.escaping = false;
+            this.parentNode = null;
+            this.parentTextNode = null;
+            this.rootNode = null;
+            this.indentLevel = 0;
+            this.shouldDefineParent = false;
+            this.shouldDefineScope = false;
+            this.protectedScopeNumber = 0;
+            this.shouldDefineQWeb = false;
+            this.shouldDefineUtils = false;
+            this.shouldDefineRefs = false;
+            this.shouldDefineResult = true;
+            this.loopNumber = 0;
+            this.inPreTag = false;
+            this.allowMultipleRoots = false;
+            this.hasParentWidget = false;
+            this.hasKey0 = false;
+            this.keyStack = [];
+            this.rootContext = this;
+            this.templateName = name || "noname";
+            this.addLine("let h = this.h;");
+        }
+        generateID() {
+            return CompilationContext.nextID++;
+        }
+        /**
+         * This method generates a "template key", which is basically a unique key
+         * which depends on the currently set keys, and on the iteration numbers (if
+         * we are in a loop).
+         *
+         * Such a key is necessary when we need to associate an id to some element
+         * generated by a template (for example, a component)
+         */
+        generateTemplateKey(prefix = "") {
+            const id = this.generateID();
+            if (this.loopNumber === 0 && !this.hasKey0) {
+                return `'${prefix}__${id}__'`;
+            }
+            let key = `\`${prefix}__${id}__`;
+            let start = this.hasKey0 ? 0 : 1;
+            for (let i = start; i < this.loopNumber + 1; i++) {
+                key += `\${key${i}}__`;
+            }
+            this.addLine(`let k${id} = ${key}\`;`);
+            return `k${id}`;
+        }
+        generateCode() {
+            if (this.shouldDefineResult) {
+                this.code.unshift("    let result;");
+            }
+            if (this.shouldDefineScope) {
+                this.code.unshift("    let scope = Object.create(context);");
+            }
+            if (this.shouldDefineRefs) {
+                this.code.unshift("    context.__owl__.refs = context.__owl__.refs || {};");
+            }
+            if (this.shouldDefineParent) {
+                if (this.hasParentWidget) {
+                    this.code.unshift("    let parent = extra.parent;");
+                }
+                else {
+                    this.code.unshift("    let parent = context;");
+                }
+            }
+            if (this.shouldDefineQWeb) {
+                this.code.unshift("    let QWeb = this.constructor;");
+            }
+            if (this.shouldDefineUtils) {
+                this.code.unshift("    let utils = this.constructor.utils;");
+            }
+            return this.code;
+        }
+        withParent(node) {
+            if (!this.allowMultipleRoots &&
+                this === this.rootContext &&
+                (this.parentNode || this.parentTextNode)) {
+                throw new Error("A template should not have more than one root node");
+            }
+            if (!this.rootContext.rootNode) {
+                this.rootContext.rootNode = node;
+            }
+            if (!this.parentNode && this.rootContext.shouldDefineResult) {
+                this.addLine(`result = vn${node};`);
+            }
+            return this.subContext("parentNode", node);
+        }
+        subContext(key, value) {
+            const newContext = Object.create(this);
+            newContext[key] = value;
+            return newContext;
+        }
+        indent() {
+            this.rootContext.indentLevel++;
+        }
+        dedent() {
+            this.rootContext.indentLevel--;
+        }
+        addLine(line) {
+            const prefix = new Array(this.indentLevel + 2).join("    ");
+            this.code.push(prefix + line);
+            return this.code.length - 1;
+        }
+        addIf(condition) {
+            this.addLine(`if (${condition}) {`);
+            this.indent();
+        }
+        addElse() {
+            this.dedent();
+            this.addLine("} else {");
+            this.indent();
+        }
+        closeIf() {
+            this.dedent();
+            this.addLine("}");
+        }
+        getValue(val) {
+            return val in this.variables ? this.getValue(this.variables[val]) : val;
+        }
+        /**
+         * Prepare an expression for being consumed at render time.  Its main job
+         * is to
+         * - replace unknown variables by a lookup in the context
+         * - replace already defined variables by their internal name
+         */
+        formatExpression(expr) {
+            this.rootContext.shouldDefineScope = true;
+            return compileExpr(expr, this.variables);
+        }
+        captureExpression(expr) {
+            this.rootContext.shouldDefineScope = true;
+            const argId = this.generateID();
+            const tokens = compileExprToArray(expr, this.variables);
+            const done = new Set();
+            return tokens
+                .map((tok) => {
+                if (tok.varName) {
+                    if (!done.has(tok.varName)) {
+                        done.add(tok.varName);
+                        this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
+                    }
+                    tok.value = `${tok.varName}_${argId}`;
+                }
+                return tok.value;
+            })
+                .join("");
+        }
+        /**
+         * Perform string interpolation on the given string. Note that if the whole
+         * string is an expression, it simply returns it (formatted and enclosed in
+         * parentheses).
+         * For instance:
+         *   'Hello {{x}}!' -> `Hello ${x}`
+         *   '{{x ? 'a': 'b'}}' -> (x ? 'a' : 'b')
+         */
+        interpolate(s) {
+            let matches = s.match(INTERP_REGEXP);
+            if (matches && matches[0].length === s.length) {
+                return `(${this.formatExpression(s.slice(2, -2))})`;
+            }
+            let r = s.replace(/\{\{.*?\}\}/g, (s) => "${" + this.formatExpression(s.slice(2, -2)) + "}");
+            return "`" + r + "`";
+        }
+        startProtectScope(codeBlock) {
+            const protectID = this.generateID();
+            this.rootContext.protectedScopeNumber++;
+            this.rootContext.shouldDefineScope = true;
+            const scopeExpr = `Object.create(scope);`;
+            this.addLine(`let _origScope${protectID} = scope;`);
+            this.addLine(`scope = ${scopeExpr}`);
+            if (!codeBlock) {
+                this.addLine(`scope.__access_mode__ = 'ro';`);
+            }
+            return protectID;
+        }
+        stopProtectScope(protectID) {
+            this.rootContext.protectedScopeNumber--;
+            this.addLine(`scope = _origScope${protectID};`);
+        }
+    }
+    CompilationContext.nextID = 1;
 
     //------------------------------------------------------------------------------
     // module/props.ts
@@ -804,439 +1240,7 @@
 
     const patch = init([eventListenersModule, attrsModule, propsModule, classModule]);
 
-    /**
-     * Owl QWeb Expression Parser
-     *
-     * Owl needs in various contexts to be able to understand the structure of a
-     * string representing a javascript expression.  The usual goal is to be able
-     * to rewrite some variables.  For example, if a template has
-     *
-     *  ```xml
-     *  <t t-if="computeSomething({val: state.val})">...</t>
-     * ```
-     *
-     * this needs to be translated in something like this:
-     *
-     * ```js
-     *   if (context["computeSomething"]({val: context["state"].val})) { ... }
-     * ```
-     *
-     * This file contains the implementation of an extremely naive tokenizer/parser
-     * and evaluator for javascript expressions.  The supported grammar is basically
-     * only expressive enough to understand the shape of objects, of arrays, and
-     * various operators.
-     */
-    //------------------------------------------------------------------------------
-    // Misc types, constants and helpers
-    //------------------------------------------------------------------------------
-    const RESERVED_WORDS = "true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,eval,void,Math,RegExp,Array,Object,Date".split(",");
-    const WORD_REPLACEMENT = {
-        and: "&&",
-        or: "||",
-        gt: ">",
-        gte: ">=",
-        lt: "<",
-        lte: "<=",
-    };
-    const STATIC_TOKEN_MAP = {
-        "{": "LEFT_BRACE",
-        "}": "RIGHT_BRACE",
-        "[": "LEFT_BRACKET",
-        "]": "RIGHT_BRACKET",
-        ":": "COLON",
-        ",": "COMMA",
-        "(": "LEFT_PAREN",
-        ")": "RIGHT_PAREN",
-    };
-    // note that the space after typeof is relevant. It makes sure that the formatted
-    // expression has a space after typeof
-    const OPERATORS = "...,.,===,==,+,!==,!=,!,||,&&,>=,>,<=,<,?,-,*,/,%,typeof ,=>,=,;,in ".split(",");
-    let tokenizeString = function (expr) {
-        let s = expr[0];
-        let start = s;
-        if (s !== "'" && s !== '"') {
-            return false;
-        }
-        let i = 1;
-        let cur;
-        while (expr[i] && expr[i] !== start) {
-            cur = expr[i];
-            s += cur;
-            if (cur === "\\") {
-                i++;
-                cur = expr[i];
-                if (!cur) {
-                    throw new Error("Invalid expression");
-                }
-                s += cur;
-            }
-            i++;
-        }
-        if (expr[i] !== start) {
-            throw new Error("Invalid expression");
-        }
-        s += start;
-        return { type: "VALUE", value: s };
-    };
-    let tokenizeNumber = function (expr) {
-        let s = expr[0];
-        if (s && s.match(/[0-9]/)) {
-            let i = 1;
-            while (expr[i] && expr[i].match(/[0-9]|\./)) {
-                s += expr[i];
-                i++;
-            }
-            return { type: "VALUE", value: s };
-        }
-        else {
-            return false;
-        }
-    };
-    let tokenizeSymbol = function (expr) {
-        let s = expr[0];
-        if (s && s.match(/[a-zA-Z_\$]/)) {
-            let i = 1;
-            while (expr[i] && expr[i].match(/\w/)) {
-                s += expr[i];
-                i++;
-            }
-            if (s in WORD_REPLACEMENT) {
-                return { type: "OPERATOR", value: WORD_REPLACEMENT[s], size: s.length };
-            }
-            return { type: "SYMBOL", value: s };
-        }
-        else {
-            return false;
-        }
-    };
-    const tokenizeStatic = function (expr) {
-        const char = expr[0];
-        if (char && char in STATIC_TOKEN_MAP) {
-            return { type: STATIC_TOKEN_MAP[char], value: char };
-        }
-        return false;
-    };
-    const tokenizeOperator = function (expr) {
-        for (let op of OPERATORS) {
-            if (expr.startsWith(op)) {
-                return { type: "OPERATOR", value: op };
-            }
-        }
-        return false;
-    };
-    const TOKENIZERS = [
-        tokenizeString,
-        tokenizeNumber,
-        tokenizeOperator,
-        tokenizeSymbol,
-        tokenizeStatic,
-    ];
-    /**
-     * Convert a javascript expression (as a string) into a list of tokens. For
-     * example: `tokenize("1 + b")` will return:
-     * ```js
-     *  [
-     *   {type: "VALUE", value: "1"},
-     *   {type: "OPERATOR", value: "+"},
-     *   {type: "SYMBOL", value: "b"}
-     * ]
-     * ```
-     */
-    function tokenize(expr) {
-        const result = [];
-        let token = true;
-        while (token) {
-            expr = expr.trim();
-            if (expr) {
-                for (let tokenizer of TOKENIZERS) {
-                    token = tokenizer(expr);
-                    if (token) {
-                        result.push(token);
-                        expr = expr.slice(token.size || token.value.length);
-                        break;
-                    }
-                }
-            }
-            else {
-                token = false;
-            }
-        }
-        if (expr.length) {
-            throw new Error(`Tokenizer error: could not tokenize "${expr}"`);
-        }
-        return result;
-    }
-    //------------------------------------------------------------------------------
-    // Expression "evaluator"
-    //------------------------------------------------------------------------------
-    /**
-     * This is the main function exported by this file. This is the code that will
-     * process an expression (given as a string) and returns another expression with
-     * proper lookups in the context.
-     *
-     * Usually, this kind of code would be very simple to do if we had an AST (so,
-     * if we had a javascript parser), since then, we would only need to find the
-     * variables and replace them.  However, a parser is more complicated, and there
-     * are no standard builtin parser API.
-     *
-     * Since this method is applied to simple javasript expressions, and the work to
-     * be done is actually quite simple, we actually can get away with not using a
-     * parser, which helps with the code size.
-     *
-     * Here is the heuristic used by this method to determine if a token is a
-     * variable:
-     * - by default, all symbols are considered a variable
-     * - unless the previous token is a dot (in that case, this is a property: `a.b`)
-     * - or if the previous token is a left brace or a comma, and the next token is
-     *   a colon (in that case, this is an object key: `{a: b}`)
-     *
-     * Some specific code is also required to support arrow functions. If we detect
-     * the arrow operator, then we add the current (or some previous tokens) token to
-     * the list of variables so it does not get replaced by a lookup in the context
-     */
-    function compileExprToArray(expr, scope) {
-        scope = Object.create(scope);
-        const tokens = tokenize(expr);
-        for (let i = 0; i < tokens.length; i++) {
-            let token = tokens[i];
-            let prevToken = tokens[i - 1];
-            let nextToken = tokens[i + 1];
-            let isVar = token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value);
-            if (token.type === "SYMBOL" && !RESERVED_WORDS.includes(token.value)) {
-                if (prevToken) {
-                    if (prevToken.type === "OPERATOR" && prevToken.value === ".") {
-                        isVar = false;
-                    }
-                    else if (prevToken.type === "LEFT_BRACE" || prevToken.type === "COMMA") {
-                        if (nextToken && nextToken.type === "COLON") {
-                            isVar = false;
-                        }
-                    }
-                }
-            }
-            if (nextToken && nextToken.type === "OPERATOR" && nextToken.value === "=>") {
-                if (token.type === "RIGHT_PAREN") {
-                    let j = i - 1;
-                    while (j > 0 && tokens[j].type !== "LEFT_PAREN") {
-                        if (tokens[j].type === "SYMBOL" && tokens[j].originalValue) {
-                            tokens[j].value = tokens[j].originalValue;
-                            scope[tokens[j].value] = { id: tokens[j].value, expr: tokens[j].value };
-                        }
-                        j--;
-                    }
-                }
-                else {
-                    scope[token.value] = { id: token.value, expr: token.value };
-                }
-            }
-            if (isVar) {
-                token.varName = token.value;
-                if (token.value in scope && "id" in scope[token.value]) {
-                    token.value = scope[token.value].expr;
-                }
-                else {
-                    token.originalValue = token.value;
-                    token.value = `scope['${token.value}']`;
-                }
-            }
-        }
-        return tokens;
-    }
-    function compileExpr(expr, scope) {
-        return compileExprToArray(expr, scope)
-            .map((t) => t.value)
-            .join("");
-    }
-
-    const INTERP_REGEXP = /\{\{.*?\}\}/g;
-    //------------------------------------------------------------------------------
-    // Compilation Context
-    //------------------------------------------------------------------------------
-    class CompilationContext {
-        constructor(name) {
-            this.code = [];
-            this.variables = {};
-            this.escaping = false;
-            this.parentNode = null;
-            this.parentTextNode = null;
-            this.rootNode = null;
-            this.indentLevel = 0;
-            this.shouldDefineParent = false;
-            this.shouldDefineScope = false;
-            this.protectedScopeNumber = 0;
-            this.shouldDefineQWeb = false;
-            this.shouldDefineUtils = false;
-            this.shouldDefineRefs = false;
-            this.shouldDefineResult = true;
-            this.loopNumber = 0;
-            this.inPreTag = false;
-            this.allowMultipleRoots = false;
-            this.hasParentWidget = false;
-            this.hasKey0 = false;
-            this.keyStack = [];
-            this.rootContext = this;
-            this.templateName = name || "noname";
-            this.addLine("let h = this.h;");
-        }
-        generateID() {
-            return CompilationContext.nextID++;
-        }
-        /**
-         * This method generates a "template key", which is basically a unique key
-         * which depends on the currently set keys, and on the iteration numbers (if
-         * we are in a loop).
-         *
-         * Such a key is necessary when we need to associate an id to some element
-         * generated by a template (for example, a component)
-         */
-        generateTemplateKey(prefix = "") {
-            const id = this.generateID();
-            if (this.loopNumber === 0 && !this.hasKey0) {
-                return `'${prefix}__${id}__'`;
-            }
-            let key = `\`${prefix}__${id}__`;
-            let start = this.hasKey0 ? 0 : 1;
-            for (let i = start; i < this.loopNumber + 1; i++) {
-                key += `\${key${i}}__`;
-            }
-            this.addLine(`let k${id} = ${key}\`;`);
-            return `k${id}`;
-        }
-        generateCode() {
-            if (this.shouldDefineResult) {
-                this.code.unshift("    let result;");
-            }
-            if (this.shouldDefineScope) {
-                this.code.unshift("    let scope = Object.create(context);");
-            }
-            if (this.shouldDefineRefs) {
-                this.code.unshift("    context.__owl__.refs = context.__owl__.refs || {};");
-            }
-            if (this.shouldDefineParent) {
-                if (this.hasParentWidget) {
-                    this.code.unshift("    let parent = extra.parent;");
-                }
-                else {
-                    this.code.unshift("    let parent = context;");
-                }
-            }
-            if (this.shouldDefineQWeb) {
-                this.code.unshift("    let QWeb = this.constructor;");
-            }
-            if (this.shouldDefineUtils) {
-                this.code.unshift("    let utils = this.constructor.utils;");
-            }
-            return this.code;
-        }
-        withParent(node) {
-            if (!this.allowMultipleRoots &&
-                this === this.rootContext &&
-                (this.parentNode || this.parentTextNode)) {
-                throw new Error("A template should not have more than one root node");
-            }
-            if (!this.rootContext.rootNode) {
-                this.rootContext.rootNode = node;
-            }
-            if (!this.parentNode && this.rootContext.shouldDefineResult) {
-                this.addLine(`result = vn${node};`);
-            }
-            return this.subContext("parentNode", node);
-        }
-        subContext(key, value) {
-            const newContext = Object.create(this);
-            newContext[key] = value;
-            return newContext;
-        }
-        indent() {
-            this.rootContext.indentLevel++;
-        }
-        dedent() {
-            this.rootContext.indentLevel--;
-        }
-        addLine(line) {
-            const prefix = new Array(this.indentLevel + 2).join("    ");
-            this.code.push(prefix + line);
-            return this.code.length - 1;
-        }
-        addIf(condition) {
-            this.addLine(`if (${condition}) {`);
-            this.indent();
-        }
-        addElse() {
-            this.dedent();
-            this.addLine("} else {");
-            this.indent();
-        }
-        closeIf() {
-            this.dedent();
-            this.addLine("}");
-        }
-        getValue(val) {
-            return val in this.variables ? this.getValue(this.variables[val]) : val;
-        }
-        /**
-         * Prepare an expression for being consumed at render time.  Its main job
-         * is to
-         * - replace unknown variables by a lookup in the context
-         * - replace already defined variables by their internal name
-         */
-        formatExpression(expr) {
-            this.rootContext.shouldDefineScope = true;
-            return compileExpr(expr, this.variables);
-        }
-        captureExpression(expr) {
-            this.rootContext.shouldDefineScope = true;
-            const argId = this.generateID();
-            const tokens = compileExprToArray(expr, this.variables);
-            const done = new Set();
-            return tokens
-                .map((tok) => {
-                if (tok.varName) {
-                    if (!done.has(tok.varName)) {
-                        done.add(tok.varName);
-                        this.addLine(`const ${tok.varName}_${argId} = ${tok.value};`);
-                    }
-                    tok.value = `${tok.varName}_${argId}`;
-                }
-                return tok.value;
-            })
-                .join("");
-        }
-        /**
-         * Perform string interpolation on the given string. Note that if the whole
-         * string is an expression, it simply returns it (formatted and enclosed in
-         * parentheses).
-         * For instance:
-         *   'Hello {{x}}!' -> `Hello ${x}`
-         *   '{{x ? 'a': 'b'}}' -> (x ? 'a' : 'b')
-         */
-        interpolate(s) {
-            let matches = s.match(INTERP_REGEXP);
-            if (matches && matches[0].length === s.length) {
-                return `(${this.formatExpression(s.slice(2, -2))})`;
-            }
-            let r = s.replace(/\{\{.*?\}\}/g, (s) => "${" + this.formatExpression(s.slice(2, -2)) + "}");
-            return "`" + r + "`";
-        }
-        startProtectScope(codeBlock) {
-            const protectID = this.generateID();
-            this.rootContext.protectedScopeNumber++;
-            this.rootContext.shouldDefineScope = true;
-            const scopeExpr = `Object.create(scope);`;
-            this.addLine(`let _origScope${protectID} = scope;`);
-            this.addLine(`scope = ${scopeExpr}`);
-            if (!codeBlock) {
-                this.addLine(`scope.__access_mode__ = 'ro';`);
-            }
-            return protectID;
-        }
-        stopProtectScope(protectID) {
-            this.rootContext.protectedScopeNumber--;
-            this.addLine(`scope = _origScope${protectID};`);
-        }
-    }
-    CompilationContext.nextID = 1;
-
+    let localStorage = null;
     const browser = {
         setTimeout: window.setTimeout.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
@@ -1246,7 +1250,12 @@
         random: Math.random,
         Date: window.Date,
         fetch: (window.fetch || (() => { })).bind(window),
-        localStorage: window.localStorage,
+        get localStorage() {
+            return localStorage || window.localStorage;
+        },
+        set localStorage(newLocalStorage) {
+            localStorage = newLocalStorage;
+        },
     };
 
     /**
@@ -1358,10 +1367,10 @@
     //------------------------------------------------------------------------------
     // Const/global stuff/helpers
     //------------------------------------------------------------------------------
-    const DISABLED_TAGS = ["input", "textarea", "button", "select", "option", "optgroup"];
     const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
     const lineBreakRE = /[\r\n]/;
     const whitespaceRE = /\s+/g;
+    const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
     const NODE_HOOKS_PARAMS = {
         create: "(_, n)",
         insert: "vn",
@@ -1370,6 +1379,25 @@
     };
     function isComponent(obj) {
         return obj && obj.hasOwnProperty("__owl__");
+    }
+    class VDomArray extends Array {
+        toString() {
+            return vDomToString(this);
+        }
+    }
+    function vDomToString(vdom) {
+        return vdom
+            .map((vnode) => {
+            if (vnode.sel) {
+                const node = document.createElement(vnode.sel);
+                const result = patch(node, vnode);
+                return result.elm.outerHTML;
+            }
+            else {
+                return vnode.text;
+            }
+        })
+            .join("");
     }
     const UTILS = {
         zero: Symbol("zero"),
@@ -1392,22 +1420,8 @@
         addNameSpace(vnode) {
             addNS(vnode.data, vnode.children, vnode.sel);
         },
-        VDomArray: class VDomArray extends Array {
-        },
-        vDomToString: function (vdom) {
-            return vdom
-                .map((vnode) => {
-                if (vnode.sel) {
-                    const node = document.createElement(vnode.sel);
-                    const result = patch(node, vnode);
-                    return result.elm.outerHTML;
-                }
-                else {
-                    return vnode.text;
-                }
-            })
-                .join("");
-        },
+        VDomArray,
+        vDomToString,
         getComponent(obj) {
             while (obj && !isComponent(obj)) {
                 obj = obj.__proto__;
@@ -1548,7 +1562,7 @@
             const template = {
                 elem,
                 fn: function (context, extra) {
-                    const compiledFunction = this._compile(name, elem);
+                    const compiledFunction = this._compile(name);
                     template.fn = compiledFunction;
                     return compiledFunction.call(this, context, extra);
                 },
@@ -1642,26 +1656,27 @@
                 }
             });
         }
-        _compile(name, elem, parentContext, defineKey) {
+        _compile(name, options = {}) {
+            const elem = options.elem || this.templates[name].elem;
             const isDebug = elem.attributes.hasOwnProperty("t-debug");
             const ctx = new CompilationContext(name);
             if (elem.tagName !== "t") {
                 ctx.shouldDefineResult = false;
             }
-            if (parentContext) {
-                ctx.variables = Object.create(parentContext.variables);
-                ctx.parentNode = parentContext.parentNode || ctx.generateID();
+            if (options.hasParent) {
+                ctx.variables = Object.create(null);
+                ctx.parentNode = ctx.generateID();
                 ctx.allowMultipleRoots = true;
                 ctx.hasParentWidget = true;
                 ctx.shouldDefineResult = false;
                 ctx.addLine(`let c${ctx.parentNode} = extra.parentNode;`);
-                if (defineKey) {
+                if (options.defineKey) {
                     ctx.addLine(`let key0 = extra.key || "";`);
                     ctx.hasKey0 = true;
                 }
             }
             this._compileNode(elem, ctx);
-            if (!parentContext) {
+            if (!options.hasParent) {
                 if (ctx.shouldDefineResult) {
                     ctx.addLine(`return result;`);
                 }
@@ -1710,7 +1725,8 @@
                 }
                 if (this.translateFn) {
                     if (node.parentNode.getAttribute("t-translation") !== "off") {
-                        text = this.translateFn(text);
+                        const match = translationRE.exec(text);
+                        text = match[1] + this.translateFn(match[2]) + match[3];
                     }
                 }
                 if (ctx.parentNode) {
@@ -1735,10 +1751,16 @@
                 }
                 return;
             }
+            if (node.tagName !== "t" && node.hasAttribute("t-call")) {
+                const tCallNode = document.createElement("t");
+                tCallNode.setAttribute("t-call", node.getAttribute("t-call"));
+                node.removeAttribute("t-call");
+                node.prepend(tCallNode);
+            }
             const firstLetter = node.tagName[0];
             if (firstLetter === firstLetter.toUpperCase()) {
                 // this is a component, we modify in place the xml document to change
-                // <SomeComponent ... /> to <t t-component="SomeComponent" ... />
+                // <SomeComponent ... /> to <SomeComponent t-component="SomeComponent" ... />
                 node.setAttribute("t-component", node.tagName);
             }
             else if (node.tagName !== "t" && node.hasAttribute("t-component")) {
@@ -1868,22 +1890,31 @@
             const attrs = [];
             const props = [];
             const tattrs = [];
-            function handleBooleanProps(key, val) {
+            function handleProperties(key, val) {
                 let isProp = false;
-                if (node.nodeName === "input" && key === "checked") {
-                    let type = node.getAttribute("type");
-                    if (type === "checkbox" || type === "radio") {
-                        isProp = true;
-                    }
-                }
-                if (node.nodeName === "option" && key === "selected") {
-                    isProp = true;
-                }
-                if (key === "disabled" && DISABLED_TAGS.indexOf(node.nodeName) > -1) {
-                    isProp = true;
-                }
-                if ((key === "readonly" && node.nodeName === "input") || node.nodeName === "textarea") {
-                    isProp = true;
+                switch (node.nodeName) {
+                    case "input":
+                        let type = node.getAttribute("type");
+                        if (type === "checkbox" || type === "radio") {
+                            if (key === "checked" || key === "indeterminate") {
+                                isProp = true;
+                            }
+                        }
+                        if (key === "value" || key === "readonly" || key === "disabled") {
+                            isProp = true;
+                        }
+                        break;
+                    case "option":
+                        isProp = key === "selected" || key === "disabled";
+                        break;
+                    case "textarea":
+                        isProp = key === "readonly" || key === "disabled";
+                        break;
+                    case "button":
+                    case "select":
+                    case "optgroup":
+                        isProp = key === "disabled";
+                        break;
                 }
                 if (isProp) {
                     props.push(`${key}: _${val}`);
@@ -1921,7 +1952,7 @@
                             name = '"' + name + '"';
                         }
                         attrs.push(`${name}: _${attID}`);
-                        handleBooleanProps(name, attID);
+                        handleProperties(name, attID);
                     }
                 }
                 // dynamic attributes
@@ -1958,7 +1989,7 @@
                         }
                         ctx.addLine(`let _${attID} = ${formattedValue};`);
                         attrs.push(`${attName}: _${attID}`);
-                        handleBooleanProps(attName, attID);
+                        handleProperties(attName, attID);
                     }
                 }
                 if (name.startsWith("t-attf-")) {
@@ -2043,6 +2074,7 @@
     QWeb.nextId = 1;
     // dev mode enables better error messages or more costly validations
     QWeb.dev = false;
+    QWeb.enableTransitions = true;
     // slots contains sub templates defined with t-set inside t-component nodes, and
     // are meant to be used by the t-slot directive.
     QWeb.slots = {};
@@ -2060,6 +2092,9 @@
     }
     function htmlToVNode(node) {
         if (!(node instanceof Element)) {
+            if (node instanceof Comment) {
+                return h("!", node.textContent);
+            }
             return { text: node.textContent };
         }
         const attrs = {};
@@ -2279,73 +2314,81 @@
             // ------------------------------------------------
             ctx.rootContext.shouldDefineScope = true;
             ctx.rootContext.shouldDefineUtils = true;
-            if (node.nodeName !== "t") {
-                throw new Error("Invalid tag for t-call directive (should be 't')");
-            }
             const subTemplate = node.getAttribute("t-call");
+            const isDynamic = INTERP_REGEXP.test(subTemplate);
             const nodeTemplate = qweb.templates[subTemplate];
-            if (!nodeTemplate) {
+            if (!isDynamic && !nodeTemplate) {
                 throw new Error(`Cannot find template "${subTemplate}" (t-call)`);
             }
             // Step 2: compile target template in sub templates
             // ------------------------------------------------
-            let subId = qweb.subTemplates[subTemplate];
-            if (!subId) {
-                subId = QWeb.nextId++;
-                qweb.subTemplates[subTemplate] = subId;
-                const subTemplateFn = qweb._compile(subTemplate, nodeTemplate.elem, ctx, true);
-                QWeb.subTemplates[subId] = subTemplateFn;
+            let subIdstr;
+            if (isDynamic) {
+                const _id = ctx.generateID();
+                ctx.addLine(`let tname${_id} = ${ctx.interpolate(subTemplate)};`);
+                ctx.addLine(`let tid${_id} = this.subTemplates[tname${_id}];`);
+                ctx.addIf(`!tid${_id}`);
+                ctx.addLine(`tid${_id} = this.constructor.nextId++;`);
+                ctx.addLine(`this.subTemplates[tname${_id}] = tid${_id};`);
+                ctx.addLine(`this.constructor.subTemplates[tid${_id}] = this._compile(tname${_id}, {hasParent: true, defineKey: true});`);
+                ctx.closeIf();
+                subIdstr = `tid${_id}`;
+            }
+            else {
+                let subId = qweb.subTemplates[subTemplate];
+                if (!subId) {
+                    subId = QWeb.nextId++;
+                    qweb.subTemplates[subTemplate] = subId;
+                    const subTemplateFn = qweb._compile(subTemplate, { hasParent: true, defineKey: true });
+                    QWeb.subTemplates[subId] = subTemplateFn;
+                }
+                subIdstr = `'${subId}'`;
             }
             // Step 3: compile t-call body if necessary
             // ------------------------------------------------
             let hasBody = node.hasChildNodes();
-            let protectID;
+            const protectID = ctx.startProtectScope();
             if (hasBody) {
                 // we add a sub scope to protect the ambient scope
                 ctx.addLine(`{`);
                 ctx.indent();
-                protectID = ctx.startProtectScope();
                 const nodeCopy = node.cloneNode(true);
                 for (let attr of ["t-if", "t-else", "t-elif", "t-call"]) {
                     nodeCopy.removeAttribute(attr);
                 }
-                const parentNode = ctx.parentNode;
-                ctx.parentNode = "__0";
                 // this local scope is intended to trap c__0
                 ctx.addLine(`{`);
                 ctx.indent();
                 ctx.addLine("let c__0 = [];");
-                qweb._compileNode(nodeCopy, ctx);
+                qweb._compileNode(nodeCopy, ctx.subContext("parentNode", "__0"));
                 ctx.rootContext.shouldDefineUtils = true;
                 ctx.addLine("scope[utils.zero] = c__0;");
-                ctx.parentNode = parentNode;
                 ctx.dedent();
                 ctx.addLine(`}`);
             }
             // Step 4: add the appropriate function call to current component
             // ------------------------------------------------
-            const callingScope = hasBody ? "scope" : "Object.assign(Object.create(context), scope)";
             const parentComponent = `utils.getComponent(context)`;
             const key = ctx.generateTemplateKey();
             const parentNode = ctx.parentNode ? `c${ctx.parentNode}` : "result";
             const extra = `Object.assign({}, extra, {parentNode: ${parentNode}, parent: ${parentComponent}, key: ${key}})`;
             if (ctx.parentNode) {
-                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, ${callingScope}, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
             }
             else {
                 // this is a t-call with no parentnode, we need to extract the result
                 ctx.rootContext.shouldDefineResult = true;
                 ctx.addLine(`result = []`);
-                ctx.addLine(`this.constructor.subTemplates['${subId}'].call(this, ${callingScope}, ${extra});`);
+                ctx.addLine(`this.constructor.subTemplates[${subIdstr}].call(this, scope, ${extra});`);
                 ctx.addLine(`result = result[0]`);
             }
             // Step 5: restore previous scope
             // ------------------------------------------------
             if (hasBody) {
-                ctx.stopProtectScope(protectID);
                 ctx.dedent();
                 ctx.addLine(`}`);
             }
+            ctx.stopProtectScope(protectID);
             return true;
         },
     });
@@ -2603,6 +2646,9 @@
         name: "transition",
         priority: 96,
         atNodeCreation({ ctx, value, addNodeHook }) {
+            if (!QWeb.enableTransitions) {
+                return;
+            }
             ctx.rootContext.shouldDefineUtils = true;
             let name = value;
             const hooks = {
@@ -2622,7 +2668,8 @@
         priority: 80,
         atNodeEncounter({ ctx, value, node, qweb }) {
             const slotKey = ctx.generateID();
-            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + '${value}'];`);
+            const valueExpr = value.match(INTERP_REGEXP) ? ctx.interpolate(value) : `'${value}'`;
+            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + ${valueExpr}];`);
             ctx.addIf(`slot${slotKey}`);
             let parentNode = `c${ctx.parentNode}`;
             if (!ctx.parentNode) {
@@ -2653,6 +2700,8 @@
         const n = parseFloat(val);
         return isNaN(n) ? val : n;
     };
+    const hasDotAtTheEnd = /\.[\w_]+\s*$/;
+    const hasBracketsAtTheEnd = /\[[^\[]+\]\s*$/;
     QWeb.addDirective({
         name: "model",
         priority: 42,
@@ -2660,14 +2709,41 @@
             const type = node.getAttribute("type");
             let handler;
             let event = fullName.includes(".lazy") ? "change" : "input";
-            // we keep here a reference to the "base expression" (if the expression
-            // is `t-model="some.expr.value", then the base expression is "some.expr").
-            // This is necessary so we can capture it in the handler closure.
-            let expr = ctx.formatExpression(value);
-            const index = expr.lastIndexOf(".");
-            const baseExpr = expr.slice(0, index);
-            ctx.addLine(`let expr${nodeID} = ${baseExpr};`);
-            expr = `expr${nodeID}.${expr.slice(index + 1)}`;
+            // First step: we need to understand the structure of the expression, and
+            // from it, extract a base expression (that we can capture, which is
+            // important because it will be used in a handler later) and a formatted
+            // expression (which uses the captured base expression)
+            //
+            // Also, we support 2 kinds of values: some.expr.value or some.expr[value]
+            // For the first one, we have:
+            // - base expression = scope[some].expr
+            // - expression = exprX.value (where exprX is the var that captures the base expr)
+            // and for the expression with brackets:
+            // - base expression = scope[some].expr
+            // - expression = exprX[keyX] (where exprX is the var that captures the base expr
+            //        and keyX captures scope[value])
+            let expr;
+            let baseExpr;
+            if (hasDotAtTheEnd.test(value)) {
+                // we manage the case where the expr has a dot: some.expr.value
+                const index = value.lastIndexOf(".");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                expr = `expr${nodeID}${value.slice(index)}`;
+            }
+            else if (hasBracketsAtTheEnd.test(value)) {
+                // we manage here the case where the expr ends in a bracket expression:
+                //    some.expr[value]
+                const index = value.lastIndexOf("[");
+                baseExpr = value.slice(0, index);
+                ctx.addLine(`let expr${nodeID} = ${ctx.formatExpression(baseExpr)};`);
+                let exprKey = value.trimRight().slice(index + 1, -1);
+                ctx.addLine(`let exprKey${nodeID} = ${ctx.formatExpression(exprKey)};`);
+                expr = `expr${nodeID}[exprKey${nodeID}]`;
+            }
+            else {
+                throw new Error(`Invalid t-model expression: "${value}" (it should be assignable)`);
+            }
             const key = ctx.generateTemplateKey();
             if (node.tagName === "select") {
                 ctx.addLine(`p${nodeID}.props = {value: ${expr}};`);
@@ -2737,6 +2813,14 @@
             else {
                 console.log(`Owl is now running in 'prod' mode.`);
             }
+        },
+    });
+    Object.defineProperty(config, "enableTransitions", {
+        get() {
+            return QWeb.enableTransitions;
+        },
+        set(value) {
+            QWeb.enableTransitions = value;
         },
     });
 
@@ -2974,7 +3058,9 @@
                     events.push([name, value]);
                 }
                 else if (name === "t-transition") {
-                    transition = value;
+                    if (QWeb.enableTransitions) {
+                        transition = value;
+                    }
                 }
                 else if (!name.startsWith("t-")) {
                     if (name !== "class" && name !== "style") {
@@ -3119,7 +3205,6 @@
             ctx.addLine(`parent.__owl__.cmap[${templateKey}] = w${componentID}.__owl__.id;`);
             if (hasSlots) {
                 const clone = node.cloneNode(true);
-                const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
                 // The next code is a fallback for compatibility reason. It accepts t-set
                 // elements that are direct children with a non empty body as nodes defining
                 // the content of a slot.
@@ -3128,26 +3213,42 @@
                 // code using slots. This will be removed in v2.0 someday. Meanwhile,
                 // please use t-set-slot everywhere you need to set the content of a
                 // slot.
-                for (let el of clone.children) {
-                    if (el.getAttribute("t-set") && el.hasChildNodes()) {
-                        slotNodes.push(el);
+                for (let node of clone.children) {
+                    if (node.hasAttribute("t-set") && node.hasChildNodes()) {
+                        node.setAttribute("t-set-slot", node.getAttribute("t-set"));
+                        node.removeAttribute("t-set");
                     }
                 }
+                const slotNodes = Array.from(clone.querySelectorAll("[t-set-slot]"));
+                const slotNames = new Set();
                 const slotId = QWeb.nextSlotId++;
                 ctx.addLine(`w${componentID}.__owl__.slotId = ${slotId};`);
                 if (slotNodes.length) {
                     for (let i = 0, length = slotNodes.length; i < length; i++) {
                         const slotNode = slotNodes[i];
-                        slotNode.parentElement.removeChild(slotNode);
-                        let key = slotNode.getAttribute("t-set-slot");
-                        slotNode.removeAttribute("t-set-slot");
-                        // here again, this code should be removed when we stop supporting
-                        // using t-set to define the content of named slots.
-                        if (!key) {
-                            key = slotNode.getAttribute("t-set");
-                            slotNode.removeAttribute("t-set");
+                        // check if this is defined in a sub component (in which case it should
+                        // be ignored)
+                        let el = slotNode.parentElement;
+                        let isInSubComponent = false;
+                        while (el !== clone) {
+                            if (el.hasAttribute("t-component") ||
+                                el.tagName[0] === el.tagName[0].toUpperCase()) {
+                                isInSubComponent = true;
+                                break;
+                            }
+                            el = el.parentElement;
                         }
-                        const slotFn = qweb._compile(`slot_${key}_template`, slotNode, ctx);
+                        if (isInSubComponent) {
+                            continue;
+                        }
+                        let key = slotNode.getAttribute("t-set-slot");
+                        if (slotNames.has(key)) {
+                            continue;
+                        }
+                        slotNames.add(key);
+                        slotNode.removeAttribute("t-set-slot");
+                        slotNode.parentElement.removeChild(slotNode);
+                        const slotFn = qweb._compile(`slot_${key}_template`, { elem: slotNode, hasParent: true });
                         QWeb.slots[`${slotId}_${key}`] = slotFn;
                     }
                 }
@@ -3156,7 +3257,7 @@
                     for (let child of Object.values(clone.childNodes)) {
                         t.appendChild(child);
                     }
-                    const slotFn = qweb._compile(`slot_default_template`, t, ctx);
+                    const slotFn = qweb._compile(`slot_default_template`, { elem: t, hasParent: true });
                     QWeb.slots[`${slotId}_default`] = slotFn;
                 }
             }
@@ -3465,13 +3566,21 @@
                 else {
                     if (fiber.shouldPatch) {
                         component.__patch(component.__owl__.vnode, fiber.vnode);
+                        // When updating a Component's props (in directive),
+                        // the component has a pvnode AND should be patched.
+                        // However, its pvnode.elm may have changed if it is a High Order Component
+                        if (component.__owl__.pvnode) {
+                            component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
+                        }
                     }
                     else {
                         component.__patch(document.createElement(fiber.vnode.sel), fiber.vnode);
                         component.__owl__.pvnode.elm = component.__owl__.vnode.elm;
                     }
                 }
-                component.__owl__.currentFiber = null;
+                if (fiber === component.__owl__.currentFiber) {
+                    component.__owl__.currentFiber = null;
+                }
             }
             // insert into the DOM (mount case)
             let inDOM = false;
@@ -3585,7 +3694,7 @@
                         throw new Error(`Missing props '${propName}' (component '${Widget.name}')`);
                     }
                     else {
-                        break;
+                        continue;
                     }
                 }
                 let isValid;
@@ -3772,6 +3881,7 @@
                 if (!this.env.qweb) {
                     this.env.qweb = new QWeb();
                 }
+                // TODO: remove this in owl 2.0
                 if (!this.env.browser) {
                     this.env.browser = browser;
                 }
@@ -3936,7 +4046,7 @@
                 message += `\nMaybe the DOM is not ready yet? (in that case, you can use owl.utils.whenReady)`;
                 throw new Error(message);
             }
-            const fiber = new Fiber(null, this, false, target, position);
+            const fiber = new Fiber(null, this, true, target, position);
             fiber.shouldPatch = false;
             if (!__owl__.vnode) {
                 this.__prepareAndRender(fiber, () => { });
@@ -4092,9 +4202,9 @@
             }
             this.willUnmount();
             __owl__.isMounted = false;
-            if (this.__owl__.currentFiber) {
-                this.__owl__.currentFiber.isCompleted = true;
-                this.__owl__.currentFiber.root.counter = 0;
+            if (__owl__.currentFiber) {
+                __owl__.currentFiber.isCompleted = true;
+                __owl__.currentFiber.root.counter = 0;
             }
             const children = __owl__.children;
             for (let id in children) {
@@ -4249,9 +4359,28 @@
                 // destroyed right now, because they are not in the DOM, and thus we won't
                 // be notified later on (when patching), that they are removed from the DOM
                 for (let childKey in __owl__.children) {
-                    let child = __owl__.children[childKey];
-                    if (!child.__owl__.isMounted && child.__owl__.parentLastFiberId < fiber.id) {
-                        child.destroy();
+                    const child = __owl__.children[childKey];
+                    const childOwl = child.__owl__;
+                    if (!childOwl.isMounted && childOwl.parentLastFiberId < fiber.id) {
+                        // we only do here a "soft" destroy, meaning that we leave the child
+                        // dom node alone, without removing it.  Most of the time, it does not
+                        // matter, because the child component is already unmounted.  However,
+                        // if some of its parent have been unmounted, the child could actually
+                        // still be attached to its parent, and this may be important if we
+                        // want to remount the parent, because the vdom need to match the
+                        // actual DOM
+                        child.__destroy(childOwl.parent);
+                        if (childOwl.pvnode) {
+                            // we remove the key here to make sure that the patching algorithm
+                            // is able to make the difference between this pvnode and an eventual
+                            // other instance of the same component
+                            delete childOwl.pvnode.key;
+                            // Since the component has been unmounted, we do not want to actually
+                            // call a remove hook.  This is pretty important, since the t-component
+                            // directive actually disabled it, so the vdom algorithm will just
+                            // not remove the child elm if we don't remove the hook.
+                            delete childOwl.pvnode.data.hook.remove;
+                        }
                     }
                 }
                 if (!vnode) {
@@ -4308,6 +4437,23 @@
     Component.env = {};
     // expose scheduler s.t. it can be mocked for testing purposes
     Component.scheduler = scheduler;
+    async function mount(C, params) {
+        const { env, props, target } = params;
+        let origEnv = C.hasOwnProperty("env") ? C.env : null;
+        if (env) {
+            C.env = env;
+        }
+        const component = new C(null, props);
+        if (origEnv) {
+            C.env = origEnv;
+        }
+        else {
+            delete C.env;
+        }
+        const position = params.position || "last-child";
+        await component.mount(target, { position });
+        return component;
+    }
 
     /**
      * The `Context` object provides a way to share data between an arbitrary number
@@ -4414,16 +4560,6 @@
             __owl__.observer = new Observer();
             __owl__.observer.notifyCB = component.render.bind(component);
         }
-        const currentCB = __owl__.observer.notifyCB;
-        __owl__.observer.notifyCB = function () {
-            if (ctx.rev > mapping[id]) {
-                // in this case, the context has been updated since we were rendering
-                // last, and we do not need to render here with the observer. A
-                // rendering is coming anyway, with the correct props.
-                return;
-            }
-            currentCB();
-        };
         mapping[id] = 0;
         const renderFn = __owl__.renderFn;
         __owl__.renderFn = function (comp, params) {
@@ -4547,6 +4683,23 @@
         };
     }
     // -----------------------------------------------------------------------------
+    // "Builder" hooks
+    // -----------------------------------------------------------------------------
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the component calling them.
+     */
+    function useComponent() {
+        return Component.current;
+    }
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the env of the component calling them.
+     */
+    function useEnv() {
+        return Component.current.env;
+    }
+    // -----------------------------------------------------------------------------
     // useSubEnv
     // -----------------------------------------------------------------------------
     /**
@@ -4590,6 +4743,8 @@
         onWillStart: onWillStart,
         onWillUpdateProps: onWillUpdateProps,
         useRef: useRef,
+        useComponent: useComponent,
+        useEnv: useEnv,
         useSubEnv: useSubEnv,
         useExternalListener: useExternalListener
     });
@@ -5186,18 +5341,22 @@
     exports.QWeb = QWeb;
     exports.Store = Store$1;
     exports.__info__ = __info__;
+    exports.browser = browser;
     exports.config = config;
     exports.core = core;
     exports.hooks = hooks$1;
     exports.misc = misc;
+    exports.mount = mount;
     exports.router = router;
     exports.tags = tags;
     exports.useState = useState$1;
     exports.utils = utils;
 
-    exports.__info__.version = '1.0.9';
-    exports.__info__.date = '2020-06-09T06:36:43.187Z';
-    exports.__info__.hash = 'c5a2f52';
-    exports.__info__.url = 'https://github.com/odoo/owl';
+
+    __info__.version = '1.2.0';
+    __info__.date = '2020-12-14T12:37:32.543Z';
+    __info__.hash = '144b323';
+    __info__.url = 'https://github.com/odoo/owl';
+
 
 }(this.owl = this.owl || {}));

@@ -59,19 +59,6 @@ header {
 }
 .navbar {
     margin-bottom: 0;
-
-    ul.nav > li {
-        &.divider {
-            display: none;
-            margin: $nav-link-padding-y ($nav-link-padding-x * 0.5);
-            border-right: 1px solid;
-            opacity: 0.25;
-        }
-
-        &.active + .divider {
-            visibility: hidden;
-        }
-    }
     .nav.navbar-nav.float-right {
         @include media-breakpoint-down(sm) {
             float: none!important;
@@ -207,11 +194,6 @@ img, .media_iframe_video, .o_image {
     &.float-left {
         margin-right: $grid-gutter-width / 2;
     }
-}
-img.o_we_custom_image {
-    // Images added with the editor are .img-fluid by default but should
-    // still behave like inline content.
-    display: inline-block;
 }
 
 // Others
@@ -413,6 +395,7 @@ img.o_we_custom_image {
 .oe_attachments .o_image_small {
     height: 40px;
     width: 50px;
+    background-repeat: no-repeat;
 }
 
 form label {
@@ -540,3 +523,41 @@ form label {
         }
     }
 }
+
+.o_portal_security_body {
+    @extend .mx-auto;
+    max-width: map-get($container-max-widths, sm);
+    section {
+        @extend .mt-4;
+        form.oe_reset_password_form {
+            max-width: initial;
+            margin: initial;
+        }
+        .form-group {
+            // for the absolutely positioned meter on new password
+            position: relative;
+        }
+        label, button {
+            @extend .text-nowrap;
+        }
+    }
+}
+
+// Copyright
+.o_footer_copyright {
+    .o_footer_copyright_name {
+        vertical-align: middle;
+    }
+    .js_language_selector {
+        display: inline-block;
+    }
+    @include media-breakpoint-up(md) {
+        .row {
+            display: flex;
+            > div {
+                margin: auto 0;
+            }
+        }
+    }
+}
+

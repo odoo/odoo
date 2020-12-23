@@ -10,10 +10,12 @@ from collections import OrderedDict
 from odoo import http, fields
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import html2plaintext
 from odoo.tools.misc import get_lang
+from odoo.tools import sql
 
 
 class WebsiteBlog(http.Controller):
@@ -53,7 +55,7 @@ class WebsiteBlog(http.Controller):
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
-    def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False):
+    def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False, search=None):
         """ Prepare all values to display the blogs index page or one specific blog"""
         BlogPost = request.env['blog.post']
         BlogTag = request.env['blog.tag']
@@ -100,6 +102,10 @@ class WebsiteBlog(http.Controller):
             if use_cover and not fullwidth_cover:
                 offset += 1
 
+        if search:
+            tags_like_search = BlogTag.search([('name', 'ilike', search)])
+            domain += ['|', '|', '|', ('author_name', 'ilike', search), ('name', 'ilike', search), ('content', 'ilike', search), ('tag_ids', 'in', tags_like_search.ids)]
+
         posts = BlogPost.search(domain, offset=offset, limit=self._blog_post_per_page, order="is_published desc, post_date desc, id asc")
         total = BlogPost.search_count(domain)
 
@@ -133,6 +139,8 @@ class WebsiteBlog(http.Controller):
             'state_info': state and {"state": state, "published": published_count, "unpublished": unpublished_count},
             'blogs': blogs,
             'blog': blog,
+            'search': search,
+            'search_count': total,
         }
 
     @http.route([
@@ -145,7 +153,7 @@ class WebsiteBlog(http.Controller):
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
     ], type='http', auth="public", website=True, sitemap=True)
-    def blog(self, blog=None, tag=None, page=1, **opt):
+    def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
         if blog and not blog.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
@@ -161,10 +169,10 @@ class WebsiteBlog(http.Controller):
             # redirect get tag-1,tag-2 -> get tag-1
             tags = tag.split(',')
             if len(tags) > 1:
-                url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end)()
+                url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end, search=search)()
                 return request.redirect(url, code=302)
 
-        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
+        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page, search=search)
 
         # in case of a redirection need by `_prepare_blog_values` we follow it
         if isinstance(values, werkzeug.wrappers.Response):
@@ -173,9 +181,9 @@ class WebsiteBlog(http.Controller):
         if blog:
             values['main_object'] = blog
             values['edit_in_backend'] = True
-            values['blog_url'] = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
+            values['blog_url'] = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
         else:
-            values['blog_url'] = QueryURL('/blog', ['tag'], date_begin=date_begin, date_end=date_end)
+            values['blog_url'] = QueryURL('/blog', ['tag'], date_begin=date_begin, date_end=date_end, search=search)
 
         return request.render("website_blog.blog_post_short", values)
 
@@ -191,6 +199,13 @@ class WebsiteBlog(http.Controller):
 
     @http.route([
         '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
+    ], type='http', auth="public", website=True, sitemap=False)
+    def old_blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
+        # Compatibility pre-v14
+        return request.redirect(_build_url_w_params("/blog/%s/%s" % (slug(blog), slug(blog_post)), request.params), code=301)
+
+    @http.route([
+        '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
     ], type='http', auth="public", website=True, sitemap=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
@@ -221,7 +236,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         if not blog_post.blog_id.id == blog.id:
-            return request.redirect("/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post)), code=301)
+            return request.redirect("/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post)), code=301)
 
         tags = request.env['blog.tag'].search([])
 
@@ -258,20 +273,14 @@ class WebsiteBlog(http.Controller):
         response = request.render("website_blog.blog_post_complete", values)
 
         if blog_post.id not in request.session.get('posts_viewed', []):
-            if not request.session.get('posts_viewed'):
-                request.session['posts_viewed'] = []
-
-            request.session['posts_viewed'].append(blog_post.id)
-            request.session.modified = True
-
-            # Increase counter
-            blog_post.sudo()._write({
-                'visits': blog_post.visits + 1,
-                'write_date': blog_post.write_date,
-            })
+            if sql.increment_field_skiplock(blog_post, 'visits'):
+                if not request.session.get('posts_viewed'):
+                    request.session['posts_viewed'] = []
+                request.session['posts_viewed'].append(blog_post.id)
+                request.session.modified = True
         return response
 
-    @http.route('/blog/<int:blog_id>/post/new', type='http', auth="public", website=True)
+    @http.route('/blog/<int:blog_id>/post/new', type='http', auth="user", website=True)
     def blog_post_create(self, blog_id, **post):
         # Use sudo so this line prevents both editor and admin to access blog from another website
         # as browse() will return the record even if forbidden by security rules but editor won't
@@ -283,9 +292,9 @@ class WebsiteBlog(http.Controller):
             'blog_id': blog_id,
             'is_published': False,
         })
-        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+        return werkzeug.utils.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
-    @http.route('/blog/post_duplicate', type='http', auth="public", website=True, methods=['POST'])
+    @http.route('/blog/post_duplicate', type='http', auth="user", website=True, methods=['POST'])
     def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
 
@@ -294,7 +303,7 @@ class WebsiteBlog(http.Controller):
         :return redirect to the new blog created
         """
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
-        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+        return werkzeug.utils.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):

@@ -60,16 +60,24 @@ class ResCompany(models.Model):
         ('round_globally', 'Round Globally'),
         ], default='round_per_line', string='Tax Calculation Rounding Method')
     currency_exchange_journal_id = fields.Many2one('account.journal', string="Exchange Gain or Loss Journal", domain=[('type', '=', 'general')])
-    income_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_credit_account_id', readonly=False,
-        string="Gain Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
-    expense_currency_exchange_account_id = fields.Many2one('account.account', related='currency_exchange_journal_id.default_debit_account_id', readonly=False,
-        string="Loss Exchange Rate Account", domain="[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id)]")
+    income_currency_exchange_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Gain Exchange Rate Account",
+        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id), \
+                             ('user_type_id', 'in', %s)]" % [self.env.ref('account.data_account_type_revenue').id,
+                                                             self.env.ref('account.data_account_type_other_income').id])
+    expense_currency_exchange_account_id = fields.Many2one(
+        comodel_name='account.account',
+        string="Loss Exchange Rate Account",
+        domain=lambda self: "[('internal_type', '=', 'other'), ('deprecated', '=', False), ('company_id', '=', id), \
+                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_expenses').id)
     anglo_saxon_accounting = fields.Boolean(string="Use anglo-saxon accounting")
     property_stock_account_input_categ_id = fields.Many2one('account.account', string="Input Account for Stock Valuation")
     property_stock_account_output_categ_id = fields.Many2one('account.account', string="Output Account for Stock Valuation")
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
+    account_tax_fiscal_country_id = fields.Many2one('res.country', string="Fiscal Country", compute='compute_account_tax_fiscal_country', store=True, readonly=False, help="The country to use the tax reports from for this company")
 
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
@@ -82,20 +90,27 @@ class ResCompany(models.Model):
     #Fields of the setup step for opening move
     account_opening_move_id = fields.Many2one(string='Opening Journal Entry', comodel_name='account.move', help="The journal entry containing the initial balance of all this company's accounts.")
     account_opening_journal_id = fields.Many2one(string='Opening Journal', comodel_name='account.journal', related='account_opening_move_id.journal_id', help="Journal where the opening entry of this company's accounting has been posted.", readonly=False)
-    account_opening_date = fields.Date(string='Opening Entry', default=lambda self: fields.Date.today().replace(month=1, day=1), required=True, help="That is the date of the opening entry.")
+    account_opening_date = fields.Date(string='Opening Entry', default=lambda self: fields.Date.context_today(self).replace(month=1, day=1), required=True, help="That is the date of the opening entry.")
 
     # Fields marking the completion of a setup step
     account_setup_bank_data_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bank data step", default='not_done')
     account_setup_fy_data_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding fiscal year step", default='not_done')
     account_setup_coa_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding charts of account step", default='not_done')
     account_onboarding_invoice_layout_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding invoice layout step", default='not_done')
-    account_onboarding_sample_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sample invoice step", default='not_done')
+    account_onboarding_create_invoice_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding create invoice step", default='not_done')
     account_onboarding_sale_tax_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding sale tax step", default='not_done')
 
     # account dashboard onboarding
     account_invoice_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account invoice onboarding panel", default='not_done')
     account_dashboard_onboarding_state = fields.Selection(DASHBOARD_ONBOARDING_STATES, string="State of the account dashboard onboarding panel", default='not_done')
     invoice_terms = fields.Text(string='Default Terms and Conditions', translate=True)
+    terms_type = fields.Selection([('plain', 'Terms as Notes'), ('html', 'Terms as Web Page')],
+                                  string='Terms & Conditions format', default='plain')
+    invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
+                                     default="""<h1 style="text-align: center; ">Terms &amp; Conditions</h1>
+                                     <p>Your conditions...</p>""")
+
+    account_setup_bill_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bill step", default='not_done')
 
     # Needed in the Point of Sale
     account_default_pos_receivable_account_id = fields.Many2one('account.account', string="Default PoS Receivable Account")
@@ -103,11 +118,11 @@ class ResCompany(models.Model):
     # Accrual Accounting
     expense_accrual_account_id = fields.Many2one('account.account',
         help="Account used to move the period of an expense",
-        domain="[('internal_group', '=', 'liability'), ('internal_type', 'not in', ('receivable', 'payable')), ('reconcile', '=', True), ('company_id', '=', id)]")
+        domain="[('internal_group', '=', 'liability'), ('internal_type', 'not in', ('receivable', 'payable')), ('company_id', '=', id)]")
     revenue_accrual_account_id = fields.Many2one('account.account',
         help="Account used to move the period of a revenue",
-        domain="[('internal_group', '=', 'asset'), ('internal_type', 'not in', ('receivable', 'payable')), ('reconcile', '=', True), ('company_id', '=', id)]")
-    accrual_default_journal_id = fields.Many2one('account.journal', help="Journal used by default for moving the period of an entry", domain="[('type', '=', 'general')]")
+        domain="[('internal_group', '=', 'asset'), ('internal_type', 'not in', ('receivable', 'payable')), ('company_id', '=', id)]")
+    automatic_entry_default_journal_id = fields.Many2one('account.journal', help="Journal used by default for moving the period of an entry", domain="[('type', '=', 'general')]")
 
     # Technical field to hide country specific fields in company form view
     country_code = fields.Char(related='country_id.code')
@@ -140,6 +155,11 @@ class ResCompany(models.Model):
             if rec.fiscalyear_last_day > max_day:
                 raise ValidationError(_("Invalid fiscal year last day"))
 
+    @api.depends('country_id')
+    def compute_account_tax_fiscal_country(self):
+        for record in self:
+            record.account_tax_fiscal_country_id = record.country_id
+
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
             are displayed only one time. """
@@ -154,7 +174,7 @@ class ResCompany(models.Model):
         return [
             'base_onboarding_company_state',
             'account_onboarding_invoice_layout_state',
-            'account_onboarding_sample_invoice_state',
+            'account_onboarding_create_invoice_state',
         ]
 
     def get_and_update_account_dashboard_onboarding_state(self):
@@ -168,7 +188,7 @@ class ResCompany(models.Model):
     def get_account_dashboard_onboarding_steps_states_names(self):
         """ Necessary to add/edit steps from other modules (account_winbooks_import in this case). """
         return [
-            'base_onboarding_company_state',
+            'account_setup_bill_state',
             'account_setup_bank_data_state',
             'account_setup_fy_data_state',
             'account_setup_coa_state',
@@ -188,21 +208,38 @@ class ResCompany(models.Model):
     def _validate_fiscalyear_lock(self, values):
         if values.get('fiscalyear_lock_date'):
 
-            nb_draft_entries = self.env['account.move'].search([
+            draft_entries = self.env['account.move'].search([
                 ('company_id', 'in', self.ids),
                 ('state', '=', 'draft'),
                 ('date', '<=', values['fiscalyear_lock_date'])])
-            if nb_draft_entries:
-                raise ValidationError(_('There are still unposted entries in the period you want to lock. You should either post or delete them.'))
+            if draft_entries:
+                error_msg = _('There are still unposted entries in the period you want to lock. You should either post or delete them.')
+                action_error = {
+                    'view_mode': 'tree',
+                    'name': 'Unposted Entries',
+                    'res_model': 'account.move',
+                    'type': 'ir.actions.act_window',
+                    'domain': [('id', 'in', draft_entries.ids)],
+                    'search_view_id': [self.env.ref('account.view_account_move_filter').id, 'search'],
+                    'views': [[self.env.ref('account.view_move_tree').id, 'list'], [self.env.ref('account.view_move_form').id, 'form']],
+                }
+                raise RedirectWarning(error_msg, action_error, _('Show unposted entries'))
 
-            has_unreconciled_statement_lines = self.env['account.bank.statement.line'].search_count([
+            unreconciled_statement_lines = self.env['account.bank.statement.line'].search([
                 ('company_id', 'in', self.ids),
                 ('is_reconciled', '=', False),
+                ('date', '<=', values['fiscalyear_lock_date']),
+                ('move_id.state', 'in', ('draft', 'posted')),
             ])
-            if has_unreconciled_statement_lines:
-                raise ValidationError(_(
-                    "There are still unreconciled bank statement lines in the period you want to lock."
-                    "You should either reconcile or delete them."))
+            if unreconciled_statement_lines:
+                error_msg = _("There are still unreconciled bank statement lines in the period you want to lock."
+                            "You should either reconcile or delete them.")
+                action_error = {
+                    'type': 'ir.actions.client',
+                    'tag': 'bank_statement_reconciliation_view',
+                    'context': {'statement_line_ids': unreconciled_statement_lines.ids, 'company_ids': self.ids},
+                }
+                raise RedirectWarning(error_msg, action_error, _('Show Unreconciled Bank Statement Line'))
 
     def _get_user_fiscal_lock_date(self):
         """Get the fiscal lock date for this company depending on the user"""
@@ -221,6 +258,7 @@ class ResCompany(models.Model):
             if values.get('bank_account_code_prefix'):
                 new_bank_code = values.get('bank_account_code_prefix') or company.bank_account_code_prefix
                 company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code)
+
             if values.get('cash_account_code_prefix'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code)
@@ -401,71 +439,13 @@ class ResCompany(models.Model):
     @api.model
     def action_open_account_onboarding_sale_tax(self):
         """ Onboarding step for the invoice layout. """
-        action = self.env.ref('account.action_open_account_onboarding_sale_tax').read()[0]
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_sale_tax")
         action['res_id'] = self.env.company.id
         return action
 
     @api.model
-    def _get_sample_invoice(self):
-        """ Get a sample invoice or create one if it does not exist. """
-        # use current user as partner
-        partner = self.env.user.partner_id
-
-        company_id = self.env.company.id
-        # try to find an existing sample invoice
-        sample_invoice = self.env['account.move'].search(
-            [('company_id', '=', company_id),
-             ('partner_id', '=', partner.id)], limit=1)
-
-        if len(sample_invoice) == 0:
-            # If there are no existing accounts or no journal, fail
-            account = self.env.company.get_chart_of_accounts_or_fail()
-
-            journal = self.env['account.journal'].search([('company_id', '=', company_id)], limit=1)
-            if len(journal) == 0:
-                action = self.env.ref('account.action_account_journal_form')
-                msg = _("We cannot find any journal for this company. You should create one."
-                        "\nPlease go to Configuration > Journals.")
-                raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
-
-            sample_invoice = self.env['account.move'].with_context(default_move_type='out_invoice', default_journal_id=journal.id).create({
-                'payment_reference': _('Sample invoice'),
-                'partner_id': partner.id,
-                'invoice_line_ids': [
-                    (0, 0, {
-                        'name': _('Sample invoice line name'),
-                        'account_id': account.id,
-                        'quantity': 2,
-                        'price_unit': 199.99,
-                    }),
-                    (0, 0, {
-                        'name': _('Sample invoice line name 2'),
-                        'account_id': account.id,
-                        'quantity': 1,
-                        'price_unit': 25.0,
-                    }),
-                ],
-            })
-        return sample_invoice
-
-    @api.model
-    def action_open_account_onboarding_sample_invoice(self):
-        """ Onboarding step for sending a sample invoice. Open a window to compose an email,
-            with the edi_invoice_template message loaded by default. """
-        sample_invoice = self._get_sample_invoice()
-        template = self.env.ref('account.email_template_edi_invoice', False)
-        action = self.env.ref('account.action_open_account_onboarding_sample_invoice').read()[0]
-        action['context'] = {
-            'default_res_id': sample_invoice.id,
-            'default_use_template': bool(template),
-            'default_template_id': template and template.id or False,
-            'default_model': 'account.move',
-            'default_composition_mode': 'comment',
-            'mark_invoice_as_sent': True,
-            'custom_layout': 'mail.mail_notification_borders',
-            'force_email': True,
-            'mail_notify_author': True,
-        }
+    def action_open_account_onboarding_create_invoice(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("account.action_open_account_onboarding_create_invoice")
         return action
 
     def action_save_onboarding_invoice_layout(self):
@@ -501,7 +481,7 @@ class ResCompany(models.Model):
         journals = self.env['account.journal'].search([('company_id', '=', self.id)])
         results_by_journal = {
             'results': [],
-            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.today()))
+            'printing_date': format_date(self.env, fields.Date.to_string(fields.Date.context_today(self)))
         }
 
         for journal in journals:
@@ -566,15 +546,15 @@ class ResCompany(models.Model):
 
         return results_by_journal
 
-    def get_fiscal_country(self):
-        """ Returns the country to be used for this company's tax report.
-        By default, it'll be the one from the address; but a config parameter
-        may be used for each company to customize that behavior.
+    def compute_fiscalyear_dates(self, current_date):
         """
-        self.ensure_one()
+        The role of this method is to provide a fallback when account_accounting is not installed.
+        As the fiscal year is irrelevant when account_accounting is not installed, this method returns the calendar year.
+        :param current_date: A datetime.date/datetime.datetime object.
+        :return: A dictionary containing:
+            * date_from
+            * date_to
+        """
 
-        fiscal_country_key = 'account_fiscal_country_%s' % self.id
-        forced_country_code = self.env['ir.config_parameter'].sudo().get_param(fiscal_country_key)
-        forced_country = forced_country_code and self.env['res.country'].search([('code', 'ilike', forced_country_code)], limit=1)
-
-        return forced_country or self.country_id
+        return {'date_from': datetime(year=current_date.year, month=1, day=1).date(),
+                'date_to': datetime(year=current_date.year, month=12, day=31).date()}

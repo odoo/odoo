@@ -11,19 +11,19 @@ function factory(dependencies) {
         /**
          * @override
          */
-        static create() {
-            const record = super.create();
-            record._refresh();
-            record._onResize = _.debounce(() => record._refresh(), 100);
-            return record;
+        _created() {
+            const res = super._created(...arguments);
+            this._refresh();
+            this._onResize = _.debounce(() => this._refresh(), 100);
+            return res;
         }
 
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             window.removeEventListener('resize', this._onResize);
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------

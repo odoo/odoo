@@ -4,5 +4,30 @@
         <record id="digest.digest_digest_default" model="digest.digest">
             <field name="kpi_all_sale_total">True</field>
         </record>
+
+        <record id="digest_tip_sale1_management_0" model="digest.tip">
+            <field name="name">Tip: Odoo supports configurable products</field>
+            <field name="sequence">2200</field>
+            <field name="group_id" ref="sales_team.group_sale_manager" />
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Odoo supports configurable products</p>
+    <p class="tip_content">Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make sale orders encoding easier and error-proof.</p>
+    <img src="/sale_management/static/src/img/Sales-configure-products.gif" class="illustration_border" />
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_sale_management_1" model="digest.tip">
+            <field name="name">Tip: Sell or buy products in bulk with matrixes</field>
+            <field name="sequence">2700</field>
+            <field name="group_id" ref="sales_team.group_sale_manager" />
+            <field name="tip_description" type="html">
+<div>
+    <p class="tip_title">Tip: Sell or buy products in bulk with matrixes</p>
+    <p class="tip_content">Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the Purchase application.</p>
+    <img src="/sale_management/static/src/img/t-shirts.png" class="illustration_border" />
+</div>
+            </field>
+        </record>
     </data>
 </odoo>

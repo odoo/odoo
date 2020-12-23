@@ -45,7 +45,7 @@
                     <page string="Products" name="products">
                         <field name="lines" colspan="4" nolabel="1">
                             <tree string="Order lines" editable="bottom">
-                                <field name="product_id"/>
+                                <field name="full_product_name"/>
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
@@ -55,10 +55,11 @@
                                 <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                 <field name="price_subtotal" widget="monetary" force_save="1"/>
                                 <field name="price_subtotal_incl" widget="monetary" force_save="1"/>
+                                <field name="currency_id" invisible="1"/>
                             </tree>
                             <form string="Order lines">
                                 <group col="4">
-                                    <field name="product_id"/>
+                                    <field name="full_product_name"/>
                                     <field name="qty"/>
                                     <field name="discount" widget="monetary"/>
                                     <field name="price_unit" widget="monetary"/>
@@ -68,6 +69,7 @@
                                     <field name="tax_ids" widget="many2many_tags" invisible="1"/>
                                     <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                     <field name="notice"/>
+                                    <field name="currency_id" invisible="1"/>
                                 </group>
                             </form>
                         </field>
@@ -90,6 +92,7 @@
                                 class="oe_subtotal_footer_separator"
                                 widget="monetary"
                                 attrs="{'invisible': [('amount_paid','=', 'amount_total')]}"/>
+                            <field name="currency_id" invisible="1"/>
                         </group>
                         <div class="oe_clear"/>
                     </page>
@@ -183,7 +186,7 @@
         <field name="name">pos.order.pivot</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <pivot string="PoS Orders">
+            <pivot string="PoS Orders" sample="1">
                 <field name="date_order" type="row"/>
                 <field name="amount_total" type="measure"/>
             </pivot>
@@ -212,6 +215,13 @@
         <field name="res_model">pos.order</field>
         <field name="view_mode">graph,tree,form,kanban,pivot</field>
         <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Create a new POS order
+            </p>
+        </field>
     </record>
 
     <record id="view_pos_order_tree" model="ir.ui.view">
@@ -267,6 +277,7 @@
                 <field name="price_subtotal" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="price_subtotal_incl" readonly="1" sum="Sum of subtotals" widget="monetary"/>
                 <field name="create_date" readonly="1"/>
+                <field name="currency_id" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -282,6 +293,7 @@
                     <field name="discount" widget="monetary"/>
                     <field name="price_unit" widget="monetary"/>
                     <field name="create_date" />
+                    <field name="currency_id"/>
                 </group>
             </form>
         </field>
@@ -322,6 +334,7 @@
                 <field name="product_id" />
                 <field name="qty" />
                 <field name="price_unit" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
             </tree>
         </field>
     </record>

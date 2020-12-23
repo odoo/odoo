@@ -254,14 +254,29 @@ function tz_offset() {
 
 
 function pycontext() {
+    const d = new Date();
+    const today = `${
+        String(d.getFullYear()).padStart(4, "0")}-${
+        String(d.getMonth() + 1).padStart(2, "0")}-${
+        String(d.getDate()).padStart(2, "0")}`;
+    const now = `${
+        String(d.getUTCFullYear()).padStart(4, "0")}-${
+        String(d.getUTCMonth() + 1).padStart(2, "0")}-${
+        String(d.getUTCDate()).padStart(2, "0")} ${
+        String(d.getUTCHours()).padStart(2, "0")}:${
+        String(d.getUTCMinutes()).padStart(2, "0")}:${
+        String(d.getUTCSeconds()).padStart(2, "0")}`;
+
+    const { datetime, relativedelta, time } = py.extras;
     return {
-        datetime: py.extras.datetime,
-        context_today: context_today,
-        time: py.extras.time,
-        relativedelta: py.extras.relativedelta,
-        current_date: py.PY_call(
-            py.extras.time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
-        tz_offset: tz_offset,
+        current_date: today,
+        datetime,
+        time,
+        now,
+        today,
+        relativedelta,
+        context_today,
+        tz_offset,
     };
 }
 

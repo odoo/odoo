@@ -40,7 +40,9 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             this.floorMapRef.el.style.background = this.state.floorBackground;
         }
         mounted() {
-            this.env.pos.set_table(null);
+            if (this.env.pos.table) {
+                this.env.pos.set_table(null);
+            }
             this.floorMapRef.el.style.background = this.state.floorBackground;
             // call _tableLongpolling once then set interval of 5sec.
             this._tableLongpolling();
@@ -87,17 +89,18 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             }
         }
         async _changeSeatsNum() {
-            if (!this.selectedTable) return;
+            const selectedTable = this.selectedTable
+            if (!selectedTable) return;
             const { confirmed, payload: inputNumber } = await this.showPopup('NumberPopup', {
-                startingValue: this.selectedTable.seats,
+                startingValue: selectedTable.seats,
                 cheap: true,
                 title: this.env._t('Number of Seats ?'),
             });
             if (!confirmed) return;
-            const newSeatsNum = parseInt(inputNumber, 10) || this.selectedTable.seats;
-            if (newSeatsNum !== this.selectedTable.seats) {
-                this.selectedTable.seats = newSeatsNum;
-                await this._save(this.selectedTable);
+            const newSeatsNum = parseInt(inputNumber, 10) || selectedTable.seats;
+            if (newSeatsNum !== selectedTable.seats) {
+                selectedTable.seats = newSeatsNum;
+                await this._save(selectedTable);
             }
         }
         async _changeShape() {
@@ -107,15 +110,16 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             await this._save(this.selectedTable);
         }
         async _renameTable() {
-            if (!this.selectedTable) return;
+            const selectedTable = this.selectedTable;
+            if (!selectedTable) return;
             const { confirmed, payload: newName } = await this.showPopup('TextInputPopup', {
-                startingValue: this.selectedTable.name,
+                startingValue: selectedTable.name,
                 title: this.env._t('Table Name ?'),
             });
             if (!confirmed) return;
-            if (newName !== this.selectedTable.name) {
-                this.selectedTable.name = newName;
-                await this._save(this.selectedTable);
+            if (newName !== selectedTable.name) {
+                selectedTable.name = newName;
+                await this._save(selectedTable);
             }
         }
         async _setTableColor({ detail: color }) {
@@ -151,15 +155,24 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             });
             if (!confirmed) return;
             try {
+                const originalSelectedTableId = this.state.selectedTableId;
                 await this.rpc({
                     model: 'restaurant.table',
                     method: 'create_from_ui',
-                    args: [{ active: false, id: this.state.selectedTableId }],
+                    args: [{ active: false, id: originalSelectedTableId }],
                 });
                 this.activeFloor.tables = this.activeTables.filter(
-                    (table) => table.id !== this.state.selectedTableId
+                    (table) => table.id !== originalSelectedTableId
                 );
-                this.state.selectedTableId = null;
+                // Value of an object can change inside async function call.
+                //   Which means that in this code block, the value of `state.selectedTableId`
+                //   before the await call can be different after the finishing the await call.
+                // Since we wanted to disable the selected table after deletion, we should be
+                //   setting the selectedTableId to null. However, we only do this if nothing
+                //   else is selected during the rpc call.
+                if (this.state.selectedTableId === originalSelectedTableId) {
+                    this.state.selectedTableId = null;
+                }
             } catch (error) {
                 if (error.message.code < 0) {
                     await this.showPopup('OfflineErrorPopup', {
@@ -171,12 +184,12 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 }
             }
         }
-        async _onSelectTable(event) {
+        _onSelectTable(event) {
             const table = event.detail;
             if (this.state.isEditMode) {
                 this.state.selectedTableId = table.id;
             } else {
-                await this.env.pos.set_table(table);
+                this.env.pos.set_table(table);
             }
         }
         _onDeselectTable() {
@@ -271,7 +284,9 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                         .filter(
                             (o) =>
                                 o.server_id === undefined &&
-                                (o.orderlines.length !== 0 || o.paymentlines.length !== 0)
+                                (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
+                                // do not count the orders that are already finalized
+                                !o.finalized
                         ).length;
                     table_obj.order_count = table.orders + unsynced_orders;
                 });
@@ -289,6 +304,7 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
         }
     }
     FloorScreen.template = 'FloorScreen';
+    FloorScreen.hideOrderSelector = true;
 
     Registries.Component.add(FloorScreen);
 

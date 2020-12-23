@@ -13,6 +13,7 @@ class Unit(models.Model):
     surname = fields.Char(compute='_compute_surname')
     line_ids = fields.One2many('test.unit.line', 'unit_id')
     readonly_name = fields.Char('Readonly Name', readonly=True)
+    size = fields.Integer()
 
     @api.depends('name')
     def _compute_surname(self):
@@ -38,6 +39,7 @@ class Box(models.Model):
     unit_id = fields.Many2one('test.unit', 'Unit', required=True,
                               ondelete='cascade')
     field_in_box = fields.Char('Field1')
+    size = fields.Integer()
 
 
 # We add a third level of _inherits
@@ -71,6 +73,6 @@ class AnotherBox(models.Model):
     val2 = fields.Integer('Value 2', required=True)
 
     @api.constrains('val1', 'val2')
-    def _check(self):
-        if self.val1 != self.val2:
+    def _check_values(self):
+        if any(box.val1 != box.val2 for box in self):
             raise ValidationError("The two values must be equals")

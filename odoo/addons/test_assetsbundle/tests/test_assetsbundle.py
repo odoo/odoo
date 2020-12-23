@@ -4,6 +4,7 @@
 from collections import Counter
 import datetime
 import errno
+from lxml import etree
 import os
 import time
 from unittest.mock import patch
@@ -474,42 +475,64 @@ class TestJavascriptAssetsBundle(FileTouchable):
         html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2')
         attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 2)
+
+        asset_data = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[0]
+        asset_xmlid = asset_data.attrib.get('data-asset-xmlid')
+        asset_version = asset_data.attrib.get('data-asset-version')
+
+        format_data = {
+            "js": attachments[0].url,
+            "css": attachments[1].url,
+            "asset_xmlid": asset_xmlid,
+            "asset_version": asset_version,
+        }
+
         self.assertEqual(html.strip(), ("""<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="%(css)s"/>
+        <link type="text/css" rel="stylesheet" href="%(css)s" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="%(js)s"></script>
+        <script type="text/javascript" src="%(js)s" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
     </head>
     <body>
     </body>
-</html>""" % {"js": attachments[0].url, "css": attachments[1].url}).encode('utf8'))
+</html>""" % format_data).encode('utf8'))
 
     def test_21_exteral_lib_assets_debug_mode(self):
         html = self.env['ir.ui.view']._render_template('test_assetsbundle.template2', {"debug": "assets"})
         attachments = self.env['ir.attachment'].search([('url', '=like', '/web/content/%-%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 0)
+
+        asset_data = etree.HTML(html).xpath('//*[@data-asset-xmlid]')[0]
+        asset_xmlid = asset_data.attrib.get('data-asset-xmlid')
+        asset_version = asset_data.attrib.get('data-asset-version')
+
+        format_data = {
+            "asset_xmlid": asset_xmlid,
+            "asset_version": asset_version,
+        }
+
         self.assertEqual(html.strip(), ("""<!DOCTYPE html>
 <html>
     <head>
         <link rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css"/>
-        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile2.css"/>
+        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
+        <link type="text/css" rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile2.css" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile1.js"></script>
-        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile2.js"></script>
-        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile3.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile1.js" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile2.js" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile3.js" data-asset-xmlid="%(asset_xmlid)s" data-asset-version="%(asset_version)s"></script>
     </head>
     <body>
     </body>
-</html>""").encode('utf8'))
+</html>""" % format_data).encode('utf8'))
 
 
 @tagged('-at_install', 'post_install')

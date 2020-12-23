@@ -13,3 +13,4 @@ List of contributors:
 * Marcelo Pereira marcelo.pereira@arxi.pt https://github.com/marcelopereiraarxi
 * Nuno Silva nuno.silva@arxi.pt https://github.com/nunosilvaarxi
 * Reinaldo Ramos reinaldo.ramos@arxi.pt https://github.com/reinaldoramosarxi
+* Tiago Santos tiago.santos@arxi.pt https://github.com/tiagosantosarxi

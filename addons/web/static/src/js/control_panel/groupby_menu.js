@@ -4,7 +4,7 @@ odoo.define('web.GroupByMenu', function (require) {
     const CustomGroupByItem = require('web.CustomGroupByItem');
     const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * 'Group by' menu
@@ -24,7 +24,7 @@ odoo.define('web.GroupByMenu', function (require) {
                 .filter(field => this._validateField(field))
                 .sort(({ string: a }, { string: b }) => a > b ? 1 : a < b ? -1 : 0);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
         }
 
         //---------------------------------------------------------------------
@@ -42,7 +42,7 @@ odoo.define('web.GroupByMenu', function (require) {
          * @override
          */
         get items() {
-            return this.model.getFiltersOfType('groupBy');
+            return this.model.get('filters', f => f.type === 'groupBy');
         }
 
         /**

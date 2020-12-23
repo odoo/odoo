@@ -30,18 +30,48 @@ function factory() {
         }
 
         /**
-         * Called when the record is being created, but not yet processed
-         * its create value on the fields. This method is handy to define purely
-         * technical property on this record, like handling of timers. This
-         * method acts like the constructor, but has a very important difference:
-         * the `this` is the proxified record, so evaluation of field values
-         * on get/set work correctly.
+         * This function is called during the create cycle, when the record has
+         * already been created, but its values have not yet been assigned.
+         *
+         * It is usually preferable to override @see `_created`.
+         *
+         * The main use case is to prepare the record for the assignation of its
+         * values, for example if a computed field relies on the record to have
+         * some purely technical property correctly set.
+         *
+         * @abstract
+         * @private
          */
-        init() {}
+        _willCreate() {}
 
-        //--------------------------------------------------------------------------
+        /**
+         * This function is called after the record has been created, more
+         * precisely at the end of the update cycle (which means all implicit
+         * changes such as computes have been applied too).
+         *
+         * The main use case is to register listeners on the record.
+         *
+         * @abstract
+         * @private
+         */
+        _created() {}
+
+        /**
+         * This function is called when the record is about to be deleted. The
+         * record still has all of its fields values accessible, but for all
+         * intents and purposes the record should already be considered
+         * deleted, which means update shouldn't be called inside this method.
+         *
+         * The main use case is to unregister listeners on the record.
+         *
+         * @abstract
+         * @private
+         */
+        _willDelete() {}
+
+        //----------------------------------------------------------------------
         // Public
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         /**
          * Returns all records of this model that match provided criteria.
@@ -61,8 +91,9 @@ function factory() {
          * function, otherwise the record will not be registered.
          *
          * @static
-         * @param {Object} [data] data object with initial data, including relations.
-         * @returns {mail.model} newly created record
+         * @param {Object|Object[]} [data] data object with initial data, including relations.
+         *  If data is an iterable, multiple records will be created.
+         * @returns {mail.model|mail.model[]} newly created record(s)
          */
         static create(data) {
             return this.env.modelManager.create(this, data);
@@ -80,6 +111,19 @@ function factory() {
         }
 
         /**
+         * Gets the unique record that matches the given identifying data, if it
+         * exists.
+         * @see `_createRecordLocalId` for criteria of identification.
+         *
+         * @static
+         * @param {Object} data
+         * @returns {mail.model|undefined}
+         */
+        static findFromIdentifyingData(data) {
+            return this.env.modelManager.findFromIdentifyingData(this, data);
+        }
+
+        /**
          * This method returns the record of this model that matches provided
          * local id. Useful to convert a local id to a record. Note that even
          * if there's a record in the system having provided local id, if the
@@ -87,11 +131,13 @@ function factory() {
          * assumes the record does not exist.
          *
          * @static
-         * @param {string|mail.model|undefined} recordOrLocalId
+         * @param {string} localId
+         * @param {Object} param1
+         * @param {boolean} [param1.isCheckingInheritance]
          * @returns {mail.model|undefined}
          */
-        static get(recordOrLocalId) {
-            return this.env.modelManager.get(this, recordOrLocalId);
+        static get(localId, { isCheckingInheritance } = {}) {
+            return this.env.modelManager.get(this, localId, { isCheckingInheritance });
         }
 
         /**
@@ -99,8 +145,9 @@ function factory() {
          * on provided data.
          *
          * @static
-         * @param {Object} data
-         * @returns {mail.model} created or updated record.
+         * @param {Object|Object[]} data
+         *  If data is an iterable, multiple records will be created/updated.
+         * @returns {mail.model|mail.model[]} created or updated record(s).
          */
         static insert(data) {
             return this.env.modelManager.insert(this, data);
@@ -121,13 +168,13 @@ function factory() {
         async async(func) {
             return new Promise((resolve, reject) => {
                 Promise.resolve(func()).then(result => {
-                    if (this.constructor.get(this)) {
+                    if (this.exists()) {
                         resolve(result);
                     } else {
                         reject(new RecordDeletedError(this.localId));
                     }
                 }).catch(error => {
-                    if (this.constructor.get(this)) {
+                    if (this.exists()) {
                         reject(error);
                     } else {
                         reject(new RecordDeletedError(this.localId));
@@ -144,6 +191,15 @@ function factory() {
         }
 
         /**
+         * Returns whether the current record exists.
+         *
+         * @returns {boolean}
+         */
+        exists() {
+            return this.env.modelManager.exists(this.constructor, this);
+        }
+
+        /**
          * Update this record with provided data.
          *
          * @param {Object} [data={}]
@@ -152,20 +208,9 @@ function factory() {
             this.env.modelManager.update(this, data);
         }
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // Private
-        //--------------------------------------------------------------------------
-
-        /**
-         * @static
-         * @private
-         * @param {Object} data
-         * @param {any} data.id
-         * @return {function}
-         */
-        static _findFunctionFromData(data) {
-            return record => record.id === data.id;
-        }
+        //----------------------------------------------------------------------
 
         /**
          * This method generates a local id for this record that is
@@ -178,12 +223,13 @@ function factory() {
          * track relations and records in the system instead of arbitrary
          * number to differenciate them.
          *
+         * @static
          * @private
          * @param {Object} data
          * @returns {string}
          */
-        _createRecordLocalId(data) {
-            return _.uniqueId(`${this.constructor.modelName}_`);
+        static _createRecordLocalId(data) {
+            return _.uniqueId(`${this.modelName}_`);
         }
 
         /**

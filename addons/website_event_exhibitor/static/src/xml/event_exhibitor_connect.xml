@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="exhibitor.connect.closed.modal">
+        <div class="o_wesponsor_js_connect_modal_main container">
+            <div class="row mt-2">
+                <t t-if="! widget.sponsorData.event_is_ongoing">
+                    <div class="col-12 alert alert-warning text-center" role="alert"
+                        t-if="widget.sponsorData.event_is_done">
+                        Event <span t-esc="widget.sponsorData.event_name" class="font-weight-bold"/> is over.
+
+                        <br/>
+                        <span>Join us next time to meet <b t-esc="widget.sponsorData.name"/>!</span>
+                    </div>
+                    <div class="col-12 alert alert-warning text-center" role="alert"
+                        t-else="">
+                        <span t-esc="widget.sponsorData.name" class="font-weight-bold"/> is not available right now.<br />
+                        Event <span t-esc="widget.sponsorData.event_name" class="font-weight-bold"/>
+                        <span t-if="widget.sponsorData.event_start_today">
+                            starts in
+                            <span t-esc="widget.sponsorData.event_start_remaining"/> minutes
+                        </span>
+                        <span class="my-0" t-else="">
+                            starts on <span t-esc="widget.sponsorData.event_date_begin_located"/>
+                        </span>
+                    </div>
+                </t>
+                <div class="col-12 alert alert-warning text-center" role="alert"
+                    t-else="">
+                    <span t-esc="widget.sponsorData.name" class="font-weight-bold"/> is not available right now.<br />
+                    Come back between
+                    <strong>
+                        <t t-esc="widget.sponsorData.hour_from_str"/>
+                        -
+                        <t t-esc="widget.sponsorData.hour_to_str"/>
+                    </strong> (<span t-esc="widget.sponsorData.event_date_tz"/>)
+                    to meet them !
+                </div>
+                <div class="col-2">
+                    <img class="img" style="max-width: 100%;"
+                        t-att-src="widget.sponsorData.website_image_url"
+                        t-att-alt="widget.sponsorData.name"/>
+                </div>
+                <div class="col-10">
+                    <div class="d-flex align-items-top mb-3">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex align-items-center">
+                                <h4 t-esc="widget.sponsorData.name" class="mb4"/>
+                                <span class="badge badge-primary ml-2"
+                                    t-esc="widget.sponsorData.sponsor_type_name"/>
+                            </div>
+                            <span class="text-muted" t-if="widget.sponsorData.subtitle" t-esc="widget.sponsorData.subtitle"/>
+                            <span t-if="widget.sponsorData.url">
+                                <i class="fa fa-home mr-2"/><a t-att-href="widget.sponsorData.url"><span t-esc="widget.sponsorData.url"/></a>
+                            </span>
+                            <span t-if="widget.sponsorData.email">
+                                <i class="fa fa-envelope mr-2"/><a t-att-mailto="widget.sponsorData.email"><span t-esc="widget.sponsorData.email"/></a>
+                            </span>
+                            <span t-if="widget.sponsorData.phone">
+                                <i class="fa fa-phone mr-2"/><span t-esc="widget.sponsorData.phone"/>
+                            </span>
+                        </div>
+                        <img t-if="widget.sponsorData.country_flag_url"
+                            class="img ml-auto"
+                            style="max-height: 36px;"
+                            t-att-src="widget.sponsorData.country_flag_url"
+                            t-att-alt="widget.sponsorData.country_name"/>
+                    </div>
+                </div>
+                <span class="col-12" t-if="widget.sponsorData.website_description" t-raw="widget.sponsorData.website_description"/>
+            </div>
+            <div>
+            </div>
+        </div>
+    </t>
+
+</templates>

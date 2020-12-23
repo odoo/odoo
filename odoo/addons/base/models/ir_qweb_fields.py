@@ -222,6 +222,7 @@ class DateTimeConverter(models.AbstractModel):
         options = super(DateTimeConverter, self).get_available_options()
         options.update(
             format=dict(type='string', string=_('Pattern to format')),
+            tz_name=dict(type='char', string=_('Optional timezone name')),
             time_only=dict(type='boolean', string=_('Display only the time')),
             hide_seconds=dict(type='boolean', string=_('Hide seconds')),
             date_only=dict(type='boolean', string=_('Display only the date')),
@@ -242,6 +243,11 @@ class DateTimeConverter(models.AbstractModel):
 
         value = fields.Datetime.context_timestamp(self, value)
 
+        if options.get('tz_name'):
+            tzinfo = babel.dates.get_timezone(options['tz_name'])
+        else:
+            tzinfo = None
+
         if 'format' in options:
             pattern = options['format']
         else:
@@ -259,10 +265,12 @@ class DateTimeConverter(models.AbstractModel):
 
         if options.get('time_only'):
             format_func = babel.dates.format_time
+            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
         if options.get('date_only'):
             format_func = babel.dates.format_date
+            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
 
-        return pycompat.to_text(format_func(value, format=pattern, locale=locale))
+        return pycompat.to_text(format_func(value, format=pattern, tzinfo=tzinfo, locale=locale))
 
 
 class TextConverter(models.AbstractModel):
@@ -287,7 +295,7 @@ class SelectionConverter(models.AbstractModel):
     def get_available_options(self):
         options = super(SelectionConverter, self).get_available_options()
         options.update(
-            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field informations'), required=True)
+            selection=dict(type='selection', string=_('Selection'), description=_('By default the widget uses the field information'), required=True)
         )
         return options
 
@@ -377,6 +385,17 @@ class ImageConverter(models.AbstractModel):
 
         return u'<img src="data:%s;base64,%s">' % (Image.MIME[image.format], value.decode('ascii'))
 
+class ImageUrlConverter(models.AbstractModel):
+    """ ``image_url`` widget rendering, inserts an image tag in the
+    document.
+    """
+    _name = 'ir.qweb.field.image_url'
+    _description = 'Qweb Field Image'
+    _inherit = 'ir.qweb.field.image'
+
+    @api.model
+    def value_to_html(self, value, options):
+        return u'<img src="%s">' % (value)
 
 class MonetaryConverter(models.AbstractModel):
     """ ``monetary`` converter, has a mandatory option
@@ -518,6 +537,21 @@ class DurationConverter(models.AbstractModel):
             digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
             round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
+            format=dict(
+                type="selection",
+                params=[
+                    ('long', _('Long')),
+                    ('short', _('Short')),
+                    ('narrow', _('Narrow'))],
+                string=_('Format'),
+                description=_("Formatting: long, short, narrow (not used for digital)"),
+                default_value='long'
+            ),
+            add_direction=dict(
+                type="boolean",
+                string=_("Add direction"),
+                description=_("Add directional information (not used for digital)")
+            ),
         )
         return options
 
@@ -556,7 +590,12 @@ class DurationConverter(models.AbstractModel):
             if not v:
                 continue
             section = babel.dates.format_timedelta(
-                v*secs_per_unit, threshold=1, locale=locale)
+                v*secs_per_unit,
+                granularity=round_to,
+                add_direction=options.get('add_direction'),
+                format=options.get('format', 'long'),
+                threshold=1,
+                locale=locale)
             if section:
                 sections.append(section)
 

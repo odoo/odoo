@@ -5,10 +5,11 @@ const components = {
     FollowerSubtype: require('mail/static/src/components/follower_subtype/follower_subtype.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,20 +17,21 @@ QUnit.module('components', {}, function () {
 QUnit.module('follower_subtype', {}, function () {
 QUnit.module('follower_subtype_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createFollowerSubtypeComponent = async ({ follower, followerSubtype }) => {
-            const FollowerSubtypeComponent = components.FollowerSubtype;
-            FollowerSubtypeComponent.env = this.env;
-            this.component = new FollowerSubtypeComponent(null, {
+            const props = {
                 followerLocalId: follower.localId,
                 followerSubtypeLocalId: followerSubtype.localId,
+            };
+            await createRootComponent(this, components.FollowerSubtype, {
+                props,
+                target: this.widget.el,
             });
-            await this.component.mount(this.widget.el);
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -37,18 +39,8 @@ QUnit.module('follower_subtype_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
-        delete components.FollowerSubtype.env;
-    }
+        afterEach(this);
+    },
 });
 
 QUnit.test('simplest layout of a followed subtype', async function (assert) {

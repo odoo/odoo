@@ -140,10 +140,7 @@ Available manifest fields are:
 
     These hooks should only be used when setup/cleanup required for this module
     is either extremely difficult or impossible through the api.
-``active`` (``bool``)
-    This indicates whether this module is to be used or not.
-    It is generally used to archive obsolete modules.
 
 .. _semantic versioning: https://semver.org
 .. _existing categories:
-     https://github.com/odoo/odoo/blob/13.0/odoo/addons/base/data/ir_module_category_data.xml
+     https://github.com/odoo/odoo/blob/14.0/odoo/addons/base/data/ir_module_category_data.xml

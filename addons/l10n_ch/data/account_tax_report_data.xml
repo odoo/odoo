@@ -3,12 +3,13 @@
 
     <record id="tax_report" model="account.tax.report">
         <field name="name">Tax Report</field>
-        <field name="country_id" ref="base.br"/>
+        <field name="country_id" ref="base.ch"/>
     </record>
 
     <record id="account_tax_report_line_chiffre_af" model="account.tax.report.line">
         <field name="name">I - CHIFFRE D'AFFAIRES</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
         <field name="sequence" eval="1"/>
     </record>
 
@@ -86,6 +87,7 @@
     <record id="account_tax_report_line_calc_impot" model="account.tax.report.line">
         <field name="name">II - CALCUL DE L'IMPOT</field>
         <field name="report_id" ref="tax_report"/>
+        <field name="formula">None</field>
         <field name="sequence" eval="3"/>
     </record>
 

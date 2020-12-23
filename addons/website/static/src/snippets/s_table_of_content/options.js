@@ -1,25 +1,37 @@
 odoo.define('website.s_table_of_content_options', function (require) {
 'use strict';
 
-const options = require('web_editor.snippets.options');
+const snippetOptions = require('web_editor.snippets.options');
 
-options.registry.TableOfContent = options.Class.extend({
+snippetOptions.registry.TableOfContent = snippetOptions.SnippetOptionWidget.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         this.targetedElements = 'h1, h2';
         const $headings = this.$target.find(this.targetedElements);
-        if ($headings.length > 0) {
-            this.isAnimateScrolling = this.$target.find(this.targetedElements)[0].dataset.anchor === 'true' ? true : false;
-            this._generateNav();
-        }
+
         // Generate the navbar if the content changes
         const targetNode = this.$target.find('.s_table_of_content_main')[0];
         const config = {attributes: false, childList: true, subtree: true, characterData: true};
-        this.observer = new MutationObserver(() => this._generateNav());
-        this.observer.observe(targetNode, config);
-        return this._super(...arguments);
+
+        const _super = this._super;
+
+        let timeout;
+
+        this.observer = new MutationObserver((mutations) => {
+            const isInTable = mutations.find((mutation) => $(mutation.target).closest('.s_table_of_content_main').length);
+            if (!isInTable) return;
+
+            clearTimeout(timeout);
+            timeout = setTimeout(() => {
+                this._generateNav();
+            }, 200);
+        });
+        this.observer.observe(this.$target[0], config);
+        await this.updateChangesInWysiwyg();
+        this._generateNav();
+        return _super(...arguments);
     },
     /**
      * @override
@@ -29,63 +41,35 @@ options.registry.TableOfContent = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Animate (or not) scrolling.
-     *
-     * @see this.selectClass for parameters
-     */
-    animateScrolling: function (previewMode, widgetValue, params) {
-        const $headings = this.$target.find(this.targetedElements);
-        const anchorValue = widgetValue ? 'true' : '0';
-        _.each($headings, el => el.dataset.anchor = anchorValue);
-        this.isAnimateScrolling = !!widgetValue;
-    },
-
-    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
      * @private
      */
-    _generateNav: function (ev) {
-        const $nav = this.$target.find('.s_table_of_content_navbar');
-        const $headings = this.$target.find(this.targetedElements);
-        $nav.empty();
-        _.each($headings, el => {
-            const $el = $(el);
-            const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
-            $('<a>').attr('href', "#" + id)
-                    .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
-                    .text($el.text())
-                    .appendTo($nav);
-            $el.attr('id', id);
-            $el[0].dataset.anchor = this.isAnimateScrolling === true ? 'true' : '0';
+    _generateNav: async function (ev) {
+        await this.wysiwyg.withDomMutations(this.$target, () => {
+            const $nav = this.$target.find('.s_table_of_content_navbar');
+            if (!$nav.length) return;
+            const $headings = this.$target.find(this.targetedElements);
+            $nav.empty();
+            _.each($headings, el => {
+                const $el = $(el);
+                const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
+                $('<a>')
+                        .attr('href', "#" + id)
+                        .addClass('table_of_content_link list-group-item list-group-item-action py-2 border-0 rounded-0')
+                        .text($el.text())
+                        .appendTo($nav);
+                $el.attr('id', id);
+                $el[0].dataset.anchor = 'true';
+            });
+            $nav.find('a:first').addClass('active');
         });
-        $nav.find('a:first').addClass('active');
-    },
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        switch (methodName) {
-            case 'animateScrolling': {
-                const $headings = this.$target.find(this.targetedElements);
-                if ($headings.length > 0) {
-                    return $headings[0].dataset.anchor === 'true' ? 'true' : '0';
-                } else {
-                    return 'true';
-                }
-            }
-        }
-        return this._super(...arguments);
     },
 });
 
-options.registry.TableOfContentNavbar = options.Class.extend({
+snippetOptions.registry.TableOfContentNavbar = snippetOptions.SnippetOptionWidget.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -96,7 +80,7 @@ options.registry.TableOfContentNavbar = options.Class.extend({
      *
      * @see this.selectClass for parameters
      */
-    navbarPosition: function (previewMode, widgetValue, params) {
+    navbarPosition: async function (previewMode, widgetValue, params) {
         const $navbar = this.$target;
         const $mainContent = this.$target.parent().find('.s_table_of_content_main');
         if (widgetValue === 'top' || widgetValue === 'left') {
@@ -115,6 +99,8 @@ options.registry.TableOfContentNavbar = options.Class.extend({
             $navbar.find('.s_table_of_content_navbar').addClass('list-group-horizontal-md');
             $mainContent.removeClass('col-lg-9').addClass('col-lg-12');
         }
+
+        if (previewMode === false) await this.updateChangesInWysiwyg(this.$target.parent());
     },
 
     //--------------------------------------------------------------------------
@@ -140,13 +126,14 @@ options.registry.TableOfContentNavbar = options.Class.extend({
     },
 });
 
-options.registry.TableOfContentMainColumns = options.Class.extend({
+snippetOptions.registry.TableOfContentMainColumns = snippetOptions.SnippetOptionWidget.extend({
+    forceNoDeleteButton: true,
+
     /**
      * @override
      */
     start: function () {
         const leftPanelEl = this.$overlay.data('$optionsSection')[0];
-        leftPanelEl.querySelector('.oe_snippet_remove').classList.add('d-none'); // TODO improve the way to do that
         leftPanelEl.querySelector('.oe_snippet_clone').classList.add('d-none'); // TODO improve the way to do that
         return this._super.apply(this, arguments);
     },

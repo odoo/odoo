@@ -1,22 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import datetime
 import itertools
 import logging
 import re
-import time
 from ast import literal_eval
 from collections import defaultdict
 from collections.abc import Mapping
 from operator import itemgetter
 
-import dateutil
+from psycopg2 import sql
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique
-from odoo.tools.safe_eval import safe_eval
+from odoo.tools.safe_eval import safe_eval, datetime, dateutil, time
 
 _logger = logging.getLogger(__name__)
 
@@ -152,7 +150,7 @@ class IrModel(models.Model):
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
             return []                   # no default field when importing
-        return [(0, 0, {'name': 'x_name', 'field_description': 'Name', 'ttype': 'char', 'copied': True})]
+        return [Command.create({'name': 'x_name', 'field_description': 'Name', 'ttype': 'char', 'copied': True})]
 
     name = fields.Char(string='Model Description', translate=True, required=True)
     model = fields.Char(default='x_', required=True, index=True)
@@ -203,7 +201,7 @@ class IrModel(models.Model):
         for model in self:
             records = self.env[model.model]
             if not records._abstract:
-                cr.execute('SELECT COUNT(*) FROM "%s"' % records._table)
+                cr.execute(sql.SQL('SELECT COUNT(*) FROM {}').format(sql.Identifier(records._table)))
                 model.count = cr.fetchone()[0]
 
     @api.constrains('model')
@@ -233,7 +231,7 @@ class IrModel(models.Model):
                     raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
 
     _sql_constraints = [
-        ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
+        ('obj_name_uniq', 'unique (model)', 'Each model must have a unique name.'),
     ]
 
     def _get(self, name):
@@ -256,8 +254,7 @@ class IrModel(models.Model):
         if args is None:
             args = []
         domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        model_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(model_ids).with_user(name_get_uid))
+        return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
 
     def _drop_table(self):
         for model in self:
@@ -266,29 +263,28 @@ class IrModel(models.Model):
                 table = current_model._table
                 kind = tools.table_kind(self._cr, table)
                 if kind == 'v':
-                    self._cr.execute('DROP VIEW "%s"' % table)
+                    self._cr.execute(sql.SQL('DROP VIEW {}').format(sql.Identifier(table)))
                 elif kind == 'r':
-                    self._cr.execute('DROP TABLE "%s" CASCADE' % table)
+                    self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
                     # discard all translations for this model
                     self._cr.execute("""
                         DELETE FROM ir_translation
                         WHERE type IN ('model', 'model_terms') AND name LIKE %s
                     """, [model.model + ',%'])
             else:
-                # do not warn in the case of a test module
-                module = self.env.context.get('module', '')
-                if not module.startswith('test_'):
-                    _logger.warning('The model %s could not be dropped because it did not exist in the registry.', model.model)
+                _logger.runbot('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
         # Prevent manual deletion of module tables
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
-            for model in self:
-                if model.state != 'manual':
-                    raise UserError(_("Model '%s' contains module data and cannot be removed.", model.name))
-                # prevent screwing up fields that depend on these models' fields
-                model.field_id._prepare_update()
+        for model in self:
+            if model.state != 'manual':
+                raise UserError(_("Model '%s' contains module data and cannot be removed.", model.name))
+
+    def unlink(self):
+        # prevent screwing up fields that depend on these models' fields
+        self.field_id._prepare_update()
 
         # delete fields whose comodel is being removed
         self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
@@ -383,7 +379,7 @@ class IrModel(models.Model):
             ids = upsert(self.env.cr, self._table, cols, rows, ['model'])
             for row, id_ in zip(rows, ids):
                 model_ids[row[0]] = id_
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[1:])
 
         # update their XML id
         module = self._context.get('module')
@@ -417,9 +413,13 @@ class IrModel(models.Model):
     def _add_manual_models(self):
         """ Add extra models to the registry. """
         # clean up registry first
-        custom_models = [name for name, model_class in self.pool.items() if model_class._custom]
-        for name in custom_models:
-            del self.pool[name]
+        for name, Model in list(self.pool.items()):
+            if Model._custom:
+                del self.pool.models[name]
+                # remove the model's name from its parents' _inherit_children
+                for Parent in Model.__bases__:
+                    if hasattr(Parent, 'pool'):
+                        Parent._inherit_children.discard(name)
         # add manual models
         cr = self.env.cr
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
@@ -713,8 +713,8 @@ class IrModelFields(models.Model):
                 # TODO: Refactor this brol in master
                 if is_model and tools.column_exists(self._cr, model._table, field.name) and \
                         tools.table_kind(self._cr, model._table) == 'r':
-                    self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (
-                        model._table, field.name,
+                    self._cr.execute(sql.SQL('ALTER TABLE {} DROP COLUMN {} CASCADE').format(
+                        sql.Identifier(model._table), sql.Identifier(field.name),
                     ))
                 if field.state == 'manual' and field.ttype == 'many2many':
                     rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
@@ -735,7 +735,7 @@ class IrModelFields(models.Model):
                              (tuple(tables_to_drop), tuple(self.ids)))
             tables_to_keep = set(row[0] for row in self._cr.fetchall())
             for rel_name in tables_to_drop - tables_to_keep:
-                self._cr.execute('DROP TABLE "%s"' % rel_name)
+                self._cr.execute(sql.SQL('DROP TABLE {}').format(sql.Identifier(rel_name)))
 
         return True
 
@@ -801,14 +801,15 @@ class IrModelFields(models.Model):
             # the registry has been modified, restore it
             self.pool.setup_models(self._cr)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
+        # Prevent manual deletion of module columns
+        if any(field.state != 'manual' for field in self):
+            raise UserError(_("This column contains module data and cannot be removed!"))
+
     def unlink(self):
         if not self:
             return True
-
-        # Prevent manual deletion of module columns
-        if not self._context.get(MODULE_UNINSTALL_FLAG) and \
-                any(field.state != 'manual' for field in self):
-            raise UserError(_("This column contains module data and cannot be removed!"))
 
         # prevent screwing up fields that depend on these fields
         self._prepare_update()
@@ -937,9 +938,18 @@ class IrModelFields(models.Model):
             # rename column in database, and its corresponding index if present
             table, oldname, newname, index, stored = column_rename
             if stored:
-                self._cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (table, oldname, newname))
+                self._cr.execute(
+                    sql.SQL('ALTER TABLE {} RENAME COLUMN {} TO {}').format(
+                        sql.Identifier(table),
+                        sql.Identifier(oldname),
+                        sql.Identifier(newname)
+                    ))
                 if index:
-                    self._cr.execute('ALTER INDEX "%s_%s_index" RENAME TO "%s_%s_index"' % (table, oldname, table, newname))
+                    self._cr.execute(
+                        sql.SQL('ALTER INDEX {} RENAME TO {}').format(
+                            sql.Identifier(f'{table}_{oldname}_index'),
+                            sql.Identifier(f'{table}_{newname}_index'),
+                        ))
 
         if column_rename or patched_models:
             # setup models, this will reload all manual fields in registry
@@ -1032,7 +1042,7 @@ class IrModelFields(models.Model):
             ids = upsert(cr, self._table, cols, rows, ['model', 'name'])
             for row, id_ in zip(rows, ids):
                 field_ids[row[:2]] = id_
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML id
         module = self._context.get('module')
@@ -1208,7 +1218,7 @@ class IrModelSelection(models.Model):
         rows = [key + val for key, val in expected.items() if existing.get(key) != val]
         if rows:
             ids = upsert(cr, self._table, cols, rows, ['field_id', 'value'])
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML ids
         module = self._context.get('module')
@@ -1334,7 +1344,8 @@ class IrModelSelection(models.Model):
 
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
         # Prevent manual deletion of module columns
         if (
             self.pool.ready
@@ -1344,6 +1355,7 @@ class IrModelSelection(models.Model):
                               'Please modify them through Python code, '
                               'preferably through a custom addon!'))
 
+    def unlink(self):
         self._process_ondelete()
         result = super().unlink()
 
@@ -1450,7 +1462,11 @@ class IrModelConstraint(models.Model):
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
                                  ('f', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
+                    self._cr.execute(
+                        sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
+                            sql.Identifier(table),
+                            sql.Identifier(name)
+                        ))
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
 
             if typ == 'u':
@@ -1459,7 +1475,8 @@ class IrModelConstraint(models.Model):
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
                                  ('u', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
+                    self._cr.execute(sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
+                        sql.Identifier(table), sql.Identifier(name)))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
         self.unlink()
@@ -1581,7 +1598,7 @@ class IrModelRelation(models.Model):
 
         # drop m2m relation tables
         for table in to_drop:
-            self._cr.execute('DROP TABLE "%s" CASCADE' % table,)
+            self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
             _logger.info('Dropped table %s', table)
 
     def _reflect_relation(self, model, table, module):
@@ -1613,7 +1630,7 @@ class IrModelAccess(models.Model):
     name = fields.Char(required=True, index=True)
     active = fields.Boolean(default=True, help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module).')
     model_id = fields.Many2one('ir.model', string='Model', required=True, index=True, ondelete='cascade')
-    group_id = fields.Many2one('res.groups', string='Group', ondelete='cascade', index=True)
+    group_id = fields.Many2one('res.groups', string='Group', ondelete='restrict', index=True)
     perm_read = fields.Boolean(string='Read Access')
     perm_write = fields.Boolean(string='Write Access')
     perm_create = fields.Boolean(string='Create Access')
@@ -1955,12 +1972,6 @@ class IrModelData(models.Model):
 
         return result
 
-    def _generate_xmlids(self, xml_id, model):
-        """ Return all the XML ids to create for the given model. """
-        yield xml_id
-        for parent_model in model._inherits:
-            yield '%s_%s' % (xml_id, parent_model.replace('.', '_'))
-
     @api.model
     def _update_xmlids(self, data_list, update=False):
         """ Create or update the given XML ids.
@@ -1977,14 +1988,6 @@ class IrModelData(models.Model):
             prefix, suffix = data['xml_id'].split('.', 1)
             record = data['record']
             noupdate = bool(data.get('noupdate'))
-            # First create XML ids for parent records, then create XML id for
-            # record. The order reflects their actual creation order. This order
-            # is relevant for the uninstallation process: the record must be
-            # deleted before its parent records.
-            for parent_model, parent_field in record._inherits.items():
-                parent = record[parent_field]
-                puffix = suffix + '_' + parent_model.replace('.', '_')
-                rows.add((prefix, puffix, parent._name, parent.id, noupdate))
             rows.add((prefix, suffix, record._name, record.id, noupdate))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
@@ -2007,7 +2010,9 @@ class IrModelData(models.Model):
             INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
             VALUES {rows}
             ON CONFLICT (module, name)
-            DO UPDATE SET write_date=(now() at time zone 'UTC') {where}
+            DO UPDATE SET (model, res_id, write_date) =
+                (EXCLUDED.model, EXCLUDED.res_id, now() at time zone 'UTC')
+                {where}
         """.format(
             rows=", ".join([rowf] * len(sub_rows)),
             where="WHERE NOT ir_model_data.noupdate" if update else "",
@@ -2021,8 +2026,6 @@ class IrModelData(models.Model):
         record = self.xmlid_to_object(xml_id)
         if record:
             self.pool.loaded_xmlids.add(xml_id)
-            for parent_model, parent_field in record._inherits.items():
-                self.pool.loaded_xmlids.add(xml_id + '_' + parent_model.replace('.', '_'))
         return record
 
     @api.model
@@ -2063,6 +2066,19 @@ class IrModelData(models.Model):
             else:
                 records_items.append((data.model, data.res_id))
 
+        # avoid prefetching fields that are going to be deleted: during uninstall, it is
+        # possible to perform a recompute (via flush_env) after the database columns have been
+        # deleted but before the new registry has been created, meaning the recompute will
+        # be executed on a stale registry, and if some of the data for executing the compute
+        # methods is not in cache it will be fetched, and fields that exist in the registry but not
+        # in the database will be prefetched, this will of course fail and prevent the uninstall.
+        for ir_field in self.env['ir.model.fields'].browse(field_ids):
+            model = self.pool.get(ir_field.model)
+            if model is not None:
+                field = model._fields.get(ir_field.name)
+                if field is not None:
+                    field.prefetch = False
+
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []
 
@@ -2079,18 +2095,23 @@ class IrModelData(models.Model):
 
             # special case for ir.model.fields
             if records._name == 'ir.model.fields':
+                missing = records - records.exists()
+                if missing:
+                    # delete orphan external ids right now;
+                    # an orphan ir.model.data can happen if the ir.model.field is deleted via
+                    # an ONDELETE CASCADE, in which case we must verify that the records we're
+                    # processing exist in the database otherwise a MissingError will be raised
+                    orphans = ref_data.filtered(lambda r: r.res_id in missing._ids)
+                    _logger.info('Deleting orphan ir_model_data %s', orphans)
+                    orphans.unlink()
+                    # /!\ this must go before any field accesses on `records`
+                    records -= missing
                 # do not remove LOG_ACCESS_COLUMNS unless _log_access is False
                 # on the model
                 records -= records.filtered(lambda f: f.name == 'id' or (
                     f.name in models.LOG_ACCESS_COLUMNS and
                     f.model in self.env and self.env[f.model]._log_access
                 ))
-                # delete orphan external ids right now
-                missing_ids = set(records.ids) - set(records.exists().ids)
-                orphans = ref_data.filtered(lambda r: r.res_id in missing_ids)
-                if orphans:
-                    _logger.info('Deleting orphan ir_model_data %s', orphans)
-                    orphans.unlink()
 
             # now delete the records
             _logger.info('Deleting %s', records)
@@ -2161,32 +2182,57 @@ class IrModelData(models.Model):
                 """
         self._cr.execute(query, (tuple(modules), True))
         for (id, xmlid, model, res_id) in self._cr.fetchall():
-            if xmlid not in loaded_xmlids:
-                if model in self.env:
-                    if self.search_count([
-                        ("model", "=", model),
-                        ("res_id", "=", res_id),
-                        ("id", "!=", id),
-                        ("id", "not in", bad_imd_ids),
-                    ]):
-                        # another external id is still linked to the same record, only deleting the old imd
-                        bad_imd_ids.append(id)
-                        continue
+            if xmlid in loaded_xmlids:
+                continue
 
-                    _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
-                    record = self.env[model].browse(res_id)
-                    if record.exists():
-                        module = xmlid.split('.', 1)[0]
-                        record = record.with_context(module=module)
-                        if record._name == 'ir.model.fields' and not module.startswith('test_'):
-                            _logger.warning(
-                                "Deleting field %s.%s (hint: fields should be"
-                                " explicitly removed by an upgrade script)",
-                                record.model, record.name,
-                            )
-                        record.unlink()
-                    else:
-                        bad_imd_ids.append(id)
+            Model = self.env.get(model)
+            if Model is None:
+                continue
+
+            # when _inherits parents are implicitly created we give them an
+            # external id (if their descendant has one) in order to e.g.
+            # properly remove them when the module is deleted, however this
+            # generated id is *not* provided during update yet we don't want to
+            # try and remove either the xid or the record, so check if the
+            # record has a child we've just updated
+            keep = False
+            for inheriting in (self.env[m] for m in Model._inherits_children):
+                # ignore mixins
+                if inheriting._abstract:
+                    continue
+
+                parent_field = inheriting._inherits[model]
+                children = inheriting.with_context(active_test=False).search([(parent_field, '=', res_id)])
+                children_xids = {
+                    xid
+                    for xids in (children and children._get_external_ids().values())
+                    for xid in xids
+                }
+                if children_xids & loaded_xmlids:
+                    # at least one child was loaded
+                    keep = True
+                    break
+            if keep:
+                continue
+
+            # if the record has other associated xids, only remove the xid
+            if self.search_count([
+                ("model", "=", model),
+                ("res_id", "=", res_id),
+                ("id", "!=", id),
+                ("id", "not in", bad_imd_ids),
+            ]):
+                bad_imd_ids.append(id)
+                continue
+
+            _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
+            record = Model.browse(res_id)
+            if record.exists():
+                module = xmlid.split('.', 1)[0]
+                record = record.with_context(module=module)
+                record.unlink()
+            else:
+                bad_imd_ids.append(id)
         if bad_imd_ids:
             self.browse(bad_imd_ids).unlink()
 

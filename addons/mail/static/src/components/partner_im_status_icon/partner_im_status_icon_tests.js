@@ -5,10 +5,11 @@ const components = {
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -16,17 +17,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('partner_im_status_icon', {}, function () {
 QUnit.module('partner_im_status_icon_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createPartnerImStatusIcon = async partner => {
-            const PartnerImStatusIconComponent = components.PartnerImStatusIcon;
-            PartnerImStatusIconComponent.env = this.env;
-            this.component = new PartnerImStatusIconComponent(null, { partnerLocalId: partner.localId });
-            await this.component.mount(this.widget.el);
+            await createRootComponent(this, components.PartnerImStatusIcon, {
+                props: { partnerLocalId: partner.localId },
+                target: this.widget.el
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -34,15 +35,7 @@ QUnit.module('partner_im_status_icon_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        this.env = undefined;
-        delete components.PartnerImStatusIcon.env;
+        afterEach(this);
     },
 });
 

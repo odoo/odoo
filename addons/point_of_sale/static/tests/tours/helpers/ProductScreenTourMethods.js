@@ -31,7 +31,7 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             return [
                 {
                     content: `selecting '${name}' subcategory`,
-                    trigger: `.category-list .category-simple-button:contains("${name}")`,
+                    trigger: `.products-widget > .products-widget-control .category-simple-button:contains("${name}")`,
                 },
                 {
                     content: `'${name}' subcategory selected`,
@@ -52,6 +52,9 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
 
         /**
          * Press the numpad in sequence based on the given space-separated keys.
+         * NOTE: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
+         * fast inputs. Fast inputs is the case in tours.
+         *
          * @param {String} keys space-separated numpad keys
          */
         pressNumpad(keys) {
@@ -83,6 +86,40 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     content: 'now in payment screen',
                     trigger: '.pos-content .payment-screen',
                     run: () => {},
+                },
+            ];
+        }
+
+        clickCustomerButton() {
+            return [
+                { content: 'click customer button', trigger: '.actionpad .button.set-customer' },
+                {
+                    content: 'customer screen is shown',
+                    trigger: '.pos-content .clientlist-screen',
+                    run: () => {},
+                },
+            ];
+        }
+
+        clickCustomer(name) {
+            return [
+                {
+                    content: `select customer '${name}'`,
+                    trigger: `.clientlist-screen .client-line td:contains("${name}")`,
+                },
+                {
+                    content: `client line '${name}' is highlighted`,
+                    trigger: `.clientlist-screen .client-line.highlight td:contains("${name}")`,
+                    run: () => {},
+                },
+            ];
+        }
+
+        clickSetCustomer() {
+            return [
+                {
+                    content: 'click set customer',
+                    trigger: '.clientlist-screen .button.next.highlight',
                 },
             ];
         }
@@ -147,15 +184,48 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        totalAmountIs(amount) {
+            return [
+                {
+                    content: `order total amount is '${amount}'`,
+                    trigger: `.order-container .order .summary .value:contains("${amount}")`,
+                    run: () => {},
+                }
+            ]
+        }
+        modeIsActive(mode) {
+            return [
+                {
+                    content: `'${mode}' is active`,
+                    trigger: `.numpad button.selected-mode:contains('${mode}')`,
+                    run: function () {},
+                },
+            ];
+        }
     }
 
     class Execute {
-        order(productName, quantity, price) {
+        /**
+         * Create an orderline for the given `productName` and `quantity`.
+         * - If `unitPrice` is provided, price of the product of the created line
+         *   is changed to that value.
+         * - If `expectedTotal` is provided, the created orderline (which is the currently
+         *   selected orderline) is checked if it contains the correct quantity and total
+         *   price.
+         *
+         * @param {string} productName
+         * @param {string} quantity
+         * @param {string} unitPrice
+         * @param {string} expectedTotal
+         */
+        addOrderline(productName, quantity, unitPrice = undefined, expectedTotal = undefined) {
             const res = this._do.clickDisplayedProduct(productName);
-            if (price) {
+            if (unitPrice) {
                 res.push(...this._do.pressNumpad('Price'));
-                res.push(...this._do.pressNumpad(price.toString().split('').join(' ')));
+                res.push(...this._check.modeIsActive('Price'));
+                res.push(...this._do.pressNumpad(unitPrice.toString().split('').join(' ')));
                 res.push(...this._do.pressNumpad('Qty'));
+                res.push(...this._check.modeIsActive('Qty'));
             }
             for (let char of quantity.toString()) {
                 if ('.0123456789'.includes(char)) {
@@ -164,14 +234,21 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     res.push(...this._do.pressNumpad('+/-'));
                 }
             }
+            if (expectedTotal) {
+                res.push(...this._check.selectedOrderlineHas(productName, quantity, expectedTotal));
+            } else {
+                res.push(...this._check.selectedOrderlineHas(productName, quantity));
+            }
             return res;
+        }
+        addMultiOrderlines(...list) {
+            const steps = [];
+            for (let [product, qty, price] of list) {
+                steps.push(...this.addOrderline(product, qty, price));
+            }
+            return steps;
         }
     }
 
-    return {
-        Do,
-        Check,
-        Execute,
-        ProductScreen: createTourMethods('ProductScreen', Do, Check, Execute),
-    };
+    return createTourMethods('ProductScreen', Do, Check, Execute);
 });

@@ -62,7 +62,8 @@ var createViewer = async function (params) {
     });
 };
 
-QUnit.module('DocumentViewer', {
+QUnit.module('mail', {}, function () {
+QUnit.module('document_viewer_tests.js', {
     beforeEach: function () {
         this.attachments = [
             {id: 1, name: 'filePdf.pdf', type: 'binary', mimetype: 'application/pdf', datas:'R0lGOP////ywAADs='},
@@ -225,6 +226,7 @@ QUnit.module('DocumentViewer', {
 
         viewer.destroy();
     });
-
 });
+});
+
 });

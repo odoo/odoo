@@ -6,6 +6,12 @@ import random
 
 
 class TestBlogPerformance(UtilPerf):
+    def setUp(self):
+        super().setUp()
+        # if website_livechat is installed, disable it
+        if 'channel_id' in self.env['website']:
+            self.env['website'].search([]).channel_id = False
+
     def test_10_perf_sql_blog_standard_data(self):
         self.assertEqual(self._get_url_hot_query('/blog'), 28)
 

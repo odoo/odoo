@@ -10,27 +10,6 @@
     </div>
 </template>
 
-<template id="s_text_highlight_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@id='so_main_colorpicker']" position="attributes">
-        <attribute name="data-selector" add=".s_text_highlight"/>
-    </xpath>
-    <xpath expr="//div[@id='so_width']" position="attributes">
-        <attribute name="data-selector" add=".s_text_highlight"/>
-    </xpath>
-    <xpath expr="//div[@id='so_text_align']" position="attributes">
-        <attribute name="data-selector" add=".s_text_highlight"/>
-    </xpath>
-    <xpath expr="//div[@data-js='background']" position="before">
-        <div data-selector=".s_text_highlight">
-            <we-select string="Position">
-                <we-button data-select-class="">Left</we-button>
-                <we-button data-select-class="mx-auto">Center</we-button>
-                <we-button data-select-class="ml-auto">Right</we-button>
-            </we-select>
-        </div>
-    </xpath>
-</template>
-
 <template id="assets_snippet_s_text_highlight_css_000" inherit_id="website.assets_frontend">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_text_highlight/000.scss"/>

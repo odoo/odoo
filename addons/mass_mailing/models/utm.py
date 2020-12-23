@@ -34,6 +34,15 @@ class UtmCampaign(models.Model):
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing campaign """
+        default_vals = {
+            'received_ratio': 0,
+            'opened_ratio': 0,
+            'replied_ratio': 0,
+            'bounced_ratio': 0
+        }
+        if not self.ids:
+            self.update(default_vals)
+            return
         self.env.cr.execute("""
             SELECT
                 c.id as campaign_id,
@@ -64,12 +73,7 @@ class UtmCampaign(models.Model):
         for campaign in self:
             stats = stats_per_campaign.get(campaign.id)
             if not stats:
-                vals = {
-                    'received_ratio': 0,
-                    'opened_ratio': 0,
-                    'replied_ratio': 0,
-                    'bounced_ratio': 0
-                }
+                vals = default_vals
             else:
                 total = (stats['expected'] - stats['ignored']) or 1
                 delivered = stats['sent'] - stats['bounced']

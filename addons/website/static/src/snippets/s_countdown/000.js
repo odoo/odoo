@@ -4,14 +4,16 @@ odoo.define('website.s_countdown', function (require) {
 const {ColorpickerWidget} = require('web.Colorpicker');
 const core = require('web.core');
 const publicWidget = require('web.public.widget');
+const weUtils = require('web_editor.utils');
 
 const qweb = core.qweb;
 const _t = core._t;
 
 const CountdownWidget = publicWidget.Widget.extend({
     selector: '.s_countdown',
-    xmlDependencies: ['/website/static/src/xml/website.s_countdown.xml'],
+    xmlDependencies: ['/website/static/src/snippets/s_countdown/000.xml'],
     disabledInEditableMode: false,
+    defaultColor: 'rgba(0, 0, 0, 255)',
 
     /**
      * @override
@@ -75,8 +77,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         if (ColorpickerWidget.isCSSColor(color)) {
             return color;
         }
-        const style = window.getComputedStyle(document.documentElement);
-        return style.getPropertyValue('--' + color).trim();
+        return weUtils.getCSSVariableValue(color) || this.defaultColor;
     },
     /**
      * Gets the time difference in seconds between now and countdown due date.
@@ -101,14 +102,15 @@ const CountdownWidget = publicWidget.Widget.extend({
             } else {
                 // Show (non editable) msg when user lands on already finished countdown
                 if (!this.$('.s_countdown_end_redirect_message').length) {
-                    this.$target.find('.container').append(
+                    const $container = this.$('> .container, > .container-fluid, > .o_container_small');
+                    $container.append(
                         $(qweb.render('website.s_countdown.end_redirect_message', {
                             redirectUrl: redirectUrl,
                         }))
                     );
                 }
             }
-        } else if (this.endAction === 'message') {
+        } else if (this.endAction === 'message' || this.endAction === 'message_no_countdown') {
             this.$('.s_countdown_end_message').removeClass('d-none');
         }
     },

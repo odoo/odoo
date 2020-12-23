@@ -37,7 +37,7 @@ odoo.define('website_form.s_website_form', function (require) {
 
             // Initialize datetimepickers
             var datepickers_options = {
-                minDate: moment({y: 1900}),
+                minDate: moment({ y: 1000 }),
                 maxDate: moment({y: 9999, M: 11, d: 31}),
                 calendarWeeks: true,
                 icons: {
@@ -82,7 +82,7 @@ odoo.define('website_form.s_website_form', function (require) {
             this.$target.find('button').off('click');
 
             // Empty imputs
-            this.$target.find('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea').val('');
+            this.$target[0].reset();
 
             // Remove saving of the error colors
             this.$target.find('.o_has_error').removeClass('o_has_error').find('.form-control, .custom-select').removeClass('is-invalid');
@@ -98,7 +98,9 @@ odoo.define('website_form.s_website_form', function (require) {
         send: async function (e) {
             e.preventDefault(); // Prevent the default submit behavior
              // Prevent users from crazy clicking
-            this.$target.find('.s_website_form_send, .o_website_form_send').addClass('disabled'); // !compatibility
+            this.$target.find('.s_website_form_send, .o_website_form_send')
+                .addClass('disabled')    // !compatibility
+                .attr('disabled', 'disabled');
 
             var self = this;
 
@@ -141,6 +143,18 @@ odoo.define('website_form.s_website_form', function (require) {
                 }
             });
 
+            // force server date format usage for existing fields
+            this.$target.find('.s_website_form_field:not(.s_website_form_custom)')
+            .find('.s_website_form_date, .s_website_form_datetime').each(function () {
+                var date = $(this).datetimepicker('viewDate').clone().locale('en');
+                var format = 'YYYY-MM-DD';
+                if ($(this).hasClass('s_website_form_datetime')) {
+                    date = date.utc();
+                    format = 'YYYY-MM-DD HH:mm:ss';
+                }
+                form_values[$(this).find('input').attr('name')] = date.format(format);
+            });
+
             const tokenObj = await this._recaptcha.getToken('website_form');
             if (tokenObj.token) {
                 form_values['recaptcha_token_response'] = tokenObj.token;
@@ -152,7 +166,9 @@ odoo.define('website_form.s_website_form', function (require) {
             ajax.post(this.$target.attr('action') + (this.$target.data('force_action') || this.$target.data('model_name')), form_values)
             .then(function (result_data) {
                 // Restore send button behavior
-                self.$target.find('.s_website_form_send, .o_website_form_send').removeClass('disabled'); // !compatibility
+                self.$target.find('.s_website_form_send, .o_website_form_send')
+                    .removeAttr('disabled')
+                    .removeClass('disabled'); // !compatibility
                 result_data = JSON.parse(result_data);
                 if (!result_data.id) {
                     // Failure, the server didn't return the created record ID
@@ -283,7 +299,9 @@ odoo.define('website_form.s_website_form', function (require) {
 
         update_status: function (status, message) {
             if (status !== 'success') { // Restore send button behavior if result is an error
-                this.$target.find('.s_website_form_send, .o_website_form_send').removeClass('disabled'); // !compatibility
+                this.$target.find('.s_website_form_send, .o_website_form_send')
+                    .removeAttr('disabled')
+                    .removeClass('disabled'); // !compatibility
             }
             var $result = this.$('#s_website_form_result, #o_website_form_result'); // !compatibility
 

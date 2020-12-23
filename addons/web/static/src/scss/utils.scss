@@ -98,6 +98,31 @@
     @return if($luma > $threshold, $-dark, $-light);
 }
 
+// Extend placeholder which adds a chess-like background below the color and
+// image of an element to preview the transparency of that color and image.
+// This is done thanks to both ::before and ::after elements so they must both
+// be available.
+%o-preview-alpha-background {
+    position: relative;
+    z-index: 0;
+
+    &::before {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background-image: url('/web/static/src/img/transparent.png');
+        background-size: 10px auto;
+        border-radius: inherit;
+    }
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background: inherit; // Inherit all background properties
+        border-radius: inherit;
+    }
+}
+
 // ------------------------------------------------------------------
 // Padding
 // ------------------------------------------------------------------
@@ -215,6 +240,20 @@
     $tmp: nth($list, $i);
     $list: set-nth($list, $i, nth($list, $j));
     @return set-nth($list, $j, $tmp);
+}
+
+// Function to get an element of a list with a default value in case the index
+// is out-of-bounds; also return that value if the retrieved value is null.
+@function o-safe-nth($list, $index, $default: null) {
+    $value: if($index > 0 and $index <= length($list), nth($list, $index), null);
+    @return if($value != null, $value, $default);
+}
+
+// Function to get an element of a map with a default value in case the key
+// does not exist; also return that value if the retrieved value is null.
+@function o-safe-get($map, $key, $default: null) {
+    $value: map-get($map, $key);
+    @return if($value != null, $value, $default);
 }
 
 // ------- Kanban grouped mixins -------
@@ -380,13 +419,6 @@
     a {
         cursor: pointer;
     }
-}
-
-// Scrollbar doesn't overlap with content
-@mixin o-scrollbar-overlay {
-    overflow-y: auto;
-    overflow-y: overlay;
-    -ms-overflow-style: -ms-autohiding-scrollbar;
 }
 
 %o-nocontent-init-image {

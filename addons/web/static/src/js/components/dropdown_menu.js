@@ -1,6 +1,7 @@
 odoo.define('web.DropdownMenu', function (require) {
     "use strict";
 
+    const { _t } = require('web.core');
     const DropdownMenuItem = require('web.DropdownMenuItem');
 
     const { Component, hooks } = owl;
@@ -34,7 +35,7 @@ odoo.define('web.DropdownMenu', function (require) {
             this.dropdownMenu = useRef('dropdown');
             this.state = useState({ open: false });
 
-            useExternalListener(window, 'click', this._onWindowClick);
+            useExternalListener(window, 'click', this._onWindowClick, true);
             useExternalListener(window, 'keydown', this._onWindowKeydown);
         }
 
@@ -59,6 +60,26 @@ odoo.define('web.DropdownMenu', function (require) {
          */
         get displayChevron() {
             return this.env.device.isMobile;
+        }
+
+        /**
+         * In mobile, by default, we use the middle of the screen as a threshold value to choose
+         * the alignment of the open dropdown against its triggering button.
+         *
+         * FIXME: Needs to be adapted for desktop, current calculation are only relevant on mobile screen
+         *
+         * @return {string} Bootstrap's dropdown alignment class
+         */
+        get dropdownMenuAlignClass() {
+            if (this.env.device.isMobile) {
+                const threshold = document.documentElement.clientWidth / 2;
+                const { left, right } = this.el.getBoundingClientRect();
+                if (_t.database.parameters.direction === 'rtl') {
+                    return right > threshold ? 'dropdown-menu-left' : 'dropdown-menu-right';
+                }
+                return left > threshold ? 'dropdown-menu-right' : 'dropdown-menu-left';
+            }
+            return '';
         }
 
         /**
@@ -121,7 +142,22 @@ odoo.define('web.DropdownMenu', function (require) {
          * @param {MouseEvent} ev
          */
         _onWindowClick(ev) {
-            if (this.state.open && !this.el.contains(ev.target)) {
+            if (
+                this.state.open &&
+                !this.el.contains(ev.target) &&
+                !this.el.contains(document.activeElement)
+            ) {
+                if (document.body.classList.contains("modal-open")) {
+                    // retrieve the active modal and check if the dropdown is a child of this modal
+                    const modal = document.querySelector('.modal:not(.o_inactive_modal)');
+                    if (!modal.contains(this.el)) {
+                        return;
+                    }
+                }
+                // check for an active open bootstrap calendar like the filter dropdown inside the search panel)
+                if (document.querySelector('body > .bootstrap-datetimepicker-widget')) {
+                    return;
+                }
                 this.state.open = false;
             }
         }

@@ -40,7 +40,7 @@ Izvori podataka:
 """,
     "version": "13.0",
     "author": "OpenERP Croatian Community",
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
 
     'depends': [
         'account',
@@ -59,5 +59,4 @@ Izvori podataka:
     'demo': [
         'demo/demo_company.xml',
     ],
-    "active": False,
 }

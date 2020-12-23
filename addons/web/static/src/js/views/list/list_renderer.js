@@ -78,6 +78,7 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+        this.no_open = params.no_open;
     },
     /**
      * Compute columns visilibity. This can't be done earlier as we need the
@@ -293,6 +294,15 @@ var ListRenderer = BasicRenderer.extend({
         };
     },
     /**
+     * Returns the jQuery node used to update the selection
+     *
+     * @private
+     * @return {jQuery}
+     */
+    _getSelectableRecordCheckboxes: function () {
+        return this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+    },
+    /**
      * Adjacent buttons (in the arch) are displayed in a single column. This
      * function iterates over the arch's nodes and replaces "button" nodes by
      * "button_group" nodes, with a single "button_group" node for adjacent
@@ -366,7 +376,7 @@ var ListRenderer = BasicRenderer.extend({
             },
         });
         _.each(this.arch.children, function (c) {
-            if (c.tag !== 'control' && c.tag !== 'groupby') {
+            if (c.tag !== 'control' && c.tag !== 'groupby' && c.tag !== 'header') {
                 var reject = c.attrs.modifiers.column_invisible;
                 // If there is an evaluated domain for the field we override the node
                 // attribute to have the evaluated modifier value.
@@ -705,7 +715,7 @@ var ListRenderer = BasicRenderer.extend({
             .attr('tabindex', -1)
             .text(name + ' (' + group.count + ')');
         var $arrow = $('<span>')
-            .css('padding-left', (groupLevel * 20) + 'px')
+            .css('padding-left', 2 + (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
             .addClass('fa');
         if (group.count > 0) {
@@ -889,6 +899,9 @@ var ListRenderer = BasicRenderer.extend({
         if (node.attrs.readOnly) {
             $th.addClass('oe_read_only');
         }
+        if (node.tag === 'button_group') {
+            $th.addClass('o_list_button');
+        }
         if (!field || node.attrs.nolabel === '1') {
             return $th;
         }
@@ -949,6 +962,9 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
+        if (this.no_open && this.mode === "readonly") {
+            $tr.addClass('o_list_no_open');
+        }
         this._setDecorationClasses($tr, this.rowDecorations, record);
         return $tr;
     },
@@ -978,6 +994,7 @@ var ListRenderer = BasicRenderer.extend({
             'href': "#",
             'role': "button",
             'data-toggle': "dropdown",
+            'data-display': "static",
             'aria-expanded': false,
         });
         $a.appendTo($optionalColumnsDropdown);
@@ -1086,16 +1103,16 @@ var ListRenderer = BasicRenderer.extend({
 
         // append the table (if any) to the main element
         if (tableWrapper) {
-            dom.append(this.el, tableWrapper, {
-                callbacks: [{ widget: this }],
-                in_DOM: document.body.contains(this.el),
-            });
+            this.el.appendChild(tableWrapper);
+            if (document.body.contains(this.el)) {
+                this.pagers.forEach(pager => pager.on_attach_callback());
+            }
             if (this.optionalColumns.length) {
                 this.el.classList.add('o_list_optional_columns');
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
                 );
-                this.$el.append(this._renderOptionalColumnsDropdown());
+                this.$('table').append(this._renderOptionalColumnsDropdown());
             }
             if (this.selection.length) {
                 const $checked_rows = this.$('tr').filter(
@@ -1110,7 +1127,7 @@ var ListRenderer = BasicRenderer.extend({
 
         // display the no content helper if necessary
         if (!this._hasContent() && !!this.noContentHelp) {
-            this.$el.append(this._renderNoContentHelper());
+            this._renderNoContentHelper();
         }
     },
     /**
@@ -1164,9 +1181,10 @@ var ListRenderer = BasicRenderer.extend({
      * @private
      */
     _updateSelection: function () {
+        const previousSelection = JSON.stringify(this.selection);
         this.selection = [];
         var self = this;
-        var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+        var $inputs = this._getSelectableRecordCheckboxes();
         var allChecked = $inputs.length > 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
@@ -1176,7 +1194,9 @@ var ListRenderer = BasicRenderer.extend({
             }
         });
         this.$('thead .o_list_record_selector input').prop('checked', allChecked);
-        this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        if (JSON.stringify(this.selection) !== previousSelection) {
+            this.trigger_up('selection_changed', { allChecked, selection: this.selection });
+        }
         this._updateFooter();
     },
 
@@ -1373,7 +1393,7 @@ var ListRenderer = BasicRenderer.extend({
     _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click')) {
+        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click') && !this.no_open) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
                 this.trigger_up('open_record', { id: id, target: ev.target });

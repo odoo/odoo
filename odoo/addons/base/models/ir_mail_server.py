@@ -9,10 +9,13 @@ import email.policy
 import logging
 import re
 import smtplib
+from socket import gaierror, timeout
+from ssl import SSLError
 import sys
 import threading
 
 import html2text
+import idna
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError
@@ -32,6 +35,21 @@ class MailDeliveryException(Exception):
 def _print_debug(self, *args):
     _logger.debug(' '.join(str(a) for a in args))
 smtplib.SMTP._print_debug = _print_debug
+
+# Python 3: workaround for bpo-35805, only partially fixed in Python 3.8.
+RFC5322_IDENTIFICATION_HEADERS = {'message-id', 'in-reply-to', 'references', 'resent-msg-id'}
+_noFoldPolicy = email.policy.SMTP.clone(max_line_length=None)
+class IdentificationFieldsNoFoldPolicy(email.policy.EmailPolicy):
+    # Override _fold() to avoid folding identification fields, excluded by RFC2047 section 5
+    # These are particularly important to preserve, as MTAs will often rewrite non-conformant
+    # Message-ID headers, causing a loss of thread information (replies are lost)
+    def _fold(self, name, value, *args, **kwargs):
+        if name.lower() in RFC5322_IDENTIFICATION_HEADERS:
+            return _noFoldPolicy._fold(name, value, *args, **kwargs)
+        return super()._fold(name, value, *args, **kwargs)
+
+# Global monkey-patch for our preferred SMTP policy, preserving the non-default linesep
+email.policy.SMTP = IdentificationFieldsNoFoldPolicy(linesep=email.policy.SMTP.linesep)
 
 # Python 2: replace smtplib's stderr
 class WriteToLogger(object):
@@ -114,6 +132,18 @@ class IrMailServer(models.Model):
             except UserError as e:
                 # let UserErrors (messages) bubble up
                 raise e
+            except (UnicodeError, idna.core.InvalidCodepoint) as e:
+                raise UserError(_("Invalid server name !\n %s", ustr(e)))
+            except (gaierror, timeout) as e:
+                raise UserError(_("No response received. Check server address and port number.\n %s", ustr(e)))
+            except smtplib.SMTPServerDisconnected as e:
+                raise UserError(_("The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s", ustr(e.strerror)))
+            except smtplib.SMTPResponseException as e:
+                raise UserError(_("Server replied with following exception:\n %s", ustr(e.smtp_error)))
+            except smtplib.SMTPException as e:
+                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e.smtp_error)))
+            except SSLError as e:
+                raise UserError(_("An SSL exception occurred. Check connection security type.\n %s", ustr(e)))
             except Exception as e:
                 raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s", ustr(e)))
             finally:
@@ -124,14 +154,13 @@ class IrMailServer(models.Model):
                     # ignored, just a consequence of the previous exception
                     pass
 
-        title = _("Connection Test Succeeded!")
-        message = _("Everything seems properly set up!")
+        message = _("Connection Test Successful!")
         return {
             'type': 'ir.actions.client',
             'tag': 'display_notification',
             'params': {
-                'title': title,
                 'message': message,
+                'type': 'success',
                 'sticky': False,
             }
         }
@@ -205,12 +234,9 @@ class IrMailServer(models.Model):
 
         if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
-            # The user/password must be converted to bytestrings in order to be usable for
-            # certain hashing schemes, like HMAC.
-            # See also bug #597143 and python issue #5285
-            smtp_user = pycompat.to_text(ustr(smtp_user))
-            smtp_password = pycompat.to_text(ustr(smtp_password))
-            connection.login(smtp_user, smtp_password)
+            local, at, domain = smtp_user.rpartition('@')
+            domain = idna.encode(domain).decode('ascii')
+            connection.login(f"{local}{at}{domain}", smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.

@@ -34,15 +34,36 @@ class PartnerImStatusIcon extends Component {
         return this.env.models['mail.partner'].get(this.props.partnerLocalId);
     }
 
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick(ev) {
+        if (!this.props.hasOpenChat) {
+            return;
+        }
+        this.partner.openChat();
+    }
+
 }
 
 Object.assign(PartnerImStatusIcon, {
     defaultProps: {
-        hasBackground: true
+        hasBackground: true,
+        hasOpenChat: false,
     },
     props: {
         partnerLocalId: String,
         hasBackground: Boolean,
+        /**
+         * Determines whether a click on `this` should open a chat with
+         * `this.partner`.
+         */
+        hasOpenChat: Boolean,
     },
     template: 'mail.PartnerImStatusIcon',
 });

@@ -55,11 +55,18 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
      *        the url to load when manually running the tour
      * @param {boolean} [options.rainbowMan=true]
      *        whether or not the rainbowman must be shown at the end of the tour
+     * @param {string} [options.fadeout]
+     *        Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear, quickly,
+     *        'medium', 'slow' and 'very_slow' will wait little longer before disappearing, no
+     *        will keep rainbowman on screen until user clicks anywhere outside rainbowman
      * @param {boolean} [options.sequence=1000]
      *        priority sequence of the tour (lowest is first, tours with the same
      *        sequence will be executed in a non deterministic order).
      * @param {Promise} [options.wait_for]
      *        indicates when the tour can be started
+     * @param {string|function} [options.rainbowManMessage]
+              text or function returning the text displayed under the rainbowman
+              at the end of the tour.
      * @param {Object[]} steps - steps' descriptions, each step being an object
      *                     containing a tip description
      */
@@ -74,11 +81,12 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         var options = args.length === 2 ? {} : args[1];
         var steps = last_arg instanceof Array ? last_arg : [last_arg];
         var tour = {
-            name: name,
+            name: options.saveAs || name,
             steps: steps,
             url: options.url,
             rainbowMan: options.rainbowMan === undefined ? true : !!options.rainbowMan,
             rainbowManMessage: options.rainbowManMessage,
+            fadeout: options.fadeout || 'medium',
             sequence: options.sequence || 1000,
             test: options.test,
             wait_for: options.wait_for || Promise.resolve(),
@@ -90,7 +98,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
                 this._consume_tour(name);
             };
         }
-        this.tours[name] = tour;
+        this.tours[tour.name] = tour;
     },
     /**
      * Returns a promise which is resolved once the tour can be started. This
@@ -275,12 +283,23 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             extra_trigger = get_first_visible_element($extra_trigger).length;
         }
 
+        var $visible_alt_trigger = $();
+        if (tip.alt_trigger) {
+            var $alt_trigger;
+            if (tip.in_modal !== false && this.$modal_displayed.length) {
+                $alt_trigger = this.$modal_displayed.find(tip.alt_trigger);
+            } else {
+                $alt_trigger = get_jquery_element_from_selector(tip.alt_trigger);
+            }
+            $visible_alt_trigger = get_first_visible_element($alt_trigger);
+        }
+
         var triggered = $visible_trigger.length && extra_trigger;
         if (triggered) {
             if (!tip.widget) {
-                this._activate_tip(tip, tour_name, $visible_trigger);
+                this._activate_tip(tip, tour_name, $visible_trigger, $visible_alt_trigger);
             } else {
-                tip.widget.update($visible_trigger);
+                tip.widget.update($visible_trigger, $visible_alt_trigger);
             }
         } else {
             if ($trigger.iframeContainer || ($extra_trigger && $extra_trigger.iframeContainer)) {
@@ -314,7 +333,18 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         }
         return !!triggered;
     },
-    _activate_tip: function(tip, tour_name, $anchor) {
+    /**
+     * Activates the provided tip for the provided tour, $anchor and $alt_trigger.
+     * $alt_trigger is an alternative trigger that can consume the step. The tip is
+     * however only displayed on the $anchor.
+     *
+     * @param {Object} tip
+     * @param {String} tour_name
+     * @param {jQuery} $anchor
+     * @param {jQuery} $alt_trigger
+     * @private
+     */
+    _activate_tip: function(tip, tour_name, $anchor, $alt_trigger) {
         var tour = this.tours[tour_name];
         var tip_info = tip;
         if (tour.skip_link) {
@@ -331,7 +361,7 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         if (this.running_tour !== tour_name) {
             tip.widget.on('tip_consumed', this, this._consume_tip.bind(this, tip, tour_name));
         }
-        tip.widget.attach_to($anchor).then(this._to_next_running_step.bind(this, tip, tour_name));
+        tip.widget.attach_to($anchor, $alt_trigger).then(this._to_next_running_step.bind(this, tip, tour_name));
     },
     _deactivate_tip: function(tip) {
         if (tip && tip.widget) {
@@ -391,9 +421,14 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
         //display rainbow at the end of any tour
         if (this.tours[tour_name].rainbowMan && this.running_tour !== tour_name &&
             this.tours[tour_name].current_step === this.tours[tour_name].steps.length) {
-            const message = this.tours[tour_name].rainbowManMessage ||
-                _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
-            new RainbowMan({message}).appendTo(this.$body);
+            let message = this.tours[tour_name].rainbowManMessage;
+            if (message) {
+                message = typeof message === 'function' ? message() : message;
+            } else {
+                message = _t('<strong><b>Good job!</b> You went through all steps of this tour.</strong>');
+            }
+            const fadeout = this.tours[tour_name].fadeout;
+            new RainbowMan({message, fadeout}).appendTo(this.$body);
         }
         this.tours[tour_name].current_step = 0;
         local_storage.removeItem(get_step_key(tour_name));

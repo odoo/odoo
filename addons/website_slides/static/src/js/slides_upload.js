@@ -67,11 +67,12 @@ var SlideUploadDialog = Dialog.extend({
         this._alertRemove();
         $('<div/>', {
             "class": 'alert alert-warning',
+            id: 'upload-alert',
             role: 'alert'
         }).text(message).insertBefore(this.$('form'));
     },
     _alertRemove: function () {
-        this.$('.alert-warning').remove();
+        this.$('#upload-alert').remove();
     },
     /**
      * Section and tags management from select2
@@ -188,17 +189,17 @@ var SlideUploadDialog = Dialog.extend({
             if (! this.modulesToInstallStatus.installing) {
                 btnList.push({text: this.modulesToInstallStatus.failed ? _t("Retry") : _t("Install"), classes: 'btn-primary', click: this._onClickInstallModuleConfirm.bind(this)});
             }
-            btnList.push({text: _t("Go Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
+            btnList.push({text: _t("Discard"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
         } else if (state !== '_upload') { // no button when uploading
             if (this.canUpload) {
                 if (this.canPublish) {
-                    btnList.push({text: _t("Publish"), classes: 'btn-primary o_w_slide_upload o_w_slide_upload_published', click: this._onClickFormSubmit.bind(this)});
-                    btnList.push({text: _t("Save as Draft"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
+                    btnList.push({text: _t("Save & Publish"), classes: 'btn-primary o_w_slide_upload o_w_slide_upload_published', click: this._onClickFormSubmit.bind(this)});
+                    btnList.push({text: _t("Save"), classes: 'o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                 } else {
-                    btnList.push({text: _t("Save as Draft"), classes: 'btn-primary o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
+                    btnList.push({text: _t("Save"), classes: 'btn-primary o_w_slide_upload', click: this._onClickFormSubmit.bind(this)});
                 }
             }
-            btnList.push({text: _t("Go Back"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
+            btnList.push({text: _t("Discard"), classes: 'o_w_slide_go_back', click: this._onClickGoBack.bind(this)});
         }
         return btnList;
     },
@@ -351,22 +352,20 @@ var SlideUploadDialog = Dialog.extend({
         };
     },
     /**
-     * Show the preview/right column and resize the modal
+     * Show the preview
      * @private
      */
     _showPreviewColumn: function () {
-        this.$('#o_wslides_js_slide_upload_left_column').removeClass('col').addClass('col-md-6');
-        this.$('#o_wslides_js_slide_upload_preview_column').removeClass('d-none');
-        this.$modal.find('.modal-dialog').addClass('modal-lg');
+        this.$('.o_slide_tutorial').addClass('d-none');
+        this.$('.o_slide_preview').removeClass('d-none');
     },
     /**
-     * Hide the preview/right column and resize the modal
+     * Hide the preview
      * @private
      */
     _hidePreviewColumn: function () {
-        this.$('#o_wslides_js_slide_upload_left_column').addClass('col').removeClass('col-md-6');
-        this.$('#o_wslides_js_slide_upload_preview_column').addClass('d-none');
-        this.$modal.find('.modal-dialog').removeClass('modal-lg');
+        this.$('.o_slide_tutorial').removeClass('d-none');
+        this.$('.o_slide_preview').addClass('d-none');
     },
     /**
      * @private
@@ -388,6 +387,7 @@ var SlideUploadDialog = Dialog.extend({
     _onChangeType: function () {
         var currentType = this.get('state');
         var tmpl;
+        this.$modal.find('.modal-dialog').removeClass('modal-lg');
         if (currentType === '_select') {
             tmpl = 'website.slide.upload.modal.select';
         } else if (currentType === '_upload') {
@@ -396,6 +396,7 @@ var SlideUploadDialog = Dialog.extend({
             tmpl = 'website.slide.upload.modal.import';
         } else {
             tmpl = this.slide_type_data[currentType]['template'];
+            this.$modal.find('.modal-dialog').addClass('modal-lg');
         }
         this.$('.o_w_slide_upload_modal_container').empty();
         this.$('.o_w_slide_upload_modal_container').append(QWeb.render(tmpl, {widget: this}));
@@ -407,8 +408,6 @@ var SlideUploadDialog = Dialog.extend({
         } else {
             this.set_title(_t("Upload a document"));
         }
-
-        this.$modal.find('.modal-dialog').removeClass('modal-lg');
     },
     _onChangeCanSubmitForm: function (ev) {
         if (this.get('can_submit_form')) {

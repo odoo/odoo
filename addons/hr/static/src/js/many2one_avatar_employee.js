@@ -8,48 +8,26 @@ odoo.define('hr.Many2OneAvatarEmployee', function (require) {
     // Usage:
     //   <field name="employee_id" widget="many2one_avatar_employee"/>
 
-    const { _t } = require('web.core');
     const fieldRegistry = require('web.field_registry');
     const { Many2OneAvatarUser, KanbanMany2OneAvatarUser } = require('mail.Many2OneAvatarUser');
-    const session = require('web.session');
 
+    const { Component } = owl;
 
     const Many2OneAvatarEmployeeMixin = {
-        supportedModel: 'hr.employee',
-
-        /**
-         * Set the field to read on 'hr.employee' to get the partner id.
-         *
-         * @override
-         */
-        init() {
-            this._super(...arguments);
-            this.partnerField = 'user_partner_id';
-        },
+        supportedModels: ['hr.employee', 'hr.employee.public'],
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
 
         /**
-         * Display a warning if the user clicked on himself, or on an employee
-         * not associated with any user.
-         *
          * @override
-         * @param {number} [partnerId] the id of the clicked partner
          */
-        _displayWarning(partnerId) {
-            if (partnerId !== session.partner_id) {
-                // this is not ourself, so if we get here it means that the
-                // employee is not associated with any user
-                this.displayNotification({
-                    message: _t('You can only chat with employees that have a dedicated user'),
-                    type: 'info',
-                });
-            } else {
-                this._super(...arguments);
-            }
-        },
+        async _onAvatarClicked(ev) {
+            ev.stopPropagation(); // in list view, prevent from opening the record
+            const env = Component.env;
+            await env.messaging.openChat({ employeeId: this.value.res_id });
+        }
     };
 
     const Many2OneAvatarEmployee = Many2OneAvatarUser.extend(Many2OneAvatarEmployeeMixin);

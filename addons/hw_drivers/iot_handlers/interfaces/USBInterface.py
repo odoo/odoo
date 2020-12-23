@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from usb import core
 
-from odoo.addons.hw_drivers.controllers.driver import Interface
+from odoo.addons.hw_drivers.interface import Interface
 
 
 class USBInterface(Interface):
@@ -18,9 +21,9 @@ class USBInterface(Interface):
         devs = core.find(find_all=True)
         cpt = 2
         for dev in devs:
-            dev.identifier =  "usb_%04x:%04x" % (dev.idVendor, dev.idProduct)
-            if dev.identifier in usb_devices:
-                dev.identifier += '_%s' % cpt
+            identifier = "usb_%04x:%04x" % (dev.idVendor, dev.idProduct)
+            if identifier in usb_devices:
+                identifier += '_%s' % cpt
                 cpt += 1
-            usb_devices[dev.identifier] = dev
+            usb_devices[identifier] = dev
         return usb_devices

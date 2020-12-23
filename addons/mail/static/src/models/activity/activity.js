@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/activity/activity/js', function (require) {
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one } = require('mail/static/src/model/model_field.js');
+const { clear } = require('mail/static/src/model/model_field_command.js');
 
 function factory(dependencies) {
 
@@ -42,7 +43,7 @@ function factory(dependencies) {
             if ('can_write' in data) {
                 data2.canWrite = data.can_write;
             }
-            if ('create_data' in data) {
+            if ('create_date' in data) {
                 data2.dateCreate = data.create_date;
             }
             if ('date_deadline' in data) {
@@ -59,12 +60,6 @@ function factory(dependencies) {
             }
             if ('note' in data) {
                 data2.note = data.note;
-            }
-            if ('res_id' in data) {
-                data2.res_id = data.res_id;
-            }
-            if ('res_model' in data) {
-                data2.res_model = data.res_model;
             }
             if ('state' in data) {
                 data2.state = data.state;
@@ -93,13 +88,19 @@ function factory(dependencies) {
                     data2.creator = [
                         ['insert', {
                             id: data.create_uid[0],
-                            partnerDisplayName: data.create_uid[1],
+                            display_name: data.create_uid[1],
                         }],
                     ];
                 }
             }
             if ('mail_template_ids' in data) {
                 data2.mailTemplates = [['insert', data.mail_template_ids]];
+            }
+            if ('res_id' in data && 'res_model' in data) {
+                data2.thread = [['insert', {
+                    id: data.res_id,
+                    model: data.res_model,
+                }]];
             }
             if ('user_id' in data) {
                 if (!data.user_id) {
@@ -108,7 +109,19 @@ function factory(dependencies) {
                     data2.assignee = [
                         ['insert', {
                             id: data.user_id[0],
-                            partnerDisplayName: data.user_id[1],
+                            display_name: data.user_id[1],
+                        }],
+                    ];
+                }
+            }
+            if ('request_partner_id' in data) {
+                if (!data.request_partner_id) {
+                    data2.requestingPartner = [['unlink']];
+                } else {
+                    data2.requestingPartner = [
+                        ['insert', {
+                            id: data.request_partner_id[0],
+                            display_name: data.request_partner_id[1],
                         }],
                     ];
                 }
@@ -130,8 +143,8 @@ function factory(dependencies) {
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    default_res_id: this.res_id,
-                    default_res_model: this.res_model,
+                    default_res_id: this.thread.id,
+                    default_res_model: this.thread.model,
                 },
                 res_id: this.id,
             };
@@ -146,10 +159,17 @@ function factory(dependencies) {
                 model: 'mail.activity',
                 method: 'activity_format',
                 args: [this.id],
-            }));
-            this.update(this.constructor.convertData(data));
-            if (this.chatter) {
-                this.chatter.refresh();
+            }, { shadow: true }));
+            let shouldDelete = false;
+            if (data) {
+                this.update(this.constructor.convertData(data));
+            } else {
+                shouldDelete = true;
+            }
+            this.thread.refreshActivities();
+            this.thread.refresh();
+            if (shouldDelete) {
+                this.delete();
             }
         }
 
@@ -168,11 +188,8 @@ function factory(dependencies) {
                     attachment_ids: attachmentIds,
                     feedback,
                 },
-                context: this.chatter ? this.chatter.context : {},
             }));
-            if (this.chatter) {
-                this.chatter.refresh();
-            }
+            this.thread.refresh();
             this.delete();
         }
 
@@ -188,18 +205,18 @@ function factory(dependencies) {
                 args: [[this.id]],
                 kwargs: { feedback },
             }));
-            const chatter = this.chatter;
-            if (chatter) {
-                this.chatter.refresh();
-            }
+            this.thread.refresh();
+            const thread = this.thread;
             this.delete();
+            if (!action) {
+                thread.refreshActivities();
+                return;
+            }
             this.env.bus.trigger('do-action', {
                 action,
                 options: {
                     on_close: () => {
-                        if (chatter) {
-                            chatter.refreshActivities();
-                        }
+                        thread.refreshActivities();
                     },
                 },
             });
@@ -208,6 +225,13 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
 
         /**
          * @private
@@ -227,6 +251,21 @@ function factory(dependencies) {
         _computeMessaging() {
             return [['link', this.env.messaging]];
         }
+
+        /**
+         * Wysiwyg editor put `<p><br></p>` even without a note on the activity.
+         * This compute replaces this almost empty value by an actual empty
+         * value, to reduce the size the empty note takes on the UI.
+         *
+         * @private
+         * @returns {string|undefined}
+         */
+        _computeNote() {
+            if (this.note === '<p><br></p>') {
+                return clear();
+            }
+            return this.note;
+        }
     }
 
     Activity.fields = {
@@ -241,9 +280,6 @@ function factory(dependencies) {
             default: false,
         }),
         category: attr(),
-        chatter: many2one('mail.chatter', {
-            inverse: 'activities',
-        }),
         creator: many2one('mail.user'),
         dateCreate: attr(),
         dateDeadline: attr(),
@@ -251,7 +287,9 @@ function factory(dependencies) {
             default: false,
         }),
         icon: attr(),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isCurrentPartnerAssignee: attr({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,
@@ -275,11 +313,29 @@ function factory(dependencies) {
          * Do not use this value in a 't-raw' if the activity has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        note: attr(),
-        res_id: attr(),
-        res_model: attr(),
+        note: attr({
+            compute: '_computeNote',
+            dependencies: [
+                'note',
+            ],
+        }),
+        /**
+         * Determines that an activity is linked to a requesting partner or not.
+         * It will be used notably in website slides to know who triggered the
+         * "request access" activity.
+         * Also, be useful when the assigned user is different from the
+         * "source" or "requesting" partner.
+         */
+        requestingPartner: many2one('mail.partner'),
         state: attr(),
         summary: attr(),
+        /**
+         * Determines to which "thread" (using `mail.activity.mixin` on the
+         * server) `this` belongs to.
+         */
+        thread: many2one('mail.thread', {
+            inverse: 'activities',
+        }),
         type: many2one('mail.activity_type', {
             inverse: 'activities',
         }),

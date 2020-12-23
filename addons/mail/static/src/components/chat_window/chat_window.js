@@ -4,9 +4,10 @@ odoo.define('mail/static/src/components/chat_window/chat_window.js', function (r
 const components = {
     AutocompleteInput: require('mail/static/src/components/autocomplete_input/autocomplete_input.js'),
     ChatWindowHeader: require('mail/static/src/components/chat_window_header/chat_window_header.js'),
-    ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
+    ThreadView: require('mail/static/src/components/thread_view/thread_view.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 const { isEventHandled } = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
@@ -21,12 +22,15 @@ class ChatWindow extends Component {
         super(...args);
         useStore(props => {
             const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
+            const thread = chatWindow ? chatWindow.thread : undefined;
             return {
                 chatWindow: chatWindow ? chatWindow.__state : undefined,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 localeTextDirection: this.env.messaging.locale.textDirection,
+                thread: thread ? thread.__state : undefined,
             };
         });
+        useUpdate({ func: () => this._update() });
         /**
          * Reference of the header of the chat window.
          * Useful to prevent click on header from wrongly focusing the window.
@@ -53,11 +57,6 @@ class ChatWindow extends Component {
     mounted() {
         this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
         this.env.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
-        this._update();
-    }
-
-    patched() {
-        this._update();
     }
 
     willUnmount() {
@@ -113,9 +112,10 @@ class ChatWindow extends Component {
             isDoFocus: false,
             isFocused: true,
         });
-        if (!this.chatWindow.thread) {
+        if (this._inputRef.comp) {
             this._inputRef.comp.focus();
-        } else {
+        }
+        if (this._threadRef.comp) {
             this._threadRef.comp.focus();
         }
     }
@@ -129,9 +129,24 @@ class ChatWindow extends Component {
      * @private
      */
     _saveThreadScrollTop() {
-        this.chatWindow.update({
-            threadInitialScrollTop: this._threadRef.comp.getScrollTop(),
-        });
+        if (
+            !this._threadRef.comp ||
+            !this.chatWindow.threadViewer ||
+            !this.chatWindow.threadViewer.threadView
+        ) {
+            return;
+        }
+        if (this.chatWindow.threadViewer.threadView.componentHintList.length > 0) {
+            // the current scroll position is likely incorrect due to the
+            // presence of hints to adjust it
+            return;
+        }
+        this.chatWindow.threadViewer.saveThreadCacheScrollHeightAsInitial(
+            this._threadRef.comp.getScrollHeight()
+        );
+        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+            this._threadRef.comp.getScrollTop()
+        );
     }
 
     /**
@@ -162,20 +177,15 @@ class ChatWindow extends Component {
      * @param {Object} ui.item
      * @param {integer} ui.item.id
      */
-    _onAutocompleteSelect(ev, ui) {
-        const partnerId = ui.item.id;
-        const partner = this.env.models['mail.partner'].find(partner => partner.id === partnerId);
-        const chat = partner.correspondentThreads.find(thread => thread.channel_type === 'chat');
-        if (chat) {
-            chat.open({ chatWindowMode: 'from_new_message' });
-        } else {
-            this.env.models['mail.thread'].createChannel({
-                autoselect: true,
-                autoselectChatWindowMode: 'from_new_message',
-                partnerId,
-                type: 'chat',
-            });
+    async _onAutocompleteSelect(ev, ui) {
+        const chat = await this.env.messaging.getChat({ partnerId: ui.item.id });
+        if (!chat) {
+            return;
         }
+        this.env.messaging.chatWindowManager.openThread(chat, {
+            makeActive: true,
+            replaceNewMessage: true,
+        });
     }
 
     /**
@@ -205,25 +215,6 @@ class ChatWindow extends Component {
     }
 
     /**
-     * Handle focus of the chat window based on position of click. The click on
-     * chat window that folds it should NOT set focus on this chat window.
-     *
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClick(ev) {
-        const chatWindowHeader = this._chatWindowHeaderRef.el;
-        if (chatWindowHeader && chatWindowHeader.contains(ev.target)) {
-            // handled in _onClickedHeader
-            return;
-        }
-        if (this.chatWindow.isFocused) {
-            return;
-        }
-        this.chatWindow.focus();
-    }
-
-    /**
      * Called when clicking on header of chat window. Usually folds the chat
      * window.
      *
@@ -239,6 +230,7 @@ class ChatWindow extends Component {
             this.chatWindow.unfold();
             this.chatWindow.focus();
         } else {
+            this._saveThreadScrollTop();
             this.chatWindow.fold();
         }
     }
@@ -264,12 +256,6 @@ class ChatWindow extends Component {
      * @private
      */
     _onFocusout() {
-        if (this._inputRef.comp) {
-            this._inputRef.comp.focusout();
-        }
-        if (this._threadRef.comp) {
-            this._threadRef.comp.focusout();
-        }
         if (!this.chatWindow) {
             // ignore focus out due to record being deleted
             return;
@@ -288,6 +274,10 @@ class ChatWindow extends Component {
          * CTRL-C & CTRL-V when on the home menu.
          */
         ev.stopPropagation();
+        if (!this.chatWindow) {
+            // prevent crash during delete
+            return;
+        }
         switch (ev.key) {
             case 'Tab':
                 ev.preventDefault();
@@ -298,13 +288,14 @@ class ChatWindow extends Component {
                 }
                 break;
             case 'Escape':
-                if (isEventHandled(ev, 'ComposerTextInput.closeMentionSuggestions')) {
+                if (isEventHandled(ev, 'ComposerTextInput.closeSuggestions')) {
                     break;
                 }
                 if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
                     break;
                 }
                 ev.preventDefault();
+                this.chatWindow.focusNextVisibleUnfoldedChatWindow();
                 this.chatWindow.close();
                 break;
         }
@@ -319,9 +310,6 @@ class ChatWindow extends Component {
      * @private
      */
     async _onWillHideHomeMenu() {
-        if (!this.chatWindow.thread) {
-            return;
-        }
         this._saveThreadScrollTop();
     }
 
@@ -334,9 +322,6 @@ class ChatWindow extends Component {
      * @private
      */
     async _onWillShowHomeMenu() {
-        if (!this.chatWindow.thread) {
-            return;
-        }
         this._saveThreadScrollTop();
     }
 

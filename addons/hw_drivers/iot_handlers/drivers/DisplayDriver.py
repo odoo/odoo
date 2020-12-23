@@ -1,17 +1,22 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 import jinja2
 import json
 import logging
 import netifaces as ni
 import os
-from pathlib import Path
 import subprocess
 import threading
 import time
 import urllib3
 
 from odoo import http
+from odoo.addons.hw_drivers.connection_manager import connection_manager
+from odoo.addons.hw_drivers.driver import Driver
+from odoo.addons.hw_drivers.event_manager import event_manager
+from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_drivers.controllers.driver import Driver, event_manager, iot_devices, cm
 
 path = os.path.realpath(os.path.join(os.path.dirname(__file__), '../../views'))
 loader = jinja2.FileSystemLoader(path)
@@ -27,11 +32,11 @@ _logger = logging.getLogger(__name__)
 class DisplayDriver(Driver):
     connection_type = 'display'
 
-    def __init__(self, device):
-        super(DisplayDriver, self).__init__(device)
-        self._device_type = 'display'
-        self._device_connection = 'hdmi'
-        self._device_name = device['name']
+    def __init__(self, identifier, device):
+        super(DisplayDriver, self).__init__(identifier, device)
+        self.device_type = 'display'
+        self.device_connection = 'hdmi'
+        self.device_name = device['name']
         self.event_data = threading.Event()
         self.owner = False
         self.rendered_html = ''
@@ -39,9 +44,13 @@ class DisplayDriver(Driver):
             self._x_screen = device.get('x_screen', '0')
             self.load_url()
 
-    @property
-    def device_identifier(self):
-        return self.dev['identifier']
+        self._actions.update({
+            'update_url': self._action_update_url,
+            'display_refresh': self._action_display_refresh,
+            'take_control': self._action_take_control,
+            'customer_facing_display': self._action_customer_facing_display,
+            'get_owner': self._action_get_owner,
+        })
 
     @classmethod
     def supported(cls, device):
@@ -52,24 +61,8 @@ class DisplayDriver(Driver):
         displays = list(filter(lambda d: iot_devices[d].device_type == 'display', iot_devices))
         return len(displays) and iot_devices[displays[0]]
 
-    def action(self, data):
-        if data.get('action') == "update_url" and self.device_identifier != 'distant_display':
-            self.update_url(data.get('url'))
-        elif data.get('action') == "display_refresh" and self.device_identifier != 'distant_display':
-            self.call_xdotools('F5')
-        elif data.get('action') == "take_control":
-            self.take_control(self.data['owner'], data.get('html'))
-        elif data.get('action') == "customer_facing_display":
-            self.update_customer_facing_display(self.data['owner'], data.get('html'))
-        elif data.get('action') == "get_owner":
-            self.data = {
-                'value': '',
-                'owner': self.owner,
-            }
-            event_manager.device_changed(self)
-
     def run(self):
-        while self.device_identifier != 'distant_display':
+        while self.device_identifier != 'distant_display' and not self._stopped.isSet():
             time.sleep(60)
             if self.url != 'http://localhost:8069/point_of_sale/display/' + self.device_identifier:
                 # Refresh the page every minute
@@ -93,7 +86,7 @@ class DisplayDriver(Driver):
             urllib3.disable_warnings()
             http = urllib3.PoolManager(cert_reqs='CERT_NONE')
             try:
-                response = http.request('GET', "%s/iot/box/%s/screen_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address()))
+                response = http.request('GET', "%s/iot/box/%s/display_url" % (helpers.get_odoo_server_url(), helpers.get_mac_address()))
                 if response.status == 200:
                     data = json.loads(response.data.decode('utf8'))
                     url = data[self.device_identifier]
@@ -135,6 +128,27 @@ class DisplayDriver(Driver):
         }
         event_manager.device_changed(self)
         self.event_data.set()
+
+    def _action_update_url(self, data):
+        if self.device_identifier != 'distant_display':
+            self.update_url(data.get('url'))
+
+    def _action_display_refresh(self, data):
+        if self.device_identifier != 'distant_display':
+            self.call_xdotools('F5')
+
+    def _action_take_control(self, data):
+        self.take_control(self.data.get('owner'), data.get('html'))
+
+    def _action_customer_facing_display(self, data):
+        self.update_customer_facing_display(self.data.get('owner'), data.get('html'))
+
+    def _action_get_owner(self, data):
+        self.data = {
+            'value': '',
+            'owner': self.owner,
+        }
+        event_manager.device_changed(self)
 
 class DisplayController(http.Controller):
 
@@ -215,5 +229,5 @@ class DisplayController(http.Controller):
             'cust_js': cust_js,
             'display_ifaces': display_ifaces,
             'display_identifier': display_identifier,
-            'pairing_code': cm.pairing_code,
+            'pairing_code': connection_manager.pairing_code,
         })

@@ -4,59 +4,51 @@
 from base64 import b64decode
 from cups import IPPError, IPP_PRINTER_IDLE, IPP_PRINTER_PROCESSING, IPP_PRINTER_STOPPED
 import dbus
+import io
 import logging
 import netifaces as ni
 import os
-import io
-import base64
+from PIL import Image, ImageOps
 import re
 import subprocess
 import tempfile
-from PIL import Image, ImageOps
+from uuid import getnode as get_mac
 
-from odoo import http, _
-from odoo.addons.hw_drivers.controllers.driver import event_manager, Driver, iot_devices, cm
+from odoo import http
+from odoo.addons.hw_drivers.connection_manager import connection_manager
+from odoo.addons.hw_drivers.controllers.proxy import proxy_drivers
+from odoo.addons.hw_drivers.driver import Driver
+from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.iot_handlers.interfaces.PrinterInterface import PPDs, conn, cups_lock
+from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
-from odoo.addons.hw_proxy.controllers.main import drivers as old_drivers
 
 _logger = logging.getLogger(__name__)
 
-def print_star_error(deviceId):
-    """We communicate with receipt printers using the ESCPOS protocol.
-    By default, Star printers use the Star mode. This can be changed by
-    modifying the position of the DIP-Switches at the bottom of the printer.
-    """
-    error_page = (
-        "\x1B\x1D\x61\x01"                                      # Centering start
-        "\x1B\x69\x01\x01Bad configuration\x1B\x69\x00\x00"     # Title, double size
-        "\n\n--------------------\n\n"
-        "\x1B\x1D\x61\x00"                                      # Centering Stop
-        "Your printer is in Star line mode, but should\n"
-        "use ESC/POS mode. You will not be able to print\n"
-        "receipts without changing your configuration.\n\n"
-        "For more details and instructions on how to\n"
-        "configure your printer, please refer to:\n\n"
-        "\x1B\x1D\x61\x01"                                      # Centering start
-        "\x1B\x2D\x01"                                          # Underline start
-        "http://www.odoo.com"  # TODO: Replace URL
-        "\x0A\x0A"
-        "\x1B\x2D\x00"                                          # Underline stop
-        "\x1B\x1D\x61\x00"                                      # Centering stop
-        "\x1B\x64\x02"                                          # Full Cut
-    )
-    process = subprocess.Popen(["lp", "-d", deviceId], stdin=subprocess.PIPE)
-    process.communicate(error_page.encode("utf-8"))
+RECEIPT_PRINTER_COMMANDS = {
+    'star': {
+        'center': b'\x1b\x1d\x61\x01', # ESC GS a n
+        'cut': b'\x1b\x64\x02',  # ESC d n
+        'title': b'\x1b\x69\x01\x01%s\x1b\x69\x00\x00',  # ESC i n1 n2
+        'drawers': [b'\x07', b'\x1a']  # BEL & SUB
+    },
+    'escpos': {
+        'center': b'\x1b\x61\x01',  # ESC a n
+        'cut': b'\x1d\x56\x41\n',  # GS V m
+        'title': b'\x1b\x21\x30%s\x1b\x21\x00',  # ESC ! n
+        'drawers': [b'\x1b\x3d\x01', b'\x1b\x70\x00\x19\x19', b'\x1b\x70\x01\x19\x19']  # ESC = n then ESC p m t1 t2
+    }
+}
 
-def cups_notification_handler(message, uri, device_id, state, reason, accepting_jobs):
-    if device_id in iot_devices:
+def cups_notification_handler(message, uri, device_identifier, state, reason, accepting_jobs):
+    if device_identifier in iot_devices:
         reason = reason if reason != 'none' else None
         state_value = {
             IPP_PRINTER_IDLE: 'connected',
             IPP_PRINTER_PROCESSING: 'processing',
             IPP_PRINTER_STOPPED: 'stopped'
         }
-        iot_devices[device_id].update_status(state_value[state], message, reason)
+        iot_devices[device_identifier].update_status(state_value[state], message, reason)
 
 # Create a Cups subscription if it doesn't exist yet
 try:
@@ -76,25 +68,33 @@ bus.add_signal_receiver(cups_notification_handler, signal_name="PrinterStateChan
 class PrinterDriver(Driver):
     connection_type = 'printer'
 
-    def __init__(self, device):
-        super(PrinterDriver, self).__init__(device)
-        self._device_type = 'printer'
-        self._device_connection = self.dev['device-class'].lower()
-        self._device_name = self.dev['device-make-and-model']
+    def __init__(self, identifier, device):
+        super(PrinterDriver, self).__init__(identifier, device)
+        self.device_type = 'printer'
+        self.device_connection = device['device-class'].lower()
+        self.device_name = device['device-make-and-model']
         self.state = {
             'status': 'connecting',
             'message': 'Connecting to printer',
             'reason': None,
         }
         self.send_status()
-        if 'direct' in self._device_connection and 'CMD:ESC/POS;' in self.dev['device-id']:
+
+        self._actions.update({
+            'cashbox': self.open_cashbox,
+            'print_receipt': self.print_receipt,
+            '': self._action_default,
+        })
+
+        self.receipt_protocol = 'star' if 'STR_T' in device['device-id'] else 'escpos'
+        if 'direct' in self.device_connection and any(cmd in device['device-id'] for cmd in ['CMD:STAR;', 'CMD:ESC/POS;']):
             self.print_status()
 
     @classmethod
     def supported(cls, device):
         if device.get('supported', False):
             return True
-        protocol = ['dnssd', 'lpd']
+        protocol = ['dnssd', 'lpd', 'socket']
         if any(x in device['url'] for x in protocol) and device['device-make-and-model'] != 'Unknown' or 'direct' in device['device-class']:
             model = cls.get_device_model(device)
             ppdFile = ''
@@ -113,11 +113,7 @@ class PrinterDriver(Driver):
                 conn.setPrinterUsersAllowed(device['identifier'], ['all'])
                 conn.addPrinterOptionDefault(device['identifier'], "usb-no-reattach", "true")
                 conn.addPrinterOptionDefault(device['identifier'], "usb-unidir", "true")
-            if 'STR_T' in device['device-id']:
-                # Star printers have either STR_T or ESP in their name depending on the protocol used.
-                print_star_error(device['identifier'])
-            else:
-                return True
+            return True
         return False
 
     @classmethod
@@ -136,18 +132,6 @@ class PrinterDriver(Driver):
     def get_status(cls):
         status = 'connected' if any(iot_devices[d].device_type == "printer" and iot_devices[d].device_connection == 'direct' for d in iot_devices) else 'disconnected'
         return {'status': status, 'messages': ''}
-
-    @property
-    def device_identifier(self):
-        return self.dev['identifier']
-
-    def action(self, data):
-        if data.get('action') == 'cashbox':
-            self.open_cashbox()
-        elif data.get('action') == 'print_receipt':
-            self.print_receipt(base64.b64decode(data['receipt']))
-        else:
-            self.print_raw(b64decode(data['document']))
 
     def disconnect(self):
         self.update_status('disconnected', 'Printer was disconnected')
@@ -182,7 +166,8 @@ class PrinterDriver(Driver):
         process = subprocess.Popen(["lp", "-d", self.device_identifier], stdin=subprocess.PIPE)
         process.communicate(data)
 
-    def print_receipt(self, receipt):
+    def print_receipt(self, data):
+        receipt = b64decode(data['receipt'])
         im = Image.open(io.BytesIO(receipt))
 
         # Convert to greyscale then to black and white
@@ -190,40 +175,40 @@ class PrinterDriver(Driver):
         im = ImageOps.invert(im)
         im = im.convert("1")
 
-        '''ESC a n
-            - ESC a: Select justification, in hex: "1B 61"
-            - n: Justification:
-                - 0: left
-                - 1: center
-                - 2: right
-        '''
-        center = b'\x1b\x61\x01'
+        print_command = getattr(self, 'format_%s' % self.receipt_protocol)(im)
+        self.print_raw(print_command)
 
-        '''GS v0 m x y
-            - GS v0: Print raster bit image, in hex: "1D 76 30"
-            - m: Density mode:
-                - 0: 180dpi x 180dpi
-                - 1: 180dpi x 90dpi
-                - 2: 90dpi x 180 dpi
-                - 3: 90dpi x 90 dpi
-            - x: Length in X direction, in bytes, represented as 2 bytes in little endian
-            - y: Length in Y direction, in dots, represented as 2 bytes in little endian
-        '''
-        width_pixels, height_pixels = im.size
-        width_bytes = int((width_pixels + 7) / 8)
-        print_command = b"\x1d\x76\x30" + b'\x00' + (width_bytes).to_bytes(2, 'little') + height_pixels.to_bytes(2, 'little')
+    def format_star(self, im):
+        width = int((im.width + 7) / 8)
 
-        '''GS V m
-            - GS V: Cut, in hex: "1D 56"
-            - m: Cut mode:
-                - 0: Full cut
-                - 1: Partial cut
-                - 65 (0x41): Feed paper then full cut
-                - 66 (0x42): Feed paper then partial cut
-        '''
-        cut = b'\x1d\x56' + b'\x41'
+        raster_init = b'\x1b\x2a\x72\x41'
+        raster_page_length = b'\x1b\x2a\x72\x50\x30\x00'
+        raster_send = b'\x62'
+        raster_close = b'\x1b\x2a\x72\x42'
 
-        self.print_raw(center + print_command + im.tobytes() + cut + b'\n')
+        raster_data = b''
+        dots = im.tobytes()
+        while len(dots):
+            raster_data += raster_send + width.to_bytes(2, 'little') + dots[:width]
+            dots = dots[width:]
+
+        return raster_init + raster_page_length + raster_data + raster_close
+
+    def format_escpos(self, im):
+        width = int((im.width + 7) / 8)
+
+        raster_send = b'\x1d\x76\x30\x00'
+        max_slice_height = 255
+
+        raster_data = b''
+        dots = im.tobytes()
+        while len(dots):
+            im_slice = dots[:width*max_slice_height]
+            slice_height = int(len(im_slice) / width)
+            raster_data += raster_send + width.to_bytes(2, 'little') + slice_height.to_bytes(2, 'little') + im_slice
+            dots = dots[width*max_slice_height:]
+
+        return raster_data + RECEIPT_PRINTER_COMMANDS['escpos']['cut']
 
     def print_status(self):
         """Prints the status ticket of the IoTBox on the current printer."""
@@ -257,23 +242,22 @@ class PrinterDriver(Driver):
             mac = '\nMAC Address:\n%s\n' % helpers.get_mac_address()
             homepage = '\nHomepage:\nhttp://%s:8069\n\n' % main_ips
 
-        code = cm.pairing_code
+        code = connection_manager.pairing_code
         if code:
             pairing_code = '\nPairing Code:\n%s\n' % code
 
-        center = b'\x1b\x61\x01'
-        title = b'\n\x1b\x21\x30\x1b\x4d\x01IoTBox Status\x1b\x4d\x00\x1b\x21\x00\n'
-        cut = b'\x1d\x56\x41'
-
-        self.print_raw(center + title + wlan.encode() + mac.encode() + ip.encode() + homepage.encode() + pairing_code.encode() + cut + b'\n')
+        commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
+        title = commands['title'] % b'IoTBox Status'
+        self.print_raw(commands['center'] + title + b'\n' + wlan.encode() + mac.encode() + ip.encode() + homepage.encode() + pairing_code.encode() + commands['cut'])
 
     def open_cashbox(self):
         """Sends a signal to the current printer to open the connected cashbox."""
-        # ESC = --> Set peripheral device
-        self.print_raw(b'\x1b\x3d\x01')
-        for drawer in [b'\x1b\x70\x00', b'\x1b\x70\x01']:  # Kick pin 2 and 5
-            command = drawer + b'\x19\x19'  # Pulse ON during 50ms then OFF during 50ms
-            self.print_raw(command)
+        commands = RECEIPT_PRINTER_COMMANDS[self.receipt_protocol]
+        for drawer in commands['drawers']:
+            self.print_raw(drawer)
+
+    def _action_default(self, data):
+        self.print_raw(b64decode(data['document']))
 
 
 class PrinterController(http.Controller):
@@ -286,4 +270,4 @@ class PrinterController(http.Controller):
             return True
         return False
 
-old_drivers['printer'] = PrinterDriver
+proxy_drivers['printer'] = PrinterDriver

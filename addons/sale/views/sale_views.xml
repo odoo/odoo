@@ -134,7 +134,7 @@
             <field name="name">sale.order.graph</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <graph string="Sales Orders">
+                <graph string="Sales Orders" sample="1">
                     <field name="partner_id"/>
                     <field name="amount_total" type="measure"/>
                 </graph>
@@ -144,7 +144,7 @@
             <field name="name">sale.order.pivot</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-                <pivot string="Sales Orders">
+                <pivot string="Sales Orders" sample="1">
                     <field name="date_order" type="row"/>
                     <field name="amount_total" type="measure"/>
                 </pivot>
@@ -195,7 +195,7 @@
             <field name="model">sale.order</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" multi_edit="1" sample="1">
+                <tree string="Sales Orders" sample="1">
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                     <field name="date_order" string="Order Date" widget="date" optional="show"/>
@@ -222,7 +222,7 @@
             <field name="model">sale.order</field>
             <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Quotation" class="o_sale_order" multi_edit="1" sample="1">
+                <tree string="Quotation" class="o_sale_order" sample="1">
                     <field name="name" string="Number" readonly="1" decoration-bf="1"/>
                     <field name="create_date" string="Creation Date" widget="date" optional="show"/>
                     <field name="commitment_date" widget="date" optional="hide"/>
@@ -259,7 +259,7 @@
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-              <form string="Sales Order" class="o_sale_order">
+              <form string="Sales Order" class="o_sale_order" js_class="sale_discount_form">
                 <header>
                     <field name="authorized_transaction_ids" invisible="1"/>
                     <button name="payment_action_capture" type="object"
@@ -553,7 +553,7 @@
                                     <field
                                         name="customer_lead"
                                         optional="hide"
-                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent'])]}"
+                                        attrs="{'readonly': [('parent.state', 'not in', ['draft', 'sent', 'sale'])]}"
                                     />
                                     <field
                                         name="price_unit"
@@ -567,7 +567,7 @@
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
-                                    <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
+                                    <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"/>
                                     <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
@@ -810,6 +810,21 @@
             </field>
         </record>
 
+        <record id="action_sale_order_form_view" model="ir.actions.act_window">
+            <field name="name">Sales Order</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_mode">form,tree,kanban,calendar,pivot,graph,activity</field>
+            <field name="search_view_id" ref="sale_order_view_search_inherit_sale"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new quotation, the first step of a new sale!
+                </p><p>
+                    Once the quotation is confirmed, it becomes a sales order.<br/> You will be able to create an invoice and collect the payment.
+                </p>
+            </field>
+        </record>
+
         <record id="sale_order_action_view_order_tree" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">tree</field>
@@ -905,15 +920,13 @@
             <field name="search_view_id" ref="view_sales_order_filter"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                No orders to upsell found
+                No orders to upsell found.
               </p><p>
-                You can upsell an order when you have delivered more quantities
-                than initially ordered, with an invoicing policy based on
-                ordered quantities.
+                An order is to upsell when delivered quantities are above initially
+                ordered quantities, and the invoicing policy is based on ordered quantities.
               </p><p>
-                A typical example is the pre-paid hours of service,
-                when you want to sell extra hours because the initial
-                hours have already been used.
+                As an example, if you sell pre-paid hours of services, Odoo recommends you
+                to sell extra hours when all ordered hours have been consumed.
               </p>
             </field>
         </record>
@@ -1017,6 +1030,7 @@
                     <field name="qty_to_invoice"/>
                     <field name="product_uom" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="price_subtotal" sum="Total" widget="monetary"/>
+                    <field name="currency_id" invisible="1"/>
                 </tree>
             </field>
         </record>

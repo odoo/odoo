@@ -8,14 +8,14 @@
                     <div class="top-content">
                         <div class="button back"
                               t-on-click="showScreen('ProductScreen')">
-                            <i class="fa fa-angle-double-left"></i>
-                            Back
+                            <i class="fa fa-angle-double-left fa-fw"></i>
+                            <span class="back_text">Back</span>
                         </div>
                         <div class="top-content-center"><h1>Payment</h1></div>
                         <div class="button next" t-att-class="{ highlight: currentOrder.is_paid() }"
                               t-on-click="validateOrder(false)">
-                            Validate
-                            <i class="fa fa-angle-double-right"></i>
+                            <span class="next_text">Validate</span>
+                            <i class="fa fa-angle-double-right fa-fw"></i>
                         </div>
                     </div>
                 </t>
@@ -68,11 +68,6 @@
                                         t-att-class="{ highlight: currentOrder.is_to_invoice() }"
                                         t-on-click="toggleIsToInvoice">
                                         <i class="fa fa-file-text-o" /> Invoice
-                                    </div>
-                                    <div class="button js_email"
-                                        t-att-class="{ highlight: currentOrder.is_to_email() }"
-                                        t-on-click="toggleIsToEmail">
-                                        <i class="fa fa-inbox" /> Email
                                     </div>
                                     <div t-if="env.pos.config.tip_product_id" class="button js_tip"
                                         t-on-click="addTip">
