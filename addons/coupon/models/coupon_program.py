@@ -133,7 +133,7 @@ class CouponProgram(models.Model):
         return self.currency_id._convert(self[field], currency_to, self.company_id, fields.Date.today())
 
     def _is_valid_partner(self, partner):
-        if self.rule_partners_domain:
+        if self.rule_partners_domain and self.rule_partners_domain != '[]':
             domain = ast.literal_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
             return bool(self.env['res.partner'].search_count(domain))
         else:
