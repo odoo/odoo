@@ -4487,6 +4487,7 @@ class AccountPartialReconcile(models.Model):
         cash_basis_amount_dict = defaultdict(float)
         cash_basis_base_amount_dict = defaultdict(float)
         cash_basis_amount_currency_dict = defaultdict(float)
+<<<<<<< HEAD
         # We use a set here in case the reconciled lines belong to the same move (it happens with POS)
         for move in {self.debit_move_id.move_id, self.credit_move_id.move_id}:
             #move_date is the max of the 2 reconciled items
@@ -4561,6 +4562,85 @@ class AccountPartialReconcile(models.Model):
             if not newly_created_move:
                 newly_created_move = self._create_tax_basis_move()
             self._create_tax_cash_basis_base_line(cash_basis_amount_dict, cash_basis_amount_currency_dict, cash_basis_base_amount_dict, newly_created_move)
+=======
+        with self.env.norecompute():
+            # We use a set here in case the reconciled lines belong to the same move (it happens with POS)
+            for move in {self.debit_move_id.move_id, self.credit_move_id.move_id}:
+                #move_date is the max of the 2 reconciled items
+                if move_date < move.date:
+                    move_date = move.date
+                percentage_before = percentage_before_rec[move.id]
+                percentage_after = move.line_ids[0]._get_matched_percentage()[move.id]
+                # update the percentage before as the move can be part of
+                # multiple partial reconciliations
+                percentage_before_rec[move.id] = percentage_after
+
+                for line in move.line_ids:
+                    if not line.tax_exigible:
+                        #amount is the current cash_basis amount minus the one before the reconciliation
+                        amount = line.balance * percentage_after - line.balance * percentage_before
+                        if percentage_after == 1.0 and percentage_before > 0.0 and line.amount_residual < 0 and amount < 0 and float_compare(line.amount_residual, amount, precision_rounding=line.company_id.currency_id.rounding) < 0:
+                            # when registering the final payment we use directly the amount_residual to correct rounding issues
+                            amount = line.amount_residual
+                        rounded_amt = self._get_amount_tax_cash_basis(amount, line)
+                        if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
+                            continue
+                        if line.tax_line_id and line.tax_line_id.tax_exigibility == 'on_payment':
+                            if not newly_created_move:
+                                newly_created_move = self._create_tax_basis_move()
+                            #create cash basis entry for the tax line
+                            to_clear_aml = self.env['account.move.line'].with_context(check_move_validity=False).create({
+                                'name': line.move_id.name,
+                                'debit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
+                                'credit': rounded_amt if rounded_amt > 0 else 0.0,
+                                'account_id': line.account_id.id,
+                                'analytic_account_id': line.analytic_account_id.id,
+                                'analytic_tag_ids': line.analytic_tag_ids.ids,
+                                'tax_exigible': True,
+                                'amount_currency': line.amount_currency and line.currency_id.round(-line.amount_currency * amount / line.balance) or 0.0,
+                                'currency_id': line.currency_id.id,
+                                'move_id': newly_created_move.id,
+                                'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
+                            })
+                            # Group by cash basis account and tax
+                            self.env['account.move.line'].with_context(check_move_validity=False).create({
+                                'name': line.name,
+                                'debit': rounded_amt if rounded_amt > 0 else 0.0,
+                                'credit': abs(rounded_amt) if rounded_amt < 0 else 0.0,
+                                'account_id': line.tax_line_id.cash_basis_account_id.id,
+                                'analytic_account_id': line.analytic_account_id.id,
+                                'analytic_tag_ids': line.analytic_tag_ids.ids,
+                                'tax_line_id': line.tax_line_id.id,
+                                'tax_exigible': True,
+                                'amount_currency': line.amount_currency and line.currency_id.round(line.amount_currency * amount / line.balance) or 0.0,
+                                'currency_id': line.currency_id.id,
+                                'move_id': newly_created_move.id,
+                                'partner_id': line.partner_id.id,
+                                'journal_id': newly_created_move.journal_id.id,
+                            })
+                            if line.account_id.reconcile and not line.reconciled:
+                                #setting the account to allow reconciliation will help to fix rounding errors
+                                to_clear_aml |= line
+                                to_clear_aml.reconcile()
+
+                        if any([tax.tax_exigibility == 'on_payment' for tax in line.tax_ids]):
+                            #create cash basis entry for the base
+                            for tax in line.tax_ids.filtered(lambda t: t.tax_exigibility == 'on_payment'):
+                                # We want to group base lines as much as
+                                # possible to avoid creating too many of them.
+                                # This will result in a more readable report
+                                # tax and less cumbersome to analyse.
+                                key = self._get_tax_cash_basis_base_key(tax, move, line)
+                                cash_basis_amount_dict[key] += rounded_amt
+                                cash_basis_amount_currency_dict[key] += line.currency_id.round(line.amount_currency * amount / line.balance) if line.currency_id and self.amount_currency else 0.0
+
+            if cash_basis_amount_dict:
+                if not newly_created_move:
+                    newly_created_move = self._create_tax_basis_move()
+                self._create_tax_cash_basis_base_line(cash_basis_amount_dict, cash_basis_amount_currency_dict, newly_created_move)
+        self.recompute()
+>>>>>>> f63cfa03050... temp
         if newly_created_move:
             self._set_tax_cash_basis_entry_date(move_date, newly_created_move)
             # post move
