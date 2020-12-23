@@ -554,6 +554,7 @@
         <t t-set="combination" t-value="product._get_first_possible_combination()"/>
         <t t-set="combination_info" t-value="product._get_combination_info(combination, add_qty=add_qty or 1, pricelist=pricelist)"/>
         <t t-set="product_variant" t-value="product.env['product.product'].browse(combination_info['product_id'])"/>
+        <t t-set="has_add_to_cart" t-value="product._is_add_to_cart_possible()"/>
 
         <t t-call="website.layout">
             <t t-set="additional_title" t-value="product.name" />
@@ -606,7 +607,7 @@
                                 </a>
                             </t>
                             <p t-field="product.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents." />
-                            <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
+                            <form t-if="has_add_to_cart" action="/shop/cart/update" method="POST">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
                                 <div class="js_product js_main_product mb-3">
                                     <div>
@@ -1033,7 +1034,8 @@
                                 </t>
                                 <t t-else="">
                                     <span class="text-muted w-100" t-esc="int(line.product_uom_qty)"/>
-                                    <input type="hidden" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="line.product_uom_qty" />
+                                    <!-- Input is needed because the delete button relies on it -->
+                                    <input type="hidden" class="js_quantity form-control quantity" t-att-data-line-id="line.id" t-att-data-product-id="line.product_id.id" t-att-value="int(line.product_uom_qty) == line.product_uom_qty and int(line.product_uom_qty) or line.product_uom_qty" />
                                 </t>
                             </div>
                         </td>
@@ -1069,6 +1071,7 @@
             <div id="wrap">
                 <div class="container oe_website_sale py-2">
                     <div class="row">
+                        <t t-set="has_checkout" t-value="website_sale_order and website_sale_order.website_order_line"/>
                         <div class="col-12">
                             <t t-call="website_sale.wizard_checkout">
                                 <t t-set="step" t-value="10" />
@@ -1097,7 +1100,7 @@
                                         <span class="fa fa-chevron-left" />
                                         <span class="">Continue Shopping</span>
                                     </a>
-                                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                                    <a role="button" t-if="has_checkout" class="btn btn-primary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
                                         <span class="">Process Checkout</span>
                                         <span class="fa fa-chevron-right" />
                                     </a>
@@ -1112,7 +1115,7 @@
                                     <span class="fa fa-chevron-left" />
                                     Continue<span class="d-none d-md-inline"> Shopping</span>
                                 </a>
-                                <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-primary float-right" href="/shop/checkout?express=1">
+                                <a role="button" t-if="has_checkout" class="btn btn-primary float-right" href="/shop/checkout?express=1">
                                     <span class="">Process Checkout</span>
                                     <span class="fa fa-chevron-right" />
                                 </a>
@@ -1132,9 +1135,11 @@
         </div>
         <t t-if="website_sale_order and website_sale_order.website_order_line">
             <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                <div class="form-row mb8 cart_line">
+                <t t-set="use_line" t-value="1"/>
+                <div t-if="use_line" class="form-row mb8 cart_line">
                     <div class="col-3 text-center">
-                        <span t-if="line._is_not_sellable_line() and line.product_id.image_128">
+                        <t t-set="use_img" t-value="line._is_not_sellable_line() and line.product_id.image_128"/>
+                        <span t-if="use_img">
                             <img t-att-src="image_data_uri(line.product_id.image_128)" class="img o_image_64_max rounded mb-2 img-fluid" t-att-alt="line.name_short"/>
                         </span>
                         <span t-else=""
@@ -1623,7 +1628,8 @@
                     <t t-call="website_sale.total">
                         <t t-set="no_rowspan" t-value="1"/>
                     </t>
-                    <a role="button" t-if="website_sale_order and website_sale_order.website_order_line" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
+                    <t t-set="has_checkout" t-value="website_sale_order and website_sale_order.website_order_line"/>
+                    <a role="button" t-if="has_checkout" class="btn btn-secondary float-right d-none d-xl-inline-block" href="/shop/checkout?express=1">
                         <span>Process Checkout</span>
                     </a>
                 </div>

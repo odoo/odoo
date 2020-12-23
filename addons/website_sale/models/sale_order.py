@@ -94,7 +94,8 @@ class SaleOrder(models.Model):
         if product and (product.product_tmpl_id.has_dynamic_attributes() or product.product_tmpl_id._has_no_variant_attributes()) and not line_id:
             return self.env['sale.order.line']
 
-        domain = [('order_id', '=', self.id), ('product_id', '=', product_id)]
+        domain = kwargs['extra_domain'] if 'extra_domain' in kwargs else []
+        domain += [('order_id', '=', self.id), ('product_id', '=', product_id)]
         if line_id:
             domain += [('id', '=', line_id)]
         else:

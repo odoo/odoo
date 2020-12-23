@@ -482,6 +482,9 @@ class WebsiteSale(http.Controller):
         request.website.sale_get_order(code=promo)
         return request.redirect(redirect)
 
+    def _prepare_cart_values(self, request, values, **post):
+        """Anchor point for modules that need to update the cart rendered information"""
+
     @http.route(['/shop/cart'], type='http', auth="public", website=True, sitemap=False)
     def cart(self, access_token=None, revive='', **post):
         """
@@ -520,6 +523,8 @@ class WebsiteSale(http.Controller):
             if not request.env.context.get('pricelist'):
                 _order = order.with_context(pricelist=order.pricelist_id.id)
             values['suggested_products'] = _order._cart_accessories()
+
+        self._prepare_cart_values(request, values, **post)
 
         if post.get('type') == 'popover':
             # force no-cache so IE11 doesn't cache this XHR
