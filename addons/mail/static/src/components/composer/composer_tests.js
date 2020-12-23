@@ -128,8 +128,9 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
 QUnit.test('composer text input: basic rendering when linked thread is a mail.channel', async function (assert) {
     assert.expect(4);
 
+    this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 20,
         model: 'mail.channel',
     });
