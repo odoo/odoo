@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <template id="snippets" groups="base.group_user">
-    <div class="o_we_website_top_actions d-none">
-        <div class="o_we_external_history_buttons">
-            <!-- Will be populated externally by Jabberwock/Wysiwyg -->
-        </div>
-        <form class="ml-auto">
-            <button type="button" class="btn btn-secondary" name="mobile" data-action="mobile"><i class="fa fa-mobile"></i></button>
-            <button type="button" class="btn btn-secondary" name="cancel" data-action="cancel" accesskey="j">Discard</button>
-            <button type="button" class="btn btn-primary" name="save" data-action="save" accesskey="s">Save</button>
-        </form>
-    </div>
+    <form class="o_we_website_top_actions d-none">
+        <button type="button" class="btn btn-primary" name="save" data-action="save" accesskey="s">Save</button>
+        <button type="button" class="btn btn-secondary" name="cancel" data-action="cancel" accesskey="j">Discard</button>
+        <button type="button" class="btn btn-secondary" name="mobile" data-action="mobile">Mobile preview</button>
+    </form>
     <div id="snippets_menu">
         <button type="button" tabindex="1" class="o_we_add_snippet_btn active text-uppercase" accesskey="1">
             <span>Blocks</span>

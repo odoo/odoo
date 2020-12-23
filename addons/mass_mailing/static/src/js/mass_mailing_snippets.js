@@ -1,10 +1,10 @@
 odoo.define('mass_mailing.snippets.options', function (require) {
 "use strict";
 
-var snippetOptions = require('web_editor.snippets.options');
+var options = require('web_editor.snippets.options');
 
 // Snippet option for resizing  image and column width inline like excel
-snippetOptions.registry.mass_mailing_sizing_x = snippetOptions.SnippetOptionWidget.extend({
+options.registry.mass_mailing_sizing_x = options.Class.extend({
     /**
      * @override
      */
@@ -79,7 +79,7 @@ snippetOptions.registry.mass_mailing_sizing_x = snippetOptions.SnippetOptionWidg
     },
 });
 
-snippetOptions.registry.mass_mailing_table_item = snippetOptions.SnippetOptionWidget.extend({
+options.registry.mass_mailing_table_item = options.Class.extend({
     onClone: function (options) {
         this._super.apply(this, arguments);
 
@@ -127,7 +127,7 @@ snippetOptions.registry.mass_mailing_table_item = snippetOptions.SnippetOptionWi
 
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
-snippetOptions.registry.BackgroundImage = snippetOptions.registry.BackgroundImage.extend({
+options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
     start: function () {
         this._super();
         if (this.snippets && this.snippets.split('.')[0] === "mass_mailing") {

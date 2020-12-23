@@ -1,9 +1,9 @@
 odoo.define('website.s_facebook_page_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-snippetOptions.registry.facebookPage = snippetOptions.SnippetOptionWidget.extend({
+options.registry.facebookPage = options.Class.extend({
     /**
      * Initializes the required facebook page data to create the iframe.
      *
@@ -51,7 +51,7 @@ snippetOptions.registry.facebookPage = snippetOptions.SnippetOptionWidget.extend
      * @see this.selectClass for parameters
      * @param {String} optionName the name of the option to toggle
      */
-    toggleOption: async function (previewMode, widgetValue, params) {
+    toggleOption: function (previewMode, widgetValue, params) {
         let optionName = params.optionName;
         if (optionName.startsWith('tab.')) {
             optionName = optionName.replace('tab.', '');
@@ -74,16 +74,16 @@ snippetOptions.registry.facebookPage = snippetOptions.SnippetOptionWidget.extend
                 this.fbData[optionName] = widgetValue;
             }
         }
-        return await this._markFbElement();
+        return this._markFbElement();
     },
     /**
      * Sets the facebook page's URL.
      *
      * @see this.selectClass for parameters
      */
-    pageUrl: async function (previewMode, widgetValue, params) {
+    pageUrl: function (previewMode, widgetValue, params) {
         this.fbData.href = widgetValue;
-        return await this._markFbElement();
+        return this._markFbElement();
     },
 
     //--------------------------------------------------------------------------
@@ -96,7 +96,7 @@ snippetOptions.registry.facebookPage = snippetOptions.SnippetOptionWidget.extend
      * @see this.selectClass for parameters
      */
     _markFbElement: function () {
-        return this._checkURL().then(async () => {
+        return this._checkURL().then(() => {
             // Managing height based on options
             if (this.fbData.tabs) {
                 this.fbData.height = this.fbData.tabs === 'events' ? 300 : 500;
@@ -105,11 +105,9 @@ snippetOptions.registry.facebookPage = snippetOptions.SnippetOptionWidget.extend
             } else {
                 this.fbData.height = this.fbData.show_facepile ? 225 : 150;
             }
-            await this.wysiwyg.withDomMutations(this.$target, () => {
-                for (const [key, value] of Object.entries(this.fbData)) {
-                    this.$target.attr('data-' + key, value);
-                    this.$target.data(key, value);
-                }
+            _.each(this.fbData, (value, key) => {
+                this.$target.attr('data-' + key, value);
+                this.$target.data(key, value);
             });
         });
     },

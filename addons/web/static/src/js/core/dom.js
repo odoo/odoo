@@ -551,14 +551,9 @@ var dom = {
                     return;
                 }
                 $scrollable.stop();
-                if (document.body.contains(el)) {
-                    dom.scrollTo(el, Object.assign({}, options, {
-                        duration: remainingMs,
-                    })).then(resolve);
-                } else {
-                    console.warn('This snippet are wrongly removed', el);
-                    resolve();
-                }
+                dom.scrollTo(el, Object.assign({}, options, {
+                    duration: remainingMs,
+                })).then(() => resolve());
             };
 
             // Detect the end of the animation to be able to indicate it to

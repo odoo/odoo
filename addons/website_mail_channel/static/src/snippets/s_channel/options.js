@@ -2,19 +2,17 @@ odoo.define('website_mail_channel.s_channel_options', function (require) {
 'use strict';
 
 var core = require('web.core');
-var snippetOptions = require('web_editor.snippets.options');
+var options = require('web_editor.snippets.options');
 var wUtils = require('website.utils');
 
 var _t = core._t;
 
-snippetOptions.registry.Channel = snippetOptions.SnippetOptionWidget.extend({
+options.registry.Channel = options.Class.extend({
     /**
      * @override
      */
-    cleanForSave: async function () {
-        await this.wysiwyg.withDomMutations(this.$target, () => {
-            this.$target.addClass('d-none');
-        });
+    cleanForSave: function () {
+        this.$target.addClass('d-none');
     },
 
     //--------------------------------------------------------------------------

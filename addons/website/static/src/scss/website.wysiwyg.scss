@@ -20,8 +20,12 @@
 }
 
 // EDITOR TOP BAR AND POPOVER
-#oe_snippets .o_we_website_top_actions {
+.o_we_website_top_actions {
+    @include o-position-absolute($top: 0, $right: 0);
+    z-index: ($zindex-fixed + $zindex-modal-backdrop) / 2 + 2; // $o-we-zindex
     display: flex;
+    justify-content: flex-end;
+    width: $o-we-sidebar-width;
     height: $o-we-sidebar-top-height;
     background-color: $o-we-sidebar-tabs-bg;
 
@@ -47,9 +51,6 @@
             outline: none;
             box-shadow: none;
         }
-        .fa {
-            font-size: $o-we-font-size + 5;
-        }
     }
 
     .dropdown-menu {
@@ -58,12 +59,12 @@
     }
 }
 
-.note-statusbar {
-    display: none;
+#oe_snippets {
+    top: $o-we-sidebar-top-height;
 }
 
-table.table-picker {
-    position: absolute !important;
+.note-statusbar {
+    display: none;
 }
 
 // TRANSLATIONS
@@ -77,6 +78,10 @@ html[lang] > body.editor_enable [data-oe-translation-state] {
 
     &[data-oe-translation-state="translated"] {
         background: rgba($o-we-translated-content-color, 0.5) !important;
+    }
+
+    &.o_dirty {
+        background: rgba($o-we-translated-content-color, 0.25) !important;
     }
 }
 

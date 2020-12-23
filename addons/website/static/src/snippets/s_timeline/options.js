@@ -1,9 +1,9 @@
 odoo.define('website.s_timeline_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-snippetOptions.registry.Timeline = snippetOptions.SnippetOptionWidget.extend({
+options.registry.Timeline = options.Class.extend({
     /**
      * @override
      */
@@ -24,11 +24,9 @@ snippetOptions.registry.Timeline = snippetOptions.SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    timelineCard: async function (previewMode, widgetValue, params) {
+    timelineCard: function (previewMode, widgetValue, params) {
         const $timelineRow = this.$target.closest('.s_timeline_row');
-        await params.withDomMutations($timelineRow, () => {
-            $timelineRow.toggleClass('flex-row-reverse flex-row');
-        });
+        $timelineRow.toggleClass('flex-row-reverse flex-row');
     },
 });
 });
