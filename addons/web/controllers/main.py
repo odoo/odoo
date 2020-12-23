@@ -1059,9 +1059,11 @@ class Binary(http.Controller):
                 if suffix in ('small', 'medium', 'large', 'big'):
                     content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
 
-
-        content = limited_image_resize(
-            content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+        try:
+            content = limited_image_resize(
+                content, width=width, height=height, crop=crop, upper_limit=upper_limit, avoid_if_small=avoid_if_small)
+        except Exception:
+            return request.not_found()
 
         image_base64 = base64.b64decode(content)
         headers.append(('Content-Length', len(image_base64)))
