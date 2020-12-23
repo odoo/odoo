@@ -2,13 +2,13 @@ odoo.define('website.s_countdown_options', function (require) {
 'use strict';
 
 const core = require('web.core');
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 const CountdownWidget = require('website.s_countdown');
 
 const qweb = core.qweb;
 
-snippetOptions.registry.countdown = snippetOptions.SnippetOptionWidget.extend({
-    events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.events || {}, {
+options.registry.countdown = options.Class.extend({
+    events: _.extend({}, options.Class.prototype.events || {}, {
         'click .toggle-edit-message': '_onToggleEndMessageClick',
     }),
 
@@ -21,57 +21,47 @@ snippetOptions.registry.countdown = snippetOptions.SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    endAction: async function (previewMode, widgetValue, params) {
-        const countdownEndAction = async (context) => {
-            await params.withDomMutations(this.$target, () => {
-                this.$target.attr('data-end-action', widgetValue);
-                if (widgetValue === 'message' || widgetValue === 'message_no_countdown') {
-                    if (!this.$target.find('.s_countdown_end_message').length) {
-                        const message = this.endMessage || qweb.render('website.s_countdown.end_message');
-                        this.$target.find('.container').append(message);
-                        this.$target.toggleClass('flex-row-reverse flex-row', widgetValue === 'message_no_countdown');
-                    }
-                } else {
-                    const $message = this.$target.find('.s_countdown_end_message');
-                    if ($message.length) {
-                        this.endMessage = $message[0].outerHTML;
-                    }
-                    $message.remove();
-                }
-            });
-        };
-        await this.wysiwyg.execCommand(countdownEndAction);
+    endAction: function (previewMode, widgetValue, params) {
+        this.$target[0].dataset.endAction = widgetValue;
+        if (widgetValue === 'message' || widgetValue === 'message_no_countdown') {
+            if (!this.$target.find('.s_countdown_end_message').length) {
+                const message = this.endMessage || qweb.render('website.s_countdown.end_message');
+                this.$target.append(message);
+            }
+            this.$target.toggleClass('hide-countdown', widgetValue === 'message_no_countdown');
+        } else {
+            const $message = this.$target.find('.s_countdown_end_message').detach();
+            if ($message.length) {
+                this.endMessage = $message[0].outerHTML;
+            }
+        }
     },
     /**
     * Changes the countdown style.
     *
     * @see this.selectClass for parameters
     */
-    layout: async function (previewMode, widgetValue, params) {
-        this.wysiwyg.withDomMutations(this.$target, () => {
-            switch (widgetValue) {
-                case 'circle':
-                    this.$target[0].dataset.progressBarStyle = 'disappear';
-                    this.$target[0].dataset.progressBarWeight = 'thin';
-                    this.$target[0].dataset.layoutBackground = 'none';
-                    break;
-                case 'boxes':
-                    this.$target[0].dataset.progressBarStyle = 'none';
-                    this.$target[0].dataset.layoutBackground = 'plain';
-                    break;
-                case 'clean':
-                    this.$target[0].dataset.progressBarStyle = 'none';
-                    this.$target[0].dataset.layoutBackground = 'none';
-                    break;
-                case 'text':
-                    this.$target[0].dataset.progressBarStyle = 'none';
-                    this.$target[0].dataset.layoutBackground = 'none';
-                    break;
-                default:
-                    break;
-            }
-            this.$target[0].dataset.layout = widgetValue;
-        });
+    layout: function (previewMode, widgetValue, params) {
+        switch (widgetValue) {
+            case 'circle':
+                this.$target[0].dataset.progressBarStyle = 'disappear';
+                this.$target[0].dataset.progressBarWeight = 'thin';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+            case 'boxes':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'plain';
+                break;
+            case 'clean':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+            case 'text':
+                this.$target[0].dataset.progressBarStyle = 'none';
+                this.$target[0].dataset.layoutBackground = 'none';
+                break;
+        }
+        this.$target[0].dataset.layout = widgetValue;
     },
 
     //--------------------------------------------------------------------------
@@ -100,14 +90,6 @@ snippetOptions.registry.countdown = snippetOptions.SnippetOptionWidget.extend({
             .toggleClass("d-none", this.showEndMessage === true && this.$target.hasClass("hide-countdown"));
         this.$target.find('.s_countdown_end_message')
             .toggleClass("d-none", !this.showEndMessage);
-    },
-
-    /**
-     * @override
-     */
-    async cleanForSave() {
-        this.$('.s_countdown_anvas_wrapper canvas').remove();
-        await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

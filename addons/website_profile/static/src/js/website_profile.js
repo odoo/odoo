@@ -48,27 +48,30 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
         'click .o_forum_profile_pic_edit': '_onEditProfilePicClick',
         'change .o_forum_file_upload': '_onFileUploadChange',
         'click .o_forum_profile_pic_clear': '_onProfilePicClearClick',
+        'click .o_wprofile_submit_btn': '_onSubmitClick',
     },
 
     /**
      * @override
      */
-    start: async function () {
-        await this._super.apply(this, arguments);
-
+    start: function () {
+        var def = this._super.apply(this, arguments);
         if (this.editableMode) {
-            return;
+            return def;
         }
 
         var $textarea = this.$('textarea.o_wysiwyg_loader');
-        await wysiwygLoader.loadFromTextarea(this, $textarea, {
+        var loadProm = wysiwygLoader.load(this, $textarea[0], {
             recordInfo: {
                 context: this._getContext(),
                 res_model: 'res.users',
                 res_id: parseInt(this.$('input[name=user_id]').val()),
             },
-            value: $textarea[0].value,
+        }).then(wysiwyg => {
+            this._wysiwyg = wysiwyg;
         });
+
+        return Promise.all([def, loadProm]);
     },
 
     //--------------------------------------------------------------------------
@@ -111,6 +114,14 @@ publicWidget.registry.websiteProfileEditor = publicWidget.Widget.extend({
             id: 'forum_clear_image',
             type: 'hidden',
         }));
+    },
+    /**
+     * @private
+     */
+    _onSubmitClick: function () {
+        if (this._wysiwyg) {
+            this._wysiwyg.save();
+        }
     },
 });
 

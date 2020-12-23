@@ -3,11 +3,11 @@ odoo.define('website.s_product_catalog_options', function (require) {
 'use strict';
 
 const core = require('web.core');
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
 const _t = core._t;
 
-snippetOptions.registry.ProductCatalog = snippetOptions.SnippetOptionWidget.extend({
+options.registry.ProductCatalog = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -18,7 +18,7 @@ snippetOptions.registry.ProductCatalog = snippetOptions.SnippetOptionWidget.exte
      *
      * @see this.selectClass for parameters
      */
-    toggleDescription: async function (previewMode, widgetValue, params) {
+    toggleDescription: function (previewMode, widgetValue, params) {
         const $dishes = this.$('.s_product_catalog_dish');
         const $name = $dishes.find('.s_product_catalog_dish_name');
         $name.toggleClass('s_product_catalog_dish_dot_leaders', !widgetValue);
@@ -46,7 +46,6 @@ snippetOptions.registry.ProductCatalog = snippetOptions.SnippetOptionWidget.exte
                 }
             });
         }
-        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
