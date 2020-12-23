@@ -540,6 +540,7 @@ class PosOrder(models.Model):
             # be the conversion amount for the day the session is being closed.
             imb_amount_session_currency = cur_company._convert(abs(imbalance_amount), cur, session.config_id.company_id, fields.Date.context_today(self))
             vals.update({
+                'currency_id': cur.id,
                 'amount_currency': -imb_amount_session_currency
             })
         return vals
