@@ -570,7 +570,7 @@ class PosOrder(models.Model):
             # it makes more sense to have an equivalent `amount_currency` for
             # the balancing amount than not having it. And it's value should
             # be the conversion amount for the day the session is being closed.
-            imb_amount_session_currency = cur_company._convert(abs(imbalance_amount), cur, session.company_id, fields.Date.context_today(self))
+            imb_amount_session_currency = cur_company._convert(abs(imbalance_amount), cur, session.config_id.company_id, fields.Date.context_today(self))
             vals.update({
                 'amount_currency': -imb_amount_session_currency
             })
