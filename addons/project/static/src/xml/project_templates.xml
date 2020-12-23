@@ -18,8 +18,18 @@
     <div t-name="project.ProjectTaskAction" class="o_project_action"></div>
 
     <div t-name="project.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
-        <xpath expr="//div[hasclass('o_cp_top_left')]" position="inside">
-            <span>Hello World</span>
+        <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
+            <li t-if="show_project_update" class="o_project_updates_breadcrumb">Hello World</li>
         </xpath>
+    </div>
+
+    <div t-name="project.ProjectUpdateWidget" owl="1" t-on-click="_onClickStatus">
+        <span class="color o_status"><t t-esc="status" /></span>
+        <span class="status">Project status : <t t-esc="name" /></span>
+    </div>
+
+    <div t-name="project.ProjectUpdateWidget" owl="1" t-on-click="_onClickStatus">
+        <span class="color o_status"><t t-esc="status" /></span>
+        <span class="status">Project status : <t t-esc="name" /></span>
     </div>
 </templates>

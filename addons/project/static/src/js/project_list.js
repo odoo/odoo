@@ -6,6 +6,7 @@ odoo.define('project.ProjectListView', function (require) {
     const ListController = require('web.ListController');
     const core = require('web.core');
     const view_registry = require('web.view_registry');
+    const ProjectControlPanel = require("project.ProjectControlPanel");
 
     const _t = core._t;
 
@@ -103,6 +104,7 @@ odoo.define('project.ProjectListView', function (require) {
     const ProjectListView = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {
             Controller: ProjectListController,
+            ControlPanel: ProjectControlPanel
         }),
     });
 

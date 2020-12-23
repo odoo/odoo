@@ -60,6 +60,7 @@
             <field name="context">{
                 'pivot_row_groupby': ['user_id'],
                 'default_project_id': active_id,
+                'show_project_update': True,
             }</field>
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
@@ -282,6 +283,7 @@
                             <field name="label_tasks" string="Name of the tasks"/>
                             <field name="partner_id" widget="res_partner_many2one"/>
                         </group>
+                        <field name="last_update_id"/>
                     </group>
                     <notebook>
                         <page name="description_page" string="Description">
