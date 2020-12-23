@@ -1098,7 +1098,10 @@ class Binary(http.Controller):
                     content = getattr(odoo.tools, 'image_resize_image_%s' % suffix)(content)
 
         if crop and (width or height):
-            content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
+            try:
+                content = crop_image(content, type='center', size=(width, height), ratio=(1, 1))
+            except Exception:
+                return request.not_found()
         elif (width or height):
             if not upper_limit:
                 # resize maximum 500*500
@@ -1106,9 +1109,12 @@ class Binary(http.Controller):
                     width = 500
                 if height > 500:
                     height = 500
-            content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None),
+            try:
+                content = odoo.tools.image_resize_image(base64_source=content, size=(width or None, height or None),
                                                     encoding='base64', upper_limit=upper_limit,
                                                     avoid_if_small=avoid_if_small)
+            except Exception:
+                return request.not_found()
 
         image_base64 = base64.b64decode(content)
         headers.append(('Content-Length', len(image_base64)))
