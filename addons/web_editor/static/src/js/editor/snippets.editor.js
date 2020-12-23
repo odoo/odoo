@@ -1980,6 +1980,7 @@ var SnippetsMenu = Widget.extend({
                             }
                         },
                     });
+<<<<<<< HEAD
 
                     // Trigger a scroll on the draggable element so that jQuery updates
                     // the position of the drop zones.
@@ -1987,6 +1988,15 @@ var SnippetsMenu = Widget.extend({
                         self.$el.trigger('scroll');
                     });
 
+=======
+
+                    // Trigger a scroll on the draggable element so that jQuery updates
+                    // the position of the drop zones.
+                    $scrollingElement.on('scroll.scrolling_element', function () {
+                        self.$el.trigger('scroll');
+                    });
+
+>>>>>>> 10b9d677115... temp
                     const prom = new Promise(resolve => dragAndDropResolve = () => resolve());
                     self._mutex.exec(() => prom);
                 },
