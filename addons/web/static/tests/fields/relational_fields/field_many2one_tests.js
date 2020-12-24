@@ -208,6 +208,29 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2ones in rtl language', async function (assert) {
+            assert.expect(1);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch:
+                `<form string="Partners">
+                    <field name="trululu"/>
+                </form>`,
+                translateParameters: {
+                    direction: 'rtl',
+                }
+            });
+
+            const position = form.$('.o_field_many2one input').autocomplete('option', 'position');
+            assert.deepEqual(position, { my: "right top", at: "right bottom" },
+                "should correct position in rtl");
+
+            form.destroy();
+        });
+
         QUnit.test('editing a many2one, but not changing anything', async function (assert) {
             assert.expect(2);
             var form = await createView({

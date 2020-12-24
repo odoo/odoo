@@ -321,7 +321,11 @@ var FieldMany2One = AbstractField.extend({
             minLength: 0,
             delay: this.AUTOCOMPLETE_DELAY,
         });
-        this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
+        if (_t.database.parameters.direction === "rtl") {
+            this.$input.autocomplete("option", "position", { my: "right top", at: "right bottom" });
+        } else {
+            this.$input.autocomplete("option", "position", { my : "left top", at: "left bottom" });
+        }
         this.autocomplete_bound = true;
     },
     /**
