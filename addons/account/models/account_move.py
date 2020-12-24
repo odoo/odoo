@@ -378,6 +378,8 @@ class AccountMove(models.Model):
             if new_currency != self.currency_id:
                 self.currency_id = new_currency
                 self._onchange_currency()
+        if self.state == 'draft' and self._get_last_sequence() and self.name and self.name != '/':
+            self.name = '/'
 
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
