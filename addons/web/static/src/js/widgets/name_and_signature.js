@@ -246,8 +246,8 @@ var NameAndSignature = Widget.extend({
         this.$signatureField
             .empty()
             .jSignature({
-                'decor-color': '#D1D0CE',
-                'background-color': '#FFF',
+                'decor-color': this.defaultSignature ? null : '#D1D0CE',
+                'background-color': this.defaultSignature ? 'transparent' :'#FFF',
                 'color': '#000',
                 'lineWidth': 2,
                 'width': width,
@@ -566,7 +566,8 @@ var NameAndSignature = Widget.extend({
      */
     _onClickSignDrawClear: function (ev) {
         ev.preventDefault();
-        this.$signatureField.jSignature('reset');
+        delete this.defaultSignature
+        this.resetSignature();
     },
     /**
      * Handles click on the Load button: activates @see mode 'load'.
@@ -579,6 +580,7 @@ var NameAndSignature = Widget.extend({
         // open file upload automatically (saves 1 click)
         this.$loadFile.find('input').click();
         this.setMode('load');
+        this.resetSignature();
     },
     /**
      * Triggers up the signature change event.
