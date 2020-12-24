@@ -240,8 +240,8 @@ class Project(models.Model):
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     update_status_ids = fields.Many2many('project.update.status', 'project_update_status_rel', 'project_id', 'update_status_id', string='Project Statuses')
-    project_update_ids = fields.One2many('project.update', 'project_id')
-    project_last_update_id = fields.Many2one('project.update', string='Last Update', compute='_compute_last_update')
+    update_ids = fields.One2many('project.update', 'project_id')
+    last_update_id = fields.Many2one('project.update', string='Last Update', compute='_compute_last_update')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
@@ -307,10 +307,10 @@ class Project(models.Model):
         for project in self:
             project.rating_request_deadline = fields.datetime.now() + timedelta(days=periods.get(project.rating_status_period, 0))
 
-    @api.depends('project_update_ids')
+    @api.depends('update_ids')
     def _compute_last_update(self):
         for project in self:
-            project.project_last_update_id = self.env['project.update'].search([
+            project.last_update_id = self.env['project.update'].search([
                 ("project_id", "=", project.id)
             ], limit=1)
 

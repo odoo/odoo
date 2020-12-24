@@ -15,6 +15,7 @@ class ProjectUpdateStatus(models.Model):
     name = fields.Char()
     color = fields.Integer()
     default = fields.Boolean()
+    sequence = fields.Integer()
     project_ids = fields.Many2many('project.project', 'project_update_status_rel', 'update_status_id', 'project_id', string='Projects',
                                    default=_get_default_project_ids)
 

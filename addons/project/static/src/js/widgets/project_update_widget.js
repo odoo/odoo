@@ -1,4 +1,4 @@
-odoo.define('project.project_update', function (require) {
+odoo.define('project.project_update_widget', function (require) {
     "use strict";
     
     const fieldRegistry = require('web.field_registry');

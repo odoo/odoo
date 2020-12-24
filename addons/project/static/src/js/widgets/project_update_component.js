@@ -2,7 +2,7 @@ odoo.define('project.ProjectUpdateComponent', (function(require) {
 
     const {Component} = owl;
 
-    class ProjectUpdateWidget extends Component {
+    class ProjectUpdateComponent extends Component {
         constructor (parent, props){
             super(...arguments);
 
@@ -26,7 +26,7 @@ odoo.define('project.ProjectUpdateComponent', (function(require) {
             });
         }
     }
-    ProjectUpdateWidget.template = 'project.ProjectUpdateWidget';
+    ProjectUpdateComponent.template = 'project.ProjectUpdateComponent';
 
-    return ProjectUpdateWidget;
+    return ProjectUpdateComponent;
 }));
