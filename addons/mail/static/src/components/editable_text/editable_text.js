@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/components/editable_text/editable_text.js', function (require) {
 'use strict';
 
+const { markEventHandled } = require('mail/static/src/utils/utils.js');
+
 const { Component } = owl;
 
 class EditableText extends Component {
@@ -31,6 +33,7 @@ class EditableText extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
+        markEventHandled(ev, 'EditableText.click');
         this.trigger('o-clicked');
     }
 
