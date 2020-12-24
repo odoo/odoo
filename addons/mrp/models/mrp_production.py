@@ -1420,6 +1420,8 @@ class MrpProduction(models.Model):
                     wo.qty_producing = 1
                 else:
                     wo.qty_producing = wo.qty_remaining
+                if wo.qty_producing == 0:
+                    wo.action_cancel()
 
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
