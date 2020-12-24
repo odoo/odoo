@@ -304,7 +304,7 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
 
     html = ustr(html)
 
-    if not html:
+    if not html.strip():
         return ''
 
     tree = etree.fromstring(html, parser=etree.HTMLParser())
