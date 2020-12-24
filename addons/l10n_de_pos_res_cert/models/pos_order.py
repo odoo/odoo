@@ -110,23 +110,23 @@ class PosOrder(models.Model):
         for line in order_lines:
             line_qty = line['qty']
             line_key = (line['product_id'], line['price_unit'], line['discount'])
-            if line_key not in line_dict:
-                unit_price = str(float(line['price_subtotal_incl'] / line_qty))
-                if len(unit_price.split('.')[1]) < 2:
-                    unit_price += '0'
-                line_dict[line_key] = {
-                    'quantity': line_qty,
-                    'text': line['full_product_name'],
-                    'price_per_unit': unit_price
-                }
-            else:
-                line_dict[line_key]['quantity'] += line_qty
+            if line_qty:
+                if line_key not in line_dict:
+                    unit_price = str(float(line['price_subtotal_incl'] / line_qty))
+                    if len(unit_price.split('.')[1]) < 2:
+                        unit_price += '0'
+                    line_dict[line_key] = {
+                        'quantity': line_qty,
+                        'text': line['full_product_name'],
+                        'price_per_unit': unit_price
+                    }
+                else:
+                    line_dict[line_key]['quantity'] += line_qty
         return line_dict
 
     def _get_fields_for_draft_order(self):
         field_list = super(PosOrder, self)._get_fields_for_draft_order()
         if self.env.company.country_id == self.env.ref('base.de'):
-            field_list.append('fiskaly_transaction_uuid')
             field_list.append('fiskaly_time_start')
         return field_list
 
@@ -135,11 +135,8 @@ class PosOrder(models.Model):
         table_orders = super(PosOrder, self).get_table_draft_orders(table_id)
         if self.env.company.country_id == self.env.ref('base.de'):
             for order in table_orders:
-                order['fiskaly_uuid'] = order['fiskaly_transaction_uuid']
                 order['tss_info'] = {}
                 order['tss_info']['time_start'] = order['fiskaly_time_start']
-
-                del order['fiskaly_transaction_uuid']
                 del order['fiskaly_time_start']
 
         return table_orders

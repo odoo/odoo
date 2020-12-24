@@ -109,7 +109,9 @@ odoo.define('l10n_de_pos_res_cert.pos', function(require) {
             });
         },
          async cancelOrderTransaction(lineDifference) {
-            await this.createAndFinishOrderTransaction(lineDifference);
+            if (lineDifference.length > 0) {
+                await this.createAndFinishOrderTransaction(lineDifference);
+            }
             await this.createTransaction();
             await this.cancelTransaction();
         }

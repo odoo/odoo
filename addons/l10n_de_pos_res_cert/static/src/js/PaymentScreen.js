@@ -9,9 +9,16 @@ odoo.define('l10n_de_pos_res_cert.PaymentScreen', function(require) {
         //@Override
         async validateOrder(isForceValidate) {
             if (this.env.pos.isRestaurantCountryGermany()) {
-                await this.currentOrder.retrieveAndSendLineDifference();
+                await this.currentOrder.retrieveAndSendLineDifference().then(async () => {
+                    await super.validateOrder(...arguments);
+                }).catch(async error => {
+                    const title = this.env._t('No internet')
+                    const body = this.env._t('Check the internet connection then try to validate the order again')
+                    await this.showPopup('ErrorPopup', { title, body })
+                });
+            } else {
+                await super.validateOrder(...arguments);
             }
-            await super.validateOrder(...arguments);
         }
     };
 
