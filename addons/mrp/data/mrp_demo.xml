@@ -37,6 +37,10 @@
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product.product_product_12'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 1,})]"/>
         </record>
         <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
             <field name="bom_id" ref="mrp_bom_manufacture"/>
@@ -45,14 +49,6 @@
             <field name="time_cycle">60</field>
             <field name="sequence">5</field>
             <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_bom_manufacture_line_1" model="mrp.bom.line">
-            <field name="product_id" ref="product.product_product_12"/>
-            <field name="product_qty">1</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="sequence">5</field>
-            <field name="bom_id" ref="mrp_bom_manufacture"/>
         </record>
 
         <record id="mrp_bom_manufacture_line_2" model="mrp.bom.line">
@@ -238,6 +234,11 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">3</field>
             <field name="consumption">flexible</field>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product_product_computer_desk_head'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 1,
+                               'sequence': 1})]"/>
         </record>
         <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
             <field name="bom_id" ref="mrp_bom_desk"/>
@@ -248,22 +249,12 @@
             <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
         </record>
 
-        <record id="mrp_bom_desk_line_1" model="mrp.bom.line">
-            <field name="product_id" ref="product_product_computer_desk_head"/>
-            <field name="product_qty">1</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_desk"/>
-            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
-        </record>
-
         <record id="mrp_bom_desk_line_2" model="mrp.bom.line">
             <field name="product_id" ref="product_product_computer_desk_leg"/>
             <field name="product_qty">4</field>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="bom_id" ref="mrp_bom_desk"/>
-            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
         </record>
 
         <record id="mrp_bom_desk_line_3" model="mrp.bom.line">
@@ -272,7 +263,6 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">3</field>
             <field name="bom_id" ref="mrp_bom_desk"/>
-            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
         </record>
 
         <record id="mrp_bom_desk_line_4" model="mrp.bom.line">
@@ -281,8 +271,13 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">4</field>
             <field name="bom_id" ref="mrp_bom_desk"/>
-            <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
         </record>
+
+        <!-- Assign workcenters -->
+        <function model="mrp.bom.line" name="write">
+            <value model="mrp.bom.line" eval="obj().env['mrp.bom.line'].search([('bom_id', '=', obj().env.ref('mrp.mrp_bom_desk').id)]).ids"/>
+            <value eval="{'operation_id': ref('mrp.mrp_routing_workcenter_5')}"/>
+        </function>
 
         <!-- Table MO -->
         <record id="mrp_production_3" model="mrp.production">
@@ -303,6 +298,11 @@
             <field name="product_tmpl_id" ref="product_product_computer_desk_head_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product_product_wood_panel'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 2,
+                               'sequence': 1})]"/>
         </record>
         <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
             <field name="bom_id" ref="mrp_bom_table_top"/>
@@ -313,13 +313,6 @@
             <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
         </record>
 
-        <record id="mrp_bom_line_wood_panel" model="mrp.bom.line">
-            <field name="product_id" ref="product_product_wood_panel"/>
-            <field name="product_qty">2</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_table_top"/>
-        </record>
         <record id="mrp_bom_line_plastic_laminate" model="mrp.bom.line">
             <field name="product_id" ref="product_product_plastic_laminate"/>
             <field name="product_qty">4</field>
@@ -332,6 +325,11 @@
             <field name="product_tmpl_id" ref="product_product_plastic_laminate_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product_product_ply_veneer'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 1,
+                               'sequence': 1})]"/>
         </record>
         <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
             <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
@@ -359,25 +357,16 @@
             <field name="sequence">5</field>
             <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
         </record>
-        <record id="mrp_bom_line_plastic_laminate" model="mrp.bom.line">
-            <field name="product_id" ref="product_product_ply_veneer"/>
-            <field name="product_qty">1</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
-        </record>
 
         <record id="mrp_bom_wood_panel" model="mrp.bom">
             <field name="product_tmpl_id" ref="product_product_wood_panel_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
-        </record>
-        <record id="mrp_bom_line_wood_panel_ply" model="mrp.bom.line">
-            <field name="product_id" ref="product_product_wood_ply"/>
-            <field name="product_qty">3</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_wood_panel"/>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product_product_wood_ply'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 3,
+                               'sequence': 1})]"/>
         </record>
         <record id="mrp_bom_line_wood_panel_wear" model="mrp.bom.line">
             <field name="product_id" ref="product_product_wood_wear"/>
@@ -429,13 +418,11 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="type">phantom</field>
-        </record>
-
-        <record id="mrp_bom_kit_line_1" model="mrp.bom.line">
-            <field name="product_id" ref="product_product_wood_panel"/>
-            <field name="product_qty">1</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="bom_id" ref="mrp_bom_kit"/>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product_product_wood_panel'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 1,
+                               'sequence': 1})]"/>
         </record>
 
         <record id="mrp_bom_kit_line_2" model="mrp.bom.line">
@@ -579,13 +566,11 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
             <field name="code">PRIM-ASSEM</field>
-        </record>
-        <record id="mrp_bom_laptop_cust_line_1" model="mrp.bom.line">
-            <field name="product_id" ref="product_product_drawer_drawer"/>
-            <field name="product_qty">1</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_laptop_cust"/>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product_product_drawer_drawer'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 1,
+                               'sequence': 1})]"/>
         </record>
         <record id="mrp_bom_laptop_cust_line_2" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_case"/>
@@ -600,6 +585,11 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
             <field name="code">SEC-ASSEM</field>
+            <field name="bom_line_ids" model="mrp.bom.line"
+                eval="[(0, 0, {'product_id': ref('product_product_drawer_drawer'),
+                               'product_uom_id': ref('uom.product_uom_unit'),
+                               'product_qty': 1,
+                               'sequence': 1})]"/>
         </record>
         <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
             <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
@@ -626,13 +616,6 @@
             <field name="time_cycle">30</field>
             <field name="sequence">5</field>
             <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
-        <record id="mrp_bom_laptop_cust_rout_line_1" model="mrp.bom.line">
-            <field name="product_id" ref="product_product_drawer_drawer"/>
-            <field name="product_qty">1</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="sequence">1</field>
-            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
         </record>
         <record id="mrp_bom_laptop_cust_rout_line_2" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_case"/>

@@ -1219,9 +1219,15 @@ class TestMrpOrder(TestMrpCommon):
         })
 
         # Create service type product
-        product_raw = self.env['product.product'].create({
+        product_service = self.env['product.product'].create({
             'name': 'raw Geyser',
             'type': 'service',
+        })
+
+        # Create non-service type product for BOM
+        product_consu = self.env['product.product'].create({
+            'name': 'water',
+            'type': 'consu',
         })
 
         # Create bom for finish product
@@ -1231,7 +1237,7 @@ class TestMrpOrder(TestMrpCommon):
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
-            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_service.id}), (0, 0, {'product_id': product_consu.id})]
         })
 
         mo_form = Form(self.env['mrp.production'])

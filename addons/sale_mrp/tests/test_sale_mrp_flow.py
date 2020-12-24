@@ -69,21 +69,13 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         cls.bom_kit_1 = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_1.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-
-        BomLine = cls.env['mrp.bom.line']
-        BomLine.create({
-            'product_id': cls.component_a.id,
-            'product_qty': 2.0,
-            'bom_id': cls.bom_kit_1.id})
-        BomLine.create({
-            'product_id': cls.component_b.id,
-            'product_qty': 1.0,
-            'bom_id': cls.bom_kit_1.id})
-        BomLine.create({
-            'product_id': cls.component_c.id,
-            'product_qty': 3.0,
-            'bom_id': cls.bom_kit_1.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.component_a.id, 'product_qty': 2.0}),
+                (0, 0, {'product_id': cls.component_b.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': cls.component_c.id, 'product_qty': 3.0}),
+            ]
+        })
 
         # Create a kit 'kit_parent' :
         # ---------------------------
@@ -107,46 +99,34 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         bom_kit_2 = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_2.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-
-        BomLine.create({
-            'product_id': cls.component_d.id,
-            'product_qty': 1.0,
-            'bom_id': bom_kit_2.id})
-        BomLine.create({
-            'product_id': cls.kit_1.id,
-            'product_qty': 2.0,
-            'bom_id': bom_kit_2.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.component_d.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': cls.kit_1.id, 'product_qty': 2.0}),
+            ]
+        })
 
         bom_kit_parent = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_parent.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-
-        BomLine.create({
-            'product_id': cls.component_e.id,
-            'product_qty': 1.0,
-            'bom_id': bom_kit_parent.id})
-        BomLine.create({
-            'product_id': cls.kit_2.id,
-            'product_qty': 2.0,
-            'bom_id': bom_kit_parent.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.component_e.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': cls.kit_2.id, 'product_qty': 2.0}),
+            ]
+        })
 
         bom_kit_3 = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_3.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.component_f.id, 'product_qty': 1.0}),
+                (0, 0, {'product_id': cls.component_g.id, 'product_qty': 2.0}),
+            ]
+        })
 
-        BomLine.create({
-            'product_id': cls.component_f.id,
-            'product_qty': 1.0,
-            'bom_id': bom_kit_3.id})
-        BomLine.create({
-            'product_id': cls.component_g.id,
-            'product_qty': 2.0,
-            'bom_id': bom_kit_3.id})
-
-        BomLine.create({
+        cls.env['mrp.bom.line'].create({
             'product_id': cls.kit_3.id,
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
@@ -642,16 +622,11 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         self.bom = self.env['mrp.bom'].create({
                 'product_tmpl_id': self.finished_product.product_tmpl_id.id,
                 'product_qty': 1.0,
-                'type': 'phantom'})
-        BomLine = self.env['mrp.bom.line']
-        BomLine.create({
-                'product_id': self.component1.id,
-                'product_qty': 2.0,
-                'bom_id': self.bom.id})
-        BomLine.create({
-                'product_id': self.component2.id,
-                'product_qty': 1.0,
-                'bom_id': self.bom.id})
+                'type': 'phantom',
+                'bom_line_ids': [
+                    (0, 0, {'product_id': self.component1.id, 'product_qty': 2.0,}),
+                    (0, 0, {'product_id': self.component2.id, 'product_qty': 1.0,})
+                ]})
 
         # Create a SO for a specific partner for three units of the finished product
         so_vals = {
@@ -1143,24 +1118,19 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         bom_kit_uom_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-
-        BomLine = self.env['mrp.bom.line']
-        BomLine.create({
-            'product_id': component_uom_unit.id,
-            'product_qty': 2.0,
-            'product_uom_id': self.uom_dozen.id,
-            'bom_id': bom_kit_uom_1.id})
-        BomLine.create({
-            'product_id': component_uom_dozen.id,
-            'product_qty': 1.0,
-            'product_uom_id': self.uom_dozen.id,
-            'bom_id': bom_kit_uom_1.id})
-        BomLine.create({
-            'product_id': component_uom_kg.id,
-            'product_qty': 3.0,
-            'product_uom_id': self.uom_gm.id,
-            'bom_id': bom_kit_uom_1.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_uom_unit.id,
+                        'product_qty': 2.0,
+                        'product_uom_id': self.uom_dozen.id,}),
+                (0, 0, {'product_id': component_uom_dozen.id,
+                        'product_qty': 1.0,
+                        'product_uom_id': self.uom_dozen.id,}),
+                (0, 0, {'product_id': component_uom_kg.id,
+                        'product_qty': 3.0,
+                        'product_uom_id': self.uom_gm.id,}),
+            ]
+        })
 
         # Updating the quantities in stock to prevent
         # a 'Not enough inventory' warning message.
@@ -1250,40 +1220,33 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         bom_kit_uom_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-
-        BomLine = self.env['mrp.bom.line']
-        BomLine.create({
-            'product_id': component_uom_unit.id,
-            'product_qty': 2.0,
-            'product_uom_id': self.uom_dozen.id,
-            'bom_id': bom_kit_uom_1.id})
-        BomLine.create({
-            'product_id': component_uom_dozen.id,
-            'product_qty': 1.0,
-            'product_uom_id': self.uom_dozen.id,
-            'bom_id': bom_kit_uom_1.id})
-        BomLine.create({
-            'product_id': component_uom_kg.id,
-            'product_qty': 5.0,
-            'product_uom_id': self.uom_gm.id,
-            'bom_id': bom_kit_uom_1.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_uom_unit.id,
+                        'product_qty': 2.0,
+                        'product_uom_id': self.uom_dozen.id,}),
+                (0, 0, {'product_id': component_uom_dozen.id,
+                        'product_qty': 1.0,
+                        'product_uom_id': self.uom_dozen.id,}),
+                (0, 0, {'product_id': component_uom_kg.id,
+                        'product_qty': 5.0,
+                        'product_uom_id': self.uom_gm.id,}),
+            ]
+        })
 
         bom_kit_uom_in_kit = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_uom_in_kit.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-
-        BomLine.create({
-            'product_id': component_uom_gm.id,
-            'product_qty': 3.0,
-            'product_uom_id': self.uom_kg.id,
-            'bom_id': bom_kit_uom_in_kit.id})
-        BomLine.create({
-            'product_id': kit_uom_1.id,
-            'product_qty': 2.0,
-            'product_uom_id': self.uom_dozen.id,
-            'bom_id': bom_kit_uom_in_kit.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_uom_gm.id,
+                        'product_qty': 3.0,
+                        'product_uom_id': self.uom_kg.id,}),
+                (0, 0, {'product_id': kit_uom_1.id,
+                        'product_qty': 2.0,
+                        'product_uom_id': self.uom_dozen.id,}),
+            ]
+        })
 
         # Create a simple warehouse to receives some products
         warehouse_1 = self.env['stock.warehouse'].create({
@@ -1503,9 +1466,15 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         })
 
         # Create service type product
-        product_raw = self.env['product.product'].create({
+        product_service = self.env['product.product'].create({
             'name': 'raw Geyser',
             'type': 'service',
+        })
+
+        # Create non-service type product for BOM
+        product_consu = self.env['product.product'].create({
+            'name': 'water',
+            'type': 'consu',
         })
 
         # Create bom for finish product
@@ -1515,7 +1484,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             'product_uom_id': self.env.ref('uom.product_uom_unit').id,
             'product_qty': 1.0,
             'type': 'normal',
-            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_raw.id})]
+            'bom_line_ids': [(5, 0), (0, 0, {'product_id': product_service.id}), (0, 0, {'product_id': product_consu.id})]
         })
 
         # Create sale order

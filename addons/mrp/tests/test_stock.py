@@ -218,57 +218,41 @@ class TestKitPicking(common.TestMrpCommon):
         bom_kit_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_1.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-        BomLine = self.env['mrp.bom.line']
-        BomLine.create({
-            'product_id': component_a.id,
-            'product_qty': 2.0,
-            'bom_id': bom_kit_1.id})
-        BomLine.create({
-            'product_id': component_b.id,
-            'product_qty': 1.0,
-            'bom_id': bom_kit_1.id})
-        BomLine.create({
-            'product_id': component_c.id,
-            'product_qty': 3.0,
-            'bom_id': bom_kit_1.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_a.id, 'product_qty': 2.0,}),
+                (0, 0, {'product_id': component_b.id, 'product_qty': 1.0,}),
+                (0, 0, {'product_id': component_c.id, 'product_qty': 3.0,}),
+            ]
+        })
         bom_kit_2 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_2.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-        BomLine.create({
-            'product_id': component_d.id,
-            'product_qty': 1.0,
-            'bom_id': bom_kit_2.id})
-        BomLine.create({
-            'product_id': kit_1.id,
-            'product_qty': 2.0,
-            'bom_id': bom_kit_2.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_d.id, 'product_qty': 1.0,}),
+                (0, 0, {'product_id': kit_1.id, 'product_qty': 2.0,}),
+            ]
+        })
         bom_kit_parent = self.env['mrp.bom'].create({
             'product_tmpl_id': self.kit_parent.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-        BomLine.create({
-            'product_id': component_e.id,
-            'product_qty': 1.0,
-            'bom_id': bom_kit_parent.id})
-        BomLine.create({
-            'product_id': kit_2.id,
-            'product_qty': 2.0,
-            'bom_id': bom_kit_parent.id})
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_e.id, 'product_qty': 1.0,}),
+                (0, 0, {'product_id': kit_2.id, 'product_qty': 2.0,})
+            ]
+        })
         bom_kit_3 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_3.product_tmpl_id.id,
             'product_qty': 1.0,
-            'type': 'phantom'})
-        BomLine.create({
-            'product_id': component_f.id,
-            'product_qty': 1.0,
-            'bom_id': bom_kit_3.id})
-        BomLine.create({
-            'product_id': component_g.id,
-            'product_qty': 2.0,
-            'bom_id': bom_kit_3.id})
-        BomLine.create({
+            'type': 'phantom',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component_f.id, 'product_qty': 1.0,}),
+                (0, 0, {'product_id': component_g.id, 'product_qty': 2.0,}),
+            ]
+        })
+        self.env['mrp.bom.line'].create({
             'product_id': kit_3.id,
             'product_qty': 1.0,
             'bom_id': bom_kit_parent.id})

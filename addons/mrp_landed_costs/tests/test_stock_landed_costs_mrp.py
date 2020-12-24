@@ -44,12 +44,11 @@ class TestStockLandedCostsMrp(ValuationReconciliationTestCommon):
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': cls.product_component1.id, 'product_qty': 3}),
+            ]
         })
-        cls.bom_refri_line1 = cls.env['mrp.bom.line'].create({
-            'bom_id': cls.bom_refri.id,
-            'product_id': cls.product_component1.id,
-            'product_qty': 3,
-        })
+        cls.bom_refri_line1 = cls.bom_refri.bom_line_ids[0]
         cls.bom_refri_line2 = cls.env['mrp.bom.line'].create({
             'bom_id': cls.bom_refri.id,
             'product_id': cls.product_component2.id,

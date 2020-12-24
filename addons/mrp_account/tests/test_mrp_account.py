@@ -40,7 +40,7 @@ class TestMrpAccount(TestMrpCommon):
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
-                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4})
+                (0, 0, {'product_id': cls.product_1.id, 'product_qty': 4}),
             ]})
         cls.dining_table = cls.env['product.product'].create({
             'name': 'Table (MTO)',
@@ -78,34 +78,31 @@ class TestMrpAccount(TestMrpCommon):
             'operation_ids': [
                 (0, 0, {'workcenter_id': cls.mrp_workcenter.id, 'name': 'Manual Assembly'}),
             ],
-        })
-        cls.mrp_bom_desk.write({
             'bom_line_ids': [
                 (0, 0, {
                     'product_id': cls.product_table_sheet.id,
                     'product_qty': 1,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
-                    'sequence': 1,
-                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+                    'sequence': 1}),
                 (0, 0, {
                     'product_id': cls.product_table_leg.id,
                     'product_qty': 4,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
-                    'sequence': 2,
-                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+                    'sequence': 2}),
                 (0, 0, {
                     'product_id': cls.product_bolt.id,
                     'product_qty': 4,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
-                    'sequence': 3,
-                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+                    'sequence': 3}),
                 (0, 0, {
                     'product_id': cls.product_screw.id,
                     'product_qty': 10,
                     'product_uom_id': cls.env.ref('uom.product_uom_unit').id,
-                    'sequence': 4,
-                    'operation_id': cls.mrp_bom_desk.operation_ids.id}),
+                    'sequence': 4}),
             ]
+        })
+        cls.mrp_bom_desk.bom_line_ids.write({
+            'operation_id': cls.mrp_bom_desk.operation_ids.id
         })
         cls.mrp_workcenter_1 = cls.env['mrp.workcenter'].create({
             'name': 'Drill Station 1',

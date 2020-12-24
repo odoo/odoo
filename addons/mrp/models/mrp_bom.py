@@ -88,6 +88,7 @@ class MrpBom(models.Model):
     @api.constrains('product_id', 'product_tmpl_id', 'bom_line_ids')
     def _check_bom_lines(self):
         for bom in self:
+            has_non_service_bom_line = False
             for bom_line in bom.bom_line_ids:
                 if bom.product_id:
                     same_product = bom.product_id == bom_line.product_id
@@ -106,6 +107,10 @@ class MrpBom(models.Model):
                             product=ptav.product_tmpl_id.display_name,
                             bom_product=bom_line.parent_product_tmpl_id.display_name
                         ))
+                if not has_non_service_bom_line and bom_line.product_id.product_tmpl_id.type != 'service':
+                    has_non_service_bom_line = True
+            if not has_non_service_bom_line:
+                raise ValidationError(_("BoM requires at least one (non-service) BoM line product."))
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):

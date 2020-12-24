@@ -6,13 +6,10 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="type">subcontract</field>
             <field name="subcontractor_ids" eval="[(4, ref('base.res_partner_12'))]"/>
-        </record>
-
-        <record id="mrp_bom_line_subcontract" model="mrp.bom.line">
-            <field name="product_id" ref="mrp.product_product_computer_desk_screw"/>
-            <field name="product_qty">1</field>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="bom_id" ref="mrp_bom_subcontract"/>
+            <field name="bom_line_ids" model="mrp.bom.line" eval="[(0, 0, {
+                'product_id': ref('mrp.product_product_computer_desk_screw'),
+                'product_uom_id': ref('uom.product_uom_unit'),
+                'product_qty': 1,})]"/>
         </record>
 
         <record id="product_supplierinfo_subcontracting" model="product.supplierinfo">
