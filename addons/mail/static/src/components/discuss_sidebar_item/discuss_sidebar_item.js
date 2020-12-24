@@ -6,6 +6,7 @@ const components = {
     ThreadIcon: require('mail/static/src/components/thread_icon/thread_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const { isEventHandled } = require('mail/static/src/utils/utils.js');
 
 const Dialog = require('web.Dialog');
 
@@ -117,6 +118,9 @@ class DiscussSidebarItem extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
+        if (isEventHandled(ev, 'EditableText.click')) {
+            return;
+        }
         this.thread.open();
     }
 
