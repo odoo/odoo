@@ -1,0 +1,21 @@
+.o_rtl {
+    .select2-container {
+        .select2-choice {
+            abbr {
+                background: url('../../lib/select2/select2.png') right top no-repeat#{"/*rtl:ignore*/"};
+            }
+            b {
+                background: url('../../lib/select2/select2.png') no-repeat 0 1px#{"/*rtl:ignore*/"};
+            }
+        }
+    }
+    .select2-search input {
+        /*rtl:begin:ignore*/
+        background: #fff url('../../lib/select2/select2.png') no-repeat -37px -22px;
+        background: url('../../lib/select2/select2.png') no-repeat -37px -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, #fff), color-stop(0.99, #eee));
+        background: url('../../lib/select2/select2.png') no-repeat -37px -22px, -webkit-linear-gradient(center bottom, #fff 85%, #eee 99%);
+        background: url('../../lib/select2/select2.png') no-repeat -37px -22px, -moz-linear-gradient(center bottom, #fff 85%, #eee 99%);
+        background: url('../../lib/select2/select2.png') no-repeat -37px -22px, linear-gradient(to bottom, #fff 85%, #eee 99%) 0 0;
+        /*rtl:end:ignore*/
+    }
+}
