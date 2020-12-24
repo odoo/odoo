@@ -380,6 +380,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copy2.name, 'MISC2/2016/01/0001')
         with Form(copy2) as move_form:  # It is editable in the form
             move_form.name = 'MyMISC/2016/0001'
+            move_form.journal_id = self.test_move.journal_id
+            self.assertEqual(move_form.name, '/')
+            move_form.journal_id = new_journal
+            self.assertEqual(move_form.name, 'MISC2/2016/01/0001')
+            move_form.name = 'MyMISC/2016/0001'
         copy2.action_post()
         self.assertEqual(copy2.name, 'MyMISC/2016/0001')
 
