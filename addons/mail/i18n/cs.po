@@ -598,7 +598,7 @@ msgstr "Přidat kanály"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Add Email Blacklist"
-msgstr "Přidat email na Blacklist"
+msgstr "Přidat email na blacklist"
 
 #. module: mail
 #. openerp-web
@@ -2537,6 +2537,12 @@ msgid "Following"
 msgstr "Odběr zpráv"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
@@ -2985,7 +2991,7 @@ msgstr "Pouze interní"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__recipient
 msgid "Invalid email address"
-msgstr "neplatná emailová adresa"
+msgstr "Neplatná emailová adresa"
 
 #. module: mail
 #: code:addons/mail/models/mail_blacklist.py:0
