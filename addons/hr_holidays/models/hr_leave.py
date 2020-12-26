@@ -282,7 +282,7 @@ class HolidaysRequest(models.Model):
         is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
                 leave.name = leave.sudo().private_name
             else:
                 leave.name = '*****'
@@ -291,7 +291,7 @@ class HolidaysRequest(models.Model):
         is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
                 leave.sudo().private_name = leave.name
 
     def _search_description(self, operator, value):
