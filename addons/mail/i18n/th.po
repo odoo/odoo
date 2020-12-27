@@ -33,7 +33,7 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid " This channel is private. People must be invited to join it."
-msgstr "ช่องนี้เป็นช่องส่วนตัว ผู้คนจะต้องได้รับเชิญให้เข้าร่วม"
+msgstr " ช่องนี้เป็นช่องส่วนตัว ผู้คนจะต้องได้รับเชิญให้เข้าร่วม"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -975,7 +975,7 @@ msgstr "ลบอัตโนมัติ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Auto Subscribe Groups"
-msgstr "Auto Subscribe Groups"
+msgstr "สมัครสมาชิกกลุ่มอัตโนมัติ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__group_ids
@@ -2426,6 +2426,12 @@ msgid "Following"
 msgstr "กำลังติดตาม"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
 msgid "Font awesome icon e.g. fa-tasks"
@@ -2512,12 +2518,12 @@ msgstr "See http://openerp.com"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__email
 msgid "Handle by Emails"
-msgstr ""
+msgstr "จัดการโดยอีเมลล์"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__res_users__notification_type__inbox
 msgid "Handle in Odoo"
-msgstr ""
+msgstr "จัดการในระบบ odoo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_message__has_cancel
@@ -4520,6 +4526,9 @@ msgid ""
 "- Handle by Emails: notifications are sent to your email address\n"
 "- Handle in Odoo: notifications appear in your Odoo Inbox"
 msgstr ""
+"นโยบายเกี่ยวกับวิธีจัดการกับการแจ้งเตือน Chatter:\n"
+"- จัดการโดยอีเมล: การแจ้งเตือนจะถูกส่งไปยังที่อยู่อีเมลของคุณ\n"
+"- จัดการใน Odoo: การแจ้งเตือนจะปรากฏในกล่องจดหมาย Odoo ของคุณ"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_contact
@@ -6378,6 +6387,9 @@ msgid ""
 " users it is important to change it immediately for security reasons. I will"
 " keep nagging you about it!"
 msgstr ""
+"รหัสผ่านของคุณเป็นค่าเริ่มต้น (admin+)! "
+"หากระบบนี้เปิดเผยต่อผู้ใช้ที่ไม่น่าเชื่อถือสิ่งสำคัญคือต้องเปลี่ยนทันทีด้วยเหตุผลด้านความปลอดภัย"
+" ฉันจะจู้จี้คุณเกี่ยวกับเรื่องนี้!"
 
 #. module: mail
 #. openerp-web

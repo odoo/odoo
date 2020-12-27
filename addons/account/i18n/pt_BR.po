@@ -12798,6 +12798,8 @@ msgid ""
 "You can only set an account having the receivable type on payment terms "
 "lines for customer invoice."
 msgstr ""
+"Você só pode definir uma conta com o tipo de contas a receber nas linhas de "
+"condições de pagamento da fatura do cliente."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__invoice_reference_type
@@ -12817,6 +12819,8 @@ msgid ""
 "You can't change the company of your account since there are some journal "
 "items linked to it."
 msgstr ""
+"Você não pode alterar a empresa de sua conta, pois há alguns itens de diário"
+" vinculados a ela."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12825,6 +12829,8 @@ msgid ""
 "You can't change the company of your journal since there are some journal "
 "entries linked to it."
 msgstr ""
+"Você não pode mudar a empresa do seu diário, pois existem algumas entradas "
+"de diário vinculadas a ele."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12833,6 +12839,8 @@ msgid ""
 "You can't change the company of your tax since there are some journal items "
 "linked to it."
 msgstr ""
+"Você não pode alterar a empresa do seu imposto, pois existem alguns itens de"
+" diário vinculados a ele."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12841,6 +12849,8 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some journal items linked to it."
 msgstr ""
+"Você não pode definir uma empresa diferente em sua conta analítica, pois há "
+"alguns itens de diário vinculados a ela."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -12849,6 +12859,8 @@ msgid ""
 "You can't set a different company on your analytic tags since there are some"
 " journal items linked to it."
 msgstr ""
+"Você não pode definir uma empresa diferente em suas tags analíticas, pois há"
+" alguns itens de diário vinculados a ela."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12856,6 +12868,8 @@ msgstr ""
 msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s."
 msgstr ""
+"Você não pode adicionar/modificar entradas anteriores e inclusivas da data "
+"de bloqueio %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12895,6 +12909,8 @@ msgid ""
 "You cannot create a move already in the posted state. Please create a draft "
 "move and post it after."
 msgstr ""
+"Você não pode criar uma movimento já no estado lançado. Por favor, crie um "
+"rascunho de movimento e lance-o depois,"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -12906,13 +12922,13 @@ msgstr "Você não pode excluir um pagamento que já está postado."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an entry which has been posted once."
-msgstr ""
+msgstr "Você não pode excluir uma entrada que foi lançada uma vez."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot delete an item linked to a posted entry."
-msgstr ""
+msgstr "Você não pode excluir um item vinculado a uma entrada lançada."
 
 #. module: account
 #: code:addons/account/models/res_config_settings.py:0
@@ -12932,6 +12948,8 @@ msgid ""
 "You cannot do this modification on a reconciled journal entry. You can just change some non legal fields or you must unreconcile first.\n"
 "Journal Entry (id): %s (%s)"
 msgstr ""
+"Você não pode fazer essa modificação em uma entrada de diário reconciliada. Você pode apenas alterar alguns campos não legais ou você deve desconciliar primeiro.\n"
+"Entrada de Diário (id): %s (%s)"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12941,6 +12959,8 @@ msgid ""
 "You cannot edit the following fields due to restrict mode being activated on"
 " the journal: %s."
 msgstr ""
+"Você não pode editar os seguintes campos devido ao modo de restrição que "
+"está sendo ativado no diário: %s."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -12948,6 +12968,8 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it has been posted once."
 msgstr ""
+"Você não pode editar o diário de uma movimentação de conta se ela foi "
+"lançada uma vez."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12984,6 +13006,8 @@ msgid ""
 "You cannot modify a posted entry of this journal because it is in strict "
 "mode."
 msgstr ""
+"Você não pode modificar uma entrada lançada neste diário porque ele está no "
+"modo estrito."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -12992,6 +13016,8 @@ msgid ""
 "You cannot modify the field %s of a journal that already has accounting "
 "entries."
 msgstr ""
+"Você não pode modificar o campo %s de um diário que já possui entradas "
+"contábeis."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13000,6 +13026,9 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
+"Você não pode modificar os impostos relacionados a um item de diário "
+"lançado, você deve redefinir o lançamento de diário para rascunho para fazer"
+" isso."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13008,6 +13037,8 @@ msgid ""
 "You cannot overwrite the values ensuring the inalterability of the "
 "accounting."
 msgstr ""
+"Você não pode sobrescrever os valores garantindo a inalterabilidade da "
+"contabilidade."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -13066,12 +13097,15 @@ msgstr ""
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr ""
+"Você não pode redefinir para rascunho um lançamento de base de caixa do "
+"imposto,"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot reset to draft an exchange difference journal entry."
 msgstr ""
+"Você não pode redefinir para rascunhar um lançamento de diferença de câmbio."
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -13103,7 +13137,7 @@ msgstr "Você não pode usar uma conta depreciada."
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You cannot use taxes on lines with an Off-Balance account"
-msgstr ""
+msgstr "Você não pode usar impostos em linhas com uma conta fora do balanço"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13390,7 +13424,7 @@ msgstr "linhas de extrato"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
-msgstr ""
+msgstr "campo técnico para o widget tax-group-custom-field"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
