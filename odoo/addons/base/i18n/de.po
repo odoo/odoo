@@ -2149,6 +2149,32 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_sale_timesheet_edit
+msgid ""
+"\n"
+"Allow to edit sale order line in the timesheets\n"
+"===============================================\n"
+"\n"
+"This module adds the edition of the sale order line\n"
+"set in the timesheets. This allows adds more flexibility\n"
+"to the user to easily change the sale order line on a\n"
+"timesheet in task form view when it is needed.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_helpdesk_sale_timesheet_edit
+msgid ""
+"\n"
+"Allow to edit sale order line in the timesheets\n"
+"===============================================\n"
+"\n"
+"This module adds the edition of the sale order line\n"
+"set in the timesheets. This allows adds more flexibility\n"
+"to the user to easily change the sale order line on a\n"
+"timesheet in ticket form view when it is needed.\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
 msgid ""
 "\n"
@@ -11993,6 +12019,14 @@ msgid "Company"
 msgstr "Unternehmen"
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Company Data"
 msgstr "Unternehmensdaten"
@@ -14152,6 +14186,12 @@ msgid "Edit Translations"
 msgstr "Übersetzungen bearbeiten"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet_edit
+#: model:ir.module.module,summary:base.module_sale_timesheet_edit
+msgid "Edit the sale order line linked in the timesheets"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
 msgid "Education"
 msgstr "Ausbildung"
@@ -16240,6 +16280,11 @@ msgstr "Helpdesk Reperatur"
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_coupon
 msgid "Helpdesk Sale Coupon"
 msgstr "Helpdesk Verkaufsgutschein"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet_edit
+msgid "Helpdesk Sales Timesheet Edit"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
@@ -24468,6 +24513,11 @@ msgid "Sales Timesheet"
 msgstr "Zeiterfassung im Vertrieb"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_timesheet_edit
+msgid "Sales Timesheet Edit"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_purchase
 msgid "Sales Timesheet Purchase"
 msgstr "Verkauf Stundenzettel Einkauf"
@@ -26264,14 +26314,6 @@ msgid "The active field allows you to hide the category without removing it."
 msgstr ""
 "Das \"Aktiv\" Feld erlaubt das Verstecken der Kategorie ohne diese zu "
 "löschen."
-
-#. module: base
-#: code:addons/base/models/res_users.py:0
-#, python-format
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
-"Das ausgewählte Unternehmen gehört nicht zu den zulässigen Unternehmen für "
-"diesen Benutzer"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq

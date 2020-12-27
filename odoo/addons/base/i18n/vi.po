@@ -15,8 +15,8 @@
 # Martin Trigaux, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 08:41+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Duy BQ <duybq86@gmail.com>, 2020\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2012,6 +2012,32 @@ msgstr ""
 "\n"
 "Cho phép người mua hàng của cửa hàng Thương mại điện tử của bạn tạo các bộ sưu tập cá nhân các sản phẩm họ muốn mua và lưu chúng để tham khảo trong tương lai.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_timesheet_edit
+msgid ""
+"\n"
+"Allow to edit sale order line in the timesheets\n"
+"===============================================\n"
+"\n"
+"This module adds the edition of the sale order line\n"
+"set in the timesheets. This allows adds more flexibility\n"
+"to the user to easily change the sale order line on a\n"
+"timesheet in task form view when it is needed.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_helpdesk_sale_timesheet_edit
+msgid ""
+"\n"
+"Allow to edit sale order line in the timesheets\n"
+"===============================================\n"
+"\n"
+"This module adds the edition of the sale order line\n"
+"set in the timesheets. This allows adds more flexibility\n"
+"to the user to easily change the sale order line on a\n"
+"timesheet in ticket form view when it is needed.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -4050,6 +4076,14 @@ msgid ""
 "* Redirection to the Android/iOS mobile app when you click on an Odoo URL.\n"
 "    "
 msgstr ""
+"\n"
+"Mail Mobile\n"
+"===========\n"
+"Mô-đun này sửa đổi addon thư để cung cấp:\n"
+"\n"
+"* Đẩy thông báo đến các thiết bị đã đăng ký cho tin nhắn trực tiếp, tin nhắn trò chuyện và kênh.\n"
+"* Chuyển hướng sang ứng dụng di động Android / iOS khi bạn nhấp vào URL Odoo.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_maintenance
@@ -8143,7 +8177,7 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">×</span>"
-msgstr ""
+msgstr "<span aria-label=\"Đóng\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -11676,6 +11710,14 @@ msgid "Company"
 msgstr "Công ty"
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Company Data"
 msgstr "Dữ liệu công ty"
@@ -13838,6 +13880,12 @@ msgid "Edit Translations"
 msgstr "Điều chỉnh bản dịch"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet_edit
+#: model:ir.module.module,summary:base.module_sale_timesheet_edit
+msgid "Edit the sale order line linked in the timesheets"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
 msgid "Education"
 msgstr "Trình độ"
@@ -15904,6 +15952,11 @@ msgid "Helpdesk Sale Coupon"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet_edit
+msgid "Helpdesk Sales Timesheet Edit"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
 msgid "Helpdesk Stock"
 msgstr "Hỗ trợ kho"
@@ -16710,17 +16763,17 @@ msgstr "Import tỉ giá từ Internet.\n"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr ""
+msgstr "Nhập / Xuất hóa đơn từ XML/PDF"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_facturx
 msgid "Import/Export invoices with Factur-X"
-msgstr ""
+msgstr "Nhập / Xuất hóa đơn từ Factur-X"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl
 msgid "Import/Export invoices with generic UBL"
-msgstr ""
+msgstr "Nhập / Xuất hóa đơn từ UBL chung"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
@@ -16748,7 +16801,7 @@ msgstr "Người dùng bị Vô hiệu"
 #: code:addons/models.py:0
 #, python-format
 msgid "Incompatible companies on records:"
-msgstr ""
+msgstr "Các công ty không tương thích với dữ liệu:"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
@@ -16994,7 +17047,7 @@ msgstr "Tích hợp SMS Marketing vào các chiến dịch tiếp thị"
 #. module: base
 #: model:ir.module.module,description:base.module_coupon
 msgid "Integrate coupon mechanism in orders."
-msgstr ""
+msgstr "Tích hợp cơ chế phiếu giảm giá trong đơn hàng."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon
@@ -17077,7 +17130,7 @@ msgstr "Internet vạn vật"
 #: model:ir.module.category,name:base.module_category_internet_of_things_(iot)
 #: model:ir.module.category,name:base.module_category_manufacturing_internet_of_things_(iot)
 msgid "Internet of Things (IoT)"
-msgstr ""
+msgstr "Internet vạn vật (IoT)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_cron__interval_number
@@ -18034,6 +18087,8 @@ msgid ""
 "Let the system try to select the right account, taxes and/or product for "
 "your vendor bills"
 msgstr ""
+"Hãy để hệ thống cố gắng chọn đúng tài khoản, thuế và/hoặc sản phẩm cho hóa "
+"đơn nhà cung cấp của bạn"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_referral
@@ -18152,7 +18207,7 @@ msgstr "Liên kết giữa Điểm bán hàng và Kinh Doanh"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
-msgstr ""
+msgstr "Mô-đun liên kết giữa Pos Blackbox Be và Pos HR"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -18266,7 +18321,7 @@ msgstr "Nhật ký"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Long"
-msgstr ""
+msgstr "Dài"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_loyalty
@@ -18581,7 +18636,7 @@ msgstr "Quản lý diễn đàn với FAQ và Q&A"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_fleet
 msgid "Manage accounting with fleets"
-msgstr ""
+msgstr "Quản lý kế toán kèm phương tiện"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.grant_menu_access
@@ -18620,12 +18675,12 @@ msgstr ""
 #: model:ir.module.module,description:base.module_account_disallowed_expenses
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses
 msgid "Manage disallowed expenses"
-msgstr ""
+msgstr "Quản lý chi phí không được phép"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_disallowed_expenses_fleet
 msgid "Manage disallowed expenses with fleets"
-msgstr ""
+msgstr "Quản lý chi phí không được phép với phương tiện"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud_delivery
@@ -18636,7 +18691,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
 msgid "Manage discounts in taxclouds computations."
-msgstr ""
+msgstr "Quản lý chiết khấu khi tính toán taxclouds."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -18756,7 +18811,7 @@ msgstr "Sản xuất"
 #: model:ir.module.module,shortdesc:base.module_mrp_product_expiry
 #: model:ir.module.module,summary:base.module_mrp_product_expiry
 msgid "Manufacturing Expiry"
-msgstr ""
+msgstr "Hạn sản xuất"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp
@@ -18785,7 +18840,7 @@ msgstr "Quan hệ nhiều-nhiều"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_map
 msgid "Map View"
-msgstr ""
+msgstr "Dạng xem bản đồ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_product_margin
@@ -19573,11 +19628,13 @@ msgid ""
 "Name or id '%(name_or_id)s' used in '%(use)s' must be present in view but is"
 " missing."
 msgstr ""
+"Tên hoặc id '%(name_or_id)s' được dùng trong '%(use)s' phải có trong giao "
+"diện nhưng nó lại đang thiếu."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.form_res_users_key_description
 msgid "Name your key"
-msgstr ""
+msgstr "Tên khóa của bạn"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -19633,7 +19690,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "New API Key"
-msgstr ""
+msgstr "Khóa API mới"
 
 #. module: base
 #: model:res.country,name:base.nc
@@ -19805,12 +19862,14 @@ msgid ""
 "No response received. Check server address and port number.\n"
 " %s"
 msgstr ""
+"Không nhận được phản hồi. Kiểm tra địa chỉ server và số port.\n"
+" %s"
 
 #. module: base
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "No spaces allowed in view_mode: %r"
-msgstr ""
+msgstr "Không được có khoản trống trong view_mode: %r"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_data__noupdate
@@ -24262,6 +24321,11 @@ msgid "Sales Timesheet"
 msgstr "Thời gian biểu bán hàng"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_timesheet_edit
+msgid "Sales Timesheet Edit"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_purchase
 msgid "Sales Timesheet Purchase"
 msgstr ""
@@ -26047,12 +26111,6 @@ msgstr "Mô đun `base` không thể gỡ"
 msgid "The active field allows you to hide the category without removing it."
 msgstr ""
 "Kích hoạt trường này cho phép bạn ẩn các danh mục mà không cần phải xóa nó."
-
-#. module: base
-#: code:addons/base/models/res_users.py:0
-#, python-format
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Người dùng này không thuộc công ty được chọn"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq

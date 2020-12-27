@@ -17,8 +17,8 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 08:41+0000\n"
 "PO-Revision-Date: 2016-08-05 12:54+0000\n"
-"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2452,6 +2452,32 @@ msgid ""
 msgstr ""
 "\n"
 "Sta bestellers van uw eCommerce-winkel toe gepersonaliseerde collecties van producten te maken die ze willen kopen en bewaar ze voor toekomstig gebruik."
+
+#. module: base
+#: model:ir.module.module,description:base.module_sale_timesheet_edit
+msgid ""
+"\n"
+"Allow to edit sale order line in the timesheets\n"
+"===============================================\n"
+"\n"
+"This module adds the edition of the sale order line\n"
+"set in the timesheets. This allows adds more flexibility\n"
+"to the user to easily change the sale order line on a\n"
+"timesheet in task form view when it is needed.\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_helpdesk_sale_timesheet_edit
+msgid ""
+"\n"
+"Allow to edit sale order line in the timesheets\n"
+"===============================================\n"
+"\n"
+"This module adds the edition of the sale order line\n"
+"set in the timesheets. This allows adds more flexibility\n"
+"to the user to easily change the sale order line on a\n"
+"timesheet in ticket form view when it is needed.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_oauth
@@ -7884,6 +7910,12 @@ msgid ""
 "It adds a timer to a view for time recording purpose\n"
 "    "
 msgstr ""
+"\n"
+"Deze module installeert een timer.\n"
+"==========================================\n"
+"\n"
+"Timer voor het registreren van tijdregistratie\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -9942,7 +9974,7 @@ msgstr "Factuur extraheren"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr ""
+msgstr "Factuurextractie notificatie"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
@@ -12745,6 +12777,14 @@ msgid "Company"
 msgstr "Bedrijf"
 
 #. module: base
+#: code:addons/base/models/res_users.py:0
+#, python-format
+msgid ""
+"Company %(company_name)s is not in the allowed companies for user "
+"%(user_name)s (%(company_allowed)s)."
+msgstr ""
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_company_step
 msgid "Company Data"
 msgstr "Bedrijfsgegevens"
@@ -14915,6 +14955,12 @@ msgid "Edit Translations"
 msgstr "Wijzig vertalingen"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_helpdesk_sale_timesheet_edit
+#: model:ir.module.module,summary:base.module_sale_timesheet_edit
+msgid "Edit the sale order line linked in the timesheets"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
 msgid "Education"
 msgstr "Opleiding"
@@ -17007,6 +17053,11 @@ msgstr "Helpdesk reparatie"
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_coupon
 msgid "Helpdesk Sale Coupon"
 msgstr "Helpdesk verkoop kortingsbon"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_helpdesk_sale_timesheet_edit
+msgid "Helpdesk Sales Timesheet Edit"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
@@ -19466,7 +19517,7 @@ msgstr "MRP II - Vervaldatum"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_expiry
 msgid "MRP Workorder Expiry"
-msgstr ""
+msgstr "MRP II - Vervaldatum"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -19777,7 +19828,7 @@ msgstr "Beheer kortingen in taxclouds-berekeningen met bezorging."
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_taxcloud
 msgid "Manage discounts in taxclouds computations."
-msgstr ""
+msgstr "Beheer kortingen in taxclouds-berekeningen."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_plm
@@ -25628,7 +25679,7 @@ msgstr "Salaris pakket configurator (België)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_contract_salary_payroll
 msgid "Salary Configurator - Payroll"
-msgstr ""
+msgstr "Salaris Configurator"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_contract_salary
@@ -25745,6 +25796,11 @@ msgstr "Verkoopteams"
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet
 msgid "Sales Timesheet"
 msgstr "Urenstaten verkoop"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_sale_timesheet_edit
+msgid "Sales Timesheet Edit"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_purchase
@@ -27250,7 +27306,7 @@ msgstr "Doelvenster"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_project
 msgid "Task Generation from Sales Orders"
-msgstr ""
+msgstr "Genereer taak vanuit verkooporder"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet
@@ -27415,7 +27471,7 @@ msgstr "Testen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
 msgid "Tests flow of API keys"
-msgstr ""
+msgstr "Test API sleutel"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
@@ -27539,12 +27595,6 @@ msgid "The active field allows you to hide the category without removing it."
 msgstr ""
 "Het veld actief staat toe categorieën te verbergen zonder deze te "
 "verwijderen."
-
-#. module: base
-#: code:addons/base/models/res_users.py:0
-#, python-format
-msgid "The chosen company is not in the allowed companies for this user"
-msgstr "Het gekozen bedrijf is geen toegestaan bedrijf voor deze gebruiker"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_code_uniq
@@ -28624,7 +28674,7 @@ msgstr "Beheer je werving en selectie pijplijn."
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk
 msgid "Track, prioritize, and solve customer tickets"
-msgstr ""
+msgstr "Volg, prioriteer en los klantentickets op"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event
@@ -29306,7 +29356,7 @@ msgstr "gebruik '1' voor ja en '0' voor nee"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_iot
 msgid "Use IoT Devices in the PoS"
-msgstr ""
+msgstr "Gebruik de IoT Box voor de Kassa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_iot
@@ -29910,7 +29960,7 @@ msgstr "Web"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_web_cohort
 msgid "Web Cohort Tests"
-msgstr ""
+msgstr "Web cohort Test"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_editor
@@ -29987,12 +30037,12 @@ msgstr "Website enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm_questions
 msgid "Website Event CRM Questions"
-msgstr ""
+msgstr "Website event menu CRM vragen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_crm
 msgid "Website Events CRM"
-msgstr ""
+msgstr "Website event CRM"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_form
