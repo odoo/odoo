@@ -476,18 +476,21 @@ class Web_Editor(http.Controller):
             View = View.sudo()
         return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
 
+    def get_modified_image_fields(self, original, data, res_model):
+        return {
+            'original_id': original.id,
+            'datas': data,
+            'type': 'binary',
+            'res_model': res_model or 'ir.ui.view',
+        }
+
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):
         """
         Creates a modified copy of an attachment and returns its image_src to be
         inserted into the DOM.
         """
-        fields = {
-            'original_id': attachment.id,
-            'datas': data,
-            'type': 'binary',
-            'res_model': res_model or 'ir.ui.view',
-        }
+        fields = self.get_modified_image_fields(attachment, data, res_model)
         if fields['res_model'] == 'ir.ui.view':
             fields['res_id'] = 0
         elif res_id:

@@ -23,6 +23,7 @@ from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimety
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
+from odoo.addons.web_editor.controllers.main import Web_Editor
 
 logger = logging.getLogger(__name__)
 
@@ -578,3 +579,10 @@ class WebsiteBinary(http.Controller):
         response = request.redirect(website.image_url(website, 'favicon'), code=301)
         response.headers['Cache-Control'] = 'public, max-age=%s' % http.STATIC_CACHE_LONG
         return response
+
+class WebsiteWeb_editor(Web_Editor):
+    def get_modified_image_fields(self, original, data, res_model):
+        fields = super().get_modified_image_fields(original, data, res_model)
+        # Prevent theme update/change from updating modified images
+        fields.update({'theme_template_id': None, 'key': None})
+        return fields
