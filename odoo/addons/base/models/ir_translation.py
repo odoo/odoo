@@ -400,7 +400,6 @@ class IrTranslation(models.Model):
             return
 
         Translation = self.env['ir.translation']
-        outdated = Translation
         discarded = Translation
 
         for record in records:
@@ -436,9 +435,7 @@ class IrTranslation(models.Model):
             for translation in translations_to_match:
                 matches = get_close_matches(translation.src, terms, 1, 0.9)
                 src = matches[0] if matches else None
-                if not src:
-                    outdated += translation
-                elif (src, translation.lang) in done:
+                if not src or (src, translation.lang) in done:
                     discarded += translation
                 else:
                     vals = {'src': src, 'state': translation.state}
@@ -446,9 +443,6 @@ class IrTranslation(models.Model):
                         vals['value'] = src
                     translation.write(vals)
                     done.add((src, translation.lang))
-
-        # process outdated and discarded translations
-        outdated.write({'state': 'to_translate'})
 
         if discarded:
             # delete in SQL to avoid invalidating the whole cache
