@@ -743,6 +743,14 @@ class TestComputeOnchange(common.TransactionCase):
         self.assertEqual(form.bar, "foo6r")
         self.assertEqual(form.baz, "baz5")
 
+    def test_onchange_once(self):
+        """ Modifies `foo` field which will trigger an onchange method and
+        checks it was triggered only one time. """
+        form = Form(self.env['test_new_api.compute.onchange'].with_context(default_foo="oof"))
+        record = form.save()
+        self.assertEqual(record.foo, "oof")
+        self.assertEqual(record.count, 1, "value onchange must be called only one time")
+
     def test_onchange_one2many(self):
         record = self.env['test_new_api.model_parent_m2o'].create({
             'name': 'Family',
