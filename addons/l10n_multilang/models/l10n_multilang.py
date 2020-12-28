@@ -5,6 +5,7 @@ from collections import defaultdict
 import logging
 
 from odoo import api, models
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -22,7 +23,18 @@ class AccountChartTemplate(models.Model):
             ], order='id', limit=1)
             module = external_id and self.env.ref('base.module_' + external_id.module)
             if module and module.state == 'installed':
-                chart_template.process_coa_translations()
+                langs = chart_template._get_langs()
+                if langs:
+                    # do not use `request.env` here, it can cause deadlocks
+                    if request and request.session.uid:
+                        current_user = self.env['res.users'].browse(request.uid)
+                        company = current_user.company_id
+                    else:
+                        # fallback to company of current user, most likely __system__
+                        # (won't work well for multi-company)
+                        company = self.env.user.company_id
+
+                    chart_template._process_single_company_coa_translations(company.id, langs)
         return res
 
     @api.multi
@@ -61,29 +73,38 @@ class AccountChartTemplate(models.Model):
 
     @api.multi
     def process_coa_translations(self):
-        installed_langs = dict(self.env['res.lang'].get_installed())
         company_obj = self.env['res.company']
         for chart_template_id in self:
-            langs = []
-            if chart_template_id.spoken_languages:
-                for lang in chart_template_id.spoken_languages.split(';'):
-                    if lang not in installed_langs:
-                        # the language is not installed, so we don't need to load its translations
-                        continue
-                    else:
-                        langs.append(lang)
-                if langs:
-                    company_ids = company_obj.search([('chart_template_id', '=', chart_template_id.id)])
-                    for company in company_ids:
-                        # write account.account translations in the real COA
-                        chart_template_id._process_accounts_translations(company.id, langs, 'name')
-                        # copy account.tax name translations
-                        chart_template_id._process_taxes_translations(company.id, langs, 'name')
-                        # copy account.tax description translations
-                        chart_template_id._process_taxes_translations(company.id, langs, 'description')
-                        # copy account.fiscal.position translations
-                        chart_template_id._process_fiscal_pos_translations(company.id, langs, 'name')
+            langs = chart_template_id._get_langs()
+            if langs:
+                company_ids = company_obj.search([('chart_template_id', '=', chart_template_id.id)])
+                for company in company_ids:
+                    chart_template_id._process_single_company_coa_translations(company.id, langs)
         return True
+
+    def _process_single_company_coa_translations(self, company_id, langs):
+        # write account.account translations in the real COA
+        self._process_accounts_translations(company_id, langs, 'name')
+        # copy account.tax name translations
+        self._process_taxes_translations(company_id, langs, 'name')
+        # copy account.tax description translations
+        self._process_taxes_translations(company_id, langs, 'description')
+        # copy account.fiscal.position translations
+        self._process_fiscal_pos_translations(company_id, langs, 'name')
+
+    def _get_langs(self):
+        if not self.spoken_languages:
+            return []
+
+        installed_langs = dict(self.env['res.lang'].get_installed())
+        langs = []
+        for lang in self.spoken_languages.split(';'):
+            if lang not in installed_langs:
+                # the language is not installed, so we don't need to load its translations
+                continue
+            else:
+                langs.append(lang)
+        return langs
 
     @api.multi
     def _process_accounts_translations(self, company_id, langs, field):
