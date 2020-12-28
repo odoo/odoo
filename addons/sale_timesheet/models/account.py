@@ -21,6 +21,7 @@ class AccountAnalyticLine(models.Model):
         ('non_billable_project', 'No task found')], string="Billable Type", compute='_compute_timesheet_invoice_type', compute_sudo=True, store=True, readonly=True)
     timesheet_invoice_id = fields.Many2one('account.move', string="Invoice", readonly=True, copy=False, help="Invoice created from the timesheet")
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
+    is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
 
     # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to bill_type and pricing_type of project (See in master)
     @api.depends('so_line.product_id', 'project_id', 'task_id', 'task_id.bill_type', 'task_id.pricing_type')
@@ -52,7 +53,7 @@ class AccountAnalyticLine(models.Model):
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
-        for timesheet in self._get_not_billed():  # Get only the timesheets are not yet invoiced
+        for timesheet in self.filtered(lambda t: not t.is_so_line_edited)._get_not_billed():  # Get only the timesheets are not yet invoiced
             timesheet.so_line = timesheet.project_id.allow_billable and timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
 
     def _get_not_billed(self):
@@ -60,11 +61,6 @@ class AccountAnalyticLine(models.Model):
 
     def _check_timesheet_can_be_billed(self):
         return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
-
-    @api.constrains('so_line', 'project_id')
-    def _check_sale_line_in_project_map(self):
-        if not all(t._check_timesheet_can_be_billed() for t in self._get_not_billed().filtered(lambda t: t.project_id and t.so_line)):
-            raise ValidationError(_("This timesheet line cannot be billed: there is no Sale Order Item defined on the task, nor on the project. Please define one to save your timesheet line."))
 
     def write(self, values):
         # prevent to update invoiced timesheets if one line is of type delivery
