@@ -12,7 +12,7 @@ class PurchaseOrder(models.Model):
 
     @api.onchange('requisition_id')
     def _onchange_requisition_id(self):
-        if not self.requisition_id:
+        if not self.requisition_id or self.order_line:
             return
 
         self = self.with_company(self.company_id)

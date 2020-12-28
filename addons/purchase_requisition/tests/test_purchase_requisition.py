@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.purchase_requisition.tests.common import TestPurchaseRequisitionCommon
+from odoo.tests.common import Form
 
 
 class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
@@ -18,7 +19,6 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
         self.requisition1.with_user(self.user_purchase_requisition_user).action_draft()
         # I duplicate requisition.
         self.requisition1.with_user(self.user_purchase_requisition_user).copy()
-
 
     def test_02_purchase_requisition(self):
         price_product09 = 34
@@ -67,6 +67,15 @@ class TestPurchaseRequisition(TestPurchaseRequisitionCommon):
 
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo09.id)]), 'The supplier info should be removed')
         self.assertFalse(self.env['product.supplierinfo'].search([('id', '=', supplierinfo13.id)]), 'The supplier info should be removed')
+
+    def test_03_create_purchase_order_from_requisition(self):
+        """ Creates a purchase requisition then generate a purchase order from it."""
+        purchase_form = Form(self.env['purchase.order'].with_context(default_requisition_id=self.requisition1.id))
+        purchase_form.partner_id = self.res_partner_1
+        purchase = purchase_form.save()
+        self.assertEqual(len(purchase.order_line), len(self.requisition1.line_ids))
+        self.assertEqual(purchase.order_line.product_uom_qty, self.requisition1.line_ids.product_qty)
+        self.assertEqual(purchase.order_line.price_unit, self.requisition1.line_ids.price_unit)
 
     def test_06_purchase_requisition(self):
         """ Create a blanquet order for a product and a vendor already linked via
