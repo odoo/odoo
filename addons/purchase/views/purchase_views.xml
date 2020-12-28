@@ -227,7 +227,7 @@
                                     <field
                                         name="product_id"
                                         attrs="{
-                                            'readonly': [('state', 'in', ('purchase', 'to approve','done', 'cancel'))],
+                                            'readonly': [('state', 'in', ('to approve','done', 'cancel'))],
                                             'required': [('display_type', '=', False)],
                                         }"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_qty,'uom':product_uom, 'company_id': parent.company_id}"
