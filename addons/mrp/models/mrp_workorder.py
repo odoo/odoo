@@ -396,8 +396,8 @@ class MrpWorkorder(models.Model):
                         continue
 
                     qty_already_consumed += wl.qty_done
-                qty_to_consume = self._prepare_component_quantity(move, workorder.qty_producing)
-                qty_to_consume = self._get_real_uom_qty(qty_to_consume, True)
+                qty_to_consume = workorder._prepare_component_quantity(move, workorder.qty_producing)
+                qty_to_consume = workorder._get_real_uom_qty(qty_to_consume, True)
                 wl_to_unlink.unlink()
                 if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=rounding) > 0:
                     line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
