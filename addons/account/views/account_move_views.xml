@@ -93,25 +93,38 @@
             <field name="model">account.move.line</field>
             <field name="arch" type="xml">
                 <kanban class="o_kanban_mobile">
-                    <field name="date_maturity"/>
-                    <field name="move_id"/>
-                    <field name="name"/>
+                    <field name="company_currency_id"/>
                     <field name="partner_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
                                 <div class="row mb4">
-                                    <strong class="col-6">
-                                        <span t-esc="record.move_id.value"/>
-                                    </strong>
-                                    <strong class="col-6 text-right">
-                                        <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/><field name="date_maturity"/>
-                                    </strong>
-                                    <div class="col-10">
-                                        <span t-esc="record.name.value"/>
+                                    <div class="col-8">
+                                        <field name="account_id"/>
                                     </div>
+                                    <strong t-if="record.date_maturity.raw_value" class="col-4 pl-0 text-right">
+                                        <i class="fa fa-clock-o" aria-label="Date" role="img" title="Date"/> <field name="date_maturity"/>
+                                    </strong>
+                                </div>
+                                <div class="row mb4" style="min-height: 60px;">
+                                    <em class="col-10">
+                                        <field name="name"/>
+                                    </em>
                                     <div class="col-2 text-right">
                                         <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)" t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value" class="oe_kanban_avatar o_image_24_cover"/>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <field name="tax_ids" widget="many2many_tags"/>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <t t-if="record.debit.raw_value > 0">
+                                            <field name="debit"/><span> (DR)</span>
+                                        </t>
+                                        <t t-if="record.credit.raw_value > 0">
+                                            <field name="credit"/><span> (CR)</span>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
@@ -944,6 +957,7 @@
                                     <span>This entry has been generated through the Invoicing app, before installing Accounting. Its balance has been imported separately.</span>
                                 </div>
                                 <field name="line_ids"
+                                       mode="tree,kanban"
                                        context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}"
                                        attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
@@ -1251,7 +1265,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_purchase" model="ir.actions.act_window">
@@ -1260,7 +1274,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_sales_purchases"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_bank_cash" model="ir.actions.act_window">
@@ -1269,7 +1283,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_bank_cash"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_journal_misc" model="ir.actions.act_window">
@@ -1278,7 +1292,7 @@
             <field name="res_model">account.move.line</field>
             <field name="domain">[('display_type', 'not in', ('line_section', 'line_note'))]</field>
             <field name="view_id" ref="view_move_line_tree_grouped_misc"/>
-            <field name="view_mode">tree,pivot,graph</field>
+            <field name="view_mode">tree,pivot,graph,kanban</field>
         </record>
 
         <record id="action_account_moves_ledger_general" model="ir.actions.act_window">
