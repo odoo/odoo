@@ -145,11 +145,33 @@
                     <field name="bill_type" invisible="1"/>
                     <field name="pricing_type" invisible="1"/>
                 </xpath>
+                <xpath expr="//field[@name='timesheet_ids']" position="attributes">
+                    <attribute name="widget">so_line_one2many</attribute>
+                </xpath>
+                <xpath expr="//field[@name='timesheet_ids']/tree" position="inside">
+                    <field name="is_so_line_edited" invisible="1" />
+                </xpath>
                 <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='unit_amount']" position="before">
                     <field name="timesheet_invoice_id" invisible="1"/>
-                    <field name="so_line" readonly="1" attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}" context="{'with_remaining_hours': True}" optional="hide"/>
+                    <field name="so_line"
+                        attrs="{'column_invisible': [('parent.allow_billable', '=', False)]}"
+                        context="{'with_remaining_hours': True}" options="{'no_create': True, 'no_open': True}"
+                        domain="[('is_service', '=', True), ('order_partner_id', 'child_of', parent.commercial_partner_id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('order_id', '=?', parent.project_sale_order_id)]"
+                        optional="hide"/>
                 </xpath>
             </field>
+        </record>
+
+        <record id="project_task_view_form_inherit_sale_timesheet_editable" model="ir.ui.view">
+            <field name="name">project.task.form.view.form.inherit.sale.timesheet.editable</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project_task_view_form_inherit_sale_timesheet"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='so_line']" position="attributes">
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+            </field>
+            <field name="groups_id" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
         </record>
 
         <record id="view_task_form2_inherit_sale_timesheet" model="ir.ui.view">
