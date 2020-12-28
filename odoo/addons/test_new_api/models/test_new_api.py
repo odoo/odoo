@@ -544,6 +544,7 @@ class ComputeOnchange(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', store=True)
     baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    count = fields.Integer(default=0)
     line_ids = fields.One2many(
         'test_new_api.compute.onchange.line', 'record_id',
         compute='_compute_line_ids', store=True, readonly=False
@@ -552,6 +553,10 @@ class ComputeOnchange(models.Model):
         'test_new_api.multi.tag',
         compute='_compute_tag_ids', store=True, readonly=False,
     )
+
+    @api.onchange('foo')
+    def _onchange_foo(self):
+        self.count += 1
 
     @api.depends('foo')
     def _compute_bar(self):
