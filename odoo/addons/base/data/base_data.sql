@@ -38,7 +38,7 @@ CREATE TABLE ir_module_category (
     write_date timestamp without time zone,
     write_uid integer, -- references res_users on delete set null,
     parent_id integer REFERENCES ir_module_category ON DELETE SET NULL,
-    name character varying(128) NOT NULL,
+    name character varying NOT NULL,
     primary key(id)
 );
 
@@ -48,14 +48,14 @@ CREATE TABLE ir_module_module (
     create_date timestamp without time zone,
     write_date timestamp without time zone,
     write_uid integer, -- references res_users on delete set null,
-    website character varying(256),
-    summary character varying(256),
-    name character varying(128) NOT NULL,
+    website character varying,
+    summary character varying,
+    name character varying NOT NULL,
     author character varying,
     icon varchar,
     state character varying(16),
-    latest_version character varying(64),
-    shortdesc character varying(256),
+    latest_version character varying,
+    shortdesc character varying,
     category_id integer REFERENCES ir_module_category ON DELETE SET NULL,
     description text,
     application boolean default False,
@@ -75,7 +75,7 @@ CREATE TABLE ir_module_module_dependency (
     create_date timestamp without time zone,
     write_date timestamp without time zone,
     write_uid integer, -- references res_users on delete set null,
-    name character varying(128),
+    name character varying,
     module_id integer REFERENCES ir_module_module ON DELETE cascade,
     primary key(id)
 );
