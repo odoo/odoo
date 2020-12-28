@@ -235,9 +235,19 @@ class MrpBom(models.Model):
                 boms_done.append((bom, {'qty': converted_line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': current_line}))
             else:
                 # We round up here because the user expects that if he has to consume a little more, the whole UOM unit
-                # should be consumed.
+                # should be consumed. For example,
+                # Raw Material: Pipe 5m, Unit of measure is Unit
+                # Finished Product: Pipe 1.2m, Unit of measure is Unit
+                # The rounding factor of the Unit is 1.0
+                # BoM: 1xPipe 1.2m is made from 0.24 Pipe 5m
+                # Produce 100 Pipe 1.2m will require 25 Pipe 5m instead of 24 (which is 0.24*100)
                 rounding = current_line.product_uom_id.rounding
-                line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
+                if rounding >= current_line.product_qty:
+                    # 4 Pipe 1.2m still require a whole UoM of 1.0 Pipe 5m instead of 0.96 Pipe 5m
+                    whole_uom_qty = float_round(rounding / current_line.product_qty, precision_rounding=rounding, rounding_method='DOWN')
+                    line_quantity = float_round(current_qty / whole_uom_qty, precision_rounding=rounding, rounding_method='UP')
+                else:
+                    line_quantity = float_round(line_quantity, precision_rounding=rounding, rounding_method='UP')
                 lines_done.append((current_line, {'qty': line_quantity, 'product': current_product, 'original_qty': quantity, 'parent_line': parent_line}))
 
         return boms_done, lines_done
