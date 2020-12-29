@@ -38,6 +38,7 @@ class PurchaseTestCommon(TestStockCommon):
 
         cls.t_shirt = cls.env['product.product'].create({
             'name': 'T-shirt',
+            'description': 'Internal Notes',
             'route_ids': [(6, 0, [cls.route_buy, cls.route_mto])],
             'seller_ids': [(0, 0, {'name': cls.partner_1.id, 'delay': 5})]
         })

@@ -460,15 +460,15 @@ class PurchaseOrderLine(models.Model):
 
     @api.model
     def _prepare_purchase_order_line_from_procurement(self, product_id, product_qty, product_uom, company_id, values, po):
-        line_description = product_id._get_description(po.picking_type_id)
+        line_description = ''
         if values.get('product_description_variants'):
-            line_description += values['product_description_variants']
+            line_description = values['product_description_variants']
         supplier = values.get('supplier')
         res = self._prepare_purchase_order_line(product_id, product_qty, product_uom, company_id, supplier, po)
         # We need to keep the vendor name set in _prepare_purchase_order_line. To avoid redundancy
         # in the line name, we add the line_description only if different from the product name.
         # This way, we shoud not lose any valuable information.
-        if product_id.name != line_description:
+        if line_description and product_id.name != line_description:
             res['name'] += '\n' + line_description
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
@@ -490,9 +490,9 @@ class PurchaseOrderLine(models.Model):
         args can be merged. If it returns an empty record then a new line will
         be created.
         """
-        description_picking = product_id._get_description(self.order_id.picking_type_id) or ''
+        description_picking = ''
         if values.get('product_description_variants'):
-            description_picking += values['product_description_variants']
+            description_picking = values['product_description_variants']
         lines = self.filtered(
             lambda l: l.propagate_cancel == values['propagate_cancel']
             and ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True)
