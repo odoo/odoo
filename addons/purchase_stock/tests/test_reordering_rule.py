@@ -21,6 +21,7 @@ class TestReorderingRule(SavepointCase):
         product_form = Form(cls.env['product.product'])
         product_form.name = 'Product A'
         product_form.type = 'product'
+        product_form.description = 'Internal Notes'
         with product_form.seller_ids.new() as seller:
             seller.name = cls.partner
         product_form.route_ids.add(cls.env.ref('purchase_stock.route_warehouse0_buy'))
@@ -66,6 +67,7 @@ class TestReorderingRule(SavepointCase):
         # On the po generated, the source document should be the name of the reordering rule
         self.assertEqual(order_point.name, purchase_order.origin, 'Source document on purchase order should be the name of the reordering rule.')
         self.assertEqual(purchase_order.order_line.product_qty, 10)
+        self.assertEqual(purchase_order.order_line.name, 'Product A')
 
         # Increase the quantity on the RFQ before confirming it
         purchase_order.order_line.product_qty = 12
