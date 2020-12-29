@@ -310,14 +310,10 @@ class ProjectTask(models.Model):
         self.ensure_one()
         if not self.commercial_partner_id or not self.allow_billable:
             return False
-        domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]
+        domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done']), ('remaining_hours', '>', 0)]
         if self.project_id.bill_type == 'customer_project' and self.project_sale_order_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
-        sale_lines = self.env['sale.order.line'].search(domain)
-        for line in sale_lines:
-            if line.remaining_hours_available and line.remaining_hours > 0:
-                return line
-        return False
+        return self.env['sale.order.line'].search(domain, limit=1)
 
     def action_make_billable(self):
         return {

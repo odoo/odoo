@@ -79,7 +79,7 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available')
-    remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours')
+    remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', store=True)
 
     def name_get(self):
         res = super(SaleOrderLine, self).name_get()
@@ -103,7 +103,7 @@ class SaleOrderLine(models.Model):
                             hours += 1
                         else:
                             minutes = minutes * 30
-                        remaining_time =' ({sign}{hours:02.0f}:{minutes:02.0f})'.format(
+                        remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f})'.format(
                             sign='-' if line.remaining_hours < 0 else '',
                             hours=hours,
                             minutes=minutes)
