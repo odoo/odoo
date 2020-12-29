@@ -54,6 +54,12 @@ var DateWidget = Widget.extend({
             keyBinds: null,
         }, options || {});
 
+        if (_t.database.parameters.direction === "rtl") {
+            this.options.widgetPositioning = {
+                horizontal: 'right',
+            };
+        }
+
         this.__libInput = 0;
         // tempusdominus doesn't offer any elegant way to check whether the
         // datepicker is open or not, so we have to listen to hide/show events

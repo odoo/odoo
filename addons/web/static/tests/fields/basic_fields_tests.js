@@ -3131,6 +3131,32 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field: datepicker renders at right end in RTL', async function (assert) {
+        assert.expect(3);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="date"/></form>',
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+                direction: 'rtl',
+            },
+        });
+
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 0,
+            "datepicker should be closed initially");
+
+        await testUtils.dom.openDatepicker(form.$('.o_datepicker'));
+        assert.strictEqual($('.bootstrap-datetimepicker-widget:visible').length, 1,
+            "datepicker should be opened");
+        assert.hasClass($('.bootstrap-datetimepicker-widget:visible'), 'float-right',
+            "datepicker should rendered at right end in RTL");
+
+        form.destroy();
+    });
+
     QUnit.test('date field: toggle datepicker far in the future', async function (assert) {
         assert.expect(3);
 
