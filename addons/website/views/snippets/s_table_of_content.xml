@@ -60,6 +60,12 @@
             <we-checkbox string="Sticky" data-select-class="s_table_of_content_navbar_sticky" data-no-preview="true"/>
         </div>
         <div data-js="TableOfContentMainColumns" data-selector=".s_table_of_content_navbar_wrap, .s_table_of_content_main"/>
+        <div data-js="sizing_x" data-selector=".s_table_of_content_navbar_wrap, .s_table_of_content_main"/>
+        <div data-selector=".s_table_of_content_navbar_wrap, .s_table_of_content_main"
+            data-drop-near=".s_table_of_content_navbar_wrap, .s_table_of_content_main"/>
+    </xpath>
+    <xpath expr="//div[@data-js='sizing_x']" position="attributes">
+        <attribute name="data-exclude" add=".s_table_of_content_navbar_wrap, .s_table_of_content_main" separator=","/>
     </xpath>
 </template>
 
