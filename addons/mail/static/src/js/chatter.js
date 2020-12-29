@@ -75,6 +75,9 @@ var Chatter = Widget.extend({
         }
         if (mailFields.mail_followers) {
             this.fields.followers = new Followers(this, mailFields.mail_followers, record, options);
+            const fieldsInfo = record.fieldsInfo[options.viewType || record.viewType];
+            const nodeOptions = fieldsInfo[mailFields.mail_followers].options || {};
+            this.reloadOnUploadAttachment = nodeOptions.post_refresh == 'always';
         }
         if (mailFields.mail_thread) {
             this.fields.thread = new ThreadField(this, mailFields.mail_thread, record, options);
@@ -601,10 +604,10 @@ var Chatter = Widget.extend({
      * @private
      */
     _onReloadAttachmentBox: function () {
+        this._reloadAttachmentBox();
         if (this.reloadOnUploadAttachment) {
             this.trigger_up('reload', { keepChanges: true });
         }
-        this._reloadAttachmentBox();
     },
     /**
      * @private
