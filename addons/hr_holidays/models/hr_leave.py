@@ -522,9 +522,10 @@ class HolidaysRequest(models.Model):
     def _compute_number_of_hours_text(self):
         # YTI Note: All this because a readonly field takes all the width on edit mode...
         for leave in self:
-            leave.number_of_hours_text = '%s%g Hours%s' % (
+            leave.number_of_hours_text = '%s%g %s%s' % (
                 '' if leave.request_unit_half or leave.request_unit_hours else '(',
                 float_round(leave.number_of_hours_display, precision_digits=2),
+                _('Hours'),
                 '' if leave.request_unit_half or leave.request_unit_hours else ')')
 
     @api.depends('state', 'employee_id', 'department_id')
