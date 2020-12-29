@@ -176,7 +176,7 @@ class Applicant(models.Model):
 
     @api.depends('email_from')
     def _compute_application_count(self):
-        application_data = self.env['hr.applicant'].read_group([
+        application_data = self.env['hr.applicant'].with_context(active_test=False).read_group([
             ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
         applicants = self.filtered(lambda applicant: applicant.email_from)
