@@ -572,6 +572,25 @@ class Task(models.Model):
         ('0', 'Normal'),
         ('1', 'Important'),
     ], default='0', index=True, string="Priority")
+    version = fields.Selection(
+        selection=[
+            ('12.0', '12.0'),
+            ('12.1', '12.1'),
+            ('12.2', '12.2'),
+            ('12.3', '12.3'),
+            ('12.4', '12.4'),
+            ('12.5', '12.5'),
+            ('13.0', '13.0'),
+            ('13.1', '13.1'),
+            ('13.2', '13.2'),
+            ('13.3', '13.3'),
+            ('13.4', '13.4'),
+            ('13.5', '13.5'),
+            ('14.0', '14.0'),
+            ('14.1', '14.1'),
+        ],
+        sortable=True,
+    )
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
@@ -1167,7 +1186,7 @@ class Task(models.Model):
                 if task.project_id.partner_id:
                     task.partner_id = task.project_id.partner_id
             else:
-                task.partner_id = task.project_id.partner_id or task.parent_id.partner_id 
+                task.partner_id = task.project_id.partner_id or task.parent_id.partner_id
 
     @api.depends('partner_id.email', 'parent_id.email_from')
     def _compute_email_from(self):
