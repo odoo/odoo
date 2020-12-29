@@ -252,16 +252,6 @@ class ProjectTask(models.Model):
         for task in self:
             task.remaining_hours_so = mapped_remaining_hours[task._origin.id]
 
-    @api.onchange('sale_line_id')
-    def _onchange_sale_line_id(self):
-        # TODO: remove me in master
-        return
-
-    @api.onchange('project_id')
-    def _onchange_project_id(self):
-        # TODO: remove me in master
-        return
-
     @api.depends('analytic_account_id.active')
     def _compute_analytic_account_active(self):
         super()._compute_analytic_account_active()
