@@ -96,8 +96,12 @@ odoo.define('web.CustomFilterItem', function (require) {
         _validateField(field) {
             return !field.deprecated &&
                 field.searchable &&
-                FIELD_TYPES[field.type] &&
+                FIELD_TYPES[this._getFieldType(field)] &&
                 field.name !== 'id';
+        }
+
+        _getFieldType(field) {
+            return (field.type === 'selection' && field.sortable ? 'sortable_' : '') + field.type
         }
 
         /**
@@ -105,7 +109,7 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @param {Object} condition
          */
         _setDefaultValue(condition) {
-            const fieldType = this.fields[condition.field].type;
+            const fieldType = this._getFieldType(this.fields[condition.field]);
             const genericType = FIELD_TYPES[fieldType];
             const operator = FIELD_OPERATORS[genericType][condition.operator];
             switch (genericType) {
@@ -145,7 +149,7 @@ odoo.define('web.CustomFilterItem', function (require) {
         _onApply() {
             const preFilters = this.state.conditions.map(condition => {
                 const field = this.fields[condition.field];
-                const type = this.FIELD_TYPES[field.type];
+                const type = this.FIELD_TYPES[this._getFieldType(field)];
                 const operator = this.OPERATORS[type][condition.operator];
                 const descriptionArray = [field.string, operator.description];
                 const domainArray = [];
@@ -238,7 +242,7 @@ odoo.define('web.CustomFilterItem', function (require) {
          * @param {Event} ev
          */
         _onValueInput(condition, ev) {
-            const type = this.fields[condition.field].type;
+            const type = this._getFieldType(this.fields[condition.field]);
             if (['float', 'integer', 'id'].includes(type)) {
                 const previousValue = condition.value;
                 const parser = field_utils.parse[type === 'float' ? 'float' : 'integer'];

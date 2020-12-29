@@ -2226,6 +2226,11 @@ class Selection(Field):
     selection = None            # [(value, string), ...], function or method name
     validate = True             # whether validating upon write
     ondelete = None             # {value: policy} (what to do when value is deleted)
+    sortable = False            # whether > and < are valid on the values
+
+    @property
+    def _description_sortable(self):
+        return self.sortable
 
     def __init__(self, selection=Default, string=Default, **kwargs):
         super(Selection, self).__init__(selection=selection, string=string, **kwargs)

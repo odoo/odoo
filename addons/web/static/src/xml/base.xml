@@ -334,7 +334,7 @@
             <div t-foreach="state.conditions" t-as="condition" t-key="condition_index"
                 class=" o_filter_condition dropdown-item-text"
                 >
-                <t t-set="fieldType" t-value="fields[condition.field].type"/>
+                <t t-set="fieldType" t-value="_getFieldType(fields[condition.field])"/>
                 <t t-set="selectedOperator" t-value="OPERATORS[FIELD_TYPES[fieldType]][condition.operator]"/>
                 <span t-if="!condition_first" class="o_or_filter">or</span>
                 <select class="o_input o_generator_menu_field"
@@ -376,7 +376,7 @@
                             t-on-datetime-changed="_onDateChanged(condition, 1)"
                         />
                     </t>
-                    <select t-elif="fieldType === 'selection'" class="o_input"
+                    <select t-elif="fieldType.includes('selection')" class="o_input"
                         t-on-change="_onValueInput(condition)"
                         >
                         <option t-foreach="fields[condition.field].selection" t-as="option" t-key="option_index"

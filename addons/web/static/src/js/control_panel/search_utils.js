@@ -64,6 +64,16 @@ odoo.define('web.searchUtils', function (require) {
             { symbol: "!=", description: _lt("is set"), value: false },
             { symbol: "=", description: _lt("is not set"), value: false },
         ],
+        sortable_selection: [
+            { symbol: "=", description: _lt("is") },
+            { symbol: "!=", description: _lt("is not") },
+            { symbol: "!=", description: _lt("is set"), value: false },
+            { symbol: "=", description: _lt("is not set"), value: false },
+            { symbol: ">", description: _lt("greater than") },
+            { symbol: "<", description: _lt("less than") },
+            { symbol: ">=", description: _lt("greater than or equal to") },
+            { symbol: "<=", description: _lt("less than or equal to") },
+        ],
     };
     const FIELD_TYPES = {
         boolean: 'boolean',
@@ -80,6 +90,7 @@ odoo.define('web.searchUtils', function (require) {
         one2many: 'char',
         text: 'char',
         selection: 'selection',
+        sortable_selection: 'sortable_selection',
     };
     const DEFAULT_PERIOD = 'this_month';
     const QUARTERS = {
