@@ -1274,13 +1274,16 @@ body.editor_enable.editor_has_snippets {
 
         .o_we_image_weight {
             display: flex;
+            flex-flow: row wrap;
             justify-content: flex-end;
-            align-items: center;
+            align-items: baseline;
             margin: $o-we-sidebar-content-field-spacing *.25 $o-we-item-border-width $o-we-sidebar-content-field-spacing*2;
 
             b {
+                font: 0.85em/1 bold $o-we-sidebar-content-field-input-font-family;
+            }
+            .fa, b:last-child {
                 margin-left: $o-we-sidebar-content-field-label-spacing;
-                font: 1em/1 bold $o-we-sidebar-content-field-input-font-family;
                 color: $o-we-color-success;
             }
         }

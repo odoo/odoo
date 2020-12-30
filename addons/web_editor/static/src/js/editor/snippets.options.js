@@ -3283,6 +3283,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         (await this._computeAvailableWidths()).forEach(([value, label]) => {
             $select.append(`<we-button data-select-width="${value}">${label}</we-button>`);
         });
+        uiFragment.querySelector('.o_we_image_weight b').textContent = `${(this.initialWeight / 1024).toFixed(1)} kb`;
         const qualityRange = uiFragment.querySelector('we-range');
         if (img.dataset.mimetype !== 'image/jpeg') {
             qualityRange.remove();
@@ -3327,8 +3328,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const dataURL = await applyModifications(img);
         const weight = dataURL.split(',')[1].length / 4 * 3;
         const $weight = this.$el.find('.o_we_image_weight');
-        $weight.find('> small').text(_t("New size"));
-        $weight.find('b').text(`${(weight / 1024).toFixed(1)} kb`);
+        $weight.find('b:last').text(`${(weight / 1024).toFixed(1)} kb`);
         $weight.removeClass('d-none');
         img.classList.add('o_modified_image_to_save');
         return loadImage(dataURL, img);
@@ -3348,6 +3348,8 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         this.originalId = img.dataset.originalId;
         this.originalSrc = img.dataset.originalSrc;
+        const response = await fetch(img.src);
+        this.initialWeight = parseInt(response.headers.get('content-length'));
     },
     /**
      * Sets the image's width to its suggested size.
