@@ -565,6 +565,13 @@
 
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
+            <t t-set="head_login">
+                <t t-call-assets="web.assets_backend" t-js="false" prefetch="true" backend="true"/>
+                <t t-call-assets="web.assets_common" t-css="false" prefetch="true" backend="true"/>
+                <t t-call-assets="web.assets_backend" t-css="false" prefetch="true" backend="true"/>
+                <t t-call-assets="web.assets_backend_prod_only" t-css="false" prefetch="true" backend="true"/>
+            </t>
+            <t t-set="head" t-value="(head or '') + head_login"/>
             <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 

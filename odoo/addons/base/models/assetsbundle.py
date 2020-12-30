@@ -115,6 +115,7 @@ class AssetsBundle(object):
         self.user_direction = self.env['res.lang']._lang_get(
             self.env.context.get('lang') or self.env.user.lang
         ).direction
+        self.backend = None
         for f in files:
             if f['atype'] == 'text/sass':
                 self.stylesheets.append(SassStylesheetAsset(self, url=f['url'], filename=f['filename'], inline=f['content'], media=f['media'], direction=self.user_direction))
@@ -127,7 +128,7 @@ class AssetsBundle(object):
             elif f['atype'] == 'text/javascript':
                 self.javascripts.append(JavascriptAsset(self, url=f['url'], filename=f['filename'], inline=f['content']))
 
-    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False):
+    def to_node(self, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, prefetch=False):
         """
         :returns [(tagName, attributes, content)] if the tag is auto close
         """
@@ -148,6 +149,23 @@ class AssetsBundle(object):
             if js:
                 for jscript in self.javascripts:
                     response.append(jscript.to_node())
+        elif prefetch:
+            if css and self.stylesheets:
+                css_attachments = self.css() or []
+                for attachment in css_attachments:
+                    attr = OrderedDict([
+                        ['rel', 'prefetch'],
+                        ['href', attachment.url],
+                        ['as', 'style'],
+                    ])
+                    response.append(("link", attr, None))
+            if js and self.javascripts:
+                attr = OrderedDict([
+                    ['rel', 'prefetch'],
+                    ['href', self.js().url],
+                    ['as', 'script'],
+                ])
+                response.append(("link", attr, None))
         else:
             if css and self.stylesheets:
                 css_attachments = self.css() or []
