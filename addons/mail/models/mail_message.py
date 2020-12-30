@@ -893,13 +893,12 @@ class Message(models.Model):
                                          if message.get('model') == model and message.get('res_id') in mids.ids]
 
         # Calculate remaining ids: if not void, raise an error
+
         other_ids = other_ids.difference(set(document_related_ids))
         if not (other_ids and self.browse(other_ids).exists()):
             return
-        raise AccessError(
-            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)
-            + ' - ({} {}, {} {})'.format(_('Records:'), list(other_ids)[:6], _('User:'), self._uid)
-        )
+
+        super().check_access_rule(operation)
 
     @api.model
     def _get_record_name(self, values):
