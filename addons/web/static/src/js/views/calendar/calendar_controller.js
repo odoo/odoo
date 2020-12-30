@@ -151,7 +151,10 @@ var CalendarController = AbstractController.extend({
             self._rpc({
                 model: self.modelName,
                 method: 'get_unusual_days',
-                args: [self.model.data.start_date.format('YYYY-MM-DD'), self.model.data.end_date.format('YYYY-MM-DD')],
+                args: [
+                    self.model.data.start_date.clone().locale('en').format('YYYY-MM-DD'),
+                    self.model.data.end_date.clone().locale('en').format('YYYY-MM-DD')
+                ],
                 context: self.context,
             }).then(function (data) {
                 _.each(self.$el.find('td.fc-day'), function (td) {
