@@ -144,8 +144,6 @@ var LinkDialog = Dialog.extend({
 
         this.data.text = this.data.text.replace(/[ \t\r\n]+/g, ' ');
 
-        this.__editorEditable = this.props.__editorEditable;
-
         var allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         var allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         this.data.className = this.data.iniClassName
