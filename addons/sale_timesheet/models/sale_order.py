@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import math
+
 from odoo import api, fields, models, _
 from odoo.osv import expression
-import math
 
 
 class SaleOrder(models.Model):
