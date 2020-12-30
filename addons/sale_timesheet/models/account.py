@@ -41,16 +41,6 @@ class AccountAnalyticLine(models.Model):
             else:
                 timesheet.timesheet_invoice_type = False
 
-    @api.onchange('employee_id')
-    def _onchange_task_id_employee_id(self):
-        if self.project_id and self.task_id.allow_billable:  # timesheet only
-            if self.task_id.bill_type == 'customer_task' or self.task_id.pricing_type == 'fixed_rate':
-                self.so_line = self.task_id.sale_line_id
-            elif self.task_id.pricing_type == 'employee_rate':
-                self.so_line = self._timesheet_determine_sale_line(self.task_id, self.employee_id, self.project_id)
-            else:
-                self.so_line = False
-
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
         for timesheet in self.filtered(lambda t: not t.is_so_line_edited)._get_not_billed():  # Get only the timesheets are not yet invoiced
