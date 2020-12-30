@@ -459,8 +459,8 @@ QUnit.module('fields', {}, function () {
             });
             assert.containsNone(form.$('.o_list_record_remove'),
                 'delete icon should not be visible in readonly');
-            assert.containsNone(form.$('.o_field_x2many_list_row_add'),
-                '"Add an item" should not be visible in readonly');
+            assert.containsOnce(form, '.o_field_x2many_list_row_add',
+                '"Add an item" should be visible in readonly');
 
             await testUtils.form.clickEdit(form);
 
@@ -566,8 +566,8 @@ QUnit.module('fields', {}, function () {
 
             assert.ok(!form.$('.o_list_record_remove').length,
                 'delete icon should not be visible in readonly');
-            assert.ok(!form.$('.o_field_x2many_list_row_add').length,
-                '"Add an item" should not be visible in readonly');
+            assert.ok(form.$('.o_field_x2many_list_row_add').length,
+                '"Add an item" should be visible in readonly');
 
             await testUtils.form.clickEdit(form);
 
@@ -701,8 +701,8 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            assert.containsNone(form, '.o_field_x2many_list_row_add',
-                '"Add an item" link should not be available in readonly');
+            assert.containsOnce(form, '.o_field_x2many_list_row_add',
+                '"Add an item" link should be available in readonly');
 
             await testUtils.form.clickEdit(form);
 
