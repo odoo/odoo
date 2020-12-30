@@ -23,8 +23,8 @@ class AccountAnalyticLine(models.Model):
     so_line = fields.Many2one(compute="_compute_so_line", store=True, readonly=False)
     is_so_line_edited = fields.Boolean("Is Sales Order Item Manually Edited")
 
-    # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to bill_type and pricing_type of project (See in master)
-    @api.depends('so_line.product_id', 'project_id', 'task_id', 'task_id.bill_type', 'task_id.pricing_type')
+    # TODO: [XBO] Since the task_id is not required in this model,  then it should more efficient to depends to pricing_type of project (See in master)
+    @api.depends('so_line.product_id', 'project_id', 'task_id', 'task_id.pricing_type')
     def _compute_timesheet_invoice_type(self):
         for timesheet in self:
             if timesheet.project_id:  # AAL will be set to False
@@ -81,18 +81,16 @@ class AccountAnalyticLine(models.Model):
                 on the one on the project
         """
         if not task:
-            if project.bill_type == 'customer_project' and project.pricing_type == 'employee_rate':
+            if project.pricing_type == 'employee_rate':
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', project.id), ('employee_id', '=', employee.id)])
                 if map_entry:
                     return map_entry.sale_line_id
             if project.sale_line_id:
                 return project.sale_line_id
         if task.allow_billable:
-            if task.bill_type == 'customer_task':
+            if task.pricing_type in ('task_rate', 'fixed_rate'):
                 return task.sale_line_id
-            if task.pricing_type == 'fixed_rate':
-                return task.sale_line_id
-            elif task.pricing_type == 'employee_rate':
+            else:  # then pricing_type = 'employee_rate'
                 map_entry = project.sale_line_employee_ids.filtered(lambda map_entry: map_entry.employee_id == employee)
                 if map_entry:
                     return map_entry.sale_line_id

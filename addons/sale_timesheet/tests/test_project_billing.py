@@ -11,7 +11,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
+
         # set up
         cls.employee_tde = cls.env['hr.employee'].create({
             'name': 'Employee TDE',
@@ -97,7 +97,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             'name': "Project billed at Employee Rate",
             'allow_timesheets': True,
             'allow_billable': True,
-            'bill_type': 'customer_project',
             'pricing_type': 'employee_rate',
             'sale_order_id': cls.sale_order_1.id,
             'partner_id': cls.sale_order_1.partner_id.id,
@@ -146,7 +145,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         # Change project to billable at task rate
         self.project_non_billable.write({
             'allow_billable': True,
-            'bill_type': 'customer_project',
             'pricing_type': 'fixed_rate',
         })
         task.timesheet_product_id = self.product_delivery_timesheet3
@@ -202,7 +200,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         # Change project to billable at employee rate
         self.project_non_billable.write({
             'allow_billable': True,
-            'bill_type': 'customer_project',
             'pricing_type': 'employee_rate',
         })
 
@@ -260,7 +257,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         })
 
         self.assertTrue(task.allow_billable, "Task in project 'employee rate' should be billable")
-        self.assertEqual(task.bill_type, 'customer_project', "Task in project 'employee rate' should be billed at employee rate")
         self.assertEqual(task.pricing_type, 'employee_rate', "Task in project 'employee rate' should be billed at employee rate")
         self.assertFalse(task.sale_line_id, "Task created in a project billed on 'employee rate' should not be linked to a SOL")
         self.assertEqual(task.partner_id, task.project_id.partner_id, "Task created in a project billed on 'employee rate' should have the same customer as the one from the project")
