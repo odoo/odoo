@@ -10,7 +10,7 @@
 # to build upon a more complex one.  It also includes a chart of taxes and
 # the Quetzal currency.
 #
-# This module is based on the UK minimal chart of accounts:
+# This module is based on the GB minimal chart of accounts:
 # Copyright (c) 2004-2009 Seath Solutions Ltd. All Rights Reserved.
 # Geoff Gardiner, Seath Solutions Ltd (http://www.seathsolutions.com/)
 #

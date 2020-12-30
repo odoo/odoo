@@ -4,16 +4,16 @@
 # Copyright (C) 2011 Smartmode LTD (<http://www.smartmode.co.uk>).
 
 {
-    'name': 'UK - Accounting',
-    'icon': '/base/static/img/country_flags/gb.png',
+    'name': 'GB - Accounting',
+    'icon': '/base/static/img/country_flags/gb.png',    
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
-This is the latest UK Odoo localisation necessary to run Odoo accounting for UK SME's with:
+This is the latest GB Odoo localisation necessary to run Odoo accounting for GB SME's with:
 =================================================================================================
     - a CT600-ready chart of accounts
     - VAT100-ready tax structure
-    - InfoLogic UK counties listing
+    - InfoLogic GB counties listing
     - a few other adaptations""",
     'author': 'SmartMode LTD',
     'website': 'https://www.odoo.com/page/accounting',
@@ -23,7 +23,7 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
         'base_vat',
     ],
     'data': [
-        'data/l10n_uk_chart_data.xml',
+        'data/l10n_gb_chart_data.xml',
         'data/account.account.template.csv',
         'data/account.chart.template.csv',
         'data/account.tax.group.csv',
@@ -32,7 +32,7 @@ This is the latest UK Odoo localisation necessary to run Odoo accounting for UK 
         'data/account_chart_template_data.xml',
     ],
     'demo': [
-        'demo/l10n_uk_demo.xml',
+        'demo/l10n_gb_demo.xml',
         'demo/demo_company.xml',
     ],
 }

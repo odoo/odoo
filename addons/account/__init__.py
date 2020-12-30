@@ -37,7 +37,7 @@ def _auto_install_l10n(env):
             #countries using OHADA Chart of Accounts
             module_list.append('l10n_syscohada')
         elif country_code == 'GB':
-            module_list.append('l10n_uk')
+            module_list.append('l10n_gb')
         elif country_code == 'DE':
             module_list.append('l10n_de_skr03')
             module_list.append('l10n_de_skr04')

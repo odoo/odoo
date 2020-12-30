@@ -14,23 +14,23 @@ class TestPartnerAssign(TransactionCase):
     def setUp(self):
         super(TestPartnerAssign, self).setUp()
 
-        self.customer_uk = self.env['res.partner'].create({
+        self.customer_gb = self.env['res.partner'].create({
             'name': 'Nigel',
-            'country_id': self.env.ref('base.uk').id,
+            'country_id': self.env.ref('base.gb').id,
             'city': 'Birmingham',
             'zip': 'B46 3AG',
             'street': 'Cannon Hill Park',
         })
-        self.lead_uk = self.env['crm.lead'].create({
+        self.lead_gb = self.env['crm.lead'].create({
             'type': 'opportunity',
             'name': 'Office Design and Architecture',
-            'partner_id': self.customer_uk.id
+            'partner_id': self.customer_gb.id
         })
 
         def geo_find(addr, **kw):
             return {
                 'Wavre, Belgium': (50.7158956, 4.6128075),
-                'Cannon Hill Park, B46 3AG Birmingham, United Kingdom': (52.45216, -1.898578),
+                'Cannon Hill Park, B46 3AG Birmingham, Great Britain': (52.45216, -1.898578),
             }.get(addr)
 
         patcher = patch('odoo.addons.base_geolocalize.models.base_geocoder.GeoCoder.geo_find', wraps=geo_find)
@@ -48,16 +48,16 @@ class TestPartnerAssign(TransactionCase):
             "street": "69 rue de Namur",
             "partner_weight": 10,
         })
-        partner_uk = self.env['res.partner'].create({
+        partner_gb = self.env['res.partner'].create({
             "name": "Think Big Systems",
             "is_company": True,
             "city": "London",
-            "country_id": self.env.ref("base.uk").id,
+            "country_id": self.env.ref("base.gb").id,
             "street": "89 Lingfield Tower",
             "partner_weight": 10,
         })
 
-        lead = self.lead_uk
+        lead = self.lead_gb
 
         # In order to test find nearest Partner functionality and assign to opportunity,
         # I Set Geo Lattitude and Longitude according to partner address.
@@ -71,7 +71,7 @@ class TestPartnerAssign(TransactionCase):
         lead.assign_partner()
 
         # I check assigned partner of opportunity who is nearest Geo Latitude and Longitude of opportunity.
-        self.assertEqual(lead.partner_assigned_id, partner_uk, "Opportuniy is not assigned nearest partner")
+        self.assertEqual(lead.partner_assigned_id, partner_gb, "Opportuniy is not assigned nearest partner")
         self.assertTrue(50 < lead.partner_latitude < 55, "Latitude is wrong: 50 < %s < 55" % lead.partner_latitude)
         self.assertTrue(-4 < lead.partner_longitude < -1, "Longitude is wrong: -4 < %s < -1" % lead.partner_longitude)
         self.assertTrue(lead.date_partner_assign, "Partner Assignment Date should be set")
