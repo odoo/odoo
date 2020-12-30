@@ -92,6 +92,28 @@ var FieldBoolean = AbstractField.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     * @override
+     * @params {Object} extraInfo
+     * @params {boolean} extraInfo.value
+     */
+    _quickEdit: function (extraInfo) {
+        this._super(...arguments);
+        // toggle if extraInfo.value === undefined (if clicked on label)
+        // otherwise force the new value
+        this._setValue(extraInfo.value === undefined ? !this.value : extraInfo.value);
+    },
+    /**
+     * @private
+     * @override
+     * @returns {Object}
+     */
+    _getQuickEditExtraInfo() {
+        return {
+            value: !this.value,
+        };
+    },
+    /**
      * The actual checkbox is designed in css to have full control over its
      * appearance, as opposed to letting the browser and the os decide how
      * a checkbox should look. The actual input is disabled and hidden. In
@@ -103,7 +125,7 @@ var FieldBoolean = AbstractField.extend({
     _render: function () {
         var $checkbox = this._formatValue(this.value);
         this.$input = $checkbox.find('input');
-        this.$input.prop('disabled', this.mode === 'readonly');
+        this.$input.prop('disabled', this.hasReadonlyModifier);
         this.$el.addClass($checkbox.attr('class'));
         this.$el.empty().append($checkbox.contents());
     },

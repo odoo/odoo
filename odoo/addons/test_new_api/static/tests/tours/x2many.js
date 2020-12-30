@@ -288,7 +288,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message ddd
         content: "create new message ddd",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: '.tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact(d))',
+        extra_trigger: '.o_form_editable .tab-pane:eq(0) .o_field_widget tbody tr:has(td:containsExact(d))',
     }, {
         content: "select another user",
         trigger: '.o_field_many2one .o_input_dropdown > input',
@@ -427,7 +427,7 @@ odoo.define('web.test.x2many', function (require) {
     }, { // add message eee
         content: "create new message eee",
         trigger: '.tab-pane:eq(0) .o_field_x2many_list_row_add a',
-        extra_trigger: 'a[data-toggle="tab"].active:contains(Messages)',
+        extra_trigger: '.o_form_editable a[data-toggle="tab"].active:contains(Messages)',
     }, {
         content: "change text value",
         trigger: 'textarea[name="body"]:first',

@@ -550,6 +550,7 @@ QUnit.module('ActionManager', {
         assert.containsOnce(actionManager, '.o_form_view');
 
         await testUtils.dom.click(actionManager.$('.o_form_view .o_data_row:first'));
+        await testUtils.nextTick(); // wait for quick edit
         assert.containsOnce(document.body, '.modal .o_form_view');
 
         await actionManager.doAction(1); // target != 'new'
@@ -581,6 +582,7 @@ QUnit.module('ActionManager', {
         assert.containsOnce(actionManager, '.o_form_view');
 
         await testUtils.dom.click(actionManager.$('.o_form_view .o_data_row:first'));
+        await testUtils.nextTick(); // wait for quick edit
         assert.containsOnce(document.body, '.modal .o_form_view');
 
         await actionManager.doAction(5); // target 'new'
