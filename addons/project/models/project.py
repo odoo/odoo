@@ -239,9 +239,12 @@ class Project(models.Model):
         ('quarterly', 'Quarterly'),
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
-    update_status_ids = fields.Many2many('project.update.status', 'project_update_status_rel', 'project_id', 'update_status_id', string='Project Statuses')
-    update_ids = fields.One2many('project.update', 'project_id')
+    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
+    update_status_ids = fields.Many2many('project.update.status', 'project_update_status_rel', 'project_id', 'update_status_id', string='Allowed Project States')
+    update_ids = fields.One2many('project.update', 'project_id', domain=[('state', '!=', 'draft')])
     last_update_id = fields.Many2one('project.update', string='Last Update', compute='_compute_last_update')
+    update_description_template = fields.Html(
+        compute='_compute_update_description_feedback', store=True, readonly=False)
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
@@ -311,8 +314,14 @@ class Project(models.Model):
     def _compute_last_update(self):
         for project in self:
             project.last_update_id = self.env['project.update'].search([
-                ("project_id", "=", project.id)
+                ("project_id", "=", project.id),
+                ('state', '!=', 'draft')
             ], limit=1)
+
+    @api.depends('company_id')
+    def _compute_update_description_feedback(self):
+        for project in self:
+            project.update_description_template = project.company_id.project_update_description_template or self.env.company.project_update_description_template
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):
@@ -502,6 +511,36 @@ class Project(models.Model):
         action_context['search_default_parent_res_name'] = self.name
         action_context.pop('group_by', None)
         return dict(action, context=action_context)
+
+    def action_open_update_status(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("project.open_project_update_form")
+        if self.last_update_id:
+            action['res_id'] = self.last_update_id.id
+            return action
+        last_draft = self.env['project.update'].search_read([
+            ('project_id', '=', self.id),
+            ('user_id', '=', self.env.uid),
+            ('state', '=', 'draft')
+        ], ['id'], limit=1)
+        if last_draft:
+            action['res_id'] = last_draft.id
+            return action
+        action_context = ast.literal_eval(action['context']) if action['context'] else {}
+        action_context.update(self._context)
+        action_context['default_project_id'] = self.id
+        return dict(action, context=action_context)
+
+    def get_last_update_or_default(self):
+        if self.last_update_id:
+            return {
+                'status': self.last_update_id.status_id.name,
+                'color': self.last_update_id.status_id.color
+            }
+        default_status = self.env['project.update.status'].search([('default', '=', True)], limit=1)
+        return {
+            'status': default_status.name,
+            'color': default_status.color
+        }
 
     # ---------------------------------------------------
     #  Business Methods

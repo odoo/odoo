@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="project_update_status_on_track" model="project.update.status">
+        <field name="name">On Track</field>
+        <field name="sequence">0</field>
+        <field name="color">10</field>
+        <field name="default">True</field>
+    </record>
+    <record id="project_update_status_at_risk" model="project.update.status">
+        <field name="name">At Risk</field>
+        <field name="sequence">10</field>
+        <field name="color">2</field>
+        <field name="default">False</field>
+    </record>
+    <record id="project_update_status_off_track" model="project.update.status">
+        <field name="name">Off Track</field>
+        <field name="sequence">20</field>
+        <field name="color">1</field>
+        <field name="default">False</field>
+    </record>
+    <record id="project_update_status_on_hold" model="project.update.status">
+        <field name="name">On Hold</field>
+        <field name="sequence">30</field>
+        <field name="color">8</field>
+        <field name="default">False</field>
+    </record>
+</odoo>

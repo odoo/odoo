@@ -19,17 +19,30 @@
 
     <div t-name="project.ControlPanel" t-inherit="web.ControlPanel" t-inherit-mode="primary" owl="1">
         <xpath expr="//ol[hasclass('breadcrumb')]" position="inside">
-            <li t-if="show_project_update" class="o_project_updates_breadcrumb">Hello World</li>
+            <li t-if="show_project_update" class="o_project_updates_breadcrumb" t-on-click="onStatusClick">
+                <span t-att-class="'o_status_bubble o_color_bubble_' + (data.color) + ' position-relative'"/>
+                <t t-esc="data.status"/>
+            </li>
         </xpath>
     </div>
 
-    <div t-name="project.ProjectUpdateComponent" owl="1" t-on-click="_onClickStatus">
-        <span class="color o_status"><t t-esc="status" /></span>
-        <span class="status">Project status : <t t-esc="name" /></span>
-    </div>
+    <span t-name="project.statusWithColor" t-att-class="'o_status_bubble o_color_bubble_' + (color)"></span>
 
-    <div t-name="project.ProjectUpdateWidget" owl="1" t-on-click="_onClickStatus">
-        <span class="color o_status"><t t-esc="status" /></span>
-        <span class="status">Project status : <t t-esc="name" /></span>
-    </div>
+    <t t-name="project.status_update_data_row">
+        <tr t-att-class="'o_data_row' + (is_last ? ' o_data_row_last' : '') + (is_first ? ' o_data_row_first' : '')" t-att-data-id="id">
+            <td class="o_status_timeline_cell position-relative pr-lg-2">
+                <div t-att-class="'o_status_bubble o_color_bubble_' + (data.color) + ' position-relative'"/>
+            </td>
+            <td class="o_data_cell pt-0 w-100">
+                <div class="o_status_line" t-att-data-id="id">
+                    <small class="o_status_line_date pull-right">
+                        <b t-esc="data.date"/>
+                    </small>
+                    <h4 class="o_status_line_title mt-2" t-esc="data.name"/>
+                    <p class="o_status_line_desc" t-esc="data.status_id"/>
+                </div>
+            </td>
+        </tr>
+    </t>
+
 </templates>

@@ -1,0 +1,71 @@
+@mixin o-background-color {
+    @for $size from 2 through length($o-colors) {
+        // Note: the first color is supposed to be invisible so it's ignored
+        &.o_color_bubble_#{$size - 1} {
+            background-color: nth($o-colors, $size);
+        }
+    }
+}
+
+.o_status_bubble {
+    @extend .o_status;
+    margin-right: 0.5rem;
+    border-radius: 50%;
+    @include o-background-color;
+}
+
+.o_form_sheet {
+    $o-bubble-padding: 0.5rem;
+    $o-bubble-size: 1.5rem;
+
+    // Resumé design
+    // =========================================
+    .o_group_project_update {
+        .o_data_row td {
+            padding: $o-bubble-padding;
+
+            &.o_status_timeline_cell {
+                div {
+                    @include size($o-bubble-size);
+                }
+
+                &:before {
+                    @include o-position-absolute(0, $left: ($o-bubble-size * .5 + $o-bubble-padding));
+                    @include size(1px, 100%);
+                    margin-left: -.01rem;
+                    background-color: $border-color;
+                    content: "";
+                }
+            }
+        }
+
+        .o_status_line_desc {
+            white-space: normal;
+        }
+
+        .o_status_line_title, .o_status_line_date {
+            line-height: 1;
+        }
+
+        .o_status_group_header + .o_data_row .o_status_timeline_cell:before {
+            top: $o-bubble-padding;
+        }
+
+        .o_data_row.o_data_row_last {
+            .o_status_line_desc {
+                margin-bottom: $headings-margin-bottom;
+            }
+
+            .o_status_timeline_cell:before {
+                height: $o-bubble-padding + $o-bubble-size/2;
+            }
+        }
+
+        .o_data_row.o_data_row_first {
+            .o_status_timeline_cell:before {
+                margin-top: $o-bubble-padding + $o-bubble-size/2;
+                height: calc(100% - #{$o-bubble-padding});
+            }
+        }
+    }
+}

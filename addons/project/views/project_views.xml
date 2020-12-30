@@ -247,7 +247,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" delete="0">
+                <form string="Project" delete="0" js_class="project_form">
                     <header>
                         <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only" groups="project.group_project_manager"/>
                     </header>
@@ -282,9 +282,7 @@
                         <group>
                             <field name="label_tasks" string="Name of the tasks"/>
                             <field name="partner_id" widget="res_partner_many2one"/>
-                            <field name="last_update_id"/>
                         </group>
-                        <field name="update_ids"/>
                     </group>
                     <notebook>
                         <page name="description_page" string="Description">
@@ -336,6 +334,7 @@
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
+                                    <field name="update_status_ids"/>
                                 </group>
                             </group>
                             <div class="row mt16 o_settings_container">
@@ -641,7 +640,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Task" class="o_form_project_tasks" js_class="project_form">
+                <form string="Task" class="o_form_project_tasks" js_class="project_task_form">
                     <field name="allow_subtasks" invisible="1" />
                     <field name="is_closed" invisible="1" />
                     <field name="allow_recurring_tasks" invisible="1" />
@@ -1185,12 +1184,4 @@
             parent="menu_project_report"
             groups="project.group_project_rating"
             sequence="40"/>
-        
-        <record id="action_project_update" model="ir.actions.client">
-            <field name="name">Project's tasks</field>
-            <field name="tag">action_project_updates</field>
-            <field name="res_model">project.task</field>
-            <field name="context">{'project_id':active_id}</field>
-        </record>
-
 </odoo>

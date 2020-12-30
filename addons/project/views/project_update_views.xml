@@ -2,49 +2,110 @@
 <odoo>
     <record id="project_update_view_form" model="ir.ui.view">
         <field name="name">project.update.view.form</field>
-        <field name="model">project.task.type</field>
+        <field name="model">project.update</field>
         <field name="arch" type="xml">
-            <form string="Project Update" delete="0">
-                <div class="row">
-                    <div class>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="name" class="o_text_overflow" placeholder="Project Update Title"/>
-                            </h1>
+            <form string="Project Update" create="0">
+                <header>
+                    <button name="action_open_update_status" type="object" string="Update Status" class="oe_highlight"
+                            context="{'default_project_id': project_id}" states="posted"/>
+                    <button name="action_post" type="object" string="Post" class="oe_highlight" states="draft"/>
+                    <button name="action_draft" type="object" string="Reset to Draft" states="posted"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
+                </header>
+                <sheet>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="oe_title">
+                                <h1>
+                                    <field name="name" class="o_text_overflow" placeholder="Project Update Title" attrs="{'readonly': [('state', '=', 'posted')]}"/>
+                                </h1>
+                            </div>
+                            <group>
+                                <field name="project_id" invisible="1"/>
+                                <field name="status_id" widget="status_with_color" options="{'no_create': True}" domain="[('project_ids','=', project_id)]"
+                                        attrs="{'readonly': [('state', '=', 'posted')]}"/>
+                                <field name="progress" widget="progressbar" options="{'current_value': 'progress', 'max_value': '100', 'editable': true}" 
+                                        attrs="{'readonly': [('state', '=', 'posted')]}"/>
+                            </group>
+                            <separator class="form-divider-h"/>
+                            <field name="description" attrs="{'readonly': [('state', '=', 'posted')]}"/>
                         </div>
+                        <div class="col-md-4 form-divider-v">
+                            <h2>About this project</h2>
+                            <div class="o_project_info">
+                                <div class="logo">
+                                    <i class="fa fa-user o_project_circle" title="Project Manager"></i>
+                                </div>
+                                <div class="content">
+                                    <div class="label"><label for="project_user_id"/></div>
+                                    <div class="data"><field name="project_user_id" widget="many2one_avatar_user"/></div>
+                                </div>
+                            </div>
+                            <div class="o_project_info">
+                                <div class="logo">
+                                    <i class="fa fa-calendar-o o_project_circle" title="Deadline"></i>
+                                </div>
+                                <div class="content">
+                                    <div class="label"><label for="project_date_deadline" string="Deadline"/></div>
+                                    <div class="data"><field name="project_date_deadline"/></div>
+                                </div>
+                            </div>
+                            <div class="o_project_info">
+                                <div class="logo">
+                                    <i class="fa fa-info o_project_circle" title="Description"></i>
+                                </div>
+                                <div class="content">
+                                    <div class="label"><label for="project_description"/></div>
+                                    <div class="data"><field name="project_description"/></div>
+                                </div>
+                            </div>
+
+                            <separator class="form-divider-h"/>
+                            <h2>Milestones</h2>
+                            
+
+                            <separator class="form-divider-h"/>
+                            <div class="o_group_project_update">
+                                <h2>Previous Status Updates</h2>
+                                
+                                <field name="previous_status_update_ids" widget="one2many_project_updates">
+                                    <tree>
+                                        <field name="name"/>
+                                        <field name="date"/>
+                                        <field name="status_id"/>
+                                        <field name="color"/>
+                                    </tree>
+                                </field>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="project_update_status_view_form" model="ir.ui.view">
+        <field name="name">project.update.status.view.form</field>
+        <field name="model">project.update.status</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
                         <group>
-                            <field name="status" widget="many2one_status" options="{'no_open': True,'no_create': True}"/>
-                            <field name="progress" widget="progressbar"/>
+                            <field name="name"/>
+                            <field name="color" widget="color_picker"/>
                         </group>
-                        <field name="description"/>
-                    </div>
-                    <div>
-                        About this project
-                        <field name="project">
-                            <form>
-                                <field name="name"/>
-                                <field name="manager_id" widget="many2one_avatar_user"/>
-                                <span class="fa fa-calendar-o"></span><field name="date_deadline" widget="many2one_avatar_user"/> 
-                            </form>
-                        </field>
-                    </div>
-                </div>
+                        <field name="default"/>
+                        <field name="project_ids"/>
+                    </group>
+                </sheet>
             </form>
         </field>
     </record>
 
     <record id="open_project_update_form" model="ir.actions.act_window">
         <field name="name">Project Update</field>
-        <field name="res_model">project.task.type</field>
+        <field name="res_model">project.update</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="task_type_tree"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-            Create a new project update for followers
-            </p><p>
-            Post updates about the project, it's current status and some notes to
-            keep the followers up-to-date !
-            </p>
-        </field>
     </record>
 </odoo>

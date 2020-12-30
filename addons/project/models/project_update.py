@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import ast
+
 from odoo import _, fields, models
 
 class ProjectUpdateStatus(models.Model):
@@ -30,8 +32,51 @@ class ProjectUpdate(models.Model):
     def _get_default_status(self):
         return self.env['project.update.status'].search([('default', '=', True)], limit=1)
 
+    def _get_default_user_id(self):
+        return self.env['project.project'].browse(self.env.context.get('default_project_id')).user_id
+
+    def _get_default_date_deadline(self):
+        return self.env['project.project'].browse(self.env.context.get('default_project_id')).date
+
+    def _get_default_project_description(self):
+        return self.env['project.project'].browse(self.env.context.get('default_project_id')).description
+
+    def _get_default_description(self):
+        return self.env['project.project'].browse(self.env.context.get('default_project_id')).update_description_template or \
+            self.env.company.project_update_description_template
+
     name = fields.Char("Title", default=_get_default_name, required=True)
-    project_id = fields.Many2one("project.project", required=True)
     status_id = fields.Many2one("project.update.status", copy=False, default=_get_default_status, required=True)
+    color = fields.Integer(related="status_id.color")
+    state = fields.Selection(
+        selection=[
+            ('draft', 'Draft'),
+            ('posted', 'Posted')
+        ],
+        default="draft", copy=False, required=True, string="Status")
     progress = fields.Integer()
-    description = fields.Html()
+    user_id = fields.Many2one('res.users', string="Author", required=True, default=lambda self: self.env.user)
+    description = fields.Html(default=_get_default_description)
+    date = fields.Date(default=fields.Date.today)
+    project_id = fields.Many2one("project.project", required=True)
+    project_user_id = fields.Many2one(related='project_id.user_id', readonly=True, default=_get_default_user_id)
+    project_date_deadline = fields.Date(related='project_id.date_deadline', readonly=True, default=_get_default_date_deadline)
+    project_description = fields.Html(related='project_id.description', readonly=True, string='Project Description', default=_get_default_project_description)
+    previous_status_update_ids = fields.One2many(related='project_id.update_ids')
+
+    def action_open_update_status(self):
+        last_draft = self.search_read([
+            ('project_id', '=', self.project_id.id),
+            ('user_id', '=', self.env.uid),
+            ('state', '=', 'draft')
+        ], ['id'], limit=1)
+        action = self.env["ir.actions.actions"]._for_xml_id("project.open_project_update_form")
+        if last_draft:
+            action['res_id'] = last_draft[0]['id']
+        return action
+
+    def action_post(self):
+        self.write({'state': 'posted'})
+
+    def action_draft(self):
+        self.write({'state': 'draft'})
