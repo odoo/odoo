@@ -394,7 +394,7 @@ class Project(models.Model):
                 task_order_line_ids = [ol['sale_line_id'][0] for ol in task_order_line_ids]
 
             if self.env.user.has_group('sales_team.group_sale_salesman'):
-                if self.bill_type == 'customer_project' and self.allow_billable and not self.sale_order_id:
+                if self.pricing_type != 'task_rate' and self.allow_billable and not self.sale_order_id:
                     actions.append({
                         'label': _("Create a Sales Order"),
                         'type': 'action',

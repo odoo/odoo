@@ -25,7 +25,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             result['project_id'] = active_id
             if not result.get('partner_id', False):
                 result['partner_id'] = project.partner_id.id
-            if project.bill_type == 'customer_project' and not result.get('line_ids', False):
+            if project.pricing_type != 'task_rate' and not result.get('line_ids', False):
                 if project.pricing_type == 'employee_rate':
                     default_product = self.env.ref('sale_timesheet.time_product', False)
                     result['line_ids'] = [
