@@ -273,7 +273,7 @@ return AbstractWebClient.extend({
      */
     _onScrollTo: function (ev) {
         var offset = {top: ev.data.top, left: ev.data.left || 0};
-        if (!offset.top) {
+        if (ev.data.selector) {
             offset = dom.getPosition(document.querySelector(ev.data.selector));
             // Substract the position of the action_manager as it is the scrolling part
             offset.top -= dom.getPosition(this.action_manager.el).top;
