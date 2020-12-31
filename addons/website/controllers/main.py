@@ -340,6 +340,14 @@ class Website(Home):
             t['numOfElFetch'] = attribs.get('data-number-of-elements-fetch')
         return templates
 
+    @http.route('/website/get_current_currency', type='json', auth="public", website=True)
+    def get_current_currency(self, **kwargs):
+        return {
+            'id': request.website.company_id.currency_id.id,
+            'symbol': request.website.company_id.currency_id.symbol,
+            'position': request.website.company_id.currency_id.position,
+        }
+
     # ------------------------------------------------------
     # Edit
     # ------------------------------------------------------

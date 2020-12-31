@@ -136,6 +136,13 @@ class Website(main.Website):
         if view_key in ('website_sale.products_list_view', 'website_sale.add_grid_or_list_option'):
             request.session.pop('website_sale_shop_layout_mode', None)
 
+    @http.route()
+    def get_current_currency(self, **kwargs):
+        return {
+            'id': request.website.currency_id.id,
+            'symbol': request.website.currency_id.symbol,
+            'position': request.website.currency_id.position,
+        }
 
 class WebsiteSale(http.Controller):
 
