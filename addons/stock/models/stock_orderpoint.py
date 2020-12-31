@@ -272,7 +272,7 @@ class StockWarehouseOrderpoint(models.Model):
         for g in rules_groups:
             if not g.get('route_id'):
                 continue
-            orderpoints = self.filtered(lambda o: o.location_id == g['location_id'])
+            orderpoints = self.filtered(lambda o: o.location_id.id == g['location_id'][0])
             orderpoints.route_id = g['route_id']
 
     def _get_product_context(self):
