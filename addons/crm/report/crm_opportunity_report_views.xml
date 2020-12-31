@@ -138,12 +138,13 @@
             <field name="view_ids"
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph_lead')}),
-                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')})]"/>
+                          (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot_lead')}),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_leads')})]"/>
             <field name="help">This report analyses the source of your leads.</field>
         </record>
 
         <record id="crm_opportunity_report_menu_lead" model="ir.ui.menu">
-            <field name="action" ref="crm.crm_opportunity_report_action_lead"/>
+            <field name="action" ref="crm_opportunity_report_action_lead"/>
         </record>
 
 </odoo>
