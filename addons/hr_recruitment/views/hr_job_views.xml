@@ -24,6 +24,7 @@
                 <field name="manager_id"/>
                 <field name="state"/>
                 <field name="user_id"/>
+                <field name="application_count"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
@@ -60,9 +61,14 @@
                                 </t>
                                 <t t-if="record.state.raw_value == 'open'">
                                     <div class="row">
-                                        <div class="col-12 o_kanban_primary_left">
+                                        <div class="col-7 o_kanban_primary_left">
                                             <button class="btn btn-secondary" name="set_recruit" type="object">Start Recruitment</button>
                                         </div>
+                                        <t t-if="record.old_application_count.raw_value != 0">
+                                            <div class="col-5 text_top_padding">
+                                                <field name="old_application_count"/> Applications<br/>
+                                            </div>
+                                        </t>
                                     </div>
                                 </t>
                                 <div name="kanban_boxes" class="row o_recruitment_kanban_boxes">
@@ -81,6 +87,7 @@
                                     <div role="menuitem"><a t-if="record.state.raw_value == 'recruit'" name="set_open" type="object">Recruitment Done</a></div>
                                     <div role="menuitem"><a t-if="record.state.raw_value == 'open'" name="set_recruit" type="object">Start recruitment</a></div>
                                     <div role="menuitem"><a t-if="widget.editable" name="edit_job" type="edit">Edit</a></div>
+                                    <div role="menuitem" name="applications_action"><a t-if="record.state.raw_value == 'open' and record.application_count.raw_value != 0" name="%(action_hr_job_applications)d" type="action">Applications</a></div>
                                 </div>
                                 <div role="menuitem" aria-haspopup="true">
                                     <ul class="oe_kanban_colorpicker" data-field="color" role="menu"/>
