@@ -2262,6 +2262,7 @@ exports.Orderline = Backbone.Model.extend({
 
         var product =  this.get_product();
         var taxes_ids = this.tax_ids || product.taxes_id;
+        taxes_ids = _.filter(taxes_ids, t => t in this.pos.taxes_by_id);
         var taxes =  this.pos.taxes;
         var taxdetail = {};
         var product_taxes = [];
