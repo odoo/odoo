@@ -401,8 +401,6 @@ class PosOrder(models.Model):
             'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
             'invoice_cash_rounding_id': self.config_id.rounding_method.id if self.config_id.cash_rounding else False
         }
-        if self.crm_team_id:
-            vals['team_id'] = self.crm_team_id.id
         return vals
 
     def action_pos_order_invoice(self):
