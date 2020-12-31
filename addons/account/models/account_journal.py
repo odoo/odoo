@@ -212,9 +212,7 @@ class AccountJournal(models.Model):
         }
 
         for journal in self:
-            if journal.type in ('bank', 'cash'):
-                journal.default_account_type = True
-            elif journal.type in default_account_id_types:
+            if journal.type in default_account_id_types:
                 journal.default_account_type = self.env.ref(default_account_id_types[journal.type]).id
             else:
                 journal.default_account_type = False

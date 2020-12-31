@@ -11,8 +11,29 @@ options.registry.Channel = options.Class.extend({
     /**
      * @override
      */
+    async start() {
+        await this._super(...arguments);
+        this.publicChannels = await this._getPublicChannels();
+    },
+    /**
+     * @override
+     */
     cleanForSave: function () {
         this.$target.addClass('d-none');
+    },
+    /**
+     * If we have already created channels => select the first one
+     * else => modal prompt (create a new channel)
+     *
+     * @override
+     */
+    onBuilt() {
+        if (this.publicChannels.length) {
+            this.$target[0].dataset.id = this.publicChannels[0][0];
+        } else {
+            const widget = this._requestUserValueWidgets('create_mail_channel_opt')[0];
+            widget.$el.click();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -56,12 +77,12 @@ options.registry.Channel = options.Class.extend({
     /**
      * @override
      */
-    _renderCustomXML: function (uiFragment) {
-        return this._rpc({
-            model: 'mail.channel',
-            method: 'name_search',
-            args: ['', [['public', '=', 'public']]],
-        }).then(channels => {
+    _renderCustomXML(uiFragment) {
+        // TODO remove this part in master 
+        const createChannelEl = uiFragment.querySelector('we-button[data-create-channel]');
+        createChannelEl.dataset.name = 'create_mail_channel_opt';
+
+        return this._getPublicChannels().then(channels => {
             const menuEl = uiFragment.querySelector('.select_discussion_list');
             for (const channel of channels) {
                 const el = document.createElement('we-button');
@@ -69,6 +90,17 @@ options.registry.Channel = options.Class.extend({
                 el.textContent = channel[1];
                 menuEl.appendChild(el);
             }
+        });
+    },
+    /**
+     * @private
+     * @return {Promise}
+     */
+    _getPublicChannels() {
+        return this._rpc({
+            model: 'mail.channel',
+            method: 'name_search',
+            args: ['', [['public', '=', 'public']]],
         });
     },
 });
