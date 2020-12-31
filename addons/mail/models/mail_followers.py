@@ -123,74 +123,136 @@ class Followers(models.Model):
         self.env['res.partner'].flush(['active', 'partner_share'])
         self.env['res.groups'].flush(['users'])
         self.env['mail.channel'].flush(['email_send', 'channel_type'])
+
+        def partner_select(where, join_subfollowers=False, select_groups=False):
+            query = """
+                  SELECT
+                      partner.id as pid,
+                      NULL::int AS cid,
+                      partner.active as active,
+                      partner.partner_share as pshare,
+                      NULL as ctype,
+                      users.notification_type AS notif,
+            """
+            if select_groups:
+                query += """
+                      array_agg(groups.id) AS groups
+                """
+            else:
+                query += """
+                      NULL AS groups
+                """
+            query += """
+                  FROM res_partner partner
+                  LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
+                """
+            if select_groups:
+                query += """
+                  LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
+                  LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
+                """
+            if join_subfollowers:
+                query += """
+                  INNER JOIN sub_followers subfol ON subfol.partner_id = partner.id
+                """
+            query += where
+            query += """
+                  GROUP BY partner.id, users.notification_type
+            """
+            return query
+
+        def channel_select(where, join_subfollowers=False):
+            query = """
+                  SELECT
+                      NULL::int AS pid,
+                      channel.id AS cid,
+                      TRUE as active,
+                      NULL AS pshare,
+                      channel.channel_type AS ctype,
+                      CASE
+                          WHEN channel.email_send = TRUE THEN 'email'
+                          ELSE 'inbox'
+                      END AS notif,
+                      NULL AS groups
+                  FROM mail_channel channel
+                  """
+            if join_subfollowers:
+                query += """
+                  INNER JOIN sub_followers subfol ON subfol.channel_id = channel.id
+                """
+
+            query += where
+            return query
+        query = ""
+        query_parts = []
+        params = []
         if records and subtype_id:
             query = """
-SELECT DISTINCT ON(pid, cid) * FROM (
-    WITH sub_followers AS (
-        SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
-        FROM mail_followers fol
-            RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
-            ON subrel.mail_followers_id = fol.id
-            RIGHT JOIN mail_message_subtype subtype
-            ON subtype.id = subrel.mail_message_subtype_id
-        WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
-    )
-    SELECT partner.id as pid, NULL::int AS cid,
-            partner.active as active, partner.partner_share as pshare, NULL as ctype,
-            users.notification_type AS notif, array_agg(groups.id) AS groups
-        FROM res_partner partner
-        LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-        LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
-        LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
-        WHERE EXISTS (
-            SELECT partner_id FROM sub_followers
-            WHERE sub_followers.channel_id IS NULL
-                AND sub_followers.partner_id = partner.id
-                AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
-        ) %s
-        GROUP BY partner.id, users.notification_type
-    UNION
-    SELECT NULL::int AS pid, channel.id AS cid,
-            TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-            CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
-        FROM mail_channel channel
-        WHERE EXISTS (
-            SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
-        ) %s
-) AS x
-ORDER BY pid, cid, notif
-""" % ('OR partner.id IN %s' if pids else '', 'OR channel.id IN %s' if cids else '')
-            params = [subtype_id, records._name, tuple(records.ids)]
-            if pids:
-                params.append(tuple(pids))
-            if cids:
-                params.append(tuple(cids))
-            self.env.cr.execute(query, tuple(params))
-            res = self.env.cr.fetchall()
-        elif pids or cids:
-            params, query_pid, query_cid = [], '', ''
-            if pids:
-                query_pid = """
-SELECT partner.id as pid, NULL::int AS cid,
-    partner.active as active, partner.partner_share as pshare, NULL as ctype,
-    users.notification_type AS notif, NULL AS groups
-FROM res_partner partner
-LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
-WHERE partner.id IN %s"""
-                params.append(tuple(pids))
-            if cids:
-                query_cid = """
-SELECT NULL::int AS pid, channel.id AS cid,
-    TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
-    CASE when channel.email_send = TRUE then 'email' else 'inbox' end AS notif, NULL AS groups
-FROM mail_channel channel WHERE channel.id IN %s """
-                params.append(tuple(cids))
-            query = ' UNION'.join(x for x in [query_pid, query_cid] if x)
-            query = 'SELECT DISTINCT ON(pid, cid) * FROM (%s) AS x ORDER BY pid, cid, notif' % query
-            self.env.cr.execute(query, tuple(params))
-            res = self.env.cr.fetchall()
-        else:
-            res = []
+                WITH sub_followers AS (
+                    SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
+                    FROM mail_followers fol
+                        RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
+                        ON subrel.mail_followers_id = fol.id
+                        RIGHT JOIN mail_message_subtype subtype
+                        ON subtype.id = subrel.mail_message_subtype_id
+                    WHERE subrel.mail_message_subtype_id = %s AND fol.res_model = %s AND fol.res_id IN %s
+                )
+            """
+            params += [subtype_id, records._name, tuple(records.ids)]
+
+            query_parts.append(
+                partner_select(
+                    """
+                    WHERE subfol.channel_id IS NULL
+                          AND (
+                              coalesce(subfol.internal, false) <> TRUE
+                              OR coalesce(partner.partner_share, false) <> TRUE
+                          )
+                    """,
+                    select_groups=True,
+                    join_subfollowers=True,
+                )
+            )
+            query_parts.append(
+                channel_select(
+                    "WHERE subfol.partner_id IS NULL",
+                    join_subfollowers=True,
+                )
+            )
+        elif not (pids or cids):
+            return []
+
+        if pids:
+            query_parts.append(
+                partner_select(
+                    "WHERE partner.id IN %s",
+                    select_groups=records and subtype_id
+                )
+            )
+            params.append(tuple(pids))
+
+        if cids:
+            query_parts.append(
+                channel_select(
+                    "WHERE channel.id IN %s"
+                )
+            )
+            params.append(tuple(cids))
+
+        query = (
+            """
+            SELECT DISTINCT ON(pid, cid) *
+            FROM (
+            """
+            + query
+            + " UNION ALL".join(query_parts) +
+            """
+            ) AS x
+            ORDER BY pid, cid, notif
+            """
+        )
+        self.env.cr.execute(query, tuple(params))
+        res = self.env.cr.fetchall()
         return res
 
     def _get_subscription_data(self, doc_data, pids, cids, include_pshare=False, include_active=False):
