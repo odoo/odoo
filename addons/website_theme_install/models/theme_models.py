@@ -201,23 +201,23 @@ class Theme(models.AbstractModel):
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
 
-    theme_template_id = fields.Many2one('theme.ir.ui.view')
+    theme_template_id = fields.Many2one('theme.ir.ui.view', copy=False)
 
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    key = fields.Char()
-    theme_template_id = fields.Many2one('theme.ir.attachment')
+    key = fields.Char(copy=False)
+    theme_template_id = fields.Many2one('theme.ir.attachment', copy=False)
 
 
 class WebiteMenu(models.Model):
     _inherit = 'website.menu'
 
-    theme_template_id = fields.Many2one('theme.website.menu')
+    theme_template_id = fields.Many2one('theme.website.menu', copy=False)
 
 
 class WebsitePage(models.Model):
     _inherit = 'website.page'
 
-    theme_template_id = fields.Many2one('theme.website.page')
+    theme_template_id = fields.Many2one('theme.website.page', copy=False)
