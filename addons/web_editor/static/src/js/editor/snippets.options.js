@@ -1956,11 +1956,11 @@ const ListUserValueWidget = UserValueWidget.extend({
     /**
      * @private
      * @param {string || integer} id
-     * @param {string} [text]
+     * @param {string} [value]
      * @param {Object} [recordData] key, values that will be added to the
      *     element's dataset
      */
-    _addItemToTable(id, text = _t("Item"), recordData) {
+    _addItemToTable(id, value = this.el.dataset.defaultValue || _t("Item"), recordData) {
         const trEl = document.createElement('tr');
         if (!this.el.dataset.unsortable) {
             const draggableEl = document.createElement('we-button');
@@ -1971,9 +1971,9 @@ const ListUserValueWidget = UserValueWidget.extend({
             trEl.appendChild(draggableTdEl);
         }
         const inputEl = document.createElement('input');
-        inputEl.type = 'text';
-        if (text) {
-            inputEl.value = text;
+        inputEl.type = this.el.dataset.inputType || 'text';
+        if (value) {
+            inputEl.value = value;
         }
         if (id) {
             inputEl.name = id;
@@ -2033,7 +2033,7 @@ const ListUserValueWidget = UserValueWidget.extend({
      * @private
      */
     _notifyCurrentState() {
-        const values = [...this.listTable.querySelectorAll('input')].map(el => {
+        const values = [...this.listTable.querySelectorAll('.o_we_list_record_name input')].map(el => {
             const id = this.isCustom ? el.value : el.name;
             const idInt = parseInt(id);
             return Object.assign({
