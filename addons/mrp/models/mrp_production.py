@@ -680,7 +680,7 @@ class MrpProduction(models.Model):
         moves_in_first_operation = self.move_raw_ids.filtered(lambda m: m.bom_line_id in bom_line_ids)
         if all(move.state == 'assigned' for move in moves_in_first_operation):
             return 'assigned'
-        return 'confirmed'
+        return 'waiting'
 
     def action_confirm(self):
         self._check_company()
