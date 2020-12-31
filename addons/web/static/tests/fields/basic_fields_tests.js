@@ -3099,6 +3099,39 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Daterange widget in rtl rendered at right side', async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.fields.datetime_end = { string: 'Datetime End', type: 'datetime' };
+        this.data.partner.records[0].datetime_end = '2017-03-13 00:00:00';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+            <form>
+                <field name="datetime" widget="daterange" options="{'related_end_date': 'datetime_end'}"/>
+                <field name="datetime_end" widget="daterange" options="{'related_start_date': 'datetime'}"/>
+            </form>`,
+            translateParameters: {
+                direction: 'rtl',
+            },
+        });
+
+        // update input for Datetime
+        assert.hasClass(form.$('.o_field_date_range:first'), 'pull-right',
+            "the start date should have pull-right class in RTL");
+        assert.hasClass(form.$('.o_field_date_range:last'), 'pull-right',
+            "the end date should have pull-right class in RTL");
+        assert.hasClass($('.daterangepicker:first'), 'opensleft',
+            "start date should have opensleft class");
+        assert.hasClass($('.daterangepicker:last'), 'opensleft',
+            "end date should have opensleft class");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {

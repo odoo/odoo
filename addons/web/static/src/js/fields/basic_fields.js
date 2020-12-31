@@ -692,6 +692,10 @@ var FieldDateRange = InputField.extend({
         this.dateRangePickerOptions.startDate = startDate || moment();
         this.dateRangePickerOptions.endDate = endDate || moment();
 
+        if (_t.database.parameters.direction === "rtl") {
+            this.$el.addClass("pull-right");
+        }
+
         this.$el.daterangepicker(this.dateRangePickerOptions);
         this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
         this.$el.on('show.daterangepicker', this._onDateRangePickerShow.bind(this));
