@@ -123,6 +123,7 @@
                     <t id="mail_group_hook"/>
                     <t id="twitter_favorite_tweets_hook"/>
                     <t t-snippet="website.s_embed_code" t-thumbnail="/website/static/src/img/snippets_thumbs/s_embed_code.svg"/>
+                    <t id="snippet_donation_hook"/>
                 </div>
             </div>
 
@@ -152,6 +153,7 @@
                         <keywords>cite</keywords>
                     </t>
                     <t id="event_speaker_bio_hook"/>
+                    <t id="snippet_donation_button_hook"/>
                 </div>
             </div>
         </t>
@@ -167,9 +169,11 @@
         <t id="newsletter_popup_snippet" t-install="mass_mailing" string="Newsletter Popup" t-thumbnail="/website/static/src/img/snippets_thumbs/newsletter_subscribe_popup.svg"/>
         <t t-install="website_mail_group" string="Discussion Group" t-thumbnail="/website/static/src/img/snippets_thumbs/s_group.svg"/>
         <t t-install="website_twitter" string="Twitter Scroller" t-thumbnail="/website/static/src/img/snippets_thumbs/s_twitter_scroll.svg"/>
+        <t t-install="website_payment" string="Donation" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation.svg"/>
     </xpath>
     <xpath expr="//div[@id='snippet_content']//t[@t-snippet][last()]" position="after">
         <t id="newsletter_snippet" t-install="mass_mailing" string="Newsletter" t-thumbnail="/website/static/src/img/snippets_thumbs/s_newsletter_subscribe_form.svg"/>
+        <t t-install="website_payment" string="Donation Button" t-thumbnail="/website/static/src/img/snippets_thumbs/s_donation_button.svg"/>
     </xpath>
 </template>
 
@@ -525,7 +529,7 @@
         t-att-data-selector="so_snippet_addition_selector"
         data-drop-in=":not(p).oe_structure:not(.oe_structure_solo), :not(.o_mega_menu):not(p)[data-oe-type=html], :not(p).oe_structure.oe_structure_solo:not(:has(> section, > div))"/>
 
-    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code</t>
+    <t t-set="so_content_addition_selector" t-translation="off">blockquote, .s_card:not(.s_timeline_card), .s_alert, .o_facebook_page, .s_share, .s_rating, .s_hr, .s_google_map, .s_map, .s_countdown, .s_chart, .s_text_highlight, .s_progress_bar, .s_badge, .s_embed_code, .s_donation</t>
     <div id="so_content_addition"
         t-att-data-selector="so_content_addition_selector"
         t-attf-data-drop-near="p, h1, h2, h3, ul, ol, .row > div > img, #{so_content_addition_selector}"
