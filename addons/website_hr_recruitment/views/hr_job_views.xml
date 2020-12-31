@@ -11,11 +11,22 @@
                     <span class="o_recruitment_purple">Published</span>
                 </div>
             </xpath>
+            <xpath expr="//div[hasclass('o_primary')]" position="replace">
+                <field name="website_url" invisible="1"/>
+                <div class="o_primary col-11">
+                    <span><a t-attf-href="#{record.website_url.raw_value}" class="mr-2">
+                        <t t-esc="record.name.value"/></a>
+                    </span>
+                </div>
+            </xpath>
             <xpath expr="//div[@name='kanban_boxes']/div/div[1]" position="inside">
                 <field name="website_url" invisible="1"/>
-                <span>
-                    <a t-attf-href="#{record.website_url.raw_value}" class="mr-2">Job Description</a>
-                    <field name="is_published" widget='boolean_toggle'/>
+                <span><t t-if="record.no_of_recruitment.raw_value != 0">
+                    <span class="mr-2">
+                        <t t-if="record.is_published.raw_value">Published</t>
+                        <t t-else="">Not published</t>
+                    </span>
+                    <field name="is_published" widget='boolean_toggle'/></t>
                 </span>
             </xpath> 
         </field>
@@ -29,7 +40,7 @@
             <xpath expr="//div[hasclass('o_link_trackers')]" position="replace">
                 <div class="o_link_trackers col-6">
                     <a role="button" name="%(hr_recruitment.action_hr_job_sources)d" type="action" class="btn btn-sm py-0">
-                        <span title='Link Trackers'><i class='fa fa-lg fa-link' role="img" aria-label="Link Trackers"/></span> 
+                        <span title='Link Trackers'><i class='fa fa-lg fa-link' role="img" aria-label="Link Trackers"/></span>
                     </a>
                 </div>
             </xpath>

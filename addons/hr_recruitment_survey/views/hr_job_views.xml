@@ -23,9 +23,11 @@
             <xpath expr="//field[@name='manager_id']" position="after">
                 <field name="survey_id"/>
             </xpath>
-            <xpath expr='//a[@name="edit_job"]' position="after">
-                <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Preview Interview</a>
-                <a t-if="!record.survey_id.raw_value" name="action_new_survey" type="object" title="Create Interview Form">Create Interview Form</a>
+            <xpath expr='//div[@name="applications_action"]' position="after">
+                <div role="menuitem">
+                    <a t-if="record.survey_id.raw_value" name="action_print_survey" type="object" title="Display Interview Form">Preview Interview</a>
+                    <a t-if="!record.survey_id.raw_value" name="action_new_survey" type="object" title="Create Interview Form">Create Interview Form</a>
+                </div>
             </xpath>
         </field>
     </record>

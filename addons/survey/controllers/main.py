@@ -558,7 +558,6 @@ class Survey(http.Controller):
             return self._redirect_with_error(access_data, access_data['validity_code'])
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
-
         return request.render('survey.survey_page_print', {
             'is_html_empty': is_html_empty,
             'review': review,

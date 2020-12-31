@@ -27,16 +27,18 @@
             <tree string="Applicants" multi_edit="1" sample="1">
                 <field name="message_needaction" invisible="1"/>
                 <field name="last_stage_id" invisible="1"/>
-                <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="date_last_stage_update" invisible="1"/>
                 <field name="partner_name" readonly="1"/>
+                <field name="job_id"/>
                 <field name="name" readonly="1"/>
+                <field name="stage_id"/>
+                <field name="priority" widget="priority" optional="show"/>
                 <field name="partner_mobile" widget="phone" readonly="1" optional="show"/>
+                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
+                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
+                <field name="create_date" readonly="1" widget="date" optional="show"/>
                 <field name="partner_phone" widget="phone" readonly="1" optional="hide"/>
                 <field name="email_from" readonly="1" optional="hide"/>
-                <field name="job_id"/>
-                <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="priority" widget="priority" optional="show"/>
                 <field name="medium_id" optional="hide"/>
                 <field name="source_id" readonly="1" optional="hide"/>
                 <field name="salary_expected" optional="hide"/>
@@ -44,9 +46,7 @@
                 <field name="type_id" invisible="1"/>
                 <field name="availability" optional="hide"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)" readonly="1"/>
-                <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                 <field name="company_id" groups="base.group_multi_company" readonly="1" optional="hide"/>
-                <field name="stage_id"/>
             </tree>
         </field>
     </record>
@@ -86,8 +86,8 @@
                             icon="fa-pencil"
                             type="object"
                             context="{'active_test': False}"
-                            attrs="{'invisible': [('application_count', '=', 0)]}">
-                        <field name="application_count" widget="statinfo" string="Other Applications"/>
+                            attrs="{'invisible': [('application_count', '&lt;' , 2)]}">
+                        <field name="application_count" widget="statinfo" string="Applications"/>
                     </button>
                     <button name="action_makeMeeting" class="oe_stat_button" icon="fa-calendar" type="object"
                          >
@@ -106,7 +106,7 @@
                 <field name="legend_done" invisible="1"/>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
-                    <h1><field name="name"/></h1>
+                    <h1><field name="name" placeholder="e.g. Sales Manager 2 year experience"/></h1>
                     <h2 class="o_row">
                         <div>
                             <label for="partner_name" class="oe_edit_only"/>
@@ -125,7 +125,7 @@
                         <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
-                        <field name="categ_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="categ_ids" placeholder="Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="date_closed" attrs="{'invisible': [('date_closed', '=', False)]}" />
                         <field name="priority" widget="priority"/>
@@ -154,8 +154,11 @@
                         <field name="emp_id" invisible="1"/>
                     </group>
                 </group>
-                <separator string="Application Summary"/>
-                <field name="description" placeholder="Feedback of interviews..."/>
+                <notebook>
+                    <page string="Application Summary">
+                        <field name="description" placeholder="Motivations..."/>
+                    </page>
+                </notebook>
             </sheet>
             <div class="oe_chatter">
                 <field name="message_follower_ids"/>
@@ -390,7 +393,7 @@
     <record model="ir.actions.act_window" id="action_hr_job_applications">
         <field name="name">Applications</field>
         <field name="res_model">hr.applicant</field>
-        <field name="view_mode">kanban,tree,form,graph,calendar,pivot</field>
+        <field name="view_mode">kanban,tree,form,graph,calendar,pivot,activity</field>
         <field name="search_view_id" ref="hr_applicant_view_search_bis"/>
         <field name="context">{'search_default_job_id': [active_id], 'default_job_id': active_id}</field>
         <field name="help" type="html">
@@ -599,14 +602,14 @@
     </record>
 
     <record model="ir.actions.act_window.view" id="action_hr_sec_kanban_view_act_job">
-        <field name="sequence" eval="0"/>
+        <field name="sequence" eval="1"/>
         <field name="view_mode">kanban</field>
         <field name="view_id" ref="hr_kanban_view_applicant"/>
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>
     </record>
 
     <record model="ir.actions.act_window.view" id="action_hr_sec_tree_view_act_job">
-        <field name="sequence" eval="1"/>
+        <field name="sequence" eval="0"/>
         <field name="view_mode">tree</field>
         <field name="view_id" ref="crm_case_tree_view_job"/>
         <field name="act_window_id" ref="crm_case_categ0_act_job"/>

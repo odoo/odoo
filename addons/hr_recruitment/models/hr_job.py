@@ -27,6 +27,8 @@ class Job(models.Model):
     new_application_count = fields.Integer(
         compute='_compute_new_application_count', string="New Application",
         help="Number of applications that are new in the flow (typically at first step of the flow)")
+    old_application_count = fields.Integer(
+        compute='_compute_old_application_count', string="Old Application")
     manager_id = fields.Many2one(
         'hr.employee', related='department_id.manager_id', string="Department Manager",
         readonly=True, store=True)
@@ -99,6 +101,11 @@ class Job(models.Model):
             job.new_application_count = self.env["hr.applicant"].search_count(
                 [("job_id", "=", job.id), ("stage_id", "=", job._get_first_stage().id)]
             )
+
+    @api.depends('application_count', 'new_application_count')
+    def _compute_old_application_count(self):
+        for job in self:
+            job.old_application_count = job.application_count - job.new_application_count
 
     def _alias_get_creation_values(self):
         values = super(Job, self)._alias_get_creation_values()
