@@ -3,7 +3,7 @@
 
 from werkzeug import urls
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 from odoo.tools.translate import html_translate
 
 
@@ -31,7 +31,9 @@ class Applicant(models.Model):
 
     def website_form_input_filter(self, request, values):
         if 'partner_name' in values:
-            values.setdefault('name', '%s\'s Application' % values['partner_name'])
+            applicant_job = self.env['hr.job'].sudo().search([('id', '=', values['job_id'])]).name if 'job_id' in values else False
+            name = '%s - %s' % (values['partner_name'], applicant_job) if applicant_job else _("%s's Application", values['partner_name'])
+            values.setdefault('name', name)
         if values.get('job_id'):
             stage = self.env['hr.recruitment.stage'].sudo().search([
                 ('fold', '=', False),
