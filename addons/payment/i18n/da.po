@@ -14,6 +14,8 @@
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
+# JonathanStein <jstein@image.dk>, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-07-17 15:01+0000\n"
 "PO-Revision-Date: 2017-09-20 10:20+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +89,7 @@ msgstr "<i class=\"fa fa-trash\"/> Slet"
 #: code:addons/payment/models/payment_acquirer.py:122
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Annuller,</i> Din betaling er blevet annulleret."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:118
@@ -96,6 +98,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"<i>Færdig,</i> Din online betaling er blevet korrekt gennemført. Tak for din"
+" ordre."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:126
@@ -105,6 +109,9 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Fejl,</i> Vær opmærksom på, at der opstod en fejl under transaktionen. "
+"Ordren er blevet bekræftet, men vil ikke blive betalt. Kontakt os, hvis du "
+"har spørgsmål vedr. status på din ordre."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:114
@@ -113,6 +120,8 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Afventer,</i> Din online betaling er blevet behandlet. Men din ordre er "
+"endnu ikke godkendt."
 
 #. module: payment
 #. openerp-web
@@ -1009,6 +1018,14 @@ msgid ""
 "                reconcile the bank statement line with this temporary transfer account. Use reconciliation\n"
 "                templates to do it in one-click."
 msgstr ""
+"Betalinger registreres i denne journal. Hvis du modtager betalingerne "
+"enkeltvis på din bankkonto, skal du vælge din bankkonto. Hvis du modtager "
+"betalingerne i samlede overførsler for flere transaktioner, skal du oprette "
+"en betalingsjournal til denne betalingsmetode for nemt at styre "
+"bankafstemningen. Du posterer beløbet på en midlertidig konto (oprettes "
+"automatisk, når du opretter betalingsjournal). Når du modtager en "
+"udbetaling, afstemmer du kontoudtogslinjen med denne midlertidige konto. "
+"Brug afstemningsskabeloner til at gøre det med et enkelt klik."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1317,12 +1334,15 @@ msgid ""
 "This template renders the acquirer button with all necessary values.\n"
 "                                            It is rendered with qWeb with the following evaluation context:"
 msgstr ""
+"Denne skabelon renderer betalingsknappen med alle nødvendige værdier.\n"
+"                                            Den renderes med qWeb med denne kontekst:"
 
 #. module: payment
 #: model:payment.acquirer,pre_msg:payment.payment_acquirer_transfer
 msgid ""
 "Transfer information will be provided after choosing the payment aquirer."
 msgstr ""
+"Overførselsinformation vil blive uddelt efter valget af betalingsmodtageren."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_type
@@ -1406,7 +1426,7 @@ msgstr "Vi kan ikke omdirigere dig til betalingsformularen."
 #: code:addons/payment/static/src/js/payment_form.js:180
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "Vi kan ikke omdirigere dig til betalingsformularen."
 
 #. module: payment
 #. openerp-web

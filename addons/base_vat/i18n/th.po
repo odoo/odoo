@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2018
 # Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018
+# Odoo Thaidev <odoothaidev@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:07+0000\n"
 "PO-Revision-Date: 2017-09-20 10:16+0000\n"
-"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2018\n"
+"Last-Translator: Odoo Thaidev <odoothaidev@gmail.com>, 2020\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,6 +27,8 @@ msgid ""
 "<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
@@ -43,6 +46,8 @@ msgid ""
 "If this checkbox is ticked, you will not be able to save a contact if its "
 "VAT number cannot be verified by the European VIES service."
 msgstr ""
+"หากทำเครื่องหมายในช่องนี้คุณจะไม่สามารถบันทึกรายชื่อติดต่อได้หากบริการ "
+"European VIES ไม่สามารถตรวจสอบหมายเลข VAT ได้"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:134
@@ -51,6 +56,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] does not seem to be valid. \n"
 "Note: the expected format is %s"
 msgstr ""
+"ดูเหมือนว่าหมายเลข VAT [%s] สำหรับพันธมิตร [%s] จะไม่ถูกต้อง. \n"
+"หมายเหตุ: รูปแบบที่คาดไว้คือ %s"
 
 #. module: base_vat
 #: code:addons/base_vat/models/res_partner.py:133
@@ -59,6 +66,8 @@ msgid ""
 "The VAT number [%s] for partner [%s] either failed the VIES VAT validation "
 "check or did not respect the expected format %s."
 msgstr ""
+"หมายเลข VAT [%s] สำหรับพาร์ทเนอร์ [%s] อาจไม่ผ่านการตรวจสอบความถูกต้องของ "
+"VIES VAT หรือไม่เป็นไปตามรูปแบบที่คาดไว้ %s"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.view_partner_form
@@ -70,12 +79,12 @@ msgstr "ภาษีมูลค่าเพิ่ม (VAT)"
 #: model:ir.model.fields,field_description:base_vat.field_res_company_vat_check_vies
 #: model:ir.model.fields,field_description:base_vat.field_res_config_settings_vat_check_vies
 msgid "Verify VAT Numbers"
-msgstr ""
+msgstr "ตรวจสอบหมายเลข VAT"
 
 #. module: base_vat
 #: model:ir.ui.view,arch_db:base_vat.res_config_settings_view_form
 msgid "Verify VAT numbers using the European VIES service"
-msgstr ""
+msgstr "ตรวจสอบหมายเลข VAT โดยใช้บริการ European VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_config_settings
