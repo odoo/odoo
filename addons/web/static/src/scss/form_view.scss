@@ -5,6 +5,9 @@
         padding-left: $o-horizontal-padding*2;
     }
 }
+@mixin o-form-nosheet-inner-left-padding {
+    padding-left: $o-horizontal-padding;
+}
 @mixin o-form-sheet-inner-right-padding {
     padding-right: $o-horizontal-padding;
     @include media-breakpoint-between(lg, xl, $o-extra-grid-breakpoints) {
@@ -19,6 +22,11 @@
         margin-left: -$o-horizontal-padding*2;
         margin-right: -$o-horizontal-padding*2;
     }
+}
+
+@mixin o-form-nosheet-negative-margin {
+    margin-left: -$o-horizontal-padding;
+    margin-right: -$o-horizontal-padding;
 }
 
 .o_form_view {
@@ -158,6 +166,9 @@
 
         .o_form_statusbar {
             margin: (-$o-sheet-vpadding) (-$o-horizontal-padding) $o-sheet-vpadding (-$o-horizontal-padding);
+        }
+        .oe_button_box {
+            @include o-form-nosheet-negative-margin;
         }
     }
 
