@@ -14,6 +14,7 @@
                             <field name="css_class" groups="base.group_no_one" />
                         </group>
                         <group>
+                            <field name="access_token_location" />
                             <field name="auth_endpoint" />
                             <field name="scope" />
                             <field name="validation_endpoint" />
@@ -22,7 +23,7 @@
                     </sheet>
                 </form>
             </field>
-        </record>        
+        </record>
         <record id="view_oauth_provider_tree" model="ir.ui.view">
             <field name="name">auth.oauth.provider.tree</field>
             <field name="model">auth.oauth.provider</field>

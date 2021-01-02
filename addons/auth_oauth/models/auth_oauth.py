@@ -17,6 +17,12 @@ class AuthOAuthProvider(models.Model):
     scope = fields.Char()  # OAUth user data desired to access
     validation_endpoint = fields.Char(string='Validation URL', required=True)  # OAuth provider URL to validate tokens
     data_endpoint = fields.Char(string='Data URL')
+    access_token_location = fields.Selection([
+            ('bearer', 'Bearer Authorization header'),
+            ('oauth', 'OAuth Authorization header'),
+            ('uri', 'URI query-string parameter (deprecated)')
+            ], default='bearer', string="Access token location", required=True,
+            help="Where to place Access Token when accessing provider's endpoints.")
     enabled = fields.Boolean(string='Allowed')
     css_class = fields.Char(string='CSS class', default='fa fa-fw fa-sign-in text-primary')
     body = fields.Char(required=True, help='Link text in Login Dialog', translate=True)
