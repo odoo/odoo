@@ -3,9 +3,10 @@
 # 	* im_livechat
 # 
 # Translators:
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
 # Davor Bojkić <davor.bojkic@storm.hr>, 2020
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
-# Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Bole <bole@dajmi5.com>, 2020
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
@@ -18,10 +19,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:41+0000\n"
-"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Vojislav Opačić <vojislav.opacic@gmail.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -432,7 +433,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_date
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_date
 msgid "Created on"
-msgstr "Kreirano"
+msgstr "Datum kreiranja"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
@@ -546,7 +547,7 @@ msgstr "Kanal rasprave"
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
@@ -707,17 +708,6 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_3
-msgid "Joel Willis, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_2
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_6
-msgid "Joel Willis, Mitchell Admin"
 msgstr ""
 
 #. module: im_livechat
@@ -1505,8 +1495,8 @@ msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
 "initiate a new conversation."
 msgstr ""
-"Ovo je automatska pozdravna poruka koju će posjetitelji vidjeti čim "
-"iniciraju novi razgovor."
+"Ovo je automatska pozravna poruka koju će posjetitelji vidjeti čim iniciraju"
+" novi razgovor."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users__livechat_username
@@ -1561,6 +1551,12 @@ msgstr "Tretirane sesije"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "Try again"
+msgstr ""
+
+#. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:0
+#, python-format
+msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
 msgstr ""
 
 #. module: im_livechat
@@ -1670,31 +1666,6 @@ msgid "Visitor"
 msgstr "Posjetitelj"
 
 #. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_0
-msgid "Visitor #234, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_1
-msgid "Visitor #323, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_4
-msgid "Visitor #532, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_5
-msgid "Visitor #649, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_7
-msgid "Visitor #722, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
@@ -1703,11 +1674,6 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.mail_channel_livechat_1
-msgid "Visitor, Mitchell Admin"
 msgstr ""
 
 #. module: im_livechat
@@ -1809,7 +1775,7 @@ msgstr "na"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
-"ili kopirajte ovaj link i pošaljite ga Vašim kupcima ili dobavljačima:"
+"ili kopirajte ovaj link i pošaljite ga vašim kupcima ili dobavljačima:"
 
 #. module: im_livechat
 #. openerp-web

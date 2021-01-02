@@ -205,6 +205,9 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeAvatarUrl() {
+            if (this === this.env.messaging.partnerRoot) {
+                return '/mail/static/src/img/odoobot.png';
+            }
             return `/web/image/res.partner/${this.id}/image_128`;
         }
 
@@ -283,10 +286,12 @@ function factory(dependencies) {
             compute: '_computeAvatarUrl',
             dependencies: [
                 'id',
+                'messagingPartnerRoot',
             ],
         }),
         correspondentThreads: one2many('mail.thread', {
             inverse: 'correspondent',
+            readonly: true,
         }),
         country: many2one('mail.country'),
         display_name: attr({
@@ -308,7 +313,9 @@ function factory(dependencies) {
         hasCheckedUser: attr({
             default: false,
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         im_status: attr(),
         memberThreads: many2many('mail.thread', {
             inverse: 'members',
@@ -321,6 +328,9 @@ function factory(dependencies) {
          */
         messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
+        }),
+        messagingPartnerRoot: many2one('mail.partner', {
+            related: 'messaging.partnerRoot',
         }),
         model: attr({
             default: 'res.partner',

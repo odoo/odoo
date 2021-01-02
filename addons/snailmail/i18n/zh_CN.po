@@ -3,18 +3,17 @@
 # 	* snailmail
 # 
 # Translators:
+# niulin lnc. <admin@niulin.net>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# 湘子 南 <1360857908@qq.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# Manga Tsang <mts@odoo.com>, 2019
+# as co02 <asco02@163.com>, 2020
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# 湘子 南 <1360857908@qq.com>, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Emily Jia <eji@odoo.com>, 2020
-# snow wang <147156565@qq.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Manga Tsang <mts@odoo.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# as co02 <asco02@163.com>, 2020
 # keecome <7017511@qq.com>, 2020
 # Felix Yuen <fyu@odoo.com>, 2020
 # 
@@ -22,8 +21,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
+"PO-Revision-Date: 2019-03-20 14:59+0000\n"
 "Last-Translator: Felix Yuen <fyu@odoo.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -75,7 +74,7 @@ msgstr ""
 #: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s snailmail delivery failures. You won't "
+"Are you sure you want to discard %s snailmail delivery failures? You won't "
 "be able to re-send these letters later!"
 msgstr ""
 
@@ -205,7 +204,7 @@ msgstr "联系人"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__country_id
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Country"
-msgstr "国家"
+msgstr "国家/地区"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
@@ -218,7 +217,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__create_uid
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_date
@@ -231,7 +230,7 @@ msgstr "创建时间"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
 msgid "Discard delivery failures"
-msgstr "放弃发送失败"
+msgstr "丢弃发送失败"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_cancel_action
@@ -263,7 +262,7 @@ msgstr "显示名称"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_datas
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Document"
-msgstr "单据"
+msgstr "文档"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__res_id
@@ -360,7 +359,7 @@ msgstr "信息"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error____last_update
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields____last_update
 msgid "Last Modified on"
-msgstr "最后修改日"
+msgstr "最后更改日"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_uid
@@ -368,7 +367,7 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_uid
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "最后更新者"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__write_date
@@ -376,7 +375,7 @@ msgstr "最后更新人"
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__write_date
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "更新时间"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__letter_ids
@@ -483,7 +482,7 @@ msgstr "彩色打印"
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr "Qweb联系人字段"
+msgstr "Qweb字段联系人"
 
 #. module: snailmail
 #. openerp-web
@@ -620,7 +619,7 @@ msgstr "省/ 州"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state
 msgid "Status"
-msgstr "状态"
+msgstr "省份"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__street
@@ -745,7 +744,7 @@ msgstr ""
 msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
-msgstr "您没有为此服务注册的IAP账户。<br>请访问<a href=%s target=\"new\">iap.odoo.com</a>以获得免费信用。"
+msgstr "您没有为此服务注册的IAP帐户。<br>请访问<a href=%s target=\"new\">iap.odoo.com</a>以获得免费信用。"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -753,7 +752,7 @@ msgstr "您没有为此服务注册的IAP账户。<br>请访问<a href=%s target
 msgid ""
 "You don't have enough credits to perform this operation.<br>Please go to "
 "your <a href=%s target=\"new\">iap account</a>."
-msgstr "您没有足够的积分来执行此操作.<br>请转到您的<a href=%s target=\"new\">iap账户</a>。"
+msgstr "您没有足够的积分来执行此操作.<br>请转到您的<a href=%s target=\"new\">iap帐户</a>。"
 
 #. module: snailmail
 #. openerp-web
@@ -765,7 +764,7 @@ msgstr ""
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "ZIP"
-msgstr "ZIP"
+msgstr "邮编"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__zip

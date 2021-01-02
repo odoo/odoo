@@ -3,16 +3,15 @@
 # 	* event_sms
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Marius Stedjan <marius@stedjan.com>, 2020
+# Martin Trigaux, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,10 +27,6 @@ msgid ""
 "${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
 " confirm your registration and hope to meet you there."
 msgstr ""
-"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name}: Vi er glade for å minne deg på at arrangementet "
-"${object.event_id.name} starter ${object.get_date_range_str()}. Vi bekrefter"
-" din påmelding, og håper vi ser deg."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -40,75 +35,48 @@ msgid ""
 "user.env.company.name}: We are happy to confirm your registration for the "
 "${object.event_id.name} event."
 msgstr ""
-"${object.event_id.organizer_id.name or object.event_id.company_id.name or "
-"user.env.company.name}: Vi er glade for å bekrefte din påmelding til "
-"arrangementet ${object.event_id.name}."
-
-#. module: event_sms
-#: model:ir.model.fields,field_description:event_sms.field_event_mail__display_name
-#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration__display_name
-#: model:ir.model.fields,field_description:event_sms.field_event_registration__display_name
-#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__display_name
-msgid "Display Name"
-msgstr "Visningsnavn"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Arrangement Automatisk Utsendelse"
+msgstr ""
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
 msgid "Event Registration"
-msgstr "Arrangementregistrering"
+msgstr "Registrering til arrangement"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr "Arrangement: Påmelding"
+msgstr ""
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr "Arrangement: Påminnelse"
-
-#. module: event_sms
-#: model:ir.model.fields,field_description:event_sms.field_event_mail__id
-#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration__id
-#: model:ir.model.fields,field_description:event_sms.field_event_registration__id
-#: model:ir.model.fields,field_description:event_sms.field_event_type_mail__id
-msgid "ID"
-msgstr "ID"
-
-#. module: event_sms
-#: model:ir.model.fields,field_description:event_sms.field_event_mail____last_update
-#: model:ir.model.fields,field_description:event_sms.field_event_mail_registration____last_update
-#: model:ir.model.fields,field_description:event_sms.field_event_registration____last_update
-#: model:ir.model.fields,field_description:event_sms.field_event_type_mail____last_update
-msgid "Last Modified on"
-msgstr "Sist endret"
+msgstr ""
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr "Mail Planlegging på Arrangementkategori"
+msgstr ""
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
 msgid "Registration Mail Scheduler"
-msgstr "Påmelding Mail Planlegger"
+msgstr ""
 
 #. module: event_sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
 msgid "SMS"
-msgstr "SMS"
+msgstr ""
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__sms_template_id
 #: model:ir.model.fields,field_description:event_sms.field_event_type_mail__sms_template_id
 msgid "SMS Template"
-msgstr "SMS-mal"
+msgstr ""
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -121,4 +89,4 @@ msgstr "Send"
 #: model:ir.model.fields,help:event_sms.field_event_type_mail__sms_template_id
 msgid ""
 "This field contains the template of the SMS that will be automatically sent"
-msgstr "Dette feltet inneholder malen for SMS-en som blir automatisk sendt."
+msgstr ""

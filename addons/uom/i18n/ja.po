@@ -1,44 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* uom
+# * uom
 # 
 # Translators:
-# Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
-# Martin Trigaux, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
-# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
-# Tim Siu Lai <tl@roomsfor.hk>, 2020
-# 
+# Martin Trigaux, 2018
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2018
+# Manami Hashi <manami@roomsfor.hk>, 2018
+# 高木正勝 <masakatsu.takagi@pro-spire.co.jp>, 2018
+# Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Tim Siu Lai <tl@roomsfor.hk>, 2020\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2018\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ja\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
-msgid ""
-"<span class=\"oe_grey\">\n"
-"                                    e.g: 1*(reference unit)=ratio*(this unit)\n"
-"                                </span>"
-msgstr ""
-
-#. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
-msgid ""
-"<span class=\"oe_grey\">\n"
-"                                    e.g: 1*(this unit)=ratio*(reference unit)\n"
-"                                </span>"
-msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
@@ -56,23 +38,17 @@ msgid "Add a new unit of measure category"
 msgstr ""
 
 #. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
-msgid "Archived"
-msgstr "アーカイブ済"
-
-#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
 msgid "Bigger Ratio"
 msgstr "比率"
 
 #. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
+#: selection:uom.uom,uom_type:0
 msgid "Bigger than the reference Unit of Measure"
 msgstr "基準単位より大きい"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
-#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Category"
 msgstr "カテゴリ"
 
@@ -97,7 +73,7 @@ msgstr "作成日"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
-msgid "Days"
+msgid "Day(s)"
 msgstr "日"
 
 #. module: uom
@@ -108,17 +84,12 @@ msgstr "表示名"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
-msgid "Dozens"
-msgstr "ダース"
-
-#. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
-msgid "Group By"
-msgstr "グループ化"
+msgid "Dozen(s)"
+msgstr "ダース(s)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
-msgid "Hours"
+msgid "Hour(s)"
 msgstr "時間"
 
 #. module: uom
@@ -160,9 +131,19 @@ msgid "Last Updated on"
 msgstr "最終更新日"
 
 #. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Length"
+msgstr "長さ"
+
+#. module: uom
 #: model:uom.category,name:uom.uom_categ_length
 msgid "Length / Distance"
 msgstr "長さ / 距離"
+
+#. module: uom
+#: model:uom.uom,name:uom.product_uom_litre
+msgid "Liter(s)"
+msgstr "リッター（燃料量）"
 
 #. module: uom
 #: model:res.groups,name:uom.group_uom
@@ -185,7 +166,7 @@ msgid "Ratio"
 msgstr "比率"
 
 #. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
+#: selection:uom.uom,uom_type:0
 msgid "Reference Unit of Measure for this category"
 msgstr "このカテゴリの基準単位"
 
@@ -195,12 +176,7 @@ msgid "Rounding Precision"
 msgstr "丸め精度"
 
 #. module: uom
-#: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
-msgid "Search UOM"
-msgstr ""
-
-#. module: uom
-#: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
+#: selection:uom.uom,uom_type:0
 msgid "Smaller than the reference Unit of Measure"
 msgstr "基準単位より小さい"
 
@@ -212,34 +188,49 @@ msgid ""
 msgstr "計算された数量はこの値の倍数になります。小片のような更に分割できない単位には1.0を使用します。"
 
 #. module: uom
-#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
+#: sql_constraint:uom.uom:0
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "単位の変換比率は0にできません。"
 
 #. module: uom
-#: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
+#: sql_constraint:uom.uom:0
 msgid "The reference unit must have a conversion factor equal to 1."
 msgstr ""
 
 #. module: uom
-#: model:ir.model.constraint,message:uom.constraint_uom_uom_rounding_gt_zero
+#: sql_constraint:uom.uom:0
 msgid "The rounding precision must be strictly positive."
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:152
 #, python-format
 msgid ""
 "The unit of measure %s defined on the order line doesn't belong to the same "
-"category as the unit of measure %s defined on the product. Please correct "
+"category than the unit of measure %s defined on the product. Please correct "
 "the unit of measure defined on the order line or on the product, they should"
 " belong to the same category."
 msgstr ""
 
 #. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Time"
+msgstr "時間"
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__uom_type
 msgid "Type"
 msgstr "タイプ"
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_category__measure_type
+msgid "Type of Measure"
+msgstr ""
+
+#. module: uom
+#: model:ir.model.fields,field_description:uom.field_uom_uom__measure_type
+msgid "Type of measurement category"
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__active
@@ -258,14 +249,24 @@ msgid "Unit of Measure"
 msgstr "単位"
 
 #. module: uom
+#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
+msgid "Unit of Measure Categories"
+msgstr "単位カテゴリ"
+
+#. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
 msgid "Unit of Measure Category"
 msgstr "単位カテゴリ"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
-msgid "Units"
+msgid "Unit(s)"
 msgstr "個"
+
+#. module: uom
+#: selection:uom.category,measure_type:0
+msgid "Units"
+msgstr ""
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -275,13 +276,7 @@ msgid "Units of Measure"
 msgstr "単位"
 
 #. module: uom
-#: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
-msgid "Units of Measure Categories"
-msgstr "単位カテゴリ"
-
-#. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
-#: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
 msgstr "単位カテゴリ"
 
@@ -298,7 +293,7 @@ msgstr ""
 "            時間, 日数."
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:93
 #, python-format
 msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
@@ -306,17 +301,19 @@ msgid ""
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:95
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
 msgstr ""
 
 #. module: uom
+#: selection:uom.category,measure_type:0
 #: model:uom.category,name:uom.product_uom_categ_vol
 msgid "Volume"
 msgstr "容積"
 
 #. module: uom
+#: selection:uom.category,measure_type:0
 #: model:uom.category,name:uom.product_uom_categ_kgm
 msgid "Weight"
 msgstr "重量"
@@ -327,13 +324,18 @@ msgid "Working Time"
 msgstr "作業時間"
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0
+#: sql_constraint:uom.category:0
+msgid "You can have only one category per measurement type."
+msgstr ""
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:28
 #, python-format
 msgid "You cannot delete this UoM Category as it is used by the system."
 msgstr ""
 
 #. module: uom
-#: code:addons/uom/models/uom_uom.py:0
+#: code:addons/uom/models/uom_uom.py:115
 #, python-format
 msgid ""
 "You cannot delete this UoM as it is used by the system. You should rather "
@@ -353,34 +355,34 @@ msgid "cm"
 msgstr "cm"
 
 #. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid "e.g: 1 * (reference unit) = ratio * (this unit)"
+msgstr "注記: 1 * (基準単位) = 比率 * (本単位)"
+
+#. module: uom
+#: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
+msgid "e.g: 1 * (this unit) = ratio * (reference unit)"
+msgstr "注記: 1 * (本単位) = 比率 * (基準単位)"
+
+#. module: uom
 #: model:uom.uom,name:uom.product_uom_floz
-msgid "fl oz (US)"
-msgstr ""
+msgid "fl oz"
+msgstr "fl oz"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_foot
-msgid "ft"
-msgstr ""
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_cubic_foot
-msgid "ft³"
-msgstr ""
+msgid "foot(ft)"
+msgstr "foot(ft)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_gal
-msgid "gal (US)"
-msgstr ""
+msgid "gal(s)"
+msgstr "gal(s)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_inch
-msgid "in"
-msgstr ""
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_cubic_inch
-msgid "in³"
-msgstr ""
+msgid "inch(es)"
+msgstr "inch(es)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
@@ -394,25 +396,20 @@ msgstr "km"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_lb
-msgid "lb"
-msgstr ""
+msgid "lb(s)"
+msgstr "lb(s)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_mile
-msgid "mi"
-msgstr ""
-
-#. module: uom
-#: model:uom.uom,name:uom.product_uom_cubic_meter
-msgid "m³"
-msgstr ""
+msgid "mile(s)"
+msgstr "mile(s)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_oz
-msgid "oz"
-msgstr ""
+msgid "oz(s)"
+msgstr "oz(s)"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_qt
-msgid "qt (US)"
-msgstr ""
+msgid "qt"
+msgstr "qt"

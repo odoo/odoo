@@ -3,21 +3,23 @@
 # 	* im_livechat
 # 
 # Translators:
-# Antoine Gilard <ang@odoo.com>, 2020
+# Eric Geens <ericgeens@yahoo.com>, 2016
+# Volluta <volluta@tutanota.com>, 2018
 # Yip132 <yannick.renders@gmail.com>, 2020
+# Antoine Gilard <ang@odoo.com>, 2020
 # Martin Trigaux, 2020
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:41+0000\n"
-"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -360,7 +362,7 @@ msgstr "Code"
 #. module: im_livechat
 #: model:ir.ui.menu,name:im_livechat.livechat_config
 msgid "Configuration"
-msgstr "Configuratie"
+msgstr "Instellingen"
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_res_partner
@@ -418,7 +420,7 @@ msgstr "Land van de bezoeker in het kanaal"
 msgid "Create a channel and start chatting to fill up your history."
 msgstr ""
 "Maak een kanaal en start met chatten om het kanaal te vullen met een "
-"historie."
+"historiek."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
@@ -719,17 +721,6 @@ msgstr "Is livechat bezig?"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
 msgstr "Is anonieme bezoeker"
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_3
-msgid "Joel Willis, Marc Demo"
-msgstr "Joel Willis, Marc Demo"
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_2
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_6
-msgid "Joel Willis, Mitchell Admin"
-msgstr "Joel Willis, Mitchell Admin"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -1056,7 +1047,7 @@ msgstr "Online"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Online Chat Name"
-msgstr "Online chatnaam"
+msgstr "Online chat naam"
 
 #. module: im_livechat
 #. openerp-web
@@ -1100,7 +1091,7 @@ msgid ""
 msgstr ""
 "Operators\n"
 "                                            <br/>\n"
-"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Opmerkingen\" title=\"Opmerkingen\"/>"
+"                                            <i class=\"fa fa-comments\" role=\"img\" aria-label=\"Comments\" title=\"Comments\"/>"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1590,6 +1581,12 @@ msgid "Try again"
 msgstr "Probeer opnieuw"
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:0
+#, python-format
+msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
 msgstr "URL Regex"
@@ -1652,7 +1649,7 @@ msgstr "Gebruiker"
 #: code:addons/im_livechat/static/src/legacy/public_livechat.xml:0
 #, python-format
 msgid "User is idle"
-msgstr "Gebruiker is idle"
+msgstr "Gebruiker is inactief"
 
 #. module: im_livechat
 #. openerp-web
@@ -1699,31 +1696,6 @@ msgid "Visitor"
 msgstr "Bezoeker"
 
 #. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_0
-msgid "Visitor #234, Mitchell Admin"
-msgstr "Visitor #234, Mitchell Admin"
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_1
-msgid "Visitor #323, Marc Demo"
-msgstr "Visitor #323, Marc Demo"
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_4
-msgid "Visitor #532, Mitchell Admin"
-msgstr "Visitor #532, Mitchell Admin"
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_5
-msgid "Visitor #649, Mitchell Admin"
-msgstr "Visitor #649, Mitchell Admin"
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_7
-msgid "Visitor #722, Marc Demo"
-msgstr "Visitor #722, Marc Demo"
-
-#. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
@@ -1733,11 +1705,6 @@ msgstr "Bezoeker heeft de conversatie verlaten."
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
 msgstr "Bezoeker is blij"
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.mail_channel_livechat_1
-msgid "Visitor, Mitchell Admin"
-msgstr "Visitor, Mitchell Admin"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
@@ -1780,7 +1747,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
 msgid "Your chatter history is empty"
-msgstr "Uw chathistorie is leeg"
+msgstr "Uw chat historiek is leeg"
 
 #. module: im_livechat
 #. openerp-web

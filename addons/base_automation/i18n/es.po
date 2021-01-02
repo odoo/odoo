@@ -3,15 +3,35 @@
 # 	* base_automation
 # 
 # Translators:
+# Inigo Zuluaga <inigo_zuluaga@yahoo.es>, 2017
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2017
+# Ana Juaristi <ajuaristio@gmail.com>, 2017
+# Carles Antoli <carlesantoli@hotmail.com>, 2017
+# Sergio Flores <vitavitae1@gmail.com>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# oihane <oihanecruce@gmail.com>, 2017
+# José Vicente <txusev@gmail.com>, 2017
+# Ivan Nieto <ivan.n.s@tuta.io>, 2017
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2017
+# Antonio Trueba, 2017
+# Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2017
+# Miguel Orueta <mo@landoo.es>, 2017
+# e2f <projects@e2f.com>, 2018
+# Raquel Iciarte <ric@odoo.com>, 2018
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
 "Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -214,6 +234,7 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__display_name
 msgid "Display Name"
 msgstr "Nombre mostrado"
 
@@ -261,6 +282,7 @@ msgstr "Horas"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__id
 msgid "ID"
 msgstr "ID"
 
@@ -289,8 +311,9 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server____last_update
 msgid "Last Modified on"
-msgstr "Última modificación el"
+msgstr "Última modificación en"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__last_run
@@ -422,7 +445,7 @@ msgstr "Secuencia"
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_ir_actions_server
 msgid "Server Action"
-msgstr "Acción de servidor"
+msgstr "Acción del servidor"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__action_server_id
@@ -461,7 +484,7 @@ msgstr "Nombre del modelo destino"
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__activity_user_field_name
 msgid "Technical name of the user on the record"
-msgstr "Nombre técnico del usuario en el registro"
+msgstr "Nombre técnico del usuario en el registro."
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
@@ -533,6 +556,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
 msgid "Usage"
 msgstr "Uso"
 
@@ -578,6 +602,7 @@ msgid "Value Mapping"
 msgstr "Mapeo de valores"
 
 #. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
@@ -643,3 +668,11 @@ msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
 "Puede deshabilitar esta acción automatizada o editarla para resolver el "
 "problema."
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
+msgstr ""

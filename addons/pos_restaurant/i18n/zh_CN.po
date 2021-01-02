@@ -3,33 +3,33 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# v2exerer <9010446@qq.com>, 2020
-# fausthuang, 2020
-# Felix Yuen <fyu@odoo.com>, 2020
-# snow wang <147156565@qq.com>, 2020
-# Manga Tsang <mts@odoo.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# as co02 <asco02@163.com>, 2020
+# Joray <13637815@qq.com>, 2017
+# Gary Wei <Gary.wei@elico-corp.com>, 2017
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# v2exerer <9010446@qq.com>, 2019
+# fausthuang, 2019
+# snow wang <147156565@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2020
 # Martin Trigaux, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
 # 湘子 南 <1360857908@qq.com>, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
 # keecome <7017511@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # xu xiaohu <xu.xiaohu@gmail.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Lin Li <ljsrzc007@gmail.com>, 2020
+# Manga Tsang <mts@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Lin Li <ljsrzc007@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Manga Tsang <mts@odoo.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,14 +131,14 @@ msgid ""
 "A restaurant floor represents the place where customers are served, this is where you can\n"
 "                define and position the tables."
 msgstr ""
-"餐馆楼层代表您服务的客户的位置，您可以\n"
+"餐馆楼层代表你服务的客户的位置，你可以\n"
 "                定义和布置桌椅。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
 msgid "Active"
-msgstr "启用"
+msgstr "有效"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -251,14 +251,14 @@ msgstr "外观"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_search
 msgid "Archived"
-msgstr "已归档"
+msgstr "存档"
 
 #. module: pos_restaurant
 #. openerp-web
 #: code:addons/pos_restaurant/static/src/js/Screens/FloorScreen/FloorScreen.js:0
 #, python-format
 msgid "Are you sure ?"
-msgstr "确定？"
+msgstr "你确定？"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -267,7 +267,7 @@ msgstr "确定？"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Back"
-msgstr "回退"
+msgstr "返回"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -399,7 +399,7 @@ msgstr "创建时间"
 #: code:addons/pos_restaurant/static/src/xml/Screens/FloorScreen/EditBar.xml:0
 #, python-format
 msgid "Delete"
-msgstr "删除"
+msgstr "刪除"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -546,6 +546,13 @@ msgid "Guests ?"
 msgstr "顾客？"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Guests:"
+msgstr "客人："
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
 msgid "Height"
 msgstr "高度"
@@ -576,7 +583,7 @@ msgstr "如果失败，表单将会在POS失效"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__module_pos_restaurant
 msgid "Is a Bar/Restaurant"
-msgstr "酒吧/餐馆"
+msgstr "为酒吧/餐厅"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -712,7 +719,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Note"
-msgstr "便签"
+msgstr "备注"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
@@ -722,7 +729,7 @@ msgstr ""
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Notes"
-msgstr "便签"
+msgstr "备注"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -826,12 +833,12 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitBillScreen.xml:0
 #, python-format
 msgid "Payment"
-msgstr "支付"
+msgstr "付款"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__pos_config_id
 msgid "Point of Sale"
-msgstr "销售点"
+msgstr "POS"
 
 #. module: pos_restaurant
 #: model:ir.model,name:pos_restaurant.model_pos_config
@@ -925,7 +932,7 @@ msgstr "紫色"
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "Quantity"
-msgstr "购买量"
+msgstr "数量"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1032,7 +1039,7 @@ msgstr "座位"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
 msgid "Sequence"
-msgstr "单号规则"
+msgstr "序号"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1178,7 +1185,7 @@ msgstr "此销售点提供的餐厅最低标准。"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
 msgid "The table where this order was served"
-msgstr "订单服务台"
+msgstr "本订单所预定胡座位"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
@@ -1328,7 +1335,7 @@ msgstr ""
 #: model:product.template,uom_name:pos_restaurant.pos_food_vege_product_template
 #: model:product.template,uom_name:pos_restaurant.water_product_template
 msgid "Units"
-msgstr "件"
+msgstr "单位"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__sequence
@@ -1422,7 +1429,14 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
 #, python-format
 msgid "at"
-msgstr "at"
+msgstr "在"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "at table"
+msgstr "桌号为"
 
 #. module: pos_restaurant
 #. openerp-web

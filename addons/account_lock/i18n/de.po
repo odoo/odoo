@@ -3,7 +3,8 @@
 # 	* account_lock
 # 
 # Translators:
-# Martin Trigaux, 2020
+# Martin Trigaux, 2019
+# Leon Grill <leg@odoo.com>, 2020
 # Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
 # 
 msgid ""
@@ -11,7 +12,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"PO-Revision-Date: 2019-12-16 11:00+0000\n"
 "Last-Translator: Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -38,14 +39,14 @@ msgstr "ID"
 #. module: account_lock
 #: model:ir.model.fields,field_description:account_lock.field_res_company____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
 msgstr ""
-"Das Sperrdatum für Abrechnungsadministratoren kann nicht mehr zurückgesetzt "
+"Das Sperrdatum für Buchhalter ist unwiderufbar und kann nicht entfernt "
 "werden."
 
 #. module: account_lock
@@ -54,8 +55,7 @@ msgstr ""
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
-"Das neue Sperrdatum für Abrechnungsadministratoren muss nach dem vorherigen "
-"Sperrdatum liegen."
+"Das neue Buchhalter-Sperrdatum muss nach dem vorherigen Sperrdatum liegen."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -78,9 +78,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
-"Sie dürfen Administratoren nicht strenger eingrenzen wie Anwender. Bitte "
-"stellen Sie sicher, dass das Administratoren-Sperrdatum vor demjenigen der "
-"Anwender gesetzt wird."
+"Sie dürfen Buchhalter nicht strenger eingrenzen wie Anwender. Bitte stellen "
+"Sie sicher, dass das Buchhalter-Sperrdatum vor dem der Anwender gesetzt "
+"wird."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0

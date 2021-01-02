@@ -3,14 +3,13 @@
 # 	* base_import
 # 
 # Translators:
-# Martin Trigaux, 2020
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2019
+# snow wang <147156565@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Martin Trigaux, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# snow wang <147156565@qq.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Jeanphy <hzh0292@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # 
 msgid ""
@@ -18,7 +17,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
 "Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -62,7 +61,7 @@ msgstr "( %d  更多)"
 msgid ""
 "A single column was found in the file, this often means the file separator "
 "is incorrect"
-msgstr "在文件中只找到一列，这通常意味着文件分隔符不正确"
+msgstr "文件中仅有一栏，这经常意味着文件分隔符不正确"
 
 #. module: base_import
 #. openerp-web
@@ -103,7 +102,7 @@ msgstr "批量限制"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Between rows %d and %d"
-msgstr "在第 %d 行和第 %d 行之间"
+msgstr "行 %d 与行 %d之间"
 
 #. module: base_import
 #. openerp-web
@@ -129,7 +128,7 @@ msgstr "栏位 %s 包含非法数据(值: %s)"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr "栏位 %s 包含不正确的值。 出错行 %d: %s"
+msgstr "栏位 %s 包含非法数据。值 %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
@@ -178,7 +177,7 @@ msgstr "如果不存在则新建"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__create_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__create_uid
 msgid "Created by"
-msgstr "创建者"
+msgstr "创建人"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_date
@@ -365,7 +364,7 @@ msgstr "文件大小超出设定的最大值 (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr "文件的检查或导入， 原始二进制编码（不是base64编码）"
+msgstr "文件的审核或导入， 原始二进制编码（不是base64编码）"
 
 #. module: base_import
 #. openerp-web
@@ -428,10 +427,10 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
-"如果文件包含\n"
-"                列名，Odoo可以自动监测\n"
-"                字段对应的列。这使得导入\n"
-"                简单，尤其是当文件有很多列。"
+"如果文件中包含\n"
+"                列的名称，doo的可以尝试自动检测\n"
+"                字段对应的列。这使得导入\n"
+"                简单，尤其是当文件有很多列。"
 
 #. module: base_import
 #. openerp-web
@@ -468,7 +467,7 @@ msgstr "导入文件"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import preview failed due to:"
-msgstr "导入预览失败因为："
+msgstr "导入预览文件失败"
 
 #. module: base_import
 #. openerp-web
@@ -513,7 +512,7 @@ msgstr "无效的单元格数据在行%(row)s, 列%(col)s: %(cell_value)s"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview____last_update
 #: model:ir.model.fields,field_description:base_import.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "最后更改日"
+msgstr "最后修改日"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_uid
@@ -534,7 +533,7 @@ msgstr "最后更改日"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_uid
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_uid
 msgid "Last Updated by"
-msgstr "最后更新者"
+msgstr "最后更新人"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__write_date
@@ -555,7 +554,7 @@ msgstr "最后更新者"
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_o2m_child__write_date
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_preview__write_date
 msgid "Last Updated on"
-msgstr "更新时间"
+msgstr "最后更新时间"
 
 #. module: base_import
 #. openerp-web
@@ -652,7 +651,7 @@ msgstr "行 %d%s"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "See possible values"
-msgstr "查看可能的值"
+msgstr "查看所有可能的值"
 
 #. module: base_import
 #. openerp-web
@@ -803,7 +802,7 @@ msgstr "测试:基本导入模型浮动"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Text Delimiter:"
-msgstr "文本分隔符："
+msgstr "文本分隔符: "
 
 #. module: base_import
 #. openerp-web
@@ -912,7 +911,7 @@ msgstr "在继续导入前你可以测试或重新载入你的文件。"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "You must configure at least one field to import"
-msgstr "您必须配置至少一个要导入的字段"
+msgstr "You must configure at least one field to import"
 
 #. module: base_import
 #. openerp-web
@@ -939,4 +938,4 @@ msgstr "在第 %d 行和第 %d 行之间"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "unknown error code %s"
-msgstr "未知编码错误 %s"
+msgstr "未知错误代码 %s"

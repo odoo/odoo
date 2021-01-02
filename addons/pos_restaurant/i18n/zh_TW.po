@@ -3,14 +3,17 @@
 # 	* pos_restaurant
 # 
 # Translators:
+# Michael Yeung, 2018
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# Martin Trigaux, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -68,7 +71,7 @@ msgstr "<span class=\"pos-change_amount\">$ 0.86</span>"
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
 msgid "<span class=\"pos-change_title\">Change</span>"
-msgstr "<span class=\"pos-change_title\">改變</span>"
+msgstr "<span class=\"pos-change_title\">找零</span>"
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -105,7 +108,7 @@ msgstr "<strong>POS：</strong>"
 msgid ""
 "A background image used to display a floor layout in the point of sale "
 "interface"
-msgstr "背景圖像用於在POS界面顯示樓層規劃"
+msgstr "背景圖像用於在銷售點界面顯示樓層規劃"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -120,7 +123,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -212,7 +215,7 @@ msgstr "總額"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__name
 msgid "An internal identification of a table"
-msgstr "該餐桌的內部識別編碼"
+msgstr "一表單的內部識別"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__name
@@ -233,7 +236,7 @@ msgstr "外觀"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_search
 msgid "Archived"
-msgstr "封存"
+msgstr "歸檔"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -249,7 +252,7 @@ msgstr "您確定？"
 #: code:addons/pos_restaurant/static/src/xml/Screens/TipScreen.xml:0
 #, python-format
 msgid "Back"
-msgstr "返回"
+msgstr "退回"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -280,7 +283,7 @@ msgstr "培根漢堡"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/PrintBillButton.xml:0
 #, python-format
 msgid "Bill"
-msgstr "Bill"
+msgstr "帳單"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -366,14 +369,14 @@ msgstr "顏色"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "創建者"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__create_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -441,7 +444,7 @@ msgstr "編輯"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_splitbill
 msgid "Enables Bill Splitting in the Point of Sale."
-msgstr "在POS中啟用帳單拆分。"
+msgstr "在銷售點中啟用帳單拆分。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__floor_id
@@ -463,7 +466,7 @@ msgstr "樓層示意圖"
 #: code:addons/pos_restaurant/models/pos_restaurant.py:0
 #, python-format
 msgid "Floor: %s - PoS Config: %s \n"
-msgstr "樓層: %s - PoS 設置: %s \n"
+msgstr "樓層： %s - PoS 配置： %s"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -529,6 +532,13 @@ msgid "Guests ?"
 msgstr "顧客？"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Guests:"
+msgstr "客人："
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
 msgid "Height"
 msgstr "高度"
@@ -577,21 +587,21 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer____last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後修改時間"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_uid
 msgid "Last Updated by"
-msgstr "最後更新者"
+msgstr "最後更新人"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__write_date
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: pos_restaurant
 #: model_terms:pos.config,customer_facing_display_html:pos_restaurant.pos_config_restaurant
@@ -695,7 +705,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Note"
-msgstr "備註"
+msgstr "便箋"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
@@ -705,7 +715,7 @@ msgstr "服務員添加的說明。"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Notes"
-msgstr "備註"
+msgstr "待辦事項"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1015,7 +1025,7 @@ msgstr "座位"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
 msgid "Sequence"
-msgstr "序號"
+msgstr "序列"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1151,17 +1161,17 @@ msgstr "本桌預設的可服務客戶數目"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_floor__table_ids
 msgid "The list of tables in this floor"
-msgstr "本層的餐桌清單"
+msgstr "本層的桌子清單"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids
 msgid "The restaurant floors served by this point of sale."
-msgstr "此POS提供的餐廳樓層數。"
+msgstr "此銷售點提供的餐廳樓層數。"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_order__table_id
 msgid "The table where this order was served"
-msgstr "本訂單所服務的餐桌"
+msgstr "本訂單所服務的桌子"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__color
@@ -1334,7 +1344,7 @@ msgstr "素食"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__position_v
 msgid "Vertical Position"
-msgstr "垂直位置"
+msgstr "豎直位置"
 
 #. module: pos_restaurant
 #: model:product.product,name:pos_restaurant.water
@@ -1406,6 +1416,13 @@ msgstr ""
 #, python-format
 msgid "at"
 msgstr "在"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "at table"
+msgstr "在桌號"
 
 #. module: pos_restaurant
 #. openerp-web

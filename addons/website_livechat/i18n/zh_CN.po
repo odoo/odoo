@@ -3,30 +3,31 @@
 # 	* website_livechat
 # 
 # Translators:
-# e2f <projects@e2f.com>, 2020
+# waveyeung <waveyeung@qq.com>, 2016
+# fausthuang, 2016
+# Luke <cialuo@qq.com>, 2016
+# e2f <projects@e2f.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2019
+# 老窦 北京 <2662059195@qq.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# ChinaMaker <liuct@chinamaker.net>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
+# John An <johnxan@163.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# Fisher <fisher@kdomi.com>, 2020
+# Jeanphy <hzh0292@qq.com>, 2020
+# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # Martin Trigaux, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# Luke <cialuo@qq.com>, 2020
-# 老窦 北京 <2662059195@qq.com>, 2020
-# bf2549c5415a9287249cba2b8a5823c7, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# ChinaMaker <liuct@chinamaker.net>, 2020
-# Fisher <fisher@kdomi.com>, 2020
-# Felix Yuen <fyu@odoo.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Jeanphy <hzh0292@qq.com>, 2020
-# John An <johnxan@163.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:13+0000\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,11 +55,6 @@ msgid ""
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
-msgid "<span class=\"fa fa-comments mr-2\"/>Speaking With"
-msgstr ""
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Live Chat</span>\n"
@@ -70,7 +66,7 @@ msgstr ""
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "<span>Livechat Channel</span>"
-msgstr "<span>聊天频道</span>"
+msgstr "<span>即时聊天</span>"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
@@ -78,14 +74,16 @@ msgid "Available"
 msgstr "可用"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Avatar"
+msgstr "头像"
+
+#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "Bad"
 msgstr "糟糕"
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
-msgid "Busy"
-msgstr "忙碌"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__can_publish
@@ -99,8 +97,15 @@ msgstr "频道"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Chat"
 msgstr "聊天"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Chats"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_res_config_settings
@@ -110,7 +115,7 @@ msgstr "配置设置"
 #. module: website_livechat
 #: model:ir.model.fields,help:website_livechat.field_im_livechat_channel__website_description
 msgid "Description of the channel displayed on the website page"
-msgstr "渠道的说明显示在网站上"
+msgstr "渠道显示的说明显示在网站上"
 
 #. module: website_livechat
 #: model:ir.model,name:website_livechat.model_mail_channel
@@ -143,6 +148,13 @@ msgid "Happy face"
 msgstr "笑脸"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "History"
+msgstr "历史"
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel__id
@@ -153,9 +165,21 @@ msgid "ID"
 msgstr "ID"
 
 #. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
+msgid "In Conversation"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
 msgid "Is Published"
 msgstr "已发布"
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Lang"
+msgstr ""
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel____last_update
@@ -186,7 +210,7 @@ msgstr "即时聊天"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_list_page
 msgid "Livechat Support Channels"
-msgstr "即时聊天支持渠道"
+msgstr "即时聊天支持页面"
 
 #. module: website_livechat
 #. openerp-web
@@ -224,6 +248,18 @@ msgid "Okay"
 msgstr "OK"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Online"
+msgstr "在线"
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Operator Avatar"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
 msgid "Operator Name"
 msgstr ""
@@ -248,14 +284,8 @@ msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Send chat request"
 msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
-msgid "Sessions"
-msgstr "会话"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
@@ -275,7 +305,7 @@ msgstr "统计信息"
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
 msgid "The"
-msgstr "此"
+msgstr "这"
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
@@ -314,6 +344,13 @@ msgid "Visitor"
 msgstr "访问者"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Visitor is online"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
 msgid "Visitor's Sessions"
 msgstr ""
@@ -329,7 +366,10 @@ msgid "Visitors"
 msgstr "访问者"
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
 #: model:ir.model,name:website_livechat.model_website
+#, python-format
 msgid "Website"
 msgstr "网站"
 
@@ -341,7 +381,7 @@ msgstr "网站直播频道"
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website__channel_id
 msgid "Website Live Chat Channel"
-msgstr "网站在线客服"
+msgstr "网站在线聊天频道"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_url
@@ -353,7 +393,7 @@ msgstr "网站网址"
 #: model:ir.model,name:website_livechat.model_website_visitor
 #, python-format
 msgid "Website Visitor"
-msgstr "网页访问者"
+msgstr "网站访问者"
 
 #. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__website_description

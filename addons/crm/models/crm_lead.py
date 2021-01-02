@@ -367,7 +367,7 @@ class Lead(models.Model):
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
 
-    @api.depends(lambda self: ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields())
+    @api.depends(lambda self: ['stage_id', 'team_id'] + self._pls_get_safe_fields())
     def _compute_probabilities(self):
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
@@ -509,7 +509,7 @@ class Lead(models.Model):
 
         for lead, values in zip(leads, vals_list):
             if any(field in ['active', 'stage_id'] for field in values):
-                lead._handle_won_lost(vals)
+                lead._handle_won_lost(values)
 
         return leads
 
@@ -1336,24 +1336,29 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         return super(Lead, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notify_get_groups()
+        groups = super(Lead, self)._notify_get_groups(msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
 
         self.ensure_one()
         if self.type == 'lead':
-            convert_action = self._notify_get_action_link('controller', controller='/lead/convert')
+            convert_action = self._notify_get_action_link('controller', controller='/lead/convert', **msg_vals)
             salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won')
-            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost')
+            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won', **msg_vals)
+            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost', **msg_vals)
             salesman_actions = [
                 {'url': won_action, 'title': _('Won')},
                 {'url': lost_action, 'title': _('Lost')}]
 
         if self.team_id:
-            salesman_actions.append({'url': self._notify_get_action_link('view', res_id=self.team_id.id, model=self.team_id._name), 'title': _('Sales Team Settings')})
+            custom_params = dict(msg_vals, res_id=self.team_id.id, model=self.team_id._name)
+            salesman_actions.append({
+                'url': self._notify_get_action_link('view', **custom_params),
+                'title': _('Sales Team Settings')
+            })
 
         salesman_group_id = self.env.ref('sales_team.group_sale_salesman').id
         new_group = (
@@ -1933,8 +1938,7 @@ class Lead(models.Model):
     def _pls_prepare_frequencies(self, lead_values, leads_pls_fields, target_state=None):
         """new state is used when getting frequencies for leads that are changing to lost or won.
         Stays none if we are checking frequencies for leads already won or lost."""
-        # Frequencies must include tag_id
-        pls_fields = set(leads_pls_fields + ['tag_id'])
+        pls_fields = leads_pls_fields.copy()
         frequencies = dict((field, {}) for field in pls_fields)
 
         stage_ids = self.env['crm.stage'].search_read([], ['sequence', 'name', 'id'], order='sequence')
@@ -2003,6 +2007,11 @@ class Lead(models.Model):
         leads_values_dict = OrderedDict()
         pls_fields = ["stage_id", "team_id"] + self._pls_get_safe_fields()
 
+        # Check if tag_ids is in the pls_fields and removed it from the list. The tags will be managed separately.
+        use_tags = 'tag_ids' in pls_fields
+        if use_tags:
+            pls_fields.remove('tag_ids')
+
         if domain:
             # active_test = False as domain should take active into 'active' field it self
             from_clause, where_clause, where_params = self.env['crm.lead'].with_context(active_test=False)._where_calc(domain).get_sql()
@@ -2018,15 +2027,19 @@ class Lead(models.Model):
             self._cr.execute(query, where_params)
             lead_results = self._cr.dictfetchall()
 
-            # Get tags values
-            query = """SELECT crm_lead.id as lead_id, t.id as tag_id
+            if use_tags:
+                # Get tags values
+                query = """SELECT crm_lead.id as lead_id, t.id as tag_id
                             FROM %s
                             LEFT JOIN crm_tag_rel rel ON crm_lead.id = rel.lead_id
                             LEFT JOIN crm_tag t ON rel.tag_id = t.id
                             WHERE %s order by crm_lead.team_id asc"""
-            query = sql.SQL(query % (from_clause, where_clause)).format(*args)
-            self._cr.execute(query, where_params)
-            tag_results = self._cr.dictfetchall()
+                args.append(sql.Identifier('tag_id'))
+                query = sql.SQL(query % (from_clause, where_clause)).format(*args)
+                self._cr.execute(query, where_params)
+                tag_results = self._cr.dictfetchall()
+            else:
+                tag_results = []
 
             # get all (variable, value) couple for all in self
             for lead in lead_results:
@@ -2054,7 +2067,8 @@ class Lead(models.Model):
                     value = lead[field].id if isinstance(lead[field], models.BaseModel) else lead[field]
                     if value or field in ('email_state', 'phone_state'):
                         lead_values.append((field, value))
-                for tag in lead.tag_ids:
-                    lead_values.append(('tag_id', tag.id))
+                if use_tags:
+                    for tag in lead.tag_ids:
+                        lead_values.append(('tag_id', tag.id))
                 leads_values_dict[lead.id] = {'values': lead_values, 'team_id': lead['team_id'].id}
             return leads_values_dict

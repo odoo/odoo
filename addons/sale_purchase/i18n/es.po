@@ -3,16 +3,20 @@
 # 	* sale_purchase
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Martin Trigaux, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
+# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# Antonio Trueba, 2019
+# Miguel Orueta <mo@landoo.es>, 2019
+# Mariela Moreno <mam@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Mariela Moreno <mam@odoo.com>, 2019\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,28 +35,9 @@ msgstr ""
 "            Acciones manuales podrían ser necesitadas."
 
 #. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
-msgid "<span class=\"o_stat_text\">Purchase</span>"
-msgstr "<span class=\"o_stat_text\">Compra</span>"
-
-#. module: sale_purchase
-#: model_terms:ir.ui.view,arch_db:sale_purchase.purchase_order_inherited_form_sale
-msgid "<span class=\"o_stat_text\">Sale</span>"
-msgstr "<span class=\"o_stat_text\">Venta</span>"
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__display_name
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__display_name
-msgid "Display Name"
-msgstr "Nombre mostrado"
-
-#. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "Exception(s) occurred on the purchase order(s):"
-msgstr "Excepción(es) ocurrida(s) en la(s) orden(es) de compra:"
+msgstr "Excepcion(es) ocurrida(s) en la(s) orden(es) de compra."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
@@ -73,15 +58,6 @@ msgid "Generated Purchase Lines"
 msgstr "Lineas de compra generada"
 
 #. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template__id
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__id
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line__id
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order__id
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__id
-msgid "ID"
-msgstr "ID"
-
-#. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_product__service_to_purchase
 #: model:ir.model.fields,help:sale_purchase.field_product_template__service_to_purchase
 msgid ""
@@ -89,18 +65,6 @@ msgid ""
 "automatically created to buy the product. Tip: don't forget to set a vendor "
 "on the product."
 msgstr ""
-"Si está marcado, cada vez que vende este producto a través de un pedido de "
-"venta, se crea automáticamente un solicitud de presupuesto para comprar el "
-"producto. Consejo: no olvide establecer un proveedor en el producto."
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_product_template____last_update
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order____last_update
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order_line____last_update
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order____last_update
-#: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line____last_update
-msgid "Last Modified on"
-msgstr "Última modificación el"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_quantity_decreased
@@ -109,13 +73,8 @@ msgstr "Acciones manuales pueden ser necesarias."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order__purchase_order_count
-msgid "Number of Purchase Order Generated"
-msgstr "Número de órdenes de compra generadas"
-
-#. module: sale_purchase
-#: model:ir.model.fields,field_description:sale_purchase.field_purchase_order__sale_order_count
-msgid "Number of Source Sale"
-msgstr "Número de venta de origen"
+msgid "Number of Purchase Order"
+msgstr "Número de pedido de compra"
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_line__purchase_line_count
@@ -142,7 +101,6 @@ msgstr "Plantilla de producto"
 #: model:ir.model.constraint,message:sale_purchase.constraint_product_template_service_to_purchase
 msgid "Product that is not a service can not create RFQ."
 msgstr ""
-"El producto que no es un servicio no puede crear solicitud de presupuesto."
 
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_product_product__service_to_purchase
@@ -153,7 +111,7 @@ msgstr "Compras Automáticamente"
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order
 msgid "Purchase Order"
-msgstr "Orden de compra"
+msgstr "Pedido de compra"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
@@ -161,10 +119,9 @@ msgid "Purchase Order Line"
 msgstr "Línea de pedido de compra"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/sale_order.py:0
-#, python-format
-msgid "Purchase Order generated from %s"
-msgstr "Orden de compra generada a partir de %s"
+#: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_form_view_inherit
+msgid "Purchase Orders"
+msgstr "Pedidos de compra"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -196,12 +153,6 @@ msgid "Sales Order Line"
 msgstr "Línea de pedido de venta"
 
 #. module: sale_purchase
-#: code:addons/sale_purchase/models/purchase_order.py:0
-#, python-format
-msgid "Sources Sale Orders %s"
-msgstr "Ordenes de venta de origen %s"
-
-#. module: sale_purchase
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -218,14 +169,12 @@ msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
 "the purchase order if needed."
 msgstr ""
-"¡Estás disminuyendo la cantidad pedida! No olvide actualizar manualmente la "
-"orden de compra si es necesario."
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
 msgid "cancelled"
-msgstr "cancelado"
+msgstr "Cancelado"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_purchase_on_sale_cancellation

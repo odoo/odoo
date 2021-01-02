@@ -241,7 +241,7 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
+        template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for order in self:
                 for coupon in order.generated_coupon_ids:
@@ -476,9 +476,11 @@ class SaleOrderLine(models.Model):
         if 'product_id' in fnames:
             Program = self.env['coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
+            field_total_order_count = Program._fields['total_order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
+            programs |= self.env.cache.get_records(Program, field_total_order_count)
             if programs:
                 products = self.filtered('is_reward_line').mapped('product_id')
                 for program in programs:
                     if program.discount_line_product_id in products:
-                        self.env.cache.invalidate([(field_order_count, program.ids)])
+                        self.env.cache.invalidate([(field_order_count, program.ids), (field_total_order_count, program.ids)])

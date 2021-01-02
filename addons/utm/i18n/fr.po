@@ -3,28 +3,33 @@
 # 	* utm
 # 
 # Translators:
-# Moka Tourisme <hello@mokatourisme.fr>, 2020
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# missjuliette333 <missjuliette333@hotmail.fr>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# e2f <projects@e2f.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
+# William Olhasque <william.olhasque@scopea.fr>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2019
+# Vallen Delobel <edv@odoo.com>, 2020
+# Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Frédéric LIETART <stuff@tifred.fr>, 2020
-# missjuliette333 <missjuliette333@hotmail.fr>, 2020
 # Melanie Bernard <mbe@odoo.com>, 2020
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Eloïse Stilmant <est@odoo.com>, 2020
-# William Olhasque <william.olhasque@scopea.fr>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
-# Priscilla (prs) Odoo <prs@odoo.com>, 2020
-# Vallen Delobel <edv@odoo.com>, 2020
-# Martin Trigaux, 2020
 # Fabien Pinckaers <fp@openerp.com>, 2020
+# Frédéric Clementi <frederic.clementi@camptocamp.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Fabien Pinckaers <fp@openerp.com>, 2020\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -239,6 +244,11 @@ msgid "Dropdown menu"
 msgstr "Menu déroulant"
 
 #. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "Modifier"
+
+#. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
 msgid "Email Campaign - Products"
 msgstr "Campagne d\\email - articles"
@@ -324,7 +334,7 @@ msgstr "Est un site Web"
 #: model:ir.model.fields,field_description:utm.field_utm_stage____last_update
 #: model:ir.model.fields,field_description:utm.field_utm_tag____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
@@ -359,7 +369,7 @@ msgstr "Rappel de piste"
 #. module: utm
 #: model:ir.ui.menu,name:utm.menu_link_tracker_root
 msgid "Link Tracker"
-msgstr "Suivi de liens"
+msgstr "Surveillance de liens"
 
 #. module: utm
 #: model:utm.source,name:utm.utm_source_linkedin
@@ -471,7 +481,7 @@ msgstr "En cours"
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_fall_drive
 msgid "Sale"
-msgstr "Promo"
+msgstr "Vente"
 
 #. module: utm
 #: model:utm.stage,name:utm.campaign_stage_1
@@ -534,12 +544,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Source"
+msgstr "Origine"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
 msgid "Source Name"
-msgstr "Nom de la source"
+msgstr "Nom de l'origine"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
@@ -567,6 +577,13 @@ msgid ""
 msgstr ""
 "Les étapes vous permettent d’organiser votre flux de travail (par exemple: "
 "planification, conception, en cours, terminé,…)."
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
 
 #. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
@@ -598,8 +615,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
-"Ce nom vous aidera à suivre vos différentes campagnes marketing, p. ex. "
-"Campagne_automnale ou Spécial_Noël"
+"Ce nom pour vous aidera à suivre vos différentes campagnes marketing, p. ex."
+" Campagne_automnale ou Spécial_Noël"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id

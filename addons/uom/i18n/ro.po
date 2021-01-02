@@ -3,19 +3,19 @@
 # 	* uom
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
+# Cozmin Candea <office@terrabit.ro>, 2018
 # Dorin Hongu <dhongu@gmail.com>, 2020
-# Cozmin Candea <office@terrabit.ro>, 2020
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
 msgid "Active"
-msgstr "Activ"
+msgstr "Activ(a)"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -73,7 +73,7 @@ msgstr "Raport mărire"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__bigger
 msgid "Bigger than the reference Unit of Measure"
-msgstr "Mai mare decât unitatea de măsură de referință"
+msgstr "Mai mare decât Unitatea de Masură de referință"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__category_id
@@ -87,8 +87,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversia între Unitățile de Măsura pot avea loc numai dacă ele aparțin "
-"aceleiași categorii. Conversia va fi făcută pe baza proporțiilor."
+"Conversia intre Unitatile de Masura pot avea loc numai daca ele apartin "
+"aceleiasi categorii. Conversia va fi facuta pe baza proportiilor."
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
@@ -134,7 +134,7 @@ msgid ""
 "How many times this Unit of Measure is bigger than the reference Unit of "
 "Measure in this category: 1 * (this unit) = ratio * (reference unit)"
 msgstr ""
-"Cu cât este mai mare această unitate de măsură decât unitatea de măsură de referință din aceasta categorie:\n"
+"Cu cât este mai mare aceasta Unitate de Măsura decât Unitatea de Măsura de referință din aceasta categorie:\n"
 "1 * (aceasta unitate) = raport * (unitatea de referință)"
 
 #. module: uom
@@ -198,7 +198,7 @@ msgstr "Raport"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__reference
 msgid "Reference Unit of Measure for this category"
-msgstr "Unitatea de măsură de referință pentru această categorie"
+msgstr "Unitatea de Masura de Referinta pentru aceasta categorie"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__rounding
@@ -213,7 +213,20 @@ msgstr "Căutare UOM"
 #. module: uom
 #: model:ir.model.fields.selection,name:uom.selection__uom_uom__uom_type__smaller
 msgid "Smaller than the reference Unit of Measure"
-msgstr "Mai mică decât unitatea de măsură de referință"
+msgstr "Mai mică decât Unitatea de Masură de referință"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
 
 #. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
@@ -221,14 +234,22 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
 "of Measure that cannot be further split, such as a piece."
 msgstr ""
-"Cantitatea calculată va fi un multiplu al acestei valori. Folosiți 1.0 "
-"pentru o unitate de Măsură care nu mai poate fi împărțită, precum este o "
+"Cantitatea calculata va fi un multiplu al acestei valori. Folositi 1.0 "
+"pentru o Unitate de Masura care nu mai poate fi impartita, precum este o "
 "bucata."
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "Raportul conversiei pentru o unitate de masura nu poate fi zero!"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -267,7 +288,7 @@ msgstr ""
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_unit
 msgid "Unit"
-msgstr "buc"
+msgstr "Unitate"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
@@ -282,7 +303,7 @@ msgstr "Categorie Unitate de măsură"
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_unit
 msgid "Units"
-msgstr "buc"
+msgstr "Unități"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_form_action
@@ -300,7 +321,7 @@ msgstr "Categorii Unități de Măsură"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_categ_tree_view
 msgid "Units of Measure categories"
-msgstr "Categorii unități de măsură"
+msgstr "Categorii Unități de măsură"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_categ_form_action
@@ -321,21 +342,25 @@ msgid ""
 "UoM category %s should have a reference unit of measure. If you just created"
 " a new category, please record the 'reference' unit first."
 msgstr ""
-"Categoria UM %s ar trebui să aibă o unitate de măsură de referință. Dacă "
-"tocmai ați creat o nouă categorie, înregistrați mai întâi unitatea de "
-"referință."
+"Categoria UM ar trebui să aibă o unitate de măsură de referință. Dacă tocmai"
+" ați creat o nouă categorie, înregistrați mai întâi unitatea de referință."
 
 #. module: uom
 #: code:addons/uom/models/uom_uom.py:0 code:addons/uom/models/uom_uom.py:0
 #, python-format
 msgid "UoM category %s should only have one reference unit of measure."
-msgstr ""
-"Categoria UM %s ar trebui să aibă doar o unitate de măsură de referință."
+msgstr "Categoria UM ar trebui să aibă doar o unitate de măsură de referință."
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_vol
 msgid "Volume"
 msgstr "Volum"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "Avertizare pentru %s"
 
 #. module: uom
 #: model:uom.category,name:uom.product_uom_categ_kgm
@@ -346,23 +371,6 @@ msgstr "Masă"
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
 msgstr "Program de lucru"
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
-"Nu puteți șterge această categorie UM pentru că este utilizată în sistem."
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid ""
-"You cannot delete this UoM as it is used by the system. You should rather "
-"archive it."
-msgstr ""
-"Nu puteți șterge acestă UM pentru că este utilizat în sistem. Ar trebui să "
-"arhivați mai degrabă."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action

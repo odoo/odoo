@@ -3,16 +3,44 @@
 # 	* calendar
 # 
 # Translators:
-# Martin Trigaux, 2020
+# Alejandro Die Sanchis <marketing@domatix.com>, 2016
+# Sergio Flores <vitavitae1@gmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Alejandro Santana <alejandrosantana@anubia.es>, 2016
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Angel Catanzariti <angel@exor.com.ar>, 2016
+# Andres Ruiz <andres.ruiz.otalora@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Gelo Joga Landoo <gj@landoo.es>, 2017
+# RGB Consulting <odoo@rgbconsulting.com>, 2017
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# Christopher Ormaza <chris.ormaza@gmail.com>, 2017
+# b9b2db555321dc69d8faed263d46c5b6, 2017
+# Paloma Yazmin Reyes Morales <paloma.reyes@jarsa.com.mx>, 2017
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
+# Ana Juaristi <ajuaristio@gmail.com>, 2018
+# oihane <oihanecruce@gmail.com>, 2018
+# Javier Ramirez <elbomba887@gmail.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Antonio Trueba, 2018
+# Cristopher Cravioto <ccr@odoo.com>, 2019
+# Rick Hunter <rick.hunter.ec@gmail.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Efrem Jimenez <efj@odoo.com>, 2019
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
+# Rick Hunter <rick_hunter_ec@yahoo.com>, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,6 +151,9 @@ msgid ""
 "                    </li>\n"
 "                % endfor\n"
 "                </ul></li>\n"
+"                % if object.event_id.videocall_location:\n"
+"                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
+"                % endif\n"
 "            </ul>\n"
 "        </td>\n"
 "    </tr></table>\n"
@@ -203,6 +234,9 @@ msgid ""
 "                    </li>\n"
 "                % endfor\n"
 "                </ul></li>\n"
+"                % if object.event_id.videocall_location:\n"
+"                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
+"                % endif\n"
 "            </ul>\n"
 "        </td>\n"
 "    </tr></table>\n"
@@ -281,6 +315,9 @@ msgid ""
 "                    </li>\n"
 "                % endfor\n"
 "                </ul></li>\n"
+"                % if object.event_id.videocall_location:\n"
+"                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
+"                % endif\n"
 "            </ul>\n"
 "        </td>\n"
 "    </tr></table>\n"
@@ -387,7 +424,7 @@ msgstr "Archivado"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_attachment_count
 msgid "Attachment Count"
-msgstr "Nº de archivos adjuntos"
+msgstr "Conteo de archivos adjuntos"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__attendee_status
@@ -399,12 +436,23 @@ msgstr "Estado de asistencia"
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Attendees"
-msgstr "Participantes"
+msgstr "Asistentes"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_search
 msgid "Availability"
 msgstr "Disponibilidad"
+
+#. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
+msgid "Available"
+msgstr "Disponible"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
+msgid "Available/Busy"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
@@ -432,6 +480,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_view_form
 msgid "Calendar"
 msgstr "Calendario"
 
@@ -603,7 +652,7 @@ msgstr "Detalles"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__display_name
 #: model:ir.model.fields,field_description:calendar.field_res_users__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -684,7 +733,7 @@ msgstr "Empleado"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__stop_date
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_tree
 msgid "End Date"
-msgstr "Fecha final"
+msgstr "Fecha finalización"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
@@ -695,7 +744,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__end_type__end_date
 msgid "End date"
-msgstr "Fecha final"
+msgstr "Fecha de fin"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -774,7 +823,7 @@ msgstr "Seguidores (Canales)"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Contactos)"
+msgstr "Seguidores (Empresas)"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__forever
@@ -792,17 +841,6 @@ msgstr "Cuarto"
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fr
 msgid "Fr"
 msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
-msgid "Free"
-msgstr "Gratuito"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
-msgid "Free/Busy"
-msgstr "Libre/Ocupado"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
@@ -918,6 +956,13 @@ msgid "Is the Event Highlighted"
 msgstr "Es el Evento Resaltado"
 
 #. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Join Video Call"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_recurrence__byday__-1
 msgid "Last"
@@ -937,7 +982,7 @@ msgstr "Última"
 #: model:ir.model.fields,field_description:calendar.field_res_partner____last_update
 #: model:ir.model.fields,field_description:calendar.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Última modificación el"
+msgstr "Última modificación en"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_alarm__write_uid
@@ -1217,7 +1262,7 @@ msgstr "Participante"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__partner_id
 msgid "Partner-related data of the user"
-msgstr "Datos de contacto del usuario."
+msgstr "Datos del usuario relativos a la empresa"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__privacy
@@ -1441,12 +1486,12 @@ msgstr "Domingo"
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_event_type_name_uniq
 msgid "Tag name already exists !"
-msgstr "¡El nombre de categoría ya existe!"
+msgstr "¡El nombre de etiqueta ya existe!"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__categ_ids
 msgid "Tags"
-msgstr "Categorías"
+msgstr "Etiquetas"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -1601,12 +1646,12 @@ msgstr "Unidad"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread
 msgid "Unread Messages"
-msgstr "Mensajes sin leer"
+msgstr "Mensajes por leer"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Nº de mensajes sin leer"
+msgstr "Contador de mensajes sin leer"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__until

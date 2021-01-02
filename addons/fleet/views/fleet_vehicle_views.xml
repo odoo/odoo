@@ -72,7 +72,8 @@
                                     name="action_accept_driver_change"
                                     attrs="{'invisible': [('future_driver_id', '=', False)]}"/>
                             </div>
-                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager"/>
+                            <field name="plan_to_change_car" groups="fleet.fleet_group_manager" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
+                            <field name="plan_to_change_bike" groups="fleet.fleet_group_manager"  attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
                             <field name="next_assignation_date"/>
                             <field name="location"/>
                         </group>
@@ -98,6 +99,12 @@
                             <field name="doors" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}"/>
                             <field name="color"/>
                             <field name="model_year"/>
+                            <field name="frame_type" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
+                            <label for="frame_size" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}">
+                                <field name="frame_size" /><span>cm</span>
+                            </div>
+                            <field name="electric_assistance" attrs="{'invisible': [('vehicle_type', '!=', 'bike')]}"/>
                         </group>
                         <group string="Engine" attrs="{'invisible': [('vehicle_type', '!=', 'car')]}">
                             <field name="transmission"/>
@@ -168,8 +175,8 @@
                 <field name="location"/>
                 <field string="Status" name="state_id"/>
                 <filter string="Available" name="available"
-                    domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), ('plan_to_change_car', '=', True)]"/>
-                <filter name="planned" string="Planned for Change" domain="[('plan_to_change_car', '=', True)]"/>
+                    domain="['&amp;', ('future_driver_id', '=', False), '|', ('driver_id', '=', False), '|', '&amp;', ('plan_to_change_car', '=', True), ('vehicle_type', '=', 'car'), '&amp;', ('plan_to_change_bike', '=', True), ('vehicle_type', '=', 'bike')]"/>
+                <filter name="planned" string="Planned for Change" domain="['|', '&amp;', ('vehicle_type', '=', 'bike'), ('plan_to_change_bike', '=', True), '&amp;', ('vehicle_type', '=', 'car'), ('plan_to_change_car', '=', True)]"/>
                 <separator/>
                 <filter string="Need Action" name="alert_true" domain="['|', ('contract_renewal_due_soon', '=', True), ('contract_renewal_overdue', '=', True)]"/>
                 <separator/>

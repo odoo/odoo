@@ -3,22 +3,23 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Sherif Abd Ekmoniem <sherif.tsupport@gmail.com>, 2020
-# Mustafa Rawi <mustafa@cubexco.com>, 2020
-# Mustafa J. Kadhem <safi2266@gmail.com>, 2020
-# amrnegm <amrnegm.01@gmail.com>, 2020
-# Martin Trigaux, 2020
-# hoxhe Aits <hoxhe0@gmail.com>, 2020
-# Mohammed Albasha <m.albasha.ma@gmail.com>, 2020
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2020
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Mustafa J. Kadhem <safi2266@gmail.com>, 2019
+# amrnegm <amrnegm.01@gmail.com>, 2019
+# Martin Trigaux, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# Osoul <baruni@osoul.ly>, 2019
+# Mohammed Albasha <m.albasha.ma@gmail.com>, 2019
+# Osama Ahmaro <osamaahmaro@gmail.com>, 2019
+# Ali Alrehawi <alrehawi@hotmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-09-23 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,22 @@ msgstr ""
 #, python-format
 msgid " : Check Number Sequence"
 msgstr " :  رقم  التسلسلي الشيك "
+
+#. module: account_check_printing
+#: code:addons/account_check_printing/models/account_payment.py:0
+#, python-format
+msgid "A check memo cannot exceed 60 characters."
+msgstr "يجب ألا يزيد بيان الشيك عن 60 حرفًا."
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "قالب مخطط الحساب"
+
+#. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_reconciliation_widget
+msgid "Account Reconciliation widget"
+msgstr "أداة التسويات المحاسبية"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_margin_left
@@ -52,7 +69,7 @@ msgstr "المبلغ بالكلمات"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
-msgstr "الغاء"
+msgstr "إلغاء"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
@@ -98,12 +115,6 @@ msgid "Check Top Margin"
 msgstr "الهامش العلوي للشيك"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid "Check numbers can only consist of digits"
-msgstr ""
-
-#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
@@ -139,17 +150,17 @@ msgstr "شيكات للطباعة"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_company
 msgid "Companies"
-msgstr "شركات"
+msgstr "الشركات"
+
+#. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
+msgid "Company Country code"
+msgstr "كود دولة المؤسسة"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr "ضبط الاعدادات"
-
-#. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_res_partner
-msgid "Contact"
-msgstr "جهة الاتصال"
+msgstr "ضبط الإعدادات"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -162,31 +173,12 @@ msgid "Created on"
 msgstr "أنشئ في"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__display_name
 msgid "Display Name"
 msgstr "الاسم المعروض"
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid "Go to the configuration panel"
-msgstr "الذهاب للوحة الإعدادات"
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__id
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__id
 msgid "ID"
 msgstr "المُعرف"
 
@@ -206,18 +198,7 @@ msgid "Journal"
 msgstr "دفتر اليومية"
 
 #. module: account_check_printing
-#: model:ir.model,name:account_check_printing.model_account_move
-msgid "Journal Entry"
-msgstr "قيد اليومية"
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_journal____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_company____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
 msgstr "آخر تعديل في"
 
@@ -262,12 +243,6 @@ msgid "None"
 msgstr "لا شيء"
 
 #. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
-msgid "Payment Method"
-msgstr "طريقة السداد"
-
-#. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
 msgstr "المدفوعات"
@@ -288,22 +263,6 @@ msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
 msgstr "برجاء إدخال رقم أول شيك مطبوع مسبقًا تود الطباعة عليه."
-
-#. module: account_check_printing
-#: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_move__preferred_payment_method_id
-#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__preferred_payment_method_id
-msgid "Preferred Payment Method"
-msgstr ""
-
-#. module: account_check_printing
-#: model:ir.model.fields,help:account_check_printing.field_res_partner__property_payment_method_id
-#: model:ir.model.fields,help:account_check_printing.field_res_users__property_payment_method_id
-msgid ""
-"Preferred payment method when paying this vendor. This is used to filter "
-"vendor bills by preferred payment method to register payments in mass. Use "
-"cases: create bank files for batch wires, check runs."
-msgstr ""
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -335,6 +294,16 @@ msgid "Print Pre-numbered Checks"
 msgstr "طباعة شيكات مُرقمة مسبقًا"
 
 #. module: account_check_printing
+#: model:ir.model,name:account_check_printing.model_account_payment_register
+msgid "Register Payment"
+msgstr "تسجيل دفعة"
+
+#. module: account_check_printing
+#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
+msgid "Reset Amount in Words"
+msgstr ""
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
 msgstr "الهامش الأيمن"
@@ -350,22 +319,9 @@ msgstr ""
 "لإلغاء تفعيل خاصية الطباعة، اختر 'لا شيء'."
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Sent"
-msgstr "تم الإرسال"
-
-#. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
 msgstr "الرقم المسلسل للشيك المطبوع التالي."
-
-#. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
-msgid ""
-"Something went wrong with Check Layout, please select another layout in "
-"Invoicing/Accounting Settings and try again."
-msgstr ""
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_printing_payment_method_selected
@@ -375,12 +331,13 @@ msgid ""
 msgstr "حقل تقني يُستخدم لتحديد ما إن كان خيار طباعة شيك مفعلًا كطريقة للدفع."
 
 #. module: account_check_printing
-#: code:addons/account_check_printing/models/account_payment.py:0
-#, python-format
+#: model:ir.model.fields,help:account_check_printing.field_res_config_settings__country_code
 msgid ""
-"The following numbers are already used:\n"
-"%s"
+"The ISO country code in two chars. \n"
+"You can use this field for quick search."
 msgstr ""
+"كود الدولة حسب المعيار الدولي أيزو المكون من حرفين.\n"
+"يمكنك استخدام هذا الحقل لإجراء بحث سريع."
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -416,9 +373,11 @@ msgstr ""
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,help:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid ""
-"This option allows you to print the date label on the check as per CPA.\n"
+"This option allows you to print the date label on the check as per CPA. "
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"يسمح لك هذا الخيار بطباعة التاريخ على الشيك حسب متطلباتك. عطل هذا الخيار إن "
+"كانت شيكاتك المطبوعة مسبقًا تتضمن التاريخ."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -432,14 +391,26 @@ msgid "Unmark Sent"
 msgstr "إزالة تحديد الرسالة كمُرسلة"
 
 #. module: account_check_printing
-#: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
-msgid "Void Check"
-msgstr ""
-
-#. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid ""
-"You have to choose a check layout. For this, go in Invoicing/Accounting "
-"Settings, search for 'Checks layout' and set one."
+"You have to choose a check layout. For this, go in Apps, search for 'Checks "
+"layout' and install one."
 msgstr ""
+"عليك اختيار نموذج للشيك. لتفعل هذا، اذهب إلى 'تطبيقات'، ابحث عن 'نماذج "
+"الشيكات' وقم بتثبيت أحدهم."
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
+msgid "check in middle"
+msgstr "الشيك في المنتصف"
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
+msgid "check on bottom"
+msgstr "الشيك في الأسفل"
+
+#. module: account_check_printing
+#: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
+msgid "check on top"
+msgstr "الشيك في الأعلى"

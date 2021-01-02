@@ -3,20 +3,21 @@
 # 	* purchase
 # 
 # Translators:
+# Iulian Cutui <iulian.cutui@gmail.com>, 2018
 # Cozmin Candea <office@terrabit.ro>, 2020
-# Martin Trigaux, 2020
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
-# Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Martin Trigaux, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,6 +32,9 @@ msgid ""
 "                (object.state in ('draft', 'sent') and 'Request for Quotation - %s' % (object.name) or\n"
 "                'Purchase Order - %s' % (object.name))"
 msgstr ""
+"\n"
+"                (object.state in ('draft', 'sent') and 'Cere de ofertă - %s' % (object.name) or\n"
+"                'Comandă de achiziție- %s' % (object.name))"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_partner__supplier_invoice_count
@@ -140,6 +144,27 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Dragă ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Aici este în atașament comanda<strong>${object.name}</strong>\n"
+"        % if object.partner_ref:\n"
+"            cu referința: ${object.partner_ref}\n"
+"        % endif\n"
+"        în valoare de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        de la ${object.company_id.name}. \n"
+"        <br/><br/>\n"
+"        % if object.date_planned:\n"
+"            Recepția este așteptată pe data de  <strong>${format_date(object.date_planned)}</strong>.\n"
+"            <br/><br/>\n"
+"            Ați putea confirma primirea acestei comenzi?\n"
+"        % endif\n"
+"    </p>\n"
+"</div>"
 
 #. module: purchase
 #: model:mail.template,body_html:purchase.email_template_edi_purchase
@@ -294,7 +319,7 @@ msgstr "<span>Solicitați confirmarea</span>"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 msgid "<strong class=\"d-block mb-1\">From:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">De la:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -407,7 +432,7 @@ msgstr "<strong>Preț unitar</strong>"
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
 msgid "<strong>Untaxed Amount:</strong>"
-msgstr "<strong>Valoare fără taxe:</strong>"
+msgstr "<strong>Suma neimpozitată:</strong>"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.portal_my_purchase_order_update_date
@@ -432,6 +457,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"62%\n"
+"match\n"
 "Un produs stocabil este un produs pentru care gestionați stocul. Aplicația \"Inventar\" trebuie instalată.\n"
 "Un produs consumabil, pe de altă parte, este un produs pentru care nu este gestionat stocul.\n"
 "Un serviciu este un produs nematerial pe care îl oferiți."
@@ -450,13 +477,10 @@ msgstr "Avertizare acces"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"În funcție de configurația produsului, cantitatea primită poate fi calculată automat prin mecanism:\n"
-"  - Manual: cantitatea este setată manual pe linie\n"
-"  - Mișcări ale stocurilor: cantitatea provine din rămășiță confirmată\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -551,8 +575,10 @@ msgstr "Toate RFQ-urile în așteptare"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
-msgid "Allow automatically send email to reminde your vendor the receipt date"
+msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
+"Permiteți trimiterea automată de e-mailuri pentru a reaminti furnizorului "
+"data"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_company__po_lock__edit
@@ -658,6 +684,8 @@ msgid ""
 "Automatically send a confirmation email to the vendor X days before the "
 "expected receipt date, asking him to confirm the exact date."
 msgstr ""
+"Trimiteți automat un e-mail de confirmare furnizorului cu X zile înainte de "
+"data primirii preconizate, solicitându-i să confirme data exactă."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -767,7 +795,7 @@ msgstr "Anulează"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__cancel
 #, python-format
 msgid "Cancelled"
-msgstr "Anulat"
+msgstr "Anulat(ă)"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.report_purchaseorder_document
@@ -896,7 +924,7 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Conversia între Unitățile de Măsura pot avea loc numai dacă ele aparțin "
+"Conversia între unitățile de măsură pot avea loc numai dacă ele aparțin "
 "aceleiași categorii. Conversia va fi făcută pe baza proporțiilor."
 
 #. module: purchase
@@ -1095,7 +1123,7 @@ msgstr "Ciornă RFQs"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__dest_address_id
 msgid "Drop Ship Address"
-msgstr ""
+msgstr "Adresă livrare directă"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_mail_compose_message
@@ -1137,7 +1165,7 @@ msgstr "Urmăritori (Parteneri)"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
@@ -1309,7 +1337,7 @@ msgstr "Notă contabilă"
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move_line
 msgid "Journal Item"
-msgstr "Element jurnal"
+msgstr "Notă contabilă"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_account_move____last_update
@@ -1398,19 +1426,19 @@ msgstr "Nivelurile de aprobare *"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Lock"
-msgstr "Închide"
+msgstr "Blochează"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_res_config_settings__lock_confirmed_po
 msgid "Lock Confirmed Orders"
-msgstr "Închide comenzile confirmate"
+msgstr "Blocați comenzile confirmate"
 
 #. module: purchase
 #: code:addons/purchase/controllers/portal.py:0
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 #, python-format
 msgid "Locked"
-msgstr "Închisă"
+msgstr "Blocat"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
@@ -1467,9 +1495,9 @@ msgid ""
 " to cope with unexpected vendor delays."
 msgstr ""
 "Marja de eroare pentru termenele de plată ale vânzătorilor. Când sistemul "
-"generează comenzi de achiziție pentru comandare de produse, acestea vor fi "
-"programate cu multe zile mai devreme, să facă față întârzierilor neașteptate"
-" ale vânzătorilor."
+"generează comenzi de achiziție pentru reachiziționarea de produse, acestea "
+"vor fi programate cu multe zile mai devreme, să facă față întârzierilor "
+"neașteptate ale vânzătorilor."
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_has_error
@@ -1596,12 +1624,12 @@ msgstr "Fără RFQ-uri de afișat"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.product_normal_action_puchased
 msgid "No product found. Let's create one!"
-msgstr ""
+msgstr "Nu a fost găsit niciun produs. Să creăm unul!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid "No purchase order found. Let's create one!"
-msgstr ""
+msgstr "Nu a fost găsită nicio comandă de achiziție. Să creăm una!"
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_rfq
@@ -1771,7 +1799,7 @@ msgstr "Alte informații"
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_done
 #: model:mail.template,report_name:purchase.email_template_edi_purchase_reminder
 msgid "PO_${(object.name or '').replace('/','_')}"
-msgstr "CA_${(object.name or '').replace('/','_')}"
+msgstr "PO_${(object.name or '').replace('/','_')}"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__partner_id
@@ -1827,7 +1855,7 @@ msgstr "Tipăriți"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Print RFQ"
-msgstr "Tipărire CdO"
+msgstr "Tipărire CdO/RFQ"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__priority
@@ -2446,9 +2474,9 @@ msgid ""
 "Selecting \"Blocking Message\" will throw an exception with the message and "
 "block the flow. The Message has to be written in the next field."
 msgstr ""
-"Dacă selectați opțiunea \"Avertizare\" veți înștiința utilizatorul cu un "
-"mesaj, Selectând \"Mesaj de blocare\" veți trimite o excepție cu mesajul și "
-"va bloca fluxul. Mesajul trebuie scris în câmpul următor."
+"Daca selectati optiunea \"Avertizare\" veti instiinta utilizatorul cu un "
+"mesaj, Selectand \"Mesaj de blocare\" veti trimite o exceptie cu mesajul si "
+"va bloca fluxul. Mesajul trebuie scris în campul urmator."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2691,7 +2719,7 @@ msgstr "De aprobat"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr "Cantitate de facturat"
+msgstr "Pentru Facturare Cantitate"
 
 #. module: purchase
 #. openerp-web
@@ -2796,7 +2824,7 @@ msgstr "Unități de măsură"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
 msgid "Unlock"
-msgstr "Redeschide"
+msgstr "Deblocat"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_unread
@@ -2981,6 +3009,13 @@ msgid ""
 " dates and keep you informed in case of any delays. To get the vendor's "
 "performance statistics, click on the OTD rate."
 msgstr ""
+"Când creați o comandă de achiziție, aruncați o privire asupra ratei de "
+"livrare la timp a furnizorului: procentul de produse livrate la timp. Dacă "
+"este prea scăzut, activați mementourile automate. Cu câteva zile înainte de "
+"expediere, Odoo va trimite vânzătorului un e-mail pentru a cere confirmarea "
+"datelor de expediere și pentru a vă informa în caz de întârziere. Pentru a "
+"obține statistici de performanță ale vânzătorului, faceți clic pe rata de "
+"livrare la timp."
 
 #. module: purchase
 #: model_terms:digest.tip,tip_description:purchase.digest_tip_purchase_1
@@ -2990,6 +3025,11 @@ msgid ""
 "clicking on a button in the email, the information is added on the purchase "
 "order. Use filters to track orders that have not been acknowledged."
 msgstr ""
+"Când trimiteți o comandă de achiziție prin e-mail, Odoo solicită "
+"furnizorului să confirme primirea comenzii. Când furnizorul confirmă comanda"
+" făcând clic pe un buton din e-mail, informațiile sunt adăugate pe comanda "
+"de cumpărare. Utilizați filtre pentru a urmări comenzile care nu au fost "
+"confirmate."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -3039,6 +3079,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Oferta dvs. conține produse de la companie %(product_company)s în timp ce oferta dvs. aparține companiei %(quote_company)s. \n"
+" Vă rugăm să schimbați compania din ofertă sau să eliminați produsele din alte companii(%(bad_products)s)."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form

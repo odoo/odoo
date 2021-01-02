@@ -3,17 +3,17 @@
 # 	* sales_team
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Jorunn D. Newth, 2020
-# Marius Stedjan <marius@stedjan.com>, 2020
+# Martin Trigaux, 2019
+# Jorunn D. Newth, 2019
+# Marius Stedjan <marius@stedjan.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2019\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +39,7 @@ msgstr "<span>Rapportering</span>"
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "<span>View</span>"
-msgstr "<span>Vis</span>"
+msgstr "<span>Visning</span>"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_needaction
@@ -69,13 +69,7 @@ msgid "Administrator"
 msgstr ""
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.crm_team_1
-msgid "America"
-msgstr "Amerika"
-
-#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Archived"
 msgstr "Arkivert"
 
@@ -96,11 +90,6 @@ msgid "Big Pretty Button :)"
 msgstr "Stor, fin knapp :)"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_crm_tag
-msgid "CRM Tag"
-msgstr ""
-
-#. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
@@ -110,11 +99,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Channel Members"
 msgstr "Kanalmedlemmer"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
-msgid "Color"
-msgstr "Farge"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
@@ -128,14 +112,8 @@ msgstr "Firma"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Configuration"
 msgstr "Konfigurasjon"
-
-#. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor7
-msgid "Consulting"
-msgstr "Konsulenttjenester"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -143,25 +121,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Create new tags for your opportunities"
-msgstr ""
-
-#. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid ""
-"Create tags that fit your business (product structure, sales type, etc.) to "
-"better manage and track your opportunities."
-msgstr ""
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
 msgid "Created by"
 msgstr "Opprettet av"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
 msgid "Created on"
 msgstr "Opprettet"
@@ -189,22 +153,9 @@ msgid "Define a new sales team"
 msgstr ""
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor5
-msgid "Design"
-msgstr "Design"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
-#: model:ir.model.fields,field_description:sales_team.field_res_partner__display_name
-#: model:ir.model.fields,field_description:sales_team.field_res_users__display_name
 msgid "Display Name"
 msgstr "Visningsnavn"
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Europe"
-msgstr "Europa"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
@@ -249,10 +200,7 @@ msgid "Group By..."
 msgstr "Grupper etter..."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
-#: model:ir.model.fields,field_description:sales_team.field_res_partner__id
-#: model:ir.model.fields,field_description:sales_team.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -260,18 +208,18 @@ msgstr "ID"
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Hvis huket av, krever nye meldinger din oppmerksomhet."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Hvis huket av, har enkelte meldinger leveringsfeil."
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
-"If set, this Sales Team will be used for sales and assignments related to "
+"If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
 
@@ -283,31 +231,21 @@ msgid ""
 msgstr ""
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor4
-msgid "Information"
-msgstr "Informasjon"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
 msgid "Is Follower"
 msgstr "Er følger"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag____last_update
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
-#: model:ir.model.fields,field_description:sales_team.field_res_partner____last_update
-#: model:ir.model.fields,field_description:sales_team.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "Sist endret"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
 msgstr "Sist oppdatert av"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
 msgid "Last Updated on"
 msgstr "Sist oppdatert"
@@ -315,12 +253,12 @@ msgstr "Sist oppdatert"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hovedvedlegg"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
 msgid "Message Delivery error"
-msgstr "Feilmelding for levering"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
@@ -335,7 +273,7 @@ msgstr "Antall handlinger"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of errors"
-msgstr "Antall feil"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
@@ -345,7 +283,7 @@ msgstr "Antall meldinger som krever handling"
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Antall meldinger med leveringsfeil"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_unread_counter
@@ -353,19 +291,14 @@ msgid "Number of unread messages"
 msgstr "Antall uleste meldinger"
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor8
-msgid "Other"
-msgstr "Annen"
-
-#. module: sales_team
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "Kasse"
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor1
-msgid "Product"
-msgstr "Produkt"
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Sales"
+msgstr "Salg"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -406,36 +339,14 @@ msgid "Sequence"
 msgstr "Sekvens"
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor3
-msgid "Services"
-msgstr "Tjenester"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "Settings"
+msgstr "Innstillinger"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "Vis på dashbord"
-
-#. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor2
-msgid "Software"
-msgstr "Programvare"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
-msgid "Tag Name"
-msgstr "Tagnavn"
-
-#. module: sales_team
-#: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "Etikettnavn eksisterer allerede!"
-
-#. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
-#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
-#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
-msgid "Tags"
-msgstr "Etiketter"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -450,18 +361,13 @@ msgstr "Kanalmedlemmer"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_pipelines_act
-msgid "Teams"
-msgstr "Team"
+msgid "Team Pipelines"
+msgstr ""
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
 msgstr "Kanalfarge"
-
-#. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor6
-msgid "Training"
-msgstr "Opplæring"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -478,7 +384,7 @@ msgstr "Uleste meldinger"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Antall uleste meldinger"
+msgstr "Teller for uleste meldinger"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
@@ -486,7 +392,7 @@ msgstr "Antall uleste meldinger"
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
 "Use Sales Teams to organize your sales departments.\n"
-"                Each team will work with a separate pipeline."
+"                    Each team will work with a separate pipeline."
 msgstr ""
 
 #. module: sales_team
@@ -513,6 +419,16 @@ msgstr "Brukere"
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "Nettsted"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
+msgid "Website Messages"
+msgstr "Meldinger fra nettsted"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
+msgid "Website communication history"
+msgstr "Historikk for kommunikasjon på nettsted"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

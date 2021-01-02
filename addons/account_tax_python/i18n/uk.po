@@ -3,7 +3,9 @@
 # 	* account_tax_python
 # 
 # Translators:
-# Martin Trigaux, 2020
+# Yaroslav Molochko <onorua@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Bohdan Lisnenko, 2018
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
@@ -11,7 +13,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -63,14 +65,14 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Обчисліть суму податку, встановивши змінну 'result'.\n"
+"Обчислити суму податку, встановивши змінну \"результат\"\n"
 "\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
+":param base_amount: float, фактична сума, на яку застосовується податок\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param company: res.company набір одиночних записів\n"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
@@ -83,13 +85,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Обчисліть суму податку, встановивши змінну 'result'.\n"
+"Обчислити суму податку, встановивши змінну \"результат\".\n"
 "\n"
-":param base_amount: float, actual amount on which the tax is applied\n"
+":param base_amount: float, фактична сума, на яку застосовується податок\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
@@ -102,13 +104,13 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну 'result' на True або False.\n"
+"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильна\" або \"Невірна\".\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param company: res.company recordset singleton\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param company: res.company набір одиночних записів\n"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
@@ -120,12 +122,12 @@ msgid ""
 ":param product: product.product recordset singleton or None\n"
 ":param partner: res.partner recordset singleton or None"
 msgstr ""
-"Визначте, чи буде застосовано податок, встановивши змінну 'result' на True або False.\n"
+"Визначте, чи буде застосовано податок, встановивши змінну \"результат\" на \"Правильний\" або \"Невірний\".\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
-":param product: product.product recordset singleton or None\n"
-":param partner: res.partner recordset singleton or None"
+":param product: product.product набір одиночних записів або Нічого\n"
+":param partner: res.partner набір одиночних записів або Нічого"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__display_name
@@ -143,7 +145,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax____last_update
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни"
+msgstr "Останні зміни на"
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute

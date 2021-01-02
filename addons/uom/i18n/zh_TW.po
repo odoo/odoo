@@ -3,14 +3,16 @@
 # 	* uom
 # 
 # Translators:
+# Martin Trigaux, 2019
+# gogobook <O968041428@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -44,7 +46,7 @@ msgstr ""
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__active
 msgid "Active"
-msgstr "啟用"
+msgstr "有效"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -59,7 +61,7 @@ msgstr "添加一個新的度量單位"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Archived"
-msgstr "歸檔"
+msgstr "封存"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__factor_inv
@@ -88,13 +90,13 @@ msgstr "計量單位轉換只能在同一個類型之間進行。轉換根據比
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "創建者"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
 msgid "Created on"
-msgstr "建立於"
+msgstr "創建時間"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
@@ -115,7 +117,7 @@ msgstr "打"
 #. module: uom
 #: model_terms:ir.ui.view,arch_db:uom.uom_uom_view_search
 msgid "Group By"
-msgstr "分組按"
+msgstr "分組"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_hour
@@ -146,19 +148,19 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
 #: model:ir.model.fields,field_description:uom.field_uom_uom____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後修改時間"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_uid
 msgid "Last Updated by"
-msgstr "最後更新者"
+msgstr "最後更新人"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__write_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "最後更新時間"
 
 #. module: uom
 #: model:uom.category,name:uom.uom_categ_length
@@ -206,6 +208,19 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "小於參考計量單位"
 
 #. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
@@ -216,6 +231,14 @@ msgstr "計算的數量將是這個值的倍數。  不能進一步分割的單�
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "計量單位的轉換比率不能為 0！"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -256,7 +279,7 @@ msgstr "單位"
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_uom__name
 msgid "Unit of Measure"
-msgstr "單位"
+msgstr "計量單位"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__name
@@ -273,7 +296,7 @@ msgstr "單位"
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_form_view
 #: model_terms:ir.ui.view,arch_db:uom.product_uom_tree_view
 msgid "Units of Measure"
-msgstr "計量單位"
+msgstr "測量單位"
 
 #. module: uom
 #: model:ir.actions.act_window,name:uom.product_uom_categ_form_action
@@ -318,6 +341,12 @@ msgid "Volume"
 msgstr "體積"
 
 #. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "%s 的警告"
+
+#. module: uom
 #: model:uom.category,name:uom.product_uom_categ_kgm
 msgid "Weight"
 msgstr "重量"
@@ -326,20 +355,6 @@ msgstr "重量"
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
 msgstr "工作時間"
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr "您不能刪除該計量單位類別，因為它已被系統使用。"
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid ""
-"You cannot delete this UoM as it is used by the system. You should rather "
-"archive it."
-msgstr "您不能刪除該計量單位，因為它已被系統使用。您應該把它存檔。"
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action
@@ -388,7 +403,7 @@ msgstr ""
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_kgm
 msgid "kg"
-msgstr "公斤"
+msgstr "kg"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_km

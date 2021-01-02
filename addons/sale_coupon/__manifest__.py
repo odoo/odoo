@@ -8,6 +8,7 @@
     'version': '1.0',
     'depends': ['coupon', 'sale'],
     'data': [
+        'data/mail_template_data.xml',
         'security/sale_coupon_security.xml',
         'security/ir.model.access.csv',
         'wizard/sale_coupon_apply_code_views.xml',

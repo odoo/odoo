@@ -3,21 +3,23 @@
 # 	* payment
 # 
 # Translators:
-# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
-# sharkutz <sharkutz4life@yahoo.com>, 2020
+# Sergiu Baltariu <s_baltariu@yahoo.com>, 2018
+# Iulian Cutui <iulian.cutui@gmail.com>, 2018
+# sharkutz <sharkutz4life@yahoo.com>, 2019
 # Cozmin Candea <office@terrabit.ro>, 2020
+# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Martin Trigaux, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,13 +64,13 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
-"<h3>Vă rugăm să efectuați o plată în: </h3> <ul><li>Banca: "
-"%s</li><li>Contul: %s</li><li>Titular cont: %s</li></ul>"
+"<h3>Vă rugăm să efectuați o plată în </h3> <ul><li>Banca: %s</li><li>Contul:"
+" %s</li><li>Titular cont: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Înapoi la contul meu"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Înapoi la conttul meu"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -264,7 +266,7 @@ msgstr "Activează"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__active
 msgid "Active"
-msgstr "Activ"
+msgstr "Activ(a)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
@@ -455,8 +457,11 @@ msgstr "Captați Tranzacție"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
-msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr "Captați valoarea de la Odoo la finalizarea livrării."
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed. Use this if "
+"you want to charge your customers cards only once you are sure you can ship "
+"the goods to them."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -478,7 +483,7 @@ msgstr "Alegeți metoda dvs. de plată implicită pentru clienți."
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
-msgstr "Localitate"
+msgstr "Oraș"
 
 #. module: payment
 #. openerp-web
@@ -492,6 +497,11 @@ msgstr "Click aici pentru a fi redirecționat către pagina de confirmare."
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Close"
 msgstr "Închide"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_method_code
+msgid "Code"
+msgstr "Cod"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__color
@@ -700,6 +710,7 @@ msgstr "Destituire"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:payment.field_account_move__display_name
 #: model:ir.model.fields,field_description:payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__display_name
@@ -891,6 +902,7 @@ msgstr "Am un cont Paypal"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__id
 #: model:ir.model.fields,field_description:payment.field_account_move__id
 #: model:ir.model.fields,field_description:payment.field_account_payment__id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__id
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__id
@@ -1025,6 +1037,7 @@ msgstr "Limba"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template____last_update
 #: model:ir.model.fields,field_description:payment.field_account_move____last_update
 #: model:ir.model.fields,field_description:payment.field_account_payment____last_update
+#: model:ir.model.fields,field_description:payment.field_account_payment_register____last_update
 #: model:ir.model.fields,field_description:payment.field_ir_http____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard____last_update
@@ -1215,6 +1228,7 @@ msgstr "Nerealizat"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
@@ -1569,6 +1583,11 @@ msgid "Reference of the TX as stored in the acquirer database"
 msgstr "Referința TX așa cum este stocată în baza de date a achizitorului"
 
 #. module: payment
+#: model:ir.model,name:payment.model_account_payment_register
+msgid "Register Payment"
+msgstr "Înregistrează Plată"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
 msgid "Related Document ID"
 msgstr "ID Document Asociat"
@@ -1587,7 +1606,7 @@ msgstr "Partener asociat"
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Required fields not filled: %s"
-msgstr "Câmpurile obligatorii nu sunt completate: %s"
+msgstr "Câmpurile obligatorii nu sunt completateȘ %s"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
@@ -1622,6 +1641,7 @@ msgstr "Date de plată salvate"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
 msgstr "Jeton de Plată Salvat"
 
@@ -1675,7 +1695,7 @@ msgstr "Eroare server"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Server error:"
-msgstr "Eroare Server:"
+msgstr "Eroare ServerȘ"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1696,7 +1716,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__state
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "State"
-msgstr "Status"
+msgstr "Judeţ"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
@@ -1723,6 +1743,11 @@ msgstr "Cheie publicabilă Stripe"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
 msgstr "Cheia secretă a fâșiei"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_partner_ids
+msgid "Suitable Payment Token Partner"
+msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1769,7 +1794,7 @@ msgstr ""
 msgid ""
 "The transaction %s with %s for %s has been cancelled with the following "
 "message: %s"
-msgstr "Tranzacția %scu %s  pentru%s a fost anulată cu următorul mesaj:%s"
+msgstr "Tranzacția %scu %s  pentru%s a fost anulată cu următorul mesaj:"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1830,7 +1855,7 @@ msgid ""
 "This field holds the image used for this payment icon, limited to "
 "1024x1024px"
 msgstr ""
-"Acest câmp conține imaginea utilizată pentru această iconiță de plată, "
+"Acest câmp conține imaginea utilizată pentru această pictogramă de plată, "
 "limitată la 1024x1024px"
 
 #. module: payment
@@ -1853,7 +1878,7 @@ msgid ""
 "acquirers. Setting an email for this partner is advised."
 msgstr ""
 "Acest partener nu are un e-mail, ceea ce poate cauza probleme cu unii "
-"colectori de plăți. Setarea unui e-mail pentru acest partener este "
+"dobânditori de plăți. Setarea unui e-mail pentru acest partener este "
 "recomandată."
 
 #. module: payment

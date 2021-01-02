@@ -3,17 +3,21 @@
 # 	* project
 # 
 # Translators:
+# Aleksander, 2018
+# c21b6a13d68b58cd46df1f0c60d157fa_0eac24f <ebcc7c4c5322361be308a32a8952aa57_340590>, 2018
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018
+# Viktor Basso <viktor@voit.no>, 2018
+# Marius Stedjan <marius@stedjan.com>, 2020
 # Martin Trigaux, 2020
 # Jorunn D. Newth, 2020
-# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 14:19+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Jorunn D. Newth, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -328,13 +332,20 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
+msgstr ""
+"<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Administrer\" "
+"title=\"Administrer\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Domain Alias\" "
 "title=\"Domain Alias\"/>"
+msgstr ""
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid "<i class=\"fa fa-exclamation-triangle fa-sm\"/>&amp;nbsp;"
 msgstr ""
 
 #. module: project
@@ -606,6 +617,13 @@ msgid "Allowed Portal Users"
 msgstr ""
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.edit_project
+msgid ""
+"Allowed Portal Users will see all the tasks of this project without distinction.<br/>\n"
+"                                                Leave empty to restrict the access to the portal users' own tasks."
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__allowed_user_ids
 msgid "Allowed User"
 msgstr ""
@@ -630,7 +648,11 @@ msgid "April"
 msgstr "April"
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
+#, python-format
 msgid "Archive"
 msgstr "Arkiver"
 
@@ -728,7 +750,7 @@ msgstr "Antall vedlegg"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__attachment_ids
-msgid "Attachment that don't come from message."
+msgid "Attachments that don't come from a message."
 msgstr ""
 
 #. module: project
@@ -752,8 +774,8 @@ msgstr "Automatisk kanbanstatus"
 #: model:ir.model.fields,help:project.field_project_task_type__auto_validation_kanban_state
 msgid ""
 "Automatically modify the kanban state when the customer replies to the feedback for this stage.\n"
-" * A good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
-" * A medium or a bad feedback will set the kanban state to 'blocked' (red bullet).\n"
+" * Good feedback from the customer will update the kanban state to 'ready for the new stage' (green bullet).\n"
+" * Neutral or bad feedback will set the kanban state to 'blocked' (red bullet).\n"
 msgstr ""
 
 #. module: project
@@ -768,19 +790,6 @@ msgstr "Backlog"
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__blocked
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__blocked
-#: model:project.task,legend_blocked:project.project_task_1
-#: model:project.task,legend_blocked:project.project_task_12
-#: model:project.task,legend_blocked:project.project_task_19
-#: model:project.task,legend_blocked:project.project_task_20
-#: model:project.task,legend_blocked:project.project_task_24
-#: model:project.task,legend_blocked:project.project_task_25
-#: model:project.task,legend_blocked:project.project_task_26
-#: model:project.task,legend_blocked:project.project_task_3
-#: model:project.task,legend_blocked:project.project_task_8
-#: model:project.task,legend_blocked:project.project_task_9
-#: model:project.task.type,legend_blocked:project.project_stage_0
-#: model:project.task.type,legend_blocked:project.project_stage_2
-#: model:project.task.type,legend_blocked:project.project_stage_3
 #, python-format
 msgid "Blocked"
 msgstr "Blokkert"
@@ -790,20 +799,6 @@ msgstr "Blokkert"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
-
-#. module: project
-#: model:project.task,legend_done:project.project_task_10
-#: model:project.task,legend_done:project.project_task_11
-#: model:project.task,legend_done:project.project_task_2
-#: model:project.task,legend_done:project.project_task_21
-#: model:project.task,legend_done:project.project_task_22
-#: model:project.task,legend_done:project.project_task_4
-#: model:project.task,legend_done:project.project_task_5
-#: model:project.task,legend_done:project.project_task_6
-#: model:project.task,legend_done:project.project_task_7
-#: model:project.task.type,legend_done:project.project_stage_1
-msgid "Buzz or set as done"
 msgstr ""
 
 #. module: project
@@ -830,11 +825,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 msgid "Cancel"
 msgstr "Avbryt"
-
-#. module: project
-#: model:project.task.type,name:project.project_stage_3
-msgid "Cancelled"
-msgstr "Kansellert"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
@@ -926,7 +916,10 @@ msgid "Confirm"
 msgstr "Bekreft"
 
 #. module: project
+#. openerp-web
 #: code:addons/project/models/project.py:0
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
 #: code:addons/project/wizard/project_task_type_delete.py:0
 #, python-format
 msgid "Confirmation"
@@ -945,6 +938,14 @@ msgstr "Konsulenttjenester"
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
 msgid "Contact"
 msgstr "Kontakt"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid "Continue Recurrence"
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1013,7 +1014,7 @@ msgstr "Opprettet"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Creation Date"
-msgstr "Opprettelsesdato"
+msgstr "Opprettet Dato"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__currency_id
@@ -1071,7 +1072,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__access_url
 #: model:ir.model.fields,help:project.field_project_task__access_url
 msgid "Customer Portal URL"
-msgstr "Link til kundeportal"
+msgstr "URL til kundeportal"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_project_report
@@ -1183,10 +1184,11 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__project_privacy_visibility
 msgid ""
 "Defines the visibility of the tasks of the project:\n"
-"- Invited internal users: employees may only see the followed project and tasks.\n"
-"- All internal users: employees may see all project and tasks.\n"
-"- Invited portal and all internal users: employees may see everything.   Portal users may see project and tasks followed by\n"
-"   them or by someone of their company."
+"- Invited internal users: employees may only see the followed projects and tasks.\n"
+"- All internal users: employees may see all projects and tasks.\n"
+"- Invited portal and all internal users: employees may see everything.\n"
+"   Portal users may see project and tasks followed by\n"
+"   them or by someone in their company."
 msgstr ""
 
 #. module: project
@@ -1266,10 +1268,14 @@ msgid "Disabled Rating Warning"
 msgstr ""
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_confirmation_wizard
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
+#, python-format
 msgid "Discard"
 msgstr "Forkast"
 
@@ -1296,11 +1302,6 @@ msgid "Do not have access, skip this data for user's digest email"
 msgstr "Har ikke tilgang, hopp over denne dataen for brukerens digest e-post"
 
 #. module: project
-#: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
-msgid "Documentation"
-msgstr "Dokumentasjon"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Documents"
 msgstr "Dokumenter"
@@ -1312,7 +1313,6 @@ msgstr "Dokumenter"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: model:project.task.type,name:project.project_stage_2
 #, python-format
 msgid "Done"
 msgstr "Fullført"
@@ -1359,7 +1359,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__partner_email
 #: model:ir.model.fields,field_description:project.field_project_task__partner_email
 msgid "Email"
-msgstr "E-post"
+msgstr "Epost"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_from
@@ -1369,7 +1369,7 @@ msgstr "Epost fra"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
 msgid "Email Template"
-msgstr "E-postmal"
+msgstr "Epostmal"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
@@ -1391,21 +1391,15 @@ msgid "Ending Date"
 msgstr "Sluttdato"
 
 #. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Error! You cannot create recursive hierarchy of task(s)."
-msgstr ""
-
-#. module: project
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "Error! You cannot create recursive hierarchy of tasks."
-msgstr ""
-
-#. module: project
 #: model:ir.model.constraint,message:project.constraint_project_project_project_date_greater
-msgid "Error! project start-date must be lower than project end-date."
-msgstr "Feil! Prosjektets startdato må komme før sluttdatoen."
+msgid "Error! Project start date must be before project end date."
+msgstr ""
+
+#. module: project
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "Error! You cannot create a recursive hierarchy of tasks."
+msgstr ""
 
 #. module: project
 #. openerp-web
@@ -1613,10 +1607,10 @@ msgstr "Timer"
 #: model:ir.model.fields,help:project.field_project_project__rating_status
 msgid ""
 "How to get customer feedback?\n"
-"- Rating when changing stage: an email will be sent when a task is pulled in another stage.\n"
-"- Periodical Rating: email will be sent periodically.\n"
+"- Rating when changing stage: an email will be sent when a task is pulled to another stage.\n"
+"- Periodic rating: an email will be sent periodically.\n"
 "\n"
-"Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
+"Don't forget to set up the email templates on the stages for which you want to get customer feedback."
 msgstr ""
 
 #. module: project
@@ -1639,7 +1633,7 @@ msgstr "Jeg tar den"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__id
 #: model:ir.model.fields,field_description:project.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "IDID"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_parent_thread_id
@@ -1683,18 +1677,18 @@ msgid "If checked, some messages have a delivery error."
 msgstr "Hvis huket av, har enkelte meldinger leveringsfeil."
 
 #. module: project
-#: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
-msgid ""
-"If set an email will be sent to the customer when the task or issue reaches "
-"this step."
-msgstr ""
-
-#. module: project
 #: model:ir.model.fields,help:project.field_project_task_type__rating_template_id
 msgid ""
 "If set and if the project's rating configuration is 'Rating when changing "
 "stage', then an email will be sent to the customer when the task reaches "
 "this step."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,help:project.field_project_task_type__mail_template_id
+msgid ""
+"If set, an email will be sent to the customer when the task or issue reaches"
+" this step."
 msgstr ""
 
 #. module: project
@@ -1723,30 +1717,6 @@ msgstr "Viktig"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__normal
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__normal
-#: model:project.task,legend_normal:project.project_task_1
-#: model:project.task,legend_normal:project.project_task_10
-#: model:project.task,legend_normal:project.project_task_11
-#: model:project.task,legend_normal:project.project_task_12
-#: model:project.task,legend_normal:project.project_task_19
-#: model:project.task,legend_normal:project.project_task_2
-#: model:project.task,legend_normal:project.project_task_20
-#: model:project.task,legend_normal:project.project_task_21
-#: model:project.task,legend_normal:project.project_task_22
-#: model:project.task,legend_normal:project.project_task_24
-#: model:project.task,legend_normal:project.project_task_25
-#: model:project.task,legend_normal:project.project_task_26
-#: model:project.task,legend_normal:project.project_task_3
-#: model:project.task,legend_normal:project.project_task_4
-#: model:project.task,legend_normal:project.project_task_5
-#: model:project.task,legend_normal:project.project_task_6
-#: model:project.task,legend_normal:project.project_task_7
-#: model:project.task,legend_normal:project.project_task_8
-#: model:project.task,legend_normal:project.project_task_9
-#: model:project.task.type,legend_normal:project.project_stage_0
-#: model:project.task.type,legend_normal:project.project_stage_1
-#: model:project.task.type,legend_normal:project.project_stage_2
-#: model:project.task.type,legend_normal:project.project_stage_3
-#: model:project.task.type,name:project.project_stage_1
 #, python-format
 msgid "In Progress"
 msgstr "Under arbeid"
@@ -1803,6 +1773,21 @@ msgstr "Er et firma"
 #: model_terms:ir.ui.view,arch_db:project.project_tags_search_view
 msgid "Issue Version"
 msgstr "Saksversjon"
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid "It seems that some tasks are part of a recurrence."
+msgstr ""
+
+#. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid "It seems that this task is part of a recurrence."
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__january
@@ -2133,20 +2118,6 @@ msgid "Name of the tasks:"
 msgstr ""
 
 #. module: project
-#: model:project.task,legend_blocked:project.project_task_10
-#: model:project.task,legend_blocked:project.project_task_11
-#: model:project.task,legend_blocked:project.project_task_2
-#: model:project.task,legend_blocked:project.project_task_21
-#: model:project.task,legend_blocked:project.project_task_22
-#: model:project.task,legend_blocked:project.project_task_4
-#: model:project.task,legend_blocked:project.project_task_5
-#: model:project.task,legend_blocked:project.project_task_6
-#: model:project.task,legend_blocked:project.project_task_7
-#: model:project.task.type,legend_blocked:project.project_stage_1
-msgid "Need functional or technical help"
-msgstr "Trenger funksjonell eller teknisk hjelp"
-
-#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Neutral face"
 msgstr ""
@@ -2155,7 +2126,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
-#: model:project.task.type,name:project.project_stage_0
 #, python-format
 msgid "New"
 msgstr "Ny"
@@ -2197,7 +2167,7 @@ msgstr "Neste aktiviteter"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Frist for neste aktivitet"
+msgstr "Neste aktivitetsfrist"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_summary
@@ -2275,14 +2245,24 @@ msgid "Number of Actions"
 msgstr "Antall handlinger"
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__doc_count
+msgid "Number of Documents Attached"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__after
 #: model:ir.model.fields.selection,name:project.selection__project_task_recurrence__repeat_type__after
 msgid "Number of Repetitions"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
-msgid "Number of Working Days to Open the task"
+#: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
+msgid "Number of Tasks"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
+msgid "Number of Tasks Left to Create"
 msgstr ""
 
 #. module: project
@@ -2291,9 +2271,9 @@ msgid "Number of Working Days to close the task"
 msgstr ""
 
 #. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__doc_count
-msgid "Number of documents attached"
-msgstr "Antall vedlagte dokumenter"
+#: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
+msgid "Number of Working Days to open the task"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
@@ -2312,16 +2292,6 @@ msgstr "Antall meldinger som krever handling"
 #: model:ir.model.fields,help:project.field_project_task__message_has_error_counter
 msgid "Number of messages with delivery error"
 msgstr "Antall meldinger med leveringsfeil"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_type_delete_wizard__tasks_count
-msgid "Number of tasks"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task_recurrence__recurrence_left
-msgid "Number of tasks left to create"
-msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_unread_counter
@@ -2381,15 +2351,15 @@ msgstr "Oppgaver med passert frist"
 #: model:ir.model.fields,help:project.field_project_task_type__legend_blocked
 msgid ""
 "Override the default value displayed for the blocked state for kanban "
-"selection, when the task or issue is in that stage."
+"selection when the task or issue is in that stage."
 msgstr ""
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__legend_done
 #: model:ir.model.fields,help:project.field_project_task_type__legend_done
 msgid ""
-"Override the default value displayed for the done state for kanban "
-"selection, when the task or issue is in that stage."
+"Override the default value displayed for the done state for kanban selection"
+" when the task or issue is in that stage."
 msgstr ""
 
 #. module: project
@@ -2397,7 +2367,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task_type__legend_normal
 msgid ""
 "Override the default value displayed for the normal state for kanban "
-"selection, when the task or issue is in that stage."
+"selection when the task or issue is in that stage."
 msgstr ""
 
 #. module: project
@@ -2449,8 +2419,8 @@ msgstr ""
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__periodic
-msgid "Periodical Rating"
-msgstr "Periodisk vurdering"
+msgid "Periodic rating"
+msgstr ""
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__partner_phone
@@ -2461,7 +2431,7 @@ msgstr "Telefon"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
-"Plan resource allocation accross projets and tasks, and estimate deadlines "
+"Plan resource allocation across projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
 
@@ -2499,7 +2469,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__access_url
 #: model:ir.model.fields,field_description:project.field_project_task__access_url
 msgid "Portal Access URL"
-msgstr "Tilgangslink for portal"
+msgstr "URL for tilgang til portal"
 
 #. module: project
 #. openerp-web
@@ -2645,11 +2615,6 @@ msgid "Projects"
 msgstr "Prosjekter"
 
 #. module: project
-#: model:mail.channel,name:project.mail_channel_project_task
-msgid "Projects & Tasks"
-msgstr "Prosjekter og oppgaver"
-
-#. module: project
 #: model:ir.model.fields,field_description:project.field_project_delete_wizard__projects_archived
 msgid "Projects Archived"
 msgstr ""
@@ -2767,31 +2732,14 @@ msgstr "Vurderinger av %s"
 #. module: project
 #: code:addons/project/models/project.py:0
 #: model:ir.model.fields.selection,name:project.selection__project_task__kanban_state__done
-#: model:project.task,legend_done:project.project_task_1
-#: model:project.task,legend_done:project.project_task_12
-#: model:project.task,legend_done:project.project_task_20
-#: model:project.task,legend_done:project.project_task_24
-#: model:project.task,legend_done:project.project_task_25
-#: model:project.task,legend_done:project.project_task_26
-#: model:project.task,legend_done:project.project_task_3
-#: model:project.task,legend_done:project.project_task_8
-#: model:project.task,legend_done:project.project_task_9
-#: model:project.task.type,legend_done:project.project_stage_0
-#: model:project.task.type,legend_done:project.project_stage_2
 #, python-format
 msgid "Ready"
 msgstr "Klar"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
-msgid "Ready for next stage"
+msgid "Ready for Next Stage"
 msgstr "Klar for neste stadium"
-
-#. module: project
-#: model:project.task,legend_done:project.project_task_19
-#: model:project.task.type,legend_done:project.project_stage_3
-msgid "Ready to reopen"
-msgstr "Klar til å gjenåpnes"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__rating_last_feedback
@@ -2974,7 +2922,7 @@ msgstr "Gjenopprett"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ribbon_message
-msgid "Ribbon message"
+msgid "Ribbon Message"
 msgstr ""
 
 #. module: project
@@ -3106,13 +3054,13 @@ msgstr "Del"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__is_favorite
-msgid "Show Project on dashboard"
-msgstr "Vis prosjekt på dashbord"
+msgid "Show Project on Dashboard"
+msgstr ""
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
-msgstr "Vis alle oppføringer som har neste handlingsdato før dagen i dag"
+msgstr "Vis alle oppføringer som har en neste tiltak-dato før dagen i dag"
 
 #. module: project
 #. openerp-web
@@ -3234,15 +3182,23 @@ msgstr ""
 "Planlagt: Fremtidige aktiviteter."
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid "Stop Recurrence"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__subtask_count
+msgid "Sub-task Count"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__subtask_project_id
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_project_id
 msgid "Sub-task Project"
 msgstr "Prosjekt for deloppgaver"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__subtask_count
-msgid "Sub-task count"
-msgstr "Antall deloppgaver"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_task_action_sub_task
@@ -3262,7 +3218,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours
 msgid ""
 "Sum of the time planned of all the sub-tasks linked to this task. Usually "
-"less or equal to the initially time planned of this task."
+"less than or equal to the initially planned time of this task."
 msgstr ""
 
 #. module: project
@@ -3296,7 +3252,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
 msgid "Tags"
-msgstr "Etiketter"
+msgstr "Tagger"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -3415,8 +3371,6 @@ msgstr "Oppgave klar for neste stadium"
 #: model:ir.model.fields,field_description:project.field_res_partner__task_ids
 #: model:ir.model.fields,field_description:project.field_res_users__task_ids
 #: model:ir.ui.menu,name:project.menu_project_management
-#: model:project.project,label_tasks:project.project_project_1
-#: model:project.project,label_tasks:project.project_project_2
 #: model_terms:ir.ui.view,arch_db:project.portal_layout
 #: model_terms:ir.ui.view,arch_db:project.portal_my_home
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -3698,6 +3652,14 @@ msgid "Type of the exception activity on record."
 msgstr "Type for unntaksaktiviteten på posten."
 
 #. module: project
+#. openerp-web
+#: code:addons/project/static/src/js/project_form.js:0
+#: code:addons/project/static/src/js/project_list.js:0
+#, python-format
+msgid "Unarchive"
+msgstr "Av-arkiver"
+
+#. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Unassigned"
@@ -3720,7 +3682,7 @@ msgstr "Uleste meldinger"
 #: model:ir.model.fields,field_description:project.field_project_project__message_unread_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Antall uleste meldinger"
+msgstr "Teller for uleste meldinger"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__repeat_type
@@ -3733,6 +3695,11 @@ msgstr "Til"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Use <b>activities</b> to organize your daily work."
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
+msgid "Use Email Alias"
 msgstr ""
 
 #. module: project
@@ -3760,11 +3727,6 @@ msgstr "Bruk oppgaver som"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_project__alias_enabled
-msgid "Use email alias"
 msgstr ""
 
 #. module: project
@@ -3818,7 +3780,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:project.field_project_project__website_message_ids
 #: model:ir.model.fields,field_description:project.field_project_task__website_message_ids
 msgid "Website Messages"
-msgstr "Meldinger fra nettsted"
+msgstr "Nettstedmeldinger"
 
 #. module: project
 #. openerp-web
@@ -3831,7 +3793,7 @@ msgstr ""
 #: model:ir.model.fields,help:project.field_project_project__website_message_ids
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 msgid "Website communication history"
-msgstr " Kommunikasjonshistorikk for nettsted"
+msgstr "Kommunikasjonshistorikk på nettstedet"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__wed
@@ -3862,6 +3824,26 @@ msgid "Whether this project should be displayed on your dashboard."
 msgstr ""
 
 #. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__working_days_open
+msgid "Working Days to Assign"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__working_days_close
+msgid "Working Days to Close"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
+msgid "Working Hours to Assign"
+msgstr ""
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
+msgid "Working Hours to Close"
+msgstr ""
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
 msgid "Working Time"
 msgstr "Arbeidstid"
@@ -3874,26 +3856,6 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__working_days_open
-msgid "Working days to assign"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__working_days_close
-msgid "Working days to close"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
-msgid "Working hours to assign"
-msgstr ""
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
-msgid "Working hours to close"
 msgstr ""
 
 #. module: project
@@ -3926,15 +3888,15 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
-"You cannot archive recurring tasks. Please, disable the recurrence first."
+"You cannot archive recurring tasks. Please disable the recurrence first."
 msgstr ""
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
 msgid ""
-"You cannot change the company of an analytical account if it is related to a"
-" project."
+"You cannot change the company of an analytic account if it is related to a "
+"project."
 msgstr ""
 
 #. module: project
@@ -3949,7 +3911,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid ""
-"You cannot delete recurring tasks. Please, disable the recurrence first."
+"You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
 
 #. module: project

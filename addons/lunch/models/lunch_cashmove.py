@@ -11,7 +11,7 @@ class LunchCashMove(models.Model):
     _description = 'Lunch Cashmove'
     _order = 'date desc'
 
-    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id)
+    currency_id = fields.Many2one('res.currency', default=lambda self: self.env.company.currency_id, required=True)
     user_id = fields.Many2one('res.users', 'User',
                               default=lambda self: self.env.uid)
     date = fields.Date('Date', required=True, default=fields.Date.context_today)

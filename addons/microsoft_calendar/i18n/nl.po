@@ -10,10 +10,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2020-09-07 08:14+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-12-11 11:03+0000\n"
 "Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -71,9 +71,14 @@ msgstr ""
 "gebruiken!"
 
 #. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "Agenda deelnemer informatie"
+
+#. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_event
 msgid "Calendar Event"
-msgstr "Agenda gebeurtenis"
+msgstr "Afspraak"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
@@ -134,6 +139,7 @@ msgid "Delete from the current Microsoft Calendar account"
 msgstr "Verwijderen uit het huidige Microsoft Agenda-account."
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
@@ -149,6 +155,7 @@ msgid "Event Recurrence Rule"
 msgstr "Afspraak terugkeerpatroon"
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -165,9 +172,10 @@ msgid ""
 "alarm information without removing it."
 msgstr ""
 "Als het actief veld niet is aangevinkt, heeft u de mogelijkheid om het "
-"evenement alarm te verbergen zonder deze te verwijderen."
+"afspraakalarm te verbergen zonder deze te verwijderen."
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update
@@ -237,14 +245,19 @@ msgstr "Hoofd-ID voor Microsoft-terugkeerpatroon"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "Modified occurrence is crossing or overlapping adjacent occurrence."
-msgstr ""
+msgstr "Aangepaste afspraak kruist of overlapt een aangrenzende afspraak."
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__need_sync_m
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_sync__need_sync_m
 msgid "Need Sync M"
-msgstr ""
+msgstr "Need Sync M"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Next Sync Token"
+msgstr "Volgende synchronisatietoken"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__sync_policy
@@ -275,6 +288,11 @@ msgstr "Outlook: synchronisatie"
 #, python-format
 msgid "Redirection"
 msgstr "Doorverwijzing"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Refresh Token"
+msgstr "Vernieuw token"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -350,9 +368,19 @@ msgstr ""
 "is."
 
 #. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Token Validity"
+msgstr "Geldigheid token"
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
 msgid "User"
 msgstr "Gebruiker"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "User Token"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -368,11 +396,9 @@ msgstr "Gebruikers"
 #: code:addons/microsoft_calendar/models/microsoft_sync.py:0
 #, python-format
 msgid ""
-"You cannot delete a record synchronized with Outlook Calendar, archive it "
+"You cannot delete a record synchronized with Microsoft Calendar, archive it "
 "instead."
 msgstr ""
-"U kunt een record dat is gesynchroniseerd met Outlook-agenda niet "
-"verwijderen, maar archiveren."
 
 #. module: microsoft_calendar
 #. openerp-web

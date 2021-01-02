@@ -3,23 +3,25 @@
 # 	* calendar
 # 
 # Translators:
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
-# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# storm_mpildek <matija.pildek@storm.hr>, 2017
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2017
+# Đurđica Žarković <durdica.zarkovic@storm.hr>, 2019
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2019
+# Vojislav Opačić <vojislav.opacic@gmail.com>, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
 # Tina Milas, 2020
 # Milan Tribuson <one.mile.code@gmail.com>, 2020
-# Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
-# Vojislav Opačić <vojislav.opacic@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Bole <bole@dajmi5.com>, 2020
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,6 +132,9 @@ msgid ""
 "                    </li>\n"
 "                % endfor\n"
 "                </ul></li>\n"
+"                % if object.event_id.videocall_location:\n"
+"                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
+"                % endif\n"
 "            </ul>\n"
 "        </td>\n"
 "    </tr></table>\n"
@@ -210,6 +215,9 @@ msgid ""
 "                    </li>\n"
 "                % endfor\n"
 "                </ul></li>\n"
+"                % if object.event_id.videocall_location:\n"
+"                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
+"                % endif\n"
 "            </ul>\n"
 "        </td>\n"
 "    </tr></table>\n"
@@ -288,6 +296,9 @@ msgid ""
 "                    </li>\n"
 "                % endfor\n"
 "                </ul></li>\n"
+"                % if object.event_id.videocall_location:\n"
+"                <li>Join Video Call: <a href=\"${object.event_id.videocall_location}\" target=\"_blank\">${object.event_id.videocall_location}</a></li>\n"
+"                % endif\n"
 "            </ul>\n"
 "        </td>\n"
 "    </tr></table>\n"
@@ -411,6 +422,17 @@ msgid "Availability"
 msgstr "Raspoloživost"
 
 #. module: calendar
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
+#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
+msgid "Available"
+msgstr "Dostupno"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
+msgid "Available/Busy"
+msgstr ""
+
+#. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__base_event_id
 msgid "Base Event"
 msgstr ""
@@ -436,6 +458,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.ui.menu,name:calendar.mail_menu_calendar
 #: model:ir.ui.menu,name:calendar.menu_calendar_configuration
+#: model_terms:ir.ui.view,arch_db:calendar.res_users_view_form
 msgid "Calendar"
 msgstr "Kalendar"
 
@@ -528,7 +551,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event_type__create_date
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__create_date
 msgid "Created on"
-msgstr "Kreirano"
+msgstr "Datum kreiranja"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
@@ -607,7 +630,7 @@ msgstr "Detalji"
 #: model:ir.model.fields,field_description:calendar.field_res_partner__display_name
 #: model:ir.model.fields,field_description:calendar.field_res_users__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -740,7 +763,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
 msgid "Everyone"
-msgstr "Svi"
+msgstr "Svatko"
 
 #. module: calendar
 #: code:addons/calendar/models/mail_activity.py:0
@@ -796,17 +819,6 @@ msgstr "Četvrti"
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__fr
 msgid "Fr"
 msgstr ""
-
-#. module: calendar
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_attendee__availability__free
-#: model:ir.model.fields.selection,name:calendar.selection__calendar_event__show_as__free
-msgid "Free"
-msgstr "Slobodan"
-
-#. module: calendar
-#: model:ir.model.fields,field_description:calendar.field_calendar_attendee__availability
-msgid "Free/Busy"
-msgstr "Slobodan/Zauzet"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__fr
@@ -920,6 +932,13 @@ msgstr "Je pratitelj"
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__is_highlighted
 msgid "Is the Event Highlighted"
 msgstr "Da li je događaj istaknut"
+
+#. module: calendar
+#: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_location
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_calendar
+#: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
+msgid "Join Video Call"
+msgstr ""
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__byday__-1

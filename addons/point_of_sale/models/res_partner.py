@@ -15,10 +15,33 @@ class ResPartner(models.Model):
     pos_order_ids = fields.One2many('pos.order', 'partner_id', readonly=True)
 
     def _compute_pos_order(self):
-        partners_data = self.env['pos.order'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
-        mapped_data = dict([(partner['partner_id'][0], partner['partner_id_count']) for partner in partners_data])
-        for partner in self:
-            partner.pos_order_count = mapped_data.get(partner.id, 0)
+        # retrieve all children partners and prefetch 'parent_id' on them
+        all_partners = self.with_context(active_test=False).search([('id', 'child_of', self.ids)])
+        all_partners.read(['parent_id'])
+
+        pos_order_data = self.env['pos.order'].read_group(
+            domain=[('partner_id', 'in', all_partners.ids)],
+            fields=['partner_id'], groupby=['partner_id']
+        )
+
+        self.pos_order_count = 0
+        for group in pos_order_data:
+            partner = self.browse(group['partner_id'][0])
+            while partner:
+                if partner in self:
+                    partner.pos_order_count += group['partner_id_count']
+                partner = partner.parent_id
+
+    def action_view_pos_order(self):
+        '''
+        This function returns an action that displays the pos orders from partner.
+        '''
+        action = self.env.ref('point_of_sale.action_pos_pos_form').read()[0]
+        if self.is_company:
+            action['domain'] = [('partner_id.commercial_partner_id.id', '=', self.id)]
+        else:
+            action['domain'] = [('partner_id.id', '=', self.id)]
+        return action
 
     @api.model
     def create_from_ui(self, partner):
@@ -34,11 +57,11 @@ class ResPartner(models.Model):
             partner_id = self.create(partner).id
         return partner_id
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_active_pos_session(self):
         running_sessions = self.env['pos.session'].sudo().search([('state', '!=', 'closed')])
         if running_sessions:
             raise UserError(
                 _("You cannot delete contacts while there are active PoS sessions. Close the session(s) %s first.")
                 % ", ".join(session.name for session in running_sessions)
             )
-        return super(ResPartner, self).unlink()

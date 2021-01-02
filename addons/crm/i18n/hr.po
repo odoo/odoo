@@ -3,29 +3,33 @@
 # 	* crm
 # 
 # Translators:
-# Ivan Marijanović <ivanm101@yahoo.com>, 2020
-# Vojislav Opačić <vojislav.opacic@gmail.com>, 2020
-# Davor Bojkić <davor.bojkic@storm.hr>, 2020
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
+# storm_mpildek <matija.pildek@storm.hr>, 2017
+# Filip Cuk <filipcuk2@gmail.com>, 2017
+# Mario Jureša <mario.juresa@uvid.hr>, 2017
+# Davor Bojkić <davor.bojkic@storm.hr>, 2017
+# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2018
+# Ivan Marijanović <ivanm101@yahoo.com>, 2018
+# Ana-Maria Olujić <ana-maria.olujic@slobodni-programi.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Vojislav Opačić <vojislav.opacic@gmail.com>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Jasmina Otročak <jasmina@uvid.hr>, 2020
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
 # KRISTINA PALAŠ <kristina.palas@storm.hr>, 2020
-# Jasmina Otročak <jasmina@uvid.hr>, 2020
 # Tina Milas, 2020
-# Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Bole <bole@dajmi5.com>, 2020
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
-# Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # Marko Carević <marko.carevic@live.com>, 2020
-# Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Stjepan Lovasić <stjepan.lovasic@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Marko Carević <marko.carevic@live.com>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -505,13 +509,6 @@ msgid "Bounce"
 msgstr "Odbij"
 
 #. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid ""
-"Use this button to update the probabilities of all leads. This can take up "
-"to several minutes depending on how many there are."
-msgstr ""
-
-#. module: crm
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid ""
@@ -654,7 +651,7 @@ msgstr "Tvrtka"
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__partner_name
 msgid "Company Name"
-msgstr "Tvrtka"
+msgstr "Naziv za prikaz"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__date
@@ -682,6 +679,11 @@ msgstr ""
 #: code:addons/crm/static/src/js/tours/crm.js:0
 #, python-format
 msgid "Congrats, best of luck catching such big fish! :)"
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid "Consider leads created as of the"
 msgstr ""
 
 #. module: crm
@@ -775,7 +777,7 @@ msgstr "Ispravno"
 #. module: crm
 #: model:ir.model.fields,help:crm.field_crm_lead__message_bounce
 msgid "Counter of the number of bounced emails for this contact"
-msgstr "Broj odbačenih e-mail poruka ovog kontakta"
+msgstr "Broj odbačenih email poruka ovog kontakta"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_country_id
@@ -861,7 +863,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:crm.field_crm_stage__create_date
 #: model:ir.model.fields,field_description:crm.field_crm_team__create_date
 msgid "Created on"
-msgstr "Kreirano"
+msgstr "Datum kreiranja"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_activity_report__lead_create_date
@@ -904,7 +906,7 @@ msgstr "Kupac"
 #: code:addons/crm/models/crm_lead.py:0
 #, python-format
 msgid "Customer Email"
-msgstr "E-mail kupca"
+msgstr "Email kupca"
 
 #. module: crm
 #: model:ir.ui.menu,name:crm.res_partner_menu_customer
@@ -1020,7 +1022,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:crm.field_res_users__display_name
 #: model:ir.model.fields,field_description:crm.field_utm_campaign__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: crm
 #: code:addons/crm/models/digest.py:0 code:addons/crm/models/digest.py:0
@@ -1073,7 +1075,7 @@ msgstr "E-pošta"
 #. module: crm
 #: model_terms:ir.ui.view,arch_db:crm.sales_team_form_view_in_crm
 msgid "Email Alias"
-msgstr "E-mail alias"
+msgstr "e-mail alias"
 
 #. module: crm
 #: model:crm.lead.scoring.frequency.field,name:crm.frequency_field_email_state
@@ -1646,7 +1648,7 @@ msgstr "Potencijali"
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_graph_lead
 #: model_terms:ir.ui.view,arch_db:crm.crm_opportunity_report_view_pivot_lead
 msgid "Leads Analysis"
-msgstr "Analiza potencijala"
+msgstr "Analiza CRM potencijala"
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.action_report_crm_lead_salesteam
@@ -1983,7 +1985,7 @@ msgstr "Nove prilike"
 #. module: crm
 #: model:ir.actions.act_window,name:crm.action_opportunity_form
 msgid "New Opportunity"
-msgstr "Nova prilika"
+msgstr "Nova Prilika"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__activity_date_deadline
@@ -2003,12 +2005,12 @@ msgstr "Tip sljedeće aktivnosti"
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__green
 msgid "Next activity is planned"
-msgstr "Sljedeća aktivnost je planirana"
+msgstr "Slijedeća aktivnost je planirana"
 
 #. module: crm
 #: model:ir.model.fields.selection,name:crm.selection__crm_lead__kanban_state__red
 msgid "Next activity late"
-msgstr "Sljedeća aktivnost kasni"
+msgstr "Slijedeća aktivnost kasni"
 
 #. module: crm
 #: code:addons/crm/models/crm_lead.py:0
@@ -2090,8 +2092,8 @@ msgid ""
 "Odoo helps you keep track of your sales pipeline to follow\n"
 "                    up potential sales and better forecast your future revenues."
 msgstr ""
-"Odoo Vam pomaže pratiti Vaše tokove prodaje za praćenje\n"
-"potencijalnih prodaja i bolju prognozu Vaših budućih prihoda."
+"Odoo vam pomaže pratiti vaše tokove prodaje za praćenja\n"
+"potencijalnih prodaja i bolju prognozu vaših budućih prihoda."
 
 #. module: crm
 #: model_terms:digest.tip,tip_description:crm.digest_tip_crm_2
@@ -2414,7 +2416,7 @@ msgstr "Vjerojatnost"
 #. module: crm
 #: model:crm.stage,name:crm.stage_lead3
 msgid "Proposition"
-msgstr "U pregovoru"
+msgstr "Proposition"
 
 #. module: crm
 #: model:ir.model.fields,field_description:crm.field_crm_lead__recurring_revenue_monthly_prorated
@@ -2620,7 +2622,7 @@ msgstr "Postavke"
 #. module: crm
 #: model:res.groups,name:crm.group_use_lead
 msgid "Show Lead Menu"
-msgstr "Prikaži izbornik poslovnih potencijala"
+msgstr "Pokaži vodeći izbornik"
 
 #. module: crm
 #: model:res.groups,name:crm.group_use_recurring_revenues
@@ -2723,11 +2725,6 @@ msgid ""
 msgstr ""
 "Etape omogućuju prodavaču da jednostavno prati kako je pojedina prilika\n"
 "pozicionirana u procesu prodaje."
-
-#. module: crm
-#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
-msgid "Consider leads created as of the"
-msgstr ""
 
 #. module: crm
 #: model_terms:ir.actions.act_window,help:crm.crm_activity_report_action
@@ -3126,6 +3123,13 @@ msgstr "KOristi razlog gubitka kako bi objasnili zašto je prilika izgubljena."
 msgid ""
 "Use the top left <i>Create</i> button, or send an email to %s to test the "
 "email gateway."
+msgstr ""
+
+#. module: crm
+#: model_terms:ir.ui.view,arch_db:crm.res_config_settings_view_form
+msgid ""
+"Use this button to update the probabilities of all leads. This can take up "
+"to several minutes depending on how many there are."
 msgstr ""
 
 #. module: crm

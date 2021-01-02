@@ -1,7 +1,7 @@
 import collections
 import logging
 
-from odoo import models
+from odoo import models, Command
 from odoo.tools import populate
 
 _logger = logging.getLogger(__name__)
@@ -35,5 +35,5 @@ class Partner(models.Model):
 
     def _populate(self, size):
         records = super()._populate(size)
-        self.env.ref('base.user_admin').write({'company_ids': [(4, rec.id) for rec in records]})  # add all created companies on user admin
+        self.env.ref('base.user_admin').write({'company_ids': [Command.link(rec.id) for rec in records]})  # add all created companies on user admin
         return records

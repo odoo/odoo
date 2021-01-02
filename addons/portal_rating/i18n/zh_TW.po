@@ -3,14 +3,17 @@
 # 	* portal_rating
 # 
 # Translators:
+# Andy Cheng <andy.cheng@richsoda.com>, 2019
+# Martin Trigaux, 2020
+# gogobook <O968041428@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2019-12-16 11:07+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -23,19 +26,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid ""
-"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
-"'/mail/chatter_post'}"
+msgid "#{widget.options['force_submit_url'] || '/mail/chatter_post'}"
 msgstr ""
-"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
-"'/mail/chatter_post'}"
-
-#. module: portal_rating
-#. openerp-web
-#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: portal_rating
 #. openerp-web
@@ -99,6 +91,7 @@ msgid "Details"
 msgstr "詳細訊息"
 
 #. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http__display_name
 #: model:ir.model.fields,field_description:portal_rating.field_mail_message__display_name
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__display_name
 msgid "Display Name"
@@ -112,14 +105,17 @@ msgid "Edit"
 msgstr "編輯"
 
 #. module: portal_rating
+#: model:ir.model,name:portal_rating.model_ir_http
+msgid "HTTP Routing"
+msgstr "HTTP 路由"
+
+#. module: portal_rating
 #. openerp-web
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "Half a star"
-msgstr "半顆星"
+msgstr "半星"
 
 #. module: portal_rating
 #. openerp-web
@@ -147,9 +143,10 @@ msgstr "我喜歡它"
 #: code:addons/portal_rating/static/src/js/portal_composer.js:0
 #, python-format
 msgid "I love it"
-msgstr "我超愛的"
+msgstr "我愛它"
 
 #. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http__id
 #: model:ir.model.fields,field_description:portal_rating.field_mail_message__id
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__id
 msgid "ID"
@@ -169,10 +166,11 @@ msgid "It's okay"
 msgstr "沒有問題"
 
 #. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http____last_update
 #: model:ir.model.fields,field_description:portal_rating.field_mail_message____last_update
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後更改日"
 
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_mail_message
@@ -191,11 +189,9 @@ msgstr "修改您的評論"
 #. openerp-web
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
 msgid "One star"
-msgstr "一顆星"
+msgstr "一星"
 
 #. module: portal_rating
 #: code:addons/portal_rating/models/rating.py:0
@@ -208,7 +204,7 @@ msgstr "只有網站編輯者才能更改評論"
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Post comment"
-msgstr "發表評論"
+msgstr "發佈評論"
 
 #. module: portal_rating
 #. openerp-web
@@ -226,7 +222,7 @@ msgstr "網站編輯者評論"
 #. module: portal_rating
 #: model:ir.model,name:portal_rating.model_rating_rating
 msgid "Rating"
-msgstr "評分"
+msgstr "評級"
 
 #. module: portal_rating
 #. openerp-web

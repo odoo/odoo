@@ -125,17 +125,17 @@ function factory(dependencies) {
         }
 
         /**
-         * Shift this chat window to the left on screen.
+         * Swap this chat window with the previous one.
          */
-        shiftLeft() {
-            this.manager.shiftLeft(this);
+        shiftPrev() {
+            this.manager.shiftPrev(this);
         }
 
         /**
-         * Shift this chat window to the right on screen.
+         * Swap this chat window with the next one.
          */
-        shiftRight() {
-            this.manager.shiftRight(this);
+        shiftNext() {
+            this.manager.shiftNext(this);
         }
 
         /**
@@ -167,7 +167,7 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeHasShiftLeft() {
+        _computeHasShiftPrev() {
             if (!this.manager) {
                 return false;
             }
@@ -183,7 +183,7 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeHasShiftRight() {
+        _computeHasShiftNext() {
             if (!this.manager) {
                 return false;
             }
@@ -349,13 +349,13 @@ function factory(dependencies) {
                 'thread',
             ],
         }),
-        hasShiftLeft: attr({
-            compute: '_computeHasShiftLeft',
+        hasShiftPrev: attr({
+            compute: '_computeHasShiftPrev',
             dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
-        hasShiftRight: attr({
-            compute: '_computeHasShiftRight',
+        hasShiftNext: attr({
+            compute: '_computeHasShiftNext',
             dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
@@ -441,6 +441,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'chatWindow',
             isCausal: true,
+            readonly: true,
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.

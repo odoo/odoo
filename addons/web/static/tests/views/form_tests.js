@@ -3960,10 +3960,10 @@ QUnit.module('Views', {
             "Clicking out of a dirty line while editing should trigger a warning modal.");
 
         await testUtils.dom.click($('.modal').find('.btn-primary'));
-        // use of owlCompatibilityNextTick because there are two sequential updates of the
+        // use of owlCompatibilityExtraNextTick because there are two sequential updates of the
         // control panel (which is written in owl): each of them waits for the next animation frame
         // to complete
-        await testUtils.owlCompatibilityNextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.strictEqual(form.$('.o_data_cell').first().text(), "first record",
             "Value should have been reset to what it was before editing began.");
         assert.containsOnce(form, '.o_data_row',
@@ -4497,7 +4497,7 @@ QUnit.module('Views', {
 
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'trigger an onchange');
-        await testUtils.owlCompatibilityNextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.strictEqual(form.$('.o_data_row td:first').text(), 'foo changed',
             "onchange should have been correctly applied on field in o2m list");
@@ -4558,7 +4558,7 @@ QUnit.module('Views', {
             "the initial value should be the default one");
 
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'trigger an onchange');
-        await testUtils.owlCompatibilityNextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.strictEqual(form.$('.o_data_row td:first').text(), 'foo changed',
             "onchange should have been correctly applied on field in o2m list");
@@ -5263,7 +5263,7 @@ QUnit.module('Views', {
             'display_name cell should not be visible in edit mode');
 
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-        await testUtils.owlCompatibilityNextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(form.$('.o_form_view .o_list_view tbody tr:first input[name="display_name"]'),
             'oe_read_only', 'display_name input should have oe_read_only class');
 
@@ -5302,7 +5302,7 @@ QUnit.module('Views', {
             'display_name cell should be visible in edit mode');
 
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-        await testUtils.owlCompatibilityNextTick();
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(form.$('.o_form_view .o_list_view tbody tr:first input[name="display_name"]'),
             'oe_edit_only', 'display_name input should have oe_edit_only class');
 
@@ -9616,7 +9616,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('reload a form view with a pie chart does not crash', async function (assert) {
-        assert.expect(3);
+        assert.expect(2);
 
         const form = await createView({
             View: FormView,
@@ -9628,15 +9628,11 @@ QUnit.module('Views', {
         });
 
         assert.containsOnce(form, '.o_widget');
-        const canvasId1 = form.el.querySelector('.o_widget canvas').id;
 
         await form.reload();
         await testUtils.nextTick();
 
         assert.containsOnce(form, '.o_widget');
-        const canvasId2 = form.el.querySelector('.o_widget canvas').id;
-        // A new canvas should be found in the dom
-        assert.notStrictEqual(canvasId1, canvasId2);
 
         form.destroy();
         delete widgetRegistry.map.test;
@@ -9666,7 +9662,7 @@ QUnit.module('Views', {
 
         form.destroy();
         delete fieldRegistryOwl.map.custom;
-        
+
         assert.verifySteps(['mounted', 'willUnmount']);
     });
 });

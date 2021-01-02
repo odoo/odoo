@@ -561,12 +561,20 @@ var SnippetEditor = Widget.extend({
 
         return Promise.all(defs).then(() => {
             const options = _.sortBy(this.styles, '__order');
+            const firstOptions = [];
             options.forEach(option => {
                 if (option.isTopOption) {
-                    $optionsSectionBtnGroup.prepend(option.$el);
+                    if (option.isTopFirstOption) {
+                        firstOptions.push(option);
+                    } else {
+                        $optionsSectionBtnGroup.prepend(option.$el);
+                    }
                 } else {
                     $optionsSection.append(option.$el);
                 }
+            });
+            firstOptions.forEach(option => {
+                $optionsSectionBtnGroup.prepend(option.$el);
             });
             $optionsSection.toggleClass('d-none', options.length === 0);
         });
@@ -927,12 +935,6 @@ var SnippetsMenu = Widget.extend({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         options = options || {};
-        this.trigger_up('getRecordInfo', {
-            recordInfo: options,
-            callback: function (recordInfo) {
-                _.defaults(options, recordInfo);
-            },
-        });
 
         this.options = options;
         if (!this.options.snippets) {
@@ -1031,13 +1033,6 @@ var SnippetsMenu = Widget.extend({
                 return;
             }
             if ($target.closest(this._notActivableElementsSelector).length) {
-                return;
-            }
-            const $oeStructure = $target.closest('.oe_structure');
-            if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
-                // If empty oe_structure, encourage using snippets in there by
-                // making them "wizz" in the panel.
-                this.$snippets.odooBounce();
                 return;
             }
             this._activateSnippet($target);
@@ -1632,14 +1627,6 @@ var SnippetsMenu = Widget.extend({
         var $html = $(html);
         var $scroll = $html.siblings('#o_scroll');
 
-        // TODO remove me in master: introduced in a 14.0 fix to allow users to
-        // customize their navbar with 'Boxed' website header, which they could
-        // not because of a wrong XML selector they may not update.
-        const $headerNavFix = $html.find('[data-js="HeaderNavbar"][data-selector="#wrapwrap > header > nav"]');
-        if ($headerNavFix.length) {
-            $headerNavFix[0].dataset.selector = '#wrapwrap > header nav.navbar';
-        }
-
         this.templateOptions = [];
         var selectors = [];
         var $styles = $html.find('[data-selector]');
@@ -1963,7 +1950,12 @@ var SnippetsMenu = Widget.extend({
                     // Color-customize dynamic SVGs in dropped snippets with current theme colors.
                     [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
                         const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
-                        colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
+                        colorCustomizedURL.searchParams.forEach((value, key) => {
+                            const match = key.match(/^c([1-5])$/);
+                            if (match) {
+                                colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`))
+                            }
+                        })
                         dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
                     });
 

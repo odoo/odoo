@@ -838,16 +838,16 @@ class TestTemplating(ViewCase):
         # First t-field should have an indication of xpath
         [node] = arch.xpath('//*[@t-field="a"]')
         self.assertEqual(
-            node.get('data-oe-field-xpath'),
+            node.get('data-oe-xpath'),
             '/hello[1]/world[2]',
-            'First t-field has indication of xpath through dedicated attribute')
+            'First t-field has indication of xpath')
 
         # Second t-field, from inheritance, should also have an indication of xpath
         [node] = arch.xpath('//*[@t-field="b"]')
         self.assertEqual(
-            node.get('data-oe-field-xpath'),
+            node.get('data-oe-xpath'),
             '/xpath/world',
-            'Inherited t-field has indication of xpath through dedicated attribute')
+            'Inherited t-field has indication of xpath')
 
         # The most important assert
         # The last world xpath should not have been impacted by the t-field from inheritance
@@ -2373,7 +2373,7 @@ class TestViews(ViewCase):
             self.assertIn(expected_message, message)
 
 
-class TestViewTranslations(common.SavepointCase):
+class TestViewTranslations(common.TransactionCase):
     # these tests are essentially the same as in test_translate.py, but they use
     # the computed field 'arch' instead of the translated field 'arch_db'
 

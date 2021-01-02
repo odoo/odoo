@@ -511,7 +511,7 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
+                <tree string="Purchase Order" decoration-bf="message_unread==True"
                       decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" sample="1">
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
@@ -542,7 +542,7 @@
             <field name="model">purchase.order</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
+                <tree string="Purchase Order" decoration-bf="message_unread==True"
                       class="o_purchase_order" js_class="purchase_list_dashboard" sample="1">
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>

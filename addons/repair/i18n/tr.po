@@ -3,29 +3,30 @@
 # 	* repair
 # 
 # Translators:
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# Mehmet Demirel <mdemirell@gmail.com>, 2020
-# Ramiz Deniz Öner <deniz@denizoner.com>, 2020
-# Abdullah Onur Uğur <aonurugur@outlook.com>, 2020
-# Buket Şeker <buket_skr@hotmail.com>, 2020
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2018
+# Mehmet Demirel <mdemirell@gmail.com>, 2018
+# Ramiz Deniz Öner <deniz@denizoner.com>, 2018
+# UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
+# Levent Karakaş <levent@mektup.at>, 2019
+# Yedigen, 2019
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
-# Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
-# Umur Akın <umura@projetgrup.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# Martin Trigaux, 2020
+# Umur Akın <umura@projetgrup.com>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2018-03-22 16:02+0000\n"
+"Last-Translator: Murat Kaplan <muratk@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +43,7 @@ msgstr "${(object.name or '').replace('/','_')}"
 #: model:mail.template,subject:repair.mail_template_repair_quotation
 msgid "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 msgstr ""
-"${object.partner_id.name} Onarım Talebi (Ref ${object.name or 'n/a' })"
+"${object.partner_id.name} Onarım Siparişi (Ref ${object.name or 'n/a' })"
 
 #. module: repair
 #: model:ir.actions.report,print_report_name:repair.action_report_repair_order
@@ -189,7 +190,7 @@ msgstr "Aktiviteler"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Aktivite İstisna Donatımı"
+msgstr "Etkinlik İstisna Donatımı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
@@ -234,7 +235,7 @@ msgstr "Onarım Öncesi"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Cancel"
-msgstr "İptal et"
+msgstr "İptal"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -367,7 +368,7 @@ msgstr "Para Birimi"
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Customer"
-msgstr "Müşteri"
+msgstr "Kayıtlı Müşteri"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
@@ -418,7 +419,7 @@ msgstr "Gerçekten fatura(lar) oluşturmak istiyor musunuz?"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
 msgid "Done"
-msgstr "Biten"
+msgstr "Tamamlandı"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__draft
@@ -464,7 +465,7 @@ msgstr "Takipçiler (Kanallar)"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Takipçiler (İş ortakları)"
+msgstr "Tekipçiler (İş ortakları)"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_type_icon
@@ -474,7 +475,7 @@ msgstr "Harika font ikonları örn. fa-görevler"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Future Activities"
-msgstr "Sonraki Aktiviteler"
+msgstr "Yapılacaklar"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -616,7 +617,7 @@ msgstr "Yevmiye Kaydı"
 #. module: repair
 #: model:ir.model,name:repair.model_account_move_line
 msgid "Journal Item"
-msgstr "Yevmiye Kalemi"
+msgstr "Yevmiye Kalemleri"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move____last_update
@@ -630,7 +631,7 @@ msgstr "Yevmiye Kalemi"
 #: model:ir.model.fields,field_description:repair.field_stock_traceability_report____last_update
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
 msgid "Last Modified on"
-msgstr "Son Düzenleme"
+msgstr "Son Güncelleme"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__write_uid
@@ -677,7 +678,7 @@ msgstr "Ana Ek"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
 msgid "Message Delivery error"
-msgstr "Mesaj Teslim hatası"
+msgstr "Mesaj İletilme Hatası"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
@@ -697,17 +698,17 @@ msgstr "Onarım siparişi tarafından oluşturulan hareket"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "Sonraki Aktivite Zaman Sınırı"
+msgstr "Sonraki Faaliyet Zaman Sınırı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "Sonraki Aktivite Özeti"
+msgstr "Sonraki Faaliyet Özeti"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_type_id
 msgid "Next Activity Type"
-msgstr "Sonraki Aktivite Türü"
+msgstr "Sonraki Faaliyet Türü"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
@@ -756,7 +757,7 @@ msgstr "Eylemlerin Sayısı"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
 msgid "Number of errors"
-msgstr "Hata sayısı"
+msgstr "Hata Sayıları"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction_counter
@@ -909,7 +910,7 @@ msgstr "Kaldır"
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
-msgstr "Onarım"
+msgstr "Tamir"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
@@ -971,12 +972,6 @@ msgstr "Onarım Teklif #:"
 #: model:ir.model.fields,field_description:repair.field_repair_order__name
 msgid "Repair Reference"
 msgstr "Onarım Referansı"
-
-#. module: repair
-#: model:product.product,name:repair.product_service_order_repair
-#: model:product.template,name:repair.product_service_order_repair_product_template
-msgid "Repair Services"
-msgstr "Onarım Servisleri"
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_tags
@@ -1044,7 +1039,7 @@ msgstr "Sorumlu Kullanıcı"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Teslim etme hatası"
+msgstr "SMS Ulaştırma hatası"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1070,8 +1065,8 @@ msgstr "Teklifi Gönder"
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
-msgid "Serial number is required for operation line with product '%s'"
-msgstr "Seri numarası, '%s' ürünlü işlem kalemi için gereklidir"
+msgid "Serial number is required for operation lines with products: %s"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1086,7 +1081,7 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
 msgid "Source Location"
-msgstr "Kaynak Konum"
+msgstr "Kaynak Konumu"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1216,7 +1211,7 @@ msgstr "Tür"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Kayıttaki istisna faaliyetinin türü."
+msgstr "Kayıttaki istisna etkinliğinin türü."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
@@ -1228,7 +1223,7 @@ msgstr "Onarımda"
 #: model:ir.model.fields,field_description:repair.field_repair_line__price_unit
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Unit Price"
-msgstr "Birim Fiyat"
+msgstr "Birim Maliyet"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__product_uom_name
@@ -1236,12 +1231,6 @@ msgstr "Birim Fiyat"
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
 msgstr "Ölçü Birimi"
-
-#. module: repair
-#: model:product.product,uom_name:repair.product_service_order_repair
-#: model:product.template,uom_name:repair.product_service_order_repair_product_template
-msgid "Units"
-msgstr "Adet"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
@@ -1277,7 +1266,7 @@ msgstr "Yetersiz Onarım Miktarını Uyar"
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
-msgstr "İkaz"
+msgstr "Uyarı"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__guarantee_limit

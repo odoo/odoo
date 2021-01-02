@@ -4,17 +4,19 @@
 # 
 # Translators:
 # DE T2 <e2f48d4s5vd1s2@outlook.com>, 2020
-# Martin Trigaux, 2020
 # b4d8887ced18b222d41dc1101b082e15, 2020
 # e2f FFE <e2f_de_FFE@outlook.com>, 2020
+# Martin Trigaux, 2020
+# Leon Grill <leg@odoo.com>, 2020
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: e2f FFE <e2f_de_FFE@outlook.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-02-13 10:47+0000\n"
+"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,11 +38,6 @@ msgstr "Aufgabe in einem existierenden Projekt erstellen"
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Create a task in sales order's project"
 msgstr ""
-
-#. module: sale_project
-#: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
-msgid "Create invoice"
-msgstr "Erzeuge Rechnung"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
@@ -71,7 +68,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
 msgid "Generated Task"
-msgstr ""
+msgstr "Generierte Aufgabe"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__id
@@ -98,13 +95,18 @@ msgstr "Ist eine Dienstleistung"
 #: model:ir.model.fields,field_description:sale_project.field_sale_order____last_update
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
 #, python-format
 msgid "New"
 msgstr "Neu"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
+msgid "Number of Projects"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
@@ -134,9 +136,13 @@ msgstr "Produktvorlage"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Project"
 msgstr "Projekt"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "Project Overview"
+msgstr ""
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -157,6 +163,7 @@ msgstr ""
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 #, python-format
 msgid "Projects"
 msgstr "Projekte"
@@ -177,7 +184,7 @@ msgstr "Verkaufsauftrag"
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order"
-msgstr "Verkaufsauftrag"
+msgstr "Verkaufsauftrag "
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
@@ -189,7 +196,7 @@ msgstr "Auftragselement"
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Auftragsposition"
+msgstr "Kundenauftragszeile"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__is_service
@@ -249,6 +256,12 @@ msgid "Service Tracking"
 msgstr "Dienstverfolgung"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__project_overview
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_overview
+msgid "Show Project Overview"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
 msgid "Task"
 msgstr "Aufgabe"
@@ -284,12 +297,6 @@ msgid "Tasks associated to this sale"
 msgstr "Aufgaben für diesen Auftrag"
 
 #. module: sale_project
-#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
-msgid ""
-"The Project should be linked to a Sale Order to select an Sale Order Items."
-msgstr ""
-
-#. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -311,6 +318,12 @@ msgstr ""
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
+msgstr ""
+
+#. module: sale_project
+#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
+msgid ""
+"The project should be linked to a sale order to select a sale order item."
 msgstr ""
 
 #. module: sale_project

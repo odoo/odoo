@@ -3,17 +3,17 @@
 # 	* sale_stock
 # 
 # Translators:
-# Bohdan Lisnenko, 2020
+# Bohdan Lisnenko, 2019
 # ТАрас <tratatuta@i.ua>, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
 "Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -68,21 +68,6 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">Продано</span>"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>Product</span>"
-msgstr "<span>Товар</span>"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>Quantity</span>"
-msgstr "<span>Кількість</span>"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>SN/LN</span>"
-msgstr "<span>Серійний номер/Партійний номер</span>"
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
 msgstr "<strong>Референс клієнта:</strong>"
@@ -125,7 +110,7 @@ msgid ""
 msgstr ""
 "Відповідно до налаштування товару, доставлена кількість може автоматично обчислюватися за допомогою механізму:\n"
 "   - Вручну: кількість на рядку встановлюється вручну\n"
-"   - Аналітика з витрат: кількість - сума від опублікованих витрат\n"
+"   - Аналітика з витрат: кількість - сума від витрачених витрат\n"
 "   - Табель: кількість - це сума годин, записаних на завданні, пов'язані з цим рядком продажу\n"
 "   - Складські переміщення: кількість надходить від підтверджених комплектувань\n"
 
@@ -233,11 +218,6 @@ msgstr ""
 "замовлення."
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
-msgid "Display Lots & Serial Numbers on Invoices"
-msgstr "Відображати партії та серійні номери на рахунках"
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
@@ -266,16 +246,10 @@ msgid "Display Qty Widget"
 msgstr "Відобразити віджет кількості"
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_lot_on_invoice
-msgid "Display Serial & Lot Number on Invoices"
-msgstr "Відображати партії та серійні номери на рахунках"
-
-#. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr ""
-"Відображати інкотермс на замовленні на продаж та пов'язаних рахунках-"
-"фактурах"
+"Відображати інкотермс на замовлення на продаж та відповідні рахунки-фактури"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
@@ -295,11 +269,6 @@ msgid "Documentation"
 msgstr "Документація"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
-msgid "Draft SO"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
 msgstr "Дата набрання чинності"
@@ -312,7 +281,7 @@ msgstr "Виняток стався під час комплектування:"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr "Винятки виникли в замовленні на продаж:"
+msgstr "Виключення відбулося на замовленні(ях) на продаж:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -483,15 +452,10 @@ msgid "Lot/Serial"
 msgstr "Партія/Серійний номер"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr "Партії та серійні номери будуть з'являтися на рахунках"
-
-#. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
-msgstr "Виготовлення на замовлення"
+msgstr "Виготовлення під замовлення"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -531,7 +495,7 @@ msgstr "Метод оновлення доставленої кількості"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr "Очікувані наступні дати доставки"
+msgstr "Очікувані дати доставки на наступний"
 
 #. module: sale_stock
 #. openerp-web
@@ -597,6 +561,11 @@ msgid "Qty To Deliver"
 msgstr "К-сть для доставки"
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+msgid "Quotations"
+msgstr "Комерційні пропозиції"
+
+#. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
@@ -611,19 +580,6 @@ msgid "Reserved"
 msgstr "Зарезервовано"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid ""
-"Reserving products manually in delivery orders or by running the scheduler "
-"is advised to better manage priorities in case of long customer lead times "
-"or/and frequent stock-outs. By default, the scheduler runs automatically "
-"every 24 hours."
-msgstr ""
-"Бронюючи товари вручну в замовленнях на доставку або керуючи планувальником,"
-" рекомендується краще керувати пріоритетами у випадку довгого терміну "
-"обслуговування клієнтів та/або частого вилучення запасів. За замовчуванням "
-"планувальник запускається автоматично кожні 24 години."
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
 msgstr "Маршрут"
@@ -636,7 +592,7 @@ msgstr "Рядок продажу"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
-msgstr "Замовлення на продаж"
+msgstr "Замовлення"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -667,7 +623,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Рядок замовлення на продаж"
+msgstr "Рядок замовлення"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_location_route_view_form_inherit_sale_stock
@@ -697,7 +653,7 @@ msgstr "Запланована дата"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
-msgstr "Час проведення безпеки"
+msgstr "Безпека часу проведення"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
@@ -854,11 +810,6 @@ msgstr "Коли усі товари готові"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "When to reserve sold products"
-msgstr "Коли зарезервувати продані товари"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
 msgstr "Коли розпочати доставку"
 
@@ -890,7 +841,7 @@ msgstr "Скасовано"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "days"
-msgstr "дні"
+msgstr "днів"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking

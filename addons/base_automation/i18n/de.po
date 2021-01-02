@@ -3,18 +3,30 @@
 # 	* base_automation
 # 
 # Translators:
-# Martin Trigaux, 2020
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
+# Bülent Tiknas <btiknas@googlemail.com>, 2017
+# Wolfgang Taferner, 2017
+# Niki Waibel, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Anja Funk <anja.funk@afimage.de>, 2018
+# Johannes Croe <jcr@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: philku79 <philip.kuss@gmx.de>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -209,19 +221,19 @@ msgid ""
 "                    as you are effectively disabling a customization that may set\n"
 "                    important and/or required fields."
 msgstr ""
-"Deaktivieren Sie diese automatisierte Aufgabe, um den Arbeitsablauf wieder zu ermöglichen.\n"
-"Beachten Sie, dass alle Daten nach dieser Anpassung womöglich beschädigt sein können,\n"
-"da eine diese Aufgabe mitunter wichtige Felder anpasst."
+"Deaktivieren Sie diese automatisierte Aufgabe, um den Workflow wieder zu ermöglichen.\n"
+"Beachten Sie, dass alle Daten nach diesem Schritt womöglich beschädigt sein können, da eine diese Aufgabe mitunter wichtige Modifikationen an relevanten Feldern vornimmt."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
 msgid "Due Date In"
-msgstr "Fälligkeitsdatum"
+msgstr "Fälligkeitsdatum in"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range_type
@@ -262,6 +274,7 @@ msgstr "Stunden"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__id
 msgid "ID"
 msgstr "ID"
 
@@ -290,6 +303,7 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server____last_update
 msgid "Last Modified on"
 msgstr "Zuletzt geändert am"
 
@@ -521,18 +535,19 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
-"Type of server action. The following values are available:\n"
-"- 'Execute Python Code': a block of python code that will be executed\n"
-"- 'Create': create a new record with new values\n"
-"- 'Update a Record': update the values of a record\n"
-"- 'Execute several actions': define an action that triggers several other server actions\n"
-"- 'Send Email': automatically send an email (Discuss)\n"
-"- 'Add Followers': add followers to a record (Discuss)\n"
-"- 'Create Next Activity': create an activity (Discuss)"
+"Art der Server-Aktion. Folgende Werte stehen zur Verfügung:\n"
+"- 'Python Code ausführen': ein Block von Python-Code, der ausgeführt wird\n"
+"- Anlegen\": einen neuen Datensatz mit neuen Werten anlegen\n"
+"- 'Update a Record': die Werte eines Datensatzes aktualisieren\n"
+"- 'Mehrere Aktionen ausführen': Definieren Sie eine Aktion, die mehrere andere Server-Aktionen auslöst.\n"
+"- E-Mail senden': automatisch eine E-Mail senden (Diskutieren)\n"
+"- Anhänger hinzufügen\": Anhänger zu einem Datensatz hinzufügen (Diskutieren)\n"
+"- Nächste Aktivität erstellen\": eine Aktivität erstellen (Diskutieren)"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
 msgid "Usage"
 msgstr "Verwendung"
 
@@ -579,6 +594,7 @@ msgid "Value Mapping"
 msgstr "Wertzuordnung"
 
 #. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
@@ -646,3 +662,11 @@ msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
 "Sie können diese automatisierte Aufgabe deaktivieren oder bearbeiten, um das"
 " Problem zu beheben."
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
+msgstr ""

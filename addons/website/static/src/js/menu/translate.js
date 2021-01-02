@@ -26,7 +26,8 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
         });
         this._mustEditTranslations = context.edit_translations;
         if (this._mustEditTranslations) {
-            var url = window.location.href.replace(/([?&])&*edit_translations[^&#]*&?/, '\$1');
+            var url = new URL(window.location.href);
+            url.searchParams.delete('edit_translations');
             window.history.replaceState({}, null, url);
 
             this._startTranslateMode();

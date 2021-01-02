@@ -2,19 +2,12 @@
 # This file contains the translation of the following modules:
 # 	* payment_stripe
 # 
-# Translators:
-# Martin Trigaux, 2020
-# Manuela Silva <manuelarodsilva@gmail.com>, 2020
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
-# Pedro Filipe <pedro2.10@hotmail.com>, 2020
-# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2020\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +20,7 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "&times;"
-msgstr "&times;"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_image_url
@@ -36,9 +29,6 @@ msgid ""
 "product. As defined in your Stripe profile. See: "
 "https://stripe.com/docs/checkout"
 msgstr ""
-"Um URL relativo ou absoluto que aponta para uma imagem quadrada da sua marca"
-" ou produto. Conforme definido no seu perfil do Stripe. Consulte: "
-"https://stripe.com/docs/checkout"
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_image_url
@@ -48,38 +38,15 @@ msgstr ""
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
-#: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Close"
-msgstr "Fechar"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__display_name
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__display_name
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__display_name
-msgid "Display Name"
-msgstr "Nome"
+msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
 #: code:addons/payment_stripe/static/src/xml/stripe_templates.xml:0
 #, python-format
 msgid "Error"
-msgstr "Erro"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__id
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token__id
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__id
-msgid "ID"
-msgstr "ID"
-
-#. module: payment_stripe
-#: model:ir.model.fields,help:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid ""
-"If you enable webhooks, this secret is used to verify the electronic "
-"signature of events sent by Stripe to Odoo. Failing to set this field in "
-"Odoo will disable the webhook system for this acquirer entirely."
 msgstr ""
 
 #. module: payment_stripe
@@ -87,19 +54,12 @@ msgstr ""
 #: code:addons/payment_stripe/static/src/js/stripe.js:0
 #, python-format
 msgid "Just one more second, We are redirecting you to Stripe..."
-msgstr "Só mais um segundo, nós estamos a redirecioná-lo para Stripe..."
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer____last_update
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_token____last_update
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction____last_update
-msgid "Last Modified on"
-msgstr "Última Modificação em"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Intermediário de Pagamento"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_token__stripe_payment_method
@@ -109,12 +69,12 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_token
 msgid "Payment Token"
-msgstr "Código de Pagamento"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model,name:payment_stripe.model_payment_transaction
 msgid "Payment Transaction"
-msgstr "Transação de Pagamento"
+msgstr ""
 
 #. module: payment_stripe
 #. openerp-web
@@ -134,40 +94,29 @@ msgstr ""
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__provider
 msgid "Provider"
-msgstr "Provedor"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields.selection,name:payment_stripe.selection__payment_acquirer__provider__stripe
 msgid "Stripe"
-msgstr "Stripe"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent
 msgid "Stripe Payment Intent ID"
-msgstr "Id. da Intenção de Pagamentos Stripe"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_transaction__stripe_payment_intent_secret
-msgid "Stripe Payment Intent Secret"
-msgstr "Pagamentos Stripe: Segredo de Intenção"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "Código Plublicável Stripe"
+msgstr ""
 
 #. module: payment_stripe
 #: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr "Cópdigo Secreto Stripe"
-
-#. module: payment_stripe
-#: model:ir.model.fields,field_description:payment_stripe.field_payment_acquirer__stripe_webhook_secret
-msgid "Stripe Webhook Secret"
 msgstr ""
 
 #. module: payment_stripe
-#: code:addons/payment_stripe/models/payment.py:0
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe gave us the following info about the problem: '%s'"
@@ -176,14 +125,14 @@ msgstr ""
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
-msgid "Stripe: %(count)s orders found for reference %(reference)s"
+msgid "Stripe: %s orders found for reference %s"
 msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0
 #, python-format
 msgid "Stripe: no order found for reference %s"
-msgstr "Stripe: nenhuma compra encontrada por referência %s"
+msgstr ""
 
 #. module: payment_stripe
 #: code:addons/payment_stripe/models/payment.py:0

@@ -3,14 +3,25 @@
 # 	* uom
 # 
 # Translators:
+# enjolras <yo@miguelrevilla.com>, 2018
+# ced903afe967c2a46d1036224972db9d, 2018
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2018
+# José Vicente <txusev@gmail.com>, 2018
+# RGB Consulting <odoo@rgbconsulting.com>, 2018
+# Nicolás Broggi <rnbroggi@gmail.com>, 2018
+# Israel Cevallos <israel.cevallos1792@gmail.com>, 2018
+# Antonio Trueba, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
+# Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2018-06-25 08:30+0000\n"
 "Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -91,13 +102,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_uid
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_uid
 msgid "Created by"
-msgstr "Creado por"
+msgstr "Creada por"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category__create_date
 #: model:ir.model.fields,field_description:uom.field_uom_uom__create_date
 msgid "Created on"
-msgstr "Creado el"
+msgstr "Creada el"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_day
@@ -108,7 +119,7 @@ msgstr "Días"
 #: model:ir.model.fields,field_description:uom.field_uom_category__display_name
 #: model:ir.model.fields,field_description:uom.field_uom_uom__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre para mostrar"
 
 #. module: uom
 #: model:uom.uom,name:uom.product_uom_dozen
@@ -148,7 +159,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:uom.field_uom_category__id
 #: model:ir.model.fields,field_description:uom.field_uom_uom__id
 msgid "ID"
-msgstr "ID"
+msgstr "ID (identificación)"
 
 #. module: uom
 #: model:ir.model.fields,field_description:uom.field_uom_category____last_update
@@ -214,6 +225,19 @@ msgid "Smaller than the reference Unit of Measure"
 msgstr "Más pequeña que la unidad de medida de referencia"
 
 #. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"Some critical fields have been modified on %s.\n"
+"Note that existing data WON'T be updated by this change.\n"
+"\n"
+"As units of measure impact the whole system, this may cause critical issues.\n"
+"E.g. modifying the rounding could disturb your inventory balance.\n"
+"\n"
+"Therefore, changing core units of measure in a running database is not recommended."
+msgstr ""
+
+#. module: uom
 #: model:ir.model.fields,help:uom.field_uom_uom__rounding
 msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a Unit "
@@ -226,6 +250,14 @@ msgstr ""
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_gt_zero
 msgid "The conversion ratio for a unit of measure cannot be 0!"
 msgstr "¡El ratio de conversión para una unidad de medida no puede ser 0!"
+
+#. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid ""
+"The following units of measure are used by the system and cannot be deleted: %s\n"
+"You can archive them instead."
+msgstr ""
 
 #. module: uom
 #: model:ir.model.constraint,message:uom.constraint_uom_uom_factor_reference_is_one
@@ -307,7 +339,7 @@ msgid ""
 msgstr ""
 "Las unidades de medida pertenecientes a la misma categoría pueden ser\n"
 "convertidas entre sí. Por ejemplo,  la categoría\n"
-"<i>'Tiempo'</i>, tendrá las siguientes unidades de medida: \n"
+"<I>'Tiempo'</i>, tendrá las siguientes unidades de medida: \n"
 "Horas, Días."
 
 #. module: uom
@@ -335,6 +367,12 @@ msgid "Volume"
 msgstr "Volumen"
 
 #. module: uom
+#: code:addons/uom/models/uom_uom.py:0
+#, python-format
+msgid "Warning for %s"
+msgstr "Aviso para %s"
+
+#. module: uom
 #: model:uom.category,name:uom.product_uom_categ_kgm
 msgid "Weight"
 msgstr "Peso"
@@ -343,24 +381,6 @@ msgstr "Peso"
 #: model:uom.category,name:uom.uom_categ_wtime
 msgid "Working Time"
 msgstr "Horario de trabajo"
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid "You cannot delete this UoM Category as it is used by the system."
-msgstr ""
-"No puede eliminar esta categoría de unidad de medida, ya que es utilizada "
-"por el sistema."
-
-#. module: uom
-#: code:addons/uom/models/uom_uom.py:0
-#, python-format
-msgid ""
-"You cannot delete this UoM as it is used by the system. You should rather "
-"archive it."
-msgstr ""
-"No puede eliminar esta unidad de medida, ya que es utilizada por el sistema."
-" Debería archivarla en su lugar."
 
 #. module: uom
 #: model_terms:ir.actions.act_window,help:uom.product_uom_form_action

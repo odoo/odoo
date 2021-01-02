@@ -3,30 +3,41 @@
 # 	* portal
 # 
 # Translators:
-# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2020
-# Moka Tourisme <hello@mokatourisme.fr>, 2020
+# Lucas Deliege <lud@odoo.com>, 2016
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
+# Florian Hatat, 2016
+# Kévin R., 2016
+# Xavier Symons <xsy@openerp.com>, 2017
+# Jean-Marc Dupont <jmd@6it.fr>, 2017
+# Melanie Bernard <mbe@odoo.com>, 2017
+# Micky Jault <micky037@hotmail.fr>, 2017
+# Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
+# Frédéric LIETART <stuff@tifred.fr>, 2017
+# Phyrexian <phyrexian09@gmail.com>, 2017
+# Richard Mathot <rim@odoo.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# fr trans <e2ffr05@hotmail.com>, 2018
+# Christophe CHAUVET <christophe.chauvet@gmail.com>, 2019
+# Fabien Bourgeois <fabien@yaltik.com>, 2019
+# William Olhasque <william.olhasque@scopea.fr>, 2019
+# Moka Tourisme <hello@mokatourisme.fr>, 2019
+# Eloïse Stilmant <est@odoo.com>, 2019
+# Cécile Collart <cco@odoo.com>, 2019
+# gdp Odoo <gdp@odoo.com>, 2019
+# Martin Trigaux, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
-# Fabien Bourgeois <fabien@yaltik.com>, 2020
 # Stephane DAGUET <stephane@darbtech.net>, 2020
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2020
 # Xavier Belmere <Info@cartmeleon.com>, 2020
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Eloïse Stilmant <est@odoo.com>, 2020
-# William Olhasque <william.olhasque@scopea.fr>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
-# Nathan Grognet <ngr@odoo.com>, 2020
 # a270031086f2a0d3514bc0cb507b48f6, 2020
-# gdp Odoo <gdp@odoo.com>, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
-# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: a270031086f2a0d3514bc0cb507b48f6, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,15 +69,13 @@ msgid ""
 "<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
 "title=\"Previous\"/>"
 msgstr ""
-"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Précédent\" "
-"title=\"Précédent\"/>"
+"<i class=\"fa fa-chevron-left\" role=\"img\" aria-label=\"Previous\" "
+"title=\"Previous\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
 msgid "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
-msgstr ""
-"<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Suivant\" "
-"title=\"Suivant\"/>"
+msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=\"Next\"/>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -77,6 +86,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/> Modifier"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -341,6 +358,7 @@ msgstr "Modifier le mot de passe"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
@@ -356,9 +374,9 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Modifier le nom de la société n'est pas permis une fois que le(s) "
-"documents(s) ont été créés pour votre compte. Merci de nous contacter "
-"directement pour cette opération."
+"Modifier le nom de la société n'est pas permis une fois le(s) documents(s) "
+"ont été créés pour votre compte. Merci de nous contacter directement pour "
+"cette opération."
 
 #. module: portal
 #. openerp-web
@@ -527,7 +545,7 @@ msgstr "Dû aujourd'hui"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Email"
-msgstr "Email"
+msgstr "Courriel"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
@@ -615,7 +633,7 @@ msgstr "Message d'invitation"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
 #: model:ir.model.fields,field_description:portal.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -688,7 +706,7 @@ msgstr "Nouveau mot de passe:"
 #: model_terms:ir.ui.view,arch_db:portal.pager
 #, python-format
 msgid "Next"
-msgstr "Suivant"
+msgstr "Suivante"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__note
@@ -828,7 +846,7 @@ msgid ""
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
 "Sélectionnez dans la liste ci-dessous les contacts qui doivent faire partie du portail.\n"
-"Les adresses email des contacts sélectionnés doivent être correctes et uniques.\n"
+"Les adresses courriels des contacts sélectionnés doivent être correctes et uniques.\n"
 "Si nécessaire, vous pouvez corriger ces adresses directement dans la liste."
 
 #. module: portal
@@ -843,7 +861,7 @@ msgstr "Envoyer"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr "Plusieurs contacts ont la même adresse email :"
+msgstr "Plusieurs contacts ont la même adresse courriel :"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -865,15 +883,24 @@ msgstr "Se connecter"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr "Des contacts ont une adresse email incorrecte :"
+msgstr "Des contacts ont une adresse courriel incorrecte :"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
-"Des contacts ont la même adresse email qu'un utilisateur existant du portail"
-" :"
+"Des contacts ont la même adresse courriel qu'un utilisateur existant du "
+"portail :"
+
+#. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
+msgstr ""
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -982,14 +1009,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Ce texte est inclus dans l'email envoyé aux nouveaux utilisateurs du "
+"Ce texte est inclus dans le courriel envoyé aux nouveaux utilisateurs du "
 "portail."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
-"Ce texte est inclus dans les emails envoyés aux nouveaux utilisateurs du "
+"Ce texte est inclus dans les courriels envoyés aux nouveaux utilisateurs du "
 "portail."
 
 #. module: portal
@@ -1038,6 +1065,7 @@ msgstr "Visible"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
@@ -1072,6 +1100,7 @@ msgstr "Messages du site web"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,help:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
@@ -1147,8 +1176,8 @@ msgstr "Vous devez être"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"Vous devez avoir une adresse email définie dans vos préférences utilisateur "
-"pour envoyer des emails."
+"Vous devez avoir une adresse de courriel définie dans vos préférences "
+"utilisateur pour envoyer des courriels."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

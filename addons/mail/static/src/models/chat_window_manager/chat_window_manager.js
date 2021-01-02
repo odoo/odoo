@@ -141,15 +141,16 @@ function factory(dependencies) {
         }
 
         /**
-         * Shift provided chat window to the left on screen.
+         * Shift provided chat window to previous visible index, which swap visible order of this
+         * chat window and the preceding visible one
          *
          * @param {mail.chat_window} chatWindow
          */
-        shiftLeft(chatWindow) {
+        shiftPrev(chatWindow) {
             const chatWindows = this.allOrdered;
             const index = chatWindows.findIndex(cw => cw === chatWindow);
             if (index === chatWindows.length - 1) {
-                // already left-most
+                // already first one
                 return;
             }
             const otherChatWindow = chatWindows[index + 1];
@@ -161,15 +162,16 @@ function factory(dependencies) {
         }
 
         /**
-         * Shift provided chat window to the right on screen.
+         * Shift provided chat window to next visible index, which swap visible order of this
+         * chat window and the following visible one.
          *
          * @param {mail.chat_window} chatWindow
          */
-        shiftRight(chatWindow) {
+        shiftNext(chatWindow) {
             const chatWindows = this.allOrdered;
             const index = chatWindows.findIndex(cw => cw === chatWindow);
             if (index === 0) {
-                // already right-most
+                // already last one
                 return;
             }
             const otherChatWindow = chatWindows[index - 1];

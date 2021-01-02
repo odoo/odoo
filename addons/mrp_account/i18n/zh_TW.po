@@ -3,14 +3,16 @@
 # 	* mrp_account
 # 
 # Translators:
+# Martin Trigaux, 2020
+# gogobook <O968041428@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:29+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +33,7 @@ msgstr "分析帳戶"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "從BOM計算成本"
+msgstr "從BOM計算價格"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -53,6 +55,7 @@ msgstr "已記錄的成本"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
 msgstr "顯示名稱"
 
@@ -79,6 +82,7 @@ msgstr "僅當需要生產訂單上的自動分析會計項目時，才填寫此
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
 msgid "ID"
 msgstr "ID"
 
@@ -88,28 +92,34 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity____last_update
 #: model:ir.model.fields,field_description:mrp_account.field_product_product____last_update
 #: model:ir.model.fields,field_description:mrp_account.field_product_template____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後更改日"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
 msgid "Product"
-msgstr "產品"
+msgstr "商品"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
 msgid "Product Template"
-msgstr "產品模板"
+msgstr "产品模板"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_production
 msgid "Production Order"
-msgstr "製造訂單"
+msgstr "生產單"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
 msgstr ""
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_move
+msgid "Stock Move"
+msgstr "庫存移動"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded

@@ -4,12 +4,10 @@
 import json
 import datetime
 import math
-import operator as py_operator
 import re
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
@@ -199,7 +197,6 @@ class MrpProduction(models.Model):
         )
     workorder_ids = fields.One2many(
         'mrp.workorder', 'production_id', 'Work Orders', copy=True)
-    workorder_done_count = fields.Integer('# Done Work Orders', compute='_compute_workorder_done_count')
     move_dest_ids = fields.One2many('stock.move', 'created_production_id',
         string="Stock Movements of Produced Goods")
 
@@ -231,7 +228,7 @@ class MrpProduction(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
-    is_planned = fields.Boolean('Its Operations are Planned', compute='_compute_is_planned', search='_search_is_planned')
+    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned", store=True)
 
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
@@ -318,23 +315,9 @@ class MrpProduction(models.Model):
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
-                production.is_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids if wo.state != 'done')
+                production.is_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
             else:
                 production.is_planned = False
-
-    def _search_is_planned(self, operator, value):
-        if operator not in ('=', '!='):
-            raise UserError(_('Invalid domain operator %s', operator))
-
-        if value not in (False, True):
-            raise UserError(_('Invalid domain right operand %s', value))
-        ops = {'=': py_operator.eq, '!=': py_operator.ne}
-        ids = []
-        for mo in self.search([]):
-            if ops[operator](value, mo.is_planned):
-                ids.append(mo.id)
-
-        return [('id', 'in', ids)]
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -440,15 +423,6 @@ class MrpProduction(models.Model):
     def _compute_lines(self):
         for production in self:
             production.finished_move_line_ids = production.move_finished_ids.mapped('move_line_ids')
-
-    @api.depends('workorder_ids.state')
-    def _compute_workorder_done_count(self):
-        data = self.env['mrp.workorder'].read_group([
-            ('production_id', 'in', self.ids),
-            ('state', '=', 'done')], ['production_id'], ['production_id'])
-        count_data = dict((item['production_id'][0], item['production_id_count']) for item in data)
-        for production in self:
-            production.workorder_done_count = count_data.get(production.id, 0)
 
     @api.depends(
         'move_raw_ids.state', 'move_raw_ids.quantity_done', 'move_finished_ids.state',
@@ -716,10 +690,8 @@ class MrpProduction(models.Model):
             if 'date_planned_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if production.is_planned:
-                    production.button_unplan()
-                    move_vals = self._get_move_finished_values(self.product_id, self.product_uom_qty, self.product_uom_id)
-                    production.move_finished_ids.write({'date': move_vals['date']})
+                if any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids):
+                    raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
             if vals.get('date_planned_start'):
                 production.move_raw_ids.write({'date': production.date_planned_start, 'date_deadline': production.date_planned_start})
             if vals.get('date_planned_finished'):
@@ -788,15 +760,17 @@ class MrpProduction(models.Model):
             production._onchange_move_finished()
         return production
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
         if any(production.state == 'done' for production in self):
             raise UserError(_('Cannot delete a manufacturing order in done state.'))
-        self.action_cancel()
         not_cancel = self.filtered(lambda m: m.state != 'cancel')
         if not_cancel:
             productions_name = ', '.join([prod.display_name for prod in not_cancel])
             raise UserError(_('%s cannot be deleted. Try to cancel them before.', productions_name))
 
+    def unlink(self):
+        self.action_cancel()
         workorders_to_delete = self.workorder_ids.filtered(lambda wo: wo.state != 'done')
         if workorders_to_delete:
             workorders_to_delete.unlink()
@@ -1424,8 +1398,6 @@ class MrpProduction(models.Model):
                     wo.qty_producing = 1
                 else:
                     wo.qty_producing = wo.qty_remaining
-                if wo.qty_producing == 0:
-                    wo.action_cancel()
 
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
@@ -1556,12 +1528,6 @@ class MrpProduction(models.Model):
 
     def do_unreserve(self):
         self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
-        return True
-
-    def button_unreserve(self):
-        self.ensure_one()
-        self.do_unreserve()
-        return True
 
     def button_scrap(self):
         self.ensure_one()

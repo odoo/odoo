@@ -3,18 +3,18 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # Dang Hanh <hanh.dtm@komit-consulting.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # Uyen Vo <uyen@trobz.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Uyen Vo <uyen@trobz.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -140,7 +140,7 @@ msgstr "Công ty"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập cấu hình"
+msgstr "Cấu hình"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_partner
@@ -213,23 +213,38 @@ msgstr "Bút toán sổ nhật ký"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Cập nhật gần đây bởi"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật gần đây vào"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Manual Numbering"
 msgstr "Đánh số thủ công"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+msgstr ""
+"Thủ công: Dùng cho thanh toán bảng tiền mặt, séc hoặc bất kỳ loại thanh toán nào bên ngoài Odoo.\n"
+"Điện tử: Ghi nhận thanh toán tự đống thông qua nhà cung cấp dịch vụ thanh toán bằng cách yêu cầu thực hiện giao dịch chuyện khoản được lưu trong thông tin hồ sơ khách hàng khi mua hoặc thanh toán chi phí (mã thanh toán).\n"
+"Séc: Thanh toán hóa đơn bằng séc và in từ trong Odoo.\n"
+"Giao dịch hàng loạt: Ghi lại nhiều số séc khách hàng cùng một lúc bằng cách tạo một khoản tiền gửi hàng loạt để gửi tới ngân hàng của bạn. Khi điền sao kê ngân hàng trong Odoo, bạn được đề nghị đối chiếu giao dịch với tiền gửi theo đợt. Để kích hoạt tiền gửi theo đợt, tài khoản mô-đun_batch_payment phải được cài đặt.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -256,6 +271,7 @@ msgid "None"
 msgstr "Không dùng"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"

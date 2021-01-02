@@ -3,14 +3,19 @@
 # 	* coupon
 # 
 # Translators:
+# Martin Trigaux, 2020
+# gogobook <O968041428@gmail.com>, 2020
+# Andy Cheng <andy.cheng@richsoda.com>, 2020
+# 曾逸民 <suncombo@gmail.com>, 2020
+# bluce Lan <bluce.lan@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-08-21 13:31+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -55,17 +60,6 @@ msgid "*Valid for following products:"
 msgstr "*適用於以下產品："
 
 #. module: coupon
-#: model:coupon.program,name:coupon.10_percent_coupon
-msgid "10% Discount"
-msgstr "10% 折扣"
-
-#. module: coupon
-#: model:product.product,name:coupon.product_product_10_percent_discount
-#: model:product.template,name:coupon.product_product_10_percent_discount_product_template
-msgid "10.0% discount on total amount"
-msgstr "總金額的 10.0% 折扣"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
@@ -76,8 +70,15 @@ msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
-msgid "<span class=\"oe_grey\">if 0, no limit</span>"
-msgstr "<span class=\"oe_grey\">如果0，沒有限制</span>"
+msgid "<span class=\"oe_grey\"> if 0, no limit</span>"
+msgstr ""
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid ""
+"<span> Days</span>\n"
+"                    <span class=\"oe_grey\"> if 0, coupon doesn't expire</span>"
+msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -118,98 +119,6 @@ msgstr "<strong>主動</strong>"
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Coupons</strong>"
 msgstr " <strong>優惠券</strong>"
-
-#. module: coupon
-#: model:mail.template,body_html:coupon.mail_template_sale_coupon
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
-"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        % if object.partner_id.name:\n"
-"        Congratulations ${object.partner_id.name},<br/>\n"
-"        % endif\n"
-"\n"
-"        Here is your reward from ${object.program_id.company_id.name}.<br/>\n"
-"\n"
-"        % if object.program_id.reward_type == 'discount':\n"
-"            % if object.program_id.discount_type == 'fixed_amount':\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">off on your next order</strong><br/>\n"
-"            %else\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
-"                ${object.program_id.discount_percentage} %\n"
-"            </span>\n"
-"            % if object.program_id.discount_apply_on == 'specific_products'\n"
-"                <br/>\n"
-"                % if len(object.program_id.discount_specific_product_ids) != 1\n"
-"                % set display_specific_products = True\n"
-"                <strong style=\"font-size: 24px;\">\n"
-"                    on some products*\n"
-"                </strong>\n"
-"                % else\n"
-"                <strong style=\"font-size: 24px;\">\n"
-"                    ${'on %s' % object.program_id.discount_specific_product_ids.name}\n"
-"                </strong>\n"
-"                % endif\n"
-"            % elif object.program_id.discount_apply_on == 'cheapest_product':\n"
-"            <br/><strong style=\"font-size: 24px;\">\n"
-"                off on the cheapest product\n"
-"            </strong>\n"
-"            % else\n"
-"            <br/><strong style=\"font-size: 24px;\">\n"
-"                off on your next order\n"
-"            </strong>\n"
-"            % endif\n"
-"            <br/>\n"
-"            % endif\n"
-"        % elif object.program_id.reward_type == 'product':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">on your next order</strong><br/>\n"
-"        % elif object.program_id.reward_type == 'free_shipping':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                get free shipping\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">on your next order</strong><br/>\n"
-"        % endif\n"
-"    </td></tr>\n"
-"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        Use this promo code\n"
-"        % if object.expiration_date:\n"
-"            before ${object.expiration_date}\n"
-"        % endif\n"
-"        <p style=\"margin-top: 16px;\">\n"
-"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\">\n"
-"                ${object.code}\n"
-"            </strong>\n"
-"        </p>\n"
-"        % if object.program_id.rule_min_quantity not in [0, 1]\n"
-"        <span style=\"font-size: 14px;\">\n"
-"            Minimum purchase of ${object.program_id.rule_min_quantity} products\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        % if object.program_id.rule_minimum_amount != 0.00\n"
-"        <span style=\"font-size: 14px;\">\n"
-"            Valid for purchase above ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        % if display_specific_products\n"
-"        <span>\n"
-"            *Valid for following products: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        <br/>\n"
-"        Thank you,\n"
-"        % if object.order_id.user_id.signature:\n"
-"            <br/>\n"
-"            ${object.order_id.user_id.signature | safe}\n"
-"        % endif\n"
-"    </td></tr>\n"
-"</tbody></table>\n"
-"            "
-msgstr ""
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__active
@@ -318,11 +227,6 @@ msgstr ""
 " 如果滿足某些條件，您可以共享促銷代碼或自動授予促銷。"
 
 #. module: coupon
-#: model:coupon.program,name:coupon.3_cabinets_plus_1_free
-msgid "Buy 3 large cabinets, get one for free"
-msgstr "購買3個大櫃子，免費獲得一個"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 msgid "Cancel"
@@ -337,11 +241,6 @@ msgstr "已取消"
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
 msgid "Code"
 msgstr "代號"
-
-#. module: coupon
-#: model:coupon.program,name:coupon.10_percent_auto_applied
-msgid "Code for 10% on orders"
-msgstr "訂單上 10% 的代碼"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -399,7 +298,7 @@ msgstr "優惠券節目名稱…"
 #. module: coupon
 #: model:ir.actions.act_window,name:coupon.coupon_program_action_coupon_program
 msgid "Coupon Programs"
-msgstr "優惠券規劃"
+msgstr "優惠券計畫"
 
 #. module: coupon
 #: model:ir.model,name:coupon.model_coupon_reward
@@ -411,6 +310,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_id
 msgid "Coupon Rule"
 msgstr "優惠券規則"
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Coupon Validity"
+msgstr ""
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
@@ -470,7 +374,7 @@ msgstr "創建一個新的促銷計劃。"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_uid
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_uid
 msgid "Created by"
-msgstr "創立者"
+msgstr "建立者"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_date
@@ -479,12 +383,12 @@ msgstr "創立者"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_date
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_date
 msgid "Created on"
-msgstr "創建時間"
+msgstr "建立時間"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__currency_id
 msgid "Currency"
-msgstr "幣別"
+msgstr "幣種"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__partners_domain
@@ -567,7 +471,7 @@ msgstr "結束日期"
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__expiration_date
 msgid "Expiration Date"
-msgstr "過期日期"
+msgstr "到期日期"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__expired
@@ -605,12 +509,6 @@ msgstr "免費產品"
 #, python-format
 msgid "Free Product - %s"
 msgstr "免費產品－%s"
-
-#. module: coupon
-#: model:product.product,name:coupon.product_product_free_large_cabinet
-#: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
-msgid "Free Product - Large Cabinet"
-msgstr "免費產品 - 大機櫃"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
@@ -667,6 +565,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "Invalid partner."
+msgstr "無效的合作夥伴。"
+
+#. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon____last_update
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard____last_update
 #: model:ir.model.fields,field_description:coupon.field_coupon_program____last_update
@@ -675,7 +579,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:coupon.field_mail_compose_message____last_update
 #: model:ir.model.fields,field_description:coupon.field_report_coupon_report_coupon____last_update
 msgid "Last Modified on"
-msgstr "最後修改於"
+msgstr "最後更改日"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_uid
@@ -693,12 +597,12 @@ msgstr "最後更新者"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__write_date
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__write_date
 msgid "Last Updated on"
-msgstr "最後更新於"
+msgstr "更新時間"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Logo"
-msgstr "Logo"
+msgstr "徽標"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
@@ -1022,6 +926,11 @@ msgid ""
 msgstr ""
 
 #. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Specify a mail template to send the generated coupons as email."
+msgstr ""
+
+#. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_date_from
 msgid "Start Date"
@@ -1035,9 +944,7 @@ msgstr "狀態"
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_excluded
 msgid "Tax Excluded"
-msgstr ""
-" \n"
-"外稅"
+msgstr "未稅"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_rule__rule_minimum_amount_tax_inclusion__tax_included
@@ -1053,6 +960,12 @@ msgstr ""
 #: model:ir.model.constraint,message:coupon.constraint_coupon_coupon_unique_coupon_code
 msgid "The coupon code must be unique!"
 msgstr "優惠券代碼必須是唯一的！"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "The coupon program for %s is in draft or closed state"
+msgstr "%s 優惠券計劃草案或是關閉狀態"
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
@@ -1079,23 +992,49 @@ msgid "The start date must be before the end date"
 msgstr "開始日期必須在結束日期之前。"
 
 #. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon %s exists but the origin sales order is not validated yet."
+msgstr " 此優惠券存%s在但源來的銷售訂單不驗證。"
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has already been used (%s)."
+msgstr ""
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has been cancelled (%s)."
+msgstr ""
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr ""
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
+msgid "Total Order Count"
+msgstr ""
+
+#. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Unit of Measure"
 msgstr "單位"
 
 #. module: coupon
-#: model:product.product,uom_name:coupon.product_product_10_percent_discount
-#: model:product.product,uom_name:coupon.product_product_free_large_cabinet
-#: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
-#: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
-msgid "Units"
-msgstr "單位"
-
-#. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
 msgid "Use a code"
 msgstr "使用代碼"
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__template_id
+msgid "Use template"
+msgstr "使用模版"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
@@ -1133,16 +1072,6 @@ msgstr "在其生成的優惠券有效期"
 #, python-format
 msgid "You can not delete a program in active state"
 msgstr "不能刪除處於活動狀態的程序。"
-
-#. module: coupon
-#: model:mail.template,report_name:coupon.mail_template_sale_coupon
-msgid "Your Coupon Code"
-msgstr "聖上的優惠券代碼"
-
-#. module: coupon
-#: model:mail.template,subject:coupon.mail_template_sale_coupon
-msgid "Your reward coupon from ${object.program_id.company_id.name} "
-msgstr "您的優惠券來自 ${object.program_id.company_id.name} "
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon

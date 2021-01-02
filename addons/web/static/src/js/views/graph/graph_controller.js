@@ -10,6 +10,7 @@ const { ComponentWrapper } = require('web.OwlCompatibility');
 const DropdownMenu = require('web.DropdownMenu');
 const { DEFAULT_INTERVAL, INTERVAL_OPTIONS } = require('web.searchUtils');
 const { qweb } = require('web.core');
+const { _t } = require('web.core');
 
 class CarretDropdownMenu extends DropdownMenu {
     /**
@@ -52,13 +53,6 @@ var GraphController = AbstractController.extend({
         // the view is embedded
         this.groupableFields = params.groupableFields;
         this.buttonDropdownPromises = [];
-    },
-    /**
-     * @override
-     */
-    start: function () {
-        this.$el.addClass('o_graph_controller');
-        return this._super.apply(this, arguments);
     },
     /**
      * @todo check if this can be removed (mostly duplicate with
@@ -126,20 +120,20 @@ var GraphController = AbstractController.extend({
             // Instantiate and append MeasureMenu
             this.measures.forEach(m => m.isActive = m.fieldName === state.measure);
             this.measureMenu = new ComponentWrapper(this, CarretDropdownMenu, {
-                title: "Measures",
+                title: _t("Measures"),
                 items: this.measures,
             });
             this.buttonDropdownPromises = [this.measureMenu.mount(fragment)];
+            if (this.isEmbedded) {
+                // Instantiate and append GroupBy menu
+                this.groupByMenu = new ComponentWrapper(this, CarretDropdownMenu, {
+                    title: _t("Group By"),
+                    icon: 'fa fa-bars',
+                    items: this._getGroupBys(state.groupBy),
+                });
+                this.buttonDropdownPromises.push(this.groupByMenu.mount(fragment));
+            }
             if ($node) {
-                if (this.isEmbedded) {
-                    // Instantiate and append GroupBy menu
-                    this.groupByMenu = new ComponentWrapper(this, CarretDropdownMenu, {
-                        title: "Group By",
-                        icon: 'fa fa-bars',
-                        items: this._getGroupBys(state.groupBy),
-                    });
-                    this.buttonDropdownPromises.push(this.groupByMenu.mount(fragment));
-                }
                 this.$buttons.appendTo($node);
             }
         }

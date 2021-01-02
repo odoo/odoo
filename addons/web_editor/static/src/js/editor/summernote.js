@@ -2077,9 +2077,8 @@ eventHandler.modules.editor.currentStyle = function (target) {
     if (!styleInfo.image || !dom.isEditable(styleInfo.image)) {
         styleInfo.image = undefined;
         var r = range.create();
-        if (r && r.isOnEditable()) {
+        if (r)
             styleInfo.image = r.isOnImg();
-        }
     }
     // Fix when the target is a link: the text-align buttons state should
     // indicate the alignment of the link in the parent, not the text inside

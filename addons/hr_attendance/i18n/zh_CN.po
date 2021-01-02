@@ -3,15 +3,17 @@
 # 	* hr_attendance
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# Felix Yuen <fyu@odoo.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Jeanphy <hzh0292@qq.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# as co02 <asco02@163.com>, 2020
+# waveyeung <waveyeung@qq.com>, 2017
+# Bo Cao, 2017
+# 苏州远鼎 <tiexinliu@126.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Jeanphy <hzh0292@qq.com>, 2019
+# Martin Trigaux, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # 
 msgid ""
@@ -19,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
 "Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +76,7 @@ msgid ""
 "                        </span>"
 msgstr ""
 "<span class=\"o_stat_text\">\n"
-"                           上月\n"
+"                           上个月\n"
 "                        </span>"
 
 #. module: hr_attendance
@@ -119,8 +121,8 @@ msgid ""
 "Add a few employees to be able to select an employee here and perform his check in / check out.\n"
 "                To create employees go to the Employees menu."
 msgstr ""
-"添加一些员工账号，并用这些账号登录进来，选择签到/签出操作试试看.\n"
-"                要添加员工，请点击员工菜单即可."
+"添加一些员工账号，并用这些账号登陆进来，选择签到/签出操作试试看.\n"
+"                要添加员工点击员工菜单即可."
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_manager
@@ -132,7 +134,7 @@ msgstr "管理员"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "An apple a day keeps the doctor away"
-msgstr "一天一苹果，医生远离我"
+msgstr "一天一苹果医生远离我"
 
 #. module: hr_attendance
 #. openerp-web
@@ -231,7 +233,7 @@ msgstr "签到"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_my_attendances
 msgid "Check In / Check Out"
-msgstr "签到/签出"
+msgstr "签到/签退"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__check_out
@@ -241,7 +243,7 @@ msgstr "签到/签出"
 #: model:ir.model.fields,field_description:hr_attendance.field_res_users__last_check_out
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "Check Out"
-msgstr "签出"
+msgstr "签退"
 
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
@@ -267,14 +269,14 @@ msgstr "签到时间"
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_base__attendance_state__checked_out
 #: model:ir.model.fields.selection,name:hr_attendance.selection__hr_employee_public__attendance_state__checked_out
 msgid "Checked out"
-msgstr "签出"
+msgstr "签退"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "Checked out at"
-msgstr "签出时间"
+msgstr "签退时间"
 
 #. module: hr_attendance
 #. openerp-web
@@ -299,7 +301,7 @@ msgstr "配置设置"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_settings
 msgid "Configuration"
-msgstr "基础配置"
+msgstr "配置"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_employee_attendance_action_kanban
@@ -334,14 +336,14 @@ msgstr "显示名称"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Early to bed and early to rise, makes a man healthy, wealthy and wise"
-msgstr "早睡早起身体好，财富智慧少不了"
+msgstr "早睡早起, 使人健康, 富有和聪明"
 
 #. module: hr_attendance
 #. openerp-web
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Eat breakfast as a king, lunch as a merchant and supper as a beggar"
-msgstr "国王的早餐，商人的午餐，乞丐的晚餐"
+msgstr "早餐当国王，午餐当商人，晚餐当乞丐"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_attendance__employee_id
@@ -391,7 +393,7 @@ msgstr "先到先得"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "Glad to have you back, it's been a while!"
-msgstr "很久没见，欢迎回来!"
+msgstr "很高兴你回来了, 已经有一段时间了!"
 
 #. module: hr_attendance
 #. openerp-web
@@ -544,7 +546,7 @@ msgstr ""
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_kiosk_no_user_mode
 msgid "Kiosk Mode"
-msgstr "Kiosk模式"
+msgstr "Kiosk 模式"
 
 #. module: hr_attendance
 #: model:ir.model.fields,field_description:hr_attendance.field_hr_employee__last_attendance_id
@@ -574,12 +576,12 @@ msgstr "最后更新时间"
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_manage_attendances
 msgid "Manager"
-msgstr "经理"
+msgstr "管理员"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance
 msgid "Manual Attendance"
-msgstr "管理考勤"
+msgstr "手动出勤"
 
 #. module: hr_attendance
 #: model:ir.actions.client,name:hr_attendance.hr_attendance_action_greeting_message
@@ -594,7 +596,7 @@ msgstr "我的出勤"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.hr_attendance_view_filter
 msgid "No Check Out"
-msgstr "无签出 "
+msgstr "无签退"
 
 #. module: hr_attendance
 #: model_terms:ir.actions.act_window,help:hr_attendance.hr_attendance_action
@@ -629,7 +631,7 @@ msgstr "不可用"
 #: code:addons/hr_attendance/static/src/xml/attendance.xml:0
 #, python-format
 msgid "OK"
-msgstr "OK"
+msgstr "确认"
 
 #. module: hr_attendance
 #: model:res.groups,name:hr_attendance.group_hr_attendance_user
@@ -665,7 +667,7 @@ msgstr "扫描你的工牌"
 #. module: hr_attendance
 #: model_terms:ir.ui.view,arch_db:hr_attendance.res_config_settings_view_form
 msgid "Set PIN codes in the employee detail form (in HR Settings tab)."
-msgstr "在员工详细信息表单（HR设置页卡）中设置PIN码。"
+msgstr "在员工详细信息表单（HR设置选项卡）中设置PIN码。"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_settings
@@ -711,7 +713,7 @@ msgstr "您的员工的出勤记录将显示在此处。"
 #: code:addons/hr_attendance/static/src/js/greeting_message.js:0
 #, python-format
 msgid "The early bird catches the worm"
-msgstr "早起的虫儿被鸟吃"
+msgstr "早起的鸟儿有虫吃"
 
 #. module: hr_attendance
 #: model:res.groups,comment:hr_attendance.group_hr_attendance_kiosk

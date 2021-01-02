@@ -3,28 +3,30 @@
 # 	* sale_stock
 # 
 # Translators:
-# Denis Baranov <baranov@itlibertas.com>, 2020
+# Mekan Bash <tmbashimov@gmail.com>, 2017
+# Artur Komishenko <Archi1792@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# sergeiruzkiicode <sergei.ruzki@icode.by>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2018
+# Sergey Vilizhanin, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Collex100, 2019
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Gennady Marchenko <gennadym@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Collex100, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
-# Sergey Vilizhanin, 2020
-# Max Belyanin <maxbelyanin@gmail.com>, 2020
-# Viktor Pogrebniak <vp@aifil.ru>, 2020
-# Vasiliy Korobatov <korobatov@gmail.com>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
-# Константин Коровин <korovin74@gmail.com>, 2020
-# sorin Rusu <to.rusu.sorin@gmail.com>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
 # Polina Alexandrova <polinaalexnder@gmail.com>, 2020
+# ILMIR <karamov@it-projects.info>, 2020
+# Irina Fedulova <istartlin@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Константин Коровин <korovin74@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Polina Alexandrova <polinaalexnder@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: Константин Коровин <korovin74@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,21 +78,6 @@ msgid "<span class=\"o_stat_text\">Sold</span>"
 msgstr "<span class=\"o_stat_text\">продано</span>"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>Product</span>"
-msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>Quantity</span>"
-msgstr "<span>Количество</span>"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
-msgid "<span>SN/LN</span>"
-msgstr ""
-
-#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_delivery_document_inherit_sale_stock
 msgid "<strong>Customer Reference:</strong>"
 msgstr "<strong>Справочник клиента:</strong>"
@@ -118,10 +105,10 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Складируемый - это продукт, для которого вы отслеживаете остатки на складе. "
-"Необходимо установить приложение Склад. Потребляемый - это продукт, для "
-"которого остатки не учитываются. Услуга - это нематериальный продукт, "
-"который вы предоставляете."
+"Товар сохраняется - это товар, которым вы управляете на складе. Необходимо "
+"установить приложение Состав. Затратный товар - это товар, для которого "
+"состав не руководствуется. Услуга - это нематериальный товар, который вы "
+"предоставляете."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -200,7 +187,7 @@ msgstr "Дата завершения первого заказа на дост�
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+msgstr "Настройки конфигурации"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -237,11 +224,6 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
-msgid "Display Lots & Serial Numbers on Invoices"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__display_name
@@ -270,11 +252,6 @@ msgid "Display Qty Widget"
 msgstr ""
 
 #. module: sale_stock
-#: model:res.groups,name:sale_stock.group_lot_on_invoice
-msgid "Display Serial & Lot Number on Invoices"
-msgstr ""
-
-#. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr "Показать инкотермс в клиентском заказе и связанных с ним счетах"
@@ -295,11 +272,6 @@ msgstr "Не забудьте сменить партнера на следую�
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Documentation"
 msgstr "Документация"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
-msgid "Draft SO"
-msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -403,7 +375,7 @@ msgstr "Перемещение, подвергшихся воздействию:
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
 msgid "Incoterm"
-msgstr "Incoterm"
+msgstr "Инкотермс"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
@@ -482,11 +454,6 @@ msgstr "Последнее изменение"
 #: model:ir.model,name:sale_stock.model_stock_production_lot
 msgid "Lot/Serial"
 msgstr "Партия/Серия"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "Lots &amp; Serial numbers will appear on the invoice"
-msgstr ""
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -598,6 +565,11 @@ msgid "Qty To Deliver"
 msgstr ""
 
 #. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_report_product_product_replenishment
+msgid "Quotations"
+msgstr "Коммерческие предложения"
+
+#. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
@@ -612,19 +584,6 @@ msgid "Reserved"
 msgstr "Зарезервированный"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid ""
-"Reserving products manually in delivery orders or by running the scheduler "
-"is advised to better manage priorities in case of long customer lead times "
-"or/and frequent stock-outs. By default, the scheduler runs automatically "
-"every 24 hours."
-msgstr ""
-"Бронируя товары вручную в заказах на доставку или управляя планировщиком, "
-"рекомендуется лучше управлять приоритетами в случае долгого срока "
-"обслуживания клиентов и / или частого извлечения запасов. По умолчанию "
-"планировщик запускается автоматически каждые 24 часа."
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
 msgid "Route"
 msgstr "Маршрут"
@@ -637,7 +596,7 @@ msgstr "Позиция продажи"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
-msgstr "Заказ на продажу"
+msgstr "Заказ"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
@@ -658,7 +617,7 @@ msgstr "Отчет по анализу продаж"
 #: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
-msgstr "Заказ на продажу"
+msgstr "Заказ продаж"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
@@ -849,11 +808,6 @@ msgstr "Предупреждение!"
 #: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
 msgid "When all products are ready"
 msgstr "Когда все товары готовы"
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
-msgid "When to reserve sold products"
-msgstr "Когда зарезервировать проданные товары"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

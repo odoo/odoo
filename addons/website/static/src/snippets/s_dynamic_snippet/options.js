@@ -47,7 +47,7 @@ const dynamicSnippetOptions = options.Class.extend({
      * @returns {Promise}
      */
     _fetchDynamicFilters: function () {
-		return this._rpc({route: '/website/snippet/options_filters'});
+        return this._rpc({route: '/website/snippet/options_filters'});
     },
     /**
      * Fetch dynamic filters templates.

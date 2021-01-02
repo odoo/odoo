@@ -3,8 +3,8 @@
 # 	* sms
 # 
 # Translators:
+# Cozmin Candea <office@terrabit.ro>, 2018
 # Martin Trigaux, 2020
-# Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
@@ -13,8 +13,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 14:34+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2017-12-13 14:58+0000\n"
 "Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -121,6 +121,13 @@ msgstr ""
 "compozitor sms cu acest șablon"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
+#, python-format
+msgid "An error occurred when sending an SMS."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
 msgid "Applies to"
@@ -130,11 +137,9 @@ msgstr "Se aplică pentru"
 #: code:addons/sms/wizard/sms_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s SMS delivery failures. You won't be able"
+"Are you sure you want to discard %s SMS delivery failures? You won't be able"
 " to re-send these SMS later!"
 msgstr ""
-"Sigur doriți să renunțați la %s eșecuri de livrare prin SMS. Nu veți putea "
-"trimite mai aceste SMS mai târziu!"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -749,7 +754,7 @@ msgstr "Numărul de mesaje cu eroare de livrare"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will recieve the SMS if sent in mass mode, without"
+"Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
 
@@ -887,12 +892,16 @@ msgid "Resend Notification"
 msgstr "Retrimitere Notificare"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/message/message.xml:0
+#: code:addons/sms/static/src/components/message/message.xml:0
 #: model:ir.actions.act_window,name:sms.sms_sms_action
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+#, python-format
 msgid "SMS"
 msgstr "SMS"
 
@@ -935,6 +944,13 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "Eroare livrare SMS"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/models/notification_group/notification_group.js:0
+#, python-format
+msgid "SMS Failures"
+msgstr ""
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -1046,7 +1062,7 @@ msgstr "Trimitere SMS (%s)"
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #, python-format
 msgid "Send SMS Text Message"
-msgstr "Trimiteți mesaj SMS"
+msgstr "Trimiteți mesajul SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -1071,7 +1087,7 @@ msgstr "Trimite direct"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__numbers
 msgid "Send to numbers"
-msgstr "Trimiteți la numerele"
+msgstr "Trimiteți la numere"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_resend_action
@@ -1205,7 +1221,7 @@ msgstr ""
 "- 'Execute several actions': definiți o acțiune care declanșează mai multe alte acțiuni server\n"
 "- 'Send Email': trimite automat un e-mail (Discută)\n"
 "- 'Add Followers': adăugați adepți într-o înregistrare (Discutați)\n"
-"- 'Create Next Activitate': creați o Activitate (Discutați)"
+"- 'Create Next Activity': creați o activitate (Discutați)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__recipient_single_number_itf

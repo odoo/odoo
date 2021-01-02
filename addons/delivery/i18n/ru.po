@@ -3,24 +3,26 @@
 # 	* delivery
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Collex100, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
+# Gennady Marchenko <gennadym@gmail.com>, 2017
+# Mekan Bash <tmbashimov@gmail.com>, 2017
+# Evgeny <transingularity@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Yuriy Ney <k_wizard@mail.ru>, 2018
+# Viktor Pogrebniak <vp@aifil.ru>, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Collex100, 2019
+# Martin Trigaux, 2019
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Sergey Vilizhanin, 2020
-# Viktor Pogrebniak <vp@aifil.ru>, 2020
 # Andrey Samorukov <andrey.samorukov@me.com>, 2020
-# Vasiliy Korobatov <korobatov@gmail.com>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
-# Константин Коровин <korovin74@gmail.com>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"PO-Revision-Date: 2016-08-05 12:57+0000\n"
+"Last-Translator: Andrey Samorukov <andrey.samorukov@me.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -173,12 +175,14 @@ msgstr "Сумма"
 msgid ""
 "Amount of the order to benefit from a free shipping, expressed in the "
 "company currency"
-msgstr "Сумма заказа с бесплатной доставкой, выраженная в валюте компании"
+msgstr ""
+"Сумма заказа, чтобы воспользоваться бесплатной доставкой, выраженная в "
+"валюте компании"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Archived"
-msgstr "Заархивировано"
+msgstr "Архивировано"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__available_carrier_ids
@@ -253,7 +257,7 @@ msgstr "Страны"
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__create_uid
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_choose_delivery_carrier__create_date
@@ -404,7 +408,7 @@ msgstr "Отменить"
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__display_name
 #: model:ir.model.fields,field_description:delivery.field_stock_return_picking__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: delivery
 #: model:ir.actions.act_window,name:delivery.act_delivery_trackers_url
@@ -418,9 +422,9 @@ msgid ""
 "                UPS Express, UPS Standard) with a set of pricing rules attached\n"
 "                to each method."
 msgstr ""
-"Каждый перевозчик (например, UPS) может иметь несколько способов доставки\n"
-"(например, UPS Express, UPS Standard) с набором правил тарификации,\n"
-"привязанным к каждому способу доставки."
+"Каждый перевозчик( например UPS) может иметь несколько методов доставки\n"
+"(например UPS Express, UPS Standard) с набором правил тарификации,\n"
+"привязанному к каждому методу доставки."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__prod_environment
@@ -450,8 +454,8 @@ msgstr ""
 #: model:ir.model.fields,help:delivery.field_sale_order__carrier_id
 msgid "Fill this field if you plan to invoice the shipping based on picking."
 msgstr ""
-"Заполните это поле, если вы планируете выставить счет на отгрузку, "
-"основанный на комплектовании."
+"Заполните это поле, если вы планируете выставить счет на отгрузку основанный"
+" на комплектовании."
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
@@ -459,8 +463,8 @@ msgid ""
 "Filling this form allows you to filter delivery carriers according to the "
 "delivery address of your customer."
 msgstr ""
-"Заполнение этой формы позволяет фильтровать носителей доставки в "
-"соответствии с адресом доставки вашего клиента."
+"Заполнение этой формы позволяет фильтровать носители доставки в соответствии"
+" с адресом доставки вашего клиента."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__fixed_price
@@ -498,13 +502,13 @@ msgstr "Получить процентную ставку и создать о�
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_product__hs_code
 #: model:ir.model.fields,field_description:delivery.field_product_template__hs_code
 msgid "HS Code"
-msgstr "HS-код"
+msgstr "HS Code"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_product_packaging__height
@@ -532,7 +536,7 @@ msgstr "Высота должна быть положительной"
 #: model:ir.model.fields,field_description:delivery.field_stock_quant_package__id
 #: model:ir.model.fields,field_description:delivery.field_stock_return_picking__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "Номер"
 
 #. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__free_over
@@ -816,7 +820,7 @@ msgstr ""
 #. module: delivery
 #: model:ir.model,name:delivery.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Возвратная Комплектация"
+msgstr "Разукомплектовать"
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_price_rule__list_base_price
@@ -832,7 +836,7 @@ msgstr "Цена продажи"
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order
 msgid "Sales Order"
-msgstr "Заказ на продажу"
+msgstr "Заказ продаж"
 
 #. module: delivery
 #: model:ir.model,name:delivery.model_sale_order_line
@@ -977,7 +981,7 @@ msgid ""
 "                quotation) or the invoice (based on the delivery orders)."
 msgstr ""
 "Эти методы позволяют автоматически рассчитывать стоимость доставки\n"
-"в соответствии с вашими настройками; в заказе на продажу (на основании\n"
+"в соответсвии с вашими настройками; в заказе на продажу ( на основании\n"
 "предложения) или счете-фактуре (на основании заказов на поставку)."
 
 #. module: delivery
@@ -1051,7 +1055,7 @@ msgstr "Перемещение"
 #: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
-msgstr "Единицы"
+msgstr "единицы"
 
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.choose_delivery_carrier_view_form
@@ -1137,8 +1141,8 @@ msgid ""
 "Your delivery method has no redirect on courier provider's website to track "
 "this order."
 msgstr ""
-"Ваш метод доставки не переадресован на веб-сайт перевозчика для отслеживания"
-" этого заказа."
+"Ваш метод доставки не переадресован на вебсайт перевозчика для отслеживания "
+"этого заказа."
 
 #. module: delivery
 #: model:ir.model.fields,field_description:delivery.field_delivery_carrier__zip_from
@@ -1153,4 +1157,4 @@ msgstr "Почтовые До"
 #. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.view_delivery_carrier_form
 msgid "e.g. UPS Express"
-msgstr "напр., UPS Express"
+msgstr " например UPS Express"

@@ -3,24 +3,25 @@
 # 	* stock_account
 # 
 # Translators:
-# Максим Дронь <dronmax@gmail.com>, 2020
-# Denis Baranov <baranov@itlibertas.com>, 2020
+# Mekan Bash <tmbashimov@gmail.com>, 2017
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Collex100, 2017
+# Sergey Vilizhanin, 2018
+# Denis Baranov <baranov@itlibertas.com>, 2019
+# Максим Дронь <dronmax@gmail.com>, 2019
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Gennady Marchenko <gennadym@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Collex100, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
-# Sergey Vilizhanin, 2020
-# Vasiliy Korobatov <korobatov@gmail.com>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
+# sorin Rusu <to.rusu.sorin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:11+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:10+0000\n"
+"Last-Translator: sorin Rusu <to.rusu.sorin@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,6 +61,21 @@ msgstr ""
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
 msgid "<b>Set other input/output accounts on specific </b>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Product</span>"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "<span>Количество</span>"
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.stock_account_report_invoice_document
+msgid "<span>SN/LN</span>"
 msgstr ""
 
 #. module: stock_account
@@ -182,7 +198,7 @@ msgstr "Компания"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_res_config_settings
 msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+msgstr "Настройки конфигурации"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0
@@ -223,7 +239,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_uid
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__create_date
@@ -268,12 +284,17 @@ msgstr ""
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
 msgid "Default unit of measure used for all stock operations."
 msgstr ""
-"Стандартная единица измерения, используемая для всех складских операций."
+"Стандартная единица измерения, используемое для всех складских операций."
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__description
 msgid "Description"
 msgstr "Описание"
+
+#. module: stock_account
+#: model:ir.model.fields,field_description:stock_account.field_res_config_settings__group_lot_on_invoice
+msgid "Display Lots & Serial Numbers on Invoices"
+msgstr ""
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_account_chart_template__display_name
@@ -296,7 +317,12 @@ msgstr "Описание"
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__display_name
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
+
+#. module: stock_account
+#: model:res.groups,name:stock_account.group_lot_on_invoice
+msgid "Display Serial & Lot Number on Invoices"
+msgstr ""
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
@@ -320,7 +346,7 @@ msgstr "First In First Out (FIFO)"
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_valuation_search
 msgid "Group by..."
-msgstr "Группировать по…"
+msgstr "Группировать…"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_inventory__has_account_moves
@@ -348,7 +374,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__id
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer_revaluation__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "Номер"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_inventory
@@ -439,6 +465,11 @@ msgstr "Последнее обновление"
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__stock_valuation_layer_id
 msgid "Linked To"
+msgstr ""
+
+#. module: stock_account
+#: model_terms:ir.ui.view,arch_db:stock_account.res_config_settings_view_form
+msgid "Lots &amp; Serial numbers will appear on the invoice"
 msgstr ""
 
 #. module: stock_account
@@ -581,7 +612,7 @@ msgstr "оценка остатка"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking
 msgid "Return Picking"
-msgstr "Возвратная Комплектация"
+msgstr "Разукомплектовать"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_stock_return_picking_line
@@ -804,7 +835,7 @@ msgid ""
 msgstr ""
 "Используется для оценки инвентаризации в реальном времени. Когда задан по "
 "виртуальному месту хранения (не внутреннего типа), этот счёт будет "
-"использован для хранения значения продуктов, перемещённых из внутреннего "
+"использован для хранения значения продуктов перемещённых из внутреннего "
 "места хранения в это место хранения, вместо заданного исходящего счёта в "
 "товаре. Это не оказывает влияния на внутренние места хранения."
 
@@ -819,7 +850,7 @@ msgid ""
 msgstr ""
 "Используется для оценки инвентаризации в реальном времени. Когда задан по "
 "виртуальному месту хранения (не внутреннего типа), этот счёт будет "
-"использован для хранения значения продуктов, перемещённых из этого места "
+"использован для хранения значения продуктов перемещённых из этого места "
 "хранения во внутреннее место хранения, вместо заданного исходящего счёта в "
 "товаре. Это не оказывает влияния на внутренние места хранения."
 

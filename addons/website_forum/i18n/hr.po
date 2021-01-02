@@ -3,25 +3,25 @@
 # 	* website_forum
 # 
 # Translators:
-# Davor Bojkić <davor.bojkic@storm.hr>, 2020
-# Jasmina Otročak <jasmina@uvid.hr>, 2020
-# Vojislav Opačić <vojislav.opacic@gmail.com>, 2020
+# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2017
+# Mario Jureša <mario.juresa@uvid.hr>, 2017
+# Davor Bojkić <davor.bojkic@storm.hr>, 2018
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Jasmina Otročak <jasmina@uvid.hr>, 2019
+# Tina Milas, 2019
+# Milan Tribuson <one.mile.code@gmail.com>, 2019
+# Vojislav Opačić <vojislav.opacic@gmail.com>, 2019
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2020
-# Bole <bole@dajmi5.com>, 2020
-# Vladimir Olujić <olujic.vladimir@storm.hr>, 2020
-# Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2020
-# Mario Jureša <mario.juresa@uvid.hr>, 2020
-# Tina Milas, 2020
-# Milan Tribuson <one.mile.code@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Bole <bole@dajmi5.com>, 2020
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
-"PO-Revision-Date: 2020-09-07 08:21+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: Karolina Tonković <karolina.tonkovic@storm.hr>, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
@@ -554,6 +554,11 @@ msgstr ""
 "</small>"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
 msgstr ""
@@ -628,11 +633,6 @@ msgstr ""
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
-msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 msgid "<span>By </span>"
 msgstr "<span>Od </span>"
 
@@ -644,7 +644,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "A new answer on"
-msgstr "Novi odgovor na"
+msgstr "Novi odgovor  na"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -1293,7 +1293,7 @@ msgstr "Kreiraj"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__create_date
 #: model:ir.model.fields,field_description:website_forum.field_res_users__create_date
 msgid "Create Date"
-msgstr "Datum kreiranja"
+msgstr "Kreiraj datum"
 
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
@@ -1336,7 +1336,7 @@ msgstr "Kreirao"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_reason__create_date
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__create_date
 msgid "Created on"
-msgstr "Kreirano"
+msgstr "Datum kreiranja"
 
 #. module: website_forum
 #: model:gamification.badge,name:website_forum.badge_q_4
@@ -1454,7 +1454,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_forum.field_res_users__display_name
 #: model:ir.model.fields,field_description:website_forum.field_website__display_name
 msgid "Display Name"
-msgstr "Naziv"
+msgstr "Naziv za prikaz"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_user_bio
@@ -2907,7 +2907,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_answer
 msgid "See post"
-msgstr "Pogledaj objavu"
+msgstr "Pogledaj post"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_new_question
@@ -3262,7 +3262,7 @@ msgstr "Naslov ne smije biti prazan."
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__recipient_id
 msgid "To"
-msgstr "Do"
+msgstr "za"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -3439,7 +3439,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Validate"
-msgstr "Odobri"
+msgstr "Ovjeri"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_post_template_validation
@@ -3449,7 +3449,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.display_post_question_block
 msgid "View"
-msgstr "Pogledaj"
+msgstr "Pogled"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__views

@@ -3,16 +3,16 @@
 # 	* portal_rating
 # 
 # Translators:
+# Kostas Goutoudis <goutoudis@gmail.com>, 2019
 # Martin Trigaux, 2020
-# Kostas Goutoudis <goutoudis@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2019-12-16 11:07+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,17 +24,8 @@ msgstr ""
 #. openerp-web
 #: code:addons/portal_rating/static/src/xml/portal_chatter.xml:0
 #, python-format
-msgid ""
-"#{widget.options['force_submit_url'] ? widget.options['force_submit_url'] : "
-"'/mail/chatter_post'}"
+msgid "#{widget.options['force_submit_url'] || '/mail/chatter_post'}"
 msgstr ""
-
-#. module: portal_rating
-#. openerp-web
-#: code:addons/portal_rating/static/src/xml/portal_rating_composer.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: portal_rating
 #. openerp-web
@@ -98,6 +89,7 @@ msgid "Details"
 msgstr "Λεπτομέρειες"
 
 #. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http__display_name
 #: model:ir.model.fields,field_description:portal_rating.field_mail_message__display_name
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__display_name
 msgid "Display Name"
@@ -111,9 +103,12 @@ msgid "Edit"
 msgstr "Επεξεργασία"
 
 #. module: portal_rating
+#: model:ir.model,name:portal_rating.model_ir_http
+msgid "HTTP Routing"
+msgstr ""
+
+#. module: portal_rating
 #. openerp-web
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format
@@ -149,6 +144,7 @@ msgid "I love it"
 msgstr ""
 
 #. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http__id
 #: model:ir.model.fields,field_description:portal_rating.field_mail_message__id
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating__id
 msgid "ID"
@@ -168,6 +164,7 @@ msgid "It's okay"
 msgstr ""
 
 #. module: portal_rating
+#: model:ir.model.fields,field_description:portal_rating.field_ir_http____last_update
 #: model:ir.model.fields,field_description:portal_rating.field_mail_message____last_update
 #: model:ir.model.fields,field_description:portal_rating.field_rating_rating____last_update
 msgid "Last Modified on"
@@ -188,8 +185,6 @@ msgstr ""
 
 #. module: portal_rating
 #. openerp-web
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
-#: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #: code:addons/portal_rating/static/src/xml/portal_tools.xml:0
 #, python-format

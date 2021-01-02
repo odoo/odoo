@@ -1475,6 +1475,8 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             noIcons: true,
             noDocuments: true,
             isForBgVideo: true,
+            vimeoPreviewIds: ['299225971', '414790269', '420192073', '368484050', '334729960', '417478345',
+                '312451183', '415226028', '367762632', '340475898', '374265101', '370467553'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
         }, el).open();
@@ -1842,6 +1844,13 @@ const SnippetOptionWidget = Widget.extend({
      */
     isTopOption: false,
     /**
+     * Indicates if the option should be the first one displayed in the button
+     * group at the top of the options panel, next to the clone/remove button.
+     *
+     * @type {boolean}
+     */
+    isTopFirstOption: false,
+    /**
      * Forces the target to not be possible to remove.
      *
      * @type {boolean}
@@ -2028,7 +2037,7 @@ const SnippetOptionWidget = Widget.extend({
      * @param {Object} params
      * @returns {Promise|undefined}
      */
-    selectStyle: function (previewMode, widgetValue, params) {
+    selectStyle: async function (previewMode, widgetValue, params) {
         // Disable all transitions for the duration of the method as many
         // comparisons will be done on the element to know if applying a
         // property has an effect or not. Also, changing a css property via the
@@ -2749,10 +2758,18 @@ const SnippetOptionWidget = Widget.extend({
             requiresReload = !!reloadMessage;
             if (requiresReload) {
                 const save = await new Promise(resolve => {
-                    Dialog.confirm(this, _t("This change needs to reload the page, this will save all your changes and reload the page, are you sure you want to proceed?") + ' '
+                    Dialog.confirm(this, _t("To apply this change, we need to save all your previous modifications and reload the page.") + ' '
                             + (typeof reloadMessage === 'string' ? reloadMessage : ''), {
-                        confirm_callback: () => resolve(true),
-                        cancel_callback: () => resolve(false),
+                        buttons: [{
+                            text: _t('Save and Reload'),
+                            classes: 'btn-primary',
+                            close: true,
+                            click: () => resolve(true),
+                        }, {
+                            text: _t("Cancel"),
+                            close: true,
+                            click: () => resolve(false)
+                        }],
                     });
                 });
                 if (!save) {
@@ -3712,7 +3729,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
                 return;
         }
         const newURL = new URL(currentSrc, window.location.origin);
-        newURL.searchParams.set('c1', normalizeColor(widgetValue));
+        newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
         this.$target.css('background-image', `url('${src}')`);
@@ -3749,12 +3766,12 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName) {
+    _computeWidgetState: function (methodName, params) {
         switch (methodName) {
             case 'background':
                 return getBgImageURL(this.$target[0]);
             case 'dynamicColor':
-                return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get('c1');
+                return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get(params.colorName);
         }
         return this._super(...arguments);
     },
@@ -3762,7 +3779,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
-        if (widgetName === 'dynamic_color_opt') {
+        if ('colorName' in params) {
+            const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
+            return src.searchParams.has(params.colorName);
+        } else if (widgetName === 'dynamic_color_opt') {
             const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
             return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
@@ -3775,10 +3795,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     _setBackground(backgroundURL) {
         if (backgroundURL) {
             this.$target.css('background-image', `url('${backgroundURL}')`);
-            this.$target.addClass('oe_img_bg');
+            this.$target.addClass('oe_img_bg o_bg_img_center');
         } else {
             this.$target.css('background-image', '');
-            this.$target.removeClass('oe_img_bg');
+            this.$target.removeClass('oe_img_bg o_bg_img_center');
         }
     },
 });
@@ -3880,7 +3900,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     _renderCustomXML(uiFragment) {
         Object.keys(this._getDefaultColors()).map(colorName => {
             uiFragment.querySelector('[data-name="colors"]')
-                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}">`)[0]);
+                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}"></we-colorpicker>`)[0]);
         });
 
         uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
@@ -4481,11 +4501,6 @@ registry.many2one = SnippetOptionWidget.extend({
      */
     start: function () {
         var self = this;
-        this.trigger_up('getRecordInfo', _.extend(this.options, {
-            callback: function (recordInfo) {
-                _.defaults(self.options, recordInfo);
-            },
-        }));
 
         this.Model = this.$target.data('oe-many2one-model');
         this.ID = +this.$target.data('oe-many2one-id');
@@ -4779,7 +4794,7 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
                 return;
         }
         const newURL = new URL(target.src, window.location.origin);
-        newURL.searchParams.set('c1', normalizeColor(widgetValue));
+        newURL.searchParams.set(params.colorName, normalizeColor(widgetValue));
         const src = newURL.pathname + newURL.search;
         await loadImage(src);
         target.src = src;
@@ -4798,7 +4813,16 @@ registry.DynamicSvg = SnippetOptionWidget.extend({
     _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'color':
-                return new URL(this.$target[0].src, window.location.origin).searchParams.get('c1');
+                return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if ('colorName' in params) {
+            return new URL(this.$target[0].src, window.location.origin).searchParams.get(params.colorName);
         }
         return this._super(...arguments);
     },

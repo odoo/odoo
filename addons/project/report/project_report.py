@@ -22,7 +22,7 @@ class ReportProjectTaskUser(models.Model):
         help="Number of Working Days to close the task")
     working_days_open = fields.Float(string='# Working Days to Assign',
         digits=(16,2), readonly=True, group_operator="avg",
-        help="Number of Working Days to Open the task")
+        help="Number of Working Days to open the task")
     delay_endings_days = fields.Float(string='# Days to Deadline', digits=(16,2), readonly=True)
     nbr = fields.Integer('# of Tasks', readonly=True)  # TDE FIXME master: rename into nbr_tasks
     priority = fields.Selection([
@@ -33,7 +33,7 @@ class ReportProjectTaskUser(models.Model):
     state = fields.Selection([
             ('normal', 'In Progress'),
             ('blocked', 'Blocked'),
-            ('done', 'Ready for next stage')
+            ('done', 'Ready for Next Stage')
         ], string='Kanban State', readonly=True)
     company_id = fields.Many2one('res.company', string='Company', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)

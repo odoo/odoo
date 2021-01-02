@@ -3,24 +3,31 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Florian Laboureix <fll@odoo.com>, 2020
+# Xavier Belmere <Info@cartmeleon.com>, 2016
+# Benedicte HANET <hanetb@gmail.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
+# Clo <clo@odoo.com>, 2016
+# Florent de Labarre <florent@iguanayachts.com>, 2017
+# Laura Piraux <lap@odoo.com>, 2017
+# Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2018
+# Fabien Pinckaers <fp@openerp.com>, 2018
+# Stéphane GUILLY <stephane.guilly@laposte.net>, 2018
+# Eloïse Stilmant <est@odoo.com>, 2018
+# Marie Willemyns <mwi@odoo.com>, 2019
+# Guillaume Piens <gup@odoo.com>, 2019
 # Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Martin Trigaux, 2020
-# Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Alain van de Werve <avw@openerp.com>, 2020
-# Guillaume Piens <gup@odoo.com>, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
-# Fernanda Marques <fem@odoo.com>, 2020
 # Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Arnaud Willem <contact@arnaud-willem.eu>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +89,7 @@ msgstr "Impression chèque"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_printing_payment_method_selected
 msgid "Check Printing Payment Method Selected"
-msgstr "Mode de paiement choisi pour l'impression des chèques"
+msgstr "Méthode de paiement d'impression des chèques sélectionnées"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
@@ -223,7 +230,7 @@ msgstr "Pièce comptable"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Dernière modification le"
+msgstr "Dernière Modification le"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -240,6 +247,21 @@ msgstr "Dernière mise à jour le"
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Manual Numbering"
 msgstr "Numérotation manuelle"
+
+#. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+msgstr ""
+"intermédiaire de paiementPaiement manuel : soyez payé en espèces, par chèque ou par tout autre moyen externe à Odoo.\n"
+"Paiement électronique : soyez payé automatiquement par un intermédiaire de paiement en demandant une transaction sur une carte enregistrée par le client lors de l'achat ou de l'inscription en ligne (jeton de paiement).\n"
+"Chèque : payez par chèque en l'imprimant depuis Odoo.\n"
+"Dépôt groupé : encaissez plusieurs chèques clients à la fois en générant un dépôt groupé à envoyer à votre banque. Lors de l'encodage du relevé bancaire dans Odoo, vous pouvez rapprocher la transaction et le dépôt groupé. Pour activer le dépôt groupé, vous devez installer le module account_batch_deposit.\n"
+"Virement SEPA : payez en envoyant un fichier de virement SEPA à votre banque. Pour activer les virements SEPA, vous devez installer le module account_sepa.  "
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
@@ -266,6 +288,7 @@ msgid "None"
 msgstr "Aucun"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"

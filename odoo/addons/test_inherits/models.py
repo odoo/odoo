@@ -73,6 +73,6 @@ class AnotherBox(models.Model):
     val2 = fields.Integer('Value 2', required=True)
 
     @api.constrains('val1', 'val2')
-    def _check(self):
-        if self.val1 != self.val2:
+    def _check_values(self):
+        if any(box.val1 != box.val2 for box in self):
             raise ValidationError("The two values must be equals")

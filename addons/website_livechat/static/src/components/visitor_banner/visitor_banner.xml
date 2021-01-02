@@ -18,12 +18,12 @@
                 <span class="o_VisitorBanner_visitor" t-esc="visitor.nameOrDisplayName"/>
                 <span class="o_VisitorBanner_language">
                     <i class="o_VisitorBanner_languageIcon fa fa-comment-o" aria-label="Lang"/>
-                    <t t-esc="visitor.lang"/>
+                    <t t-esc="visitor.lang_name"/>
                 </span>
-                <t t-if="visitor.website">
+                <t t-if="visitor.website_name">
                     <span class="o_VisitorBanner_website">
                         <i class="o_VisitorBanner_websiteIcon fa fa-globe" aria-label="Website"/>
-                        <span t-esc="visitor.website"/>
+                        <span t-esc="visitor.website_name"/>
                     </span>
                 </t>
                 <div class="o_VisitorBanner_history">

@@ -275,7 +275,7 @@
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" placeholder="Project Name"/>
+                            <field name="name" class="o_text_overflow" placeholder="Project Name"/>
                         </h1>
                         <div name="options_active">
                             <div>
@@ -328,7 +328,15 @@
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
                                     <field name="allowed_portal_user_ids" widget="many2many_tags" options="{'no_create': True}" attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}"/>
-
+                                    <span colspan="2" class="oe_edit_only text-muted"
+                                          attrs="{'invisible': [('privacy_visibility', '!=', 'portal')]}">
+                                        <dl class="o_project_portal_warning_dl">
+                                            <dt class="o_project_portal_warning_dt" aria-hidden="True">
+                                                <i class="fa fa-exclamation-triangle fa-sm"/>&amp;nbsp;</dt>
+                                            <dd class="o_project_portal_warning_dd">Allowed Portal Users will see all the tasks of this project without distinction.<br/>
+                                                Leave empty to restrict the access to the portal users' own tasks.</dd>
+                                        </dl>
+                                    </span>
                                     <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                                 <group name="extra_settings">
@@ -504,11 +512,11 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
                                 <div class="o_project_kanban_main">
-                                    <div class="o_kanban_card_content">
+                                    <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
                                             <div class="o_primary">
-                                                <span><t t-esc="record.name.value"/></span>
-                                                <span t-if="record.partner_id.value">
+                                                <span class="o_text_overflow"><t t-esc="record.name.value"/></span>
+                                                <span class="o_text_overflow" t-if="record.partner_id.value">
                                                     <strong><t t-esc="record.partner_id.value"/></strong>
                                                 </span>
                                             </div>
@@ -605,7 +613,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Task" class="o_form_project_tasks">
+                <form string="Task" class="o_form_project_tasks" js_class="project_form">
                     <field name="allow_subtasks" invisible="1" />
                     <field name="is_closed" invisible="1" />
                     <field name="allow_recurring_tasks" invisible="1" />
@@ -900,7 +908,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Tasks" multi_edit="1" sample="1">
+                <tree string="Tasks" multi_edit="1" sample="1" js_class="project_list">
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
@@ -915,6 +923,7 @@
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
                     <field name="kanban_state" widget="state_selection" optional="hide" readonly="1"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
+                    <field name="recurrence_id" invisible="1" />
                 </tree>
             </field>
         </record>

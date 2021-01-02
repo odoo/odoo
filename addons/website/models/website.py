@@ -160,17 +160,6 @@ class Website(models.Model):
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
-    def _bootstrap_snippet_filters(self):
-        ir_filter = self.env.ref('website.dynamic_snippet_country_filter', raise_if_not_found=False)
-        if ir_filter:
-            self.env['website.snippet.filter'].create({
-                'field_names': 'name,code,image_url:image,phone_code:char',
-                'filter_id': ir_filter.id,
-                'limit': 16,
-                'name': _('Countries'),
-                'website_id': self.id,
-            })
-
     @api.model
     def create(self, vals):
         self._handle_favicon(vals)
@@ -181,7 +170,6 @@ class Website(models.Model):
 
         res = super(Website, self).create(vals)
         res._bootstrap_homepage()
-        res._bootstrap_snippet_filters()
 
         if not self.env.user.has_group('website.group_multi_website') and self.search_count([]) > 1:
             all_user_groups = 'base.group_portal,base.group_user,base.group_public'
@@ -233,10 +221,13 @@ class Website(models.Model):
         if 'favicon' in vals:
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_last_remaining_website(self):
         website = self.search([('id', 'not in', self.ids)], limit=1)
         if not website:
             raise UserError(_('You must keep at least one website.'))
+
+    def unlink(self):
         # Do not delete invoices, delete what's strictly necessary
         attachments_to_unlink = self.env['ir.attachment'].search([
             ('website_id', 'in', self.ids),

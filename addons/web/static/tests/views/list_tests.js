@@ -6161,8 +6161,8 @@ QUnit.module('Views', {
 
         // Press 'Tab' -> should get out of the one to many and go to the next field of the form
         await testUtils.fields.triggerKeydown(form.$('.o_field_widget[name=o2m] .o_selected_row input'), 'tab');
-        // use of owlCompatibilityNextTick because the x2many control panel is updated twice
-        await testUtils.owlCompatibilityNextTick();
+        // use of owlCompatibilityExtraNextTick because the x2many control panel is updated twice
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "the next field should be selected");
 
@@ -8175,6 +8175,84 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with many2one: click out does not discard the row', async function (assert) {
+        // In this test, we simulate a long click by manually triggering a mousedown and later on
+        // mouseup and click events
+        assert.expect(5);
+
+        this.data.bar.fields.m2o = {string: "M2O field", type: "many2one", relation: "foo"};
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="o2m">
+                        <tree editable="bottom">
+                            <field name="m2o" required="1"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(form, '.o_data_row');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        assert.containsOnce(form, '.o_data_row');
+
+        // focus and write something in the m2o
+        form.$('.o_field_many2one input').focus().val('abcdef').trigger('keyup');
+        await testUtils.nextTick();
+
+        // then simulate a mousedown outside
+        form.$('.o_field_widget[name="display_name"]').focus().trigger('mousedown');
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal', "should ask confirmation to create a record");
+
+        // trigger the mouseup and the click
+        form.$('.o_field_widget[name="display_name"]').trigger('mouseup').trigger('click');
+        await testUtils.nextTick();
+
+        assert.containsOnce(document.body, '.modal', "modal should still be displayed");
+        assert.containsOnce(form, '.o_data_row', "the row should still be there");
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list alongside html field: click out to unselect the row', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="text" widget="html"/>
+                    <field name="o2m">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(form, '.o_data_row');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        assert.containsOnce(form, '.o_data_row');
+        assert.hasClass(form.$('.o_data_row'), 'o_selected_row');
+
+        // click outside to unselect the row
+        await testUtils.dom.click(document.body);
+        assert.containsOnce(form, '.o_data_row');
+        assert.doesNotHaveClass(form.$('.o_data_row'), 'o_selected_row');
+
+        form.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
@@ -10096,10 +10174,10 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the second last element');
-        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields dropdown is the last element');
 
@@ -10164,10 +10242,10 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the last element');
-        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields is the last element');
 

@@ -3,22 +3,23 @@
 # 	* website_sale
 # 
 # Translators:
-# Chris <krystof.reklamy13@gmail.com>, 2020
 # Ladislav Tomm <tomm@helemik.cz>, 2020
+# Adam Kettner, 2020
+# Chris <krystof.reklamy13@gmail.com>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# Martin Trigaux, 2020
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Martin Trigaux, 2020
+# trendspotter, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:22+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
+"Last-Translator: trendspotter, 2020\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,26 +52,6 @@ msgstr "&amp; Doprava"
 #: model_terms:ir.ui.view,arch_db:website_sale.searchbar_input_snippet_options
 msgid ", .s_wsale_products_searchbar_input"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.checkout
-msgid "/shop/checkout"
-msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.extra_info
-msgid "/shop/extra_info"
-msgstr ""
-
-#. module: website_sale
-#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_1
-msgid "1 year"
-msgstr "1 rok"
-
-#. module: website_sale
-#: model:product.template.attribute.value,name:website_sale.product_1_attribute_3_value_2
-msgid "2 year"
-msgstr "2 roky"
 
 #. module: website_sale
 #: model:mail.template,body_html:website_sale.mail_template_sale_cart_recovery
@@ -266,13 +247,12 @@ msgstr ""
 "<p>Zákazníkům byste měli poslat e-mail, abyste je povzbudili!</p>"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid ""
-"<small class=\"text-muted float-right\">Source: https://termsfeed.com/blog"
-"/sample-terms-and-conditions-template</small>"
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. Please "
+"contact us directly for this operation.</small>"
 msgstr ""
-"<small class=\"text-muted float-right\">Zdroj: https://termsfeed.com/blog"
-"/sample-terms-and-conditions-template</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -351,6 +331,8 @@ msgid ""
 "<span class=\"o_form_label\">Assignment</span>\n"
 "                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Úkol</span>\n"
+"                            <span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-specific.\" groups=\"website.group_multi_website\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -435,59 +417,6 @@ msgstr "<strong>Platební informace:</strong>"
 #: model_terms:ir.ui.view,arch_db:website_sale.total
 msgid "<strong>Total:</strong>"
 msgstr "<strong>Celkem:</strong>"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
-msgid ""
-"A <b>Governing Law</b> will inform users which laws govern the agreement. "
-"This should the country in which your company is headquartered or the "
-"country from which you operate your web site and mobile app."
-msgstr ""
-"<b>Platný zákon</b> bude informovat uživatele, které zákony země upravují "
-"dohodu. To by měla být země, ve které má vaše společnost sídlo, nebo země, "
-"ze které provozujete svůj web a mobilní aplikaci."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
-msgid ""
-"A <b>Limit What Users Can Do</b> clause can inform users that by agreeing to"
-" use your service, they’re also agreeing to not do certain things. This can "
-"be part of a very long and thorough list in your Terms and Conditions "
-"agreements so as to encompass the most amount of negative uses."
-msgstr ""
-"<b>Doložka o činnostech</b>, které mohou uživatelé udělat, může informovat "
-"uživatele, že souhlasí s používáním vaší služby a souhlasí také s tím, že "
-"nebudou dělat určité věci. Může to být součástí velmi dlouhého a důkladného "
-"seznamu ve vašich smluvních podmínkách, který zahrnuje co nejvíce "
-"negativních použití."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
-msgid ""
-"A <b>Links To Other Web Sites</b> clause will inform users that you are not "
-"responsible for any third party web sites that you link to. This kind of "
-"clause will generally inform users that they are responsible for reading and"
-" agreeing (or disagreeing) with the Terms and Conditions or Privacy Policies"
-" of these third parties."
-msgstr ""
-"Klauzule <b>Odkazy na jiné webové stránky</b> informuje uživatele, že nejste"
-" zodpovědní za žádné webové stránky třetích stran, na které odkazujete. "
-"Tento druh doložky bude obecně informovat uživatele, že jsou zodpovědní za "
-"čtení a souhlas (nebo nesouhlas) s podmínkami nebo zásadami ochrany osobních"
-" údajů těchto třetích stran."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
-msgid ""
-"A <b>Termination</b> clause will inform that users’ accounts on your website"
-" and mobile app or users’ access to your website and mobile (if users can’t "
-"have an account with you) can be terminated in case of abuses or at your "
-"sole discretion."
-msgstr ""
-"<b>Ustanovení o ukončení služby</b> bude informovat, že účty uživatelů na "
-"vašem webu a mobilní aplikaci nebo přístup uživatelů k vašemu webu a mobilu "
-"(pokud uživatelé nemohou mít u vás účet) mohou být ukončeny v případě "
-"zneužití nebo na základě vlastního uvážení."
 
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.product_template_action_website
@@ -689,16 +618,6 @@ msgid "Be aware!"
 msgstr "Buďte si vědomi co děláte!"
 
 #. module: website_sale
-#: model:res.country.group,name:website_sale.benelux
-msgid "BeNeLux"
-msgstr "BeNeLux"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_benelux
-msgid "Benelux"
-msgstr "Benelux"
-
-#. module: website_sale
 #. openerp-web
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
@@ -717,11 +636,6 @@ msgid "Billing Address"
 msgstr "fakturační adresa"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_bins
-msgid "Bins"
-msgstr "Koše"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid ""
 "Boost your sales with two kinds of discount programs: promotions and coupon "
@@ -732,16 +646,6 @@ msgstr ""
 "kuponové kódy. Mohou být nastaveny konkrétní podmínky (produkty, zákazníci, "
 "minimální částka nákupu, doba). Odměny mohou být slevy (% nebo částka) nebo "
 "produkty zdarma."
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_boxes
-msgid "Boxes"
-msgstr "Krabice"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_cabinets
-msgid "Cabinets"
-msgstr "Skříně"
 
 #. module: website_sale
 #. openerp-web
@@ -832,9 +736,22 @@ msgid "Category Description"
 msgstr "Popis kategorie"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_furnitures_chairs
-msgid "Chairs"
-msgstr "Židle"
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid ""
+"Changing VAT number is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Změna DIČ není povolena, pokud byly pro váš účet vydány dokument(y). Prosím "
+"kontaktujte nás přímo pro tuto operaci."
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
+msgid ""
+"Changing company name is not allowed once document(s) have been issued for "
+"your account. Please contact us directly for this operation."
+msgstr ""
+"Po vydání dokumentu(ů) pro váš účet není změna názvu společnosti povolena. "
+"Kontaktujte nás přímo pro tuto operaci."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__child_id
@@ -845,11 +762,6 @@ msgstr "Podřízené kategorie"
 #: model:ir.actions.act_window,name:website_sale.action_open_website_sale_onboarding_payment_acquirer_wizard
 msgid "Choose a payment method"
 msgstr "Zvolte způsob platby"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_christmas
-msgid "Christmas"
-msgstr "Vánoce"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -883,11 +795,6 @@ msgid "Click on this button so your customers can see it."
 msgstr "Klikněte na toto tlačítko, aby vás zákazníci mohli vidět."
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
-msgid "Close"
-msgstr "Zavřít"
-
-#. module: website_sale
 #: model:ir.model,name:website_sale.model_res_company
 msgid "Companies"
 msgstr "Společnosti"
@@ -896,11 +803,6 @@ msgstr "Společnosti"
 #: model_terms:ir.ui.view,arch_db:website_sale.address_b2b
 msgid "Company Name"
 msgstr " Název společnosti "
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_desks_components
-msgid "Components"
-msgstr "Komponenty"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -981,11 +883,6 @@ msgstr "Kontakt"
 #, python-format
 msgid "Conversion"
 msgstr "Konverze"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_furnitures_couches
-msgid "Couches"
-msgstr ""
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_res_country
@@ -1097,12 +994,7 @@ msgstr "Popis"
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_description
 msgid "Description for the website"
-msgstr "Popis k webstránke"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_desks
-msgid "Desks"
-msgstr "Stoly"
+msgstr "Popis k webové straně"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_sequence
@@ -1183,12 +1075,7 @@ msgstr "Přetáhněte stavební bloky sem a upravte záhlaví pro \""
 #: code:addons/website_sale/static/src/js/tours/website_sale_shop.js:0
 #, python-format
 msgid "Drag this website block and drop it in your page."
-msgstr "Přetáhněte tento blok webstránky a umístěte jej na svou stránku."
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_drawers
-msgid "Drawers"
-msgstr "Šuplíky"
+msgstr "Přetáhněte tento blok webu a umístěte jej na svou stránku."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__shop_extra_field_ids
@@ -1204,11 +1091,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_pricelist__code
 msgid "E-commerce Promotional Code"
 msgstr "Propagační kód e-shopu"
-
-#. module: website_sale
-#: model:product.pricelist,name:website_sale.list_europe
-msgid "EUR"
-msgstr "EUR"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1316,12 +1198,7 @@ msgstr "Pole Název"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "From Website"
-msgstr "Z webstránky"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_furnitures
-msgid "Furnitures"
-msgstr ""
+msgstr "Z webové strany"
 
 #. module: website_sale
 #. openerp-web
@@ -1407,33 +1284,6 @@ msgstr "Mám promo kód"
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__id
 msgid "ID"
 msgstr "ID"
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
-msgid ""
-"If your website or mobile apps allows users to create content and make that "
-"content public to other users, a <b>Content</b> section will inform users "
-"that they own the rights to the content they have created.<br/>The “Content”"
-" clause usually mentions that users must give you (the website or mobile app"
-" developer) a license so that you can share this content on your "
-"website/mobile app and to make it available to other users.<br/>Because the "
-"content created by users is public to other users, a DMCA notice clause (or "
-"Copyright Infringement ) section is helpful to inform users and copyright "
-"authors that, if any content is found to be a copyright infringement, you "
-"will respond to any DMCA take down notices received and you will take down "
-"the content."
-msgstr ""
-"Pokud váš web nebo mobilní aplikace umožňují uživatelům vytvářet obsah a "
-"zveřejňovat tento obsah ostatním uživatelům, v části <b>Obsah</b> budou "
-"uživatelé informováni o tom, že vlastní práva na obsah, který vytvořili. "
-"<br/>Klauzule “Obsah” obvykle uvádí, že vám uživatelé musí dát (vývojář webu"
-" nebo mobilní aplikace) licenci, abyste mohli tento obsah sdílet na svém "
-"webu / mobilní aplikaci a zpřístupnit jej ostatním uživatelům. <br/>Protože "
-"obsah vytvořený uživateli je veřejný ostatním uživatelům, doložka o oznámení"
-" DMCA (nebo Sekce Porušení autorských práv) je užitečná pro informování "
-"uživatelů a autorů autorských práv, že pokud se zjistí, že jakýkoli obsah "
-"porušuje autorská práva, odpovíte na všechna obdržená oznámení o odebrání "
-"podle zákona DMCA a obsah odstraníte."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__image_1920
@@ -1533,11 +1383,6 @@ msgid "Kpi Website Sale Total Value"
 msgstr ""
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_lamps
-msgid "Lamps"
-msgstr "Svítidla"
-
-#. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_account_move____last_update
 #: model:ir.model.fields,field_description:website_sale.field_crm_team____last_update
 #: model:ir.model.fields,field_description:website_sale.field_digest_digest____last_update
@@ -1568,6 +1413,8 @@ msgid "Last Modified on"
 msgstr "Naposled změněno"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Month"
 msgstr "Poslední měsíc"
@@ -1597,11 +1444,15 @@ msgid "Last Updated on"
 msgstr "Naposled upraveno"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Week"
 msgstr "Minulý týden"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
+#: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
 msgid "Last Year"
 msgstr "Minulý rok"
@@ -1669,7 +1520,7 @@ msgstr "Správa propagace &amp; kupónové programy"
 #: code:addons/website_sale/static/src/xml/website_sale_dashboard.xml:0
 #, python-format
 msgid "Medium"
-msgstr "Střední hodnoty"
+msgstr "Střední"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1680,11 +1531,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__manual_name
 msgid "Method"
 msgstr "Metoda"
-
-#. module: website_sale
-#: model:product.public.category,name:website_sale.public_category_multimedia
-msgid "Multimedia"
-msgstr "Multimedia"
 
 #. module: website_sale
 #. openerp-web
@@ -1726,6 +1572,11 @@ msgstr "Název: Z až A"
 #, python-format
 msgid "New Product"
 msgstr "Nový produkt"
+
+#. module: website_sale
+#: model:product.ribbon,html:website_sale.new_ribbon
+msgid "New!"
+msgstr ""
 
 #. module: website_sale
 #. openerp-web
@@ -1910,7 +1761,7 @@ msgstr "Datum objednání"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__website_order_line
 msgid "Order Lines displayed on Website"
-msgstr "Řádky objednávek zobrazené na webstránce"
+msgstr "Řádky objednávek zobrazené na webu"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_order_line
@@ -1918,8 +1769,8 @@ msgid ""
 "Order Lines to be displayed on the website. They should not be used for "
 "computation purpose."
 msgstr ""
-"Řádky, které se mají zobrazit na webstránce. Neměly by být použity pro účely"
-" výpočtu."
+"Řádky, které se mají zobrazit na webu. Neměly by být použity pro účely "
+"výpočtu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -2025,7 +1876,7 @@ msgstr "Platební pokyny"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_sale_payment_acquirer_onboarding_wizard__payment_method
 msgid "Payment Method"
-msgstr "Platební podmínky"
+msgstr "Způsob platby"
 
 #. module: website_sale
 #: model:ir.ui.menu,name:website_sale.menu_ecommerce_payment_transactions
@@ -2094,7 +1945,7 @@ msgstr "Cena"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__pricelist_ids
 msgid "Price list available for this Ecommerce/Website"
-msgstr "Ceník dostupný pro tento elektronický obchod / webstránka"
+msgstr "Ceník dostupný pro tento elektronický obchod / web"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_product_pricelist
@@ -2207,6 +2058,7 @@ msgstr "Varianty výrobku"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website_visitor__visitor_product_count
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
 msgid "Product Views"
 msgstr ""
 
@@ -2226,11 +2078,6 @@ msgid "Product ribbon"
 msgstr ""
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
-msgid "Product views"
-msgstr ""
-
-#. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.product_template_action_website
 #: model:ir.ui.menu,name:website_sale.menu_catalog
 #: model:ir.ui.menu,name:website_sale.menu_catalog_products
@@ -2238,6 +2085,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_tree
 msgid "Products"
 msgstr "Produkty"
 
@@ -2356,7 +2205,7 @@ msgstr "Důvod hodnocení"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
-msgid "Recently viewed Products"
+msgid "Recently Viewed Products"
 msgstr ""
 
 #. module: website_sale
@@ -2390,7 +2239,7 @@ msgstr "Sestavy"
 #: model:ir.model.fields,help:website_sale.field_product_public_category__website_id
 #: model:ir.model.fields,help:website_sale.field_product_template__website_id
 msgid "Restrict publishing to this website."
-msgstr "Omezit publikování na této webstránce."
+msgstr "Omezit publikování na tomto webu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
@@ -2439,6 +2288,11 @@ msgstr "Vpravo"
 #: model:ir.model.fields,field_description:website_sale.field_product_template__is_seo_optimized
 msgid "SEO optimized"
 msgstr "SEO optimalizováno"
+
+#. module: website_sale
+#: model:product.ribbon,html:website_sale.sale_ribbon
+msgid "Sale"
+msgstr "Prodej"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_graph_website
@@ -2602,11 +2456,6 @@ msgid "Sequence"
 msgstr "Číselná řada"
 
 #. module: website_sale
-#: model:product.public.category,name:website_sale.services
-msgid "Services"
-msgstr "Služby"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
 msgid ""
 "Ship to the same address\n"
@@ -2713,6 +2562,11 @@ msgid "Sold"
 msgstr "Prodáno"
 
 #. module: website_sale
+#: model:product.ribbon,html:website_sale.sold_out_ribbon
+msgid "Sold out"
+msgstr ""
+
+#. module: website_sale
 #: code:addons/website_sale/controllers/main.py:0
 #, python-format
 msgid "Some required fields are empty."
@@ -2748,7 +2602,7 @@ msgstr "Stát / Kraj ..."
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_company__website_sale_onboarding_payment_acquirer_state
 msgid "State of the website sale onboarding payment acquirer step"
-msgstr "Stav kroku nabytí prodeje webu při prodeji platby"
+msgstr "Stav kroku nákupu na platformě příjemce plateb"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
@@ -2806,7 +2660,7 @@ msgstr "TIN / VAT"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Tag"
-msgstr "Tag"
+msgstr "Štítek"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.total
@@ -2817,11 +2671,6 @@ msgstr "Daně:"
 #: model:ir.model.fields,help:website_sale.field_website__all_pricelist_ids
 msgid "Technical: Used to recompute pricelist_ids"
 msgstr ""
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
-msgid "Terms &amp;amp; Conditions"
-msgstr "Obchodní podmínky"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -2839,21 +2688,10 @@ msgid "The #1"
 msgstr "Číslo 1"
 
 #. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.terms
-msgid ""
-"The <b>Intellectual Property</b> disclosure will inform users that the "
-"contents, logo and other visual media you created is your property and is "
-"protected by copyright laws."
-msgstr ""
-"Zveřejnění <b>duševního vlastnictví</b> informuje uživatele, že obsah, logo "
-"a další vizuální média, která jste vytvořili, jsou vaším vlastnictvím a jsou"
-" chráněny autorskými právy."
-
-#. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_product_product__website_url
 #: model:ir.model.fields,help:website_sale.field_product_template__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webstránky."
+msgstr "Celá adresa URL pro přístup k dokumentu prostřednictvím webu."
 
 #. module: website_sale
 #: code:addons/website_sale/models/sale_order.py:0
@@ -2884,6 +2722,13 @@ msgid ""
 "The product will be available in each mentioned eCommerce category. Go to "
 "Shop > Customize and enable 'eCommerce categories' to view all eCommerce "
 "categories."
+msgstr ""
+
+#. module: website_sale
+#. openerp-web
+#: code:addons/website_sale/static/src/js/website_sale.editor.js:0
+#, python-format
+msgid "The snippet will be visible once one has seen one product"
 msgstr ""
 
 #. module: website_sale
@@ -2932,13 +2777,6 @@ msgid ""
 "This email template is suggested by default when you send a recovery email."
 msgstr ""
 "Tato šablona e-mailu je přednastavena při odeslání e-mailu pro obnovení."
-
-#. module: website_sale
-#: model_terms:ir.ui.view,arch_db:website_sale.s_products_recently_viewed
-msgid ""
-"This is a preview of the recently viewed products by the user.<br/>\n"
-"                Once the user has seen at least one product this snippet will be visible."
-msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -2996,13 +2834,6 @@ msgid "USPS"
 msgstr "USPS"
 
 #. module: website_sale
-#: model:product.product,uom_name:website_sale.product_product_1
-#: model:product.product,uom_name:website_sale.product_product_1b
-#: model:product.template,uom_name:website_sale.product_product_1_product_template
-msgid "Units"
-msgstr "Jednotky"
-
-#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce
 msgid "Unpaid"
 msgstr "Nezaplacené"
@@ -3055,7 +2886,7 @@ msgstr "Ukázat košík ("
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_published
 msgid "Visible on current website"
-msgstr "Viditelné na aktuální webstránce"
+msgstr "Viditelné na aktuálním webu"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_track
@@ -3077,25 +2908,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_tree
 msgid "Visitor Product Views History"
 msgstr ""
-
-#. module: website_sale
-#: model:product.product,name:website_sale.product_product_1
-#: model:product.product,name:website_sale.product_product_1b
-#: model:product.template,name:website_sale.product_product_1_product_template
-msgid "Warranty"
-msgstr "Záruka"
-
-#. module: website_sale
-#: model:product.product,description_sale:website_sale.product_product_1
-#: model:product.product,description_sale:website_sale.product_product_1b
-#: model:product.template,description_sale:website_sale.product_product_1_product_template
-msgid ""
-"Warranty, issued to the purchaser of an article by its manufacturer, "
-"promising to repair or replace it if necessary within a specified period of "
-"time."
-msgstr ""
-"Záruka vydaná odběrateli předmětu výrobcem, slibující jej opravit nebo "
-"nahradit, je-li to nutné, ve stanovené lhůtě."
 
 #. module: website_sale
 #. openerp-web
@@ -3124,7 +2936,7 @@ msgstr "V našem obchodě máme úžasné produkty, zkontrolujte je hned teď!"
 #: model_terms:ir.ui.view,arch_db:website_sale.sale_report_view_search_website
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_pricelist_form_view
 msgid "Website"
-msgstr "Webstránka"
+msgstr "Webová strana"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_sale_payment_acquirer_onboarding_wizard
@@ -3136,12 +2948,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__public_categ_ids
 #: model:ir.model.fields,field_description:website_sale.field_product_template__public_categ_ids
 msgid "Website Product Category"
-msgstr "Produktová kategorie webstránky"
+msgstr "Produktová kategorie webu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_public_category_form_view
 msgid "Website Public Categories"
-msgstr "Veřejné kategorie webstránky"
+msgstr "Veřejné kategorie webu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_sequence
@@ -3163,36 +2975,36 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_sale.field_product_product__website_url
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_url
 msgid "Website URL"
-msgstr "URL webové stránky"
+msgstr "URL Webové stránky"
 
 #. module: website_sale
 #: model:ir.model,name:website_sale.model_website_visitor
 msgid "Website Visitor"
-msgstr "Návštěvník webstránky"
+msgstr "Návštěvník webu"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_description
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_description
 msgid "Website meta description"
-msgstr "Meta-popis webových stránek"
+msgstr "Meta-Popis webových stránek"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_keywords
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Meta-klíčová slova webových stránek"
+msgstr "Meta-Klíčová slova webových stránek"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_title
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_title
 msgid "Website meta title"
-msgstr "Meta-název webových stránek"
+msgstr "Meta-Název webových stránek"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_meta_og_img
 #: model:ir.model.fields,field_description:website_sale.field_product_template__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "Opengraph obrázek webových stránek"
+msgstr "opengraph obrázek webových stránek"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_account_bank_statement_line__website_id
@@ -3204,17 +3016,17 @@ msgstr "Webové stránky, jejichž prostřednictvím byla tato faktura vytvořen
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_sale_order__website_id
 msgid "Website through which this order was placed."
-msgstr "Webstránka, přes který byla objednávka zadána."
+msgstr "Web, přes který byla objednávka zadána."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_crm_team__website_ids
 msgid "Websites"
-msgstr "Webstránky"
+msgstr "Weby"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_crm_team__website_ids
 msgid "Websites using this Sales Team"
-msgstr "Webstránky používající tým obchodníků"
+msgstr "Webové strany používající tým obchodníků"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__module_website_sale_wishlist
@@ -3254,7 +3066,7 @@ msgstr "Nemáte žádnou objednávku z webových stránek"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.sale_order_action_to_invoice
 msgid "You don't have any order to invoice from the website"
-msgstr "Z webstránky nemáte žádný příkaz k fakturaci"
+msgstr "Z webu nemáte žádný příkaz k fakturaci"
 
 #. module: website_sale
 #: model:mail.template,subject:website_sale.mail_template_sale_cart_recovery

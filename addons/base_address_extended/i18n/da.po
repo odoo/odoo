@@ -3,20 +3,17 @@
 # 	* base_address_extended
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Morten Schou <ms@msteknik.dk>, 2020
-# Jesper Carstensen <jc@danodoo.dk>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
-# Mads Søndergaard, 2020
+# Martin Trigaux, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Mads Søndergaard, 2020\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,8 +27,6 @@ msgid ""
 "Change how the system computes the full street field based on the different "
 "street subfields"
 msgstr ""
-"Ændre hvorledes systemet udregner den fulde gade felt baseret på andre gade "
-"underfelter"
 
 #. module: base_address_extended
 #: model:ir.model,name:base_address_extended.model_res_company
@@ -49,13 +44,6 @@ msgid "Country"
 msgstr "Land"
 
 #. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__display_name
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country__display_name
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__display_name
-msgid "Display Name"
-msgstr "Vis navn"
-
-#. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number2
 #: model:ir.model.fields,field_description:base_address_extended.field_res_users__street_number2
 msgid "Door"
@@ -63,6 +51,8 @@ msgstr "Dør"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number2
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number2
+#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number2
 msgid "Door Number"
 msgstr "Dørnummer"
 
@@ -76,12 +66,6 @@ msgid ""
 "%(street_number)s: the house number\n"
 "%(street_number2)s: the door number"
 msgstr ""
-"Format til brug for gader tilhørende dette land.\n"
-"\n"
-"Du kan bruge python-lignende string mønstre med alle felter for gaden (for eksempel, brug '%(street_name)s, %(street_number)s' hvis du vil vise gadenavnet, efterfulgt af et komma, og så husnummeret)\n"
-"%(street_name)s: Gadenavn\n"
-"%(street_number)s: Husnummer\n"
-"%(street_number2)s: Dørnummer"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_partner__street_number
@@ -91,22 +75,10 @@ msgstr "Hus"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_company__street_number
+#: model:ir.model.fields,help:base_address_extended.field_res_partner__street_number
+#: model:ir.model.fields,help:base_address_extended.field_res_users__street_number
 msgid "House Number"
 msgstr "Husnummer"
-
-#. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company__id
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country__id
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner__id
-msgid "ID"
-msgstr "ID"
-
-#. module: base_address_extended
-#: model:ir.model.fields,field_description:base_address_extended.field_res_company____last_update
-#: model:ir.model.fields,field_description:base_address_extended.field_res_country____last_update
-#: model:ir.model.fields,field_description:base_address_extended.field_res_partner____last_update
-msgid "Last Modified on"
-msgstr "Sidst ændret den"
 
 #. module: base_address_extended
 #: model:ir.model.fields,field_description:base_address_extended.field_res_country__street_format
@@ -133,8 +105,8 @@ msgid "Street format..."
 msgstr "Gade"
 
 #. module: base_address_extended
-#: code:addons/base_address_extended/models/res_partner.py:0
-#: code:addons/base_address_extended/models/res_partner.py:0
+#: code:addons/base_address_extended/models/base_address_extended.py:64
+#: code:addons/base_address_extended/models/base_address_extended.py:112
 #, python-format
 msgid "Unrecognized field %s in street format."
 msgstr "Ukendt felt %s i gade formatet"

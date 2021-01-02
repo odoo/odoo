@@ -3,8 +3,19 @@
 # 	* base_import
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Leon Grill <leg@odoo.com>, 2020
+# Henry Mineehen <info@mineehen.de>, 2017
+# Niki Waibel, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Renzo Meister, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# Rudolf Schnapka <rs@techno-flex.de>, 2017
+# Thomas Neu <t.neu@runbox.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Andi, 2017
+# e2f <projects@e2f.com>, 2018
+# Johannes Croe <jcr@odoo.com>, 2019
+# Martin Trigaux, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2020
 # 
 msgid ""
@@ -12,7 +23,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"PO-Revision-Date: 2016-08-05 12:56+0000\n"
 "Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +85,7 @@ msgstr ""
 "Verbindungsverlust, Datenlimit überschritten oder Speicherlimit "
 "überschritten). Bitte versuchen Sie es erneut, falls das Problem "
 "vorübergehend ist. Wenn das Problem weiterhin besteht, versuchen Sie, die "
-"Datei zu teilen, anstatt sie in einem Stück zu importieren."
+"Datei zu teilen, anstatt sie sofort zu importieren."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -161,7 +172,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Create if doesn't exist"
-msgstr "Erstellen, wenn nicht vorhanden ist"
+msgstr "Erstellen, wenn nicht vorhanden"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -215,9 +226,9 @@ msgid ""
 "and assumes this is sufficient to create the record."
 msgstr ""
 "Erstellt neue Datensätze, wenn diese nicht gefunden werden (anstatt sie "
-"nicht zu importieren). Bitte beachten Sie, dass der Wert in der Spalte als "
-"'Name' des neuen Datensatzes verwendet wird und angenommen wird dass dies "
-"ausreicht, um den Datensatz zu erstellen."
+"nicht zu importieren). Bitte Beachten Sie, dass der Wert in der Spalte als "
+"'Name' des neuen Datensatzes verwendet wird und dass dies ausreicht, um den "
+"Datensatz zu erstellen."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -230,28 +241,28 @@ msgstr "Währung"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
-msgstr "Datenbank-ID"
+msgstr "Datenbank ID"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Date Format:"
-msgstr "Datumsformat:"
+msgstr "Datumsformat"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
-msgstr "Zeitstempelformat:"
+msgstr "Tageszeit Format:"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Decimal Separator:"
-msgstr "Dezimaltrennzeichen:"
+msgstr "Dezimal Trennzeichen:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__display_name
@@ -375,9 +386,7 @@ msgstr "Dateigröße überschreitet konfiguriertes Maximum (%s bytes)"
 #. module: base_import
 #: model:ir.model.fields,help:base_import.field_base_import_import__file
 msgid "File to check and/or import, raw binary (not base64)"
-msgstr ""
-"Zu prüfende und/oder importierende Datei, Binär-Rohdaten (nicht "
-"base64-kodiert)"
+msgstr "Zu prüfende Datei und/oder Import, raw binary (not base64))"
 
 #. module: base_import
 #. openerp-web
@@ -444,8 +453,8 @@ msgid ""
 "                field corresponding to the column. This makes imports\n"
 "                simpler especially when the file has many columns."
 msgstr ""
-"Wenn eine Datei die Bezeichnungen der Tabellenspalten beinhaltet, kann Odoo versuchen, diese automatisch den entsprechenden Datenbankfeldern zuzuordnen.\n"
-"Dies macht es einfacher, den Import von Dateien mit vielen Spalten durchzuführen."
+"Wenn eine Datei seine Spaltennamen beinhaltet, kann Odoo eine automatische Erkennung vornehmen.\n"
+"Dies macht es einfacher den Import von Dateien mit vielen Spalten vorzunehmen."
 
 #. module: base_import
 #. openerp-web
@@ -584,7 +593,7 @@ msgstr "Zuletzt aktualisiert am"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Load File"
-msgstr "Datei laden"
+msgstr "Datei Laden"
 
 #. module: base_import
 #. openerp-web
@@ -758,7 +767,7 @@ msgstr "Tests: Basisimportmodell, Zeichen"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_noreadonly
 msgid "Tests : Base Import Model, Character No readonly"
-msgstr "Tests: Basisimportmodell, Zeichen nicht schreibgeschützt"
+msgstr "Tests: Basisimportmodell, Zeichen Kein schreibgeschutz"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_char_readonly

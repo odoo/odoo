@@ -7,6 +7,9 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="inside">
                 <notebook>
+                    <page string="Toast Content" name="toast_content">
+                        <field name="toast_content" nolabel="1"/>
+                    </page>
                     <page string="Website popups" name="website_popups">
                         <field name="website_popup_ids">
                             <tree>
@@ -15,11 +18,6 @@
                         </field>
                     </page>
                 </notebook>
-            </xpath>
-            <xpath expr="//div[hasclass('oe_title')]" position="after">
-                <group>
-                    <field name="toast_content"/>
-                </group>
             </xpath>
         </field>
     </record>

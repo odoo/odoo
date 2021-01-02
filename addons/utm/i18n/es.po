@@ -3,9 +3,23 @@
 # 	* utm
 # 
 # Translators:
-# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2020
-# Carlos rodriguez <carlosalbertor436@gmail.com>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Leonardo Chianea <noamixcontenidos@gmail.com>, 2016
+# Mateo Tibaquirá Palacios <nestormateo@gmail.com>, 2016
+# Ana Juaristi <ajuaristio@gmail.com>, 2016
+# Carles Antoli <carlesantoli@hotmail.com>, 2016
+# Ivan Nieto <ivan.n.s@tuta.io>, 2016
+# Carlos rodriguez <carlosalbertor436@gmail.com>, 2016
+# oihane <oihanecruce@gmail.com>, 2016
+# Luis M. Ontalba <luis.martinez@tecnativa.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Efrem Jimenez <efj@odoo.com>, 2019
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2019
+# Cristóbal Martí Oliver <info@moblesmarti.com>, 2019
+# Cristopher Cravioto <ccr@odoo.com>, 2019
+# Jon Perez <jop@odoo.com>, 2019
+# Roberto Lizana <robertolizana@trey.es>, 2020
+# Mariana Santos Romo <msn@odoo.com>, 2020
+# VivianMontana23 <vivianpvm@gmail.com>, 2020
 # Nicolás Broggi <rnbroggi@gmail.com>, 2020
 # Martin Trigaux, 2020
 # 
@@ -14,7 +28,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
 "Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
@@ -74,7 +88,7 @@ msgstr "Campaña"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_form_quick_create
 msgid "Campaign Name"
-msgstr "Nombre de campaña"
+msgstr "Nombre de Campaña"
 
 #. module: utm
 #: model:ir.model,name:utm.model_utm_stage
@@ -213,7 +227,7 @@ msgstr "Diseño"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__display_name
 #: model:ir.model.fields,field_description:utm.field_utm_tag__display_name
 msgid "Display Name"
-msgstr "Nombre mostrado"
+msgstr "Nombre a mostrar"
 
 #. module: utm
 #. openerp-web
@@ -228,6 +242,11 @@ msgstr "Hecho"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Dropdown menu"
 msgstr "Menú desplegable"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "Editar"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
@@ -315,7 +334,7 @@ msgstr "Es el sitio web"
 #: model:ir.model.fields,field_description:utm.field_utm_stage____last_update
 #: model:ir.model.fields,field_description:utm.field_utm_tag____last_update
 msgid "Last Modified on"
-msgstr "Última modificación el"
+msgstr "Última modificación en"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__write_uid
@@ -525,12 +544,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Origen"
+msgstr "Texto original"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
 msgid "Source Name"
-msgstr "Nombre de la fuente"
+msgstr "Nombre del origen"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_source_action
@@ -555,6 +574,13 @@ msgstr "Etapas"
 msgid ""
 "Stages allow you to organize your workflow  (e.g. : plan, design, in "
 "progress,  done, …)."
+msgstr ""
+
+#. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
 msgstr ""
 
 #. module: utm
@@ -588,14 +614,14 @@ msgid ""
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
 "Esto es un nombre que facilita el seguimiento de sus diferentes proyectos de"
-" campaña. Por ejemplo: Rebajas_de_otoño, Especial_de_Navidad"
+" campaña (por ejemplo: Rebajas de otoño, Especial de Navidad)"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
-"Esto es el método de entrega. Por ejemplo: correo postal, correo "
-"electrónico, publicidad web"
+"Esto es el método de entrega (por ejemplo: correo postal, correo "
+"electrónico, pancarta publicitaria)"
 
 #. module: utm
 #: model:ir.model.fields,help:utm.field_utm_mixin__source_id
@@ -603,8 +629,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
-"Esto es la fuente del enlace. Por ejemplo: motor de búsqueda, otro dominio o"
-" nombre en listado de correos electrónicos"
+"Esto es la fuente del enlace (por ejemplo: motor de búsqueda, dominio "
+"alterno o nombre en listado de correos electrónicos)"
 
 #. module: utm
 #. openerp-web

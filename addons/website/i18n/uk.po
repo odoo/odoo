@@ -3,22 +3,22 @@
 # 	* website
 # 
 # Translators:
-# Yaroslav Molochko <onorua@gmail.com>, 2020
-# Oleg Pikarevskyi <o@btegri.co>, 2020
+# Yaroslav Molochko <onorua@gmail.com>, 2018
+# Taras Kovaliuk <tratatuta123@gmail.com>, 2018
+# Oleg Pikarevskyi <o@btegri.co>, 2019
 # Zoriana Zaiats, 2020
-# Taras Kovaliuk <tratatuta123@gmail.com>, 2020
 # Bohdan Lisnenko, 2020
-# ТАрас <tratatuta@i.ua>, 2020
-# Martin Trigaux, 2020
 # Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2020
+# Martin Trigaux, 2020
+# ТАрас <tratatuta@i.ua>, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:08+0000\n"
-"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -33,12 +33,6 @@ msgstr ""
 #, python-format
 msgid " Add Images"
 msgstr "Додати зображення"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "\" alert with a"
-msgstr "\" попередження з"
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
@@ -56,6 +50,12 @@ msgstr "\"URL для\" повинна починатися зі скісної �
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "К-сть переглянутих сторінок"
+
+#. module: website
+#: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
+msgid "# Visits"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_catalog
@@ -100,12 +100,6 @@ msgid "&amp;lt;head&amp;gt;"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_popup
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
 #: model_terms:ir.ui.view,arch_db:website.sitemap_xml
 msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
@@ -122,13 +116,6 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -161,10 +148,16 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
+#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
+#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 691-3277"
 msgstr "+1 (650) 691-3277"
 
@@ -194,16 +187,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "...and switch the timeline contents to fit your needs."
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.footer_custom
-#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
-#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
-#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "1 (650) 691-3277"
 msgstr ""
 
 #. module: website
@@ -269,21 +252,13 @@ msgid "16"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "2 <span class=\"sr-only\">(current)</span>"
-msgstr "2 <span class=\"sr-only\">(поточний)</span>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "24x7 toll-free support"
-msgstr "24x7 безкоштовна підтримка"
+msgstr "24x7 безплатна підтримка"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_hr_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "25%"
 msgstr "25%"
 
@@ -380,6 +355,13 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Click on a text</b> to start editing it."
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/tours/homepage.js:0
 #, python-format
 msgid ""
@@ -459,6 +441,20 @@ msgstr ""
 msgid ""
 "<b>My Company</b><br/>250 Executive Park Blvd, Suite 3400 <br/> San "
 "Francisco CA 94134 <br/>United States"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a ${optionTooltipLabel}."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a Color Palette."
 msgstr ""
 
 #. module: website
@@ -580,7 +576,7 @@ msgid ""
 "                                            How to get my Client ID"
 msgstr ""
 "<i class=\"fa fa-arrow-right\"/>\n"
-"                                            Як отримати мій клієнтський ID"
+"                                            Як отримати мій клієнтській ID"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -640,6 +636,13 @@ msgstr ""
 "                            <span>Підключено</span>"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.page_404
+msgid ""
+"<i class=\"fa fa-info-circle\"/> Edit the content below this line to adapt "
+"the default <strong>Page not found</strong> page."
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.protected_403
 msgid ""
 "<i class=\"fa fa-lock fa-2x\"/><br/>\n"
@@ -651,13 +654,6 @@ msgstr ""
 msgid ""
 "<i class=\"fa fa-lock fa-2x\"/><br/>\n"
 "                            <span class=\"mt-1\">Wrong password</span>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.company_description_google_map
-msgid ""
-"<i class=\"fa fa-plus-circle\"/>\n"
-"                The Google map option is enabled but"
 msgstr ""
 
 #. module: website
@@ -697,14 +693,9 @@ msgid "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
 msgstr "<i title=\"Is the page published?\" class=\"fa fa-eye\"/>"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_product_catalog_dish
-msgid "<i>Add a description here</i>"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<i>Instant setup, satisfied or reimbursed.</i>"
-msgstr "<i>Швидка інсталяція, вибіркова чи відновлена.</i>"
+msgstr "<i>Швидка інсталяція, вибіркові чи відновлення.</i>"
 
 #. module: website
 #. openerp-web
@@ -750,33 +741,9 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid ""
-"<small id=\"emailHelp\" class=\"form-text text-muted\">Form field help "
-"text</small>"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid ""
-"<small id=\"emailHelp\" class=\"form-text text-muted\">We'll never share "
-"your email with anyone else.</small>"
-msgstr ""
-"<small id=\"emailHelp\" class=\"form-text text-muted\">Ми ніколи не "
-"надаватимемо вашу електронну пошту іншим користувачам.</small>"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "<small>/ month</small>"
 msgstr "<small>/ місяць</small>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "<small>TABS</small>"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_header_magazine_oe_structure_header_magazine_1
@@ -1132,8 +1099,6 @@ msgstr "Обліковий запис &amp; Управління продажа�
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__redirect_type
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Action"
 msgstr "Дія"
 
@@ -1142,9 +1107,7 @@ msgstr "Дія"
 #: model:ir.model.fields,field_description:website.field_website_page__active
 #: model:ir.model.fields,field_description:website.field_website_rewrite__active
 #: model:ir.model.fields,field_description:website.field_website_visitor__active
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 msgid "Active"
 msgstr "Активно"
 
@@ -1170,7 +1133,7 @@ msgstr "Додати"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Add Features"
-msgstr "Додати функції"
+msgstr "Додати можливості"
 
 #. module: website
 #. openerp-web
@@ -1226,7 +1189,7 @@ msgstr ""
 #: code:addons/website/static/src/js/menu/content.js:0
 #, python-format
 msgid "Add a menu item"
-msgstr "Додайте елемент меню"
+msgstr "Додати елемент меню"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -1249,6 +1212,11 @@ msgstr "Додати до кошика"
 #, python-format
 msgid "Add to menu"
 msgstr "Додати в меню"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.company_description
+msgid "Add your key in the settings."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -1279,12 +1247,6 @@ msgstr ""
 "перегляд</b>."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Alert"
-msgstr "Сповіщення"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Align Bottom"
@@ -1312,7 +1274,7 @@ msgstr "Вирівнювання"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
 msgid "Aline Turner, CTO"
-msgstr "Аліне Тьорнер, технічний директор"
+msgstr "Aline Turner, CTO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_company_team
@@ -1486,7 +1448,12 @@ msgstr ""
 #. module: website
 #: model:ir.model,name:website.model_web_editor_assets
 msgid "Assets Utils"
-msgstr "Утиліти активу"
+msgstr "Активи утиліт"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "At The End"
+msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_ir_attachment
@@ -1521,12 +1488,6 @@ msgid "Autoredirect Language"
 msgstr "Автоматичне перенаправлення мови"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Autosizing"
-msgstr "Автоматичне визначення розміру"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_published
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_published
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_published
@@ -1538,12 +1499,6 @@ msgstr "Доступно на сайті"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "BTS Base Colors"
 msgstr ""
 
 #. module: website
@@ -1560,12 +1515,6 @@ msgstr ""
 #, python-format
 msgid "Background"
 msgstr "Фон"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Badge"
-msgstr "Значок"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -1595,7 +1544,7 @@ msgstr "Базовий перегляд"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Basic sales &amp; marketing for up to 2 users"
-msgstr "Основні продажі та торгівля для 2-х користувачів"
+msgstr "Основні продажі &amp; торгівля для 2-х користувачів"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_numbers
@@ -1652,7 +1601,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_widgets
 #, python-format
 msgid "Border"
-msgstr "Рамка"
+msgstr "Контур"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1703,23 +1652,9 @@ msgid "Boxes"
 msgstr "Коробки"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Breadcrumb"
-msgstr "Хлібні крихти"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Building blocks system"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Button"
-msgstr "Кнопка"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
@@ -1809,30 +1744,6 @@ msgid "Cannot load google map."
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Card"
-msgstr "Картка"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Card Body"
-msgstr "Тіло картки"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Card Footer"
-msgstr "Футер картки"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Card Header"
-msgstr "Заголовок картки"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Case Studies"
 msgstr ""
@@ -1867,7 +1778,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Change Icons"
-msgstr "Змінити іконки"
+msgstr "Змінити піктограми"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -1925,7 +1836,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
 msgid "Child Field"
-msgstr "Дочірнє поле"
+msgstr "Підлегле поле"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__child_id
@@ -2044,11 +1955,11 @@ msgstr "Копіювати цю сторінку"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
+#: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
@@ -2115,12 +2026,6 @@ msgid "Complete CRM for any size team"
 msgstr "Повноцінна CRM для всіх користувачів"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Components"
-msgstr "Компоненти"
-
-#. module: website
 #: model:ir.model,name:website.model_res_config_settings
 msgid "Config Settings"
 msgstr "Налаштування"
@@ -2161,12 +2066,18 @@ msgid "Connect with us"
 msgstr "Зв'яжіться з нами"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
+msgid "Connected"
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_search_console
 msgid "Console Google Search"
 msgstr ""
 
 #. module: website
 #: model:ir.model,name:website.model_res_partner
+#: model:ir.model.fields,field_description:website.field_website_visitor__partner_id
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Contact"
@@ -2219,6 +2130,11 @@ msgid "Contact us anytime"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
+msgid "Contacts"
+msgstr "Контакти"
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_robots__content
 msgid "Content"
 msgstr "Вміст"
@@ -2247,7 +2163,7 @@ msgstr "Контент для перекладу"
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
 msgid "Continue"
-msgstr "Продовжити"
+msgstr "Далі"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -2423,7 +2339,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:website.field_website_route__create_date
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: website
 #. openerp-web
@@ -2431,7 +2347,7 @@ msgstr "Створено на"
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #, python-format
 msgid "Custom"
-msgstr "Кастомний"
+msgstr "Власний"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__custom_code_head
@@ -2481,11 +2397,6 @@ msgid "Customer Account"
 msgstr "Клієнтський обліковий запис"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
-msgid "Customers"
-msgstr "Клієнти"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
 msgid "Customization tool"
 msgstr ""
@@ -2522,13 +2433,6 @@ msgid "D - H - M - S"
 msgstr ""
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/menu/edit.js:0
-#, python-format
-msgid "DRAG BUILDING BLOCKS HERE"
-msgstr "ПЕРЕТЯГНІТЬ СЮДИ БЛОКИ"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 msgid "Danger"
 msgstr "Небезпека"
@@ -2542,14 +2446,6 @@ msgstr "Панель приладів"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_border_line_widgets
 msgid "Dashed"
 msgstr "Підкреслено пунктиром"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Data"
-msgstr "Дані"
 
 #. module: website
 #. openerp-web
@@ -2596,7 +2492,7 @@ msgstr "Дні"
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Default"
-msgstr "За замовчуванням"
+msgstr "Типовий"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -2731,17 +2627,14 @@ msgid "Desktop"
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+msgid "Details"
+msgstr "Деталі"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Direction"
 msgstr "Напрямок"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Disabled"
-msgstr "Відключено"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -2760,7 +2653,6 @@ msgstr ""
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/menu/content.js:0
 #: code:addons/website/static/src/js/menu/seo.js:0
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Discard"
 msgstr "Відмінити"
@@ -2853,7 +2745,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_track__display_name
 #: model:ir.model.fields,field_description:website.field_website_visitor__display_name
 msgid "Display Name"
-msgstr "Відобразити назву"
+msgstr "Назва для відображення"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_cookies_bar
@@ -2889,7 +2781,7 @@ msgstr "Відобразити цей логотип на веб-сайті."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Display this website when users visit this domain"
-msgstr "Відображати цей веб-сайт, коли користувачі відвідують цей домен"
+msgstr "Показати цей веб-сайт, коли користувачі відвідують цей домен"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
@@ -2996,9 +2888,7 @@ msgid "Drag to the right to get a submenu"
 msgstr "Перетягніть вправо, щоб отримати підменю"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Dropdown"
 msgstr "Випадаюче меню"
 
@@ -3076,11 +2966,6 @@ msgid "Edit Menu Item"
 msgstr "Редагувати елемент меню"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
-msgid "Edit Message"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Edit Styles"
 msgstr "Редагувати стилі"
@@ -3114,15 +2999,6 @@ msgid "Edit robots.txt"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.page_404
-msgid ""
-"Edit the content below this line to adapt the default \"page not found\" "
-"page."
-msgstr ""
-"Редагуйте контент, розміщений нижче, щоб адаптувати сторінку за "
-"замовчуванням \"сторінку не знайдено\"."
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -3148,14 +3024,9 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__email
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Email"
 msgstr "Ел. пошта"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Email address"
-msgstr "Адреса електронної пошти"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3197,12 +3068,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Enter email"
-msgstr "Ввести email"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
 msgid "Equal Widths"
 msgstr ""
@@ -3211,15 +3076,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Error"
 msgstr "Помилка"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/tour_utils.js:0
-#, python-format
-msgid ""
-"Even if this title is cool, you can change it. <b>Click on a text</b> to "
-"start editing it."
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3305,7 +3161,7 @@ msgstr "Facebook"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_facebook
 #: model:ir.model.fields,field_description:website.field_website__social_facebook
 msgid "Facebook Account"
-msgstr "Обліковий запис у Facebook "
+msgstr "Сторінка в  Facebook "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3332,7 +3188,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__favicon
 msgid "Favicon"
-msgstr "Фавікон"
+msgstr "Favicon"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_three_columns
@@ -3358,7 +3214,7 @@ msgstr "Властивість 2"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Features"
-msgstr "Функції"
+msgstr "Можливості"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -3406,6 +3262,12 @@ msgid "Filter Intensity"
 msgstr "Інтенсивність фільтру"
 
 #. module: website
+#: model:ir.model.fields,field_description:website.field_website_visitor__create_date
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
+msgid "First Connection"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
 msgid "First Feature"
 msgstr "Перша властивість"
@@ -3414,11 +3276,6 @@ msgstr "Перша властивість"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "First Menu"
 msgstr "Перше меню"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__create_date
-msgid "First connection date"
-msgstr "Дата першого з'єднання"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_showcase
@@ -3531,12 +3388,6 @@ msgstr ""
 "Примусьте користувача створювати обліковий запис для кожного веб-сайту"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Form"
-msgstr "Форма"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Form Builder"
 msgstr "Конструктор форм"
@@ -3562,7 +3413,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__website__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr "Безкоштовна реєстрація"
+msgstr "Безкоштовна рестрація"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
@@ -3694,8 +3545,8 @@ msgid ""
 "customers. Simple words communicate better than big words and pompous "
 "language."
 msgstr ""
-"Копіювання починається з розуміння того, як ваш товар або послуга допомагає "
-"вашим клієнтам. Простими словами спілкуватися краще, ніж помпезною мовою."
+"Гарна копія починається з розуміння того, як ваш товар або послуга допомагає"
+" вашим клієнтам. Простими словами спілкуватися краще, ніж помпезною мовою."
 
 #. module: website
 #. openerp-web
@@ -3845,18 +3696,6 @@ msgid "H2"
 msgstr "H2"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "H4 Card title"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "H5 Card subtitle"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "HTML/CSS/JS Editor"
 msgstr "Редактор HTML/CSS/JS"
@@ -3904,12 +3743,6 @@ msgid "Has Social Default Image"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Header"
-msgstr "Верхній колонтитул"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_color
 msgid "Header Color"
 msgstr "Колір заголовка"
@@ -3928,42 +3761,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_website_page__header_visible
 msgid "Header Visible"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Headings 1"
-msgstr "Заголовок 1"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Headings 2"
-msgstr "Заголовок 2"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Headings 3"
-msgstr "Заголовок 3"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Headings 4"
-msgstr "Заголовок 4"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Headings 5"
-msgstr "Заголовок 5"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Headings 6"
-msgstr "Заголовок 6"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3997,11 +3794,6 @@ msgstr "Приховано"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 msgid "Hide For"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
-msgid "Hide countdown at the end"
 msgstr ""
 
 #. module: website
@@ -4040,7 +3832,6 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #: model:website.menu,name:website.menu_home
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
@@ -4048,16 +3839,9 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 #: model_terms:ir.ui.view,arch_db:website.template_footer_minimalist
-#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Home"
 msgstr "Головна"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Home <span class=\"sr-only\">(current)</span>"
-msgstr "Домашня сторінка <span class=\"sr-only\">(поточна)</span>"
 
 #. module: website
 #. openerp-web
@@ -4200,8 +3984,9 @@ msgid ""
 "If this field is empty, the view applies to all users. Otherwise, the view "
 "applies to the users of those groups only."
 msgstr ""
-"Якщо це поле порожнє, то перегляд застосовується до всіх користувачів. В "
-"іншому випадку перегляд застосовується лише до користувачів цих груп."
+"Якщо це поле порожнє, то представлення даних застосовується до всіх "
+"користувачів. В іншому випадку представлення даних застосовується лише до "
+"користувачів цих груп."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__active
@@ -4212,17 +3997,8 @@ msgid ""
 "         "
 msgstr ""
 "Якщо цей перегляд успадковується,\n"
-"* якщо Правильно, то перегляд завжди розширює свій батьківський\n"
+"* якщо Правильно, то перегляд завжди розширює свій батьківський елемент\n"
 "* якщо Помилково, то в даний час перегляд не поширюється на його батьківський статус, але його можна активувати"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/editor_menu.js:0
-#, python-format
-msgid ""
-"If you discard the current edits, all unsaved changes will be lost. You can "
-"cancel to return to edit mode."
-msgstr ""
 
 #. module: website
 #. openerp-web
@@ -4431,11 +4207,6 @@ msgid ""
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
-msgid "Is Connected"
-msgstr "Підключений"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_indexed
 msgid "Is Indexed"
 msgstr ""
@@ -4498,29 +4269,6 @@ msgid "It looks like your file is being called by"
 msgstr "Схоже, ваш файл запускається"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/content/website_root.js:0
-#, python-format
-msgid ""
-"It might be possible to edit the relevant items or fix the issue in <a "
-"href=\"%s\">the classic Odoo interface</a>"
-msgstr ""
-"Можливо, можна буде редагувати відповідні елементи або виправити проблему в "
-"<a href=\"%s\">класичному інтерфейсі Odoo</a>"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Item 1"
-msgstr "Елемент 1"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Item 2"
-msgstr "Елемент 2"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options
 msgid "Items per row"
 msgstr ""
@@ -4573,12 +4321,6 @@ msgid "Keywords"
 msgstr "Ключові слова"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Label"
-msgstr "Мітка"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__lang_id
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Language"
@@ -4607,15 +4349,18 @@ msgid "Languages available on your website"
 msgstr "Мови доступні на вашому веб-сайті"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_popup_options
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Large"
 msgstr "Великий"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
+msgid "Last 7 Days"
+msgstr "Останні 7 днів"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -4624,6 +4369,7 @@ msgstr "Остання дія"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_connection_datetime
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Last Connection"
 msgstr "Останнє підключення"
 
@@ -4675,7 +4421,7 @@ msgstr "Останнє меню"
 #: model:ir.model.fields,field_description:website.field_website_track____last_update
 #: model:ir.model.fields,field_description:website.field_website_visitor____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: website
 #. openerp-web
@@ -4686,6 +4432,7 @@ msgstr "Останній місяць"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Last Page"
 msgstr "Остання сторінка"
 
@@ -4821,14 +4568,6 @@ msgid "Let's start!"
 msgstr "Давайте почнемо!"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Library"
-msgstr "Бібліотека"
-
-#. module: website
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__limit
 msgid "Limit"
 msgstr "Обмеження"
@@ -4844,14 +4583,6 @@ msgid "Line"
 msgstr "Рядок"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Link"
-msgstr "Посилання"
-
-#. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
@@ -4862,23 +4593,6 @@ msgstr "Пов'зати якір"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Link Style"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Link button"
-msgstr "Кнопка посилання"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Link text"
-msgstr ""
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__partner_id
-msgid "Linked Partner"
-msgstr "Пов'язаний партнер"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5018,7 +4732,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_share_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Medium"
-msgstr "Канал"
+msgstr "Середній"
 
 #. module: website
 #. openerp-web
@@ -5111,14 +4825,10 @@ msgstr "Хвилини"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/theme_preview.xml:0
+#: model:ir.model.fields,field_description:website.field_website_visitor__mobile
 #, python-format
 msgid "Mobile"
 msgstr "Мобільний"
-
-#. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__mobile
-msgid "Mobile Phone"
-msgstr "Мобільний телефон"
 
 #. module: website
 #. openerp-web
@@ -5141,7 +4851,7 @@ msgstr "Модель"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__model_data_id
 msgid "Model Data"
-msgstr "Дані моделі"
+msgstr "Дані"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_updated
@@ -5250,6 +4960,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 #, python-format
 msgid "Name"
 msgstr "Назва"
@@ -5263,12 +4974,6 @@ msgstr "Назва та значок вашого веб-сайту"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Narrow"
 msgstr "Вузький"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Navbar"
-msgstr "Панель навігації"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -5323,11 +5028,9 @@ msgstr "Спливаючий інформаційний бюлетень"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.kanban_contain
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Next"
 msgstr "Наступний"
@@ -5383,7 +5086,7 @@ msgstr "Звичайний"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Not SEO optimized"
-msgstr "SEO не оптимізовано"
+msgstr "Не оптимізований SEO "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -5431,11 +5134,6 @@ msgid "Number of languages"
 msgstr "Кількість мов"
 
 #. module: website
-#: model:ir.model.fields,field_description:website.field_website_visitor__visit_count
-msgid "Number of visits"
-msgstr "Кількість відвідувань"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Odoo Version"
 msgstr "Версія Odoo "
@@ -5452,14 +5150,14 @@ msgstr "Офлайн"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
 #, python-format
 msgid "Ok"
 msgstr "Гаразд"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
 #, python-format
 msgid "Ok, never show me this again"
 msgstr "Добре, більше це не показувати"
@@ -5574,9 +5272,7 @@ msgid "Our References"
 msgstr "Наші посилання"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Outline"
 msgstr "Контур"
 
@@ -5677,6 +5373,7 @@ msgstr "URL сторінки"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__visitor_page_count
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Page Views"
 msgstr "Перегляди сторінки"
 
@@ -5696,49 +5393,16 @@ msgid "Page using a copy of me"
 msgstr "Сторінка використовує мою копію"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
-msgid "Page views"
-msgstr "Перегляди сторінки"
-
-#. module: website
 #: code:addons/website/models/website.py:0
 #: code:addons/website/models/website.py:0
 #: model:ir.ui.menu,name:website.menu_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 #, python-format
 msgid "Pages"
 msgstr "Сторінки"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Pagination"
-msgstr "Розбиття на сторінки"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid ""
-"Paragraph text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing "
-"elit. <i>Integer posuere erat a ante</i>."
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid ""
-"Paragraph with <strong>bold</strong>, <span class=\"text-"
-"muted\">muted</span> and <em>italic</em> texts"
-msgstr ""
-"Параграф з <strong>жирним</strong>, <span class=\"text-"
-"muted\">приглушеним</span> та <em>курсивним</em> текстом"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Paragraph."
-msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__parent_id
@@ -5800,12 +5464,6 @@ msgid "Pie"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Pill"
-msgstr "Вкладка"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Pills"
 msgstr ""
@@ -5849,12 +5507,6 @@ msgid "Preferences"
 msgstr "Персональні налаштування"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Preset"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.kanban_contain
 msgid "Prev"
 msgstr "Назад"
@@ -5876,10 +5528,8 @@ msgstr "Попередній перегляд"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
-#: model_terms:website.page,arch_db:website.bs_debug_page
 #, python-format
 msgid "Previous"
 msgstr "Попередній"
@@ -6287,7 +5937,7 @@ msgstr "Оптимізовано SEO"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
 msgid "Sample Icons"
-msgstr "Іконки зразка"
+msgstr "Зразок іконок"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -6301,7 +5951,6 @@ msgstr ""
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #: code:addons/website/static/src/js/menu/content.js:0
 #: code:addons/website/static/src/js/menu/seo.js:0
-#: code:addons/website/static/src/xml/website.editor.xml:0
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 #, python-format
 msgid "Save"
@@ -6369,9 +6018,7 @@ msgid "Scroll down to next section"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Search"
 msgstr "Пошук"
 
@@ -6491,7 +6138,6 @@ msgstr "Виберіть веб-сайт для налаштування"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Send Email"
 msgstr "Надіслати ел. листа"
 
@@ -6512,12 +6158,6 @@ msgstr "Напишіть нам"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__seo_name
 msgid "Seo name"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Separated link"
-msgstr "Окреме посилання"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__sequence
@@ -6590,7 +6230,12 @@ msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
-msgid "Show Message"
+msgid "Show Message and hide countdown"
+msgstr ""
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "Show Message and keep countdown"
 msgstr ""
 
 #. module: website
@@ -6698,7 +6343,6 @@ msgid "Slogan"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.s_alert_options
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -6706,21 +6350,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
 #: model_terms:ir.ui.view,arch_db:website.s_share_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Small"
 msgstr "Малий"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
 msgid "Small Header"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid ""
-"Small text. Lorem <b>ipsum dolor sit amet</b>, consectetur adipiscing elit. "
-"<i>Integer posuere erat a ante</i>."
 msgstr ""
 
 #. module: website
@@ -6746,12 +6381,6 @@ msgstr "Суцільний"
 #, python-format
 msgid "Some Users"
 msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Something else here"
-msgstr "Тут дещо інше"
 
 #. module: website
 #: code:addons/website/controllers/main.py:0
@@ -7032,12 +6661,6 @@ msgid "Text Position"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "Text muted. Lorem <b>ipsum dolor sit amet</b>, consectetur."
-msgstr ""
-
-#. module: website
 #: code:addons/website/controllers/backend.py:0
 #, python-format
 msgid "The Google Analytics Client ID or Key you entered seems incorrect."
@@ -7078,13 +6701,6 @@ msgstr ""
 "не вкажете їх."
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_countdown/000.xml:0
-#, python-format
-msgid "The following message will become visible"
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields,help:website.field_res_partner__website_url
 #: model:ir.model.fields,help:website.field_res_users__website_url
 #: model:ir.model.fields,help:website.field_website_page__website_url
@@ -7092,14 +6708,14 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,help:website.field_website_snippet_filter__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Повна URL-адреса для доступу до документа через сайт."
+msgstr "URL-адреса повністю, для доступу до документації через сайт"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_base_automation__website_url
 #: model:ir.model.fields,help:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,help:website.field_ir_cron__website_url
 msgid "The full URL to access the server action through the website."
-msgstr "Повна URL-адреса для доступу до сервера через сайт"
+msgstr "URL-адреса повністю, для доступу до сервера через сайт"
 
 #. module: website
 #. openerp-web
@@ -7127,6 +6743,11 @@ msgid "The limit must be between 1 and 16."
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
+msgid "The message will be visible once the countdown ends"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
 msgstr "Вибрані шаблони будуть відновлені до заводського вигляду."
@@ -7136,7 +6757,7 @@ msgstr "Вибрані шаблони будуть відновлені до з�
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "The title will take a default value unless you specify one."
-msgstr "Заголовок візьме значення за замовчуванням, якщо ви його не вкажете."
+msgstr "Заголовок займе значення за замовчуванням, якщо ви його не вкажете."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -7164,8 +6785,6 @@ msgstr "Прикріплення теми"
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.editor.js:0
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
 #, python-format
 msgid "Theme Colors"
 msgstr ""
@@ -7287,7 +6906,7 @@ msgid ""
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
 "Це поле слід використовувати при зверненні до архітектури перегляду. Він буде використовувати переклад.\n"
-"                               Занотуйте, що він буде читати `arch_db` або `arch_fs`, якщо в режимі dev-xml."
+"                               Побачте, що він буде читати `arch_db` або `arch_fs`, якщо в режимі dev-xml."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__arch_db
@@ -7304,12 +6923,6 @@ msgstr ""
 "                                                                         Корисно для (м'якого) скидання перерваного перегляду."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "This is a \""
-msgstr "Це \""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_banner
 msgid ""
 "This is a simple hero unit, a simple jumbotron-style component for calling "
@@ -7324,11 +6937,9 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.page_404
 msgid ""
-"This page does not exist, but you can create it as you are administrator of "
-"this site."
+"This page does not exist, but you can create it as you are editor of this "
+"site."
 msgstr ""
-"Ця сторінка не існує, але ви можете створити її як адміністратор цього "
-"сайту."
 
 #. module: website
 #: code:addons/website/models/website.py:0
@@ -7379,6 +6990,7 @@ msgstr "Хронологія"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__timezone
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Timezone"
 msgstr "Часовий пояс"
 
@@ -7405,7 +7017,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Title"
-msgstr "Звертання"
+msgstr "Заголовок"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_share_options
@@ -7439,20 +7051,12 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
-"Щоби надіслати запрошення в режимі B2B, відкрийте контакт або виберіть "
-"кілька у списку та натисніть на 'Управління доступом до порталу' у "
-"випадаючому меню *Дія*."
+"Щоб надіслати запрошення в режимі B2B, відкрийте контакт або виберіть кілька"
+" у списку та натисніть на 'Управління доступом до порталу' у випадаючому "
+"меню *Дія*."
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Toggle"
-msgstr "Переключити"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
 #: model_terms:ir.ui.view,arch_db:website.option_header_off_canvas
-#: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Toggle navigation"
 msgstr "Перемкніть навігацію"
 
@@ -7531,23 +7135,9 @@ msgid "Tracking ID"
 msgstr "ID відстеження"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/rte.summernote.js:0
-#, python-format
-msgid "Transform the picture (click twice to reset transformation)"
-msgstr "Перетворіть зображення (клацніть два рази, щоб скинути перетворення)"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Transition"
 msgstr "Переміщення"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/editor/wysiwyg_multizone_translate.js:0
-#, python-format
-msgid "Translate Attribute"
-msgstr "Атрибут перекладу"
 
 #. module: website
 #. openerp-web
@@ -7563,7 +7153,7 @@ msgstr "Переклад"
 
 #. module: website
 #. openerp-web
-#: code:addons/website/static/src/js/editor/editor_menu_translate.js:0
+#: code:addons/website/static/src/js/menu/edit.js:0
 #, python-format
 msgid "Translation Info"
 msgstr "Інформація про переклад"
@@ -7717,6 +7307,11 @@ msgid "Unpublished"
 msgstr "Неопубліковано"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
+msgid "Unregistered"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_kanban
 msgid "Update theme"
 msgstr "Оновити тему"
@@ -7838,7 +7433,7 @@ msgstr "Використовується в першому рівні загол
 #: code:addons/website/static/src/xml/website.seo.xml:0
 #, python-format
 msgid "Used in page second level heading"
-msgstr "Використовується в другому рівні заголовку сторінки"
+msgstr "Використовується в заголовку другого рівня сторінки"
 
 #. module: website
 #. openerp-web
@@ -7890,12 +7485,6 @@ msgid "Users"
 msgstr "Користувачі"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "Utilities &amp; Typography"
-msgstr "Утиліти та Типографіка"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_progress_bar_options
 msgid "Value"
 msgstr "Значення"
@@ -7941,7 +7530,7 @@ msgstr "Назва перегляду"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__type
 msgid "View Type"
-msgstr "Тип представлення"
+msgstr "Тип перегляду"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__mode
@@ -7957,7 +7546,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:website.website_visitor_view_action
 #: model:ir.ui.menu,name:website.menu_visitor_view_menu
 msgid "Views"
-msgstr "Представлення"
+msgstr "Переглядів"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__copy_ids
@@ -8038,11 +7627,6 @@ msgid "Visitor"
 msgstr "Відвідувач"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
-msgid "Visitor Information"
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_graph
 msgid "Visitor Page Views"
 msgstr "Перегляди сторінки відвідувачем"
@@ -8069,7 +7653,6 @@ msgstr "Історія переглядів відвідувача"
 #: model:ir.ui.menu,name:website.menu_visitor_sub_menu
 #: model:ir.ui.menu,name:website.website_visitor_menu
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_graph
-#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Visitors"
 msgstr "Відвідувачі"
 
@@ -8204,6 +7787,7 @@ msgstr "Веб-відвідувачі"
 #: model_terms:ir.ui.view,arch_db:website.menu_search
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:website.view_server_action_search_website
+#: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 #, python-format
 msgid "Website"
 msgstr "Веб-сайт"
@@ -8327,7 +7911,7 @@ msgstr "Заголовок сайту"
 #: model:ir.model.fields,field_description:website.field_website_published_multi_mixin__website_url
 #: model:ir.model.fields,field_description:website.field_website_snippet_filter__website_url
 msgid "Website URL"
-msgstr "URL веб-сайту"
+msgstr "URL сайту"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_url
@@ -8363,7 +7947,7 @@ msgid ""
 "and reject the installation of the cookies sent by us."
 msgstr ""
 "Веб-сайт може використовувати файли cookie для персоналізації та полегшення "
-"максимальної навігації користувача цим сайтом. Користувач може налаштувати "
+"максимальної навігації користувачем цим сайтом. Користувач може налаштувати "
 "свій веб-переглядач для повідомлення та відхилення встановлених нами файлів "
 "cookie."
 
@@ -8377,21 +7961,21 @@ msgstr "Меню сайту"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_description
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_description
 msgid "Website meta description"
-msgstr "Опис мети веб-сайту"
+msgstr "Мета-опис сайту"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_keywords
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Ключові слова веб-сайту"
+msgstr "Мета-ключі сайту"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_title
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_title
 msgid "Website meta title"
-msgstr "Заголовок мети веб-сайту"
+msgstr "Мета-заголовок сайту"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__website_meta_og_img
@@ -8450,11 +8034,6 @@ msgstr "Ласкаво просимо до вашого"
 #, python-format
 msgid "What do you want to do?"
 msgstr "Що би ви хотіли зробити?"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_countdown_options
-msgid "What should happen at the end?"
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -8554,7 +8133,7 @@ msgstr ""
 #: model:ir.model.constraint,message:website.constraint_res_users_login_key
 #, python-format
 msgid "You can not have two users with the same login!"
-msgstr "Ви не можете мати двох користувачів з однаковими логінами!"
+msgstr "Ви не можете мати двох користувачів з однаковим входом!"
 
 #. module: website
 #: code:addons/website/models/website_snippet_filter.py:0
@@ -8602,6 +8181,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "You may opt-out of a third-party's use of cookies by visiting the"
 msgstr ""
+
+#. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "You must keep at least one website."
+msgstr "Ви повинні зберегти принаймні один веб-сайт."
 
 #. module: website
 #. openerp-web
@@ -8730,38 +8315,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "big"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "breadcrumb"
-msgstr "хлібні крихти"
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "btn-outline-primary"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "btn-outline-secondary"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "btn-primary"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "btn-secondary"
 msgstr ""
 
 #. module: website
@@ -8936,12 +8489,6 @@ msgid "ir.ui.view"
 msgstr "ir.ui.view"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.bs_debug_view
-#: model_terms:website.page,arch_db:website.bs_debug_page
-msgid "link"
-msgstr "посилання"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "masonry, grid"
 msgstr ""
@@ -8949,17 +8496,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "menu, pricing"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.company_description_google_map
-msgid "not properly configured"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "o-color-"
 msgstr ""
 
 #. module: website
@@ -8971,20 +8507,6 @@ msgid ""
 "            your visitors. We recommend you avoid them unless you have\n"
 "            verified with a legal advisor that you absolutely need cookie\n"
 "            consent in your country."
-msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_countdown/000.xml:0
-#, python-format
-msgid "once the countdown ends."
-msgstr ""
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_countdown/000.xml:0
-#, python-format
-msgid "only"
 msgstr ""
 
 #. module: website
@@ -9005,12 +8527,6 @@ msgstr "сторінки, фрагменти, ...)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_form_preview
 msgid "phone"
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "placeholder"
 msgstr ""
 
 #. module: website
@@ -9046,12 +8562,6 @@ msgid "testimonials"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
-#: model_terms:website.page,arch_db:website.color_combinations_debug_page
-msgid "text link"
-msgstr ""
-
-#. module: website
 #: model:ir.model.fields.selection,name:website.selection__theme_ir_ui_view__inherit_id__theme_ir_ui_view
 msgid "theme.ir.ui.view"
 msgstr "theme.ir.ui.view"
@@ -9066,12 +8576,6 @@ msgstr "ця сторінка"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "valuation, rank"
-msgstr ""
-
-#. module: website
-#: code:addons/website/models/website.py:162
-#, python-format
-msgid "You must keep at least one website."
 msgstr ""
 
 #. module: website

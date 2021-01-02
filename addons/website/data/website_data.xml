@@ -241,10 +241,6 @@
             <field name="target">self</field>
         </record>
         <record id="action_website_edit" model="ir.actions.act_url">
-            <!--
-                be aware, this record has been added just after the 14.0
-                freeze and could be missing on first installed db.
-            -->
             <field name="name">Website Edit Mode</field>
             <field name="url">/?enable_editor=1</field>
             <field name="target">self</field>
@@ -778,7 +774,6 @@
             <field name="filter_id" ref="website.dynamic_snippet_country_filter"/>
             <field name="limit" eval="16"/>
             <field name="name">Countries</field>
-            <field name="website_id" ref="website.default_website"/>
         </record>
         <record id="group_multi_website" model="res.groups">
             <field name="name">Multi-website</field>

@@ -3,24 +3,22 @@
 # 	* fetchmail
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Morten Schou <ms@msteknik.dk>, 2020
-# JonathanStein <jstein@image.dk>, 2020
-# Jesper Carstensen <jc@danodoo.dk>, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
-# Ejner Sønniksen <ejner@vkdata.dk>, 2020
-# lhmflexerp <lhm@flexerp.dk>, 2020
-# Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Martin Trigaux, 2019
+# Morten Schou <ms@msteknik.dk>, 2019
+# JonathanStein <jstein@image.dk>, 2019
+# Jesper Carstensen <jc@danodoo.dk>, 2019
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Ejner Sønniksen <ejner@vkdata.dk>, 2019
+# lhmflexerp <lhm@flexerp.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:12+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:10+0000\n"
+"Last-Translator: lhmflexerp <lhm@flexerp.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,16 +45,6 @@ msgstr "Avanceret"
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Advanced Options"
 msgstr "Avancerede muligheder"
-
-#. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:0
-#, python-format
-msgid ""
-"An SSL exception occurred. Check SSL/TLS configuration on server port.\n"
-" %s"
-msgstr ""
-"Der forekom en SSL undtagelse. Tjek SSL/TLS konfiguration på server port.\n"
-"   %s"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -86,13 +74,11 @@ msgid ""
 "Connections are encrypted with SSL/TLS through a dedicated port (default: "
 "IMAPS=993, POP3S=995)"
 msgstr ""
-"Forbindelser er krypteret med SSL/TLS via en dedikeret port (standard: "
-"IMAPS=993, POP3S=995)"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__object_id
 msgid "Create a New Record"
-msgstr "Opret et nyt datasæt"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__create_uid
@@ -108,32 +94,29 @@ msgstr "Oprettet den"
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__priority
 msgid "Defines the order of processing, lower values mean higher priority"
 msgstr ""
-"Definere rangering af behandling, lavere værdier er lig med højere prioritet"
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__display_name
-#: model:ir.model.fields,field_description:fetchmail.field_mail_mail__display_name
 msgid "Display Name"
 msgstr "Vis navn"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "Email Count"
-msgstr "Email antal"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Fetch Now"
-msgstr "Hent nu"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__server
 msgid "Hostname or IP of the mail server"
-msgstr "Hostnavn eller IP på mail serveren"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__id
-#: model:ir.model.fields,field_description:fetchmail.field_mail_mail__id
 msgid "ID"
 msgstr "ID"
 
@@ -150,7 +133,7 @@ msgstr "IMAP Server"
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "If SSL required."
-msgstr "Hvis SSL påkrævet."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_mail_mail__fetchmail_server_id
@@ -176,16 +159,6 @@ msgid "Incoming Mail Servers"
 msgstr "Indgående mailservere"
 
 #. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:0
-#, python-format
-msgid ""
-"Invalid server name !\n"
-" %s"
-msgstr ""
-"Ugyldigt server navn !\n"
-"  %s"
-
-#. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__attach
 msgid "Keep Attachments"
 msgstr "Behold vedhæftninger"
@@ -198,11 +171,10 @@ msgstr "Behold original"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__date
 msgid "Last Fetch Date"
-msgstr "Sidste hent dato"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server____last_update
-#: model:ir.model.fields,field_description:fetchmail.field_mail_mail____last_update
 msgid "Last Modified on"
 msgstr "Sidst ændret den"
 
@@ -231,7 +203,7 @@ msgstr "Login-information"
 #: model:ir.cron,cron_name:fetchmail.ir_cron_mail_gateway_action
 #: model:ir.cron,name:fetchmail.ir_cron_mail_gateway_action
 msgid "Mail: Fetchmail Service"
-msgstr "Mail: Fetchmail service"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.actions.act_window,name:fetchmail.act_server_history
@@ -243,16 +215,6 @@ msgstr "Beskeder"
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__name
 msgid "Name"
 msgstr "Navn"
-
-#. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:0
-#, python-format
-msgid ""
-"No response received. Check server information.\n"
-" %s"
-msgstr ""
-"Intet svar modtaget. Tjek server information.\n"
-"   %s"
 
 #. module: fetchmail
 #: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__state__draft
@@ -272,7 +234,7 @@ msgstr "Udgående mails"
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "POP"
-msgstr "POP"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields.selection,name:fetchmail.selection__fetchmail_server__server_type__pop
@@ -282,7 +244,7 @@ msgstr "POP Server"
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_tree
 msgid "POP/IMAP Servers"
-msgstr "POP/IMAP Servere"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__password
@@ -292,7 +254,7 @@ msgstr "Adgangskode"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__port
 msgid "Port"
-msgstr "Port"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__object_id
@@ -301,14 +263,11 @@ msgid ""
 "document type. This will create new documents for new conversations, or "
 "attach follow-up emails to the existing conversations (documents)."
 msgstr ""
-"Behandl hver indgående email som del af en samtale svarende til denne "
-"dokument type. Dette vil oprette nye dokumenter for nye samtaler, eller "
-"vedhæfte opfølgnings emails til eksisterende samtaler (dokumenter)."
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Reset Confirmation"
-msgstr "Nulstil godkendelse"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -323,17 +282,17 @@ msgstr "SSL / TLS"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__script
 msgid "Script"
-msgstr "Script"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Search Incoming Mail Servers"
-msgstr "Søg indgående mail servere"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
 msgid "Server & Login"
-msgstr "Server & Login"
+msgstr ""
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_form
@@ -348,22 +307,12 @@ msgstr "Servernavn"
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__priority
 msgid "Server Priority"
-msgstr "Server Prioritet"
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__server_type
 msgid "Server Type"
 msgstr "Servertype"
-
-#. module: fetchmail
-#: code:addons/fetchmail/models/fetchmail.py:0
-#, python-format
-msgid ""
-"Server replied with following exception:\n"
-" %s"
-msgstr ""
-"Server svarede med følgende undtagelse:\n"
-"   %s"
 
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
@@ -373,7 +322,7 @@ msgstr "Server type IMAP."
 #. module: fetchmail
 #: model_terms:ir.ui.view,arch_db:fetchmail.view_email_server_search
 msgid "Server type POP."
-msgstr "Server type POP."
+msgstr ""
 
 #. module: fetchmail
 #: model:ir.model.fields,field_description:fetchmail.field_fetchmail_server__state
@@ -397,9 +346,6 @@ msgid ""
 "attached to each processed message. This will usually double the size of "
 "your message database."
 msgstr ""
-"Hvorvidt en fuldstændig original kopi af hver email skal gemmes som "
-"reference og vedhæftes hver behandlet besked. Dette vil typisk fordoble "
-"størrelsen på din besked database."
 
 #. module: fetchmail
 #: model:ir.model.fields,help:fetchmail.field_fetchmail_server__attach
@@ -407,5 +353,3 @@ msgid ""
 "Whether attachments should be downloaded. If not enabled, incoming emails "
 "will be stripped of any attachments before being processed"
 msgstr ""
-"Hvorvidt vedhæftninger skal hentes ned. Hvis slået til, vil emails blive "
-"frataget vedhæftelser før de behandles"

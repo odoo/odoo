@@ -3,18 +3,21 @@
 # 	* payment
 # 
 # Translators:
-# Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2020
-# Bohdan Lisnenko, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Zoriana Zaiats, 2018
+# ТАрас <tratatuta@i.ua>, 2018
+# Анатолій Пономаренко <aponomarenko020@gmail.com>, 2018
+# Oleksandr Paziuk <o.paziuk@mobilunity.com>, 2019
+# Bohdan Lisnenko, 2019
 # Martin Trigaux, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -231,27 +234,27 @@ msgstr "Еквайєр"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_id
 msgid "Acquirer Account"
-msgstr "Обліковий запис еквайєра"
+msgstr "Обліковий запис у еквайєра"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__acquirer_ref
 msgid "Acquirer Ref."
-msgstr "Референс еквайєра"
+msgstr "Посилання еквайєра"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__acquirer_reference
 msgid "Acquirer Reference"
-msgstr "Референс еквайєра"
+msgstr "Посилання еквайєра"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__acquirer_ids
 msgid "Acquirers"
-msgstr "Еквайєри"
+msgstr "Придбання"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr "Список еквайєрів"
+msgstr "Список покупців"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -330,9 +333,7 @@ msgstr "Заархівовано"
 msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
-msgstr ""
-"Ви дійсно хочете анулювати авторизовану транзакцію? Цю дію не можна "
-"скасувати."
+msgstr "Дійсно анулювати авторизовану транзакцію? Цю дію не можна скасувати."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__authorize_implemented
@@ -394,7 +395,7 @@ msgstr "Модель зворотнього документу"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Зворотній геш"
+msgstr "Зворотній хеш"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -452,8 +453,11 @@ msgstr "Транзакція отримання"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
-msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr "Отримати суму з Odoo, коли буде завершено доставку."
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed. Use this if "
+"you want to charge your customers cards only once you are sure you can ship "
+"the goods to them."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -491,6 +495,11 @@ msgid "Close"
 msgstr "Закрити"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_method_code
+msgid "Code"
+msgstr "Код"
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__color
 msgid "Color"
 msgstr "Колір"
@@ -515,7 +524,7 @@ msgstr "Налаштування"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr "Налаштувати"
+msgstr "Налаштування"
 
 #. module: payment
 #. openerp-web
@@ -589,7 +598,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:payment.field_payment_token__create_date
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -697,6 +706,7 @@ msgstr "Відхилити"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:payment.field_account_move__display_name
 #: model:ir.model.fields,field_description:payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__display_name
@@ -707,7 +717,7 @@ msgstr "Відхилити"
 #: model:ir.model.fields,field_description:payment.field_res_company__display_name
 #: model:ir.model.fields,field_description:payment.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Відобразити назву"
+msgstr "Назва для відображення"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_as
@@ -723,7 +733,7 @@ msgstr "Виконано"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__done_msg
 msgid "Done Message"
-msgstr "Повідомлення виконано"
+msgstr "Повідомлення \"готово\""
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__draft
@@ -807,7 +817,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "Фіксована внутрішня комісія"
+msgstr "Фіксована домашня комісія"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
@@ -817,12 +827,12 @@ msgstr "Фіксована міжнародна комісія"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__form
 msgid "Form"
-msgstr "Форма"
+msgstr "Вікно"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__view_template_id
 msgid "Form Button Template"
-msgstr "Шаблон кнопки форми"
+msgstr "З кнопки шаблону"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__form_save
@@ -888,6 +898,7 @@ msgstr "У мене є обліковий запис Paypal"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__id
 #: model:ir.model.fields,field_description:payment.field_account_move__id
 #: model:ir.model.fields,field_description:payment.field_account_payment__id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__id
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__id
@@ -996,7 +1007,7 @@ msgstr "Рахунок(и)"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids
 #, python-format
 msgid "Invoices"
-msgstr "Рахунки"
+msgstr "Рахунки-фактури"
 
 #. module: payment
 #: model:ir.model,name:payment.model_account_move
@@ -1022,6 +1033,7 @@ msgstr "Мова"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template____last_update
 #: model:ir.model.fields,field_description:payment.field_account_move____last_update
 #: model:ir.model.fields,field_description:payment.field_account_payment____last_update
+#: model:ir.model.fields,field_description:payment.field_account_payment_register____last_update
 #: model:ir.model.fields,field_description:payment.field_ir_http____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard____last_update
@@ -1032,7 +1044,7 @@ msgstr "Мова"
 #: model:ir.model.fields,field_description:payment.field_res_company____last_update
 #: model:ir.model.fields,field_description:payment.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__write_uid
@@ -1077,7 +1089,7 @@ msgstr "Керуйте методами оплати"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "Manage your payment methods"
-msgstr "Керуйте своїми способами оплати"
+msgstr "Керувати моїми способами оплати"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1091,9 +1103,9 @@ msgid ""
 "Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
-"Вручну: отримуйте оплату готівкою, чеком або будь-яким іншим методом за межами Odoo.\n"
+"Інструкція: отримуйте оплату готівкою, чеком або будь-яким іншим методом за межами Odoo.\n"
 "Електронний: отримуйте платіж автоматично за допомогою одержання платежу, надіславши запит на транзакцію на картці, збереженої клієнтом під час покупки або підписки в Інтернеті (платіжний токен).\n"
-"Пакетний депозит: одноразово зараховуйте кілька клієнтських чеків, створивши пакетний депозит, щоби подати в банк. Під час кодування виписки з банку в Odoo вам пропонують узгодити групову транзакцію з депозитом. Увімкніть цю опцію в налаштуваннях."
+"Пакетний депозит: одноразово зараховуйте кілька клієнтських чеків, створивши пакетний депозит, щоби подати в банк. Під час кодування виписки з банку в Odoo вам пропонують узгодити транзакцію з депозитом партії. Увімкніть цю опцію в налаштуваннях."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__paypal_seller_account
@@ -1216,6 +1228,7 @@ msgstr "Не завершено"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
@@ -1339,7 +1352,7 @@ msgstr "Платіжні еквайєри"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
 msgid "Payment Flow"
-msgstr "Процес оплати"
+msgstr "Платіжний потік"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -1407,7 +1420,7 @@ msgstr "Токен оплати"
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_tree_view
 #: model_terms:ir.ui.view,arch_db:payment.payment_token_view_search
 msgid "Payment Tokens"
-msgstr "Токени оплати"
+msgstr "Платежі Токенів"
 
 #. module: payment
 #: model:ir.model,name:payment.model_payment_transaction
@@ -1562,12 +1575,17 @@ msgstr "Референс"
 #. module: payment
 #: model:ir.model.constraint,message:payment.constraint_payment_transaction_reference_uniq
 msgid "Reference must be unique!"
-msgstr "Референс має бути унікальним!"
+msgstr "Посилання має бути унікальним!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
 msgstr "Довідка про TX, що зберігається в базі даних покупця"
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_payment_register
+msgid "Register Payment"
+msgstr "Зареєструйте платіж"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1623,6 +1641,7 @@ msgstr "Збережені дані про оплату"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
 msgstr "Збережені токени оплати"
 
@@ -1691,13 +1710,13 @@ msgstr "Коротка назва"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sips
 msgid "Sips"
-msgstr "Sips"
+msgstr "Набирає"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__state
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "State"
-msgstr "Статус"
+msgstr "Область"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
@@ -1726,6 +1745,11 @@ msgid "Stripe Secret Key"
 msgstr "Секретний ключ Stripe"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_partner_ids
+msgid "Suitable Payment Token Partner"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
 msgstr "Підтримувані значки платежу"
@@ -1747,7 +1771,7 @@ msgstr "Режим перевірки"
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
-"%s одержувачі платежу не можуть брати участь в ручному режимі отримання!"
+"%s одержувачі платежу не можуть брати участь в ручному режимі захоплення!"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1784,7 +1808,7 @@ msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
 msgstr ""
-"Операцію %s з %s для %s було підтверджено. Відповідні платежі опубліковано: "
+"Операцію %s з %s для %s було підтверджено. Відповідні платежі опубліковані: "
 "%s"
 
 #. module: payment
@@ -1950,12 +1974,12 @@ msgstr "Перевірка банківської картки"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr "Вартісні внутрішні комісії (у відсотках)"
+msgstr "Вартісні внутрішні збори оплати (у відсотках)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr "Вартісні міжнародні комісії (у відсотках)"
+msgstr "Вартісні міжнародні збори оплати (у відсотках)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified

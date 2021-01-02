@@ -41,6 +41,7 @@ var DataExport = Dialog.extend({
                 {text: _t("Export"), click: this._onExportData, classes: 'btn-primary'},
                 {text: _t("Close"), close: true},
             ],
+            fullscreen: config.device.isMobile,
         };
         this._super(parent, options);
         this.records = {};

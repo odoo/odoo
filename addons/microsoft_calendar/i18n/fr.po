@@ -5,16 +5,19 @@
 # Translators:
 # Martin Trigaux, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
+# Christophe Metten <cme@odoo.com>, 2020
+# Gilles Mangin <gilles.mangin@phidias.fr>, 2020
+# Florian Laboureix <fll@odoo.com>, 2020
+# David David <f322p3ph@yahoo.fr>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-12-11 11:03+0000\n"
+"Last-Translator: David David <f322p3ph@yahoo.fr>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,6 +70,11 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
+
+#. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "Informations des participants au calendrier"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_event
@@ -132,6 +140,7 @@ msgid "Delete from the current Microsoft Calendar account"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
@@ -147,6 +156,7 @@ msgid "Event Recurrence Rule"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -166,6 +176,7 @@ msgstr ""
 "événement sans la supprimer."
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update
@@ -245,6 +256,11 @@ msgid "Need Sync M"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Next Sync Token"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__sync_policy
 msgid "Next Synchronization"
 msgstr "Prochaine synchronisation"
@@ -273,6 +289,11 @@ msgstr ""
 #, python-format
 msgid "Redirection"
 msgstr "Redirection"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Refresh Token"
+msgstr "Actualiser le jeton"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -344,9 +365,19 @@ msgid "This will only affect events for which the user is the owner"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Token Validity"
+msgstr "Validité du jeton d'accès"
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
 msgid "User"
 msgstr "Utilisateur"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "User Token"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -362,7 +393,7 @@ msgstr "Utilisateurs"
 #: code:addons/microsoft_calendar/models/microsoft_sync.py:0
 #, python-format
 msgid ""
-"You cannot delete a record synchronized with Outlook Calendar, archive it "
+"You cannot delete a record synchronized with Microsoft Calendar, archive it "
 "instead."
 msgstr ""
 

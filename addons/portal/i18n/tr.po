@@ -3,30 +3,29 @@
 # 	* portal
 # 
 # Translators:
-# Ediz Duman <neps1192@gmail.com>, 2020
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
-# Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
-# Saban Yildiz <sabany@projetgrup.com>, 2020
-# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# gezgin biri <gezginbiri@hotmail.com>, 2020
-# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
-# Umur Akın <umura@projetgrup.com>, 2020
-# Buket Şeker <buket_skr@hotmail.com>, 2020
-# abc Def <hdogan1974@gmail.com>, 2020
-# Tugay Hatıl <tugayh@projetgrup.com>, 2020
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# Saban Yildiz <sabany@projetgrup.com>, 2017
+# Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2018
+# Levent Karakaş <levent@mektup.at>, 2019
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2019
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# gezgin biri <gezginbiri@hotmail.com>, 2019
 # Murat Durmuş <muratd@projetgrup.com>, 2020
+# Ediz Duman <neps1192@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# abc Def <hdogan1974@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
+"Last-Translator: abc Def <hdogan1974@gmail.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +38,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr "%d gün geciken ödeme"
+msgstr "%d gün geciken"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -75,6 +74,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/>Düzenle"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -270,7 +277,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_signature.js:0
 #, python-format
 msgid "Accept & Sign"
-msgstr "Kabul Et & İmzala"
+msgstr "Kabul Et & Kayıt Ol"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_warning
@@ -330,7 +337,7 @@ msgstr "Avatar"
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 #, python-format
 msgid "Cancel"
-msgstr "İptal et"
+msgstr "İptal"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -339,6 +346,7 @@ msgstr "Parolayı Değiştir"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
@@ -406,7 +414,7 @@ msgstr "Parolayı Doğrula"
 #: model:ir.model,name:portal.model_res_partner
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__partner_id
 msgid "Contact"
-msgstr "Temas"
+msgstr "Kontak"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -416,7 +424,7 @@ msgstr "Kontak Ayrıntıları"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "Contacts"
-msgstr "Kontaklar"
+msgstr "Kişiler"
 
 #. module: portal
 #. openerp-web
@@ -447,7 +455,7 @@ msgstr "Oluşturan"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturulma zamanı"
 
 #. module: portal
 #. openerp-web
@@ -513,7 +521,7 @@ msgstr "Belgeler"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due in %d days"
-msgstr "Ödeme kalan gün %d "
+msgstr "Güne %d kadar"
 
 #. module: portal
 #. openerp-web
@@ -614,7 +622,7 @@ msgstr "Davet İletisi"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
 #: model:ir.model.fields,field_description:portal.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Son Düzenleme"
+msgstr "Son Güncelleme"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -873,6 +881,15 @@ msgid "Some contacts have the same email as an existing portal user:"
 msgstr "Bazı kişiler mevcut portal kullanıcısı ile aynı epostaya sahip:"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
@@ -1026,6 +1043,7 @@ msgstr "Görünür"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
@@ -1060,6 +1078,7 @@ msgstr "Websitesi Mesajları"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,help:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids

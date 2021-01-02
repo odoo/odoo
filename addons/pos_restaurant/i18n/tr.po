@@ -3,18 +3,19 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
-# Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
-# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# dhkabayel <dhkabayel@gmail.com>, 2020
-# Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2020
-# Yedigen, 2020
-# abc Def <hdogan1974@gmail.com>, 2020
+# Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2017
+# gezgin biri <gezginbiri@hotmail.com>, 2017
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2017
+# Ali Zeynel AĞCA <zeynelagca@gmail.com>, 2017
+# Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2017
+# dhkabayel <dhkabayel@gmail.com>, 2019
+# Yedigen, 2019
 # Murat Durmuş <muratd@projetgrup.com>, 2020
+# abc Def <hdogan1974@gmail.com>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
+# Martin Trigaux, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Ramiz Deniz Öner <deniz@denizoner.com>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # 
@@ -22,8 +23,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
 "Last-Translator: Umur Akın <umura@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -127,13 +128,13 @@ msgid ""
 "                define and position the tables."
 msgstr ""
 "Bir restoran katı, müşterilerin hizmet edildiği yeri temsil eder, burası "
-"masaları tanımlayıp konumlandırabileceğiniz yerdir."
+"tabloları tanımlayıp konumlandırabileceğiniz yerdir."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__active
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
 msgid "Active"
-msgstr "Etkin"
+msgstr "Aktif"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -538,6 +539,13 @@ msgid "Guests ?"
 msgstr "Misafir?"
 
 #. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "Guests:"
+msgstr "Misafirler"
+
+#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
 msgid "Height"
 msgstr "Yükseklik"
@@ -588,7 +596,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer____last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table____last_update
 msgid "Last Modified on"
-msgstr "Son Düzenleme"
+msgstr "Son Güncelleme"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
@@ -706,7 +714,7 @@ msgstr ""
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/Orderline.xml:0
 #, python-format
 msgid "Note"
-msgstr "Not"
+msgstr "Bilgi"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
@@ -1192,13 +1200,14 @@ msgstr "Masanın piksel olarak yüksekliği"
 msgid ""
 "The table's horizontal position from the left side to the table's center, in"
 " pixels"
-msgstr "Masanın piksel olarak yatay olarak sol tarafından merkezine konumu."
+msgstr ""
+"Masanın piksel olarak yatay pozisyonda sol tarafından merkezine konumu."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__position_v
 msgid ""
 "The table's vertical position from the top to the table's center, in pixels"
-msgstr "Masanın piksel olarak dikey olarak  en yukarıdan merkezine konumu"
+msgstr "Masanın piksel olarak dikey olarak "
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_table__width
@@ -1253,7 +1262,7 @@ msgstr "Toplam:"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/TransferOrderButton.xml:0
 #, python-format
 msgid "Transfer"
-msgstr "Aktarım"
+msgstr "Transfer"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1370,7 +1379,7 @@ msgstr "Genişlik"
 #: code:addons/pos_restaurant/static/src/xml/Screens/SplitBillScreen/SplitOrderline.xml:0
 #, python-format
 msgid "With a"
-msgstr "ile"
+msgstr "bir ile"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -1419,6 +1428,13 @@ msgstr ""
 #, python-format
 msgid "at"
 msgstr "de"
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
+#, python-format
+msgid "at table"
+msgstr "Masada"
 
 #. module: pos_restaurant
 #. openerp-web

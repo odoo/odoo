@@ -6,7 +6,7 @@
     <t t-call="website.layout">
         <!-- Options -->
         <t t-set="opt_events_list_categories" t-value="is_view_active('website_event.opt_events_list_categories')"/>
-        <div id="wrap" class="o_wevent_event js_event">
+        <div id="wrap" t-attf-class="o_wevent_event js_event #{'o_wevent_hide_sponsors' if hide_sponsors else ''}">
             <t t-if="not event.menu_id">
                 <nav class="navbar navbar-light border-top shadow-sm d-print-none">
                     <div class="container align-items-baseline justify-content-start">

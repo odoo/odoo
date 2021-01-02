@@ -3,19 +3,18 @@
 # 	* pos_discount
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2020
-# Martin Trigaux, 2020
-# hoxhe Aits <hoxhe0@gmail.com>, 2020
-# mohamed eboda <m.eboda@gmail.com>, 2020
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2020
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Martin Trigaux, 2019
+# hoxhe Aits <hoxhe0@gmail.com>, 2019
+# mohamed eboda <m.eboda@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Osama Ahmaro <osamaahmaro@gmail.com>, 2020\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: mohamed eboda <m.eboda@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +29,7 @@ msgstr "السماح للكاشير بعمل خصومات على الأمر با
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/xml/DiscountButton.xml:0
+#: code:addons/pos_discount/static/src/xml/discount_templates.xml:6
 #, python-format
 msgid "Discount"
 msgstr "الخصم"
@@ -42,7 +41,7 @@ msgstr "الخصم %"
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#: code:addons/pos_discount/static/src/js/discount.js:14
 #: model:ir.model.fields,field_description:pos_discount.field_pos_config__discount_pc
 #, python-format
 msgid "Discount Percentage"
@@ -55,23 +54,8 @@ msgid "Discount Product"
 msgstr "منتج الخصم"
 
 #. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config__display_name
-msgid "Display Name"
-msgstr "الاسم المعروض"
-
-#. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config__id
-msgid "ID"
-msgstr "المُعرف"
-
-#. module: pos_discount
-#: model:ir.model.fields,field_description:pos_discount.field_pos_config____last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
-
-#. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#: code:addons/pos_discount/static/src/js/discount.js:28
 #, python-format
 msgid "No discount product found"
 msgstr "لا يوجد منتج لتطبيق خصم عليه"
@@ -93,7 +77,7 @@ msgstr "نسبة الخصم الافتراضي"
 
 #. module: pos_discount
 #. openerp-web
-#: code:addons/pos_discount/static/src/js/DiscountButton.js:0
+#: code:addons/pos_discount/static/src/js/discount.js:29
 #, python-format
 msgid ""
 "The discount product seems misconfigured. Make sure it is flagged as 'Can be"

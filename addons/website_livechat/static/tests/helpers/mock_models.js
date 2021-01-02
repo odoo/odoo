@@ -26,9 +26,9 @@ MockModels.patch('website_livechat/static/tests/helpers/mock_models.js', T =>
                         // This should normally not be a field.
                         history: { string: "History", type: 'string'},
                         is_connected: { string: "Is connected", type: 'boolean' },
-                        lang: { string: "Language", type: 'string'},
+                        lang_name: { string: "Language name", type: 'string'},
                         partner_id: {string: "partner", type: "many2one", relation: 'res.partner'},
-                        website: { string: "Website", type: 'string' },
+                        website_name: { string: "Website name", type: 'string' },
                     },
                     records: [],
                 },

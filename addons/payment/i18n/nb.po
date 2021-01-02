@@ -3,16 +3,19 @@
 # 	* payment
 # 
 # Translators:
-# Jorunn D. Newth, 2020
+# Aleksander, 2018
+# Viktor Basso <viktor@voit.no>, 2018
+# Jan Pedro Tumusok <jpt@eyenetworks.no>, 2018
+# Jorunn D. Newth, 2019
 # Marius Stedjan <marius@stedjan.com>, 2020
 # Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
@@ -64,7 +67,7 @@ msgstr ""
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 msgid "<i class=\"fa fa-arrow-circle-right\"/> Back to My Account"
-msgstr "<i class=\"fa fa-arrow-circle-right\"/> Tilbake til min konto"
+msgstr "<i class=\"fa fa-arrow-circle-right\"/> Tilbake til kontoen min"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -72,9 +75,8 @@ msgid ""
 "<i class=\"fa fa-check text-muted\" title=\"This payment method has not been"
 " verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 msgstr ""
-"<i class=\"fa fa-check text-muted\" title=\"Betalingsmetoden er foreløpig "
-"ikke verifisert av vårt system.\" role=\"img\" aria-label=\"Ikke "
-"verifisert\"/>"
+"<i class=\"fa fa-check text-muted\" title=\"This payment method has not been"
+" verified by our system.\" role=\"img\" aria-label=\"Not verified\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -108,7 +110,7 @@ msgstr "<i class=\"fa fa-trash\"/> Slett"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
-msgstr "<small class=\"text-muted\">(Gebyr kan tilkomme)</small>"
+msgstr "<small class=\"text-muted\">(Avgifter kan tilkomme)</small>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -157,7 +159,7 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr "Det kreves en betalingsinnløser for å opprette en transaksjon."
+msgstr "En betalingsinnløser kreves for å opprette en transaksjon."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -252,7 +254,7 @@ msgstr "Innløsere"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr "Innløserliste"
+msgstr "Liste over tilbydere"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -267,7 +269,7 @@ msgstr "Aktiv"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_active
 msgid "Add Extra Fees"
-msgstr "Legg til ekstra gebyrer"
+msgstr "Legg til ekstra avgifter"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -343,7 +345,7 @@ msgstr "Autoriseringsmekanisme støttes"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__auth_msg
 msgid "Authorize Message"
-msgstr "Melding ved autorisert"
+msgstr "Autorisasjonsmelding"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_authorize
@@ -365,7 +367,7 @@ msgstr "Autoriserte transaksjoner"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Availability"
-msgstr "Lagerstatus"
+msgstr "Tilgjengelighet"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__journal_name
@@ -395,7 +397,7 @@ msgstr "Callback Dokument Modell"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_hash
 msgid "Callback Hash"
-msgstr "Callback Hash"
+msgstr "Callback Hashß"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_method
@@ -408,17 +410,17 @@ msgstr "Callback Metode"
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 #, python-format
 msgid "Cancel"
-msgstr "Avbryt"
+msgstr "Kanseller"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__cancel_msg
 msgid "Cancel Message"
-msgstr "Melding ved avbrudd"
+msgstr "Avbryt melding"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__cancel
 msgid "Canceled"
-msgstr "Avbrutt"
+msgstr "Kansellert"
 
 #. module: payment
 #. openerp-web
@@ -432,7 +434,7 @@ msgstr "Avbrutte betalinger"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Cannot setup the payment"
-msgstr "Kan ikke utføre betalingen"
+msgstr "Kan ikke utføre betaling"
 
 #. module: payment
 #: code:addons/payment/controllers/portal.py:0
@@ -443,18 +445,21 @@ msgstr "Kan ikke uføre betalingen."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__capture_manually
 msgid "Capture Amount Manually"
-msgstr "Belast beløp manuelt"
+msgstr "Trekk beløp manuelt"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr "Belast beløpet"
+msgstr "Trekk transaksjon"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
-msgid "Capture the amount from Odoo, when the delivery is completed."
-msgstr "Belast beløpet fra Odoo når leveringen er utført."
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed. Use this if "
+"you want to charge your customers cards only once you are sure you can ship "
+"the goods to them."
+msgstr ""
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
@@ -476,20 +481,25 @@ msgstr "Velg standard metode for kundebetaling."
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_city
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "City"
-msgstr "Sted"
+msgstr "By"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Click here to be redirected to the confirmation page."
-msgstr "Klikk her for å se bekreftelsen."
+msgstr "Klikk her for å se bekreftelsen"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Close"
 msgstr "Lukk"
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_method_code
+msgid "Code"
+msgstr "Kode"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__color
@@ -516,7 +526,7 @@ msgstr "Konfigurasjon"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Configure"
-msgstr "Konfigurer"
+msgstr "Sett opp"
 
 #. module: payment
 #. openerp-web
@@ -650,7 +660,7 @@ msgstr "Kredittkort (drevet av Stripe)"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr "Kreditkort (via Stripe)"
+msgstr "Bankkort (via Stripe)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__currency_id
@@ -666,7 +676,7 @@ msgstr "Tilpasset betalingsskjema"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr "Tilpasset betalingsinstruksjon"
+msgstr "Tilpasset betalingsinstruks"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -698,6 +708,7 @@ msgstr "Avvis"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:payment.field_account_move__display_name
 #: model:ir.model.fields,field_description:payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__display_name
@@ -713,7 +724,7 @@ msgstr "Visningsnavn"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_as
 msgid "Displayed as"
-msgstr "Vises som"
+msgstr "ist som"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__state__done
@@ -734,7 +745,7 @@ msgstr "Utkast"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "E-mail"
-msgstr "E-post"
+msgstr "Epost"
 
 #. module: payment
 #: model:account.payment.method,name:payment.account_payment_method_electronic_in
@@ -747,7 +758,7 @@ msgstr "Elektronisk"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_email
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form
 msgid "Email"
-msgstr "E-post"
+msgstr "Epost"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
@@ -785,7 +796,7 @@ msgstr "Gebyr"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__fees
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Fees"
-msgstr "Gebyrer"
+msgstr "Avgifter"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_implemented
@@ -795,7 +806,7 @@ msgstr "Større for utregning av gebyrer"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__fees
 msgid "Fees amount; set by the system because depends on the acquirer"
-msgstr "Gebyrbeløp: satt av systemet fordi det avhenger av innløseren"
+msgstr "Avgiftsbeløp: satt av systemet fordi det avhenger av innløseren"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__state_message
@@ -807,12 +818,12 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_fixed
 msgid "Fixed domestic fees"
-msgstr "Faste gebyrer innland"
+msgstr "Faste avgifter innland"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_fixed
 msgid "Fixed international fees"
-msgstr "Faste gebyrer utland"
+msgstr "Faste avgifter utland"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__form
@@ -847,7 +858,7 @@ msgstr "Generer betalingslink"
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_invoice_order_generate_link
 msgid "Generate a Payment Link"
-msgstr "Generer link til betaling"
+msgstr "Generer betalingslink"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
@@ -888,6 +899,7 @@ msgstr "Jeg har en PayPal-konto"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__id
 #: model:ir.model.fields,field_description:payment.field_account_move__id
 #: model:ir.model.fields,field_description:payment.field_account_payment__id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__id
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__id
@@ -898,7 +910,7 @@ msgstr "Jeg har en PayPal-konto"
 #: model:ir.model.fields,field_description:payment.field_res_company__id
 #: model:ir.model.fields,field_description:payment.field_res_partner__id
 msgid "ID"
-msgstr "ID"
+msgstr "IDID"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -949,7 +961,7 @@ msgstr "Ingenico"
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_kanban
 msgid "Install"
-msgstr "Installer"
+msgstr "Installasjon"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__module_state
@@ -1010,7 +1022,7 @@ msgstr "Journal hvor vellykkede transaksjoner blir postert"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
 msgid "Just done"
-msgstr "Nettopp ferdig"
+msgstr "Akkurat ferdig"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1021,6 +1033,7 @@ msgstr "Språk"
 #: model:ir.model.fields,field_description:payment.field_account_chart_template____last_update
 #: model:ir.model.fields,field_description:payment.field_account_move____last_update
 #: model:ir.model.fields,field_description:payment.field_account_payment____last_update
+#: model:ir.model.fields,field_description:payment.field_account_payment_register____last_update
 #: model:ir.model.fields,field_description:payment.field_ir_http____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard____last_update
@@ -1113,8 +1126,7 @@ msgstr "Melding som vises når betalingen er autorisert."
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__pre_msg
 msgid "Message displayed to explain and help the payment process."
-msgstr ""
-"Melding som vises for å forklare og hjelpe til under betalingsprosessen."
+msgstr "Melding vist for å forklare og hjelpe til under betalingsprosessen."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__cancel_msg
@@ -1210,12 +1222,13 @@ msgstr "Ikke fullført"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
 msgstr ""
 "Merk at tokener fra innløsere, som er satt til å kun autorisere "
-"transaksjoner (istedenfor å belaste beløpet), ikke er tilgjengelig."
+"transaksjoner (istedenfor å trekke beløpet), ikke er tilgjengelig."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__payment_flow
@@ -1241,7 +1254,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "Ok"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
@@ -1259,7 +1272,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only transactions having the capture status can be voided."
-msgstr "Kun transaksjoner med status belast, kan annulleres."
+msgstr "Kun transaksjoner med status trekk, kan annulleres."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1270,7 +1283,7 @@ msgstr "Eller skan meg med bank-appen din."
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
 msgid "Other"
-msgstr "Annen"
+msgstr "Annet"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__other
@@ -1320,14 +1333,14 @@ msgstr "Betaling"
 #: model:ir.model,name:payment.model_payment_acquirer
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
 msgid "Payment Acquirer"
-msgstr "Betalingsinnløser"
+msgstr "Betalingsløsning"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_acquirer
 #: model:ir.ui.menu,name:payment.payment_acquirer_menu
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_list
 msgid "Payment Acquirers"
-msgstr "Betalingsinnløsere"
+msgstr "Betalingsløsninger"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_flow
@@ -1426,7 +1439,7 @@ msgstr "Payment acquire onboarding wizard"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__payment_flow__s2s
 msgid "Payment from Odoo"
-msgstr "Betaling fra Odoo"
+msgstr "Betaling sendt fra Odoo"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1444,14 +1457,14 @@ msgstr "Betalinger"
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Payments failed"
-msgstr "Betalinger feilet"
+msgstr "Feilede betalinger"
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:0
 #, python-format
 msgid "Payments received"
-msgstr "Betalinger mottatt"
+msgstr "Betalinger Mottatt"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_paypal
@@ -1471,7 +1484,7 @@ msgstr "Venter"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__pending_msg
 msgid "Pending Message"
-msgstr "Melding ved avventende"
+msgstr "Melding enter"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_phone
@@ -1532,7 +1545,7 @@ msgstr "Behandlet av"
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__provider
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "Provider"
-msgstr "Innløser"
+msgstr "Tilbyder"
 
 #. module: payment
 #. openerp-web
@@ -1561,6 +1574,11 @@ msgstr "Referanse må være unik!"
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
 msgid "Reference of the TX as stored in the acquirer database"
 msgstr "Transaksjonreferanse lagret i innløsers database"
+
+#. module: payment
+#: model:ir.model,name:payment.model_account_payment_register
+msgid "Register Payment"
+msgstr "Registrer betaling"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
@@ -1596,7 +1614,7 @@ msgstr "S2S Skjemamal"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_sepa_direct_debit
 msgid "SEPA Direct Debit"
-msgstr "SEPA Direkte-debitering"
+msgstr "SEPA Direct Debit"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__save_token
@@ -1612,10 +1630,11 @@ msgstr "Lagre mine betalingsdata"
 #: model:ir.actions.act_window,name:payment.payment_token_action
 #: model:ir.ui.menu,name:payment.payment_token_menu
 msgid "Saved Payment Data"
-msgstr "Lagrede betalingsdata"
+msgstr "Lagrede betalingsdata."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
 msgstr "Lagrede betalingstokener"
 
@@ -1690,7 +1709,7 @@ msgstr "Sips"
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__state
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_search
 msgid "State"
-msgstr "Modus"
+msgstr "Stat"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_acquirer_onboarding_state
@@ -1719,6 +1738,11 @@ msgid "Stripe Secret Key"
 msgstr "Stripe hemmelig nøkkel"
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_partner_ids
+msgid "Suitable Payment Token Partner"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
 msgstr "Støttede betalingsikoner"
@@ -1740,8 +1764,7 @@ msgstr "Testmodus"
 #, python-format
 msgid "The %s payment acquirers are not allowed to manual capture mode!"
 msgstr ""
-"Betalingsinnløserne %s er ikke tillatt å bruke funksjon for manuell "
-"belastning."
+"Betalingsinnløserne %s er ikke tillatt å bruke funksjon for manuelt trekk."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1755,7 +1778,7 @@ msgstr "Kunden har valgt %s for å betale dette dokumentet."
 msgid ""
 "The transaction %s with %s for %s has been authorized. Waiting for "
 "capture..."
-msgstr "Transaksjonen %s med %s for %s er autorisert. Venter på belastning..."
+msgstr "Transaksjonen %s med %s for %s er autorisert. Venter på trekk..."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1854,7 +1877,7 @@ msgid ""
 "selected it is available for all countries."
 msgstr ""
 "Denne betalingsmetoden er tilgjengelig for valgte land. Om ingen er valg, er"
-" den tilgjengelig for alle. "
+" den tilgjengelig for alle land. "
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__view_template_id
@@ -1917,7 +1940,7 @@ msgstr "Oppgrader"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__date
 msgid "Validation Date"
-msgstr "Valideringsdato"
+msgstr "Godkjenningsdato"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_transaction__type__validation
@@ -1927,12 +1950,12 @@ msgstr "Validering av bankkortet"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_dom_var
 msgid "Variable domestic fees (in percents)"
-msgstr "Varible gebyrer innland (i prosent)"
+msgstr "Varible avgifter innland (i prosent)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__fees_int_var
 msgid "Variable international fees (in percents)"
-msgstr "Variable gebyrer utland (i prosent)"
+msgstr "Variable avgifter utland (i prosent)"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__verified
@@ -2092,7 +2115,7 @@ msgstr "Din ordre blir behandlet, vennligst vent..."
 #: model_terms:payment.acquirer,auth_msg:payment.payment_acquirer_transfer
 #, python-format
 msgid "Your payment has been authorized."
-msgstr "Din betaling er autorisert."
+msgstr "Betalingen din er autorisert."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -2186,7 +2209,7 @@ msgstr "og mer"
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "e.g. Your credit card details are wrong. Please verify."
-msgstr "f.eks: Kortinformasjonen er feil. Se over og prøv på nytt."
+msgstr "f.eks: Kortinformasjonen er feil. Verifiser og prøv på nytt."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_acquirer_onboarding_wizard_form

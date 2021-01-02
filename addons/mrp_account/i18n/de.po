@@ -3,19 +3,24 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Bülent Tiknas <btiknas@googlemail.com>, 2020
-# Johannes Croe <jcr@odoo.com>, 2020
-# Leon Grill <leg@odoo.com>, 2020
+# ba566f9f7abd166f8f1f032649ec3e69, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Wolfgang Taferner, 2017
+# Katharina Moritz <kmo@e2f.com>, 2017
+# e2f <projects@e2f.com>, 2018
+# Bülent Tiknas <btiknas@googlemail.com>, 2019
+# Johannes Croe <jcr@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2020
+# Leon Grill <leg@odoo.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:29+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +31,7 @@ msgstr ""
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter__costs_hour_account_id
 msgid "Analytic Account"
-msgstr "Kostenstelle"
+msgstr "Analysekonto"
 
 #. module: mrp_account
 #: model:ir.actions.server,name:mrp_account.action_compute_price_bom_product
@@ -59,6 +64,7 @@ msgstr "Kostenauszeichnung"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
 
@@ -87,6 +93,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
 msgid "ID"
 msgstr "ID"
 
@@ -96,8 +103,9 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity____last_update
 #: model:ir.model.fields,field_description:mrp_account.field_product_product____last_update
 #: model:ir.model.fields,field_description:mrp_account.field_product_template____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_product
@@ -118,6 +126,11 @@ msgstr "Fertigungsauftrag"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
 msgid "Show Valuation"
 msgstr "Bewertung anzeigen"
+
+#. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_move
+msgid "Stock Move"
+msgstr "Lagerbuchung"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded

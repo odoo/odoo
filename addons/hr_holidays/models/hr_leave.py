@@ -256,6 +256,8 @@ class HolidaysRequest(models.Model):
     request_unit_half = fields.Boolean('Half Day', compute='_compute_request_unit_half', store=True, readonly=False)
     request_unit_hours = fields.Boolean('Custom Hours', compute='_compute_request_unit_hours', store=True, readonly=False)
     request_unit_custom = fields.Boolean('Days-long custom hours', compute='_compute_request_unit_custom', store=True, readonly=False)
+    # view
+    is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
 
     _sql_constraints = [
         ('type_value',
@@ -333,7 +335,7 @@ class HolidaysRequest(models.Model):
 
                 if resource_calendar_id.two_weeks_calendar:
                     # find week type of start_date
-                    start_week_type = int(math.floor((holiday.request_date_from.toordinal() - 1) / 7) % 2)
+                    start_week_type = self.env['resource.calendar.attendance'].get_week_type(holiday.request_date_from)
                     attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == start_week_type]
                     attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != start_week_type]
                     # First, add days of actual week coming after date_from
@@ -342,8 +344,7 @@ class HolidaysRequest(models.Model):
                     attendance_filtred += list(attendance_actual_next_week)
                     # Third, add days of actual week (to consider days that we have remove first because they coming before date_from)
                     attendance_filtred += list(attendance_actual_week)
-
-                    end_week_type = int(math.floor((holiday.request_date_to.toordinal() - 1) / 7) % 2)
+                    end_week_type = self.env['resource.calendar.attendance'].get_week_type(holiday.request_date_to)
                     attendance_actual_week = [att for att in attendances if att.week_type is False or int(att.week_type) == end_week_type]
                     attendance_actual_next_week = [att for att in attendances if att.week_type is False or int(att.week_type) != end_week_type]
                     attendance_filtred_reversed = list(reversed([att for att in attendance_actual_week if int(att.dayofweek) <= holiday.request_date_to.weekday()]))
@@ -549,6 +550,11 @@ class HolidaysRequest(models.Model):
                 holiday.can_approve = False
             else:
                 holiday.can_approve = True
+
+    @api.depends('state')
+    def _compute_is_hatched(self):
+        for holiday in self:
+            holiday.is_hatched = holiday.state not in ['refuse', 'validate']
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
@@ -810,7 +816,8 @@ class HolidaysRequest(models.Model):
                     holiday.add_follower(employee_id)
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_correct_states(self):
         error_message = _('You cannot delete a time off which is in %s state')
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
 
@@ -820,7 +827,6 @@ class HolidaysRequest(models.Model):
         else:
             for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
-        return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
         if default and 'date_from' in default and 'date_to' in default:
@@ -871,6 +877,7 @@ class HolidaysRequest(models.Model):
             meeting_values = meeting_holidays._prepare_holidays_meeting_values()
             meetings = self.env['calendar.event'].with_context(
                 no_mail_to_attendees=True,
+                calendar_no_videocall=True,
                 active_model=self._name
             ).create(meeting_values)
             for holiday, meeting in zip(meeting_holidays, meetings):
@@ -903,10 +910,6 @@ class HolidaysRequest(models.Model):
                     (4, holiday.user_id.partner_id.id)]
             result.append(meeting_values)
         return result
-
-    # YTI TODO: Remove me in master
-    def _prepare_holiday_values(self, employee):
-        return self._prepare_employees_holiday_values(employee)[0]
 
     def _prepare_employees_holiday_values(self, employees):
         self.ensure_one()
@@ -1209,18 +1212,19 @@ class HolidaysRequest(models.Model):
             return leave_notif_subtype or self.env.ref('hr_holidays.mt_leave')
         return super(HolidaysRequest, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysRequest, self)._notify_get_groups()
+        groups = super(HolidaysRequest, self)._notify_get_groups(msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
 
         self.ensure_one()
         hr_actions = []
         if self.state == 'confirm':
-            app_action = self._notify_get_action_link('controller', controller='/leave/validate')
+            app_action = self._notify_get_action_link('controller', controller='/leave/validate', **msg_vals)
             hr_actions += [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            ref_action = self._notify_get_action_link('controller', controller='/leave/refuse')
+            ref_action = self._notify_get_action_link('controller', controller='/leave/refuse', **msg_vals)
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id

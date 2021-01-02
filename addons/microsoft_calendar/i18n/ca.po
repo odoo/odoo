@@ -13,10 +13,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2020-09-07 08:14+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-12-11 11:03+0000\n"
 "Last-Translator: Arnau Ros, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -70,6 +70,11 @@ msgid ""
 "An administrator needs to configure Outlook Synchronization before you can "
 "use it!"
 msgstr ""
+
+#. module: microsoft_calendar
+#: model:ir.model,name:microsoft_calendar.model_calendar_attendee
+msgid "Calendar Attendee Information"
+msgstr "Informació del calendari dels assistents"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_calendar_event
@@ -135,6 +140,7 @@ msgid "Delete from the current Microsoft Calendar account"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__display_name
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__display_name
@@ -150,6 +156,7 @@ msgid "Event Recurrence Rule"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence__id
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -169,6 +176,7 @@ msgstr ""
 "l'esdeveniment sense esborrar-lo."
 
 #. module: microsoft_calendar
+#: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_attendee____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_recurrence____last_update
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset____last_update
@@ -248,6 +256,11 @@ msgid "Need Sync M"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Next Sync Token"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__sync_policy
 msgid "Next Synchronization"
 msgstr "Següent sincronització"
@@ -276,6 +289,11 @@ msgstr ""
 #, python-format
 msgid "Redirection"
 msgstr "Redirecció"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Refresh Token"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
@@ -347,9 +365,19 @@ msgid "This will only affect events for which the user is the owner"
 msgstr ""
 
 #. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "Token Validity"
+msgstr ""
+
+#. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
 msgid "User"
 msgstr "Usuari"
+
+#. module: microsoft_calendar
+#: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
+msgid "User Token"
+msgstr ""
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
@@ -365,7 +393,7 @@ msgstr "Usuaris"
 #: code:addons/microsoft_calendar/models/microsoft_sync.py:0
 #, python-format
 msgid ""
-"You cannot delete a record synchronized with Outlook Calendar, archive it "
+"You cannot delete a record synchronized with Microsoft Calendar, archive it "
 "instead."
 msgstr ""
 

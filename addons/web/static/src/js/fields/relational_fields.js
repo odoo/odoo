@@ -27,7 +27,7 @@ var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
-const { sprintf } = require("web.utils");
+const { sprintf, toBoolElse } = require("web.utils");
 
 const { escape } = owl.utils;
 var _t = core._t;
@@ -54,17 +54,7 @@ var M2ODialog = Dialog.extend({
                     this.trigger_up('quick_create', { value: this.value });
                 },
             }, {
-                text: _t('Create and edit'),
-                classes: 'btn-primary',
-                close: true,
-                click: function () {
-                    this.trigger_up('search_create_popup', {
-                        view_type: 'form',
-                        value: this.value,
-                    });
-                },
-            }, {
-                text: _t('Cancel'),
+                text: _t('Discard'),
                 close: true,
             }],
         });
@@ -96,7 +86,6 @@ var FieldMany2One = AbstractField.extend({
         'closed_unset': '_onDialogClosedUnset',
         'field_changed': '_onFieldChanged',
         'quick_create': '_onQuickCreate',
-        'search_create_popup': '_onSearchCreatePopup',
     }),
     events: _.extend({}, AbstractField.prototype.events, {
         'click input': '_onInputClick',
@@ -145,6 +134,9 @@ var FieldMany2One = AbstractField.extend({
         this._autocompleteSources = [];
         // Add default search method for M20 (name_search)
         this._addAutocompleteSource(this._search, {placeholder: _t('Loading...'), order: 1});
+
+        // list of last autocomplete suggestions
+        this.suggestions = [];
 
         // use a DropPrevious to properly handle related record quick creations,
         // and store a createDef to be able to notify the environment that there
@@ -260,6 +252,7 @@ var FieldMany2One = AbstractField.extend({
         }
         this.$input.autocomplete({
             source: function (req, resp) {
+                self.suggestions = [];
                 _.each(self._autocompleteSources, function (source) {
                     // Resets the results for this source
                     source.results = [];
@@ -274,7 +267,8 @@ var FieldMany2One = AbstractField.extend({
                         Promise.resolve(source.method.call(self, search)).then(function (results) {
                             source.results = results;
                             source.loading = false;
-                            resp(self._concatenateAutocompleteResults());
+                            self.suggestions = self._concatenateAutocompleteResults();
+                            resp(self.suggestions);
                         });
                     }
                 });
@@ -771,7 +765,13 @@ var FieldMany2One = AbstractField.extend({
      * @private
      */
     _onInputFocusout: function () {
-        if (this.can_create && this.floating) {
+        if (!this.floating) {
+            return;
+        }
+        const firstValue = this.suggestions.find(s => s.id);
+        if (firstValue) {
+            this.reinitialize(firstValue.id);
+        } else if (this.can_create) {
             new M2ODialog(this, this.string, this.$input.val()).open();
         }
     },
@@ -826,14 +826,6 @@ var FieldMany2One = AbstractField.extend({
      */
     _onQuickCreate: function (event) {
         this._quickCreate(event.data.value);
-    },
-    /**
-     * @private
-     * @param {OdooEvent} event
-     */
-    _onSearchCreatePopup: function (event) {
-        var data = event.data;
-        this._searchCreatePopup(data.view_type, false, this._createContext(data.value));
     },
 });
 
@@ -1360,6 +1352,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 addCreateLine: this._hasCreateLine(),
                 addTrashIcon: this._hasTrashIcon(),
                 isMany2Many: this.isMany2Many,
+                no_open: this.isReadonly && toBoolElse(arch.attrs.no_open || '', false),
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
         }
@@ -1915,6 +1908,7 @@ var FieldOne2Many = FieldX2Many.extend({
             parentID: this.value.id,
             viewInfo: this.view,
             deletable: this.activeActions.delete && params.deletable && this.canDelete,
+            disable_multiple_selection: params.disable_multiple_selection,
         }));
     },
 
@@ -1975,6 +1969,7 @@ var FieldOne2Many = FieldX2Many.extend({
         } else {
             this._openFormDialog({
                 context: data.context && data.context[0],
+                disable_multiple_selection: data.disable_multiple_selection,
                 on_saved: function (record) {
                     self._setValue({ operation: 'ADD', id: record.id });
                 },

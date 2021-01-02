@@ -422,6 +422,25 @@ class MailCase(MockEmail):
         cls.email_template = cls.env['mail.template'].create(create_values)
         return cls.email_template
 
+
+    def _generate_notify_recipients(self, partners):
+        """ Tool method to generate recipients data according to structure used
+        in notification methods. Purpose is to allow testing of internals of
+        some notification methods, notably testing links or group-based notification
+        details.
+
+        See notably ``MailThread._notify_compute_recipients()``.
+        """
+        return [
+            {'id': partner.id,
+             'active': True,
+             'share': partner.partner_share,
+             'groups': partner.user_ids.groups_id.ids,
+             'notif': partner.user_ids.notification_type or 'email',
+             'type': 'user' if partner.user_ids and not partner.partner_share else partner.user_ids and 'portal' or 'customer',
+            } for partner in partners
+        ]
+
     # ------------------------------------------------------------
     # MAIL ASSERTS WRAPPERS
     # ------------------------------------------------------------
@@ -645,7 +664,7 @@ class MailCase(MockEmail):
                 self.assertEqual(1, 0)
 
 
-class MailCommon(common.SavepointCase, MailCase):
+class MailCommon(common.TransactionCase, MailCase):
     """ Almost-void class definition setting the savepoint case + mock of mail.
     Used mainly for class inheritance in other applications and test modules. """
 
@@ -679,3 +698,24 @@ class MailCommon(common.SavepointCase, MailCase):
             name='Chell Gladys', notification_type='email')
         cls.partner_portal = cls.user_portal.partner_id
         return cls.user_portal
+
+    @classmethod
+    def _activate_multi_company(cls):
+        """ Create another company, add it to admin and create an user that
+        belongs to that new company. It allows to test flows with users from
+        different companies. """
+        cls.company_2 = cls.env['res.company'].create({
+            'name': 'Company 2',
+            'email': 'company_2@test.example.com',
+        })
+        cls.user_admin.write({'company_ids': [(4, cls.company_2.id)]})
+
+        cls.user_employee_c2 = mail_new_test_user(
+            cls.env, login='employee_c2',
+            groups='base.group_user',
+            company_id=cls.company_2.id,
+            name='Enguerrand Employee C2',
+            notification_type='inbox',
+            signature='--\nEnguerrand'
+        )
+        cls.partner_employee_c2 = cls.user_employee_c2.partner_id

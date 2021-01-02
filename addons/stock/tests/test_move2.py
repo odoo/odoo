@@ -1706,6 +1706,70 @@ class TestSinglePicking(TestStockCommon):
         self.assertEqual(len(qc_move), 1)
         self.assertTrue(qc_move.move_orig_ids == input_move, 'Move between QC and stock should only have the input move as origin')
 
+    def test_merge_chained_moves_multi_confirm(self):
+        """ Imagine multiple step delivery. A receipt picking for the same product should by add to
+        a existing picking from input to QC and another from QC to stock.
+        This existing picking is confirm in the same time (not possible in stock, but can be with batch picking)
+        and have some move to merge.
+        """
+        warehouse = self.env['stock.warehouse'].create({
+            'name': 'TEST WAREHOUSE',
+            'code': 'TEST1',
+            'reception_steps': 'three_steps',
+        })
+        receipt1 = self.env['stock.picking'].create({
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'picking_type_id': warehouse.in_type_id.id,
+        })
+        move_receipt_1 = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 5,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': receipt1.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+        })
+        receipt2 = self.env['stock.picking'].create({
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
+            'picking_type_id': warehouse.int_type_id.id,
+        })
+        move1_receipt_2 = self.MoveObj.create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 1,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': receipt2.id,
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id':  warehouse.wh_qc_stock_loc_id.id,
+        })
+        move2_receipt_2 = self.MoveObj.create({
+            'name': self.productB.name,
+            'product_id': self.productB.id,
+            'product_uom_qty': 2,
+            'product_uom': self.productB.uom_id.id,
+            'picking_id': receipt2.id,
+            'location_id': warehouse.wh_input_stock_loc_id.id,
+            'location_dest_id': warehouse.wh_qc_stock_loc_id.id,
+        })
+        (receipt1 | receipt2).action_confirm()
+
+        # Check following move has been created
+        self.assertTrue(move_receipt_1.move_dest_ids, 'No move created from push rules')
+        self.assertTrue((move1_receipt_2 | move2_receipt_2).exists().move_dest_ids, 'No move created from push rules')
+        self.assertEqual(len((move1_receipt_2 | move2_receipt_2).exists()), 1, 'Move has been merged with the other one')
+        self.assertEqual(move_receipt_1.move_dest_ids.picking_id, receipt2, 'Dest Move of receipt1 should be in the receipt2')
+
+        # Check no move is still in draft
+        self.assertTrue("draft" not in (receipt1 | receipt2).move_lines.mapped("state"))
+
+        # Check the content of the pickings
+        self.assertEqual(receipt1.move_lines.mapped("product_uom_qty"), [5])
+        self.assertEqual(receipt2.move_lines.filtered(lambda m: m.product_id == self.productB).mapped("product_uom_qty"), [3])
+        self.assertEqual(receipt2.move_lines.filtered(lambda m: m.product_id == self.productA).mapped("product_uom_qty"), [5])
+
     def test_empty_moves_validation_1(self):
         """ Use button validate on a picking that contains only moves
         without initial demand and without quantity done should be
@@ -2927,6 +2991,7 @@ class TestAutoAssign(TestStockCommon):
         """
         pack_location = self.env['stock.location'].browse(self.pack_location)
         stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'at_confirm'
 
         # create customer picking and move
         customer_picking = self.env['stock.picking'].create({
@@ -2981,6 +3046,7 @@ class TestAutoAssign(TestStockCommon):
         picking_pick, picking_client = self.create_pick_ship()
         pack_location = self.env['stock.location'].browse(self.pack_location)
         stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.picking.type'].browse(self.picking_type_out).reservation_method = 'at_confirm'
 
         # make some stock
         self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0)
@@ -3007,6 +3073,113 @@ class TestAutoAssign(TestStockCommon):
 
         self.assertEqual(picking_client.state, 'waiting', "MTO moves can't be automatically assigned.")
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 10.0)
+
+    def test_auto_assign_reservation_method(self):
+        """Test different stock.picking.type reservation methods by:
+        1. Create multiple delivery picking types with different reservation methods
+        2. Create/confirm outgoing pickings for each of these picking types for a product not in stock
+        3. Create/do an incoming picking that fulfills all of the outgoing pickings
+        4. Check that only the correct outgoing pickings are auto_assigned
+        5. Additionally check that auto-assignment at confirmation correctly works when products are in stock
+        Note, default reservation method is expected to be covered by other tests.
+        """
+
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, stock_location), 0)
+        picking_type_out1 = self.env['stock.picking.type'].browse(self.picking_type_out).copy()
+        picking_type_out2 = picking_type_out1.copy()
+        picking_type_out3 = picking_type_out1.copy()
+        picking_type_out4 = picking_type_out1.copy()
+        picking_type_out1.reservation_method = 'manual'
+        picking_type_out2.reservation_method = 'by_date'
+        picking_type_out2.reservation_days_before = '1'
+        picking_type_out3.reservation_method = 'by_date'
+        picking_type_out3.reservation_days_before = '10'
+        picking_type_out4.reservation_method = 'at_confirm'
+
+        # 'manual' assign picking => should never auto-assign
+        customer_picking1 = self.env['stock.picking'].create({
+            'name': "Delivery 1",
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': picking_type_out1.id,
+        })
+
+        # 'by_date' picking w/ 1 day before scheduled date auto-assign setting, set to 5 days in advance => shouldn't auto-assign
+        customer_picking2 = customer_picking1.copy({'name': "Delivery 2",
+                                                    'picking_type_id': picking_type_out2.id,
+                                                    'scheduled_date': customer_picking1.scheduled_date + timedelta(days=5)})
+        # 'by_date' picking w/ 10 days before scheduled date auto-assign setting, set to 5 days in advance => should auto-assign
+        customer_picking3 = customer_picking2.copy({'name': "Delivery 3", 'picking_type_id': picking_type_out3.id})
+        customer_picking4 = customer_picking3.copy({'name': "Delivery 4", 'picking_type_id': picking_type_out3.id})
+
+        customer_picking5 = customer_picking1.copy({'name': "Delivery 5", 'picking_type_id': picking_type_out4.id})
+
+        # create their associated moves (needs to be in form view so compute functions properly trigger)
+        customer_picking1 = Form(customer_picking1)
+        with customer_picking1.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 10
+        customer_picking1 = customer_picking1.save()
+
+        customer_picking2 = Form(customer_picking2)
+        with customer_picking2.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 10
+        customer_picking2 = customer_picking2.save()
+
+        customer_picking3 = Form(customer_picking3)
+        with customer_picking3.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 10
+        customer_picking3 = customer_picking3.save()
+
+        customer_picking4 = Form(customer_picking4)
+        with customer_picking4.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 10
+        customer_picking4 = customer_picking4.save()
+
+        customer_picking5 = Form(customer_picking5)
+        with customer_picking5.move_ids_without_package.new() as move:
+            move.product_id = self.productA
+            move.product_uom_qty = 10
+        customer_picking5 = customer_picking5.save()
+
+        customer_picking1.action_assign()
+        customer_picking2.action_assign()
+        customer_picking3.action_assign()
+        self.assertEqual(customer_picking1.move_lines.reserved_availability, 0, "There should be no products available to reserve yet.")
+        self.assertEqual(customer_picking2.move_lines.reserved_availability, 0, "There should be no products available to reserve yet.")
+        self.assertEqual(customer_picking3.move_lines.reserved_availability, 0, "There should be no products available to reserve yet.")
+
+        # create supplier picking and move
+        supplier_picking = self.env['stock.picking'].create({
+            'location_id': self.customer_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        supplier_move = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.customer_location,
+            'location_dest_id': self.stock_location,
+            'product_id': self.productA.id,
+            'product_uom': self.productA.uom_id.id,
+            'product_uom_qty': 50.0,
+            'picking_id': supplier_picking.id,
+        })
+        supplier_move.quantity_done = 50
+        supplier_picking._action_done()
+
+        self.assertEqual(customer_picking1.move_lines.reserved_availability, 0, "Reservation Method: 'manual' shouldn't ever auto-assign")
+        self.assertEqual(customer_picking2.move_lines.reserved_availability, 0, "Reservation Method: 'by_date' shouldn't auto-assign when not within reservation date range")
+        self.assertEqual(customer_picking3.move_lines.reserved_availability, 10, "Reservation Method: 'by_date' should auto-assign when within reservation date range")
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, stock_location), 40)
+
+        customer_picking4.action_assign()
+        customer_picking5.action_assign()
+        self.assertEqual(customer_picking4.move_lines.reserved_availability, 10, "Reservation Method: 'at_confirm' should auto-assign at confirmation")
+        self.assertEqual(customer_picking5.move_lines.reserved_availability, 10, "Reservation Method: 'by_date' should auto-assign when within reservation date range at confirmation")
 
     def test_serial_lot_ids(self):
         self.stock_location = self.env.ref('stock.stock_location_stock')

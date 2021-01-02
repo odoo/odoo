@@ -3,19 +3,22 @@
 # 	* base_automation
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Melroy van den Berg <webmaster1989@gmail.com>, 2017
+# Eric Geens <ericgeens@yahoo.com>, 2018
+# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2018
+# Cas Vissers <casvissers@brahoo.nl>, 2019
+# Martin Trigaux, 2019
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
-# Cas Vissers <casvissers@brahoo.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
 "Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -48,7 +51,7 @@ msgstr "Naam actie"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__state
 msgid "Action To Do"
-msgstr "Uit te voeren actie"
+msgstr "Actie Te doen"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__type
@@ -217,8 +220,9 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergave naam"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
@@ -264,6 +268,7 @@ msgstr "Uren"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__id
 msgid "ID"
 msgstr "ID"
 
@@ -278,7 +283,7 @@ msgid ""
 "If present, this condition must be satisfied before executing the action "
 "rule."
 msgstr ""
-"Indien aanwezig, moet deze conditie voldaan zijn voordat de actie regel "
+"Indien aanwezig, moet deze conditie zijn voldaan voordat de actie regel "
 "wordt uitgevoerd."
 
 #. module: base_automation
@@ -292,6 +297,7 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -328,7 +334,7 @@ msgstr "Minuten"
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_id
 msgid "Model"
-msgstr "Type"
+msgstr "Model"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__model_name
@@ -341,7 +347,7 @@ msgid ""
 "Model for record creation / update. Set this field only to specify a "
 "different model than the base model."
 msgstr ""
-"Model voor aanmaken/updaten van record. Stel dit veld enkel in voor een "
+"Model voor creatie / update van record. Stel dit veld enkel in voor een "
 "ander model dan de base module."
 
 #. module: base_automation
@@ -369,7 +375,7 @@ msgstr "Deze actie zal binnen %d minuten worden uitgevoerd."
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr "Bij wijziging veld trigger"
+msgstr "On change veld trigger"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -412,7 +418,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__code
 msgid "Python Code"
-msgstr "Python code"
+msgstr "Python Code"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_user_id
@@ -538,6 +544,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
 msgid "Usage"
 msgstr "Gebruik"
 
@@ -583,6 +590,7 @@ msgid "Value Mapping"
 msgstr "Waarde verdeling"
 
 #. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
 #: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
@@ -651,3 +659,11 @@ msgid "You can disable this automated action or edit it to solve the issue."
 msgstr ""
 "U kunt deze geautomatiseerde actie uitschakelen of bewerken om het probleem "
 "op te lossen."
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
+msgstr ""

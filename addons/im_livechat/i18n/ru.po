@@ -3,10 +3,15 @@
 # 	* im_livechat
 # 
 # Translators:
-# Collex100, 2020
+# Alex Puchkov <ap@alteco.co>, 2017
+# Sergey Vilizhanin, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Gennady Marchenko <gennadym@gmail.com>, 2018
+# Masha Koc <mariya.kos.ua@gmail.com>, 2018
+# Max Belyanin <maxbelyanin@gmail.com>, 2018
+# Collex100, 2019
 # ILMIR <karamov@it-projects.info>, 2020
 # Oleg Kuryan <oleg@ventor.tech>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
 # Сергей Шебанин <sergey@shebanin.ru>, 2020
 # Максим Дронь <dronmax@gmail.com>, 2020
 # Denis Baranov <baranov@itlibertas.com>, 2020
@@ -16,10 +21,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:41+0000\n"
-"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Vasiliy Korobatov <korobatov@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
@@ -82,8 +87,8 @@ msgid ""
 "* 'Hide the button' hides the chat button on the pages."
 msgstr ""
 "* 'Отображать кнопку' отображает кнопку чата на страницах.\n"
-"* 'Автовсплывание' отображает кнопку и автоматически открывает область беседы.\n"
-"* 'Скрыть кнопку' скрывает кнопку чата на страницах."
+"* 'Авто всплывание' отображает кнопку и автоматически открывает область беседы.\n"
+"* 'Скрыть кнопку' скрывает кнопку чат на страницах."
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
@@ -174,7 +179,7 @@ msgstr "Участники"
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__auto_popup
 msgid "Auto popup"
-msgstr "Автовсплывающее"
+msgstr "Авто всплывающее"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__auto_popup_timer
@@ -255,8 +260,8 @@ msgid ""
 "                it before sending."
 msgstr ""
 "Готовые ответы позволяют вставить подготовленные ответы\n"
-"              в ваши сообщения, набрав <i>:сокращение</i>. Сокращения\n"
-"              заменятся в вашем сообщении, так что вы все еще сможете отредактировать\n"
+"              в ваших сообщениях, набрав <i>:сокращение</i>. Сокращения\n"
+"              заменятся в вашем сообщение, так что вы все еще можете отредактировать\n"
 "              его перед отправкой."
 
 #. module: im_livechat
@@ -422,7 +427,7 @@ msgstr "Создайте новую автоматическую ответ"
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_uid
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__create_date
@@ -450,7 +455,7 @@ msgstr "Дата создания (час)"
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_livechat_report
 #: model:ir.ui.menu,name:im_livechat.rating_rating_menu_livechat
 msgid "Customer Ratings"
-msgstr "Оценки клиента"
+msgstr "Рейтинги клиента"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__day_number
@@ -505,7 +510,7 @@ msgid ""
 "taken into account."
 msgstr ""
 "Задержка (в секундах), чтобы автоматически открыть окно беседы. Примечание: "
-"выбранное действие должно быть «'Автовсплывающим', в противном случае этот "
+"выбранное действие должно быть «'Авто всплывающим' в противном случае этот "
 "параметр не будет приниматься во внимание."
 
 #. module: im_livechat
@@ -545,7 +550,7 @@ msgstr "Канал обсуждения"
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
@@ -608,7 +613,7 @@ msgid ""
 "given url/country, the one with the lowest sequence will be chosen."
 msgstr ""
 "С учетом того, чтобы найти подходящее правило. Если 2 правила соответствуют "
-"для данного URL-адреса или страны, будет выбрано одно с низкой "
+"для данного URL-адреса или страны, будет выбран один с низкой "
 "последовательностью."
 
 #. module: im_livechat
@@ -623,7 +628,7 @@ msgstr "Хорошо"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_search
 msgid "Group By..."
-msgstr "Группировать по…"
+msgstr "Группировать…"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -662,7 +667,7 @@ msgstr "Как я могу Вам помочь?"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "How to use the Website Live Chat widget?"
-msgstr "Как использовать виджет живого чата веб-сайта?"
+msgstr "Как использовать веб сайт живой чат виджет?"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_digest_digest__id
@@ -676,7 +681,7 @@ msgstr "Как использовать виджет живого чата ве�
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner__id
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "Номер"
 
 #. module: im_livechat
 #. openerp-web
@@ -709,17 +714,6 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_3
-msgid "Joel Willis, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_2
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_6
-msgid "Joel Willis, Mitchell Admin"
 msgstr ""
 
 #. module: im_livechat
@@ -782,7 +776,7 @@ msgstr "Последнее обновление"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Leave"
-msgstr "Отпуск"
+msgstr "Отгул"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -861,9 +855,9 @@ msgid ""
 "missed sessions, the audiance, the duration of a session, etc."
 msgstr ""
 "Статистика канала поддержки Живого Чата позволяет легко проверять и "
-"анализировать производительность эффективность сессии живого чата компании. "
-"Извлечение сведений о пропущенных сессиях, аудитории, продолжительности "
-"сессии и др."
+"анализировать производительность эффективность сессии живого чтата компании."
+" Извлечение сведений о пропущенных сессий, аудитория, продолжительность "
+"сессии, и др."
 
 #. module: im_livechat
 #: model:ir.model,name:im_livechat.model_im_livechat_report_operator
@@ -1015,7 +1009,7 @@ msgstr "Количество различных говорящих"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
 msgid "Number of message in the conversation"
-msgstr "Количество сообщений в разговоре"
+msgstr "Количество сообщений в разговорове"
 
 #. module: im_livechat
 #. openerp-web
@@ -1165,7 +1159,7 @@ msgstr "Печать"
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_ids
 #: model_terms:ir.ui.view,arch_db:im_livechat.mail_channel_view_tree
 msgid "Rating"
-msgstr "Оценка"
+msgstr "Рейтинг"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_mail_channel__rating_avg
@@ -1268,8 +1262,8 @@ msgstr ""
 msgid ""
 "Regular expression specifying the web pages this rule will be applied on."
 msgstr ""
-"Регулярное выражение, указывающее веб-страницы, к которым это правило будет "
-"применяться."
+"Регулярное выражение, указывающее веб-страницу, это правило будет "
+"применяться на."
 
 #. module: im_livechat
 #. openerp-web
@@ -1485,9 +1479,9 @@ msgid ""
 "server."
 msgstr ""
 "Правило будет применяться только для этих стран. Пример: Если вы выберете "
-"'Бельгия' и 'Соединение штаты Америки' и установите действие 'Скрыть "
-"кнопку', кнопка чата будет скрыта по указанному URL от посетителей, "
-"расположенных в этих 2 странах. Эта функция требует установленного на вашем "
+"'Бельгия' и 'Соединение штаты Америки' и установить действие 'Скрыть "
+"кнопку', чат кнопка будет скрыта по указанному URL от посетителей, "
+"расположенных в этих 2 странах. Эта функция требует установленого на вашем "
 "сервере GeoIP."
 
 #. module: im_livechat
@@ -1498,7 +1492,7 @@ msgstr "Пользователь сможет удалить каналы под
 #. module: im_livechat
 #: model:res.groups,comment:im_livechat.im_livechat_group_user
 msgid "The user will be able to join support channels."
-msgstr "Пользователь сможет присоединиться к каналам поддержки."
+msgstr "Пользователь сможет присоединиться каналы поддержки."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.rating_rating_action_view_livechat_rating
@@ -1510,7 +1504,7 @@ msgstr "На данный момент нет рейтинга для этого
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_operator_view_search
 #: model_terms:ir.ui.view,arch_db:im_livechat.rating_rating_view_search_livechat
 msgid "This Week"
-msgstr "Текущая неделя"
+msgstr "Эта неделя"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__default_message
@@ -1518,8 +1512,8 @@ msgid ""
 "This is an automated 'welcome' message that your visitor will see when they "
 "initiate a new conversation."
 msgstr ""
-"Это автоматизированное 'приветственное' сообщение, которое ваш посетитель "
-"будет видеть, когда они начнут новый разговор."
+"Это автоматизированный  'добро пожаловать' сообщение, которое Ваш посетитель"
+" будет видеть, когда они начнут новый разговор."
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_res_users__livechat_username
@@ -1577,6 +1571,12 @@ msgid "Try again"
 msgstr ""
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:0
+#, python-format
+msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
 msgstr "URL Регулярное выражение"
@@ -1587,7 +1587,7 @@ msgid ""
 "URL to a static page where you client can discuss with the operator of the "
 "channel."
 msgstr ""
-"URL к статической странице, где ваш клиент может общаться с оператором "
+"URL к статической странице, где ваш клиент может обсудить с оператором "
 "канала."
 
 #. module: im_livechat
@@ -1683,31 +1683,6 @@ msgid "Visitor"
 msgstr "Посетитель"
 
 #. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_0
-msgid "Visitor #234, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_1
-msgid "Visitor #323, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_4
-msgid "Visitor #532, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_5
-msgid "Visitor #649, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_7
-msgid "Visitor #722, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
@@ -1719,24 +1694,19 @@ msgid "Visitor is Happy"
 msgstr ""
 
 #. module: im_livechat
-#: model:mail.channel,name:im_livechat.mail_channel_livechat_1
-msgid "Visitor, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
 msgid "Web Page"
-msgstr "Веб-страница"
+msgstr "Веб страница"
 
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_channel_action
 msgid "Website Live Chat Channels"
-msgstr "Каналы живого чата веб-сайта"
+msgstr "Вебсайт каналы живого чата"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__default_message
 msgid "Welcome Message"
-msgstr "Приветственное сообщение"
+msgstr "Приветствующее сообщение"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -1758,8 +1728,8 @@ msgid ""
 "                visitors to talk in real time with your operators."
 msgstr ""
 "Вы можете создавать каналы для каждого веб-сайта, на котором вы хотите\n"
-"                интегрировать виджет живого чата веб-сайта, что позволяет посетителям вашего сайта\n"
-"                поговорить с вашими операторами в реальном времени."
+"                интегрировать веб-сайт живой чат виджет, что позволяет посетителям вашего сайта\n"
+"                поговорить с вашим операторам в реальном времени."
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.mail_channel_action
@@ -1790,12 +1760,12 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. Hello, how may I help you?"
-msgstr "напр., Здравствуйте, чем я могу вам помочь?"
+msgstr "т.е. Здравствуйте, как я могу Вам помочь?"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "e.g. YourWebsite.com"
-msgstr "напр., YourWebsite.com"
+msgstr "т.е. YourWebsite.com"
 
 #. module: im_livechat
 #. openerp-web
@@ -1822,7 +1792,7 @@ msgstr "на"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid "or copy this url and send it by email to your customers or suppliers:"
 msgstr ""
-"или скопируйте этот адрес и отправьте его по электронной почте своим "
+"или скопируйте этот адрес и отправить его по электронной почте своим "
 "клиентам или поставщикам:"
 
 #. module: im_livechat

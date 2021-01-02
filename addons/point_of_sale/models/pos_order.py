@@ -314,10 +314,10 @@ class PosOrder(models.Model):
         if self.partner_id:
             self.pricelist_id = self.partner_id.property_product_pricelist.id
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_draft_or_cancel(self):
         for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
-        return super(PosOrder, self).unlink()
 
     @api.model
     def create(self, values):
@@ -420,7 +420,7 @@ class PosOrder(models.Model):
                             .with_company(order.company_id)\
                             .with_context(default_move_type=move_vals['move_type'])\
                             .create(move_vals)
-            message = _("This invoice has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
+            message = _("This invoice has been created from the POS Order: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
             new_move.message_post(body=message)
             order.write({'account_move': new_move.id, 'state': 'invoiced'})
             new_move.sudo().with_company(order.company_id)._post()
@@ -928,7 +928,7 @@ class AccountCashRounding(models.Model):
 
     @api.constrains('rounding', 'rounding_method', 'strategy')
     def _check_session_state(self):
-        open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+        open_session = self.env['pos.session'].search([('config_id.rounding_method', 'in', self.ids), ('state', '!=', 'closed')], limit=1)
         if open_session:
             raise ValidationError(
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))

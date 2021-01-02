@@ -93,6 +93,12 @@ class Project(models.Model):
 
         (self - projects).warning_employee_rate = False
 
+    @api.depends('analytic_account_id', 'allow_billable', 'allow_timesheets')
+    def _compute_project_overview(self):
+        super()._compute_project_overview()
+        for project in self.filtered(lambda p: not p.project_overview):
+            project.project_overview = project.allow_billable or project.allow_timesheets
+
     @api.constrains('sale_line_id', 'pricing_type')
     def _check_sale_line_type(self):
         for project in self:
@@ -350,7 +356,7 @@ class ProjectTask(models.Model):
         if not self.commercial_partner_id or not self.allow_billable:
             return False
         domain = [('is_service', '=', True), ('order_partner_id', 'child_of', self.commercial_partner_id.id), ('is_expense', '=', False), ('state', 'in', ['sale', 'done'])]
-        if self.project_id.bill_type == 'customer_type' and self.project_sale_order_id:
+        if self.project_id.bill_type == 'customer_project' and self.project_sale_order_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         sale_lines = self.env['sale.order.line'].search(domain)
         for line in sale_lines:

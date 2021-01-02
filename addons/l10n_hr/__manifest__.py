@@ -59,5 +59,4 @@ Izvori podataka:
     'demo': [
         'demo/demo_company.xml',
     ],
-    "active": False,
 }

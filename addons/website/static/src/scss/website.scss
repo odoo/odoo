@@ -87,6 +87,11 @@ $-seen-urls: ();
 }
 
 #wrapwrap {
+    // When the modal is in #wrapwrap, position top should be size of the navbar
+    .modal:not(.s_popup_bottom) {
+        top: $o-navbar-height;
+    }
+
     @if o-website-value('body-image') {
         background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
         background-position: center;
@@ -352,6 +357,9 @@ font[class*='bg-'] {
     &.o_bg_img_opt_repeat {
         background-size: auto;
         background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
     }
 
     // Compatibility <= 13.0, TODO remove?
@@ -1250,9 +1258,6 @@ header {
     height: 1.5em;
     margin-right: 0.2em;
     border-radius: $rounded-pill;
-}
-span.list-inline-item.o_add_language:last-child {
-    display: none !important; // Hide the separator if it is the last list item
 }
 
 // Footer scrolltop button

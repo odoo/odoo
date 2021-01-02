@@ -229,7 +229,7 @@ class HolidaysAllocation(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.name = allocation.sudo().private_name
             else:
                 allocation.name = '*****'
@@ -237,7 +237,7 @@ class HolidaysAllocation(models.Model):
     def _inverse_description(self):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.sudo().private_name = allocation.name
 
     def _search_description(self, operator, value):
@@ -449,11 +449,11 @@ class HolidaysAllocation(models.Model):
         self.add_follower(employee_id)
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_correct_states(self):
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
         for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
             raise UserError(_('You cannot delete an allocation request which is in %s state.') % (state_description_values.get(holiday.state),))
-        return super(HolidaysAllocation, self).unlink()
 
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
@@ -666,18 +666,19 @@ class HolidaysAllocation(models.Model):
             return allocation_notif_subtype_id or self.env.ref('hr_holidays.mt_leave_allocation')
         return super(HolidaysAllocation, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle HR users and officers recipients that can validate or refuse holidays
         directly from email. """
-        groups = super(HolidaysAllocation, self)._notify_get_groups()
+        groups = super(HolidaysAllocation, self)._notify_get_groups(msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
 
         self.ensure_one()
         hr_actions = []
         if self.state == 'confirm':
-            app_action = self._notify_get_action_link('controller', controller='/allocation/validate')
+            app_action = self._notify_get_action_link('controller', controller='/allocation/validate', **msg_vals)
             hr_actions += [{'url': app_action, 'title': _('Approve')}]
         if self.state in ['confirm', 'validate', 'validate1']:
-            ref_action = self._notify_get_action_link('controller', controller='/allocation/refuse')
+            ref_action = self._notify_get_action_link('controller', controller='/allocation/refuse', **msg_vals)
             hr_actions += [{'url': ref_action, 'title': _('Refuse')}]
 
         holiday_user_group_id = self.env.ref('hr_holidays.group_hr_holidays_user').id

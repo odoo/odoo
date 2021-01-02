@@ -3,22 +3,22 @@
 # 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# as co02 <asco02@163.com>, 2020
+# Shenglan Chen <dodolobox@gmail.com>, 2016
+# Eddie Lim <bhweelim@yahoo.com>, 2017
+# Martin Trigaux, 2017
+# e2f <projects@e2f.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# 老窦 北京 <2662059195@qq.com>, 2018
+# liAnGjiA <liangjia@qq.com>, 2019
 # wopalm <wopalm@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
 "Last-Translator: wopalm <wopalm@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
 msgid "Access token to set the rating of the value"
-msgstr "访问路由来设置评级的值"
+msgstr "访问令牌来设置评级的值"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
@@ -82,12 +82,12 @@ msgstr "单据"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
 msgid "Document Model"
-msgstr "单据模型"
+msgstr "文档模型"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
 msgid "Email Thread"
-msgstr "邮件主题"
+msgstr "Email线程"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__consumed
@@ -204,17 +204,17 @@ msgstr "被评估对象的所有人"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr "父级文档"
+msgstr "父级单据"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr "父级文档模型"
+msgstr "父级单据模型"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr "父级文档名称"
+msgstr "父级单据名称"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
@@ -229,7 +229,7 @@ msgstr ""
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
-msgstr "父级相关文档模型"
+msgstr "父级相关单据模型"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
@@ -254,7 +254,7 @@ msgstr "评级人员"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
-msgstr "点评"
+msgstr "评级"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
@@ -303,11 +303,11 @@ msgstr "评级值"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
-msgstr "点评数"
+msgstr "评级数"
 
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
-msgid "Rating should be between 0 to 5"
+msgid "Rating should be between 0 and 5"
 msgstr ""
 
 #. module: rating
@@ -322,13 +322,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:rating.mail_message_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
-msgstr "点评"
+msgstr "评级"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
 #: model:ir.model.fields,help:rating.field_rating_rating__feedback
 msgid "Reason of the rating"
-msgstr "点评的理由"
+msgstr "评级的理由"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
@@ -405,7 +405,7 @@ msgstr ""
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "by"
-msgstr "单位"
+msgstr "by"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
@@ -427,7 +427,7 @@ msgstr "不满意"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
 msgid "on"
-msgstr "on"
+msgstr "在"
 
 #. module: rating
 #: code:addons/rating/controllers/main.py:0

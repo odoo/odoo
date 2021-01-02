@@ -179,10 +179,6 @@ Object.assign(ThreadView, {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
         },
-        selectedMessageLocalId: {
-            type: String,
-            optional: true,
-        },
         showComposerAttachmentsExtensions: Boolean,
         showComposerAttachmentsFilenames: Boolean,
         threadViewLocalId: String,

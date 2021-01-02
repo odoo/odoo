@@ -3,23 +3,25 @@
 # 	* sales_team
 # 
 # Translators:
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
-# e2f <projects@e2f.com>, 2020
-# Wolfgang Taferner, 2020
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
-# Katharina Moritz <kmo@e2f.com>, 2020
-# Nico Dor <nicolas.dorweiler@gmail.com>, 2020
-# Leon Grill <leg@odoo.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
-# Martin Trigaux, 2020
+# e2f <projects@e2f.com>, 2019
+# Martin Trigaux, 2019
+# Wolfgang Taferner, 2019
+# JackTheHunter <Maximilian.N98@gmail.com>, 2019
+# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2019
+# darenkster <inactive+darenkster@transifex.com>, 2019
+# Katharina Moritz <kmo@e2f.com>, 2019
+# Nico Dor <nicolas.dorweiler@gmail.com>, 2019
+# Johannes Croe <jcr@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"POT-Creation-Date: 2019-09-09 12:18+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Leon Grill <leg@odoo.com>, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -75,13 +77,7 @@ msgid "Administrator"
 msgstr "Administrator"
 
 #. module: sales_team
-#: model:crm.team,name:sales_team.crm_team_1
-msgid "America"
-msgstr "Amerika"
-
-#. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Archived"
 msgstr "Archiviert"
 
@@ -102,11 +98,6 @@ msgid "Big Pretty Button :)"
 msgstr "Ziemlich große Schaltfläche :)"
 
 #. module: sales_team
-#: model:ir.model,name:sales_team.model_crm_tag
-msgid "CRM Tag"
-msgstr ""
-
-#. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
@@ -116,11 +107,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
 msgid "Channel Members"
 msgstr "Kanal Mitglieder"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__color
-msgid "Color"
-msgstr "Farbe"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__color
@@ -134,14 +120,8 @@ msgstr "Unternehmen"
 
 #. module: sales_team
 #: model:ir.ui.menu,name:sales_team.menu_sale_config
-#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
 msgid "Configuration"
 msgstr "Konfiguration"
-
-#. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor7
-msgid "Consulting"
-msgstr "Beratung"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_partner
@@ -149,27 +129,11 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid "Create new tags for your opportunities"
-msgstr "Erstellen Sie neue Stichworte für Ihre Chancen."
-
-#. module: sales_team
-#: model_terms:ir.actions.act_window,help:sales_team.sales_team_crm_tag_action
-msgid ""
-"Create tags that fit your business (product structure, sales type, etc.) to "
-"better manage and track your opportunities."
-msgstr ""
-"Erstellen Sie Stichwörter, die zu Ihrem Unternehmen passen (Produktstruktur,"
-" Vertriebsart, etc.), um Ihre Chancen besser zu verwalten und zu verfolgen."
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_uid
 msgid "Created by"
 msgstr "Erstellt von"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__create_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__create_date
 msgid "Created on"
 msgstr "Erstellt am"
@@ -197,22 +161,9 @@ msgid "Define a new sales team"
 msgstr ""
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor5
-msgid "Design"
-msgstr "Design"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__display_name
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
-#: model:ir.model.fields,field_description:sales_team.field_res_partner__display_name
-#: model:ir.model.fields,field_description:sales_team.field_res_users__display_name
 msgid "Display Name"
 msgstr "Anzeigename"
-
-#. module: sales_team
-#: model:crm.team,name:sales_team.team_sales_department
-msgid "Europe"
-msgstr "Europa"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__favorite_user_ids
@@ -257,10 +208,7 @@ msgid "Group By..."
 msgstr "Gruppieren nach ..."
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__id
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__id
-#: model:ir.model.fields,field_description:sales_team.field_res_partner__id
-#: model:ir.model.fields,field_description:sales_team.field_res_users__id
 msgid "ID"
 msgstr "ID"
 
@@ -273,17 +221,17 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
-"Das Senden mancher Nachrichten ist fehlgeschlagen wenn dieses Fenster "
-"angekreuzt ist."
+msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
 #: model:ir.model.fields,help:sales_team.field_res_users__team_id
 msgid ""
-"If set, this Sales Team will be used for sales and assignments related to "
+"If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
+"Wenn festgelegt, wird dieser Vertriebskanal für den Verkauf und die "
+"Zuteilung zu diesem Partner verwendet."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__active
@@ -295,31 +243,21 @@ msgstr ""
 "ausblenden, ohne es zu entfernen."
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor4
-msgid "Information"
-msgstr "Information"
-
-#. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
 msgid "Is Follower"
 msgstr "Ist ein Abonnent"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag____last_update
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
-#: model:ir.model.fields,field_description:sales_team.field_res_partner____last_update
-#: model:ir.model.fields,field_description:sales_team.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Zuletzt geändert am"
+msgstr "Letzte Änderung am"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_uid
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert durch"
+msgstr "Zuletzt aktualisiert von"
 
 #. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__write_date
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__write_date
 msgid "Last Updated on"
 msgstr "Zuletzt aktualisiert am"
@@ -332,7 +270,7 @@ msgstr "Hauptanhänge"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error
 msgid "Message Delivery error"
-msgstr "Error beim senden der Nachricht"
+msgstr "Fehler beim Senden der Nachricht"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_ids
@@ -347,7 +285,7 @@ msgstr "Anzahl der Aktionen"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of errors"
-msgstr "# Fehler"
+msgstr "Anzahl der Fehler"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
@@ -365,19 +303,14 @@ msgid "Number of unread messages"
 msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor8
-msgid "Other"
-msgstr "Andere"
-
-#. module: sales_team
 #: model:crm.team,name:sales_team.pos_sales_team
 msgid "Point of Sale"
 msgstr "Point of Sale"
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor1
-msgid "Product"
-msgstr "Produkt"
+#: model:crm.team,name:sales_team.team_sales_department
+msgid "Sales"
+msgstr "Verkäufe"
 
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_crm_team
@@ -417,39 +350,17 @@ msgstr "Verkaufsteam Suche"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor3
-msgid "Services"
-msgstr "Dienstleistungen"
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_view_kanban
+msgid "Settings"
+msgstr "Einstellungen"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
 msgstr "Auf dem Dashboard anzeigen"
-
-#. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor2
-msgid "Software"
-msgstr "Software"
-
-#. module: sales_team
-#: model:ir.model.fields,field_description:sales_team.field_crm_tag__name
-msgid "Tag Name"
-msgstr "Tag Bezeichnung"
-
-#. module: sales_team
-#: model:ir.model.constraint,message:sales_team.constraint_crm_tag_name_uniq
-msgid "Tag name already exists !"
-msgstr "Schlagwort existiert bereits!"
-
-#. module: sales_team
-#: model:ir.actions.act_window,name:sales_team.sales_team_crm_tag_action
-#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_form
-#: model_terms:ir.ui.view,arch_db:sales_team.sales_team_crm_tag_view_tree
-msgid "Tags"
-msgstr "Stichwörter"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -464,18 +375,13 @@ msgstr "Teammitglieder"
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_pipelines_act
-msgid "Teams"
-msgstr "Teams"
+msgid "Team Pipelines"
+msgstr "Team Pipelines"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
 msgid "The color of the channel"
 msgstr "Die Farbe des Kanals"
-
-#. module: sales_team
-#: model:crm.tag,name:sales_team.categ_oppor6
-msgid "Training"
-msgstr "Training"
 
 #. module: sales_team
 #: code:addons/sales_team/models/crm_team.py:0
@@ -492,7 +398,7 @@ msgstr "Ungelesene Nachrichten"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "Zähler der ungelesenen Nachrichten"
+msgstr "Anzahl ungelesener Nachrichten"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
@@ -500,7 +406,7 @@ msgstr "Zähler der ungelesenen Nachrichten"
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid ""
 "Use Sales Teams to organize your sales departments.\n"
-"                Each team will work with a separate pipeline."
+"                    Each team will work with a separate pipeline."
 msgstr ""
 
 #. module: sales_team
@@ -527,6 +433,16 @@ msgstr "Benutzer"
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
 msgstr "Website"
+
+#. module: sales_team
+#: model:ir.model.fields,field_description:sales_team.field_crm_team__website_message_ids
+msgid "Website Messages"
+msgstr "Website-Nachrichten"
+
+#. module: sales_team
+#: model:ir.model.fields,help:sales_team.field_crm_team__website_message_ids
+msgid "Website communication history"
+msgstr "Website-Kommunikationshistorie"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team

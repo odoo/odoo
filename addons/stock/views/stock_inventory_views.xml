@@ -176,6 +176,7 @@
             </header>
             <sheet>
                 <field name="line_ids" invisible="1"/>
+                <field name="is_conflict_inventory" invisible="1"/>
                 <div class="oe_button_box" name="button_box">
                     <button string="Product Moves" type="object"
                             name="action_view_related_move_lines"
@@ -195,13 +196,16 @@
                                groups="stock.group_stock_multi_locations"/>
                         <field name="product_ids"
                                context="{'default_type': 'product'}"
-                               widget="many2many_tags"/>
-                        <field name="exhausted"/>
+                               widget="many2many_tags"
+                               attrs="{'readonly': ['|', ('is_conflict_inventory', '=', True), ('state', '!=', 'draft')]}"/>
+                        <field name="exhausted"
+                               attrs="{'invisible': [('is_conflict_inventory', '=', True)]}"/>
                     </group>
                     <group>
-                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                        <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"
+                               attrs="{'readonly': ['|', ('is_conflict_inventory', '=', True), ('state', '!=', 'draft')]}"/>
                         <field name="prefill_counted_quantity" widget="radio"
-                               attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                               attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('is_conflict_inventory', '=', True)]}"/>
                     </group>
                 </group>
             </sheet>
@@ -232,6 +236,15 @@
         </field>
     </record>
 
+    <record id="action_open_inventory_adjustment_view" model="ir.actions.server">
+        <field name="name">Inventory Adjustments</field>
+        <field name="model_id" ref="model_stock_inventory"/>
+        <field name="state">code</field>
+        <field name="code">
+action = model.action_open_inventory_view()
+        </field>
+    </record>
+
     <record id="model_stock_inventory_line_action_reset_product_qty" model="ir.actions.server">
         <field name="name">Set counted quantities to 0</field>
         <field name="model_id" ref="model_stock_inventory_line"/>
@@ -254,5 +267,5 @@ if records:
         </field>
     </record>
 
-    <menuitem action="action_inventory_form" id="menu_action_inventory_form" parent="menu_stock_warehouse_mgmt" sequence="30"/>
+    <menuitem action="action_open_inventory_adjustment_view" id="menu_action_inventory_form" parent="menu_stock_warehouse_mgmt" sequence="30"/>
 </odoo>

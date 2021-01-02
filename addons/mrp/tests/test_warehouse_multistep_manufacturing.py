@@ -174,7 +174,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         self.assertTrue(picking_stock_preprod)
         self.assertTrue(picking_stock_postprod)
-        self.assertEqual(picking_stock_preprod.state, 'confirmed')
+        self.assertEqual(picking_stock_preprod.state, 'assigned')
         self.assertEqual(picking_stock_postprod.state, 'waiting')
         self.assertEqual(picking_stock_preprod.origin, production_order.name, 'The pre-prod origin should be the MO name')
         self.assertEqual(picking_stock_postprod.origin, 'SOURCEDOCUMENT', 'The post-prod origin should be the SO name')
@@ -250,7 +250,7 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
 
         self.assertTrue(move_stock_preprod)
         self.assertTrue(move_stock_postprod)
-        self.assertEqual(move_stock_preprod.state, 'confirmed')
+        self.assertEqual(move_stock_preprod.state, 'assigned')
         self.assertEqual(move_stock_postprod.state, 'waiting')
 
         move_stock_preprod._action_cancel()

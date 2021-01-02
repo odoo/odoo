@@ -3,33 +3,43 @@
 # 	* website_forum
 # 
 # Translators:
-# Andreas Stauder <andreas.stauder@brain-tec.ch>, 2020
-# Thomas Lengyel <lexustec_fn@yahoo.de>, 2020
-# ba566f9f7abd166f8f1f032649ec3e69, 2020
-# Bettina Pfeifer <betzilla@web.de>, 2020
-# Johannes Croe <jcr@odoo.com>, 2020
+# Thomas Lengyel <lexustec_fn@yahoo.de>, 2017
+# Marvin Elia Hoppe <marvin_elia@web.de>, 2017
+# Niki Waibel, 2017
+# Mathias Neef <mn@copado.de>, 2017
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Renzo Meister, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# AppleMentalist <felix.schnatbaum@gmail.com>, 2018
+# Anja Funk <anja.funk@afimage.de>, 2018
+# Johannes Croe <jcr@odoo.com>, 2019
+# Chris Egal <sodaswed@web.de>, 2019
+# Katharina Moritz <kmo@e2f.com>, 2019
+# Wolfgang Taferner, 2019
+# Bettina Pfeifer <betzilla@web.de>, 2019
+# Jan Meyer, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# UteHaus, 2020
 # JEK Odoo <jek@odoo.com>, 2020
-# Nicola Peiffer <epn@odoo.com>, 2020
-# JackTheHunter <Maximilian.N98@gmail.com>, 2020
-# Leon Grill <leg@odoo.com>, 2020
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
+# ba566f9f7abd166f8f1f032649ec3e69, 2020
+# Oliver Roch <oliver.roch@d9t.de>, 2020
+# Kevin Harrings <kha@odoo.com>, 2020
 # e2f <projects@e2f.com>, 2020
 # Martin Trigaux, 2020
-# Wolfgang Taferner, 2020
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
-# Katharina Moritz <kmo@e2f.com>, 2020
-# Chris Egal <sodaswed@web.de>, 2020
-# Oliver Roch <oliver.roch@d9t.de>, 2020
-# UteHaus, 2020
-# Kevin Harrings <kha@odoo.com>, 2020
+# JackTheHunter <Maximilian.N98@gmail.com>, 2020
+# Nicola Peiffer <epn@odoo.com>, 2020
+# Andreas Jonderko <a.jonderko@gastronovi.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
-"PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Kevin Harrings <kha@odoo.com>, 2020\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
+"Last-Translator: Andreas Jonderko <a.jonderko@gastronovi.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -279,8 +289,8 @@ msgid ""
 "<b>Answers should not comment other answers</b>. Instead add a comment on "
 "the other answers."
 msgstr ""
-"<b>Antworten sollten keine anderen Antworten kommentieren</b>.\n"
-"Fügen Sie stattdessen einen Kommentar zu den anderen Antworten hinzu."
+"<b>Eine Antwort soll keine Fragen hinzufügen oder erweitern</b>.\n"
+"Ändern Sie Ihre Frage stattdessen oder fügen sie einen Kommentar hinzu."
 
 #. module: website_forum
 #: model_terms:forum.forum,faq:website_forum.forum_help
@@ -587,6 +597,11 @@ msgstr ""
 "</small>"
 
 #. module: website_forum
+#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr ""
+
+#. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_description_full
 msgid "<span class=\"badge badge-info\">Closed</span>"
 msgstr ""
@@ -658,11 +673,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_forum.close_post
 msgid "<span class=\"text-muted mx-3\">or</span>"
 msgstr ""
-
-#. module: website_forum
-#: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
-msgid "<span>&amp;times;</span>"
-msgstr "<span>&amp;times;</span>"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.moderation_queue
@@ -749,7 +759,7 @@ msgstr "Aktivität"
 #: code:addons/website_forum/static/src/xml/website_forum_templates.xml:0
 #, python-format
 msgid "Add to menu"
-msgstr "Zum Menü hinzufügen"
+msgstr "Zum Menü Hinzufügen"
 
 #. module: website_forum
 #: model:ir.model.fields,help:website_forum.field_forum_forum__allow_share
@@ -1205,7 +1215,7 @@ msgstr "Beitrag schließen"
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_post__state__close
 msgid "Closed"
-msgstr "Abgeschlossen"
+msgstr "Geschlossen"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__closed_uid
@@ -1300,7 +1310,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answers
 msgid "Convert as a comment"
-msgstr "In Kommentar umwandeln"
+msgstr "Als Kommentar konvertieren"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__karma_accept
@@ -1338,7 +1348,7 @@ msgstr "Erstellt am"
 #. module: website_forum
 #: model_terms:ir.actions.act_window,help:website_forum.action_forum_post
 msgid "Create a new forum post"
-msgstr "Einen neuen Forumsbeitrag erstellen"
+msgstr "Einen neuen Beitrag im Forum erstellen"
 
 #. module: website_forum
 #. openerp-web
@@ -1655,7 +1665,7 @@ msgstr "Erste Stimme abgegeben"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.question_dropdown
 msgid "Flag"
-msgstr "Markieren"
+msgstr "Flag"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__karma_flag
@@ -2051,7 +2061,7 @@ msgstr ""
 #: code:addons/website_forum/models/forum.py:0
 #, python-format
 msgid "It is not allowed to vote for its own post."
-msgstr "Es ist nicht erlaubt, für seinen eigenen Beitrag zu stimmen."
+msgstr "Es ist nicht erlaubt, für seinen eigenen Posten zu stimmen."
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
@@ -2208,7 +2218,7 @@ msgstr "Beiträge moderieren"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.header
 msgid "Moderation"
-msgstr ""
+msgstr "Moderation"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_sidebar
@@ -2418,7 +2428,7 @@ msgstr "Anzahl der Beiträge"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__message_has_error_counter
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__message_has_error_counter
 msgid "Number of errors"
-msgstr "# Fehler"
+msgstr "Anzahl der Fehler"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__count_flagged_posts
@@ -2569,7 +2579,7 @@ msgstr "Positive Abstimmung"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post_vote__post_id
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Post"
-msgstr "Buchen"
+msgstr "Beitrag"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.post_answer
@@ -2774,7 +2784,7 @@ msgstr "Frage erhielt 6 Stimmen"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.user_profile_content
 msgid "Questions"
-msgstr "Fragen"
+msgstr "Fragestellungen"
 
 #. module: website_forum
 #: model:ir.model.fields.selection,name:website_forum.selection__forum_forum__mode__questions
@@ -2868,7 +2878,7 @@ msgstr "Zurücksetzen"
 #. module: website_forum
 #: model_terms:forum.forum,welcome_message:website_forum.forum_help
 msgid "Register"
-msgstr "Registrieren"
+msgstr "Anmelden"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__relevancy
@@ -2924,7 +2934,7 @@ msgstr "Überprüft durch"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr "SEO-optimiert"
+msgstr "SEO optimiert"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__message_has_sms_error
@@ -3011,7 +3021,7 @@ msgstr ""
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: website_forum
 #. openerp-web
@@ -3032,7 +3042,7 @@ msgstr "Optionen zu Teilen"
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index
 msgid "Show"
-msgstr "Zeigen"
+msgstr "Show"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
@@ -3075,7 +3085,7 @@ msgstr ""
 #: code:addons/website_forum/static/src/js/website_forum.js:0
 #, python-format
 msgid "Sorry you must be logged in to perform this action"
-msgstr "Tut uns leid. Sie müssen zum Ausführen dieser Aktion angemeldet sein."
+msgstr "Tut uns leid. Du must zum Ausführen dieser Aktion angemeldet sein."
 
 #. module: website_forum
 #. openerp-web
@@ -3158,7 +3168,7 @@ msgstr "Unterstützer"
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_tag_view_form
 #: model_terms:ir.ui.view,arch_db:website_forum.view_forum_post_search
 msgid "Tag"
-msgstr "Stichwort"
+msgstr "Tag"
 
 #. module: website_forum
 #: model:ir.model.constraint,message:website_forum.constraint_forum_tag_name_uniq
@@ -3612,7 +3622,7 @@ msgstr "Website-Kommunikationshistorie"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_description
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_description
 msgid "Website meta description"
-msgstr "Website Meta-Beschreibung"
+msgstr "Website Meta Beschreibung"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__website_meta_keywords
@@ -3633,7 +3643,7 @@ msgstr "Website Meta-Titel"
 #: model:ir.model.fields,field_description:website_forum.field_forum_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_forum.field_forum_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr "Website Opengraph-Bild"
+msgstr "Offenes Grafikbild der Website"
 
 #. module: website_forum
 #: model:ir.model.fields,field_description:website_forum.field_forum_forum__welcome_message
@@ -3953,7 +3963,7 @@ msgstr ""
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.tag
 msgid "post"
-msgstr "Beitrag"
+msgstr "senden"
 
 #. module: website_forum
 #: model_terms:ir.ui.view,arch_db:website_forum.forum_index

@@ -13,7 +13,7 @@ from odoo.tools import plaintext2html, html2plaintext
 
 class SlidesPortalChatter(PortalChatter):
 
-    @http.route(['/mail/chatter_post'], type='http', methods=['POST'], auth='public', website=True)
+    @http.route(['/mail/chatter_post'], type='json', methods=['POST'], auth='public', website=True)
     def portal_chatter_post(self, res_model, res_id, message, **kw):
         result = super(SlidesPortalChatter, self).portal_chatter_post(res_model, res_id, message, **kw)
         if res_model == 'slide.channel':
@@ -22,21 +22,25 @@ class SlidesPortalChatter(PortalChatter):
             if rating_value and slide_channel and request.env.user.partner_id.id == int(kw.get('pid')):
                 # apply karma gain rule only once
                 request.env.user.add_karma(slide_channel.karma_gen_channel_rank)
+            result.update({
+                'default_rating_value': rating_value,
+                'rating_avg': slide_channel.rating_avg,
+                'rating_count': slide_channel.rating_count,
+                'force_submit_url': result.get('default_message_id') and '/slides/mail/update_comment',
+            })
         return result
 
     @http.route([
         '/slides/mail/update_comment',
         '/mail/chatter_update',
-        ], type='http', auth="user")
-    def mail_update_message(self, res_model, res_id, message, message_id, redirect=None, attachment_ids='', attachment_tokens='', **post):
+        ], type='json', auth="user")
+    def mail_update_message(self, res_model, res_id, message, message_id, attachment_ids=None, attachment_tokens=None, **post):
         # keep this mechanism intern to slide currently (saas 12.5) as it is
         # considered experimental
         if res_model != 'slide.channel':
             raise Forbidden()
         res_id = int(res_id)
 
-        attachment_ids = [int(attachment_id) for attachment_id in attachment_ids.split(',') if attachment_id]
-        attachment_tokens = [attachment_token for attachment_token in attachment_tokens.split(',') if attachment_token]
         self._portal_post_check_attachments(attachment_ids, attachment_tokens)
 
         pid = int(post['pid']) if post.get('pid') else False
@@ -70,7 +74,13 @@ class SlidesPortalChatter(PortalChatter):
                 'rating': float(post['rating_value']),
                 'feedback': html2plaintext(message.body),
             })
-
-        # redirect to specified or referrer or simply channel page as fallback
-        redirect_url = redirect or (request.httprequest.referrer and request.httprequest.referrer + '#review') or '/slides/%s' % res_id
-        return werkzeug.utils.redirect(redirect_url, 302)
+        channel = request.env[res_model].browse(res_id)
+        return {
+            'default_message_id': message.id,
+            'default_message': html2plaintext(message.body),
+            'default_rating_value': message.rating_value,
+            'rating_avg': channel.rating_avg,
+            'rating_count': channel.rating_count,
+            'default_attachment_ids': message.attachment_ids.sudo().read(['id', 'name', 'mimetype', 'file_size', 'access_token']),
+            'force_submit_url': '/slides/mail/update_comment',
+        }

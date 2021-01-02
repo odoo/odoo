@@ -3,20 +3,22 @@
 # 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
-# Oleg Kuryan <oleg@ventor.tech>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
-# Сергей Шебанин <sergey@shebanin.ru>, 2020
+# Alex Puchkov <ap@alteco.co>, 2017
+# Collex100, 2017
+# Martin Trigaux, 2017
+# Sergey Vilizhanin, 2017
+# Максим Дронь <dronmax@gmail.com>, 2018
+# Masha Koc <mariya.kos.ua@gmail.com>, 2018
+# Oleg Kuryan <oleg@ventor.tech>, 2019
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2020\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
+"PO-Revision-Date: 2016-08-05 13:09+0000\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,8 +35,7 @@ msgstr "Токен доступа для установки значения р�
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
-msgstr ""
-"Связанное сообщение для оценки поста. Используется в дополнениях веб-сайта."
+msgstr "Связанное сообщение для оценки поста.Используется аддонами вебсайта."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
@@ -49,7 +50,7 @@ msgstr "Комментарий"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__partner_id
@@ -69,7 +70,7 @@ msgstr "Дата"
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_id
@@ -110,7 +111,7 @@ msgstr ""
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Group By"
-msgstr "Группировать по"
+msgstr "Группировать"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__is_internal
@@ -131,7 +132,7 @@ msgstr "высоко недоволен"
 #: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "Номер"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_id
@@ -252,7 +253,7 @@ msgstr "номинальная лицо"
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Rating"
-msgstr "Оценка"
+msgstr "Рейтинг"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
@@ -264,12 +265,12 @@ msgstr "Средняя оценка"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "Проголосовать за последний отзыв"
+msgstr "Рейтинг: последний отзыв"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr "Голосовать за последнее изображение"
+msgstr "Рейтинг: последнее изображение"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
@@ -301,11 +302,11 @@ msgstr "значение рейтинга"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
 msgid "Rating count"
-msgstr "Количество отзывов"
+msgstr "Общая оценка"
 
 #. module: rating
 #: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
-msgid "Rating should be between 0 to 5"
+msgid "Rating should be between 0 and 5"
 msgstr ""
 
 #. module: rating
@@ -363,7 +364,7 @@ msgstr "доволен"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
 msgid "Security Token"
-msgstr "Код доступа"
+msgstr "Маркер доступа"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit

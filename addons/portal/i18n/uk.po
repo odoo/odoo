@@ -3,17 +3,19 @@
 # 	* portal
 # 
 # Translators:
+# Zoriana Zaiats, 2018
+# Ostap Yakovenko <ostap.yakovenko@maao.com.ua>, 2018
+# Bohdan Lisnenko, 2019
 # Martin Trigaux, 2020
-# Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -27,7 +29,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "%d days overdue"
-msgstr "%d днів протерміновано"
+msgstr "%d днів прострочено"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -63,6 +65,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/> Редагувати"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -327,6 +337,7 @@ msgstr "Змінити пароль"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
@@ -434,7 +445,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__create_date
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: portal
 #. openerp-web
@@ -457,7 +468,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
 msgid "Customer Portal URL"
-msgstr "URL порталу клієнта"
+msgstr "URL Порталу клієнта"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
@@ -488,7 +499,7 @@ msgstr "Деталі"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 #: model:ir.model.fields,field_description:portal.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Відобразити назву"
+msgstr "Назва для відображення"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_home
@@ -518,7 +529,7 @@ msgstr "Ел. пошта"
 #. module: portal
 #: model:ir.model,name:portal.model_mail_thread
 msgid "Email Thread"
-msgstr "Тема електронної пошти"
+msgstr "Ланцюжки повідомлень"
 
 #. module: portal
 #. openerp-web
@@ -577,7 +588,8 @@ msgstr "В порталі"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Невірна адреса ел. пошти. Будь ласка, вкажіть правильну адресу."
+msgstr ""
+"Невірна адреса ел. пошти. Будь ласка, вкажіть правильну електронну адресу."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -601,7 +613,7 @@ msgstr "Повідомлення-запрошення"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user____last_update
 #: model:ir.model.fields,field_description:portal.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_share__write_uid
@@ -655,12 +667,12 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
-msgstr "Мій рахунок"
+msgstr "Мій обліковий запис"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Name"
-msgstr "Назва"
+msgstr "Ім'я"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -726,7 +738,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
 msgid "Portal Access URL"
-msgstr "URL доступу до порталу"
+msgstr "URL Доступу до порталу"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
@@ -746,7 +758,7 @@ msgstr "Налаштування користувача порталу"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
-msgstr "Зроблено"
+msgstr "За підтримки"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -812,9 +824,9 @@ msgid ""
 "                        The email address of each selected contact must be valid and unique.\n"
 "                        If necessary, you can fix any contact's email address directly in the list."
 msgstr ""
-"Виберіть контакти зі списку нижче, які будуть належати порталу.\n"
-"Електронна пошта кожного вибраного контакту повинна бути дійсною та унікальною.\n"
-"Якщо це необхідно, ви можете виправити електронну пошту будь-якого користувача прямо в списку нижче."
+"Виберіть, які контакти зі списку нижче, будуть належати порталу.\n"
+"Ел.пошта кожного вибраного контакту повинна бути дійсною та унікальною.\n"
+"Якщо це необхідно, ви можете виправити ел.пошту будь-якого користувача прямо в списку нижче."
 
 #. module: portal
 #. openerp-web
@@ -828,7 +840,7 @@ msgstr "Надіслати"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr "Кілька контактів мають однакову ел. пошту:"
+msgstr "Декілька контактів мають однакову ел. пошту:"
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -861,6 +873,15 @@ msgstr ""
 "користувачі:"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
@@ -869,7 +890,7 @@ msgstr "Деякі обов’язкові поля пусті."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr "Область/район"
+msgstr "Область"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -964,15 +985,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Цей текст міститься в електронному листі, відправленому новим користувачам "
-"порталу."
+"Цей текст міститиметься в електронному листі новим користувачам порталу."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
 msgid "This text is included in the email sent to new users of the portal."
 msgstr ""
-"Цей текст міститься в електронному листі, надісланому новим користувачам "
-"порталу."
+"Цей текст міститиметься в електронному листі новим користувачам порталу."
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -1009,7 +1028,7 @@ msgstr ""
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
 msgid "View"
-msgstr "Перегляд"
+msgstr "Переглянути"
 
 #. module: portal
 #. openerp-web
@@ -1020,6 +1039,7 @@ msgstr "Видимий"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
@@ -1054,6 +1074,7 @@ msgstr "Повідомлення з веб-сайту"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,help:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
@@ -1173,7 +1194,7 @@ msgstr "коментарі"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "logged in"
-msgstr "в системі,"
+msgstr "в системі"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
@@ -1195,4 +1216,4 @@ msgstr "вибрати..."
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "to post a comment."
-msgstr "щоб опублікувати коментар."
+msgstr "опублікувати коментар."

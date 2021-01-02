@@ -35,8 +35,9 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
-    def create(self, values):
-        res = super(SlidePartnerRelation, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
         completed = res.filtered('completed')
         if completed:
             completed._set_completed_callback()
@@ -466,9 +467,12 @@ class Slide(models.Model):
         rec.sequence = 0
         return rec
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_already_taken(self):
         if self.question_ids and self.channel_id.channel_partner_ids:
             raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+
+    def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
         super(Slide, self).unlink()
@@ -505,9 +509,9 @@ class Slide(models.Model):
             }
         return super(Slide, self).get_access_action(access_uid)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is active. """
-        groups = super(Slide, self)._notify_get_groups()
+        groups = super(Slide, self)._notify_get_groups(msg_vals=msg_vals)
 
         if self.website_published:
             for group_name, group_method, group_data in groups:

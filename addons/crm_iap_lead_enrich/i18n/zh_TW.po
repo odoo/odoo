@@ -3,6 +3,7 @@
 # 	* crm_iap_lead_enrich
 # 
 # Translators:
+# Martin Trigaux, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
@@ -10,7 +11,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"PO-Revision-Date: 2019-12-16 11:02+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
@@ -24,7 +25,7 @@ msgstr ""
 msgid ""
 "<span> No company data found based on the email address or email address is "
 "one of an email provider. No credit was consumed. </span>"
-msgstr "<span>找不到基於電子郵件地址或電子郵件地址的公司資料是電子郵件供應商。未消耗任何點數。</span>"
+msgstr "<span>找不到基於電子郵件地址或電子郵件地址的公司資料是電子郵件供應商之一。未消耗任何積分。</span>"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_email
@@ -42,7 +43,7 @@ msgstr "允許手動豐富"
 #: model:ir.cron,cron_name:crm_iap_lead_enrich.ir_cron_lead_enrichment
 #: model:ir.cron,name:crm_iap_lead_enrich.ir_cron_lead_enrichment
 msgid "CRM: enrich leads (IAP)"
-msgstr "CRM：線索資訊擴充 （IAP）"
+msgstr "CRM：豐富潛在客戶 （IAP）"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_res_config_settings
@@ -105,14 +106,14 @@ msgstr "最後修改於"
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_email
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_notfound
 msgid "Lead Enrichment based on email address"
-msgstr "基於電子郵件地址的線索資訊擴充"
+msgstr "基於電子郵件地址的潛在客戶擴充"
 
 #. module: crm_iap_lead_enrich
 #: code:addons/crm_iap_lead_enrich/models/crm_lead.py:0
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 #, python-format
 msgid "Lead enriched based on email address"
-msgstr "基於電子郵件地址的線索資訊擴充"
+msgstr "基於電子郵件地址的潛在客戶豐富"
 
 #. module: crm_iap_lead_enrich
 #: model:ir.model,name:crm_iap_lead_enrich.model_crm_lead
@@ -124,14 +125,14 @@ msgstr "線索/商機"
 msgid ""
 "Whether IAP service for lead enrichment based on email has been performed on"
 " this lead."
-msgstr "是否針對此線索執行了基於電子郵件的線索資訊擴充 IAP 服務。"
+msgstr "是否針對此潛在客戶執行了基於電子郵件的潛在客戶擴充 IAP 服務。"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "Your balance for Lead Enrichment is insufficient. Please go to your"
-msgstr "您的IAP餘額不足。請轉到您的"
+msgstr "您的鉛濃縮餘額不足。請轉到您的"
 
 #. module: crm_iap_lead_enrich
 #: model_terms:ir.ui.view,arch_db:crm_iap_lead_enrich.mail_message_lead_enrich_no_credit
 msgid "to buy credits."
-msgstr "購買點數。"
+msgstr "購買信用。"

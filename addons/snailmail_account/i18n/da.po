@@ -3,22 +3,18 @@
 # 	* snailmail_account
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Morten Schou <ms@msteknik.dk>, 2020
-# Jesper Carstensen <jc@danodoo.dk>, 2020
-# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2020
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
-# Ejner Sønniksen <ejner@vkdata.dk>, 2020
-# Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Martin Trigaux, 2019
+# Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
+# Sanne Kristensen <sanne@vkdata.dk>, 2019
+# Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"POT-Creation-Date: 2019-08-12 11:32+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Ejner Sønniksen <ejner@vkdata.dk>, 2019\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,10 +23,10 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: snailmail_account
-#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:76
 #, python-format
 msgid "%s of the selected invoice(s) had an invalid address and were not sent"
-msgstr "%s af valgte faktura har en ugyldig adresse og blev ikke afsendt"
+msgstr ""
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -38,8 +34,6 @@ msgid ""
 "<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
-"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" "
-"title=\"Tjek at du har nok frimærker på din konto.\"/> )"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
@@ -57,9 +51,6 @@ msgid ""
 "                                            The customer address is not complete.\n"
 "                                        </span>"
 msgstr ""
-"<span class=\"text-danger\">\n"
-"                                            Kundeadressen er ukomplet.\n"
-"                                        </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -68,14 +59,11 @@ msgid ""
 "                                        Some customer addresses are not complete.\n"
 "                                    </span>"
 msgstr ""
-"<span class=\"text-danger\">\n"
-"                                        Visse kundeadresser er ukomplette.\n"
-"                                    </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
 msgid "<span> to: </span>"
-msgstr "<span> til: </span>"
+msgstr ""
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_invoice_send
@@ -85,11 +73,9 @@ msgstr "Faktura sendt"
 #. module: snailmail_account
 #: model:ir.model.fields,help:snailmail_account.field_account_invoice_send__snailmail_is_letter
 msgid ""
-"Allows to send the document by Snailmail (conventional posting delivery "
+"Allows to send the document by Snailmail (coventional posting delivery "
 "service)"
 msgstr ""
-"Gør det muligt at sende dokumentet via post (konventionel post omdelings "
-"ydelse)"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_res_company
@@ -102,77 +88,17 @@ msgid "Config Settings"
 msgstr "Konfigurer opsætning"
 
 #. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__create_uid
-msgid "Created by"
-msgstr "Oprettet af"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__create_date
-msgid "Created on"
-msgstr "Oprettet den"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__display_name
-#: model:ir.model.fields,field_description:snailmail_account.field_res_company__display_name
-#: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__display_name
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__display_name
-msgid "Display Name"
-msgstr "Vis navn"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__id
-#: model:ir.model.fields,field_description:snailmail_account.field_res_company__id
-#: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings__id
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__id
-msgid "ID"
-msgstr "ID"
-
-#. module: snailmail_account
-#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
-#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:75
+#: code:addons/snailmail_account/wizard/account_invoice_send.py:82
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoice_ids
 #, python-format
 msgid "Invalid Addresses"
-msgstr "Ugyldige adresser"
+msgstr ""
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
 msgid "Invalid Addresses Count"
-msgstr "Antal ugyldige adresser"
-
-#. module: snailmail_account
-#: code:addons/snailmail_account/wizard/account_invoice_send.py:0
-#, python-format
-msgid "Invoice"
-msgstr "Faktura"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__invoice_send_id
-msgid "Invoice Send"
-msgstr "Faktura Afsendt"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send____last_update
-#: model:ir.model.fields,field_description:snailmail_account.field_res_company____last_update
-#: model:ir.model.fields,field_description:snailmail_account.field_res_config_settings____last_update
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice____last_update
-msgid "Last Modified on"
-msgstr "Sidst ændret den"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_uid
-msgid "Last Updated by"
-msgstr "Sidst opdateret af"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__write_date
-msgid "Last Updated on"
-msgstr "Sidst opdateret den"
-
-#. module: snailmail_account
-#: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__model_name
-msgid "Model Name"
-msgstr "Modelnavn"
+msgstr ""
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__partner_id
@@ -187,14 +113,9 @@ msgid "Send by Post"
 msgstr "Send via post"
 
 #. module: snailmail_account
-#: model:ir.model,name:snailmail_account.model_snailmail_confirm_invoice
-msgid "Snailmail Confirm Invoice"
-msgstr "Post Bekræft Faktura"
-
-#. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
 msgid "Stamp(s)"
-msgstr "Frimærke(r)"
+msgstr ""
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form

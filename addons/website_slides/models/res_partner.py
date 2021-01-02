@@ -9,9 +9,32 @@ class ResPartner(models.Model):
 
     slide_channel_ids = fields.Many2many(
         'slide.channel', 'slide_channel_partner', 'partner_id', 'channel_id',
-        string='eLearning Courses')
-    slide_channel_count = fields.Integer('Course Count', compute='_compute_slide_channel_count')
-    slide_channel_company_count = fields.Integer('Company Course Count', compute='_compute_slide_channel_company_count')
+        string='eLearning Courses', groups="website_slides.group_website_slides_officer")
+    slide_channel_completed_ids = fields.One2many(
+        'slide.channel', string='Completed Courses',
+        compute='_compute_slide_channel_completed_ids',
+        search='_search_slide_channel_completed_ids',
+        groups="website_slides.group_website_slides_officer")
+    slide_channel_count = fields.Integer(
+        'Course Count', compute='_compute_slide_channel_count',
+        groups="website_slides.group_website_slides_officer")
+    slide_channel_company_count = fields.Integer(
+        'Company Course Count', compute='_compute_slide_channel_company_count',
+        groups="website_slides.group_website_slides_officer")
+
+    def _compute_slide_channel_completed_ids(self):
+        for partner in self:
+            partner.slide_channel_completed_ids = self.env['slide.channel.partner'].search([
+                ('partner_id', '=', partner.id),
+                ('completed', '=', True)
+            ]).mapped('channel_id')
+
+    def _search_slide_channel_completed_ids(self, operator, value):
+        cp_done = self.env['slide.channel.partner'].sudo().search([
+            ('channel_id', operator, value),
+            ('completed', '=', True)
+        ])
+        return [('id', 'in', cp_done.partner_id.ids)]
 
     @api.depends('is_company')
     def _compute_slide_channel_count(self):

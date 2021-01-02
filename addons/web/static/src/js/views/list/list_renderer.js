@@ -78,6 +78,7 @@ var ListRenderer = BasicRenderer.extend({
         this.pagers = []; // instantiated pagers (only for grouped lists)
         this.isGrouped = this.state.groupedBy.length > 0;
         this.groupbys = params.groupbys;
+        this.no_open = params.no_open;
     },
     /**
      * Compute columns visilibity. This can't be done earlier as we need the
@@ -291,6 +292,15 @@ var ListRenderer = BasicRenderer.extend({
                 return {name: fieldName, type: self.state.fields[fieldName].type};
             }),
         };
+    },
+    /**
+     * Returns the jQuery node used to update the selection
+     *
+     * @private
+     * @return {jQuery}
+     */
+    _getSelectableRecordCheckboxes: function () {
+        return this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
     },
     /**
      * Adjacent buttons (in the arch) are displayed in a single column. This
@@ -952,6 +962,9 @@ var ListRenderer = BasicRenderer.extend({
         if (this.hasSelectors) {
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
+        if (this.no_open && this.mode === "readonly") {
+            $tr.addClass('o_list_no_open');
+        }
         this._setDecorationClasses($tr, this.rowDecorations, record);
         return $tr;
     },
@@ -1099,7 +1112,7 @@ var ListRenderer = BasicRenderer.extend({
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
                 );
-                this.$('table').append(this._renderOptionalColumnsDropdown());
+                this.$el.append(this._renderOptionalColumnsDropdown());
             }
             if (this.selection.length) {
                 const $checked_rows = this.$('tr').filter(
@@ -1171,7 +1184,7 @@ var ListRenderer = BasicRenderer.extend({
         const previousSelection = JSON.stringify(this.selection);
         this.selection = [];
         var self = this;
-        var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+        var $inputs = this._getSelectableRecordCheckboxes();
         var allChecked = $inputs.length > 0;
         $inputs.each(function (index, input) {
             if (input.checked) {
@@ -1271,6 +1284,13 @@ var ListRenderer = BasicRenderer.extend({
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
         this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+        // Explicitly set left of the optional column dropdown as it is pushed inside
+        // this.$el, so we need to position it at the end of top right/left corner based
+        // on language direction.
+        var left = _t.database.parameters.direction === 'rtl' ?
+            this.$('.o_optional_columns .o_optional_columns_dropdown').width() :
+            this.$("table").width();
+        this.$('.o_optional_columns').css("left", left);
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to
@@ -1380,7 +1400,7 @@ var ListRenderer = BasicRenderer.extend({
     _onRowClicked: function (ev) {
         // The special_click property explicitely allow events to bubble all
         // the way up to bootstrap's level rather than being stopped earlier.
-        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click')) {
+        if (!ev.target.closest('.o_list_record_selector') && !$(ev.target).prop('special_click') && !this.no_open) {
             var id = $(ev.currentTarget).data('id');
             if (id) {
                 this.trigger_up('open_record', { id: id, target: ev.target });

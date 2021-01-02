@@ -5,7 +5,7 @@ from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 from unittest.mock import MagicMock, patch
 
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 from odoo.addons.google_calendar.utils.google_calendar import GoogleCalendarService
 from odoo.addons.google_calendar.models.res_users import User
 from odoo.addons.google_calendar.models.google_sync import GoogleSync
@@ -22,7 +22,7 @@ def patch_api(func):
     return patched
 
 @patch.object(User, '_get_google_calendar_token', lambda user: 'dummy-token')
-class TestSyncOdoo2Google(SavepointCase):
+class TestSyncOdoo2Google(TransactionCase):
 
     def setUp(self):
         super().setUp()

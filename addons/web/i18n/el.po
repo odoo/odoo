@@ -3,21 +3,21 @@
 # 	* web
 # 
 # Translators:
-# Chris Sal <christian.salias@gmail.com>, 2020
-# Stefanos Nikou <stefanos.nikou@gmail.com>, 2020
-# Sophia Anastasopoulos <sophiaanast1@gmail.com>, 2020
-# Giota Dandidou <giotadandidou@gmail.com>, 2020
+# Sophia Anastasopoulos <sophiaanast1@gmail.com>, 2019
+# Stefanos Nikou <stefanos.nikou@gmail.com>, 2019
 # Martin Trigaux, 2020
 # Kostas Goutoudis <goutoudis@gmail.com>, 2020
+# Giota Dandidou <giotadandidou@gmail.com>, 2020
 # George Tarasidis <george_tarasidis@yahoo.com>, 2020
+# Chris Sal <christian.salias@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: George Tarasidis <george_tarasidis@yahoo.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Chris Sal <christian.salias@gmail.com>, 2020\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -94,13 +94,6 @@ msgstr "%d χρόνια πριν"
 #, python-format
 msgid "%s Files"
 msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: web
 #. openerp-web
@@ -233,8 +226,8 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.frontend_layout
 msgid ""
-"<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
-"name</span>"
+"<span class=\"o_footer_copyright_name mr-2 oe_structure\">Copyright "
+"&amp;copy; Company name</span>"
 msgstr ""
 
 #. module: web
@@ -952,7 +945,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/web/static/src/js/core/dialog.js:0
 #: code:addons/web/static/src/js/core/dialog.js:0
-#: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/fields/upgrade_fields.js:0
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #: code:addons/web/static/src/js/views/calendar/calendar_quick_create.js:0
@@ -973,13 +965,6 @@ msgstr "Ακύρωση"
 #: code:addons/web/static/src/xml/file_upload_progress_bar.xml:0
 #, python-format
 msgid "Cancel Upload"
-msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
-#, python-format
-msgid "Cannot render chart with mode : "
 msgstr ""
 
 #. module: web
@@ -1228,8 +1213,8 @@ msgstr "Αντιγράφηκε !"
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
-msgid "Copy Text"
-msgstr "Αντιγραφή Κειμένου"
+msgid "Copy"
+msgstr "Αντιγραφή"
 
 #. module: web
 #. openerp-web
@@ -1240,6 +1225,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
@@ -1309,6 +1295,7 @@ msgstr "Χώρα"
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
+#: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/web_calendar.xml:0
 #, python-format
 msgid "Create"
@@ -1342,13 +1329,6 @@ msgstr "Δημιουργία Νέας Εγγραφής"
 #, python-format
 msgid "Create and Edit..."
 msgstr "Δημιουργία και Επεξεργασία..."
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/fields/relational_fields.js:0
-#, python-format
-msgid "Create and edit"
-msgstr "Δημιουργία και επεξεργασία"
 
 #. module: web
 #. openerp-web
@@ -1521,6 +1501,7 @@ msgstr "Περιγραφή"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/fields/relational_fields.js:0
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:0
 #: code:addons/web/static/src/js/views/view_dialogs.js:0
 #: code:addons/web/static/src/js/widgets/colorpicker.js:0
@@ -1570,13 +1551,6 @@ msgstr ""
 #, python-format
 msgid "Do you really want to delete this filter from favorites ?"
 msgstr "Θέλετε πραγματικά να διαγράψετε αυτό το φίλτρο από τα αγαπημένα;"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/base.xml:0
-#, python-format
-msgid "Do you want to create"
-msgstr ""
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__external_report_layout_id
@@ -2182,13 +2156,6 @@ msgstr ""
 
 #. module: web
 #. openerp-web
-#: code:addons/web/static/src/js/views/graph/graph_renderer.js:0
-#, python-format
-msgid "Invalid mode for chart"
-msgstr ""
-
-#. module: web
-#. openerp-web
 #: code:addons/web/static/src/js/tools/debug_manager_backend.js:0
 #, python-format
 msgid "JS Mobile Tests"
@@ -2391,6 +2358,13 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -2493,13 +2467,6 @@ msgstr "Μεταδομένα (%s)"
 #, python-format
 msgid "Method:"
 msgstr "Μέθοδος:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:92
-#, python-format
-msgid "MailDeliveryException"
-msgstr ""
 
 #. module: web
 #. openerp-web

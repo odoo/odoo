@@ -3,20 +3,20 @@
 # 	* mail
 # 
 # Translators:
-# Nikos Gkountras <nick@ngsol.net>, 2020
-# George Tarasidis <george_tarasidis@yahoo.com>, 2020
+# Giota Dandidou <giotadandidou@gmail.com>, 2019
+# Nikos Gkountras <nick@ngsol.net>, 2019
+# George Tarasidis <george_tarasidis@yahoo.com>, 2019
 # Martin Trigaux, 2020
 # Kostas Goutoudis <goutoudis@gmail.com>, 2020
 # Vasilis Dimopoulos <iap3tos@outlook.com>, 2020
-# Giota Dandidou <giotadandidou@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:23+0000\n"
-"PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Giota Dandidou <giotadandidou@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
+"Last-Translator: Vasilis Dimopoulos <iap3tos@outlook.com>, 2020\n"
 "Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -189,8 +189,7 @@ msgid ""
 "<br><br>\n"
 "            Type <b>@username</b> to mention someone, and grab his attention.<br>\n"
 "            Type <b>#channel</b> to mention a channel.<br>\n"
-"            Type <b>/command</b> to execute a command.<br>\n"
-"            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
+"            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
 
 #. module: mail
@@ -355,6 +354,11 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\">Αφαίρεση</span>\n"
 "<span class=\"o_stat_text\">Πλαίσιο ενέργειας</span>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "<span class=\"oe_read_only\">&amp;nbsp;</span>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2203,6 +2207,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Email alias %(alias_name)s cannot be used on %(count)d records at the same "
+"time. Please update records one by one."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
 msgstr ""
@@ -2552,12 +2564,6 @@ msgstr "Μόνο ακόλουθοι"
 #, python-format
 msgid "Following"
 msgstr "Ακολουθώ"
-
-#. module: mail
-#: code:addons/mail/models/mail_channel.py:778
-#, python-format
-msgid "Following invites are invalid as user groups do not match: %s"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -5616,14 +5622,16 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
 #, python-format
 msgid "Shift left"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
 #, python-format
 msgid "Shift right"
 msgstr ""
@@ -6659,13 +6667,6 @@ msgstr "Γράψτε ένα σχόλιο"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
-#, python-format
-msgid "Write something..."
-msgstr "Γράψτε κάτι..."
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
@@ -6808,7 +6809,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
-"address."
+"address (%s)."
 msgstr ""
 
 #. module: mail
@@ -6960,11 +6961,6 @@ msgid "assigned you an activity"
 msgstr ""
 
 #. module: mail
-#: model:mail.channel,name:mail.channel_2
-msgid "board-meetings"
-msgstr "πίνακας-συναντήσεων"
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -7046,7 +7042,7 @@ msgstr "λανθασμένη ρύθμιση ψευδώνυμου"
 #: code:addons/mail/models/models.py:0
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr "λανθασμένη διαμόρφωση ψευδώνυμου (άγνωστη αναφορά εγγραφής)"
+msgstr "λάνθασμένη διαμόρφωση ψευδώνυμου (άγνωστη αναφορά εγγραφής)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_remove_view_form
@@ -7102,11 +7098,6 @@ msgid "or"
 msgstr "ή"
 
 #. module: mail
-#: model:mail.channel,name:mail.channel_3
-msgid "rd"
-msgstr "rd"
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
@@ -7158,11 +7149,6 @@ msgstr "περιορίζεται στους ακόλουθους"
 #, python-format
 msgid "restricted to known authors"
 msgstr "περιορίζεται στους γνωστούς συγγραφείς"
-
-#. module: mail
-#: model:mail.channel,name:mail.channel_1
-msgid "sales"
-msgstr "πωλήσεις"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

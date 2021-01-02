@@ -520,7 +520,7 @@ define([
         // [workaround] added styled bogus span for style
         //  - also bogus character needed for cursor position
         if (firstSpan && !dom.nodeLength(firstSpan)) {
-          firstSpan.innerHTML = dom.ZERO_WIDTH_NBSP_CHAR;
+          $(firstSpan).html(dom.ZERO_WIDTH_NBSP_CHAR);
           range.createFromNodeAfter(firstSpan.firstChild).select();
           $editable.data(KEY_BOGUS, firstSpan);
         }

@@ -3,17 +3,19 @@
 # 	* gamification
 # 
 # Translators:
+# Yaroslav Molochko <onorua@gmail.com>, 2018
+# Zoriana Zaiats, 2018
+# Bohdan Lisnenko, 2018
+# ТАрас <tratatuta@i.ua>, 2019
 # Martin Trigaux, 2020
-# Bohdan Lisnenko, 2020
-# ТАрас <tratatuta@i.ua>, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
-"PO-Revision-Date: 2020-09-07 08:12+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:58+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -155,7 +157,7 @@ msgid ""
 " challenge."
 msgstr ""
 "<br/>Ніхто не спромігся досягти всіх цілей, жоден значок не присуджується за"
-" це випробування."
+" цей виклик."
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -681,8 +683,8 @@ msgid ""
 "                Some badges are harder than others to get with specific conditions."
 msgstr ""
 "Значок - це символ, наданий користувачеві як знак нагороди.\n"
-"Він може бути заслуженим автоматично, коли деякі умови задовольняються або вводяться вручну користувачами.\n"
-"Деякі значки складніші, ніж інші, для отримання при певних умовах."
+"Це може бути заслужено автоматично, коли деякі умови задовольняються або вводяться вручну користувачами.\n"
+"Деякі значки складніші, ніж інші, для отримання певних умов."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goal_definition_list_action
@@ -699,7 +701,7 @@ msgid ""
 "A goal is considered as completed when the current value is compared to the "
 "value to reach"
 msgstr ""
-"Мета вважається завершеною, коли поточне значення порівнюється зі значенням "
+"Мета вважається завершеною, коли поточне значення порівнюється з цінністю "
 "для досягнення"
 
 #. module: gamification
@@ -709,7 +711,7 @@ msgid ""
 "                Goals can be created automatically by using challenges."
 msgstr ""
 "Мета цілі визначається користувачем і визначенням цілі.\n"
-"Цілі можна створювати автоматично за допомогою випробувань."
+"Цілі можна створювати автоматично за допомогою проблем."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.gamification_karma_ranks_action
@@ -744,7 +746,7 @@ msgstr "Активно"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Advanced Options"
-msgstr "Розширені налаштування"
+msgstr "Додаткові налаштування"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth
@@ -787,7 +789,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_attachment_count
 msgid "Attachment Count"
-msgstr "Кількість прикріплень"
+msgstr "Підрахунок прикріплення"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_user_ids
@@ -859,9 +861,8 @@ msgid ""
 "manually closed."
 msgstr ""
 "Значки надаються після завершення завдання. Це або наприкінці періоду роботи"
-" (наприклад, наприкінці місяця для щомісячного випробування), на дату "
-"завершення випробування (якщо не встановлено періодичність) або коли "
-"випробування закрито вручну."
+" (наприклад, наприкінці місяця для щомісячного виклику), на дату завершення "
+"виклику (якщо не встановлено періодичність) або коли виклик закрито вручну."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -1072,7 +1073,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__create_date
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_wizard__current
@@ -1168,7 +1169,7 @@ msgstr "Режим відображення"
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking__display_name
 #: model:ir.model.fields,field_description:gamification.field_res_users__display_name
 msgid "Display Name"
-msgstr "Відобразити назву"
+msgstr "Назва для відображення"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__display_mode
@@ -1201,7 +1202,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__done
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Done"
-msgstr "Виконано"
+msgstr "Готово"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__draft
@@ -1240,12 +1241,12 @@ msgstr "Кожен"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal_definition__display_mode__boolean
 msgid "Exclusive (done or not-done)"
-msgstr "Виключний (виконаний або невиконаний)"
+msgstr "Ексклюзивний (виконаний або невиконаний)"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__failed
 msgid "Failed"
-msgstr "Не пройшов"
+msgstr "Невдача"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__field_id
@@ -1365,7 +1366,7 @@ msgstr "Загальна мета геміфікації для завдання
 #: model:ir.cron,cron_name:gamification.ir_cron_check_challenge
 #: model:ir.cron,name:gamification.ir_cron_check_challenge
 msgid "Gamification: Goal Challenge Check"
-msgstr "Геміфікація: Перевірка цілі завдання"
+msgstr "Гаміфікація: Перевірка цілі"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_last_month_ir_actions_server
@@ -1454,7 +1455,7 @@ msgstr "Гарна робота"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view
 msgid "Grant"
-msgstr "Надати"
+msgstr "Надавати"
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.action_grant_wizard
@@ -1547,7 +1548,7 @@ msgstr "Якщо максимум встановлений"
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Якщо позначено, то нові повідомлення будуть потребувати вашої уваги."
+msgstr "Якщо відмічено, то нові повідомлення будуть потребувати вашої уваги."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
@@ -1672,7 +1673,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_tracking____last_update
 #: model:ir.model.fields,field_description:gamification.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__last_report_date
@@ -1795,7 +1796,7 @@ msgstr "Грошова вартість"
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__monthly
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__report_message_frequency__monthly
 msgid "Monthly"
-msgstr "Щомісяця"
+msgstr "Щомісячно"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_max
@@ -1946,7 +1947,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Кількість повідомлень з помилковою доставкою"
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_unread_counter
@@ -2071,24 +2072,24 @@ msgid "Ranks List"
 msgstr "Список звань"
 
 #. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
-msgid "Reach the next rank and gain a very magic wand !"
-msgstr "Досягніть наступного звання і отримайте чарівну паличку!"
-
-#. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_master
-msgid "Reach the next rank and gain a very nice hat !"
-msgstr "Досягніть наступного звання і отримайте дуже гарний капелюх!"
-
-#. module: gamification
-#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
-msgid "Reach the next rank and gain a very nice mug !"
-msgstr "Досягніть наступного звання і отримайте дуже гарну кружку!"
+msgid "Reach the next rank and become a Master!"
+msgstr "Отримайте наступне звання та станьте Майстром!"
 
 #. module: gamification
 #: model_terms:gamification.karma.rank,description_motivational:gamification.rank_doctor
-msgid "Reach the next rank and gain a very nice unicorn !"
-msgstr "Досягніть наступного звання та отримайте дуже гарного єдинорога!"
+msgid "Reach the next rank and become a powerful user!"
+msgstr "Отримайте наступне звання та станьте потужним користувачем!"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_bachelor
+msgid "Reach the next rank to improve your status!"
+msgstr "Отримайте наступне звання, щоби покращити свій статус!"
+
+#. module: gamification
+#: model_terms:gamification.karma.rank,description_motivational:gamification.rank_student
+msgid "Reach the next rank to show the rest of the world you exist."
+msgstr "Отримайте наступне звання, щоби показати решті світу, що ви існуєте."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__reached
@@ -2108,7 +2109,7 @@ msgstr "Записаний вручну"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Reference"
-msgstr "Референс"
+msgstr "Посилання"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2123,7 +2124,7 @@ msgstr "Пов'язані цілі"
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge_user_wizard__user_id
 msgid "Related user name for the resource to manage its access."
-msgstr "Пов'язане ім'я користувача кадру для управління його доступом."
+msgstr "Пов'язане ім'я користувача ресурсу для управління доступом."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__remaining_sending
@@ -2219,7 +2220,7 @@ msgstr "Виконання завдання"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "Schedule"
-msgstr "Розклад"
+msgstr "Запланувати"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
@@ -2350,7 +2351,7 @@ msgstr "Розпочніть ціль"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "State"
-msgstr "Статус"
+msgstr "Область"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2433,7 +2434,7 @@ msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
-"День, коли буде автоматично запущене нове завдання. Якщо періодичність не "
+"День, коли буде автоматично запущений новий виклик. Якщо періодичність не "
 "встановлена, використовуватиме цю дату як дату початку мети."
 
 #. module: gamification
@@ -2680,7 +2681,7 @@ msgstr "Унікальні власники"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge_line__definition_suffix
 msgid "Unit"
-msgstr "Одиниця"
+msgstr "Одиниці"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_unread
@@ -2761,7 +2762,7 @@ msgstr ""
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_idea
 msgid "With your brilliant ideas, you are an inspiration to others."
-msgstr "З вашими блискучими ідеями ви надихаєте інших."
+msgstr "З вашими блискучими ідеями ви натхненні іншим."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__period__yearly
@@ -2807,7 +2808,7 @@ msgstr "У вас немає необхідних значків."
 #: code:addons/gamification/models/badge.py:0
 #, python-format
 msgid "You have already sent this badge too many time this month."
-msgstr "Ви надсилали цей значок занадто багато разів у цьому місяці."
+msgstr "Ви вже надсилали цей значок занадто багато разів у цьому місяці."
 
 #. module: gamification
 #: model:gamification.badge,description:gamification.badge_hidden
@@ -2837,7 +2838,7 @@ msgstr "Ви любите вивчати речі. Цікавість - це х�
 #. module: gamification
 #: model_terms:gamification.karma.rank,description:gamification.rank_student
 msgid "You're a young padawan now. May the force be with you!"
-msgstr "Тепер ви молодий падаван. Нехай сила буде з вами!"
+msgstr "Тепер ви молодий падаван. Нехай сила буде з тобою!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
@@ -2848,19 +2849,19 @@ msgstr "значки цього місяця"
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.goal_form_view
 msgid "days"
-msgstr "дні"
+msgstr "днів"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid ""
 "e.g. A Master Chief knows quite everything on the forum! You cannot beat "
 "him!"
-msgstr "напр. Майстер-шеф знає все на форумі! Ви не можете перемогти його!"
+msgstr "напр. Мастер-шеф знає все на форумі! Ви не можете перемогти його!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Master Chief"
-msgstr "напр., Майстер-шеф"
+msgstr "напр., Мастер-шеф"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2880,7 +2881,7 @@ msgstr "напр. дні"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr "напр. user.partner_id.id"
+msgstr "e.g. user.partner_id.id"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view

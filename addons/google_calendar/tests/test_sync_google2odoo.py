@@ -4,10 +4,10 @@
 from odoo.addons.google_calendar.utils.google_calendar import GoogleEvent
 import pytz
 from datetime import datetime, date
-from odoo.tests.common import SavepointCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user
 
 
-class TestSyncGoogle2Odoo(SavepointCase):
+class TestSyncGoogle2Odoo(TransactionCase):
 
     @property
     def now(self):

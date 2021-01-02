@@ -3,17 +3,18 @@
 # 	* mrp_account
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Cas Vissers <casvissers@brahoo.nl>, 2016
+# Martin Trigaux, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:29+0000\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -33,7 +34,7 @@ msgstr "Kostenplaats"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "Bereken kostprijs vanuit stuklijst"
+msgstr "Bereken prijs vanuit stuklijst"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -57,18 +58,19 @@ msgstr "Kosten geregistreerd"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__display_name
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__display_name
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__display_name
 msgid "Display Name"
 msgstr "Schermnaam"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Cost"
-msgstr "Extra kosten"
+msgstr "Extra kost"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__extra_cost
 msgid "Extra cost per produced unit"
-msgstr "Extra kosten per producteenheid"
+msgstr "Extra kost per producteenheid"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -85,6 +87,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_product__id
 #: model:ir.model.fields,field_description:mrp_account.field_product_template__id
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move__id
 msgid "ID"
 msgstr "ID"
 
@@ -94,6 +97,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity____last_update
 #: model:ir.model.fields,field_description:mrp_account.field_product_product____last_update
 #: model:ir.model.fields,field_description:mrp_account.field_product_template____last_update
+#: model:ir.model.fields,field_description:mrp_account.field_stock_move____last_update
 msgid "Last Modified on"
 msgstr "Laatst gewijzigd op"
 
@@ -118,6 +122,11 @@ msgid "Show Valuation"
 msgstr "Toon waardering"
 
 #. module: mrp_account
+#: model:ir.model,name:mrp_account.model_stock_move
+msgid "Stock Move"
+msgstr "Voorraadverplaatsting"
+
+#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid ""
 "Technical field automatically checked when a ongoing production posts "
@@ -138,9 +147,9 @@ msgstr "Waarde"
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
 msgid "Work Center"
-msgstr "Werkplek"
+msgstr "Productieplaats"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter_productivity
 msgid "Workcenter Productivity Log"
-msgstr "Werkplek effectiviteitslog"
+msgstr "Werkplaats effectiviteitslog"

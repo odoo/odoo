@@ -61,8 +61,8 @@ odoo.define('web.CustomFilterItem', function (require) {
             this.OPERATORS = FIELD_OPERATORS;
             this.FIELD_TYPES = FIELD_TYPES;
 
-            // Add default empty condition
-            this._addDefaultCondition();
+            // Add first condition
+            this._addNewCondition();
         }
 
         //---------------------------------------------------------------------
@@ -70,17 +70,20 @@ odoo.define('web.CustomFilterItem', function (require) {
         //---------------------------------------------------------------------
 
         /**
-         * Populate the conditions list with a default condition having as properties:
-         * - the first available field
-         * - the first available operator
+         * Populate the conditions list with a new condition having as properties:
+         * - the last condition or the first available field
+         * - the last condition or the first available operator
          * - a null or empty array value
          * @private
          */
-        _addDefaultCondition() {
-            const condition = {
-                field: 0,
-                operator: 0,
-            };
+        _addNewCondition() {
+            const lastCondition = [...this.state.conditions].pop();
+            const condition = lastCondition
+                ? Object.assign({}, lastCondition)
+                : {
+                    field: 0,
+                    operator: 0,
+                };
             this._setDefaultValue(condition);
             this.state.conditions.push(condition);
         }
@@ -185,7 +188,7 @@ odoo.define('web.CustomFilterItem', function (require) {
             // Reset state
             this.state.open = false;
             this.state.conditions = [];
-            this._addDefaultCondition();
+            this._addNewCondition();
         }
 
         /**

@@ -3,23 +3,23 @@
 # 	* portal
 # 
 # Translators:
-# Martin Trigaux, 2020
-# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2020
+# Eric Antones <eantones@users.noreply.github.com>, 2019
+# Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2019
+# M Palau <mpalau@tda.ad>, 2019
+# Quim - eccit <quim@eccit.com>, 2019
+# Arnau Ros, 2019
 # Carles Antoli <carlesantoli@hotmail.com>, 2020
-# Eric Antones <eantones@users.noreply.github.com>, 2020
+# Martin Trigaux, 2020
 # RGB Consulting <odoo@rgbconsulting.com>, 2020
-# Quim - eccit <quim@eccit.com>, 2020
 # Manel Fernandez Ramirez <manelfera@outlook.com>, 2020
-# M Palau <mpalau@tda.ad>, 2020
-# Arnau Ros, 2020
 # jabelchi <jabelchi@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 13:07+0000\n"
 "Last-Translator: jabelchi <jabelchi@gmail.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
@@ -69,6 +69,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil\"/> Edit"
 msgstr "<i class=\"fa fa-pencil\"/> Editar"
+
+#. module: portal
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
+msgid ""
+"<small class=\"form-text text-muted\">Changing company name or VAT number is"
+" not allowed once document(s) have been issued for your account. <br/>Please"
+" contact us directly for this operation.</small>"
+msgstr ""
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -204,14 +212,14 @@ msgstr ""
 "                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                    <div>\n"
 "                        Estimat/da ${object.user_id.name or ''},<br/> <br/>\n"
-"                        Se t'ha donat accés al portal de ${object.user_id.company_id.name}.<br/>\n"
+"                        Se t'ha donat accés al portar de ${object.user_id.company_id.name}.<br/>\n"
 "                        Les teves dades d'accés són les següents:\n"
 "                        <ul>\n"
 "                            <li>Usuari: ${object.user_id.login or ''}</li>\n"
 "                            <li>Portal: <a href=\"${'portal_url' in ctx and ctx['portal_url'] or ''}\">${'portal_url' in ctx and ctx['portal_url'] or ''}</a></li>\n"
 "                            <li>Base de dades: ${'dbname' in ctx and ctx['dbname'] or ''}</li>\n"
 "                        </ul>\n"
-"                        Pots configurar o canviar la contrasenya mitjançant l'enllaç següent:\n"
+"                        Pots configurar o canviar la contrasenya a l'enllaç següent:\n"
 "                        <ul>\n"
 "                            <li><a href=\"${object.user_id.signup_url}\">${object.user_id.signup_url}</a></li>\n"
 "                        </ul>\n"
@@ -252,7 +260,7 @@ msgstr ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Amb tecnologia <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Powered by <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=portalinvite\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -333,13 +341,14 @@ msgstr "Canvia contrasenya"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
+#: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 #, python-format
 msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
-"Canviar el NIF/CIF no està permès un cop s'han assignat les factures al "
-"compte. Si us plau, contacti directament amb nosaltres per fer-ho."
+"Canviar el NIF/CIF no està permès un cop les factures han estat assignades "
+"al compte. Si us plau, contacti directament amb nosaltres per fer-ho."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -367,7 +376,7 @@ msgstr "Ciutat"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Click here to see your document."
-msgstr "Prémer aquí per veure el document."
+msgstr "Prémer aquí per veure el document"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -393,7 +402,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Confirm Password"
-msgstr "Confirmar contrasenya"
+msgstr "Confirmeu contrasenya"
 
 #. module: portal
 #: model:ir.model,name:portal.model_res_partner
@@ -583,7 +592,7 @@ msgstr "Al portal"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid Email! Please enter a valid email address."
-msgstr "Correu no vàlid. Si us plau, proporcioneu un correu electrònic vàlid."
+msgstr "Correu no vàlid! Per favor proporcioni un correu electronic vàlid!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -643,7 +652,7 @@ msgstr "Usuari d'entrada"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.user_dropdown
 msgid "Logout"
-msgstr "Tancar sessió"
+msgstr "Tancar Sessió"
 
 #. module: portal
 #: model:ir.model,name:portal.model_mail_message
@@ -661,7 +670,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
 msgid "My Account"
-msgstr "El meu compte"
+msgstr "El Meu Compte"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -698,8 +707,7 @@ msgstr "Logo Odoo"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
-"Ups! Alguna cosa ha anat malament. Torneu a carregar la pàgina i inicieu "
-"sessió."
+"Ups! Alguna cosa ha anat malament. Recarrega la pàgina i inicia sessió."
 
 #. module: portal
 #. openerp-web
@@ -753,7 +761,7 @@ msgstr "Portal de configuració d'usuari"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "Powered by"
-msgstr "Impulsat per"
+msgstr "Recolzat per"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.pager
@@ -829,7 +837,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_wizard
 #, python-format
 msgid "Send"
-msgstr "Enviar"
+msgstr "Envia"
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
@@ -868,10 +876,19 @@ msgstr ""
 " el portal"
 
 #. module: portal
+#. openerp-web
+#: code:addons/portal/static/src/js/portal_composer.js:0
+#, python-format
+msgid ""
+"Some fields are required. Please make sure to write a message or attach a "
+"document"
+msgstr ""
+
+#. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Some required fields are empty."
-msgstr "Alguns camps obligatoris estan buits."
+msgstr "Alguns camps requerits estan buits."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -970,7 +987,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
 msgid "This text is included in the email sent to new portal users."
 msgstr ""
-"Aquest text s'inclou al correu electrònic enviat als usuaris del nou portal"
+"Aquest text s'inclou al correu electrònic enviat als nous usuaris del portal"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_wizard__welcome_message
@@ -1024,6 +1041,7 @@ msgstr "Visible"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,field_description:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_fleet_vehicle__website_message_ids
@@ -1054,10 +1072,11 @@ msgstr "Visible"
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "Missatges del lloc web"
+msgstr "Missatges de la pàgina web"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
+#: model:ir.model.fields,help:portal.field_adyen_account__website_message_ids
 #: model:ir.model.fields,help:portal.field_calendar_event__website_message_ids
 #: model:ir.model.fields,help:portal.field_crm_team__website_message_ids
 #: model:ir.model.fields,help:portal.field_fleet_vehicle__website_message_ids
@@ -1149,7 +1168,7 @@ msgstr "El teu contacte"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Zip / Postal Code"
-msgstr "Codi Postal"
+msgstr "CP / Codi Postal"
 
 #. module: portal
 #. openerp-web

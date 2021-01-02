@@ -3,17 +3,18 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Martin Trigaux, 2020
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2019
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
+# Martin Trigaux, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
 "Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
@@ -236,6 +237,21 @@ msgid "Manual Numbering"
 msgstr "Numerotare manuală"
 
 #. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+msgstr ""
+"Manual: primiți plăți în numerar, cec sau orice altă metodă în afara Odoo.\n"
+"Electronice: primiți automat plăți prin intermediul unui dobânditor de plăți solicitând o tranzacție pe un card salvat de client atunci când cumpărați sau vă abonați online (jeton de plată).\n"
+"Cec: Plătiți factura prin cec și imprimați-o de la Odoo.\n"
+"Depunere în lot: încasați mai multe cecuri ale clienților simultan, generând o depunere în lot pentru a o trimite la banca dvs. Când codificați extrasul bancar în Odoo, vi se recomandă să reconciliați tranzacția cu depozitul lot. Pentru a activa depunerea lot, trebuie instalat modul account_batch_payment.\n"
+"Transfer de credit SEPA: Plătiți factura dintr-un fișier de transfer de credit SEPA pe care îl trimiteți băncii dvs. Pentru a activa transferul de credit sepa, trebuie instalat modulul account_sepa"
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
@@ -252,7 +268,7 @@ msgstr "Numărul Cecului Urmator"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "Următorul număr de cec trebuie să conțină numai numere."
+msgstr "Următorul număr de verificare trebuie să conțină numai numere."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -260,6 +276,7 @@ msgid "None"
 msgstr "Fără"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"

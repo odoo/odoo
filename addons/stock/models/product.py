@@ -39,7 +39,7 @@ class Product(models.Model):
              "Otherwise, this includes goods stored in any Stock Location "
              "with 'internal' type.")
     virtual_available = fields.Float(
-        'Forecast Quantity', compute='_compute_quantities', search='_search_virtual_available',
+        'Forecasted Quantity', compute='_compute_quantities', search='_search_virtual_available',
         digits='Product Unit of Measure', compute_sudo=False,
         help="Forecast quantity (computed as Quantity On Hand "
              "- Outgoing + Incoming)\n"
@@ -363,14 +363,11 @@ class Product(models.Model):
 
     @api.onchange('tracking')
     def onchange_tracking(self):
-        products = self.filtered(lambda self: self.tracking and self.tracking != 'none')
-        if products:
-            unassigned_quants = self.env['stock.quant'].search_count([('product_id', 'in', products.ids), ('lot_id', '=', False), ('location_id.usage','=', 'internal')])
-            if unassigned_quants:
-                return {
-                    'warning': {
-                        'title': _('Warning!'),
-                        'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
+        if self.tracking != "none" and self.qty_available > 0:
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
 
     @api.model
     def view_header_get(self, view_id, view_type):

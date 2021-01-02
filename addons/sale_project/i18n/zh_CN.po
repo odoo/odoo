@@ -4,8 +4,6 @@
 # 
 # Translators:
 # e2f <projects@e2f.com>, 2020
-# Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
 # bf2549c5415a9287249cba2b8a5823c7, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
@@ -13,16 +11,19 @@
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # snow wang <147156565@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
+# Martin Trigaux, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # r <263737@qq.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: r <263737@qq.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-02-13 10:47+0000\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,11 +45,6 @@ msgstr "在现有项目中创建任务"
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Create a task in sales order's project"
 msgstr "在销售订单的项目中创建任务"
-
-#. module: sale_project
-#: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
-msgid "Create invoice"
-msgstr "创建发票"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
@@ -115,6 +111,11 @@ msgid "New"
 msgstr "新建"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
+msgid "Number of Projects"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
 msgid "Number of invoices"
 msgstr ""
@@ -144,9 +145,13 @@ msgstr "产品模板"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
 #: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
-#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Project"
 msgstr "项目"
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "Project Overview"
+msgstr "项目概论"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -167,6 +172,7 @@ msgstr ""
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 #, python-format
 msgid "Projects"
 msgstr "项目"
@@ -227,7 +233,7 @@ msgstr "项目关联单销售订单。"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr "任务关联的销售订单。"
+msgstr "任务所关联的销售订单。"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -257,6 +263,12 @@ msgid "Service Tracking"
 msgstr "服务跟踪"
 
 #. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__project_overview
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_overview
+msgid "Show Project Overview"
+msgstr ""
+
+#. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task
 msgid "Task"
 msgstr "任务"
@@ -271,7 +283,7 @@ msgstr "任务已创建 (%s): <a href=# data-oe-model=project.task data-oe-id=%d
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr "重新发起"
+msgstr "任务循环"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
@@ -290,12 +302,6 @@ msgid "Tasks associated to this sale"
 msgstr "与该销售关联的任务"
 
 #. module: sale_project
-#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
-msgid ""
-"The Project should be linked to a Sale Order to select an Sale Order Items."
-msgstr "该项目应链接到销售订单，以选择销售订单列表。"
-
-#. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -309,7 +315,7 @@ msgstr "产品%s不应该有一个全局项目，因为它将生成一个项目�
 msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
-msgstr "产品模板%s不应该有项目或项目模板，因为它不会生成项目。"
+msgstr "产品%s不应该有项目或项目模板，因为它不会生成项目。"
 
 #. module: sale_project
 #: code:addons/sale_project/models/product.py:0
@@ -317,7 +323,13 @@ msgstr "产品模板%s不应该有项目或项目模板，因为它不会生成�
 msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
-msgstr "产品模板%s不应具有项目模板，因为它将在全局项目中生成任务。"
+msgstr "产品%s不应具有项目模板，因为它将在全局项目中生成任务。"
+
+#. module: sale_project
+#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
+msgid ""
+"The project should be linked to a sale order to select a sale order item."
+msgstr ""
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0

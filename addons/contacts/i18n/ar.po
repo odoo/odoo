@@ -1,23 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* contacts
+# * contacts
 # 
 # Translators:
-# Mustafa Rawi <mustafa@cubexco.com>, 2020
-# Akram Alfusayal <akram_ma@hotmail.com>, 2020
-# Martin Trigaux, 2020
-# Osama Ahmaro <osamaahmaro@gmail.com>, 2020
-# Shaima Safar <shaima.safar@open-inside.com>, 2020
-# Talal Kamal <tka@odoo.com>, 2020
-# MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
+# Mustafa Rawi <mustafa@cubexco.com>, 2019
+# Akram Alfusayal <akram_ma@hotmail.com>, 2019
+# Martin Trigaux, 2019
+# Shaima Safar <shaima.safar@open-inside.com>, 2019
+# Abdulmajeed Alomar <majeeed87@gmail.com>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
-"Last-Translator: MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020\n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Abdulmajeed Alomar <majeeed87@gmail.com>, 2019\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +37,7 @@ msgstr "البنوك"
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_config
 msgid "Configuration"
-msgstr "إعدادات التكوين"
+msgstr "إعداد"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_partner_category_form
@@ -53,6 +51,7 @@ msgstr "ألقاب جهات الاتصال"
 
 #. module: contacts
 #: model:ir.actions.act_window,name:contacts.action_contacts
+#: model:ir.actions.act_window,name:contacts.action_contacts_summary
 #: model:ir.ui.menu,name:contacts.menu_contacts
 #: model:ir.ui.menu,name:contacts.res_partner_menu_contacts
 msgid "Contacts"
@@ -70,33 +69,14 @@ msgstr "مجموعات الدول"
 
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Create a contact in your address book"
 msgstr "إنشاء جهة اتصال في دفتر عناوينك"
-
-#. module: contacts
-#: model:ir.model.fields,field_description:contacts.field_res_users__display_name
-msgid "Display Name"
-msgstr "الاسم المعروض"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_country_state_partner
 msgid "Fed. States"
 msgstr "الولايات الفيدرالية"
-
-#. module: contacts
-#: model:ir.model.fields,field_description:contacts.field_res_users__id
-msgid "ID"
-msgstr "المُعرف"
-
-#. module: contacts
-#: model:ir.ui.menu,name:contacts.res_partner_industry_menu
-msgid "Industries"
-msgstr "الصناعات"
-
-#. module: contacts
-#: model:ir.model.fields,field_description:contacts.field_res_users____last_update
-msgid "Last Modified on"
-msgstr "آخر تعديل في"
 
 #. module: contacts
 #: model:ir.ui.menu,name:contacts.menu_localisation
@@ -105,8 +85,14 @@ msgstr "التوطين"
 
 #. module: contacts
 #: model_terms:ir.actions.act_window,help:contacts.action_contacts
+#: model_terms:ir.actions.act_window,help:contacts.action_contacts_summary
 msgid "Odoo helps you to easily track all activities related to a customer."
 msgstr "تساعدك أودو على تتبع كل الأنشطة المتعلقة بعميل بسهولة."
+
+#. module: contacts
+#: model:ir.ui.menu,name:contacts.res_partner_industry_menu
+msgid "Sectors of Activity"
+msgstr "قطاعات النشاط"
 
 #. module: contacts
 #: model:ir.model,name:contacts.model_res_users

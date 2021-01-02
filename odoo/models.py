@@ -62,6 +62,7 @@ from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_F
 from .tools.translate import _
 from .tools import date_utils
 from .tools import populate
+from .tools import unique
 from .tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -673,6 +674,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # reset properties memoized on cls
         cls._constraint_methods = BaseModel._constraint_methods
+        cls._ondelete_methods = BaseModel._ondelete_methods
         cls._onchange_methods = BaseModel._onchange_methods
 
     @property
@@ -694,6 +696,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # optimization: memoize result on cls, it will not be recomputed
         cls._constraint_methods = methods
+        return methods
+
+    @property
+    def _ondelete_methods(self):
+        """ Return a list of methods implementing checks before unlinking. """
+        def is_ondelete(func):
+            return callable(func) and hasattr(func, '_ondelete')
+
+        cls = type(self)
+        methods = [func for _, func in getmembers(cls, is_ondelete)]
+        # optimization: memoize results on cls, it will not be recomputed
+        cls._ondelete_methods = methods
         return methods
 
     @property
@@ -1301,10 +1315,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # convert default values to the right format
         #
         # we explicitly avoid using _convert_to_write() for x2many fields,
-        # because the latter leaves values like [(4, 2), (4, 3)], which are not
-        # supported by the web client as default values; stepping through the
-        # cache allows to normalize such a list to [(6, 0, [2, 3])], which is
-        # properly supported by the web client
+        # because the latter leaves values like [(Command.LINK, 2), 
+        # (Command.LINK, 3)], which are not supported by the web client as
+        # default values; stepping through the cache allows to normalize
+        # such a list to [(Command.SET, 0, [2, 3])], which is properly
+        # supported by the web client
         for fname, value in defaults.items():
             if fname in self._fields:
                 field = self._fields[fname]
@@ -1845,10 +1860,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for name, value in defaults.items():
             if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
                 # convert a list of ids into a list of commands
-                defaults[name] = [(6, 0, value)]
+                defaults[name] = [Command.set(value)]
             elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
                 # convert a list of dicts into a list of commands
-                defaults[name] = [(0, 0, x) for x in value]
+                defaults[name] = [Command.create(x) for x in value]
         defaults.update(values)
         return defaults
 
@@ -3413,6 +3428,12 @@ Fields:
         self.check_access_rights('unlink')
         self._check_concurrency()
 
+        from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+        for func in self._ondelete_methods:
+            # func._ondelete is True if it should be called during uninstallation
+            if func._ondelete or not self._context.get(MODULE_UNINSTALL_FLAG):
+                func(self)
+
         # mark fields that depend on 'self' to recompute them after 'self' has
         # been deleted (like updating a sum of lines after deleting one line)
         self.flush()
@@ -3530,37 +3551,18 @@ Fields:
               :const:`odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
         * .. _openerp/models/relationals/format:
 
-          :class:`~odoo.fields.One2many` and
-          :class:`~odoo.fields.Many2many` use a special "commands" format to
-          manipulate the set of records stored in/associated with the field.
-
-          This format is a list of triplets executed sequentially, where each
-          triplet is a command to execute on the set of records. Not all
-          commands apply in all situations. Possible commands are:
-
-          ``(0, 0, values)``
-              adds a new record created from the provided ``value`` dict.
-          ``(1, id, values)``
-              updates an existing record of id ``id`` with the values in
-              ``values``. Can not be used in :meth:`~.create`.
-          ``(2, id, 0)``
-              removes the record of id ``id`` from the set, then deletes it
-              (from the database). Can not be used in :meth:`~.create`.
-          ``(3, id, 0)``
-              removes the record of id ``id`` from the set, but does not
-              delete it. Can not be used in
-              :meth:`~.create`.
-          ``(4, id, 0)``
-              adds an existing record of id ``id`` to the set.
-          ``(5, 0, 0)``
-              removes all records from the set, equivalent to using the
-              command ``3`` on every record explicitly. Can not be used in
-              :meth:`~.create`.
-          ``(6, 0, ids)``
-              replaces all existing records in the set by the ``ids`` list,
-              equivalent to using the command ``5`` followed by a command
-              ``4`` for each ``id`` in ``ids``.
-        """
+          The expected value of a :class:`~odoo.fields.One2many` or
+          :class:`~odoo.fields.Many2many` relational field is a list of
+          :class:`~odoo.fields.Command` that manipulate the relation the
+          implement. There are a total of 7 commands:
+          :meth:`~odoo.fields.Command.create`,
+          :meth:`~odoo.fields.Command.update`,
+          :meth:`~odoo.fields.Command.delete`,
+          :meth:`~odoo.fields.Command.unlink`,
+          :meth:`~odoo.fields.Command.link`,
+          :meth:`~odoo.fields.Command.clear`, and
+          :meth:`~odoo.fields.Command.set`.
+          """
         if not self:
             return True
 
@@ -4552,11 +4554,11 @@ Fields:
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
                 lines = [rec.copy_data()[0] for rec in self[name].sorted(key='id')]
-                # the lines are duplicated using the wrong (old) parent, but then
-                # are reassigned to the correct one thanks to the (0, 0, ...)
-                default[name] = [(0, 0, line) for line in lines if line]
+                # the lines are duplicated using the wrong (old) parent, but then are
+                # reassigned to the correct one thanks to the (Command.CREATE, 0, ...)
+                default[name] = [Command.create(line) for line in lines if line]
             elif field.type == 'many2many':
-                default[name] = [(6, 0, self[name].ids)]
+                default[name] = [Command.set(self[name].ids)]
             else:
                 default[name] = field.convert_to_write(self[name], self)
 
@@ -4795,7 +4797,7 @@ Fields:
         return cls._transient
 
     @api.model
-    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, **read_kwargs):
         """Perform a :meth:`search` followed by a :meth:`read`.
 
         :param domain: Search domain, see ``args`` parameter in :meth:`search`.
@@ -4808,6 +4810,8 @@ Fields:
             Defaults to no limit.
         :param order: Columns to sort result, see ``order`` parameter in :meth:`search`.
             Defaults to no sort.
+        :param read_kwargs: All read keywords arguments used to call read(..., **read_kwargs) method
+            E.g. you can use search_read(..., load='') in order to avoid computing name_get
         :return: List of dictionaries containing the asked fields.
         :rtype: list(dict).
         """
@@ -4828,7 +4832,7 @@ Fields:
             del context['active_test']
             records = records.with_context(context)
 
-        result = records.read(fields)
+        result = records.read(fields, **read_kwargs)
         if len(result) <= 1:
             return result
 
@@ -5778,36 +5782,35 @@ Fields:
                 tocompute = list(tocompute)
 
             # process what to compute
-            for field, records in tocompute:
+            for field, records, create in tocompute:
                 records -= self.env.protected(field)
                 if not records:
                     continue
-                # Dont force the recomputation of compute fields which are
-                # not stored as this is not really necessary.
-                recursive = not create and field.recursive
                 if field.compute and field.store:
-                    if recursive:
-                        marked_records = self.env.not_to_compute(field, records)
+                    if field.recursive:
+                        recursively_marked = self.env.not_to_compute(field, records)
                     self.env.add_to_compute(field, records)
                 else:
-                    if recursive:
-                        marked_records = records & self.env.cache.get_records(records, field)
+                    # Dont force the recomputation of compute fields which are
+                    # not stored as this is not really necessary.
+                    if field.recursive:
+                        recursively_marked = records & self.env.cache.get_records(records, field)
                     self.env.cache.invalidate([(field, records._ids)])
                 # recursively trigger recomputation of field's dependents
-                if recursive:
-                    marked_records.modified([field.name])
+                if field.recursive:
+                    recursively_marked.modified([field.name], create)
 
     def _modified_triggers(self, tree, create=False):
         """ Return an iterator traversing a tree of field triggers on ``self``,
         traversing backwards field dependencies along the way, and yielding
-        pairs ``(field, records)`` to recompute.
+        tuple ``(field, records, created)`` to recompute.
         """
         if not self:
             return
 
         # first yield what to compute
         for field in tree.get(None, ()):
-            yield field, self
+            yield field, self, create
 
         # then traverse dependencies backwards, and proceed recursively
         for key, val in tree.items():
@@ -5869,10 +5872,10 @@ Fields:
                 # recomputed by accessing the field on the records
                 recs = recs.filtered('id')
                 try:
-                    recs.mapped(field.name)
+                    field.recompute(recs)
                 except MissingError:
                     existing = recs.exists()
-                    existing.mapped(field.name)
+                    field.recompute(existing)
                     # mark the field as computed on missing records, otherwise
                     # they remain forever in the todo list, and lead to an
                     # infinite loop...
@@ -6088,7 +6091,7 @@ Fields:
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
                         # x2many fields: serialize value as commands
-                        result[name] = commands = [(5,)]
+                        result[name] = commands = [Command.clear()]
                         # The purpose of the following line is to enable the prefetching.
                         # In the loop below, line._prefetch_ids actually depends on the
                         # value of record[name] in cache (see prefetch_ids on x2many
@@ -6105,7 +6108,7 @@ Fields:
                             if not line.id:
                                 # new line: send diff from scratch
                                 line_diff = line_snapshot.diff({})
-                                commands.append((0, line.id.ref or 0, line_diff))
+                                commands.append((Command.CREATE, line.id.ref or 0, line_diff))
                             else:
                                 # existing line: check diff from database
                                 # (requires a clean record cache!)
@@ -6114,9 +6117,9 @@ Fields:
                                     # send all fields because the web client
                                     # might need them to evaluate modifiers
                                     line_diff = line_snapshot.diff({})
-                                    commands.append((1, line.id, line_diff))
+                                    commands.append(Command.update(line.id, line_diff))
                                 else:
-                                    commands.append((4, line.id))
+                                    commands.append(Command.link(line.id))
                 return result
 
         nametree = PrefixTree(self.browse(), field_onchange)
@@ -6138,9 +6141,9 @@ Fields:
                 # retrieve all line ids in commands
                 line_ids = set()
                 for cmd in values[name]:
-                    if cmd[0] in (1, 4):
+                    if cmd[0] in (Command.UPDATE, Command.LINK):
                         line_ids.add(cmd[1])
-                    elif cmd[0] == 6:
+                    elif cmd[0] == Command.SET:
                         line_ids.update(cmd[2])
                 # prefetch stored fields on lines
                 lines = self[name].browse(line_ids)
@@ -6205,7 +6208,7 @@ Fields:
         # call, 'names' only contains fields with a default. If 'self' is a new
         # line in a one2many field, 'names' also contains the one2many's inverse
         # field, and that field may not be in nametree.
-        todo = list(names) + list(nametree) if first_call else list(names)
+        todo = list(unique(itertools.chain(names, nametree))) if first_call else list(names)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
@@ -6555,4 +6558,4 @@ def lazy_name_get(self):
 
 # keep those imports here to avoid dependency cycle errors
 from .osv import expression
-from .fields import Field, Datetime
+from .fields import Field, Datetime, Command

@@ -3,24 +3,23 @@
 # 	* digest
 # 
 # Translators:
+# Levent Karakaş <levent@mektup.at>, 2019
+# Murat Kaplan <muratk@projetgrup.com>, 2019
+# Doğan Altunbay <doganaltunbay@gmail.com>, 2019
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Gökhan Yüksel <yg_yuksel@hotmail.com>, 2019
 # Ediz Duman <neps1192@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2020
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# Doğan Altunbay <doganaltunbay@gmail.com>, 2020
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2020
-# Gökhan Yüksel <yg_yuksel@hotmail.com>, 2020
-# abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2019-03-20 14:56+0000\n"
 "Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
@@ -85,7 +84,7 @@ msgstr "Şirket"
 #. module: digest
 #: model:ir.model,name:digest.model_res_config_settings
 msgid "Config Settings"
-msgstr "Yapılandırma Ayarları"
+msgstr "Konfigürasyon Ayarları"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.res_config_settings_view_form
@@ -142,7 +141,7 @@ msgstr "Herkes için devre dışı bırak"
 #. module: digest
 #: model:ir.model.fields.selection,name:digest.selection__digest_digest__state__deactivated
 msgid "Deactivated"
-msgstr "Devre dışı"
+msgstr "Devre Dışı Bırak"
 
 #. module: digest
 #: model:ir.model,name:digest.model_digest_digest
@@ -265,6 +264,12 @@ msgstr "Kpi Res Kullanıcıları Bağlı Değeri"
 #. module: digest
 #: code:addons/digest/models/digest.py:0
 #, python-format
+msgid "Last 24 hours"
+msgstr ""
+
+#. module: digest
+#: code:addons/digest/models/digest.py:0
+#, python-format
 msgid "Last 30 Days"
 msgstr "Son 30 Gün"
 
@@ -280,7 +285,7 @@ msgstr "Son 7 Gün"
 #: model:ir.model.fields,field_description:digest.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:digest.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Son Düzenleme"
+msgstr "Son Güncelleme"
 
 #. module: digest
 #: model:ir.model.fields,field_description:digest.field_digest_digest__write_uid
@@ -528,12 +533,6 @@ msgid ""
 "When following documents, use the pencil icon to fine-tune the information you want to receive.\n"
 "Follow a project / sales team to keep track of this project's tasks / this team's opportunities."
 msgstr ""
-
-#. module: digest
-#: code:addons/digest/models/digest.py:0
-#, python-format
-msgid "Yesterday"
-msgstr "Dün"
 
 #. module: digest
 #: model_terms:ir.ui.view,arch_db:digest.portal_digest_unsubscribed

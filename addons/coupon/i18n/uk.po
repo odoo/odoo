@@ -3,16 +3,16 @@
 # 	* coupon
 # 
 # Translators:
-# Martin Trigaux, 2020
 # Bohdan Lisnenko, 2020
+# Martin Trigaux, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:24+0000\n"
-"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-08-21 13:31+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -57,17 +57,6 @@ msgid "*Valid for following products:"
 msgstr "*Дійсний для наступних товарів:"
 
 #. module: coupon
-#: model:coupon.program,name:coupon.10_percent_coupon
-msgid "10% Discount"
-msgstr "10% знижки"
-
-#. module: coupon
-#: model:product.product,name:coupon.product_product_10_percent_discount
-#: model:product.template,name:coupon.product_product_10_percent_discount_product_template
-msgid "10.0% discount on total amount"
-msgstr "10.0% знижки на загальну суму"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_coupon_program_form
 msgid ""
 "<span class=\"o_form_label oe_inline\"> Days</span> <span "
@@ -78,8 +67,15 @@ msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
-msgid "<span class=\"oe_grey\">if 0, no limit</span>"
-msgstr "<span class=\"oe_grey\">якщо 0, то без обмежень</span>"
+msgid "<span class=\"oe_grey\"> if 0, no limit</span>"
+msgstr ""
+
+#. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid ""
+"<span> Days</span>\n"
+"                    <span class=\"oe_grey\"> if 0, coupon doesn't expire</span>"
+msgstr ""
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -122,185 +118,6 @@ msgstr "<strong>Активно</strong>"
 #: model_terms:ir.ui.view,arch_db:coupon.view_coupon_program_kanban
 msgid "<strong>Coupons</strong>"
 msgstr "<strong>Купони</strong>"
-
-#. module: coupon
-#: model:mail.template,body_html:coupon.mail_template_sale_coupon
-msgid ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
-"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        % if object.partner_id.name:\n"
-"        Congratulations ${object.partner_id.name},<br/>\n"
-"        % endif\n"
-"\n"
-"        Here is your reward from ${object.program_id.company_id.name}.<br/>\n"
-"\n"
-"        % if object.program_id.reward_type == 'discount':\n"
-"            % if object.program_id.discount_type == 'fixed_amount':\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">off on your next order</strong><br/>\n"
-"            %else\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
-"                ${object.program_id.discount_percentage} %\n"
-"            </span>\n"
-"            % if object.program_id.discount_apply_on == 'specific_products'\n"
-"                <br/>\n"
-"                % if len(object.program_id.discount_specific_product_ids) != 1\n"
-"                % set display_specific_products = True\n"
-"                <strong style=\"font-size: 24px;\">\n"
-"                    on some products*\n"
-"                </strong>\n"
-"                % else\n"
-"                <strong style=\"font-size: 24px;\">\n"
-"                    ${'on %s' % object.program_id.discount_specific_product_ids.name}\n"
-"                </strong>\n"
-"                % endif\n"
-"            % elif object.program_id.discount_apply_on == 'cheapest_product':\n"
-"            <br/><strong style=\"font-size: 24px;\">\n"
-"                off on the cheapest product\n"
-"            </strong>\n"
-"            % else\n"
-"            <br/><strong style=\"font-size: 24px;\">\n"
-"                off on your next order\n"
-"            </strong>\n"
-"            % endif\n"
-"            <br/>\n"
-"            % endif\n"
-"        % elif object.program_id.reward_type == 'product':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">on your next order</strong><br/>\n"
-"        % elif object.program_id.reward_type == 'free_shipping':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                get free shipping\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">on your next order</strong><br/>\n"
-"        % endif\n"
-"    </td></tr>\n"
-"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        Use this promo code\n"
-"        % if object.expiration_date:\n"
-"            before ${object.expiration_date}\n"
-"        % endif\n"
-"        <p style=\"margin-top: 16px;\">\n"
-"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\">\n"
-"                ${object.code}\n"
-"            </strong>\n"
-"        </p>\n"
-"        % if object.program_id.rule_min_quantity not in [0, 1]\n"
-"        <span style=\"font-size: 14px;\">\n"
-"            Minimum purchase of ${object.program_id.rule_min_quantity} products\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        % if object.program_id.rule_minimum_amount != 0.00\n"
-"        <span style=\"font-size: 14px;\">\n"
-"            Valid for purchase above ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        % if display_specific_products\n"
-"        <span>\n"
-"            *Valid for following products: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        <br/>\n"
-"        Thank you,\n"
-"        % if object.order_id.user_id.signature:\n"
-"            <br/>\n"
-"            ${object.order_id.user_id.signature | safe}\n"
-"        % endif\n"
-"    </td></tr>\n"
-"</tbody></table>\n"
-"            "
-msgstr ""
-"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width:100%; margin:0px auto;\"><tbody>\n"
-"    <tr><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        % if object.partner_id.name:\n"
-"        Вітаємо ${object.partner_id.name},<br/>\n"
-"        % endif\n"
-"\n"
-"        Це ваша нагорода від ${object.program_id.company_id.name}.<br/>\n"
-"\n"
-"        % if object.program_id.reward_type == 'discount':\n"
-"            % if object.program_id.discount_type == 'fixed_amount':\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">знижки на ваше наступне замовлення</strong><br/>\n"
-"            %else\n"
-"            <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\">\n"
-"                ${object.program_id.discount_percentage} %\n"
-"            </span>\n"
-"            % if object.program_id.discount_apply_on == 'specific_products'\n"
-"                <br/>\n"
-"                % if len(object.program_id.discount_specific_product_ids) != 1\n"
-"                % set display_specific_products = True\n"
-"                <strong style=\"font-size: 24px;\">\n"
-"                    деяких товарів*\n"
-"                </strong>\n"
-"                % else\n"
-"                <strong style=\"font-size: 24px;\">\n"
-"                    ${'on %s' % object.program_id.discount_specific_product_ids.name}\n"
-"                </strong>\n"
-"                % endif\n"
-"            % elif object.program_id.discount_apply_on == 'cheapest_product':\n"
-"            <br/><strong style=\"font-size: 24px;\">\n"
-"                знижки на найдешевий товар\n"
-"            </strong>\n"
-"            % else\n"
-"            <br/><strong style=\"font-size: 24px;\">\n"
-"                знижки на ваше наступне замовлення\n"
-"            </strong>\n"
-"            % endif\n"
-"            <br/>\n"
-"            % endif\n"
-"        % elif object.program_id.reward_type == 'product':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                ${'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">на ваше наступне замовлення</strong><br/>\n"
-"        % elif object.program_id.reward_type == 'free_shipping':\n"
-"            <span style=\"font-size: 36px; color: #875A7B; font-weight: bold;\">\n"
-"                отримайте безкоштовну доставку\n"
-"            </span><br/>\n"
-"            <strong style=\"font-size: 24px;\">на ваше наступне замовлення</strong><br/>\n"
-"        % endif\n"
-"    </td></tr>\n"
-"    <tr style=\"margin-top: 16px\"><td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
-"        Використайте цей промокод\n"
-"        % if object.expiration_date:\n"
-"            до ${object.expiration_date}\n"
-"        % endif\n"
-"        <p style=\"margin-top: 16px;\">\n"
-"            <strong style=\"padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;\">\n"
-"                ${object.code}\n"
-"            </strong>\n"
-"        </p>\n"
-"        % if object.program_id.rule_min_quantity not in [0, 1]\n"
-"        <span style=\"font-size: 14px;\">\n"
-"            Мінімальна кількість покупок ${object.program_id.rule_min_quantity} товарів\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        % if object.program_id.rule_minimum_amount != 0.00\n"
-"        <span style=\"font-size: 14px;\">\n"
-"            Дійсно для придбання вище ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        % if display_specific_products\n"
-"        <span>\n"
-"            *Дісно для наступних товарів: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}\n"
-"        </span><br/>\n"
-"        % endif\n"
-"        <br/>\n"
-"        Дякуємо,\n"
-"        % if object.order_id.user_id.signature:\n"
-"            <br/>\n"
-"            ${object.order_id.user_id.signature | safe}\n"
-"        % endif\n"
-"    </td></tr>\n"
-"</tbody></table>\n"
-"            "
 
 #. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__active
@@ -408,11 +225,6 @@ msgstr ""
 "                Можна ділитися промо-кодами або надавати промо-акції автоматично, якщо виконуються певні умови."
 
 #. module: coupon
-#: model:coupon.program,name:coupon.3_cabinets_plus_1_free
-msgid "Buy 3 large cabinets, get one for free"
-msgstr "Придбайте 3 великих шафи, отримайте одну безкоштовно"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_view_form
 msgid "Cancel"
@@ -427,11 +239,6 @@ msgstr "Скасовано"
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__code
 msgid "Code"
 msgstr "Код"
-
-#. module: coupon
-#: model:coupon.program,name:coupon.10_percent_auto_applied
-msgid "Code for 10% on orders"
-msgstr "Код на 10% від замовлення"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__company_id
@@ -503,6 +310,11 @@ msgid "Coupon Rule"
 msgstr "Правило купону"
 
 #. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
+msgid "Coupon Validity"
+msgstr ""
+
+#. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__rule_date_to
 #: model:ir.model.fields,help:coupon.field_coupon_rule__rule_date_to
 msgid "Coupon program end date"
@@ -548,7 +360,7 @@ msgstr "Купони"
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_coupon_program
 msgid "Create a new coupon program"
-msgstr "Створіть нову купонну програму"
+msgstr "Створіть нову програму купону"
 
 #. module: coupon
 #: model_terms:ir.actions.act_window,help:coupon.coupon_program_action_promo_program
@@ -562,7 +374,7 @@ msgstr "Створіть нову рекламну програму"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_uid
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_uid
 msgid "Created by"
-msgstr "Створено"
+msgstr "Створив"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__create_date
@@ -571,7 +383,7 @@ msgstr "Створено"
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__create_date
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__create_date
 msgid "Created on"
-msgstr "Створено"
+msgstr "Створено на"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__currency_id
@@ -699,12 +511,6 @@ msgid "Free Product - %s"
 msgstr "Безкоштовний товар - %s"
 
 #. module: coupon
-#: model:product.product,name:coupon.product_product_free_large_cabinet
-#: model:product.template,name:coupon.product_product_free_large_cabinet_product_template
-msgid "Free Product - Large Cabinet"
-msgstr "Безкоштовний товар - велика шафа"
-
-#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
 msgid "Generate"
 msgstr "Згенерувати"
@@ -761,6 +567,12 @@ msgid "ID"
 msgstr "ID"
 
 #. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "Invalid partner."
+msgstr "Недійсний партнер."
+
+#. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon____last_update
 #: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard____last_update
 #: model:ir.model.fields,field_description:coupon.field_coupon_program____last_update
@@ -769,7 +581,7 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:coupon.field_mail_compose_message____last_update
 #: model:ir.model.fields,field_description:coupon.field_report_coupon_report_coupon____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни"
+msgstr "Останні зміни на"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_coupon__write_uid
@@ -820,7 +632,7 @@ msgstr ""
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_form_common
 msgid "Minimum Purchase Of"
-msgstr "Мінімальна к-сть покупок"
+msgstr "Мінімальна купівля"
 
 #. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_min_quantity
@@ -985,7 +797,7 @@ msgstr "Промо-код"
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
 msgid "Promotion Program Name"
-msgstr "Назва акційної програми"
+msgstr "Назва акційної промоції"
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.coupon_program_view_promo_program_form
@@ -1121,6 +933,11 @@ msgid ""
 msgstr "Деякі обрані клієнти не мають email-адреси та не отримаю купон."
 
 #. module: coupon
+#: model_terms:ir.ui.view,arch_db:coupon.coupon_generate_view_form
+msgid "Specify a mail template to send the generated coupons as email."
+msgstr ""
+
+#. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__rule_date_from
 #: model:ir.model.fields,field_description:coupon.field_coupon_rule__rule_date_from
 msgid "Start Date"
@@ -1152,6 +969,12 @@ msgid "The coupon code must be unique!"
 msgstr "Код купону має бути унікальним!"
 
 #. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "The coupon program for %s is in draft or closed state"
+msgstr "Купонна програма %sу стані чернетки або у закритому стані"
+
+#. module: coupon
 #: model:ir.model.fields,help:coupon.field_coupon_program__discount_fixed_amount
 #: model:ir.model.fields,help:coupon.field_coupon_reward__discount_fixed_amount
 msgid "The discount in fixed amount"
@@ -1176,18 +999,40 @@ msgid "The start date must be before the end date"
 msgstr "Дата початку повинна бути до дати завершення"
 
 #. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon %s exists but the origin sales order is not validated yet."
+msgstr ""
+"Цей купон %s існує, але оригінальне замовлення на продаж ще не підтверджено."
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has already been used (%s)."
+msgstr ""
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon has been cancelled (%s)."
+msgstr ""
+
+#. module: coupon
+#: code:addons/coupon/models/coupon.py:0
+#, python-format
+msgid "This coupon is expired (%s)."
+msgstr ""
+
+#. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_program__total_order_count
+msgid "Total Order Count"
+msgstr ""
+
+#. module: coupon
 #: model:ir.model.fields,field_description:coupon.field_coupon_program__reward_product_uom_id
 #: model:ir.model.fields,field_description:coupon.field_coupon_reward__reward_product_uom_id
 msgid "Unit of Measure"
 msgstr "Одиниця вимірювання"
-
-#. module: coupon
-#: model:product.product,uom_name:coupon.product_product_10_percent_discount
-#: model:product.product,uom_name:coupon.product_product_free_large_cabinet
-#: model:product.template,uom_name:coupon.product_product_10_percent_discount_product_template
-#: model:product.template,uom_name:coupon.product_product_free_large_cabinet_product_template
-msgid "Units"
-msgstr "Одиниці"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_program__promo_code_usage__code_needed
@@ -1195,9 +1040,14 @@ msgid "Use a code"
 msgstr "Використовуйте код"
 
 #. module: coupon
+#: model:ir.model.fields,field_description:coupon.field_coupon_generate_wizard__template_id
+msgid "Use template"
+msgstr "Використовуйте шаблон"
+
+#. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon
 msgid "Use this promo code before"
-msgstr "Використайте цей промо-код до"
+msgstr "Використовувати цей промо-код перед"
 
 #. module: coupon
 #: model:ir.model.fields.selection,name:coupon.selection__coupon_coupon__state__used
@@ -1230,16 +1080,6 @@ msgstr "Тривалість дії купону після його створ�
 #, python-format
 msgid "You can not delete a program in active state"
 msgstr "Ви не можете видалити програму в активному стані"
-
-#. module: coupon
-#: model:mail.template,report_name:coupon.mail_template_sale_coupon
-msgid "Your Coupon Code"
-msgstr "Ваш код купону"
-
-#. module: coupon
-#: model:mail.template,subject:coupon.mail_template_sale_coupon
-msgid "Your reward coupon from ${object.program_id.company_id.name} "
-msgstr "Ваш купон від ${object.program_id.company_id.name} "
 
 #. module: coupon
 #: model_terms:ir.ui.view,arch_db:coupon.report_coupon

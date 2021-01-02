@@ -3,9 +3,12 @@
 # 	* sms
 # 
 # Translators:
+# Pol Van Dingenen <pol.vandingenen@vanroey.be>, 2017
+# e2f_nl_c4 <e2f_nl_c4@hotmail.com>, 2017
+# Cas Vissers <casvissers@brahoo.nl>, 2017
 # Martin Trigaux, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
 # 
@@ -13,8 +16,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 14:34+0000\n"
-"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
+"PO-Revision-Date: 2017-12-13 14:58+0000\n"
 "Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -121,6 +124,13 @@ msgstr ""
 "te tonen met dit sjabloon"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
+#, python-format
+msgid "An error occurred when sending an SMS."
+msgstr "Er is een fout opgetreden bij het verzenden van een sms."
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
 msgid "Applies to"
@@ -130,11 +140,11 @@ msgstr "Heeft betrekking op"
 #: code:addons/sms/wizard/sms_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s SMS delivery failures. You won't be able"
+"Are you sure you want to discard %s SMS delivery failures? You won't be able"
 " to re-send these SMS later!"
 msgstr ""
-"Weet u zeker dat u %s mislukte sms-bezorging wilt verwijderen? U kunt deze "
-"sms later niet opnieuw verzenden!"
+"Weet je zeker dat je %s mislukte sms-bezorgingen wilt verwijderen? Je kunt "
+"deze sms later niet opnieuw verzenden!"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -301,7 +311,7 @@ msgstr "Kennisgeving afwijzen voor opnieuw verzenden per model"
 #: model:ir.model.fields,field_description:sms.field_sms_template__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
 msgid "Display Name"
-msgstr "Schermnaam"
+msgstr "Weergavenaam"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
@@ -321,7 +331,7 @@ msgstr "Document IDs"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_model
 msgid "Document Model Name"
-msgstr "Documentmodel naam"
+msgstr "Document model naam"
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__error_code__sms_duplicate
@@ -553,6 +563,7 @@ msgstr ""
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
 msgid "Indicates if the SMS composer targets a single specific recipient"
 msgstr ""
+"Geeft aan of de sms-opsteller zich richt op een enkele specifieke ontvanger."
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__failure_type__sms_credit
@@ -758,14 +769,16 @@ msgstr "Aantal berichten met leveringsfout"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will recieve the SMS if sent in mass mode, without"
+"Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
+"Aantal ontvangers dat de sms ontvangt als deze in massamodus wordt "
+"verzonden, zonder de waarde van actief domein toe te passen."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count
 msgid "Number of records found when searching with the value in Active Domain"
-msgstr ""
+msgstr "Aantal gevonden records bij het zoeken met de waarde in actief domein"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__message_unread_counter
@@ -875,7 +888,7 @@ msgstr "Record referentie"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model
 msgid "Related Document Model"
-msgstr "Gerelateerde documentmodel"
+msgstr "Gerelateerde document model"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -894,12 +907,16 @@ msgid "Resend Notification"
 msgstr "Notificatie opnieuw verzenden"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/message/message.xml:0
+#: code:addons/sms/static/src/components/message/message.xml:0
 #: model:ir.actions.act_window,name:sms.sms_sms_action
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+#, python-format
 msgid "SMS"
 msgstr "SMS"
 
@@ -942,6 +959,13 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
 msgstr "SMS fout bij versturen"
+
+#. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/models/notification_group/notification_group.js:0
+#, python-format
+msgid "SMS Failures"
+msgstr "Mislukte SMS'en"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
@@ -1035,7 +1059,7 @@ msgstr "Nu verzenden"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send SMS"
-msgstr "Verzend SMS"
+msgstr "Verstuur SMS"
 
 #. module: sms
 #: code:addons/sms/models/sms_template.py:0
@@ -1068,7 +1092,7 @@ msgstr "Verzend SMS in batch"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "Send an SMS"
-msgstr "Verzend een SMS"
+msgstr "Verstuur een SMS"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__mass_force_send
@@ -1124,7 +1148,7 @@ msgid ""
 "document model"
 msgstr ""
 "Navigatiekolom-actie om dit sjabloon beschikbaar te maken op de regels van "
-"het gerelateerde documentmodel"
+"het gerelateerde document model"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__comment_single_recipient
@@ -1276,7 +1300,7 @@ msgid ""
 "select the target field within the destination document model (sub-model)."
 msgstr ""
 "Wanneer een relatie veld is geselecteerd als eerste veld, dan kunt u een "
-"doelveld selecteren binnen de bestemming documentmodel (sub-model)."
+"doelveld selecteren binnen de bestemming document model (sub-model)."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__sub_object

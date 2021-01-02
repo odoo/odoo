@@ -380,6 +380,11 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copy2.name, 'MISC2/2016/01/0001')
         with Form(copy2) as move_form:  # It is editable in the form
             move_form.name = 'MyMISC/2016/0001'
+            move_form.journal_id = self.test_move.journal_id
+            self.assertEqual(move_form.name, '/')
+            move_form.journal_id = new_journal
+            self.assertEqual(move_form.name, 'MISC2/2016/01/0001')
+            move_form.name = 'MyMISC/2016/0001'
         copy2.action_post()
         self.assertEqual(copy2.name, 'MyMISC/2016/0001')
 
@@ -745,3 +750,25 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
         self.test_move.line_ids.unlink()
+
+    def test_account_move_inactive_currency_raise_error_on_post(self):
+        """ Ensure a move cannot be posted when using an inactive currency """
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [{}]
+        })
+
+        move.currency_id.active = False
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move.action_post()
+
+        # Make sure that the invoice can still be posted when the currency is active
+        move.action_activate_currency()
+        move.action_post()
+
+        self.assertEqual(move.state, 'posted')

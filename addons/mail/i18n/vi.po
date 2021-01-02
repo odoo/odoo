@@ -3,29 +3,29 @@
 # 	* mail
 # 
 # Translators:
-# Jean-Charles Drubay <jcdrubay@gmail.com>, 2020
-# Thang Duong Bao <nothingctrl@gmail.com>, 2020
+# Trang Tran <thuytrang1101@gmail.com>, 2020
+# son dang <son.dang@doda100.com>, 2020
 # Dang Hanh <hanh.dtm@komit-consulting.com>, 2020
+# Jean-Charles Drubay <jcdrubay@gmail.com>, 2020
 # Dao Nguyen <trucdao.uel@gmail.com>, 2020
 # Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
-# son dang <son.dang@doda100.com>, 2020
-# Trang Tran <thuytrang1101@gmail.com>, 2020
 # Martin Trigaux, 2020
 # fanha99 <fanha99@hotmail.com>, 2020
 # Tuan Tran <tmtuan.projects@gmail.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
+# Thang Duong Bao <nothingctrl@gmail.com>, 2020
 # Duy BQ <duybq86@gmail.com>, 2020
 # Minh Nguyen <ndminh210994@gmail.com>, 2020
 # Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
 # Dung Nguyen Thi <dungnt@trobz.com>, 2020
-# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 11:23+0000\n"
-"PO-Revision-Date: 2020-09-07 08:14+0000\n"
-"Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
+"Last-Translator: Dung Nguyen Thi <dungnt@trobz.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -201,8 +201,7 @@ msgid ""
 "<br><br>\n"
 "            Type <b>@username</b> to mention someone, and grab his attention.<br>\n"
 "            Type <b>#channel</b> to mention a channel.<br>\n"
-"            Type <b>/command</b> to execute a command.<br>\n"
-"            Type <b>:shortcut</b> to insert a canned response in your message.<br>"
+"            Type <b>/command</b> to execute a command.<br>"
 msgstr ""
 
 #. module: mail
@@ -380,6 +379,11 @@ msgid ""
 msgstr ""
 "<span class=\"o_stat_text\">Gỡ bỏ</span>\n"
 "                                    <span class=\"o_stat_text\">Hành động theo ngữ cảnh</span>"
+
+#. module: mail
+#: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
+msgid "<span class=\"oe_read_only\">&amp;nbsp;</span>"
+msgstr ""
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1419,7 +1423,7 @@ msgstr "Chế độ soạn thảo"
 #. module: mail
 #: model:ir.model,name:mail.model_res_config_settings
 msgid "Config Settings"
-msgstr "Thiết lập cấu hình"
+msgstr "Cấu hình"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -1467,7 +1471,7 @@ msgstr "Kết nối thất bại (vấn đề máy chủ gửi email)"
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
 msgid "Contact"
-msgstr "Liên hệ"
+msgstr "Danh bạ"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_activity
@@ -2235,6 +2239,14 @@ msgstr ""
 "không nhận được bất kỳ mail gửi hàng loạt nào nữa."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:0
+#, python-format
+msgid ""
+"Email alias %(alias_name)s cannot be used on %(count)d records at the same "
+"time. Please update records one by one."
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_cc__email_cc
 msgid "Email cc"
 msgstr "Email CC"
@@ -2371,7 +2383,7 @@ msgstr "Ngoại lệ"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Extended Filters..."
-msgstr "Các bộ lọc mở rộng..."
+msgstr "Các bộ lọc Mở rộng..."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_config_settings__fail_counter
@@ -2472,7 +2484,7 @@ msgstr "Trường nhóm"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__field_type
 msgid "Field Type"
-msgstr "Loại trường"
+msgstr "Field Type"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -2581,12 +2593,6 @@ msgstr "Chỉ những người dõi theo"
 #, python-format
 msgid "Following"
 msgstr "Theo dõi"
-
-#. module: mail
-#: code:addons/mail/models/mail_channel.py:778
-#, python-format
-msgid "Following invites are invalid as user groups do not match: %s"
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
@@ -3253,7 +3259,7 @@ msgstr "Tìm nạp lần cuối"
 #: model:ir.model.fields,field_description:mail.field_res_partner____last_update
 #: model:ir.model.fields,field_description:mail.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Sửa lần cuối vào"
+msgstr "Sửa lần cuối"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_last_seen_partner_ids
@@ -3284,7 +3290,7 @@ msgstr "Thấy lần cuối"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__write_uid
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__write_uid
 msgid "Last Updated by"
-msgstr "Cập nhật lần cuối bởi"
+msgstr "Cập nhật gần đây bởi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__write_date
@@ -3309,7 +3315,7 @@ msgstr "Cập nhật lần cuối bởi"
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__write_date
 #: model:ir.model.fields,field_description:mail.field_mail_wizard_invite__write_date
 msgid "Last Updated on"
-msgstr "Cập nhật lần cuối vào"
+msgstr "Cập nhật gần đây vào"
 
 #. module: mail
 #. openerp-web
@@ -3350,14 +3356,14 @@ msgstr "Rời kênh này"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_thread_cc__email_cc
 msgid "List of cc from incoming emails."
-msgstr "Danh sách cc từ email nhận vào."
+msgstr "Danh sách CC từ email đến"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__channel_ids
 msgid ""
 "List of channels that will be added as listeners of the current document."
 msgstr ""
-"Liệt kê các kênh mà sẽ được thêm như đối tượng lắng nghe tài liệu hiện tại."
+"Liệt kê các kênh mà sẽ được thêm như đối tượng lắng nghe tài liệu hiện hành."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_wizard_invite__partner_ids
@@ -3365,13 +3371,13 @@ msgid ""
 "List of partners that will be added as follower of the current document."
 msgstr ""
 "Danh sách các đối tác mà sẽ được thêm vào như người theo dõi tài liệu hiện "
-"tại."
+"hành."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
 #, python-format
 msgid "List users in the current channel"
-msgstr "Liệt kê người dùng ở Kênh hiện tại"
+msgstr "Liệt kê người dùng ở Kênh hiện hành"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers__channel_id
@@ -4453,7 +4459,7 @@ msgstr "Đồng ý"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_char
 msgid "Old Value Char"
-msgstr "Giá trị Char cũ"
+msgstr "Char giá trị cũ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_datetime
@@ -4473,7 +4479,7 @@ msgstr "Giá trị Integer cũ"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_monetary
 msgid "Old Value Monetary"
-msgstr "Giá trị tiền tệ cũ"
+msgstr "Giá trị Monetary cũ"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__old_value_text
@@ -5654,14 +5660,16 @@ msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
 #, python-format
 msgid "Shift left"
 msgstr ""
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.xml:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
+#: code:addons/mail/static/src/components/chat_window_header/chat_window_header.js:0
 #, python-format
 msgid "Shift right"
 msgstr ""
@@ -6248,7 +6256,7 @@ msgstr "Kiểm soát thay đổi"
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr "Kiểm soát dữ liệu"
+msgstr "Tracking Values"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__tracking_sequence
@@ -6259,7 +6267,7 @@ msgstr "Theo dõi thứ tự trường"
 #: model:ir.model.fields,field_description:mail.field_mail_mail__tracking_value_ids
 #: model:ir.model.fields,field_description:mail.field_mail_message__tracking_value_ids
 msgid "Tracking values"
-msgstr "Kiểm soát dữ liệu"
+msgstr "Giá trị truy vết"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__force_next
@@ -6711,13 +6719,6 @@ msgstr "Viết phản hồi"
 
 #. module: mail
 #. openerp-web
-#: code:addons/mail/static/src/components/composer_text_input/composer_text_input.js:0
-#, python-format
-msgid "Write something..."
-msgstr "Viết gì đó..."
-
-#. module: mail
-#. openerp-web
 #: code:addons/mail/static/src/components/message_list/message_list.js:0
 #: code:addons/mail/static/src/js/activity.js:0
 #, python-format
@@ -6864,10 +6865,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot use anything else than unaccented latin characters in the alias "
-"address."
+"address (%s)."
 msgstr ""
-"Bạn không thể sử dụng bất kỳ thứ gì khác ngoài các ký tự latin không có dấu "
-"trong địa chỉ alias."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -7023,11 +7022,6 @@ msgid "assigned you an activity"
 msgstr "giao cho bạn một hoạt động"
 
 #. module: mail
-#: model:mail.channel,name:mail.channel_2
-msgid "board-meetings"
-msgstr "board-meetings"
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/activity.xml:0
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -7169,11 +7163,6 @@ msgid "or"
 msgstr "hoặc"
 
 #. module: mail
-#: model:mail.channel,name:mail.channel_3
-msgid "rd"
-msgstr "rd"
-
-#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/message/message.js:0
 #, python-format
@@ -7227,11 +7216,6 @@ msgstr "giới hạn người theo dõi"
 #, python-format
 msgid "restricted to known authors"
 msgstr "giới hạn tác giả đã biết"
-
-#. module: mail
-#: model:mail.channel,name:mail.channel_1
-msgid "sales"
-msgstr "bán hàng"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

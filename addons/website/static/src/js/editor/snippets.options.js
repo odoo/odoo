@@ -1068,7 +1068,7 @@ options.registry.menu_data = options.Class.extend({
                         },
                     });
                 }},
-                {text: _t("Edit the menu"), classes: 'btn-primary', click: function () {
+                {text: _t("Edit the menu"), classes: 'btn-primary', close: true, click: function () {
                     this.trigger_up('action_demand', {
                         actionName: 'edit_menu',
                         params: [
@@ -1283,7 +1283,7 @@ options.registry.CarouselItem = options.Class.extend({
         const $items = this.$carousel.find('.carousel-item');
         this.$controls.removeClass('d-none');
         this.$indicators.append($('<li>', {
-            'data-target': '#' + this.$carousel.attr('id'),
+            'data-target': '#' + this.$target.attr('id'),
             'data-slide-to': $items.length,
         }));
         this.$indicators.append(' ');
@@ -1734,8 +1734,7 @@ options.registry.HeaderNavbar = options.Class.extend({
      */
     init() {
         this._super(...arguments);
-        // Don't use setTarget, we want it to be set directly at initialization.
-        this.$target = this.$target.closest('#wrapwrap > header');
+        this.setTarget(this.$target.closest('#wrapwrap > header'));
     },
 
     //--------------------------------------------------------------------------

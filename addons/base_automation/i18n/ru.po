@@ -3,19 +3,25 @@
 # 	* base_automation
 # 
 # Translators:
+# Viktor Pogrebniak <vp@aifil.ru>, 2017
+# Masha Koc <mariya.kos.ua@gmail.com>, 2017
+# Denis Trepalin <zekarious@gmail.com>, 2017
+# Max Belyanin <maxbelyanin@gmail.com>, 2017
+# Collex100, 2017
+# Ꚁemetron <d.v.selitsky@gmail.com>, 2017
+# Yuriy Ney <k_wizard@mail.ru>, 2018
+# Максим Дронь <dronmax@gmail.com>, 2018
+# Sergey Vilizhanin, 2019
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
-# Sergey Vilizhanin, 2020
-# ILMIR <karamov@it-projects.info>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.3\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-04-21 10:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2017-02-15 10:48+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -85,7 +91,7 @@ msgstr "Применить для"
 #. module: base_automation
 #: model_terms:ir.ui.view,arch_db:base_automation.view_base_automation_search
 msgid "Archived"
-msgstr "Заархивировано"
+msgstr "Архивировано"
 
 #. module: base_automation
 #: model:ir.model,name:base_automation.model_base_automation
@@ -159,7 +165,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__create_date
@@ -180,7 +186,7 @@ msgid ""
 msgstr ""
 "Задержка после даты триггера.\n"
 "                                    Вы можете поместить отрицательное число, если вам нужна задержка перед датой\n"
-"                                    триггера, например, отправление напоминания за 15 минут до начала совещания."
+"                                    триггера, как отправление напоминания 15 минут до начала совещания."
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__trg_date_range
@@ -212,8 +218,9 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__display_name
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__activity_date_deadline_range
@@ -259,8 +266,9 @@ msgstr "Часы"
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__id
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "Номер"
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__xml_id
@@ -287,6 +295,7 @@ msgstr ""
 
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation____last_update
+#: model:ir.model.fields,field_description:base_automation.field_ir_actions_server____last_update
 msgid "Last Modified on"
 msgstr "Последнее изменение"
 
@@ -337,7 +346,7 @@ msgid ""
 "different model than the base model."
 msgstr ""
 "Модель для создания / обновления записей. Установите это поле только для "
-"указания другой модели, не базовой."
+"указания другой модели, чем базовая модель."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__model_id
@@ -364,7 +373,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__on_change_field_ids
 msgid "On Change Fields Trigger"
-msgstr "Триггер, срабатывающий при изменении поля"
+msgstr "Триггер, срабатывающий прри измененнии поля"
 
 #. module: base_automation
 #: model:ir.model.fields.selection,name:base_automation.selection__base_automation__trigger__on_create
@@ -393,7 +402,7 @@ msgid ""
 " as its usage and purpose."
 msgstr ""
 "Дополнительный текст помощи для пользователей с описанием целевого "
-"представления, например, его использования или предназначения."
+"представления, например его использования или предназначения."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__link_field_id
@@ -527,6 +536,7 @@ msgstr ""
 #. module: base_automation
 #: model:ir.model.fields,field_description:base_automation.field_base_automation__usage
 #: model:ir.model.fields,field_description:base_automation.field_ir_actions_server__usage
+#: model:ir.model.fields,field_description:base_automation.field_ir_cron__usage
 msgid "Usage"
 msgstr "Использование"
 
@@ -573,6 +583,7 @@ msgstr "Структура значений"
 
 #. module: base_automation
 #: code:addons/base_automation/models/base_automation.py:0
+#: code:addons/base_automation/models/base_automation.py:0
 #, python-format
 msgid "Warning"
 msgstr "Предупреждение"
@@ -583,7 +594,7 @@ msgid ""
 "When calculating a day-based timed condition, it is possible to use a "
 "calendar to compute the date based on working days."
 msgstr ""
-"При расчете временного условия, основанного на днях, можно использовать "
+"При расчете временного условия основанного на днях, можно использовать "
 "календарь, чтобы вычислить дату на основе рабочих дней."
 
 #. module: base_automation
@@ -602,12 +613,12 @@ msgid ""
 "                                  If present, will be checked by the scheduler. If empty, will be checked at creation and update."
 msgstr ""
 "Когда срабатывает условие.\n"
-"                                  Если оно присутствует, будет проверяться планировщиком. Если параметр пуст, будет проверяться на создание и обновление."
+"                                  Если он присутствует, будет проверяться планировщика. Если параметр пуст, будет проверяться на создание и обновление."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__active
 msgid "When unchecked, the rule is hidden and will not be executed."
-msgstr "При отсутствии проверки правило скрывается и не будет выполняться."
+msgstr "При отсутствии проверки, правило скрыто и не будет выполняться."
 
 #. module: base_automation
 #: model:ir.model.fields,help:base_automation.field_base_automation__code
@@ -631,4 +642,12 @@ msgstr ""
 #: code:addons/base_automation/static/src/xml/base_automation_error_dialog.xml:0
 #, python-format
 msgid "You can disable this automated action or edit it to solve the issue."
+msgstr ""
+
+#. module: base_automation
+#: code:addons/base_automation/models/base_automation.py:0
+#, python-format
+msgid ""
+"You cannot send an email, add followers or create an activity for a deleted "
+"record.  It simply does not work."
 msgstr ""

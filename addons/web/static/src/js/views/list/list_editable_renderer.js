@@ -127,22 +127,11 @@ ListRenderer.include({
      * @override
      */
     on_attach_callback: function () {
-        this.isInDOM = true;
         this._super();
         // _freezeColumnWidths requests style information, which produces a
         // repaint, so we call it after _super to prevent flickering (in case
         // other code would also modify the DOM post rendering/before repaint)
         this._freezeColumnWidths();
-    },
-    /**
-     * The list renderer needs to know if it is in the DOM to properly compute
-     * column widths.
-     *
-     * @override
-     */
-    on_detach_callback: function () {
-        this.isInDOM = false;
-        this._super();
     },
 
     //--------------------------------------------------------------------------
@@ -1815,12 +1804,12 @@ ListRenderer.include({
             return;
         }
 
-        // ignore clicks in modals, except if the list is in a modal, and the
-        // click is performed in that modal
-        var $clickModal = $(event.target).closest('.modal');
-        if ($clickModal.length) {
+        // ignore clicks if there is a modal, except if the list is in the last
+        // (active) modal
+        var $modal = $('body > .modal:last');
+        if ($modal.length) {
             var $listModal = this.$el.closest('.modal');
-            if ($clickModal.prop('id') !== $listModal.prop('id')) {
+            if ($modal.prop('id') !== $listModal.prop('id')) {
                 return;
             }
         }

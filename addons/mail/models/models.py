@@ -154,11 +154,6 @@ class BaseModel(models.AbstractModel):
     # ALIAS MANAGEMENT
     # ------------------------------------------------------------
 
-    def _alias_check_contact(self, message, message_dict, alias):
-        """ Deprecated, remove in v14+ """
-        error_msg = self._alias_get_error_message(message, message_dict, alias)
-        return error_msg if error_msg else True
-
     def _alias_get_error_message(self, message, message_dict, alias):
         """ Generic method that takes a record not necessarily inheriting from
         mail.alias.mixin. """

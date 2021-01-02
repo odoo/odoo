@@ -3,22 +3,34 @@
 # 	* utm
 # 
 # Translators:
-# Thorsten Vocks <thorsten.vocks@openbig.org>, 2020
-# Ermin Trevisan <trevi@twanda.com>, 2020
-# brokemeister <work@maltejansen.de>, 2020
-# Leon Grill <leg@odoo.com>, 2020
+# Niki Waibel, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Wolfgang Taferner, 2017
+# e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
+# Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
+# Jan Meyer, 2019
+# Johannes Croe <jcr@odoo.com>, 2019
+# Michael Schütt <michael.schuett.lwl@gmail.com>, 2019
+# Leon Grill <leg@odoo.com>, 2019
 # Nicola Peiffer <epn@odoo.com>, 2020
+# Thorsten Vocks <thorsten.vocks@openbig.org>, 2020
+# brokemeister <work@maltejansen.de>, 2020
+# Oliver Roch <oliver.roch@d9t.de>, 2020
 # Ralf Hilgenstock <rh@dialoge.info>, 2020
-# Martin Trigaux, 2020
 # jonas <jonas.hillebrecht@bklynsoap.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: jonas <jonas.hillebrecht@bklynsoap.com>, 2020\n"
+"PO-Revision-Date: 2016-08-05 13:11+0000\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -231,6 +243,11 @@ msgstr "Erledigt"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Dropdown menu"
 msgstr "Dropdownmenu"
+
+#. module: utm
+#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
+msgid "Edit"
+msgstr "Bearbeiten"
 
 #. module: utm
 #: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
@@ -453,7 +470,7 @@ msgstr "Verantwortlich"
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #, python-format
 msgid "Review"
-msgstr "Beurteilung"
+msgstr "Bewertung"
 
 #. module: utm
 #. openerp-web
@@ -502,7 +519,7 @@ msgstr "Gesendet"
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_stage__sequence
 msgid "Sequence"
-msgstr "Reihenfolge"
+msgstr "Sequenz"
 
 #. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
@@ -528,7 +545,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_form
 #: model_terms:ir.ui.view,arch_db:utm.utm_source_view_tree
 msgid "Source"
-msgstr "Herkunft"
+msgstr "Referenz"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_source__name
@@ -561,9 +578,16 @@ msgid ""
 msgstr ""
 
 #. module: utm
+#: model:ir.model.fields,help:utm.field_utm_tag__color
+msgid ""
+"Tag color. No color means no display in kanban to distinguish internal tags "
+"from public categorization tags."
+msgstr ""
+
+#. module: utm
 #: model:ir.model.constraint,message:utm.constraint_utm_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Schlagwort existiert bereits!"
+msgstr "Stichwort existiert bereits!"
 
 #. module: utm
 #: model:ir.model.fields,field_description:utm.field_utm_campaign__tag_ids

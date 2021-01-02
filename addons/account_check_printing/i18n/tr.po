@@ -3,24 +3,23 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2020
-# Martin Trigaux, 2020
-# Levent Karakaş <levent@mektup.at>, 2020
+# Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2018
+# Alexander B. <road2monstercat@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Buket Şeker <buket_skr@hotmail.com>, 2019
+# Umur Akın <umura@projetgrup.com>, 2019
+# Yedigen, 2019
+# Ediz Duman <neps1192@gmail.com>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
-# Ulaş Sarıkaya <hasanulassarikaya@gmail.com>, 2020
-# Alexander B. <road2monstercat@gmail.com>, 2020
-# Umur Akın <umura@projetgrup.com>, 2020
-# Yedigen, 2020
-# abc Def <hdogan1974@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: abc Def <hdogan1974@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +55,7 @@ msgstr "Yazı ile Tutar"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid "Cancel"
-msgstr "İptal et"
+msgstr "İptal"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_layout
@@ -149,12 +148,12 @@ msgstr "Şirketler"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr "Yapılandırma Ayarları"
+msgstr "Konfigürasyon Ayarları"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_partner
 msgid "Contact"
-msgstr "Temas"
+msgstr "Kontak"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
@@ -164,7 +163,7 @@ msgstr "Oluşturan"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
 msgid "Created on"
-msgstr "Oluşturulma"
+msgstr "Oluşturulma zamanı"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__display_name
@@ -224,7 +223,7 @@ msgstr "Yevmiye Kaydı"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner____last_update
 msgid "Last Modified on"
-msgstr "Son Düzenleme"
+msgstr "Son Güncelleme"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__write_uid
@@ -243,6 +242,21 @@ msgid "Manual Numbering"
 msgstr "Elle Numaralandırma"
 
 #. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+msgstr ""
+"Manuel: Nakit, çek veya Odoo dışındaki herhangi bir yöntemle ödeme alın.\n"
+"Elektronik: Çevrimiçi satın alırken veya abone olurken (ödeme belirteci) müşteri tarafından kaydedilen bir kartta işlem yapılmasını talep ederek bir ödeme edinen aracılığıyla otomatik olarak ödeme alın.\n"
+"Çek: Faturayı çekle ödeyin ve Odoo'dan yazdırın.\n"
+"Toplu Para Yatırma: Bankanıza göndermek için toplu para yatırarak aynı anda birkaç müşteri çekine başlayın. Banka ekstresini Odoo'da kodlarken, işlemi toplu para yatırma işlemiyle eşitlemeniz önerilir. Toplu para yatırma işlemini etkinleştirmek için account_batch_payment modülünün kurulması gerekir.\n"
+"SEPA Alacak Transferi: Bankanıza gönderdiğiniz SEPA Alacak Transferi dosyasından fatura ödeyin. Sepa alacak transferini etkinleştirmek için account_sepa modülü kurulu olmalıdır"
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
@@ -259,7 +273,7 @@ msgstr "Sonraki Çek No"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "Sonraki Kontrol Numarası sadece rakamları içermelidir."
+msgstr "Next Check Number should only contains numbers."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -267,6 +281,7 @@ msgid "None"
 msgstr "Hiçbiri"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"

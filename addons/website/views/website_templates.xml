@@ -1028,7 +1028,7 @@
 <template id="template_header_image_oe_structure_header_image_1" inherit_id="website.template_header_image" name="Template Header image (oe_structure_header_image_1)">
     <xpath expr="//*[hasclass('oe_structure')][@id='oe_structure_header_image_1']" position="replace">
         <div class="oe_structure oe_structure_solo" id="oe_structure_header_image_1">
-            <section class="s_cover oe_img_bg pt8 pb8" data-snippet="s_cover" data-name="Cover"
+            <section class="s_cover oe_img_bg o_bg_img_center pt8 pb8" data-snippet="s_cover" data-name="Cover"
                      style="background-image: url('/web/image/website.header_image_1_default_image');">
                 <div class="container s_allow_columns">
                     <p class="mb-0"><br/></p>
@@ -1812,6 +1812,12 @@
 </template>
 
 <template id="language_selector" inherit_id="portal.language_selector">
+    <xpath expr="//t[@t-set='active_lang']" position="before">
+        <t t-if="lang not in (lg[0] for lg in languages)">
+            <t t-set="lang" t-value="website.default_lang_id.code"/>
+        </t>
+    </xpath>
+
     <!-- Always show the language selector on editable websites -->
     <xpath expr="//t[@t-set='language_selector_visible']" position="after">
         <t t-set="language_selector_visible" t-value="language_selector_visible or (website and (editable or translatable))"/>
@@ -1856,7 +1862,8 @@
         </t>
     </xpath>
     <xpath expr="//t[@t-call='website.language_selector_add_language']" position="replace">
-        <span class="o_add_language list-inline-item">|</span>
+        <span class="o_add_language list-inline-item"
+            groups="website.group_website_publisher">|</span>
         <t t-call="website.language_selector_add_language">
             <t t-set="dropdown" t-value="False"/>
         </t>
@@ -2120,16 +2127,19 @@
     1,2,3
 </template>
 
+<!-- PAGE 404 -->
 <template id="page_404" name="Page Not Found">
     <t t-call="http_routing.404">
-        <div class="container o_not_editable">
-            <div class="alert alert-info mt32">
-                <p>This page does not exist, but you can create it as you are administrator of this site.</p>
-                <a role="button" class="btn btn-primary js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+        <div class="o_not_editable bg-100 pt40">
+            <div class="container">
+                <div class="alert alert-info text-center d-lg-flex justify-content-between align-items-center">
+                    <p class="m-lg-0 text-info">This page does not exist, but you can create it as you are editor of this site.</p>
+                    <a role="button" class="btn btn-info js_disable_on_click post_link" t-attf-href="/website/add/#{ path }#{ from_template and '?template=%s' % from_template }">Create Page</a>
+                </div>
+                <div class="text-center text-muted p-3"><i class="fa fa-info-circle"></i> Edit the content below this line to adapt the default <strong>Page not found</strong> page.</div>
             </div>
-            <div class="text-center text-muted">Edit the content below this line to adapt the default "page not found" page.</div>
+            <hr/>
         </div>
-        <hr/>
     </t>
 </template>
 
@@ -2307,7 +2317,12 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
                 "widget": "contact",
                 "fields": ["name", "address", "phone", "mobile", "email"]}'/>
         <t t-if="not res_company.google_map_img()">
-            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
+            <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/>
+            <a t-att-href="res_company.google_map_link()" target="_BLANK">Google Maps</a>
+            <a t-if="editable"
+                class="fa fa-cog ml-1"
+                href="/web#action=website.action_website_configuration"
+                title="Add your key in the settings."/>
         </t>
     </address>
 </template>
@@ -2318,12 +2333,6 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <a t-att-href="res_company.google_map_link()" target="_BLANK">
                 <img class="img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
             </a>
-        </t>
-        <t t-elif="editable">
-            <div class="alert alert-warning">
-                <i class="fa fa-plus-circle"/>
-                The Google map option is enabled but <a href="/web#action=website.action_website_configuration">not properly configured</a>.
-            </div>
         </t>
     </xpath>
 </template>

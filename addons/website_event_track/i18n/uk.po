@@ -3,17 +3,18 @@
 # 	* website_event_track
 # 
 # Translators:
-# Bohdan Lisnenko, 2020
-# Martin Trigaux, 2020
+# trolka <trolka.olug@gmail.com>, 2018
 # ТАрас <tratatuta@i.ua>, 2020
+# Martin Trigaux, 2020
+# Bohdan Lisnenko, 2020
 # Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
-"PO-Revision-Date: 2020-09-07 08:21+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
+"PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
@@ -216,9 +217,9 @@ msgid ""
 " * Green indicates the track is ready to be pulled to the next stage"
 msgstr ""
 "Етап доріжки канбану вказує на особливі ситуації, що впливають на неї:\n"
-"* Сірий - типова ситуація\n"
-"* Червоний означає, що щось перешкоджає просуванню цієї доріжки\n"
-"* Зелений показує, що доріжка готова до перетягування на наступний етап"
+"  * Сірий - типова ситуація\n"
+"  * Червоний означає, що щось перешкоджає просуванню цієї доріжки\n"
+"  * Зелений показує, що доріжка готова дотягнути до наступного етапу"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_accepted
@@ -374,7 +375,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_attachment_count
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
 msgid "Attachment Count"
-msgstr "Кількість прикріплень"
+msgstr "Підрахунок прикріплення"
 
 #. module: website_event_track
 #: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
@@ -562,7 +563,7 @@ msgstr "Створив"
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
@@ -688,7 +689,7 @@ msgstr "Відкрийте для себе нашу нову дизайнерс�
 #: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
 msgid "Display Name"
-msgstr "Відобразити назву"
+msgstr "Назва для відображення"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
@@ -730,7 +731,7 @@ msgstr "Ел. пошта"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
 msgid "Email Template"
-msgstr "Шаблон електронного листа"
+msgstr "Шаблон ел. листа"
 
 #. module: website_event_track
 #. openerp-web
@@ -1291,7 +1292,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_website_menu____last_update
 #: model:ir.model.fields,field_description:website_event_track.field_website_visitor____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Остання модифікація"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_uid
@@ -1430,7 +1431,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
 msgid "Medium"
-msgstr "Канал"
+msgstr "Середній"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
@@ -1594,7 +1595,7 @@ msgstr "Кількість повідомлень, які потебують д�
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_has_error_counter
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Кількість повідомлень з помилковою доставкою"
+msgstr "Кількість повідомлень з помилковою дставкою"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_unread_counter
@@ -1963,7 +1964,7 @@ msgstr "Спонсори"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
 msgid ""
-"Sponsors might be advertised on you event pages footer.<br>\n"
+"Sponsors might be advertised on your event pages footer.<br>\n"
 "    Exhibitors might have a dedicated page with chat room for people to connect with them."
 msgstr ""
 
@@ -1976,12 +1977,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
-msgstr "Етап"
+msgstr "Стадія"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
 msgid "Stage Name"
-msgstr "Назва етапу"
+msgstr "Назва стадії"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -2033,7 +2034,7 @@ msgstr "Така мітка вже існує!"
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
 msgid "Tags"
-msgstr "Теги"
+msgstr "Мітки"
 
 #. module: website_event_track
 #: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
@@ -2100,7 +2101,7 @@ msgstr "Дякуємо за вашу пропозицію."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__website_url
 msgid "The full URL to access the document through the website."
-msgstr "Повна URL-адреса для доступу до документа через сайт."
+msgstr "URL-адреса повністю, для доступу до документації через сайт."
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track17
@@ -2173,7 +2174,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
 msgid "Title"
-msgstr "Звертання"
+msgstr "Заголовок"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
@@ -2514,7 +2515,7 @@ msgstr "Повідомлення з веб-сайту"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
 msgid "Website URL"
-msgstr "URL веб-сайту"
+msgstr "URL сайту"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_visitor
@@ -2530,17 +2531,17 @@ msgstr "Історія бесіди на сайті"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
 msgid "Website meta description"
-msgstr "Опис мети веб-сайту"
+msgstr "Мета-опис сайту"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Ключові слова веб-сайту"
+msgstr "Мета-ключі сайту"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
 msgid "Website meta title"
-msgstr "Заголовок мети веб-сайту"
+msgstr "Мета-заголовок сайту"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img

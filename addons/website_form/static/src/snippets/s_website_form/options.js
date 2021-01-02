@@ -492,7 +492,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         } else {
             const template = document.createElement('template');
             const labelWidth = this.$target[0].querySelector('.s_website_form_label').style.width;
-            template.innerHTML = qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth});
+            $(template).html(qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth}));
             const legal = template.content.firstElementChild;
             legal.setAttribute('contentEditable', true);
             this.$target.find('.s_website_form_submit').before(legal);
@@ -775,7 +775,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const select = this._getSelect();
         if (select && this.listTable) {
             select.style.display = '';
-            select.innerHTML = '';
+            $(select).empty();
             // Rebuild the select from the we-list
             this.listTable.querySelectorAll('input').forEach(el => {
                 const option = document.createElement('option');
@@ -1050,7 +1050,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     _loadListDropdown: function (selectMenu) {
         selectMenu = selectMenu || this.el.querySelector('we-list we-selection-items');
         if (selectMenu) {
-            selectMenu.innerHTML = '';
+            $(selectMenu).empty();
             const field = Object.assign({}, this.fields[this._getFieldName()]);
             this._fetchFieldRecords(field).then(() => {
                 let buttonItems;
@@ -1141,7 +1141,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const name = this._getFieldName();
         if (multiInputsWrap) {
             const type = multiInputsWrap.querySelector('.radio') ? 'radio' : 'checkbox';
-            multiInputsWrap.innerHTML = '';
+            $(multiInputsWrap).empty();
             const params = {
                 field: {
                     name: name,
@@ -1156,11 +1156,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 params.record_index = idx;
                 params.record = record;
                 const template = document.createElement('template');
-                template.innerHTML = qweb.render(`website_form.${type}`, params);
+                $(template).html(qweb.render(`website_form.${type}`, params));
                 multiInputsWrap.appendChild(template.content.firstElementChild);
             });
         } else if (selectWrap) {
-            selectWrap.innerHTML = '';
+            $(selectWrap).empty();
             this.listTable.querySelectorAll('input').forEach(el => {
                 const option = document.createElement('div');
                 option.id = (el.name || el.value);
@@ -1250,6 +1250,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
 
 options.registry.AddFieldForm = FormEditor.extend({
     isTopOption: true,
+    isTopFirstOption: true,
 
     //--------------------------------------------------------------------------
     // Options
@@ -1272,6 +1273,7 @@ options.registry.AddFieldForm = FormEditor.extend({
 
 options.registry.AddField = FieldEditor.extend({
     isTopOption: true,
+    isTopFirstOption: true,
 
     //--------------------------------------------------------------------------
     // Options

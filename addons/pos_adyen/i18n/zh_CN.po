@@ -3,22 +3,23 @@
 # 	* pos_adyen
 # 
 # Translators:
-# Felix Yuen <fyu@odoo.com>, 2020
+# Felix Yuen <fyu@odoo.com>, 2019
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# 226408 台北 <226408@so8d.com>, 2020
 # Martin Trigaux, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # Wei "oldrev" Li <liwei@sandwych.com>, 2020
+# 稀饭~~ <wangwhai@qq.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020
 # Manga Tsang <mts@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:11+0000\n"
-"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"POT-Creation-Date: 2020-11-27 15:29+0000\n"
+"PO-Revision-Date: 2019-12-16 11:07+0000\n"
 "Last-Translator: Manga Tsang <mts@odoo.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -109,17 +110,17 @@ msgstr "Adyen测试模式"
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_account
-msgid "Adyen for Plaforms Account"
+msgid "Adyen for Platforms Account"
 msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_store
-msgid "Adyen for Plaforms Store"
+msgid "Adyen for Platforms Store"
 msgstr ""
 
 #. module: pos_adyen
 #: model:ir.model,name:pos_adyen.model_adyen_terminal
-msgid "Adyen for Plaforms Terminal"
+msgid "Adyen for Platforms Terminal"
 msgstr ""
 
 #. module: pos_adyen
@@ -132,7 +133,7 @@ msgstr "发生意外错误。来自Adyen的消息：%s"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr "询问客户获取小费"
+msgstr "询问客户获取提示"
 
 #. module: pos_adyen
 #. openerp-web
@@ -156,12 +157,12 @@ msgstr "配置设置"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__country_id
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "Country"
-msgstr "国家"
+msgstr "国家/地区"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__country_code
 msgid "Country Code"
-msgstr "国家代码"
+msgstr "国家/地区代码"
 
 #. module: pos_adyen
 #: model_terms:ir.ui.view,arch_db:pos_adyen.res_config_settings_view_form
@@ -172,7 +173,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_uid
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__create_uid
 msgid "Created by"
-msgstr "创建人"
+msgstr "创建者"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__create_date
@@ -224,13 +225,13 @@ msgstr "最后修改日"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__write_uid
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__write_uid
 msgid "Last Updated by"
-msgstr "最后更新人"
+msgstr "上次更新者"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__write_date
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_terminal__write_date
 msgid "Last Updated on"
-msgstr "最后更新时间"
+msgstr "上次更新时间"
 
 #. module: pos_adyen
 #. openerp-web
@@ -290,7 +291,7 @@ msgstr "提示客户給小费。"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_reference
 msgid "Reference"
-msgstr "参考"
+msgstr "编码"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
@@ -301,12 +302,12 @@ msgstr "在测试环境中运行事务。"
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_id
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "State"
-msgstr "省/ 州"
+msgstr "状态"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__state_code
 msgid "State Code"
-msgstr "省/ 州代码"
+msgstr "州/省代码"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_account__store_ids
@@ -374,7 +375,7 @@ msgstr "与您的付款终端的连接失败。请检查它是否仍然连接到
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_adyen_store__state_code
 msgid "The state code."
-msgstr "州/省代码"
+msgstr "州省代码。"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__store_uuid
@@ -394,7 +395,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:pos_adyen.field_adyen_store__zip
 #: model_terms:ir.ui.view,arch_db:pos_adyen.adyen_store_view_form
 msgid "ZIP"
-msgstr "ZIP"
+msgstr "邮编"
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_terminal_identifier

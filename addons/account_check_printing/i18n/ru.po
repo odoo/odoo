@@ -3,19 +3,24 @@
 # 	* account_check_printing
 # 
 # Translators:
+# Collex100, 2017
+# 55f05a7bf4d36f8dbc16dc9b88d69520_d3dc437 <fe9c437e1f9ce01665bb1582f8774bf6_482841>, 2017
+# Алексей Билькевич (belskiy) <mmmbrsk@gmail.com>, 2017
+# Максим Дронь <dronmax@gmail.com>, 2017
+# Sergey Vilizhanin, 2018
+# Max Belyanin <maxbelyanin@gmail.com>, 2018
+# Vasiliy Korobatov <korobatov@gmail.com>, 2019
 # Martin Trigaux, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
-# ILMIR <karamov@it-projects.info>, 2020
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2020
-# Irina Fedulova <istartlin@gmail.com>, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +73,7 @@ msgstr "Левое поле чеке"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
 msgid "Check Number"
-msgstr "Номер чека"
+msgstr "контрольный номер"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_journal_form_inherited
@@ -108,7 +113,7 @@ msgstr ""
 msgid "Check this option if your pre-printed checks are not numbered."
 msgstr ""
 "Проверьте эту опцию, если ваши предварительно напечатанные чеки не "
-"пронумерованы."
+"пронумерованы"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -123,7 +128,7 @@ msgstr "Проверки"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
 msgid "Checks numbering sequence."
-msgstr "Последовательность нумерации чеков."
+msgstr "Последовательность нумерации чеков"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_journal.py:0
@@ -145,7 +150,7 @@ msgstr "Компании"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
 msgid "Config Settings"
-msgstr "Конфигурационные настройки"
+msgstr "Настройки конфигурации"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_partner
@@ -155,7 +160,7 @@ msgstr "Контакт"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_uid
 msgid "Created by"
-msgstr "Создал"
+msgstr "Создано"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_print_prenumbered_checks__create_date
@@ -171,7 +176,7 @@ msgstr "Создан"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__display_name
 msgid "Display Name"
-msgstr "Отображаемое имя"
+msgstr "Отображаемое Имя"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -189,7 +194,7 @@ msgstr "Перейти к панели конфигурации"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__id
 msgid "ID"
-msgstr "Идентификатор"
+msgstr "Номер"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -239,6 +244,27 @@ msgid "Manual Numbering"
 msgstr "Ручная нумерация"
 
 #. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+msgstr ""
+"Вручную Получайте оплату наличными, чеком или любым другим методом за "
+"пределами Odoo. Электронный: Получайте оплату автоматически через эквайер "
+"платежа, спрашивая транзакцию на карту, сохраненную клиентом при покупке или"
+" подписке онлайн (токен платежа). Чек: Оплачивайте счет чеком и распечатать "
+"его с Оdoo. Пакетный депозит: Поощряйте сразу несколько чеков клиентов, "
+"генерируя депозитный пакет, который нужно отправить в вашего банка. При "
+"кодировании выписки из банка в Odoo, вам предлагается согласовать транзакцию"
+" с пакетным депозиту. Чтобы включить пакетный депозит, необходимо установить"
+" модуль account_batch_payment. Кредитный перевод SEPA: оплата счета по "
+"кредитному перевода SEPA, который вы подаете в банк. Для включения перевода "
+"кредита sepa необходимо установить модуль account_sepa"
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
@@ -263,6 +289,7 @@ msgid "None"
 msgstr "Ничего"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
@@ -280,8 +307,8 @@ msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
 msgstr ""
-"Платежи к печати в виде чеков должны иметь способ оплаты 'Чек' и не должны "
-"быть уже согласованы"
+"Печать проверенных платежей должна иметь статус: 'Проверено' и выбрана в "
+"методах оплаты и не должны быть уже согласованы"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -289,8 +316,8 @@ msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
 msgstr ""
-"Пожалуйста, введите сперва номер предпечатного чека, который вы собираетесь "
-"напечатать."
+"Пожалуйста введите сперва номер пред печатной проверки которую вы "
+"собираетесь напечатать."
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
@@ -335,7 +362,7 @@ msgstr "Метка даты печати"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "Напечатать предпросмотренные чеки"
+msgstr "Напечатать предпростмотренный чек"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -360,7 +387,7 @@ msgstr "Отправлено"
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
 msgid "Sequence number of the next printed check."
-msgstr "Порядковый номер для следующего напечатанного чека."
+msgstr "Порядковый номер для следующего напечатанного чека"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -376,7 +403,7 @@ msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
 msgstr ""
-"Техническая характеристика используется, чтобы узнать, была ли печать чека "
+"Техническая характеристика используется, чтобы узнать, была ли  печать чека "
 "включена в качестве метода оплаты."
 
 #. module: account_check_printing
@@ -394,7 +421,7 @@ msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
 msgstr ""
-"Последний номер чека был %s. Для того, чтобы избежать отклонение чека "
+"Последний номер чека был %s. Для того, чтобы избежать  отклонение чека "
 "банком, вы можете использовать только большее число."
 
 #. module: account_check_printing
@@ -405,7 +432,7 @@ msgid ""
 "wrong, you can change it in the journal configuration page."
 msgstr ""
 "Выбранный журнал настроен на печать номера чеков. Если заранее отпечатанные "
-"бумажные чеки уже имеют номера или если текущая нумерация ошибочна, вы "
+"бумажные чеки уже имеют номера, или если текущая нумерация ошибочна, вы "
 "можете изменить ее на странице конфигурации журнала."
 
 #. module: account_check_printing

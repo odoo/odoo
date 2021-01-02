@@ -3,15 +3,14 @@
 # 	* im_livechat
 # 
 # Translators:
-# danimaribeiro <danimaribeiro@gmail.com>, 2020
-# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
-# André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
-# Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2020
-# Lauro de Lima <lauro@ciclix.com>, 2020
+# danimaribeiro <danimaribeiro@gmail.com>, 2017
+# Diego Bittencourt <diegomb86@gmail.com>, 2018
+# Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
+# Lauro de Lima <lauro@ciclix.com>, 2019
+# Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
 # Fernanda Marques <fem@odoo.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
-# Diego Bittencourt <diegomb86@gmail.com>, 2020
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
 # Martin Trigaux, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
@@ -26,10 +25,10 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-27 15:41+0000\n"
-"PO-Revision-Date: 2020-09-07 08:13+0000\n"
+"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
@@ -546,7 +545,7 @@ msgstr "Canal de Discussão"
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner__display_name
 #: model:ir.model.fields,field_description:im_livechat.field_res_users__display_name
 msgid "Display Name"
-msgstr "Nome exibido"
+msgstr "Nome para Exibição"
 
 #. module: im_livechat
 #: model:ir.model.fields.selection,name:im_livechat.selection__im_livechat_channel_rule__action__display_button
@@ -713,17 +712,6 @@ msgid "Is visitor anonymous"
 msgstr ""
 
 #. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_3
-msgid "Joel Willis, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_2
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_6
-msgid "Joel Willis, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Join"
 msgstr "Entrar"
@@ -766,7 +754,7 @@ msgstr "Últimas 24h"
 #: model:ir.model.fields,field_description:im_livechat.field_res_partner____last_update
 #: model:ir.model.fields,field_description:im_livechat.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Última modificação em"
+msgstr "Última Modificação em"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__write_uid
@@ -1204,17 +1192,17 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Bad"
-msgstr "Classificação: Ruim"
+msgstr "Avaliação: Ruim"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Great"
-msgstr "Classificação: Ótimo"
+msgstr "Avaliação: Ótimo"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
 msgid "Rating: Okay"
-msgstr "Classificação: Ok"
+msgstr "Avaliação: Ok"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__rating_ids
@@ -1224,7 +1212,7 @@ msgstr "Avaliações"
 #. module: im_livechat
 #: model:ir.actions.act_window,name:im_livechat.rating_rating_action_view_livechat_rating
 msgid "Ratings for livechat channel"
-msgstr "Classificações do chat"
+msgstr "Avaliações do chat"
 
 #. module: im_livechat
 #. openerp-web
@@ -1567,6 +1555,12 @@ msgid "Try again"
 msgstr ""
 
 #. module: im_livechat
+#: code:addons/im_livechat/models/mail_channel.py:0
+#, python-format
+msgid "Type <b>:shortcut</b> to insert a canned response in your message.<br>"
+msgstr ""
+
+#. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
 msgid "URL Regex"
 msgstr ""
@@ -1671,31 +1665,6 @@ msgid "Visitor"
 msgstr "Visitante"
 
 #. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_0
-msgid "Visitor #234, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_1
-msgid "Visitor #323, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_4
-msgid "Visitor #532, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_5
-msgid "Visitor #649, Mitchell Admin"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.im_livechat_mail_channel_data_7
-msgid "Visitor #722, Marc Demo"
-msgstr ""
-
-#. module: im_livechat
 #: code:addons/im_livechat/models/mail_channel.py:0
 #, python-format
 msgid "Visitor has left the conversation."
@@ -1704,11 +1673,6 @@ msgstr ""
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
-msgstr ""
-
-#. module: im_livechat
-#: model:mail.channel,name:im_livechat.mail_channel_livechat_1
-msgid "Visitor, Mitchell Admin"
 msgstr ""
 
 #. module: im_livechat

@@ -7,6 +7,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import OrderedSet
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 
 class StockMoveLine(models.Model):
@@ -108,7 +109,7 @@ class StockMoveLine(models.Model):
 
     @api.constrains('qty_done')
     def _check_positive_qty_done(self):
-        if any([ml.qty_done < 0 for ml in self]):
+        if any(ml.qty_done < 0 for ml in self):
             raise ValidationError(_('You can not enter negative quantities.'))
 
     @api.onchange('product_id', 'product_uom_id')
@@ -388,11 +389,15 @@ class StockMoveLine(models.Model):
 
         return res
 
-    def unlink(self):
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done_or_cancel(self):
         for ml in self:
             if ml.state in ('done', 'cancel'):
                 raise UserError(_('You can not delete product moves if the picking is done. You can only correct the done quantities.'))
+
+    def unlink(self):
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for ml in self:
             # Unlinking a move line should unreserve.
             if ml.product_id.type == 'product' and not ml._should_bypass_reservation(ml.location_id) and not float_is_zero(ml.product_qty, precision_digits=precision):
                 try:
@@ -400,8 +405,8 @@ class StockMoveLine(models.Model):
                 except UserError:
                     if ml.lot_id:
                         self.env['stock.quant']._update_reserved_quantity(ml.product_id, ml.location_id, -ml.product_qty, lot_id=False, package_id=ml.package_id, owner_id=ml.owner_id, strict=True)
-                    else:
-                        raise
+                    elif not self.env.context.get(MODULE_UNINSTALL_FLAG, False):
+                        raise   # pylint: disable=raise-unlink-override
         moves = self.mapped('move_id')
         res = super(StockMoveLine, self).unlink()
         if moves:

@@ -1,22 +1,21 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# 	* note
+# * note
 # 
 # Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Hamid Darabi, 2020
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
-# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
-# Hamed Mohammadi <hamed@dehongi.com>, 2020
-# 
+# Zahed Alfak <tamass4116@gmail.com>, 2018
+# Martin Trigaux, 2018
+# Morovat Guivi <tarjomac@gmail.com>, 2018
+# Hamid Darabi, 2018
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
+# Hamed Mohammadi <hamed@dehongi.com>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~11.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
+"POT-Creation-Date: 2018-09-21 13:17+0000\n"
+"PO-Revision-Date: 2018-09-21 13:17+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,31 +24,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
-msgid "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
-msgstr "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Opened\" title=\"Opened\"/>"
-
-#. module: note
-#: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
-msgid "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
-msgstr "<i class=\"fa fa-undo\" role=\"img\" aria-label=\"Closed\" title=\"Closed\"/>"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction
 msgid "Action Needed"
-msgstr "کنش مورد نیاز است"
-
-#. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
-msgid "Action to Perform"
-msgstr "اقدام برای انجام"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_mail_activity_type__category
-msgid ""
-"Actions may trigger specific behavior like opening calendar view or "
-"automatically mark as done when a document is uploaded"
-msgstr ""
+msgstr "اقدام مورد نیاز است"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -68,11 +45,6 @@ msgid "Activity"
 msgstr "فعالیت"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
-msgid "Activity Exception Decoration"
-msgstr "دکوراسیون استثنا فعالیت"
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
 msgid "Activity State"
 msgstr "وضعیت فعالیت"
@@ -83,33 +55,28 @@ msgid "Activity Type"
 msgstr "نوع فعالیت"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__activity_type_icon
-msgid "Activity Type Icon"
-msgstr "آیکون نوع فعالیت"
-
-#. module: note
 #: model_terms:ir.actions.act_window,help:note.action_note_note
 msgid "Add a new personal note"
-msgstr "افزودن یادداشت شخصی"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr "افزودن برچسب جدید"
+msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:14
 #, python-format
 msgid "Add a note"
-msgstr "افزودن یادداشت"
+msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:6
 #, python-format
 msgid "Add new note"
-msgstr "افزودن یادداشت جدید"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -119,7 +86,7 @@ msgstr "بایگانی"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_attachment_count
 msgid "Attachment Count"
-msgstr "تعداد پیوست"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -127,8 +94,18 @@ msgid "By sticky note Category"
 msgstr "با توجه به دسته بندی یادداشت"
 
 #. module: note
+#: model:ir.model.fields,help:note.field_mail_activity_type__category
+msgid "Categories may trigger specific behavior like opening calendar view"
+msgstr ""
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_mail_activity_type__category
+msgid "Category"
+msgstr "دسته‌بندی"
+
+#. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:10
 #, python-format
 msgid "Channel"
 msgstr "کانال"
@@ -137,7 +114,7 @@ msgstr "کانال"
 #: model:ir.model.fields,field_description:note.field_note_note__color
 #: model:ir.model.fields,field_description:note.field_note_tag__color
 msgid "Color Index"
-msgstr "شاخص رنگ"
+msgstr "رنگ پس زمینه"
 
 #. module: note
 #: model:ir.ui.menu,name:note.menu_note_configuration
@@ -149,7 +126,7 @@ msgstr "پیکربندی"
 #: model:ir.model.fields,field_description:note.field_note_stage__create_uid
 #: model:ir.model.fields,field_description:note.field_note_tag__create_uid
 msgid "Created by"
-msgstr "ایجاد توسط"
+msgstr "ایجاد شده توسط"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__create_date
@@ -169,29 +146,26 @@ msgid "Delete"
 msgstr "حذف"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity__display_name
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__display_name
 #: model:ir.model.fields,field_description:note.field_note_note__display_name
 #: model:ir.model.fields,field_description:note.field_note_stage__display_name
 #: model:ir.model.fields,field_description:note.field_note_tag__display_name
-#: model:ir.model.fields,field_description:note.field_res_users__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Dropdown menu"
-msgstr "منوی بازشو"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__fold
 msgid "Folded by Default"
-msgstr "بسته به طور پیشفرض"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_kanban
 msgid "Follower"
-msgstr "دنبال کننده"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_follower_ids
@@ -201,17 +175,12 @@ msgstr "دنبال‌کنندگان"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "دنبال کنندگان (کانال ها)"
+msgstr "پیروان (کانال ها)"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "دنبال کنندگان (همکاران)"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__activity_type_icon
-msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "پیروان (شرکاء)"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -221,31 +190,23 @@ msgstr "فعالیتهای آینده"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Group By"
-msgstr "دسته بندی بر مبنای"
+msgstr "گروه‌بندی برمبنای"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity__id
-#: model:ir.model.fields,field_description:note.field_mail_activity_type__id
 #: model:ir.model.fields,field_description:note.field_note_note__id
 #: model:ir.model.fields,field_description:note.field_note_stage__id
 #: model:ir.model.fields,field_description:note.field_note_tag__id
-#: model:ir.model.fields,field_description:note.field_res_users__id
 msgid "ID"
 msgstr "شناسه"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_note_note__activity_exception_icon
-msgid "Icon"
-msgstr "آیکون"
-
-#. module: note
-#: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
-msgid "Icon to indicate an exception activity."
-msgstr "آیکون برای نشان دادن یک فعالیت استثنا."
+#: model:ir.model.fields,help:note.field_note_note__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
-#: model:ir.model.fields,help:note.field_note_note__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
@@ -253,7 +214,7 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_is_follower
@@ -261,12 +222,9 @@ msgid "Is Follower"
 msgstr "دنبال می کند"
 
 #. module: note
-#: model:ir.model.fields,field_description:note.field_mail_activity____last_update
-#: model:ir.model.fields,field_description:note.field_mail_activity_type____last_update
 #: model:ir.model.fields,field_description:note.field_note_note____last_update
 #: model:ir.model.fields,field_description:note.field_note_stage____last_update
 #: model:ir.model.fields,field_description:note.field_note_tag____last_update
-#: model:ir.model.fields,field_description:note.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "آخرین تغییر در"
 
@@ -275,7 +233,7 @@ msgstr "آخرین تغییر در"
 #: model:ir.model.fields,field_description:note.field_note_stage__write_uid
 #: model:ir.model.fields,field_description:note.field_note_tag__write_uid
 msgid "Last Updated by"
-msgstr "آخرین به روز رسانی توسط"
+msgstr "آخرین تغییر توسط"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__write_date
@@ -287,27 +245,37 @@ msgstr "آخرین به روز رسانی در"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Late Activities"
-msgstr "فعالیتهای دیر شده"
+msgstr "فعالیتهای اخیر"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "پیوست اصلی"
+msgstr ""
+
+#. module: note
+#: selection:mail.activity.type,category:0
+msgid "Meeting"
+msgstr "ملاقات"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_01
 msgid "Meeting Minutes"
-msgstr "دقیقه‌های ملاقات"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error
 msgid "Message Delivery error"
-msgstr "خطای تحویل پیام"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_ids
 msgid "Messages"
 msgstr "پیام‌ها"
+
+#. module: note
+#: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+msgid "My Activities"
+msgstr "فعالیتهای من"
 
 #. module: note
 #: model:note.stage,name:note.note_stage_00
@@ -317,17 +285,17 @@ msgstr "جدید"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr "موعد فعالیت بعدی"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_summary
 msgid "Next Activity Summary"
-msgstr "خلاصه فعالیت بعدی"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_type_id
 msgid "Next Activity Type"
-msgstr "نوع فعالیت بعدی"
+msgstr ""
 
 #. module: note
 #: model:ir.model,name:note.model_note_note
@@ -339,7 +307,7 @@ msgstr "یادداشت"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__memo
 msgid "Note Content"
-msgstr "محتوای یادداشت"
+msgstr ""
 
 #. module: note
 #: model:ir.model,name:note.model_note_stage
@@ -357,11 +325,11 @@ msgid "Note Tag"
 msgstr "تگ متن"
 
 #. module: note
-#: code:addons/note/models/res_users.py:0
+#: code:addons/note/models/res_users.py:61
 #: model:ir.actions.act_window,name:note.action_note_note
 #: model:ir.ui.menu,name:note.menu_note_notes
-#: model:note.stage,name:note.note_stage_02
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
+#: model:note.stage,name:note.note_stage_02
 #, python-format
 msgid "Notes"
 msgstr "یادداشت‌ها"
@@ -376,27 +344,37 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_needaction_counter
 msgid "Number of Actions"
-msgstr "تعداد کنش ها"
+msgstr "تعداد اقدامات"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
-msgid "Number of errors"
-msgstr "تعداد خطاها"
+msgid "Number of error"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
 msgid "Number of messages which requires an action"
-msgstr "تعداد پیام ها که نیاز به کنش دارد"
+msgstr "تعداد پیام ها که نیاز به عمل"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "تعداد پیامهای با خطای تحویل"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_unread_counter
 msgid "Number of unread messages"
 msgstr "تعداد پیام‌های خوانده نشده"
+
+#. module: note
+#: selection:mail.activity.type,category:0
+msgid "Other"
+msgstr "سایر"
+
+#. module: note
+#: selection:note.note,activity_state:0
+msgid "Overdue"
+msgstr "سررسید گذشته"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__user_id
@@ -407,37 +385,42 @@ msgstr "مالک‌"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__user_id
 msgid "Owner of the note stage"
-msgstr "صاحب مرحله یادداشت"
+msgstr ""
+
+#. module: note
+#: selection:note.note,activity_state:0
+msgid "Planned"
+msgstr "برنامه ریزی شده"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity__note_id
 msgid "Related Note"
-msgstr "یادداشت مربوطه"
+msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:23
 #, python-format
 msgid "Remember..."
-msgstr "یادآور..."
+msgstr ""
 
 #. module: note
-#: model:ir.model.fields.selection,name:note.selection__mail_activity_type__category__reminder
+#: selection:mail.activity.type,category:0
 #: model:mail.activity.type,name:note.mail_activity_data_reminder
 msgid "Reminder"
-msgstr "یادآور"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_user_id
 msgid "Responsible User"
-msgstr "کاربر پاسخگو"
+msgstr ""
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:25
 #, python-format
 msgid "SAVE"
-msgstr "ذخیره"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__sequence
@@ -447,11 +430,10 @@ msgstr "دنباله"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/xml/systray.xml:0
-#: code:addons/note/static/src/xml/systray.xml:0
+#: code:addons/note/static/src/xml/systray.xml:18
 #, python-format
 msgid "Set date and time"
-msgstr "تنظیم ساعت و زمان"
+msgstr ""
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -472,7 +454,7 @@ msgstr "نام مرحله"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
 msgid "Stage of Notes"
-msgstr "مرحله یادداشت‌ها"
+msgstr ""
 
 #. module: note
 #: model:ir.actions.act_window,name:note.action_note_stage
@@ -484,12 +466,12 @@ msgstr "مراحل"
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
 msgid "Stages of Notes"
-msgstr "مراحل یادداشت‌ها"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__stage_ids
 msgid "Stages of Users"
-msgstr "مراحل کاربران"
+msgstr ""
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_state
@@ -506,7 +488,7 @@ msgid "Tag Name"
 msgstr "نام تگ"
 
 #. module: note
-#: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
+#: sql_constraint:note.tag:0
 msgid "Tag name already exists !"
 msgstr "برچسب نام از قبل وجود دارد!"
 
@@ -518,11 +500,12 @@ msgstr "برچسب نام از قبل وجود دارد!"
 #: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "تگ ها"
+msgstr "برچسب‌ها"
 
 #. module: note
 #. openerp-web
-#: code:addons/note/static/src/js/systray_activity_menu.js:0
+#: code:addons/note/static/src/js/systray_activity_menu.js:97
+#: selection:note.note,activity_state:0
 #, python-format
 msgid "Today"
 msgstr "امروز"
@@ -538,11 +521,6 @@ msgid "Todo"
 msgstr "در دست اقدام"
 
 #. module: note
-#: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
-msgid "Type of the exception activity on record."
-msgstr "نوع فعالیت استثنایی برای رکورد."
-
-#. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread
 msgid "Unread Messages"
 msgstr "پیام های ناخوانده"
@@ -550,14 +528,24 @@ msgstr "پیام های ناخوانده"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread_counter
 msgid "Unread Messages Counter"
-msgstr "شمارنده پیام‌های خوانده‌ نشده"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_stage__sequence
 msgid "Used to order the note stages"
-msgstr "مورد استفاده برای مرتب سازی مراحل یادداشت"
+msgstr ""
 
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
 msgstr "کاربران"
+
+#. module: note
+#: model:ir.model.fields,field_description:note.field_note_note__website_message_ids
+msgid "Website Messages"
+msgstr "پیام‌های وب‌سایت"
+
+#. module: note
+#: model:ir.model.fields,help:note.field_note_note__website_message_ids
+msgid "Website communication history"
+msgstr "تاریخچه ارتباط با وبسایت"

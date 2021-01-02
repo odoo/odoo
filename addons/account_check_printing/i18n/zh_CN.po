@@ -3,24 +3,24 @@
 # 	* account_check_printing
 # 
 # Translators:
-# Martin Trigaux, 2020
+# 老窦 北京 <2662059195@qq.com>, 2017
+# Martin Trigaux, 2018
+# Gary Wei <Gary.wei@elico-corp.com>, 2018
+# inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Felix Yuen <fyu@odoo.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
-# guohuadeng <guohuadeng@hotmail.com>, 2020
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
-# Felix Yuen <fyu@odoo.com>, 2020
-# inspur qiuguodong <qiuguodong@inspur.com>, 2020
-# 开源智造OSCG-老杨 <yangxunbo@163.com>, 2020
-# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
-"PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2016-08-05 12:55+0000\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,12 +44,12 @@ msgstr " : 支票编号序列"
 msgid ""
 "Adjust the margins of generated checks to make it fit your printer's "
 "settings."
-msgstr "调整生成的检查页的边距以使其符合打印机的设置"
+msgstr "调整生成的空白以使其符合打印机的设置"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_amount_in_words
 msgid "Amount in Words"
-msgstr "大写金额"
+msgstr "金额大写"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -109,7 +109,7 @@ msgstr "支票号码只能由数字组成"
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_manual_sequencing
 msgid "Check this option if your pre-printed checks are not numbered."
-msgstr "如果你的预先印制支票是没有编号的请勾选此选项。"
+msgstr "勾选此选项如果你的预先印制支票是没有编号的。"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.account_journal_dashboard_kanban_view_inherited
@@ -119,7 +119,7 @@ msgstr "待打印支票"
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "检查单"
+msgstr "支票"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -179,7 +179,7 @@ msgstr "显示名称"
 #: code:addons/account_check_printing/models/account_payment.py:0
 #, python-format
 msgid "Go to the configuration panel"
-msgstr "至配置面板"
+msgstr "前去配置面板"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__id
@@ -198,12 +198,12 @@ msgstr "ID"
 msgid ""
 "In order to print multiple checks at once, they must belong to the same bank"
 " journal."
-msgstr "为了一次打印多张支票，它们必须是相同的银行账户。"
+msgstr "为了一次打印多张支票，它们必须为相同的银行帐户。"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_journal
 msgid "Journal"
-msgstr "日记账"
+msgstr "分类账"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_move
@@ -238,6 +238,21 @@ msgid "Manual Numbering"
 msgstr "手动编号"
 
 #. module: account_check_printing
+#: model:ir.model.fields,help:account_check_printing.field_account_payment__payment_method_id
+msgid ""
+"Manual: Get paid by cash, check or any other method outside of Odoo.\n"
+"Electronic: Get paid automatically through a payment acquirer by requesting a transaction on a card saved by the customer when buying or subscribing online (payment token).\n"
+"Check: Pay bill by check and print it from Odoo.\n"
+"Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo, you are suggested to reconcile the transaction with the batch deposit.To enable batch deposit, module account_batch_payment must be installed.\n"
+"SEPA Credit Transfer: Pay bill from a SEPA Credit Transfer file you submit to your bank. To enable sepa credit transfer, module account_sepa must be installed "
+msgstr ""
+"手动：通过现金，支票或Odoo以外的任何其他方式付款。\n"
+"电子：通过在线购买或订购时支付客户保存的卡上的交易（支付令牌），通过支付收单方自动获得支付。\n"
+"支票：通过支票支付账单并从Odoo打印。\n"
+"批量存款：通过生成批量存款提交给您的银行，包含多个客户支票。 在Odoo中编制银行对账单时，建议您将交易与批量存款进行对账。要启用批量存款，必须安装模块account_batch_payment。\n"
+"SEPA信用转账：从您提交给银行的SEPA信用转账文件中支付账单。 要启用spea信用转账，必须安装模块account_sepa"
+
+#. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_multi_stub
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_multi_stub
 msgid "Multi-Pages Check Stub"
@@ -254,7 +269,7 @@ msgstr "下一个支票号码"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr "下一个支票号码应该只包含数字。"
+msgstr "下一个检查号码应该只包含数字。"
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -262,6 +277,7 @@ msgid "None"
 msgstr "无"
 
 #. module: account_check_printing
+#: model:ir.model.fields,field_description:account_check_printing.field_account_payment__payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_partner__property_payment_method_id
 #: model:ir.model.fields,field_description:account_check_printing.field_res_users__property_payment_method_id
 msgid "Payment Method"
@@ -270,7 +286,7 @@ msgstr "付款方式"
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_account_payment
 msgid "Payments"
-msgstr "支付"
+msgstr "付款"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -278,14 +294,14 @@ msgstr "支付"
 msgid ""
 "Payments to print as a checks must have 'Check' selected as payment method "
 "and not have already been reconciled"
-msgstr "以支票方式付款要必须选择'支票'并且未被核对"
+msgstr "以支票方式付款要必须选择'支票'并且未被调节"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 msgid ""
 "Please enter the number of the first pre-printed check that you are about to"
 " print on."
-msgstr "请输入您要打印的第一张预先打印的支票的号码。"
+msgstr "请输入您将首次预先印制的支票的号码。"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_bank_statement_line__preferred_payment_method_id
@@ -330,7 +346,7 @@ msgstr "打印数据标签"
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
 #, python-format
 msgid "Print Pre-numbered Checks"
-msgstr "打印预印制支票"
+msgstr "打印预先印制支票"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
@@ -345,12 +361,12 @@ msgid ""
 "In order to disable the printing feature, select 'None'."
 msgstr ""
 "选择你将要打印的适合支票纸张的格式\n"
-"为了禁用打印功能，请选择'没有'"
+"为了禁用打印功能，请选择'None'"
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Sent"
-msgstr "已发送"
+msgstr "发送"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_next_number
@@ -370,7 +386,7 @@ msgstr "检查布局出现问题，请在开票/记帐设置中选择其他布�
 msgid ""
 "Technical feature used to know whether check printing was enabled as payment"
 " method."
-msgstr "用于检查支票打印是否作为付款方式启用的技术特征。"
+msgstr "从技术特征可以知道，是否可将支票作为付款方式。"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -388,7 +404,7 @@ msgstr ""
 msgid ""
 "The last check number was %s. In order to avoid a check being rejected by "
 "the bank, you can only use a greater number."
-msgstr "最后一张支票号码是%s。以防支票被银行拒收，你可以用一个稍大一点的号码"
+msgstr "最后一张支票号码是%s。以防发票被银行拒收，你可以用一个稍大一点的号码"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_payment__check_number
@@ -396,7 +412,7 @@ msgid ""
 "The selected journal is configured to print check numbers. If your pre-"
 "printed check paper already has numbers or if the current numbering is "
 "wrong, you can change it in the journal configuration page."
-msgstr "选择的日记账配置上了打印支票号码。如果预先印制支票已经有号码或者当前的号码是错误的，你可以在日记账配置页面修改"
+msgstr "被选的日记账被配置成打印支票号码。如果预先印制支票纸已经有号码或者当前的号码是错误的你可以在日记账配置页面改正"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_multi_stub

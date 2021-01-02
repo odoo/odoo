@@ -31,7 +31,7 @@
           <menuitem id="base.menu_tests" name="Tests" sequence="1000000" web_icon="test_exceptions,static/description/icon.png"/>
 
       <record model="ir.ui.menu" id="base.menu_administration">
-          <field name="groups_id" eval="[(6,0, [ref('group_system'), ref('group_erp_manager')])]"/>
+          <field name="groups_id" eval="[Command.set([ref('group_system'), ref('group_erp_manager')])]"/>
       </record>
 
       <record id="action_client_base_menu" model="ir.actions.client">

@@ -373,11 +373,10 @@
          data-selector="section"
          data-target="> .carousel">
         <we-select string="Style">
+            <we-button data-select-class="s_carousel_default">Default</we-button>
             <we-button data-select-class="s_carousel_bordered">Bordered</we-button>
             <we-button data-select-class="s_carousel_boxed">Boxed</we-button>
             <we-button data-select-class="s_carousel_rounded">Rounded</we-button>
-            <we-divider/>
-            <we-button data-select-class="s_carousel_default">Default</we-button>
         </we-select>
         <we-select string="Transition">
             <we-button data-select-class="slide">Slide</we-button>
@@ -516,7 +515,7 @@
     </div>
 
     <div data-js="menu_data"
-         data-selector="#top_menu li > a"
+         data-selector="#top_menu li > a, [data-content_menu_id] li > a"
          data-exclude=".dropdown-toggle, li.o_header_menu_button a, [data-toggle], .o_offcanvas_logo"
          data-no-check="true"/>
 
