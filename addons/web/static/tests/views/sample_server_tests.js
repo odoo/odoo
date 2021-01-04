@@ -105,13 +105,11 @@ odoo.define('web.sample_server_tests', function (require) {
                     );
                 }
             }
-            function assertBetween(fieldName, min, max, decimal = 1) {
+            function assertBetween(fieldName, min, max, isFloat = false) {
+                const val = rec[fieldName];
                 assert.ok(
-                    min <= rec[fieldName] && rec[fieldName] < max &&
-                    rec[fieldName].toString().split(".").length === decimal,
-                    `Field "${fieldName}" is between ${min} and ${max} and is ${
-                        decimal === 1 ? "an integer" : "a float number"
-                    }`
+                    min <= val && val < max && (isFloat || parseInt(val, 10) === val),
+                    `Field "${fieldName}" is between ${min} and ${max} ${!isFloat ? 'and is an integer ' : ''}: ${val}`
                 );
             }
 
@@ -129,7 +127,7 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.ok(SAMPLE_TEXTS.includes(rec.description));
             assertFormat('birthday', /\d{4}-\d{2}-\d{2}/);
             assertFormat('arrival_date', /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/);
-            assertBetween('height', 0, MAX_FLOAT, 2);
+            assertBetween('height', 0, MAX_FLOAT, true);
             assertBetween('color', 0, MAX_COLOR_INT);
             assertBetween('age', 0, MAX_INTEGER);
             assertBetween('salary', 0, MAX_MONETARY);
