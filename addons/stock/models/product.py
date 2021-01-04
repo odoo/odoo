@@ -574,7 +574,7 @@ class Product(models.Model):
             seen_rules = self.env['stock.rule']
         rule = self.env['procurement.group']._get_rule(self, location, {
             'route_ids': route_ids,
-            'warehouse_id': location.get_warehouse()
+            'warehouse_id': location.warehouse_id
         })
         if not rule:
             return seen_rules

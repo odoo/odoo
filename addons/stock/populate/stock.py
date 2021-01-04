@@ -380,7 +380,7 @@ class PickingType(models.Model):
                 locations_company = locations_by_company[values['company_id']]
                 # TODO : choice only location child of warehouse.lot_stock_id
                 inter_location = random.choice(locations_company)
-                values['warehouse_id'] = inter_location.get_warehouse().id
+                values['warehouse_id'] = inter_location.warehouse_id.id
                 if values['code'] == 'internal':
                     values['default_location_src_id'] = inter_location.id
                     values['default_location_dest_id'] = random.choice(locations_company - inter_location).id

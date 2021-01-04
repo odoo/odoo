@@ -409,7 +409,7 @@ class StockMove(models.Model):
             move.forecast_availability = move.product_qty
 
         product_moves = (self - not_product_moves)
-        warehouse_by_location = {loc: loc.get_warehouse() for loc in product_moves.location_id}
+        warehouse_by_location = {loc: loc.warehouse_id for loc in product_moves.location_id}
 
         outgoing_unreserved_moves_per_warehouse = defaultdict(lambda: self.env['stock.move'])
         for move in product_moves:
@@ -670,9 +670,9 @@ class StockMove(models.Model):
             'move_to_match_ids': self.ids,
         }
         if self.picking_type_id.code == 'outgoing':
-            warehouse = self.location_id.get_warehouse()
+            warehouse = self.location_id.warehouse_id
         else:
-            warehouse = self.location_dest_id.get_warehouse()
+            warehouse = self.location_dest_id.warehouse_id
 
         if warehouse:
             action['context']['warehouse'] = warehouse.id
@@ -883,7 +883,7 @@ class StockMove(models.Model):
 
     def _get_forecast_availability_incoming(self):
         self.ensure_one()
-        warehouse = self.location_dest_id.get_warehouse()
+        warehouse = self.location_dest_id.warehouse_id
         self.forecast_availability = self.product_id.with_context(warehouse=warehouse.id, to_date=self.date).virtual_available
         if self.state == 'draft':
             self.forecast_availability += self.product_uom_qty

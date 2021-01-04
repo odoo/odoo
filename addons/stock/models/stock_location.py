@@ -6,6 +6,7 @@ from datetime import timedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from collections import OrderedDict
 
 
 class Location(models.Model):
@@ -65,6 +66,8 @@ class Location(models.Model):
     cyclic_inventory_frequency = fields.Integer("Inventory Frequency (Days)", default=0, help=" When different than 0, inventory adjustments for products stored at this location will be created automatically at the defined frequency.")
     last_inventory_date = fields.Datetime("Last Effective Inventory", readonly=True, help="Date of the last inventory at this location.")
     next_inventory_date = fields.Date("Next Expected Inventory", compute="_compute_next_inventory_date", store=True, help="Date for next planned inventory based on cyclic schedule.")
+    warehouse_view_ids = fields.One2many('stock.warehouse', 'view_location_id', readonly=True)
+    warehouse_id = fields.Many2one('stock.warehouse', compute='_compute_warehouse_id')
 
     _sql_constraints = [('barcode_company_uniq', 'unique (barcode,company_id)', 'The barcode for a location must be unique per company !'),
                         ('inventory_freq_nonneg', 'check(cyclic_inventory_frequency >= 0)', 'The inventory frequency (days) for a location must be non-negative')]
@@ -94,6 +97,18 @@ class Location(models.Model):
                     raise UserError(_("The selected Inventory Frequency (Days) creates a date too far into the future."))
             else:
                 location.next_inventory_date = False
+
+    @api.depends('location_id.warehouse_id', 'warehouse_view_ids')
+    def _compute_warehouse_id(self):
+        warehouses = self.env['stock.warehouse'].search([('view_location_id', 'parent_of', self.ids)])
+        view_by_wh = OrderedDict((wh.view_location_id.id, wh.id) for wh in warehouses)
+        self.warehouse_id = False
+        for loc in self:
+            path = set(int(loc_id) for loc_id in loc.parent_path.split('/')[:-1])
+            for view_location_id in view_by_wh:
+                if view_location_id in path:
+                    loc.warehouse_id = view_by_wh[view_location_id]
+                    break
 
     @api.onchange('usage')
     def _onchange_usage(self):
@@ -176,12 +191,6 @@ class Location(models.Model):
                     categ = categ.parent_id
             current_location = current_location.location_id
         return putaway_location
-
-    @api.returns('stock.warehouse', lambda value: value.id)
-    def get_warehouse(self):
-        """ Returns warehouse id of warehouse that contains location """
-        domain = [('view_location_id', 'parent_of', self.ids)]
-        return self.env['stock.warehouse'].search(domain, limit=1)
 
     def should_bypass_reservation(self):
         self.ensure_one()

@@ -176,7 +176,7 @@ class StockWarehouseOrderpoint(models.Model):
 
     @api.onchange('location_id')
     def _onchange_location_id(self):
-        warehouse = self.location_id.get_warehouse().id
+        warehouse = self.location_id.warehouse_id.id
         if warehouse:
             self.warehouse_id = warehouse
 
