@@ -313,6 +313,7 @@ class StockRule(models.Model):
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
+            'product_packaging_id': values.get('product_packaging_id', False),
         }
         for field in self._get_custom_move_fields():
             if field in values:

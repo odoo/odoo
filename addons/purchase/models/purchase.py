@@ -12,7 +12,7 @@ from werkzeug.urls import url_encode
 from odoo import api, fields, models, _
 from odoo.osv import expression
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.tools.float_utils import float_is_zero
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.misc import formatLang, get_lang
 
@@ -885,6 +885,8 @@ class PurchaseOrderLine(models.Model):
     partner_id = fields.Many2one('res.partner', related='order_id.partner_id', string='Partner', readonly=True, store=True)
     currency_id = fields.Many2one(related='order_id.currency_id', store=True, string='Currency', readonly=True)
     date_order = fields.Datetime(related='order_id.date_order', string='Order Date', readonly=True)
+    product_packaging_id = fields.Many2one('product.packaging', string='Packaging', domain="[('purchase', '=', True), ('product_id', '=', product_id)]", check_company=True)
+    product_packaging_qty = fields.Float('Packaging Quantity')
 
     display_type = fields.Selection([
         ('line_section', "Section"),
@@ -1150,6 +1152,51 @@ class PurchaseOrderLine(models.Model):
             price_unit = seller.product_uom._compute_price(price_unit, self.product_uom)
 
         self.price_unit = price_unit
+
+    @api.onchange('product_id', 'product_qty', 'product_uom')
+    def _onchange_suggest_packaging(self):
+        # remove packaging if not match the product
+        if self.product_packaging_id.product_id != self.product_id:
+            self.product_packaging_id = False
+        # suggest biggest suitable packaging
+        if self.product_id and self.product_qty and self.product_uom:
+            self.product_packaging_id = self.product_id.packaging_ids.filtered('purchase')._find_suitable_product_packaging(self.product_qty, self.product_uom)
+
+    @api.onchange('product_packaging_id')
+    def _onchange_product_packaging_id(self):
+        if self.product_packaging_id and self.product_qty:
+            newqty = self.product_packaging_id._check_qty(self.product_qty, self.product_uom, "UP")
+            if float_compare(newqty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
+                return {
+                    'warning': {
+                        'title': _('Warning'),
+                        'message': _(
+                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should purchase %(quantity).2f %(unit)s.",
+                            pack_size=self.product_packaging_id.qty,
+                            pack_name=self.product_id.uom_id.name,
+                            quantity=newqty,
+                            unit=self.product_uom.name
+                        ),
+                    },
+                }
+
+    @api.onchange('product_packaging_id', 'product_uom', 'product_qty')
+    def _onchange_update_product_packaging_qty(self):
+        if not self.product_packaging_id:
+            self.product_packaging_qty = 0
+        else:
+            packaging_uom = self.product_packaging_id.product_uom_id
+            packaging_uom_qty = self.product_uom._compute_quantity(self.product_qty, packaging_uom)
+            self.product_packaging_qty = float_round(packaging_uom_qty / self.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
+
+    @api.onchange('product_packaging_qty')
+    def _onchange_product_packaging_qty(self):
+        if self.product_packaging_id:
+            packaging_uom = self.product_packaging_id.product_uom_id
+            qty_per_packaging = self.product_packaging_id.qty
+            product_qty = packaging_uom._compute_quantity(self.product_packaging_qty * qty_per_packaging, self.product_uom)
+            if float_compare(product_qty, self.product_qty, precision_rounding=self.product_uom.rounding) != 0:
+                self.product_qty = product_qty
 
     @api.depends('product_uom', 'product_qty', 'product_id.uom_id')
     def _compute_product_uom_qty(self):

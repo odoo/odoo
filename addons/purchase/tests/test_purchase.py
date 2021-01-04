@@ -173,3 +173,45 @@ class TestPurchase(AccountTestInvoicingCommon):
             '<p> - product_b from 2020-06-06 to %(today)s</p>' % {'today': fields.Date.today()},
             activity.note,
         )
+
+    def test_onchange_packaging_00(self):
+        """Create a PO and use packaging. Check we suggested suitable packaging
+        according to the product_qty. Also check product_qty or product_packaging
+        are correctly calculated when one of them changed.
+        """
+        packaging_single = self.env['product.packaging'].create({
+            'name': "I'm a packaging",
+            'product_id': self.product_a.id,
+            'qty': 1.0,
+        })
+        packaging_dozen = self.env['product.packaging'].create({
+            'name': "I'm also a packaging",
+            'product_id': self.product_a.id,
+            'qty': 12.0,
+        })
+
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+        })
+        po_form = Form(po)
+        with po_form.order_line.new() as line:
+            line.product_id = self.product_a
+            line.product_qty = 1.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_packaging_id, packaging_single)
+        self.assertEqual(po.order_line.product_packaging_qty, 1.0)
+        with po_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 2.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_qty, 2.0)
+
+
+        with po_form.order_line.edit(0) as line:
+            line.product_qty = 24.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_packaging_id, packaging_dozen)
+        self.assertEqual(po.order_line.product_packaging_qty, 2.0)
+        with po_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 1.0
+        po_form.save()
+        self.assertEqual(po.order_line.product_qty, 12)

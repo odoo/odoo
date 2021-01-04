@@ -487,6 +487,7 @@ class PurchaseOrderLine(models.Model):
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,
             'product_uom_qty': product_uom_qty,
             'product_uom': product_uom.id,
+            'product_packaging_id': self.product_packaging_id.id,
         }
 
     @api.model

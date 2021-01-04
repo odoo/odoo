@@ -9,7 +9,7 @@ from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools.misc import formatLang, get_lang
 from odoo.osv import expression
-from odoo.tools import float_is_zero, float_compare
+from odoo.tools import float_is_zero, float_compare, float_round
 
 
 from werkzeug.urls import url_encode
@@ -1351,6 +1351,9 @@ class SaleOrderLine(models.Model):
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
 
+    product_packaging_id = fields.Many2one('product.packaging', string='Packaging', default=False, domain="[('sales', '=', True), ('product_id','=',product_id)]", check_company=True)
+    product_packaging_qty = fields.Float('Packaging Quantity')
+
     @api.depends('state')
     def _compute_product_uom_readonly(self):
         for line in self:
@@ -1440,6 +1443,51 @@ class SaleOrderLine(models.Model):
                 line.qty_delivered_manual = line.qty_delivered
             else:
                 line.qty_delivered_manual = 0.0
+
+    @api.onchange('product_id', 'product_uom_qty', 'product_uom')
+    def _onchange_suggest_packaging(self):
+        # remove packaging if not match the product
+        if self.product_packaging_id.product_id != self.product_id:
+            self.product_packaging_id = False
+        # suggest biggest suitable packaging
+        if self.product_id and self.product_uom_qty and self.product_uom:
+            self.product_packaging_id = self.product_id.packaging_ids.filtered('sales')._find_suitable_product_packaging(self.product_uom_qty, self.product_uom)
+
+    @api.onchange('product_packaging_id')
+    def _onchange_product_packaging_id(self):
+        if self.product_packaging_id and self.product_uom_qty:
+            newqty = self.product_packaging_id._check_qty(self.product_uom_qty, self.product_uom, "UP")
+            if float_compare(newqty, self.product_uom_qty, precision_rounding=self.product_uom.rounding) != 0:
+                return {
+                    'warning': {
+                        'title': _('Warning'),
+                        'message': _(
+                            "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell %(quantity).2f %(unit)s.",
+                            pack_size=self.product_packaging_id.qty,
+                            pack_name=self.product_id.uom_id.name,
+                            quantity=newqty,
+                            unit=self.product_uom.name
+                        ),
+                    },
+                }
+
+    @api.onchange('product_packaging_id', 'product_uom', 'product_uom_qty')
+    def _onchange_update_product_packaging_qty(self):
+        if not self.product_packaging_id:
+            self.product_packaging_qty = False
+        else:
+            packaging_uom = self.product_packaging_id.product_uom_id
+            packaging_uom_qty = self.product_uom._compute_quantity(self.product_uom_qty, packaging_uom)
+            self.product_packaging_qty = float_round(packaging_uom_qty / self.product_packaging_id.qty, precision_rounding=packaging_uom.rounding)
+
+    @api.onchange('product_packaging_qty')
+    def _onchange_product_packaging_qty(self):
+        if self.product_packaging_id:
+            packaging_uom = self.product_packaging_id.product_uom_id
+            qty_per_packaging = self.product_packaging_id.qty
+            product_uom_qty = packaging_uom._compute_quantity(self.product_packaging_qty * qty_per_packaging, self.product_uom)
+            if float_compare(product_uom_qty, self.product_uom_qty, precision_rounding=self.product_uom.rounding) != 0:
+                self.product_uom_qty = product_uom_qty
 
     @api.depends('invoice_lines', 'invoice_lines.price_total', 'invoice_lines.move_id.state', 'invoice_lines.move_id.move_type')
     def _compute_untaxed_amount_invoiced(self):
