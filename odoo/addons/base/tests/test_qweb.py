@@ -207,6 +207,89 @@ class TestQWebNS(TransactionCase):
 
         self.assertEqual(etree.fromstring(view1._render()), etree.fromstring(expected_result))
 
+    def test_render_static_xml_with_namespace_dynamic(self):
+        """ Test the rendering on a namespaced view with dynamic URI (need default namespace uri).
+        """
+        tempate = u"""
+            <root xmlns:h="https://default.namespace.url/h">
+                <h:table t-att="{'xmlns:h': h1}">
+                    <h:tr>
+                        <h:td t-att="{'xmlns:h': h2}">Apples</h:td>
+                        <h:td>Bananas</h:td>
+                    </h:tr>
+                </h:table>
+            </root>
+        """
+        expected_result = u"""
+            <root xmlns:h="https://default.namespace.url/h">
+                <h:table xmlns:h="%(h1)s">
+                    <h:tr>
+                        <h:td xmlns:h="%(h2)s">Apples</h:td>
+                        <h:td>Bananas</h:td>
+                    </h:tr>
+                </h:table>
+            </root>
+        """
+
+        values = dict(h1="http://www.example.org/table", h2="http://www.w3.org/TD/html4/")
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">%s</t>
+            """ % tempate
+        })
+
+        rendering = view1._render(values, engine='ir.qweb')
+
+        self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result % values))
+
+    def test_render_static_xml_with_namespace_dynamic_2(self):
+        """ Test the rendering on a namespaced view with dynamic URI (need default namespace uri).
+        Default URIs must be differents.
+        """
+        tempate = u"""
+            <root xmlns:f="https://default.namespace.url/f" xmlns:h="https://default.namespace.url/h" >
+                <h:table t-att="{'xmlns:h': h1}">
+                    <h:tr>
+                        <h:td t-att="{'xmlns:h': h2}">Apples</h:td>
+                        <h:td>Bananas</h:td>
+                    </h:tr>
+                </h:table>
+                <f:table t-att="{'xmlns:f': f}">
+                    <f:width>80</f:width>
+                </f:table>
+            </root>
+        """
+        expected_result = u"""
+            <root xmlns:f="https://default.namespace.url/f" xmlns:h="https://default.namespace.url/h">
+                <h:table xmlns:h="%(h1)s">
+                    <h:tr>
+                        <h:td xmlns:h="%(h2)s">Apples</h:td>
+                        <h:td>Bananas</h:td>
+                    </h:tr>
+                </h:table>
+                <f:table xmlns:f="%(f)s">
+                    <f:width>80</f:width>
+                </f:table>
+            </root>
+        """
+
+        values = dict(h1="http://www.example.org/table", h2="http://www.w3.org/TD/html4/", f="http://www.example.org/furniture")
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">%s</t>
+            """ % tempate
+        })
+
+        rendering = view1._render(values, engine='ir.qweb')
+
+        self.assertEqual(etree.fromstring(rendering), etree.fromstring(expected_result % values))
+
     def test_render_dynamic_xml_with_namespace_t_esc(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-esc attribute correctly
         handles the t-esc attribute and keep the ns declaration.
