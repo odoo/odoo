@@ -984,7 +984,8 @@ class QWeb(object):
         else:
             # Etree will remove the ns prefixes indirection by inlining the corresponding
             # nsmap definition into the tag attribute. Restore the tag and prefix here.
-            # Note: we do not support namespace dynamic attributes.
+            # Note: we do not support namespace dynamic attributes, we need a default URI
+            # on the root and use attribute directive t-att="{'xmlns:example': value}".
             unqualified_el_tag = etree.QName(el.tag).localname
             el_tag = unqualified_el_tag
             if el.prefix:
