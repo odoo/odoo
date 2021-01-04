@@ -486,6 +486,9 @@ var FormController = BasicController.extend({
         // if the `close` attribute is set
         def.then(function () {
             self._enableButtons();
+            if (ev.data.callback) {
+                ev.data.callback();
+            }
             if (attrs.close) {
                 self.trigger_up('close_dialog');
             }

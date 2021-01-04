@@ -1645,6 +1645,63 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('spam click button in form view', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <sheet>
+                        <group>
+                            <button name="geo_localize" class="geo_localize" string="Confirm" type="object"/>
+                        </group>
+                    </sheet>
+                </form>
+            `,
+            res_id: 2,
+        });
+
+        assert.containsOnce(form, 'button.btn.geo_localize', 'The form must contains the button');
+
+        const executedActions = [];
+
+        const testPromise = testUtils.makeTestPromise();
+
+        await testUtils.mock.intercept(form, 'execute_action', (ev) => {
+            executedActions.push(ev.data.action_data.name);
+
+            testPromise.then(() => {
+                ev.data.on_success();
+                ev.data.on_closed();
+            });
+        });
+
+        await Promise.all([
+            testUtils.dom.click('button.btn.geo_localize', form),
+            testUtils.dom.click('button.btn.geo_localize', form),
+            testUtils.dom.click('button.btn.geo_localize', form),
+            testUtils.dom.click('button.btn.geo_localize', form),
+        ]);
+
+        // Finish the action
+        testPromise.resolve();
+
+        assert.strictEqual(executedActions.length, 1,
+            'Should have executed one and only one action');
+
+        assert.strictEqual(executedActions[0], 'geo_localize',
+            'Should execute the action with the right name');
+
+        // Wait for DOM refreshing
+        await testUtils.nextTick();
+        assert.ok(!form.$el.find('button.geo_localize').prop('disabled'), 'Should have re-activated the button');
+
+        form.destroy();
+    });
+
     QUnit.test('buttons classes in form view', async function (assert) {
         assert.expect(16);
 
