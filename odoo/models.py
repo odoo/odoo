@@ -5782,36 +5782,35 @@ Fields:
                 tocompute = list(tocompute)
 
             # process what to compute
-            for field, records in tocompute:
+            for field, records, create in tocompute:
                 records -= self.env.protected(field)
                 if not records:
                     continue
-                # Dont force the recomputation of compute fields which are
-                # not stored as this is not really necessary.
-                recursive = not create and field.recursive
                 if field.compute and field.store:
-                    if recursive:
-                        marked_records = self.env.not_to_compute(field, records)
+                    if field.recursive:
+                        recursively_marked = self.env.not_to_compute(field, records)
                     self.env.add_to_compute(field, records)
                 else:
-                    if recursive:
-                        marked_records = records & self.env.cache.get_records(records, field)
+                    # Dont force the recomputation of compute fields which are
+                    # not stored as this is not really necessary.
+                    if field.recursive:
+                        recursively_marked = records & self.env.cache.get_records(records, field)
                     self.env.cache.invalidate([(field, records._ids)])
                 # recursively trigger recomputation of field's dependents
-                if recursive:
-                    marked_records.modified([field.name])
+                if field.recursive:
+                    recursively_marked.modified([field.name], create)
 
     def _modified_triggers(self, tree, create=False):
         """ Return an iterator traversing a tree of field triggers on ``self``,
         traversing backwards field dependencies along the way, and yielding
-        pairs ``(field, records)`` to recompute.
+        tuple ``(field, records, created)`` to recompute.
         """
         if not self:
             return
 
         # first yield what to compute
         for field in tree.get(None, ()):
-            yield field, self
+            yield field, self, create
 
         # then traverse dependencies backwards, and proceed recursively
         for key, val in tree.items():

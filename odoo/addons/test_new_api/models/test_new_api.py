@@ -513,6 +513,22 @@ class ComputeRecursive(models.Model):
                 rec.display_name = rec.name
 
 
+class ComputeRecursiveTree(models.Model):
+    _name = 'test_new_api.recursive.tree'
+    _description = 'Test New API Recursive with one2many field'
+
+    name = fields.Char(required=True)
+    parent_id = fields.Many2one('test_new_api.recursive.tree', ondelete='cascade')
+    children_ids = fields.One2many('test_new_api.recursive.tree', 'parent_id')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'children_ids.display_name')
+    def _compute_display_name(self):
+        for rec in self:
+            children_names = rec.mapped('children_ids.display_name')
+            rec.display_name = '%s(%s)' % (rec.name, ', '.join(children_names))
+
+
 class ComputeCascade(models.Model):
     _name = 'test_new_api.cascade'
     _description = 'Test New API Cascade'
