@@ -592,6 +592,8 @@ class AccountMove(models.Model):
                 # A line with the same key does already exist, we only need one
                 # to modify it; we have to drop this one.
                 to_remove += line
+                # If we're removing lines, recomputing only the tax base amount is not enough.
+                recompute_tax_base_amount = False
             else:
                 taxes_map[grouping_key] = {
                     'tax_line': line,

@@ -27,6 +27,49 @@ class TestAccountEntry(TestExpenseCommon):
             'property_account_expense_id': self.account_expense.id,
         })
 
+    def test_tax_lockdate(self):
+        """
+        Set 'tax_lock_date after expense 'accounting_date' to trigger _onchange_currency inside move.post().
+        This will recompute taxes on the move can create an unbalanced journal entry if move._recompute_tax_lines
+        does not account for 2 separate tax lines that both have the same tax.
+        """
+        self.env.company.tax_lock_date = '2020-02-01'
+        expense = self.env['hr.expense.sheet'].create({
+            'name': 'Expense for John Smith',
+            'employee_id': self.employee.id,
+            'accounting_date': '2020-01-01'
+        })
+
+        expense_line1 = self.env['hr.expense'].create({
+            'name': 'Car Travel Expenses',
+            'employee_id': self.employee.id,
+            'product_id': self.product_expense.id,
+            'unit_amount': 350.00,
+            'tax_ids': [(6, 0, [self.tax.id])],
+            'sheet_id': expense.id,
+            'analytic_account_id': self.analytic_account.id,
+        })
+        expense_line1._onchange_product_id()
+
+        expense_line2 = self.env['hr.expense'].create({
+            'name': 'Car Travel Expenses',
+            'employee_id': self.employee.id,
+            'product_id': self.product_expense.id,
+            'unit_amount': 350.00,
+            'tax_ids': [(6, 0, [self.tax.id])],
+            'sheet_id': expense.id,
+            'analytic_account_id': self.analytic_account.id,
+        })
+        expense_line2._onchange_product_id()
+
+        expense.action_submit_sheet()
+        expense.approve_expense_sheets()
+
+        # Before this would cause an error:
+        # Cannot create unbalanced journal entry. Ids: [1108]\nDifferences debit - credit: [-63.64]
+        expense.action_sheet_move_create()
+
+
     def test_account_entry(self):
         """ Checking accounting move entries and analytic entries when submitting expense """
         expense = self.env['hr.expense.sheet'].create({
