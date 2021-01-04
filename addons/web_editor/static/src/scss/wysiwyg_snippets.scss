@@ -1273,25 +1273,23 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_we_image_weight {
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            margin: $o-we-sidebar-content-field-spacing *.25 $o-we-item-border-width $o-we-sidebar-content-field-spacing*2;
-
-            b {
-                margin-left: $o-we-sidebar-content-field-label-spacing;
-                font: 1em/1 bold $o-we-sidebar-content-field-input-font-family;
-                color: $o-we-color-success;
-            }
+            margin-left: $o-we-sidebar-content-field-label-spacing * 2;
         }
 
         .o_we_tag {
             padding: ($o-we-sidebar-content-field-label-spacing / 2) $o-we-sidebar-content-field-label-spacing;
             border-radius: 5px;
             background-color: $o-we-bg-darkest;
+            white-space: nowrap;
 
             + .fa {
                 margin: 0 0 0 5px;
+            }
+
+            &.o_we_tag_small {
+                padding: ($o-we-sidebar-content-field-label-spacing / 4) ($o-we-sidebar-content-field-label-spacing / 2);
+                border-radius: 3px;
+                font-size: 0.85em;
             }
         }
         .o_we_tag_wrapper {

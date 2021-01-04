@@ -1447,7 +1447,7 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
         } else {
             iconEl.classList.add('fa', 'fa-fw', 'fa-refresh', 'mr-1');
             this.el.classList.add('o_we_no_toggle');
-            this.containerEl.textContent = _t("Replace media");
+            this.containerEl.textContent = _t("Replace");
         }
         $(this.containerEl).prepend(iconEl);
     },
@@ -3162,7 +3162,6 @@ registry['sizing_y'] = registry.sizing.extend({
  * options that handles all the common parts.
  */
 const ImageHandlerOption = SnippetOptionWidget.extend({
-
     /**
      * @override
      */
@@ -3170,6 +3169,36 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         const _super = this._super.bind(this);
         await this._loadImageInfo();
         return _super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        const weightEl = document.createElement('span');
+        weightEl.classList.add('o_we_image_weight', 'o_we_tag', 'o_we_tag_small', 'd-none');
+        weightEl.title = _t("Size");
+        this.$weight = $(weightEl);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUI() {
+        await this._super(...arguments);
+
+        if (this._filesize === undefined) {
+            await this._applyOptions(false);
+        }
+        if (this._filesize !== undefined) {
+            this.$weight.text(`${this._filesize.toFixed(1)} kb`);
+            this.$weight.removeClass('d-none');
+            this._relocateWeightEl();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -3267,6 +3296,10 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         return this._super(...arguments);
     },
     /**
+     * @abstract
+     */
+    _relocateWeightEl() {},
+    /**
      * @override
      */
     async _renderCustomXML(uiFragment) {
@@ -3318,21 +3351,26 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * Applies all selected options on the original image.
      *
      * @private
+     * @param {boolean} [update=true] If this is false, this does not actually
+     *     modifies the image but only simulates the modifications on it to
+     *     be able to update the filesize UI.
      */
-    async _applyOptions() {
+    async _applyOptions(update = true) {
         const img = this._getImg();
+        if (!update && !(img && img.complete)) {
+            return;
+        }
         if (!['image/jpeg', 'image/png'].includes(img.dataset.mimetype)) {
             this.originalId = null;
             return;
         }
         const dataURL = await applyModifications(img);
-        const weight = dataURL.split(',')[1].length / 4 * 3;
-        const $weight = this.$el.find('.o_we_image_weight');
-        $weight.find('> small').text(_t("New size"));
-        $weight.find('b').text(`${(weight / 1024).toFixed(1)} kb`);
-        $weight.removeClass('d-none');
-        img.classList.add('o_modified_image_to_save');
-        return loadImage(dataURL, img);
+        this._filesize = dataURL.split(',')[1].length / 4 * 3 / 1024;
+
+        if (update) {
+            img.classList.add('o_modified_image_to_save');
+            return loadImage(dataURL, img);
+        }
     },
     /**
      * Loads the image's attachment info.
@@ -3429,6 +3467,14 @@ registry.ImageOptimize = ImageHandlerOption.extend({
     _getImg() {
         return this.$target[0];
     },
+    /**
+     * @override
+     */
+    _relocateWeightEl() {
+        const leftPanelEl = this.$overlay.data('$optionsSection')[0];
+        const titleTextEl = leftPanelEl.querySelector('we-title > span');
+        this.$weight.appendTo(titleTextEl);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -3511,9 +3557,11 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     /**
      * @override
      */
-    async _applyOptions() {
+    async _applyOptions(update = true) {
         await this._super(...arguments);
-        this.$target.css('background-image', `url('${this._getImg().getAttribute('src')}')`);
+        if (update) {
+            this.$target.css('background-image', `url('${this._getImg().getAttribute('src')}')`);
+        }
     },
     /**
      * Initializes this.img to an image with the background image url as src.
@@ -3529,6 +3577,22 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         // Don't set the src if not relative (ie, not local image: cannot be modified)
         this.img.src = src.startsWith('/') ? src : '';
         return await this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _relocateWeightEl() {
+        this.trigger_up('option_update', {
+            optionNames: ['BackgroundImage'],
+            name: 'add_size_indicator',
+            data: this.$weight,
+        });
+        // Hack to align on the right
+        this.$weight.css({
+            'width': '200px', // Make parent row grow by faking a width
+            'flex': '0 0 0', // But force no forced width
+            'margin-left': 'auto',
+        });
     },
 
     //--------------------------------------------------------------------------
@@ -3742,6 +3806,16 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    notify(name, data) {
+        if (name === 'add_size_indicator') {
+            this._requestUserValueWidgets('bg_image_opt')[0].$el.after(data);
+        } else {
+            this._super(...arguments);
+        }
+    },
     /**
      * @override
      */
