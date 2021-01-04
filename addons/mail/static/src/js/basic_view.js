@@ -14,7 +14,7 @@ BasicView.include({
             hasActivityIds: this._hasField('activity_ids'),
             hasMessageFollowerIds: this._hasField('message_follower_ids'),
             hasMessageIds: this._hasField('message_ids'),
-            hasRecordReloadOnAttachmentsChanged: post_refresh === 'always',
+            hasRecordReloadOnAttachmentsChanged: post_refresh === 'always' || followers_post_refresh === 'always',
             hasRecordReloadOnMessagePosted: !!post_refresh,
             hasRecordReloadOnFollowersUpdate: !!followers_post_refresh,
             isAttachmentBoxVisibleInitially: (

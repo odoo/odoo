@@ -73,6 +73,7 @@ class AttachmentDeleteConfirmDialog extends Component {
         this._dialogRef.comp._close();
         this.attachment.remove();
         this.trigger('o-attachment-removed', { attachmentLocalId: this.props.attachmentLocalId });
+        this.trigger('o-attachments-changed');
     }
 
 }
