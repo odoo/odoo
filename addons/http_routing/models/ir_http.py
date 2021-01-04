@@ -205,7 +205,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
         To be considered as translatable, the URL should either:
         1. Match a POST (non-GET actually) controller that is `website=True` and
            either `multilang` specified to True or if not specified, with `type='http'`.
-        2. If not matching 1., everything not under /static/ will be translatable
+        2. If not matching 1., everything not under /static/ or /web/ will be translatable
     '''
     if not lang_url_codes:
         lang_url_codes = [url_code for _, url_code, *_ in request.env['res.lang'].get_available()]
@@ -217,12 +217,19 @@ def is_multilang_url(local_url, lang_url_codes=None):
 
     url = local_url.partition('#')[0].split('?')
     path = url[0]
+
+    # Consider /static/ and /web/ files as non-multilang
+    if '/static/' in path or path.startswith('/web/'):
+        return False
+
     query_string = url[1] if len(url) > 1 else None
     router = request.httprequest.app.get_db_router(request.db).bind('')
 
     def is_multilang_func(func):
         return (func and func.routing.get('website', False) and
                 func.routing.get('multilang', func.routing['type'] == 'http'))
+
+
     # Try to match an endpoint in werkzeug's routing table
     try:
         func = router.match(path, method='POST', query_args=query_string)[0]
@@ -231,10 +238,6 @@ def is_multilang_url(local_url, lang_url_codes=None):
         func = router.match(path, method='GET', query_args=query_string)[0]
         return is_multilang_func(func)
     except werkzeug.exceptions.NotFound:
-        # Consider /static/ files as non-multilang
-        static_index = path.find('/static/', 1)
-        if static_index != -1 and static_index == path.find('/', 1):
-            return False
         return True
     except Exception:
         return False
