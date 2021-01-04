@@ -108,7 +108,12 @@ class StockScrap(models.Model):
         self.ensure_one()
         location_id = self.location_id.id
         if self.picking_id and self.picking_id.picking_type_code == 'incoming':
-            location_id = self.picking_id.location_dest_id.id
+            for move_line in self.picking_id.move_line_ids:
+                if move_line.product_id == self.product_id:
+                    location_id = move_line.location_id if move_line.state != 'done' else move_line.location_dest_id
+                    break
+            else:
+                location_id = self.picking_id.location_dest_id.id
         return {
             'name': self.name,
             'origin': self.origin or self.picking_id.name or self.name,
