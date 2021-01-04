@@ -84,7 +84,8 @@ class StockLandedCost(models.Model):
         self.env.cr.execute("""SELECT sm.picking_id, sm.company_id
                                  FROM stock_move AS sm
                            INNER JOIN stock_valuation_layer AS svl ON svl.stock_move_id = sm.id
-                                WHERE sm.picking_id IS NOT NULL""")
+                                WHERE sm.picking_id IS NOT NULL AND sm.company_id IN %s
+                             GROUP BY sm.picking_id, sm.company_id""", [tuple(self.company_id.ids)])
         valued_picking_ids_per_company = defaultdict(list)
         for res in self.env.cr.fetchall():
             valued_picking_ids_per_company[res[1]].append(res[0])
