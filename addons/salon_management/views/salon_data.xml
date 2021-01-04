@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<odoo>
+  <data>
+    <record id="salon_stages_form" model="ir.ui.view">
+      <field name="name">salon_stages_form.form</field>
+      <field name="model">salon.stages</field>
+      <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <h1>
+                    <field name="name"/>
+                    <field name="sequence" invisible="1"/>
+                </h1>
+            </sheet>
+            </form>
+        </field>
+    </record>
+    <record model="salon.stages" id="salon_stage_00">
+      <field name="name">Draft</field>
+      <field name="sequence">1</field>
+    </record>
+
+    <record model="salon.stages" id="salon_stage_01">
+      <field name="name">Open</field>
+      <field name="sequence">2</field>
+    </record>
+
+    <record model="salon.stages" id="salon_stage_02">
+      <field name="name">Invoiced</field>
+      <field name="sequence">3</field>
+    </record>
+
+    <record model="salon.stages" id="salon_stage_03">
+      <field name="name">Closed</field>
+      <field name="sequence">4</field>
+    </record>
+
+    <record model="salon.stages" id="salon_stage_04">
+      <field name="name">Cancelled</field>
+      <field name="sequence">5</field>
+    </record>
+
+    <record model="res.partner" id="salon_partner_01">
+      <field name="name">Salon Default Customer</field>
+      <field name="partner_salon">5</field>
+    </record>
+
+    <record model="product.template" id="salon_service_product_01">
+      <field name="name">Salon Service</field>
+<!--      <field name="partner_salon">1</field>-->
+      <field name="type">service</field>
+    </record>
+
+  </data>
+    <data noupdate="1">
+        <record model="salon.sequence.updater" id="salon_sequence_updater_01">
+<!--          <field name="name">Salon Sequence Updater</field>-->
+          <field name="sequence_salon">Chair-1</field>
+        </record>
+    </data>
+</odoo>

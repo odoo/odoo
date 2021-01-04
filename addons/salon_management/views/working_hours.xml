@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <data>
+        <record id="salon_working_form" model="ir.ui.view">
+            <field name="name">salon_working_form.form</field>
+            <field name="model">salon.working.hours</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                        <group>
+                            <group>
+                                <field name="from_time" widget="float_time"/>
+                            </group>
+                            <group>
+                                <field name="to_time" widget="float_time"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="salon_working_tree" model="ir.ui.view">
+            <field name="name">salon_working_tree.tree</field>
+            <field name="model">salon.working.hours</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="from_time" widget="float_time"/>
+                    <field name="to_time" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+    </data>
+
+    <record id="salon_config_working_action" model="ir.actions.act_window">
+        <field name="name">Working Hours</field>
+        <field name="res_model">salon.working.hours</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem id="salon_working_hours_menu" parent="salon_config_settings_menu"
+          name="Working Hours" action="salon_config_working_action" />
+
+
+    <data noupdate="1">
+        <record model="salon.working.hours" id="salon_working_01">
+            <field name="name">Sunday</field>
+        </record>
+        <record model="salon.working.hours" id="salon_working_02">
+            <field name="name">Monday</field>
+        </record>
+        <record model="salon.working.hours" id="salon_working_03">
+            <field name="name">Tuesday</field>
+        </record>
+        <record model="salon.working.hours" id="salon_working_04">
+            <field name="name">Wednesday</field>
+        </record>
+        <record model="salon.working.hours" id="salon_working_05">
+            <field name="name">Thursday</field>
+        </record>
+        <record model="salon.working.hours" id="salon_working_06">
+            <field name="name">Friday</field>
+        </record>
+        <record model="salon.working.hours" id="salon_working_07">
+            <field name="name">Saturday</field>
+        </record>
+
+    </data>
+</odoo>

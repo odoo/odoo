@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="salon_service_form" model="ir.ui.view">
+            <field name="name">salon_service_form.form</field>
+            <field name="model">salon.service</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="price"/>
+                            <field name="time_taken" widget="float_time"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="salon_service_tree" model="ir.ui.view">
+            <field name="name">salon_service_tree.tree</field>
+            <field name="model">salon.service</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="price"/>
+                    <field name="time_taken" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+        <record id="salon_service_action" model="ir.actions.act_window">
+            <field name="name">Services</field>
+            <field name="res_model">salon.service</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="salon_management_service" parent="salon_management_salon" action="salon_service_action"/>
+    </data>
+</odoo>

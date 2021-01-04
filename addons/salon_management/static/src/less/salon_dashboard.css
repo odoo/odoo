@@ -1,0 +1,39 @@
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record {
+  width: 180px;
+  height: 200px;
+  border-radius: 90px 90px 20px 20px;
+  background: #cc1f2f;
+  background: linear-gradient(#cc1f2f 0%, #cc1f2f 63%, #6d0b0b 63%, #cc1f2f 73%);
+  position: relative;
+  margin: 25px;
+  display: inline-block;
+}
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record:after,
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record:before {
+  content: "";
+  display: block;
+  width: 33.33333333px;
+  height: 111.11111111px;
+  position: absolute;
+  background: #cc1f2f;
+  border-radius: 20px;
+  border: 1px solid #000;
+  bottom: 25px;
+  right: 0;
+  left: 185px;
+  top: 64px;
+}
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record:before {
+  left: -20px;
+}
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record:after {
+  right: -20px;
+}
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record.notvacant {
+  background: #ccc;
+  background: linear-gradient(#ccc 0%, #ccc 70%, #000 70%, #ccc 77%);
+}
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record.notvacant:before,
+.o_kanban_view.o_kanban_dashboard.o_salon_kanban .o_kanban_record.notvacant:after {
+  background: #ccc;
+}

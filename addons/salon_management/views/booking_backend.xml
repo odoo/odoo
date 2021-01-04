@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="salons_booking_form" model="ir.ui.view">
+            <field name="name">salon_booking_form.form</field>
+            <field name="model">salon.booking</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button name="booking_approve" states="draft" string="Approve" class="oe_highlight" type="object"/>
+                        <button name="booking_reject" states="draft" string="Reject" class="oe_highlight" type="object"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,approved,rejected"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="phone"/>
+                                <field name="services" widget="many2many_tags"/>
+                            </group>
+                            <group>
+                                <field name="time"/>
+                                <field name="email"/>
+                                <field name="chair_id"/>
+                                <field name="lang" invisible="1"/>
+                                <field name="company_id" invisible="1"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Current Bookings">
+                                <field name="filtered_orders"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+          <record id="salons_booking_tree" model="ir.ui.view">
+            <field name="name">salon_booking_tree.tree</field>
+            <field name="model">salon.booking</field>
+            <field name="arch" type="xml">
+                <tree decoration-info="state == 'draft'">
+                    <field name="name"/>
+                    <field name="time"/>
+                    <field name="phone"/>
+                    <field name="email"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+        <record id="salon_booking_action" model="ir.actions.act_window">
+            <field name="name">Salon Bookings</field>
+            <field name="res_model">salon.booking</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="salon_management_bookings" name="Bookings" parent="salon_management_salon" action="salon_booking_action"/>
+    </data>
+</odoo>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="salon_config_settings_view_form" model="ir.ui.view">
+            <field name="name">res.config.settings.salon</field>
+            <field name="model">res.config.settings</field>
+            <field name="priority" eval="45"/>
+            <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[hasclass('settings')]" position="inside">
+                    <div class="app_settings_block" data-string="Salon" string="Salon" data-key="salon_management">
+
+                        <h2>Booking Chairs(Choose the chair when its free)</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label string="Booking Chairs" for="salon_booking_chairs" class="col-md-3 o_light_label"/>
+                                            <field name="salon_booking_chairs" widget="many2many_tags"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h2>Holidays</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-xs-12 col-md-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <div class="content-group">
+                                        <div class="row mt16">
+                                            <label string="Holidays" for="salon_holidays" class="col-md-3 o_light_label"/>
+                                            <field name="salon_holidays" widget="many2many_tags"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                </div>
+                </xpath>
+            </field>
+        </record>
+
+
+        <record id="salon_config_settings_action" model="ir.actions.act_window">
+                <field name="name">Settings</field>
+                <field name="type">ir.actions.act_window</field>
+                <field name="res_model">res.config.settings</field>
+                <field name="view_mode">form</field>
+                <field name="target">inline</field>
+                <field name="context">{'module' : 'salon_management'}</field>
+        </record>
+
+        <menuitem id="salon_config_settings_menu" parent="salon_management_menu"
+                      name="Configuration"/>
+        <menuitem id="salon_settings_menu" parent="salon_config_settings_menu"
+                      name="Settings" action="salon_config_settings_action" />
+    </data>
+</odoo>

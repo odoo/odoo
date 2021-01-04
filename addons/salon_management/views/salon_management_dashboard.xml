@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="salon_management_kanban" model="ir.ui.view" >
+            <field name="name">salon_management_kanban.dashboard</field>
+            <field name="model">salon.chair</field>
+            <field name="type">kanban</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey o_kanban_dashboard o_salon_kanban" create="0">
+                    <field name="name"/>
+                    <field name="number_of_orders"/>
+                    <field name="active_booking_chairs"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <div t-if="record.active_booking_chairs.raw_value == false">
+                                    <div class="o_primary style_chair">
+                                        <field name="name"/>
+                                        <div>
+                                            <button type="edit" string="Settings" class="fa fa-cog button_background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div t-if="record.active_booking_chairs.raw_value == true">
+                                    <div class="o_primary style_chair_booking">
+                                        <field name="name"/>
+                                        <div>
+                                            <button type="edit" string="Settings" class="fa fa-cog button_background"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <a href="#" name="%(salon_active_orders_action_dashboard)d" type="action" string="Active Orders">
+                                    <div t-if="record.active_booking_chairs.raw_value == false">
+                                        <div class="o_primary no_of_people">
+                                            <field name="number_of_orders"/>
+                                        </div>
+                                    </div>
+                                    <div t-if="record.active_booking_chairs.raw_value == true">
+                                        <div class="o_primary no_of_people_booking">
+                                            <field name="number_of_orders"/>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div t-if="record.active_booking_chairs.raw_value == false">
+                                    <div class=" o_primary style_collection">
+                                        <span class=" o_primary style_collection">
+                                            <span class=" o_primary style_collection" style="float: left;">Today's Collection :</span>
+                                            <span class=" o_primary style_collection" style="float: center;">
+                                                <field name="collection_today"/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div t-if="record.active_booking_chairs.raw_value == true">
+                                    <div class=" o_primary style_collection_booking">
+                                        <span class=" o_primary style_collection_booking">
+                                            <span class=" o_primary style_collection_booking" style="float: left;">Today's Collection :</span>
+                                            <span class=" o_primary style_collection_booking" style="float: center;">
+                                                <field name="collection_today"/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div t-if="record.active_booking_chairs.raw_value == false">
+                                    <div class=" o_primary style_collection">
+                                        <span class=" o_primary style_collection">
+                                            <span class=" o_primary style_collection" style="float: left;">Free After (Hours) :</span>
+                                            <span class=" o_primary style_collection" style="float: center;">
+                                                <field name="total_time_taken_chair" widget="float_time"/>
+                                            </span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div t-if="record.active_booking_chairs.raw_value == true">
+                                    <div class=" o_primary style_collection_booking">
+                                        <span class=" o_primary style_collection_booking">
+                                            <span class=" o_primary style_collection_booking" style="float: center;">Reserved For Booking</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+        <template id="assets_backend" name="sales_team assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet"
+                      href="/salon_management/static/src/less/salon_dashboard.less"/>
+                <link rel="stylesheet"
+                      href="/salon_management/static/src/css/salon_dashboard.css"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

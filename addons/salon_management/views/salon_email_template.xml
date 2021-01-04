@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="salon_email_template_approved" model="mail.template">
+            <field name="name">Salon e-mail template</field>
+            <field name="email_from">${object.company_id and object.company_id.email or ''}</field>
+            <field name="subject">Congratz ${object.name}</field>
+            <field name="email_to">${object.email|safe}</field>
+            <field name="lang">${object.lang}</field>
+            <field name="model_id" ref="salon_management.model_salon_booking"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                    <![CDATA[
+                  <p>Dear ${(object.name)},<br/><br/>
+                  Thank you for choosing ${(object.company_id.name)}, your booking was registered!<br/></p>
+                      Regards,<br/>
+                      ${(object.company_id.name)}
+                ]]>
+            </field>
+        </record>
+        <record id="salon_email_template_rejected" model="mail.template">
+            <field name="name">Salon e-mail template</field>
+            <field name="email_from">${object.company_id and object.company_id.email or ''}</field>
+            <field name="subject">We are Sorry ${object.name}</field>
+            <field name="email_to">${object.email|safe}</field>
+            <field name="lang">${object.lang}</field>
+            <field name="model_id" ref="salon_management.model_salon_booking"/>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html">
+                    <![CDATA[
+                  <p>Dear ${(object.name)},<br/><br/>
+                  Thank you for choosing ${(object.company_id.name)}, but your booking was rejected!<br/>
+                      there is no seats available for the time you chosen.<br/>
+                      better luck next time.<br/></p>
+                      Regards,<br/>
+                      ${(object.company_id.name)}
+                ]]>
+            </field>
+       </record>
+    </data>
+</odoo>
