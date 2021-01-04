@@ -1,0 +1,25 @@
+<odoo>
+  <data>
+    <record id="blog_website_sale_blog_form" model="ir.ui.view">
+        <field name="name">blog.post.website_sale_blog.form</field>
+        <field name="model">blog.post</field>
+        <field name="inherit_id" ref="website_blog.view_blog_post_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='website_id']" position="after">
+                <field name="product_ids" widget="many2many_tags"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_template_website_sale_blog_form" model="ir.ui.view">
+        <field name="name">product.template.website_sale_blog.form</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <field name="website_ribbon_id" position="after">
+                <field name="blog_post_ids" widget="many2many_tags"/>
+            </field>
+        </field>
+    </record>
+  </data>
+</odoo>

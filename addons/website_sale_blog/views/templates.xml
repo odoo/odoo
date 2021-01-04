@@ -1,0 +1,60 @@
+<odoo>
+    <data>
+        <!-- ===== (Option) Post Sidebar: Products Carousel ===== -->
+        <template id="opt_blog_post_product_display" name="Related Products" inherit_id="website_blog.blog_post_sidebar" active="False" customize_show="True" priority="6">
+            <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
+                <div class="o_wblog_sidebar_block pb-5">
+                    <h6 t-if="blog_post.product_ids or user_id.has_group('website.group_website_publisher')" class="text-uppercase pb-3 mb-4 border-bottom font-weight-bold">
+                        Related Products
+                        <a groups="website.group_website_designer" class="btn btn-link text-capitalize ml-2" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}"><i class='fa fa-plus'/> Add</a>
+                    </h6>
+                    <t t-if="blog_post.product_ids">
+                        <div id="o-blog-carousel-product" class="carousel slide o_not_editable" data-ride="carousel" data-interval="0">
+                            <div class="carousel-inner">
+                                <t t-foreach="blog_post.product_ids" t-as="product">
+                                    <t t-set="image_holder" t-value="product._get_image_holder()"/>
+                                    <t t-set="combination_info" t-value="product._get_combination_info(only_template=True, add_qty=1, pricelist=pricelist)"/>
+                                    <div t-attf-class="card oe_product_cart carousel-item #{product_first and 'active' or None}">
+                                        <div class="card-body p-1 oe_product_image" style="height: 256px;">
+                                            <span t-field="image_holder.image_1920" t-options="{'widget': 'image', 'preview_image': 'image_256'}"/>
+                                        </div>
+                                        <div class="card-body p-2 text-center o_wsale_product_information">
+                                            <h6 class="o_wsale_products_item_title">
+                                                <p t-field="product.name"/>
+                                                <a role="button" t-if="not product.website_published"
+                                                t-att-href="product.website_url" class="btn btn-sm btn-danger"
+                                                title="This product is unpublished.">Unpublished</a>
+                                            </h6>
+                                            <div class="product_price">
+                                                <del t-attf-class="text-danger mr-2 {{'' if combination_info['has_discounted_price'] else 'd-none'}}"
+                                                style="white-space: nowrap;" t-esc="combination_info['list_price']"
+                                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                <span t-if="combination_info['price']" t-esc="combination_info['price']"
+                                                t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                            </div>
+                                            <a t-att-href="product.website_url" class="btn btn-primary mt-2">View Product</a>
+                                        </div>
+                                    </div>
+                                </t>
+                            </div>
+                            <t t-if="len(blog_post.product_ids) > 1">
+                                <a class="carousel-control-prev" href="#o-blog-carousel-product" role="button" data-slide="prev">
+                                    <span class="fa fa-chevron-left bg-white text-primary p-2" role="img" aria-label="Previous" title="Previous"/>
+                                </a>
+                                <a class="carousel-control-next" href="#o-blog-carousel-product" role="button" data-slide="next">
+                                    <span class="fa fa-chevron-right bg-white text-primary p-2" role="img" aria-label="Next" title="Next"/>
+                                </a>
+                            </t>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <div class="mb-4 bg-100 py-2 px-3 border o_not_editable" groups="website.group_website_designer">
+                            <h6 class="text-muted"><em>No related products for this blog post!</em></h6>
+                        </div>
+                    </t>
+                </div>
+                <div class="oe_structure" id="oe_structure_blog_post_sidebar_7"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>
