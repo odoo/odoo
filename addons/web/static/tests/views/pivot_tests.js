@@ -1982,6 +1982,42 @@ QUnit.module('Views', {
         pivot.destroy();
     });
 
+    QUnit.test('Click on the measure list and open groupby list and vice versa', async function (assert) {
+        assert.expect(5);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `<pivot/>`,
+        });
+
+        // open the "Measures" menu
+        await testUtils.dom.click(pivot.$buttons[0].querySelector('button'));
+        assert.isVisible(pivot.$buttons[0].querySelector('.o_pivot_measures_list'),
+            "measures menu should be displayed");
+
+        // Simulate mousedown on closed header and open a column groupby
+        testUtils.triggerMouseEvent(pivot.$('thead .o_pivot_header_cell_closed'), "mousedown");
+        // testUtils.triggerMouseEvent($cell, "mouseup");
+        pivot.$('thead .o_pivot_header_cell_closed').click();
+        // the menu should still be open
+        assert.isNotVisible(pivot.$buttons[0].querySelector('.o_pivot_measures_list'),
+            "measures menu should not be displayed");
+        assert.containsOnce(pivot, '.o_pivot_field_menu',
+            "the field selector menu should be displayed");
+
+        // Simulate mousedown on measure menu and open the "Measures" menu again
+        testUtils.triggerMouseEvent(pivot.$buttons.find('button'), "mousedown");
+        await testUtils.dom.click(pivot.$buttons[0].querySelector('button'));
+        assert.isVisible(pivot.$buttons[0].querySelector('.o_pivot_measures_list'),
+            "measures menu should be displayed");
+        assert.containsNone(pivot, '.o_pivot_field_menu',
+            "the field selector menu should not be displayed");
+
+        pivot.destroy();
+    });
+
     QUnit.module('Sort in comparison mode', {
         beforeEach: function () {
             this.data.partner.records[0].date = '2016-12-15';
