@@ -327,7 +327,6 @@ class SalonOrder(models.Model):
         invoice_line = {
             'move_type': 'out_invoice',
             'partner_id': supplier.id,
-            'l10n_in_gst_treatment': 'consumer',
             'invoice_user_id': self.env.user.id,
             'invoice_origin': self.name,
             'invoice_line_ids': lines,
