@@ -71,3 +71,8 @@ class ProductAttributeCustomValue(models.Model):
     _sql_constraints = [
         ('sol_custom_value_unique', 'unique(custom_product_template_attribute_value_id, sale_order_line_id)', "Only one Custom Value is allowed per Attribute Value per Sales Order Line.")
     ]
+
+class ProductPackaging(models.Model):
+    _inherit = 'product.packaging'
+
+    sales = fields.Boolean("Sales", default=True, help="If true, the packaging can be used for sales orders")

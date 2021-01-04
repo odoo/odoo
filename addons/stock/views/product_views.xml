@@ -18,6 +18,7 @@
                         <field name="route_ids" widget="many2many_tags" groups="stock.group_adv_location"/>
                         <field name="total_route_ids" widget="many2many_tags" groups="stock.group_adv_location" attrs="{'invisible': [('parent_id', '=', False)]}"/>
                         <field name="removal_strategy_id" options="{'no_create': True}"/>
+                        <field name="packaging_reserve_method" widget="radio" groups="product.group_stock_packaging"/>
                     </group>
                 </group>
             </field>
@@ -155,6 +156,28 @@
                 </xpath>
                 <xpath expr="//div[@name='product_lst_price']" position="after">
                     <div t-if="record.type.raw_value == 'product'">On hand: <field name="qty_available"/> <field name="uom_id"/></div>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_packaging_tree_view" model="ir.ui.view">
+            <field name="name">product.packaging.tree.view.stock</field>
+            <field name="model">product.packaging</field>
+            <field name="inherit_id" ref="product.product_packaging_tree_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="after">
+                    <field name="package_type_id" groups="stock.group_tracking_lot"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_packaging_form_view" model="ir.ui.view">
+            <field name="name">product.packaging.form.view.stock</field>
+            <field name="model">product.packaging</field>
+            <field name="inherit_id" ref="product.product_packaging_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//label[@for='qty']" position="before">
+                    <field name="package_type_id" groups="stock.group_tracking_lot"/>
                 </xpath>
             </field>
         </record>
