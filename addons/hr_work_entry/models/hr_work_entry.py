@@ -32,9 +32,30 @@ class HrWorkEntry(models.Model):
     conflict = fields.Boolean('Conflicts', compute='_compute_conflict', store=True)  # Used to show conflicting work entries first
     department_id = fields.Many2one('hr.department', related='employee_id.department_id', store=True)
 
+    # There is no way for _error_checking() to detect conflicts in work
+    # entries that have been introduced in concurrent transactions, because of the transaction
+    # isolation.
+    # So if 2 transactions create work entries in parallel it is possible to create a conflict
+    # that will not be visible by either transaction. There is no way to detect conflicts
+    # between different records in a safe manner unless a SQL constraint is used, e.g. via
+    # an EXCLUSION constraint [1]. This (obscure) type of constraint allows comparing 2 rows
+    # using special operator classes and it also supports partial WHERE clauses. Similarly to
+    # CHECK constraints, it's backed by an index.
+    # 1: https://www.postgresql.org/docs/9.6/sql-createtable.html#SQL-CREATETABLE-EXCLUDE
     _sql_constraints = [
         ('_work_entry_has_end', 'check (date_stop IS NOT NULL)', 'Work entry must end. Please define an end date or a duration.'),
-        ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.')
+        ('_work_entry_start_before_end', 'check (date_stop > date_start)', 'Starting time should be before end time.'),
+        (
+            '_work_entries_no_validated_conflict',
+            """
+                EXCLUDE USING GIST (
+                    tsrange(date_start, date_stop, '()') WITH &&,
+                    int4range(employee_id, employee_id, '[]') WITH =
+                )
+                WHERE (state = 'validated' AND active = TRUE)
+            """,
+            'Validated work entries cannot overlap'
+        ),
     ]
 
     @api.depends('state')
