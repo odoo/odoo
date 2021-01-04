@@ -9,8 +9,8 @@
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Martin Trigaux, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1593,7 +1593,7 @@ msgstr "Adaugă"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Add Credit Note"
-msgstr "Stornare"
+msgstr "Notă credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__add_sign
@@ -2814,7 +2814,7 @@ msgstr "După țară"
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_refund
 msgid "By Credit Note"
-msgstr "Prin stornare"
+msgstr "Prin notă credit"
 
 #. module: account
 #: model:ir.filters,name:account.filter_invoice_product
@@ -3256,7 +3256,7 @@ msgid ""
 " credit notes made from this journal"
 msgstr ""
 "Bifați această casetă dacă nu doriți să utilizați aceleași secvențe pentru "
-"facturi și stornări realizate din acest jurnal"
+"facturi și notă credit realizate din acest jurnal"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account_tag__tax_negate
@@ -4049,7 +4049,7 @@ msgstr "Credit Move"
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 #, python-format
 msgid "Credit Note"
-msgstr "Stornare"
+msgstr "Notă credit"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -4063,7 +4063,7 @@ msgstr "Nota de credit creată"
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_report_search
 msgid "Credit Notes"
-msgstr "Stornări"
+msgstr "Note credit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_tax_adjustments_wizard__credit_account_id
@@ -4185,7 +4185,7 @@ msgstr "Client"
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_refund
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__out_refund
 msgid "Customer Credit Note"
-msgstr "Factură de stornare client"
+msgstr "Notă credit client"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__move_type__out_invoice
@@ -4926,7 +4926,7 @@ msgstr "Factură ciornă"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Draft Credit Note"
-msgstr "Factură stornare ciornă"
+msgstr "Notă credit ciornă"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -5021,7 +5021,7 @@ msgid ""
 "Duplicated vendor reference detected. You probably encoded twice the same vendor bill/credit note:\n"
 "%s"
 msgstr ""
-"A fost detectată o referință furnizor dublată. Probabil ați completat de două ori aceeași factură  / stornare:\n"
+"A fost detectată o referință furnizor dublată. Probabil ați completat de două ori aceeași factură  / notă credit:\n"
 "%s"
 
 #. module: account
@@ -5658,7 +5658,7 @@ msgstr "Reconciliere completă"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__cancel
 msgid "Full Refund"
-msgstr "Stornare Completă"
+msgstr "Rambursare Completă"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_reversal__refund_method__modify
@@ -8169,8 +8169,8 @@ msgid ""
 "Note that the easiest way to create a credit note is to do it directly\n"
 "                from the customer invoice."
 msgstr ""
-"Rețineți că cea mai ușoară modalitate de a crea o factură de stornare este "
-"să o faceți direct din factura clientului."
+"Rețineți că cea mai ușoară modalitate de a crea o notă credit este să o "
+"faceți direct din factura clientului."
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_move_in_refund_type
@@ -9817,7 +9817,7 @@ msgstr "Rambursare Creată"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 msgid "Refund Date"
-msgstr "Dată stornare"
+msgstr "Dată rambursare"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__refund_tax_id
@@ -9829,7 +9829,7 @@ msgstr "Taxă Rambursare"
 #: model:ir.actions.act_window,name:account.action_move_in_refund_type
 #: model:ir.ui.menu,name:account.menu_action_move_in_refund_type
 msgid "Refunds"
-msgstr "Stornări"
+msgstr "Rambursări"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13597,6 +13597,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
+"Utilizați bugetele pentru a compara veniturile și costurile preconizate"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__template_id
@@ -13779,7 +13780,7 @@ msgstr "Facturi furnizor"
 #: model:ir.model.fields.selection,name:account.selection__account_move__move_type__in_refund
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Vendor Credit Note"
-msgstr "Stornare furnizori"
+msgstr "Notă credit furnizor"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -14443,6 +14444,9 @@ msgid ""
 "create a credit note instead. Use the action menu to transform it into a "
 "credit note or refund."
 msgstr ""
+"Nu puteți valida o factură cu o sumă totală negativă. În schimb, ar trebui "
+"să creați o notă de credit. Utilizați meniul de acțiuni pentru a transforma "
+"documentul într-o notă de credit sau rambursare."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

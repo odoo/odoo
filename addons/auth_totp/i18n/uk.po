@@ -23,7 +23,7 @@ msgstr ""
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "(Disable two-factor authentication)"
-msgstr ""
+msgstr "(Вимкнути двофакторну аутентифікацію)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -32,6 +32,9 @@ msgid ""
 "                        Open the two-factor authentication app on your\n"
 "                        device to obtain a code and verify your identity"
 msgstr ""
+"<i class=\"fa fa-2x fa-mobile pull-left\"/>\n"
+"                        Відкрийте модуль двофакторної аутентифікації на вашому\n"
+"                        пристрої, щоб отримати код і підтвердити свою особу"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -39,6 +42,8 @@ msgid ""
 "<i class=\"fa fa-check-circle\"/>\n"
 "                                Two-factor authentication enabled"
 msgstr ""
+"<i class=\"fa fa-check-circle\"/>\n"
+"                                Двофакторну аутентифікацію увімкнено"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
@@ -46,6 +51,8 @@ msgid ""
 "<i class=\"fa fa-warning\"/>\n"
 "                                Two-factor authentication not enabled"
 msgstr ""
+"<i class=\"fa fa-warning\"/>\n"
+"                                Двофакторна аутентифікація не увімкнена"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -55,6 +62,10 @@ msgid ""
 "                            Two-factor authentication not enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"alert alert-info\" role=\"status\">\n"
+"                            <i class=\"fa fa-warning\"/>\n"
+"                            Двофакторну аутентифікацію не увікмнено\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_form
@@ -64,6 +75,10 @@ msgid ""
 "                            Two-factor authentication enabled\n"
 "                        </span>"
 msgstr ""
+"<span class=\"text-success\">\n"
+"                            <i class=\"fa fa-check-circle\"/>\n"
+"                            Двофакторну аутентифікацію увікнено\n"
+"                        </span>"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -72,11 +87,14 @@ msgid ""
 "                                should enter below. Don't worry if the code changes in the app,\n"
 "                                it stays valid a bit longer."
 msgstr ""
+"Після сканування штрих-коду, модуль відобразить шестизначний код, який вам\n"
+"                                необхідно ввести нижче. Не турбуйтеся, якщо код змінюється у модулі,\n"
+"                                він залишається дійсним довше."
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Authentication Code (6 digits)"
-msgstr ""
+msgstr "Код аутентифікації (6 цифр)"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -87,17 +105,17 @@ msgstr "Скасувати"
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_uid
 msgid "Created by"
-msgstr "Створив"
+msgstr "Створено"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__create_date
 msgid "Created on"
-msgstr "Створено на"
+msgstr "Створено"
 
 #. module: auth_totp
 #: model:ir.actions.server,name:auth_totp.action_disable_totp
 msgid "Disable TOTP on users"
-msgstr ""
+msgstr "Неувімкнений TOTP на користувачах"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__display_name
@@ -110,18 +128,18 @@ msgstr "Відобразити назву"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Enable Two-Factor Authentication"
-msgstr ""
+msgstr "Увімкнути двофакторну аутентифікацію"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enable two-factor authentication"
-msgstr ""
+msgstr "Увімкнути двофакторну аутентифікацію"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Enter the 6-digit code from your app"
-msgstr ""
+msgstr "Введіть 6-значний кад з вашого додатку"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_ir_http
@@ -139,14 +157,14 @@ msgstr "ID"
 #: code:addons/auth_totp/controllers/home.py:0
 #, python-format
 msgid "Invalid authentication code format."
-msgstr ""
+msgstr "Формат коду аутентифікації недійсний."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard____last_update
 #: model:ir.model.fields,field_description:auth_totp.field_ir_http____last_update
 #: model:ir.model.fields,field_description:auth_totp.field_res_users____last_update
 msgid "Last Modified on"
-msgstr "Останні зміни на"
+msgstr "Останні зміни"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__write_uid
@@ -161,12 +179,12 @@ msgstr "Останнє оновлення"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Or enter the secret code manually:"
-msgstr ""
+msgstr "Або введіть секретний код вручну:"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__qrcode
 msgid "Qrcode"
-msgstr ""
+msgstr "Qr-код"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
@@ -174,66 +192,68 @@ msgid ""
 "Scan the image below with the authenticator app on your phone.<br/>\n"
 "                                If you cannot scan the barcode, here are some alternative options:"
 msgstr ""
+"Відскануйте зображення нижче за допомогою модуля аутентифіакції на вашому телефоні.<br/>\n"
+"                                Якщо ви не можете відсканувати штрих-код, тут є кілька альтернативних опцій:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Scan this barcode with your app"
-msgstr ""
+msgstr "Відскануйте цей штрих-клд за допомогою вашого додатку"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__secret
 msgid "Secret"
-msgstr "Секрет"
+msgstr "Пароль"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "The verification code should only contain numbers"
-msgstr ""
+msgstr "Код верифікації має містити лише цифри"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_secret
 msgid "Totp Secret"
-msgstr ""
+msgstr "Ключ Totp"
 
 #. module: auth_totp
 #: model:ir.model,name:auth_totp.model_auth_totp_wizard
 msgid "Two-Factor Setup Wizard"
-msgstr ""
+msgstr "Помічник  двофакторного встановлення"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
 msgid "Two-factor Authentication"
-msgstr ""
+msgstr "Двофакторна аутентифікація"
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_res_users__totp_enabled
 msgid "Two-factor authentication"
-msgstr ""
+msgstr "Двофакторна аутентифікація"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication already enabled"
-msgstr ""
+msgstr "Двофакторну аутентифікацію вже увімкнено"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication can only be enabled for yourself"
-msgstr ""
+msgstr "Двофакторну аутентифікацію можна вмикати лише для себе"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication disabled for user(s) %s"
-msgstr ""
+msgstr "Двофакторна аутентифікація неувікнена для користувача(ів) %s"
 
 #. module: auth_totp
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Two-factor authentication is now enabled."
-msgstr ""
+msgstr "Увімкнено двофакторну аутентифікацію."
 
 #. module: auth_totp
 #: model:ir.model.fields,field_description:auth_totp.field_auth_totp_wizard__url
@@ -261,7 +281,7 @@ msgstr "Код перевірки"
 #: code:addons/auth_totp/models/res_users.py:0
 #, python-format
 msgid "Verification failed, please double-check the 6-digit code"
-msgstr ""
+msgstr "Верифікація не вдалася, перевірте ще раз  шестизначний код"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.auth_totp_form
@@ -271,14 +291,14 @@ msgstr "Перевірити"
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_field
 msgid "What is this?"
-msgstr ""
+msgstr "Що це?"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "Your two-factor secret:"
-msgstr ""
+msgstr "Ваш двофакторний пароль:"
 
 #. module: auth_totp
 #: model_terms:ir.ui.view,arch_db:auth_totp.view_totp_wizard
 msgid "show the code"
-msgstr ""
+msgstr "показати"

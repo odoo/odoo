@@ -85,6 +85,7 @@
                             class="oe_stat_button"
                             icon="fa-pencil"
                             type="object"
+                            context="{'active_test': False}"
                             attrs="{'invisible': [('application_count', '=', 0)]}">
                         <field name="application_count" widget="statinfo" string="Other Applications"/>
                     </button>

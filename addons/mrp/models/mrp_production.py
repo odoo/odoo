@@ -414,6 +414,8 @@ class MrpProduction(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_production_location(self):
+        if not self.company_id:
+            return
         location_by_company = self.env['stock.location'].read_group([
             ('company_id', 'in', self.company_id.ids),
             ('usage', '=', 'production')
@@ -716,6 +718,8 @@ class MrpProduction(models.Model):
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
                 if production.is_planned:
                     production.button_unplan()
+                    move_vals = self._get_move_finished_values(self.product_id, self.product_uom_qty, self.product_uom_id)
+                    production.move_finished_ids.write({'date': move_vals['date']})
             if vals.get('date_planned_start'):
                 production.move_raw_ids.write({'date': production.date_planned_start, 'date_deadline': production.date_planned_start})
             if vals.get('date_planned_finished'):
