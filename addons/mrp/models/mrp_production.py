@@ -509,7 +509,7 @@ class MrpProduction(models.Model):
     @api.depends('product_uom_qty', 'date_planned_start')
     def _compute_forecasted_issue(self):
         for order in self:
-            warehouse = order.location_dest_id.get_warehouse()
+            warehouse = order.location_dest_id.warehouse_id
             order.forecasted_issue = False
             if order.product_id:
                 virtual_available = order.product_id.with_context(warehouse=warehouse.id, to_date=order.date_planned_start).virtual_available
@@ -631,7 +631,7 @@ class MrpProduction(models.Model):
     def _onchange_location(self):
         source_location = self.location_src_id
         self.move_raw_ids.update({
-            'warehouse_id': source_location.get_warehouse().id,
+            'warehouse_id': source_location.warehouse_id.id,
             'location_id': source_location.id,
         })
 
@@ -641,7 +641,7 @@ class MrpProduction(models.Model):
         update_value_list = []
         for move in self.move_finished_ids:
             update_value_list += [(1, move.id, ({
-                'warehouse_id': destination_location.get_warehouse().id,
+                'warehouse_id': destination_location.warehouse_id.id,
                 'location_dest_id': destination_location.id,
             }))]
         self.move_finished_ids = update_value_list
@@ -834,7 +834,7 @@ class MrpProduction(models.Model):
             'location_dest_id': self.location_dest_id.id,
             'company_id': self.company_id.id,
             'production_id': self.id,
-            'warehouse_id': self.location_dest_id.get_warehouse().id,
+            'warehouse_id': self.location_dest_id.warehouse_id.id,
             'origin': self.name,
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
@@ -895,7 +895,7 @@ class MrpProduction(models.Model):
             'procure_method': 'make_to_stock',
             'origin': self.name,
             'state': 'draft',
-            'warehouse_id': source_location.get_warehouse().id,
+            'warehouse_id': source_location.warehouse_id.id,
             'group_id': self.procurement_group_id.id,
             'propagate_cancel': self.propagate_cancel,
         }

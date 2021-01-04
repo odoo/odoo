@@ -67,5 +67,5 @@ class ProductProduct(models.Model):
             uom = self.env['uom.uom'].browse(group['product_uom'][0])
             product_qty = uom._compute_quantity(group['product_qty'], product.uom_id, round=False)
             qty_by_product_location[(product.id, location.id)] += product_qty
-            qty_by_product_wh[(product.id, location.get_warehouse().id)] += product_qty
+            qty_by_product_wh[(product.id, location.warehouse_id.id)] += product_qty
         return qty_by_product_location, qty_by_product_wh

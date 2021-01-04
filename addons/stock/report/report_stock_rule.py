@@ -96,7 +96,7 @@ class ReportStockRule(models.AbstractModel):
         ordered_locations = self.env['stock.location']
         locations = all_locations.filtered(lambda l: l.usage in ('supplier', 'production'))
         for warehouse_id in warehouses:
-            all_warehouse_locations = all_locations.filtered(lambda l: l.get_warehouse() == warehouse_id)
+            all_warehouse_locations = all_locations.filtered(lambda l: l.warehouse_id == warehouse_id)
             starting_rules = [d for d in rules_and_loc if d['source'] not in all_warehouse_locations]
             if starting_rules:
                 start_locations = self.env['stock.location'].concat(*([r['destination'] for r in starting_rules]))
@@ -116,7 +116,7 @@ class ReportStockRule(models.AbstractModel):
     def _sort_locations_by_warehouse(self, rules_and_loc, used_rules, start_locations, ordered_locations, warehouse_id):
         """ We order locations by putting first the locations that are not the destination of others and do it recursively.
         """
-        start_locations = start_locations.filtered(lambda l: l.get_warehouse() == warehouse_id)
+        start_locations = start_locations.filtered(lambda l: l.warehouse_id == warehouse_id)
         ordered_locations |= start_locations
         rules_start = []
         for rule in rules_and_loc:
