@@ -7,10 +7,10 @@
                 <a role="button" class="o_ActivityBox_title btn" t-on-click="_onClickTitle">
                     <hr class="o_ActivityBox_titleLine" />
                     <span class="o_ActivityBox_titleText">
-                        <i class="fa fa-fw" t-att-class="chatter.isActivityBoxVisible ? 'fa-caret-down' : 'fa-caret-right'"/>
+                        <i class="fa fa-fw" t-att-class="chatter.isActivityListVisible ? 'fa-caret-down' : 'fa-caret-right'"/>
                         Planned activities
                     </span>
-                    <t t-if="!chatter.isActivityBoxVisible">
+                    <t t-if="!chatter.isActivityListVisible">
                         <span class="o_ActivityBox_titleBadges">
                             <t t-if="chatter.thread.overdueActivities.length > 0">
                                 <span class="o_ActivityBox_titleBadge badge rounded-circle badge-danger">
@@ -31,7 +31,7 @@
                     </t>
                     <hr class="o_ActivityBox_titleLine" />
                 </a>
-                <t t-if="chatter.isActivityBoxVisible">
+                <t t-if="chatter.isActivityListVisible">
                     <div class="o_ActivityList">
                         <t t-foreach="chatter.thread.activities" t-as="activity" t-key="activity.localId">
                             <Activity class="o_ActivityBox_activity" activityLocalId="activity.localId"/>

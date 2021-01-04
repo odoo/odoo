@@ -29,7 +29,7 @@
                             Log note
                         </button>
                     </t>
-                    <t t-if="chatter.hasActivities">
+                    <t t-if="chatter.hasActivityBox">
                         <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity">
                             <i class="fa fa-clock-o"/>
                             Schedule activity

@@ -88,7 +88,7 @@ FormRenderer.include({
      */
     _makeChatterContainerProps() {
         return {
-            hasActivities: this.chatterFields.hasActivityIds,
+            hasActivityBox: this.chatterFields.hasActivityIds,
             hasFollowers: this.chatterFields.hasMessageFollowerIds,
             hasMessageList: this.chatterFields.hasMessageIds,
             isAttachmentBoxVisibleInitially: this.chatterFields.isAttachmentBoxVisibleInitially,

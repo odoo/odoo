@@ -35,7 +35,6 @@ class Chatter extends Component {
                 chatter: chatter ? chatter.__state : undefined,
                 composer: thread && thread.composer,
                 thread,
-                threadActivitiesLength: thread && thread.activities.length,
             };
         }, {
             compareDepth: {

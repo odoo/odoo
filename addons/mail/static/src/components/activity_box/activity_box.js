@@ -46,7 +46,7 @@ class ActivityBox extends Component {
      * @private
      */
     _onClickTitle() {
-        this.chatter.toggleActivityBoxVisibility();
+        this.chatter.toggleActivityListVisibility();
     }
 
 }

@@ -96,7 +96,7 @@ class ChatterContainer extends Component {
 Object.assign(ChatterContainer, {
     components,
     props: {
-        hasActivities: {
+        hasActivityBox: {
             type: Boolean,
             optional: true,
         },

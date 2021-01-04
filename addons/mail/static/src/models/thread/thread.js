@@ -776,7 +776,7 @@ function factory(dependencies) {
         }
 
         async refreshActivities() {
-            if (!this.hasActivities) {
+            if (!this.hasActivityBox) {
                 return;
             }
             if (this.isTemporary) {
@@ -1594,7 +1594,7 @@ function factory(dependencies) {
     Thread.fields = {
         /**
          * Determines the `mail.activity` that belong to `this`, assuming `this`
-         * has activities (@see hasActivities).
+         * has activities (@see hasActivityBox).
          */
         activities: one2many('mail.activity', {
             inverse: 'thread',
@@ -1697,7 +1697,7 @@ function factory(dependencies) {
         /**
          * States whether `this` has activities (`mail.activity.mixin` server side).
          */
-        hasActivities: attr({
+        hasActivityBox: attr({
             default: false,
         }),
         /**

@@ -31,13 +31,22 @@
                             threadLocalId="chatter.thread.localId"
                         />
                     </t>
-                    <t t-if="chatter.thread and chatter.hasActivities and chatter.thread.activities.length > 0">
+                    <t t-if="chatter.isActivityBoxVisible">
                         <ActivityBox
                             class="o_Chatter_activityBox"
                             chatterLocalId="chatter.localId"
                         />
                     </t>
                     <t t-if="chatter.threadView">
+                        <t t-if="chatter.threadView.nonEmptyMessages.length === 0 and (chatter.isActivityBoxVisible or chatter.isAttachmentBoxVisible)">
+                            <div class="o_Chatter_emptyMessageList_separator">
+                                <hr class="o_Chatter_emptyMessageList_separatorLine"/>
+                                <span class="o_Chatter_emptyMessageList_separatorText">
+                                    Messages
+                                </span>
+                                <hr class="o_Chatter_emptyMessageList_separatorLine"/>
+                            </div>
+                        </t>
                         <ThreadView
                             class="o_Chatter_thread"
                             hasComposer="false"

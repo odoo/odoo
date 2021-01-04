@@ -19,6 +19,19 @@
     }
 }
 
+.o_Chatter_emptyMessageList_separator {
+    display: flex;
+    align-items: center;
+}
+
+.o_Chatter_emptyMessageList_separatorLine {
+    flex: 1 1 auto;
+}
+
+.o_Chatter_emptyMessageList_separatorText {
+    margin: map-get($spacers, 0) map-get($spacers, 3);
+}
+
 .o_Chatter_scrollPanel {
     overflow-y: auto;
 }
@@ -39,4 +52,13 @@
         border-left-color: $border-color;
         border-right-color: $border-color;
     }
+}
+
+.o_Chatter_emptyMessageList_separator {
+    font-weight: $font-weight-bold;
+}
+
+.o_Chatter_emptyMessageList_separatorLine {
+    border-style: dashed;
+    border-color: gray('400');
 }

@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/chatter/chatter.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -41,7 +41,7 @@ function factory(dependencies) {
         }
 
         async refresh() {
-            if (this.hasActivities) {
+            if (this.hasActivityBox) {
                 this.thread.refreshActivities();
             }
             if (this.hasFollowers) {
@@ -65,13 +65,21 @@ function factory(dependencies) {
             this.focus();
         }
 
-        toggleActivityBoxVisibility() {
-            this.update({ isActivityBoxVisible: !this.isActivityBoxVisible });
+        toggleActivityListVisibility() {
+            this.update({ isActivityListVisible: !this.isActivityListVisible });
         }
 
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsActivityBoxVisible() {
+            return this.thread && this.hasActivityBox && this.thread.activities.length > 0;
+        }
 
         /**
          * @private
@@ -102,12 +110,12 @@ function factory(dependencies) {
                     thread: [['insert', {
                         // If the thread was considered to have the activity
                         // mixin once, it will have it forever.
-                        hasActivities: this.hasActivities ? true : undefined,
+                        hasActivityBox: this.hasActivityBox ? true : undefined,
                         id: this.threadId,
                         model: this.threadModel,
                     }]],
                 });
-                if (this.hasActivities) {
+                if (this.hasActivityBox) {
                     this.thread.refreshActivities();
                 }
                 if (this.hasFollowers) {
@@ -188,7 +196,7 @@ function factory(dependencies) {
         /**
          * Determines whether `this` should display an activity box.
          */
-        hasActivities: attr({
+        hasActivityBox: attr({
             default: true,
         }),
         hasExternalBorder: attr({
@@ -229,7 +237,21 @@ function factory(dependencies) {
         hasTopbarCloseButton: attr({
             default: false,
         }),
+        /**
+         * Determines whether the activity box is currently visible.
+         */
         isActivityBoxVisible: attr({
+            compute: '_computeIsActivityBoxVisible',
+            dependencies: [
+                'hasActivityBox',
+                'thread',
+                'threadActivities',
+            ],
+        }),
+        /**
+         * Determines whether the activities should be displayed.
+         */
+        isActivityListVisible: attr({
             default: true,
         }),
         /**
@@ -288,6 +310,12 @@ function factory(dependencies) {
          * Determines the `mail.thread` that should be displayed by `this`.
          */
         thread: many2one('mail.thread'),
+        /**
+         * Serves as compute dependency.
+         */
+        threadActivities: one2many('mail.activity', {
+            related: 'thread.activities',
+        }),
         /**
          * Determines the id of the thread that will be displayed by `this`.
          */
