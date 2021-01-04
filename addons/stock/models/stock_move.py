@@ -175,6 +175,7 @@ class StockMove(models.Model):
     lot_ids = fields.Many2many('stock.production.lot', compute='_compute_lot_ids', inverse='_set_lot_ids', string='Serial Numbers', readonly=False)
     reservation_date = fields.Date('Date to Reserve', compute='_compute_reservation_date', store=True,
         help="This is a technical field for calculating when a move should be reserved")
+    product_packaging_id = fields.Many2one('product.packaging', 'Packaging', domain="[('product_id', '=', product_id)]", check_company=True)
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
@@ -781,7 +782,8 @@ class StockMove(models.Model):
         return [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
-            'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline'
+            'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline',
+            'product_packaging_id',
         ]
 
     @api.model
@@ -895,6 +897,15 @@ class StockMove(models.Model):
         self.product_uom = product.uom_id.id
         if product:
             self.description_picking = product._get_description(self.picking_type_id)
+
+    @api.onchange('product_id', 'product_qty', 'product_uom')
+    def _onchange_suggest_packaging(self):
+        # remove packaging if not match the product
+        if self.product_packaging_id.product_id != self.product_id:
+            self.product_packaging_id = False
+        # suggest biggest suitable packaging
+        if self.product_id and self.product_qty and self.product_uom:
+            self.product_packaging_id = self.product_id.packaging_ids._find_suitable_product_packaging(self.product_qty, self.product_uom)
 
     @api.onchange('lot_ids')
     def _onchange_lot_ids(self):
@@ -1241,6 +1252,10 @@ class StockMove(models.Model):
             package_id = self.env['stock.quant.package']
         if not owner_id:
             owner_id = self.env['res.partner']
+
+        # do full packaging reservation when it's needed
+        if self.product_packaging_id and self.product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
+            available_quantity = self.product_packaging_id._check_qty(available_quantity, self.product_id.uom_id, "DOWN")
 
         taken_quantity = min(available_quantity, need)
 

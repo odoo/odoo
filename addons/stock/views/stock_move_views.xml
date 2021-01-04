@@ -37,6 +37,7 @@
                     <field name="product_id"/>
                     <field name="location_id" options="{'no_create': True}" string="From"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To"/>
+                    <field name="product_packaging_id" optional="hide" groups="product.group_stock_packaging"/>
                     <field name="product_uom_qty"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                     <field name="company_id" groups="base.group_multi_company"/>

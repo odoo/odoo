@@ -934,6 +934,11 @@ class ProductCategory(models.Model):
         'stock.location.route', string='Total routes', compute='_compute_total_route_ids',
         readonly=True)
     putaway_rule_ids = fields.One2many('stock.putaway.rule', 'category_id', 'Putaway Rules')
+    packaging_reserve_method = fields.Selection([
+        ('full', 'Reserve Only Full Packagings'),
+        ('partial', 'Reserve Partial Packagings'),], string="Reserve Packagings", default='partial',
+        help="Reserve Only Full Packagings: will not reserve partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then only 1000 will be reserved\n"
+             "Reserve Partial Packagings: allow reserving partial packagings. If customer orders 2 pallets of 1000 units each and you only have 1600 in stock, then 1600 will be reserved")
 
     def _compute_total_route_ids(self):
         for category in self:
@@ -943,6 +948,11 @@ class ProductCategory(models.Model):
                 base_cat = base_cat.parent_id
                 routes |= base_cat.route_ids
             category.total_route_ids = routes
+
+class ProductPackaging(models.Model):
+    _inherit = "product.packaging"
+
+    package_type_id = fields.Many2one('stock.package.type', 'Package Type')
 
 
 class UoM(models.Model):

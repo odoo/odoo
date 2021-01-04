@@ -1033,3 +1033,30 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         sale_order4.action_confirm()
         self.assertTrue(sale_order4.picking_ids)
         self.assertEqual(sale_order4.picking_ids.state, 'assigned')
+
+    def test_packaging_propagation(self):
+        """Create a SO with lines using packaging, check the packaging propagate
+        to its move.
+        """
+        product = self.env['product.product'].create({
+            'name': 'Product with packaging',
+            'type': 'product',
+        })
+
+        packaging = self.env['product.packaging'].create({
+            'name': 'box',
+            'product_id': product.id,
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'product_id': product.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': product.uom_id.id,
+                    'product_packaging_id': packaging.id,
+                })],
+        })
+        so.action_confirm()
+        self.assertEqual(so.order_line.move_ids.product_packaging_id, packaging)

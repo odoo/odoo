@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import tagged
+from odoo.tests import tagged, Form
 from odoo.tools import float_compare
 
 from .common import TestSaleCommon
@@ -543,3 +543,48 @@ class TestSaleOrder(TestSaleCommon):
         sale_order.user_id = self.user_not_in_team
         sale_order.onchange_user_id()
         self.assertEqual(sale_order.team_id.id, self.crm_team1.id, 'Should not reset the team to default')
+
+    def test_onchange_packaging_00(self):
+        """Create a SO and use packaging. Check we suggested suitable packaging
+        according to the product_qty. Also check product_qty or product_packaging
+        are correctly calculated when one of them changed.
+        """
+        partner = self.env['res.partner'].create({'name': "I'm a partner"})
+        product_tmpl = self.env['product.template'].create({'name': "I'm a product"})
+        product = product_tmpl.product_variant_id
+        packaging_single = self.env['product.packaging'].create({
+            'name': "I'm a packaging",
+            'product_id': product.id,
+            'qty': 1.0,
+        })
+        packaging_dozen = self.env['product.packaging'].create({
+            'name': "I'm also a packaging",
+            'product_id': product.id,
+            'qty': 12.0,
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': partner.id,
+        })
+        so_form = Form(so)
+        with so_form.order_line.new() as line:
+            line.product_id = product
+            line.product_uom_qty = 1.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_single)
+        self.assertEqual(so.order_line.product_packaging_qty, 1.0)
+        with so_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 2.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_uom_qty, 2.0)
+
+
+        with so_form.order_line.edit(0) as line:
+            line.product_uom_qty = 24.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_packaging_id, packaging_dozen)
+        self.assertEqual(so.order_line.product_packaging_qty, 2.0)
+        with so_form.order_line.edit(0) as line:
+            line.product_packaging_qty = 1.0
+        so_form.save()
+        self.assertEqual(so.order_line.product_uom_qty, 12)
