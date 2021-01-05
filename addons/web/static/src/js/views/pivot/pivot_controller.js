@@ -140,6 +140,7 @@ odoo.define('web.PivotController', function (require) {
             }
             const table = this.model.exportData();
             table.title = this.title;
+            table.model = this.modelName;
             session.get_file({
                 url: '/web/pivot/export_xlsx',
                 data: { data: JSON.stringify(table) },
