@@ -76,9 +76,13 @@ SectionAndNoteFieldOne2Many.include({
                 // find one of the SO widget
                 // (not so lines because the grid values are computed on the SO)
                 // and get the grid information from its recordData.
-                var gridInfo = result.find(
+                var filtered_result = result.filter(
                     r => r.recordData.grid && r.recordData.grid.includes("header")
-                ).recordData.grid;
+                );
+                var prod = filtered_result.find(
+                    r => r.recordData.grid_product_tmpl_id && r.recordData.grid_product_tmpl_id.data.id == productTemplateId
+                )
+                var gridInfo = prod && prod.recordData.grid || filtered_result[0].recordData.grid;
                 // includes "header" is necessary to ensure the correct data is taken
                 // because the grid data isn't correctly updated in all widgets
                 // when in an new record environment.
