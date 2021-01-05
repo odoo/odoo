@@ -674,7 +674,7 @@ class ChromeBrowserException(Exception):
 class ChromeBrowser():
     """ Helper object to control a Chrome headless process. """
 
-    def __init__(self, logger, window_size, test_class):
+    def __init__(self, logger, window_size, enable_touch, test_class):
         self._logger = logger
         self.test_class = test_class
         if websocket is None:
@@ -696,6 +696,7 @@ class ChromeBrowser():
         os.makedirs(self.screenshots_dir, exist_ok=True)
 
         self.window_size = window_size
+        self.enable_touch = enable_touch
         self.sigxcpu_handler = None
         self._chrome_start()
         self._find_websocket()
@@ -807,6 +808,7 @@ class ChromeBrowser():
             '--no-sandbox': '',
             '--disable-crash-reporter': '',
             '--disable-gpu': '',
+            '--touch-events': '' if self.enable_touch else '0',
         }
         cmd = [self.executable]
         cmd += ['%s=%s' % (k, v) if v else k for k, v in switches.items()]
@@ -1257,6 +1259,7 @@ class HttpCaseCommon(BaseCase):
     registry_test_mode = True
     browser = None
     browser_size = '1366x768'
+    enable_touch = False
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
@@ -1280,7 +1283,7 @@ class HttpCaseCommon(BaseCase):
     def start_browser(cls):
         # start browser on demand
         if cls.browser is None:
-            cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.__name__)
+            cls.browser = ChromeBrowser(cls._logger, cls.browser_size, cls.enable_touch, cls.__name__)
             cls.addClassCleanup(cls.terminate_browser)
 
     @classmethod
