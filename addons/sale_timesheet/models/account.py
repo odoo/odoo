@@ -96,7 +96,7 @@ class AccountAnalyticLine(models.Model):
                     return map_entry.sale_line_id
                 if task.sale_line_id or project.sale_line_id:
                     return task.sale_line_id or project.sale_line_id
-        return self.env['sale.order.line']
+        return False
 
     def _timesheet_get_portal_domain(self):
         """ Only the timesheets with a product invoiced on delivered quantity are concerned.
