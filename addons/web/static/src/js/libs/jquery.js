@@ -120,4 +120,13 @@ $.fn.extend({
         });
     },
 });
+
+// Disable html prefilter to avoid potential xss vulnerability. This issue is
+// fixed in jQuery 3.5.0 with a equivalent patch.
+// See https://nvd.nist.gov/vuln/detail/CVE-2020-11022
+// See https://github.com/jquery/jquery/security/advisories/GHSA-gxr4-xjj5-5px2
+$.htmlPrefilter = function (html) {
+    return html;
+};
+
 });
