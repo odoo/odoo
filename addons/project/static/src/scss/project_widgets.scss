@@ -14,6 +14,11 @@
     @include o-background-color;
 }
 
+.o_status_project_form {
+    @include float-right;
+    font-size: 1.5rem;
+}
+
 .o_form_sheet {
     $o-bubble-padding: 0.5rem;
     $o-bubble-size: 1.5rem;
@@ -23,6 +28,7 @@
     .o_group_project_update {
         .o_data_row td {
             padding: $o-bubble-padding;
+            cursor: pointer;
 
             &.o_status_timeline_cell {
                 div {
@@ -51,6 +57,12 @@
             top: $o-bubble-padding;
         }
 
+        .o_data_row.o_data_row_first.o_data_row_last {
+            .o_status_timeline_cell:before {
+                height: 0;
+            }
+        }
+
         .o_data_row.o_data_row_last {
             .o_status_line_desc {
                 margin-bottom: $headings-margin-bottom;
@@ -66,6 +78,19 @@
                 margin-top: $o-bubble-padding + $o-bubble-size/2;
                 height: calc(100% - #{$o-bubble-padding});
             }
+        }
+    }
+}
+
+.o_desc_see_more, .o_desc_see_less {
+    @include float-right;
+
+    a {
+        cursor: pointer;
+        font-style: italic;
+
+        &:hover, &:focus {
+            text-decoration: underline;
         }
     }
 }

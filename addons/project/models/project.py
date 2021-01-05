@@ -120,6 +120,12 @@ class Project(models.Model):
         for project in self:
             project.task_count = result.get(project.id, 0)
 
+    def _compute_update_count(self):
+        update_data = self.env['project.update'].read_group([('project_id', 'in', self.ids), ('state', '=', 'posted')], ['project_id'], ['project_id'])
+        result = dict((data['project_id'][0], data['project_id_count']) for data in update_data)
+        for project in self:
+            project.update_count = result.get(project.id, 0)
+
     def attachment_tree_view(self):
         action = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
         action['domain'] = str([
@@ -152,6 +158,10 @@ class Project(models.Model):
 
     def _get_default_favorite_user_ids(self):
         return [(6, 0, [self.env.uid])]
+
+    def _get_default_update_states(self):
+        default_states = ['project_update_status_on_track', 'project_update_status_on_hold', 'project_update_status_off_track', 'project_update_status_at_risk']
+        return [(4, id) for id in map(lambda s: self.env.ref('project.' + s, raise_if_not_found=False).id, default_states)]
 
     name = fields.Char("Name", index=True, required=True, tracking=True)
     description = fields.Html()
@@ -240,11 +250,13 @@ class Project(models.Model):
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
     date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
-    update_status_ids = fields.Many2many('project.update.status', 'project_update_status_rel', 'project_id', 'update_status_id', string='Allowed Project States')
+    update_status_ids = fields.Many2many('project.update.status', 'project_update_status_rel', 'project_id', 'update_status_id', string='Allowed Project States',
+                                         default=_get_default_update_states)
     update_ids = fields.One2many('project.update', 'project_id', domain=[('state', '!=', 'draft')])
     last_update_id = fields.Many2one('project.update', string='Last Update', compute='_compute_last_update')
     update_description_template = fields.Html(
         compute='_compute_update_description_feedback', store=True, readonly=False)
+    update_count = fields.Integer(compute='_compute_update_count', string="Update Count")
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
@@ -312,6 +324,8 @@ class Project(models.Model):
 
     @api.depends('update_ids')
     def _compute_last_update(self):
+        # [TLE] FIXME YTI : Not able to find an efficient way to select only the last updtae for each project.
+        # Intuitively, I'd have done it by using raw sql (SELECT ... WHERE NOT EXISTS (posted update depending on same project with greater create date))
         for project in self:
             project.last_update_id = self.env['project.update'].search([
                 ("project_id", "=", project.id),
@@ -523,7 +537,7 @@ class Project(models.Model):
             ('state', '=', 'draft')
         ], ['id'], limit=1)
         if last_draft:
-            action['res_id'] = last_draft.id
+            action['res_id'] = last_draft[0]['id']
             return action
         action_context = ast.literal_eval(action['context']) if action['context'] else {}
         action_context.update(self._context)
@@ -536,7 +550,7 @@ class Project(models.Model):
                 'status': self.last_update_id.status_id.name,
                 'color': self.last_update_id.status_id.color
             }
-        default_status = self.env['project.update.status'].search([('default', '=', True)], limit=1)
+        default_status = self.env['project.update.status'].search([('project_ids', '=', self.id)], limit=1)
         return {
             'status': default_status.name,
             'color': default_status.color

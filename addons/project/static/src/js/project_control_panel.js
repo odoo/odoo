@@ -17,6 +17,13 @@ odoo.define("project.ProjectControlPanel", function (require) {
             return Promise.all(promises);
         }
 
+        async willUpdateProps() { 
+            const promises = [];
+            promises.push(super.willUpdateProps(...arguments));
+            promises.push(this._loadWidgetData());
+            return Promise.all(promises);
+        }
+
         _loadWidgetData() {
             var self = this;
             return this.rpc({
@@ -36,7 +43,7 @@ odoo.define("project.ProjectControlPanel", function (require) {
                 method: 'action_open_update_status',
                 args: [this.project_id],
             }).then(action => {
-                this.trigger('do-action', {
+                self.trigger('do-action', {
                     action: action
                 });
             });

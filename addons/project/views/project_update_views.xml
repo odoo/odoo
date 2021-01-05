@@ -22,7 +22,8 @@
                             </div>
                             <group>
                                 <field name="project_id" invisible="1"/>
-                                <field name="status_id" widget="status_with_color" options="{'no_create': True}" domain="[('project_ids','=', project_id)]"
+                                <field name="status_id" widget="status_with_color" domain="[('project_ids','=', project_id)]"
+                                        context="{'default_project_id': project_id}"
                                         attrs="{'readonly': [('state', '=', 'posted')]}"/>
                                 <field name="progress" widget="progressbar" options="{'current_value': 'progress', 'max_value': '100', 'editable': true}" 
                                         attrs="{'readonly': [('state', '=', 'posted')]}"/>
@@ -41,34 +42,33 @@
                                     <div class="data"><field name="project_user_id" widget="many2one_avatar_user"/></div>
                                 </div>
                             </div>
-                            <div class="o_project_info">
+                            <div class="o_project_info" attrs="{'invisible': [('project_date_deadline', '=', False)]}">
                                 <div class="logo">
                                     <i class="fa fa-calendar-o o_project_circle" title="Deadline"></i>
                                 </div>
                                 <div class="content">
                                     <div class="label"><label for="project_date_deadline" string="Deadline"/></div>
-                                    <div class="data"><field name="project_date_deadline"/></div>
+                                    <div class="data"><field name="project_date_deadline" widget="remaining_days"/></div>
                                 </div>
                             </div>
-                            <div class="o_project_info">
+                            <div class="o_project_info" attrs="{'invisible': [('project_description', '=', False)]}">
                                 <div class="logo">
                                     <i class="fa fa-info o_project_circle" title="Description"></i>
                                 </div>
                                 <div class="content">
-                                    <div class="label"><label for="project_description"/></div>
-                                    <div class="data"><field name="project_description"/></div>
+                                    <div class="data"><field name="project_description" widget="project_html_see_more" options="{'nbr_char': '100'}"/></div>
                                 </div>
                             </div>
 
                             <separator class="form-divider-h"/>
                             <h2>Milestones</h2>
-                            
+                            <!-- TODO Add milestones -->
 
                             <separator class="form-divider-h"/>
                             <div class="o_group_project_update">
                                 <h2>Previous Status Updates</h2>
                                 
-                                <field name="previous_status_update_ids" widget="one2many_project_updates">
+                                <field name="previous_status_update_ids" widget="one2many_project_update">
                                     <tree>
                                         <field name="name"/>
                                         <field name="date"/>
@@ -94,12 +94,23 @@
                         <group>
                             <field name="name"/>
                             <field name="color" widget="color_picker"/>
+                            <field name="default"/>
                         </group>
-                        <field name="default"/>
-                        <field name="project_ids"/>
                     </group>
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="project_update_view_tree" model="ir.ui.view">
+        <field name="name">project.update.view.tree</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <tree create="0">
+                <field name="name"/>
+                <field name="status_id" widget="status_with_color"/>
+                <field name="date"/>
+            </tree>
         </field>
     </record>
 
@@ -107,5 +118,12 @@
         <field name="name">Project Update</field>
         <field name="res_model">project.update</field>
         <field name="view_mode">form</field>
+    </record>
+
+    <record id="project_update_posted_list" model="ir.actions.act_window">
+        <field name="name">Project Update</field>
+        <field name="res_model">project.update</field>
+        <field name="domain">[('project_id', '=', active_id), ('state', '=', 'posted')]</field>
+        <field name="view_mode">tree,form</field>
     </record>
 </odoo>

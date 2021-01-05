@@ -57,6 +57,14 @@
             <field name="partner_id" ref="base.partner_demo_portal"/>
             <field name="privacy_visibility">portal</field>
             <field name="favorite_user_ids" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="description" type="xml">
+                <p><strong>With this project, we aim to design new offices !</strong></p>
+                <p><br/></p>
+                <p>Vestibulum porttitor magna at sapien posuere semper.</p>
+                <p>Cras sapien ligula, tincidunt sed neque vitae, aliquet tempus nunc.</p>
+                <p>Cras sagittis et nunc nec tempus. Suspendisse vitae quam consequat, vestibulum nunc a, tempus odio.</p>
+                <p>Sed aliquet facilisis aliquet.</p>
+            </field>
         </record>
 
         <record id="project_project_2" model="project.project">

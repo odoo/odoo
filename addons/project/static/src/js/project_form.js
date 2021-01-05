@@ -1,4 +1,4 @@
-odoo.define('project.ProjectTaskFormView', function (require) {
+odoo.define('project.ProjectFormView', function (require) {
     "use strict";
 
     const Dialog = require('web.Dialog');
@@ -6,11 +6,10 @@ odoo.define('project.ProjectTaskFormView', function (require) {
     const FormController = require('web.FormController');
     const core = require('web.core');
     const view_registry = require('web.view_registry');
-    const ProjectControlPanel = require("project.ProjectControlPanel");
 
     const _t = core._t;
 
-    const ProjectTaskFormController = FormController.extend({
+    const ProjectFormController = FormController.extend({
         _getActionMenuItems(state) {
             if (!this.archiveEnabled || !state.data['recurrence_id']) {
                 return this._super(...arguments);
@@ -98,21 +97,13 @@ odoo.define('project.ProjectTaskFormView', function (require) {
 
     });
     
-    const ProjectTaskFormView = FormView.extend({
-        config: _.extend({}, FormView.prototype.config, {
-            Controller: ProjectTaskFormController,
-        }),
-    });
-
-    view_registry.add('project_task_form', ProjectTaskFormView);
-
     const ProjectFormView = FormView.extend({
         config: _.extend({}, FormView.prototype.config, {
-            ControlPanel: ProjectControlPanel,
+            Controller: ProjectFormController,
         }),
     });
 
     view_registry.add('project_form', ProjectFormView);
 
-    return ProjectTaskFormView;
+    return ProjectFormView;
 });
