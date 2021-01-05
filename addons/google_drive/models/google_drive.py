@@ -4,8 +4,13 @@ import logging
 import json
 import re
 
+import datetime
+import dateutil
+import time
 import requests
 import werkzeug.urls
+
+from pytz import timezone
 
 from odoo import api, fields, models
 from odoo.exceptions import RedirectWarning, UserError
@@ -142,6 +147,17 @@ class GoogleDrive(models.Model):
         return res
 
     @api.model
+    def _get_eval_context(self):
+        """ evaluation context to pass to safe_eval """
+        return {
+            'uid': self._uid,
+            'time': time,
+            'datetime': datetime,
+            'dateutil': dateutil,
+            'timezone': timezone,
+        }
+
+    @api.model
     def get_google_drive_config(self, res_model, res_id):
         '''
         Function called by the js, when no google doc are yet associated with a record, with the aim to create one. It
@@ -161,7 +177,7 @@ class GoogleDrive(models.Model):
             raise UserError(_("Creating google drive may only be done by one at a time."))
         # check if a model is configured with a template
         configs = self.search([('model_id', '=', res_model)])
-        eval_context = self.env['ir.actions.actions']._get_eval_context()
+        eval_context = self._get_eval_context()
         config_values = []
         for config in configs.sudo():
             if config.filter_id:
