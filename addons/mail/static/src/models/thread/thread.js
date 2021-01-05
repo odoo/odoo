@@ -2021,6 +2021,7 @@ function factory(dependencies) {
         onChangeThreadView: attr({
             compute: '_onChangeThreadViews',
             dependencies: [
+                'needactionMessagesAsOriginThread',
                 'threadViews',
             ],
         }),
