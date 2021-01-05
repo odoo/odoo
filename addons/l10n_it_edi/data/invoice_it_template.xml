@@ -145,6 +145,9 @@
                                 <ImportoBollo t-esc="format_numbers(record.l10n_it_stamp_duty)"/>
                             </DatiBollo>
                         </DatiGeneraliDocumento>
+                        <DatiOrdineAcquisto t-if="record.ref">
+                            <IdDocumento t-esc="record.ref" />
+                        </DatiOrdineAcquisto>
                         <DatiDDT t-if="record.l10n_it_ddt_id">
                             <!--2.1.8-->
                             <NumeroDDT t-esc="record.l10n_it_ddt_id.name"/>
