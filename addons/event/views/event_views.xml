@@ -64,6 +64,9 @@
                            </page>
                            <page string="Notes">
                                <field name="note"/>
+                                <label for="ticket_instructions" string="Ticket Extra Instructions"></label>
+                                <br/>
+                                <field name="ticket_instructions" nolabel="1" class="pt-2"/>
                            </page>
                        </notebook>
                     </sheet>
@@ -222,7 +225,12 @@
                                 </field>
                             </page>
                             <page string="Notes" name="event_notes">
-                                <field name="note" placeholder="Add a note..."/>
+                                <group>
+                                    <label for="note" string="Note"/><br/>
+                                    <field nolabel="1" colspan="2" name="note" placeholder="Add a note..."/>
+                                    <label for="ticket_instructions" string="Ticket Intructions"/><br/>
+                                    <field nolabel="1" colspan="2" name="ticket_instructions"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>

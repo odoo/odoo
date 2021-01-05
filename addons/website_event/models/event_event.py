@@ -395,15 +395,6 @@ class Event(models.Model):
             return self.env.ref('website_event.mt_event_unpublished')
         return super(Event, self)._track_subtype(init_values)
 
-    def action_open_badge_editor(self):
-        """ open the event badge editor : redirect to the report page of event badge report """
-        self.ensure_one()
-        return {
-            'type': 'ir.actions.act_url',
-            'target': 'new',
-            'url': '/report/html/%s/%s?enable_editor' % ('event.event_event_report_template_badge', self.id),
-        }
-
     def _get_event_resource_urls(self):
         url_date_start = self.date_begin.strftime('%Y%m%dT%H%M%SZ')
         url_date_stop = self.date_end.strftime('%Y%m%dT%H%M%SZ')
