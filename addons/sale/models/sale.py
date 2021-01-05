@@ -137,6 +137,23 @@ class SaleOrder(models.Model):
         self.ensure_one()
         return 'form'
 
+    def _search_invoice_ids(self, operator, value):
+        if operator == 'in' and value:
+            self.env.cr.execute("""
+                SELECT array_agg(so.id)
+                    FROM sale_order so
+                    JOIN sale_order_line sol ON sol.order_id = so.id
+                    JOIN sale_order_line_invoice_rel soli_rel ON soli_rel.order_line_id = sol.id
+                    JOIN account_invoice_line ail ON ail.id = soli_rel.invoice_line_id
+                    JOIN account_invoice ai ON ai.id = ail.invoice_id
+                WHERE
+                    ai.type in ('out_invoice', 'out_refund') AND
+                    ai.id = ANY(%s)
+            """, (list(value),))
+            so_ids = self.env.cr.fetchone()[0] or []
+            return [('id', 'in', so_ids)]
+        return ['&', ('order_line.invoice_lines.invoice_id.type', 'in', ('out_invoice', 'out_refund')), ('order_line.invoice_lines.invoice_id', operator, value)]
+
     name = fields.Char(string='Order Reference', required=True, copy=False, readonly=True, states={'draft': [('readonly', False)]}, index=True, default=lambda self: _('New'))
     origin = fields.Char(string='Source Document', help="Reference of the document that generated this sales order request.")
     client_order_ref = fields.Char(string='Customer Reference', copy=False)
@@ -174,7 +191,7 @@ class SaleOrder(models.Model):
     order_line = fields.One2many('sale.order.line', 'order_id', string='Order Lines', states={'cancel': [('readonly', True)], 'done': [('readonly', True)]}, copy=True, auto_join=True)
 
     invoice_count = fields.Integer(string='Invoice Count', compute='_get_invoiced', readonly=True)
-    invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False)
+    invoice_ids = fields.Many2many("account.invoice", string='Invoices', compute="_get_invoiced", readonly=True, copy=False, search="_search_invoice_ids")
     invoice_status = fields.Selection([
         ('upselling', 'Upselling Opportunity'),
         ('invoiced', 'Fully Invoiced'),
