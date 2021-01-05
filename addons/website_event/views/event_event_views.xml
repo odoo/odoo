@@ -14,11 +14,6 @@
                 <field name="website_url" invisible="1"/>
                 <field name="is_published" widget="website_redirect_button"/>
             </div>
-            <xpath expr="//field[@name='stage_id']" position="before">
-                <button name="action_open_badge_editor"
-                    type="object"
-                    string="Preview Badges"/>
-            </xpath>
             <xpath expr="//div[hasclass('oe_title')]" position="after">
                 <div name="event_menu_configuration" groups="base.group_no_one">
                     <label for="website_menu" string="Website Submenu"/>

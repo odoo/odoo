@@ -54,6 +54,9 @@ class EventType(models.Model):
         'event.type.mail', 'event_type_id',
         string='Mail Schedule', compute='_compute_event_type_mail_ids',
         readonly=False, store=True)
+    # ticket reports
+    ticket_extra_instructions = fields.Html('Extra Instructions', translate=True,
+        help="These information will be added on your printed tickets.")
 
     @api.depends('use_mail_schedule')
     def _compute_event_type_mail_ids(self):
@@ -201,12 +204,10 @@ class EventEvent(models.Model):
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
         'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
-    # badge fields
-    badge_front = fields.Html(string='Badge Front')
-    badge_back = fields.Html(string='Badge Back')
-    badge_innerleft = fields.Html(string='Badge Inner Left')
-    badge_innerright = fields.Html(string='Badge Inner Right')
-    event_logo = fields.Html(string='Event Logo')
+    # ticket reports
+    ticket_extra_instructions = fields.Html('Extra Instructions', translate=True,
+        compute='_compute_ticket_extra_instructions', store=True, readonly=False,
+        help="These information will be added on your printed tickets.")
 
     @api.depends('stage_id', 'kanban_state')
     def _compute_kanban_state_label(self):
@@ -468,6 +469,12 @@ class EventEvent(models.Model):
                     }) for line in event.event_type_id.event_type_ticket_ids
                 ]
             event.event_ticket_ids = command
+
+    @api.depends('event_type_id')
+    def _compute_ticket_extra_instructions(self):
+        for event in self:
+            if not event.ticket_extra_instructions and event.event_type_id.ticket_extra_instructions:
+                event.ticket_extra_instructions = event.event_type_id.ticket_extra_instructions
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):

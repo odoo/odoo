@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Events Organization',
-    'version': '1.5',
+    'version': '1.6',
     'website': 'https://www.odoo.com/page/events',
     'category': 'Marketing/Events',
     'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
@@ -54,6 +54,9 @@ Key Features
         ],
         'web.assets_qweb': [
             'event/static/src/xml/**/*',
+        ],
+        'web.report_assets_common': [
+            '/event/static/src/scss/event_foldable_badge_report.scss',
         ],
     }
 }
