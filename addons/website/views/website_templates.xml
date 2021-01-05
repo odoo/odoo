@@ -1812,6 +1812,12 @@
 </template>
 
 <template id="language_selector" inherit_id="portal.language_selector">
+    <xpath expr="//t[@t-set='active_lang']" position="before">
+        <t t-if="lang not in (lg[0] for lg in languages)">
+            <t t-set="lang" t-value="website.default_lang_id.code"/>
+        </t>
+    </xpath>
+
     <!-- Always show the language selector on editable websites -->
     <xpath expr="//t[@t-set='language_selector_visible']" position="after">
         <t t-set="language_selector_visible" t-value="language_selector_visible or (website and (editable or translatable))"/>
