@@ -1,0 +1,324 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "CloseFrameEvent": {
+            "properties": {
+                "at": {
+                    "title": "at",
+                    "type": "number"
+                },
+                "frame": {
+                    "title": "frame",
+                    "type": "number"
+                },
+                "type": {
+                    "enum": [
+                        "C"
+                    ],
+                    "title": "type",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "at",
+                "frame",
+                "type"
+            ],
+            "title": "CloseFrameEvent",
+            "type": "object"
+        },
+        "FileFormat.EventType": {
+            "enum": [
+                "C",
+                "O"
+            ],
+            "title": "FileFormat.EventType",
+            "type": "string"
+        },
+        "FileFormat.EventedProfile": {
+            "properties": {
+                "endValue": {
+                    "title": "endValue",
+                    "type": "number"
+                },
+                "events": {
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/OpenFrameEvent"
+                            },
+                            {
+                                "$ref": "#/definitions/CloseFrameEvent"
+                            }
+                        ]
+                    },
+                    "title": "events",
+                    "type": "array"
+                },
+                "name": {
+                    "title": "name",
+                    "type": "string"
+                },
+                "startValue": {
+                    "title": "startValue",
+                    "type": "number"
+                },
+                "type": {
+                    "enum": [
+                        "evented"
+                    ],
+                    "title": "type",
+                    "type": "string"
+                },
+                "unit": {
+                    "$ref": "#/definitions/FileFormat.ValueUnit",
+                    "title": "unit"
+                }
+            },
+            "required": [
+                "endValue",
+                "events",
+                "name",
+                "startValue",
+                "type",
+                "unit"
+            ],
+            "title": "FileFormat.EventedProfile",
+            "type": "object"
+        },
+        "FileFormat.File": {
+            "properties": {
+                "$schema": {
+                    "enum": [
+                        "https://www.speedscope.app/file-format-schema.json"
+                    ],
+                    "title": "$schema",
+                    "type": "string"
+                },
+                "activeProfileIndex": {
+                    "title": "activeProfileIndex",
+                    "type": "number"
+                },
+                "exporter": {
+                    "title": "exporter",
+                    "type": "string"
+                },
+                "name": {
+                    "title": "name",
+                    "type": "string"
+                },
+                "profiles": {
+                    "items": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/definitions/FileFormat.EventedProfile"
+                            },
+                            {
+                                "$ref": "#/definitions/FileFormat.SampledProfile"
+                            }
+                        ]
+                    },
+                    "title": "profiles",
+                    "type": "array"
+                },
+                "shared": {
+                    "properties": {
+                        "frames": {
+                            "items": {
+                                "$ref": "#/definitions/FileFormat.Frame"
+                            },
+                            "title": "frames",
+                            "type": "array"
+                        }
+                    },
+                    "required": [
+                        "frames"
+                    ],
+                    "title": "shared",
+                    "type": "object"
+                }
+            },
+            "required": [
+                "$schema",
+                "profiles",
+                "shared"
+            ],
+            "title": "FileFormat.File",
+            "type": "object"
+        },
+        "FileFormat.Frame": {
+            "properties": {
+                "col": {
+                    "title": "col",
+                    "type": "number"
+                },
+                "file": {
+                    "title": "file",
+                    "type": "string"
+                },
+                "line": {
+                    "title": "line",
+                    "type": "number"
+                },
+                "name": {
+                    "title": "name",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name"
+            ],
+            "title": "FileFormat.Frame",
+            "type": "object"
+        },
+        "FileFormat.IProfile": {
+            "properties": {
+                "type": {
+                    "$ref": "#/definitions/FileFormat.ProfileType",
+                    "title": "type"
+                }
+            },
+            "required": [
+                "type"
+            ],
+            "title": "FileFormat.IProfile",
+            "type": "object"
+        },
+        "FileFormat.Profile": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/FileFormat.EventedProfile"
+                },
+                {
+                    "$ref": "#/definitions/FileFormat.SampledProfile"
+                }
+            ]
+        },
+        "FileFormat.ProfileType": {
+            "enum": [
+                "evented",
+                "sampled"
+            ],
+            "title": "FileFormat.ProfileType",
+            "type": "string"
+        },
+        "FileFormat.SampledProfile": {
+            "properties": {
+                "endValue": {
+                    "title": "endValue",
+                    "type": "number"
+                },
+                "name": {
+                    "title": "name",
+                    "type": "string"
+                },
+                "samples": {
+                    "items": {
+                        "items": {
+                            "type": "number"
+                        },
+                        "type": "array"
+                    },
+                    "title": "samples",
+                    "type": "array"
+                },
+                "startValue": {
+                    "title": "startValue",
+                    "type": "number"
+                },
+                "type": {
+                    "enum": [
+                        "sampled"
+                    ],
+                    "title": "type",
+                    "type": "string"
+                },
+                "unit": {
+                    "$ref": "#/definitions/FileFormat.ValueUnit",
+                    "title": "unit"
+                },
+                "weights": {
+                    "items": {
+                        "type": "number"
+                    },
+                    "title": "weights",
+                    "type": "array"
+                }
+            },
+            "required": [
+                "endValue",
+                "name",
+                "samples",
+                "startValue",
+                "type",
+                "unit",
+                "weights"
+            ],
+            "title": "FileFormat.SampledProfile",
+            "type": "object"
+        },
+        "FileFormat.ValueUnit": {
+            "enum": [
+                "bytes",
+                "microseconds",
+                "milliseconds",
+                "nanoseconds",
+                "none",
+                "seconds"
+            ],
+            "title": "FileFormat.ValueUnit",
+            "type": "string"
+        },
+        "IEvent": {
+            "properties": {
+                "at": {
+                    "title": "at",
+                    "type": "number"
+                },
+                "type": {
+                    "$ref": "#/definitions/FileFormat.EventType",
+                    "title": "type"
+                }
+            },
+            "required": [
+                "at",
+                "type"
+            ],
+            "title": "IEvent",
+            "type": "object"
+        },
+        "OpenFrameEvent": {
+            "properties": {
+                "at": {
+                    "title": "at",
+                    "type": "number"
+                },
+                "frame": {
+                    "title": "frame",
+                    "type": "number"
+                },
+                "type": {
+                    "enum": [
+                        "O"
+                    ],
+                    "title": "type",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "at",
+                "frame",
+                "type"
+            ],
+            "title": "OpenFrameEvent",
+            "type": "object"
+        },
+        "SampledStack": {
+            "items": {
+                "type": "number"
+            },
+            "type": "array"
+        }
+    },
+    "$ref": "#/definitions/FileFormat.File"
+}
