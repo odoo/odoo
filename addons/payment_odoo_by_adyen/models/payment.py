@@ -168,16 +168,12 @@ class TxOdooByAdyen(models.Model):
             self.payment_token_id = token_id
 
         # Update status
-        if data['success']:
+        if data['success'] == 'true':
             self.write({'acquirer_reference': data.get('pspReference')})
             self._set_transaction_done()
-            return True
         else:
-            error = _('Odoo Payment by Adyen: feedback error')
-            _logger.info(error)
-            self.write({'state_message': error})
-            self._set_transaction_cancel()
-            return False
+            self._set_transaction_pending()
+        return True
 
 class PaymentToken(models.Model):
     _inherit = 'payment.token'
