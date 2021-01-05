@@ -57,6 +57,7 @@ Key Features
         ],
         'web.report_assets_common': [
             '/event/static/src/scss/event_foldable_badge_report.scss',
+            '/event/static/src/scss/event_a4_ticket_report.scss',
         ],
     }
 }

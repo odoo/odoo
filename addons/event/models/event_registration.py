@@ -155,7 +155,8 @@ class EventRegistration(models.Model):
         # some were created already open
         if registrations._check_auto_confirmation():
             registrations.sudo().action_confirm()
-        else:
+        elif not self.env.context.get('install_mode', False):
+            # avoid running scheduler for demo data
             registrations._update_mail_schedulers()
 
         return registrations
@@ -167,7 +168,8 @@ class EventRegistration(models.Model):
 
         ret = super(EventRegistration, self).write(vals)
 
-        if vals.get('state') == 'open':
+        if vals.get('state') == 'open' and not self.env.context.get('install_mode', False):
+            # avoid running scheduler for demo data
             pre_draft._update_mail_schedulers()
 
         return ret

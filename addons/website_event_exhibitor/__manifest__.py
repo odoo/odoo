@@ -18,6 +18,7 @@
         'security/security.xml',
         'security/ir.model.access.csv',
         'data/event_sponsor_data.xml',
+        'report/website_event_exhibitor_templates.xml',
         'views/event_templates_sponsor.xml',
         'views/event_sponsor_views.xml',
         'views/event_event_views.xml',
@@ -37,6 +38,9 @@
             'website_event_exhibitor/static/src/scss/event_templates_sponsor.scss',
             'website_event_exhibitor/static/src/scss/event_exhibitor_templates.scss',
             'website_event_exhibitor/static/src/js/event_exhibitor_connect.js',
+        ],
+        'web.report_assets_common': [
+            '/website_event_exhibitor/static/src/scss/event_a4_ticket_report.scss',
         ],
     }
 }

@@ -17,6 +17,21 @@
         <field name="dpi">80</field>
     </record>
 
+    <record id="paperformat_euro_nomargin" model="report.paperformat">
+        <field name="name">European A4 no margin</field>
+        <field name="default" eval="False"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">1</field>
+        <field name="margin_right">1</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+    </record>
+
     <record id="action_report_event_registration_foldable_badge" model="ir.actions.report">
         <field name="name">Foldable Badge</field>
         <field name="model">event.registration</field>
@@ -39,6 +54,30 @@
         <field name="binding_model_id" ref="model_event_event"/>
         <field name="binding_type">report</field>
         <field name="paperformat_id" ref="paperformat_euro_lowmargin"/>
+    </record>
+
+    <record id="action_report_event_registration_a4_ticket" model="ir.actions.report">
+        <field name="name">A4 Ticket</field>
+        <field name="model">event.registration</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">event.event_registration_report_template_a4_ticket</field>
+        <field name="report_file">event.event_registration_report_template_a4_ticket</field>
+        <field name="print_report_name">'A4 Ticket - %s' % (object.event_id.name or 'Event').replace('/','')</field>
+        <field name="binding_model_id" ref="model_event_registration"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_euro_nomargin"/>
+    </record>
+
+    <record id="action_report_event_event_a4_ticket" model="ir.actions.report">
+        <field name="name">Example A4 Ticket</field>
+        <field name="model">event.event</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">event.event_event_report_template_a4_ticket</field>
+        <field name="report_file">event.event_event_report_template_a4_ticket</field>
+        <field name="print_report_name">'A4 Ticket - %s' % object.name</field>
+        <field name="binding_model_id" ref="model_event_event"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="paperformat_euro_nomargin"/>
     </record>
 
 </odoo>

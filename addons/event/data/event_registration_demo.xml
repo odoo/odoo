@@ -149,6 +149,7 @@
 
     <function model="event.registration"
         name="action_confirm"
+        context="{'install_mode' : True}"
         eval="[[ref('event_registration_0_0'), ref('event_registration_0_1'),
                 ref('event_registration_1_0'), ref('event_registration_1_1'), ref('event_registration_1_2'),
                 ref('event_registration_2_0'), ref('event_registration_2_1'), ref('event_registration_2_2'), ref('event_registration_2_3'),
