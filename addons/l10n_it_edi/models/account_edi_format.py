@@ -62,7 +62,6 @@ class AccountEdiFormat(models.Model):
             )
         else:
             invoice.l10n_it_send_state = 'to_send'
-            invoice.send_pec_mail()
         return {invoice: res}
 
     # -------------------------------------------------------------------------
