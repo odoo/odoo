@@ -284,6 +284,10 @@ class Cursor(BaseCursor):
             _logger.warning(msg)
             self._close(True)
 
+    def _format(self, query, params=None):
+        encoding = psycopg2.extensions.encodings[self.connection.encoding]
+        return self._obj.mogrify(query, params).decode(encoding, 'replace')
+
     @check
     def execute(self, query, params=None, log_exceptions=None):
         if params and not isinstance(params, (tuple, list, dict)):
@@ -291,9 +295,8 @@ class Cursor(BaseCursor):
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
         if self.sql_log:
-            encoding = psycopg2.extensions.encodings[self.connection.encoding]
-            _logger.debug("query: %s", self._obj.mogrify(query, params).decode(encoding, 'replace'))
-        now = time.time()
+            _logger.debug("query: %s", self._format(query, params))
+        start = time.time()
         try:
             params = params or None
             res = self._obj.execute(query, params)
@@ -304,10 +307,16 @@ class Cursor(BaseCursor):
 
         # simple query count is always computed
         self.sql_log_count += 1
-        delay = (time.time() - now)
-        if hasattr(threading.current_thread(), 'query_count'):
-            threading.current_thread().query_count += 1
-            threading.current_thread().query_time += delay
+        delay = (time.time() - start)
+        current_thread = threading.current_thread()
+        if hasattr(current_thread, 'query_count'):
+            current_thread.query_count += 1
+            current_thread.query_time += delay
+
+        # optionnal hooks for performance and tracing analysis
+        if hasattr(current_thread, 'query_hooks'):
+            for hook in current_thread.query_hooks:
+                hook(self, query, params, start, delay)
 
         # advanced stats only if sql_log is enabled
         if self.sql_log:

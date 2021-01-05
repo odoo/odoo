@@ -6,7 +6,9 @@
         <a role="button" href="#" class="o_debug_mode" t-attf-title="Open Developer Tools#{widget.debug_mode_help}"
                          t-att-data-debug-mode="widget.debug_mode" aria-label="Open Developer Tools#{widget.debug_mode_help}"
                          data-toggle="dropdown" aria-expanded="false" tabindex="-1" data-display="static">
-            <span class="fa fa-bug"/>
+            <span class="fa fa-bug">
+                <span class="profiling_items text-danger fa fa-circle"></span>
+            </span>
         </a>
         <div class="dropdown-menu dropdown-menu-right o_debug_dropdown" role="menu"/>
     </li>
@@ -17,6 +19,35 @@
     <a role="menuitem" href="#" data-action="regenerateAssets" class="dropdown-item">Regenerate Assets Bundles</a>
     <a t-if="manager._is_admin" role="menuitem" href="/web/become" class="dropdown-item">Become Superuser</a>
     <a role="menuitem" href="#" data-action="leave_debug_mode" class="dropdown-item">Leave the Developer Tools</a>
+    <div class="dropdown-divider" role="separator"/>
+    <span role="menuitem" class="dropdown-item profiling">
+        <span class="custom-control custom-switch">
+            <input type="checkbox" class="custom-control-input" id="enable_profiling"/>
+            <label class="custom-control-label" for="enable_profiling">
+                Enable profiling
+                <span class="profiling_items text-danger fa fa-circle"></span></label>
+        </span>
+    </span>
+    <span class="profiling_items">
+        <span role="menuitem" class="dropdown-item profiling">
+            <span class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input profile_switch" id="profile_sql"/>
+                <label class="custom-control-label" for="profile_sql">Record sql</label>
+            </span>
+        </span>
+        <span role="menuitem" class="dropdown-item profiling">
+            <span class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input profile_switch" id="profile_traces_sync"/>
+                <label class="custom-control-label" for="profile_traces_sync">Record traces sync</label>
+            </span>
+        </span>
+        <span role="menuitem" class="dropdown-item profiling">
+            <span class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input profile_switch" id="profile_traces_async"/>
+                <label class="custom-control-label" for="profile_traces_async">Record traces async</label>
+            </span>
+        </span>
+    </span>
 </t>
 <t t-name="WebClient.DebugManager.Backend">
     <a role="menuitem" href="#" data-action="perform_js_tests" class="dropdown-item">Run JS Tests</a>

@@ -1697,7 +1697,7 @@ var UrlWidget = InputField.extend({
     _renderReadonly: function () {
         let href = this.value;
         if (this.value && !this.websitePath) {
-            const regex = /^(?:[fF]|[hH][tT])[tT][pP][sS]?:\/\//;
+            const regex = /^((ftp|http)s?:\/)?\//i; // http(s)://... ftp(s)://... /... 
             href = !regex.test(this.value) ? `http://${href}` : href;
         }
         this.el.classList.add("o_form_uri", "o_text_overflow");
@@ -1723,6 +1723,15 @@ var UrlWidget = InputField.extend({
         ev.stopPropagation();
     },
 });
+
+
+var SpeedscopeWidget = AbstractField.extend({
+    description: _lt("SpeedScope"),
+    className: 'o_field_speedscope',
+    supportedFieldTypes: ['char'],
+    template: 'SpeedscopeWidget',
+});
+
 
 var CopyClipboard = {
     quickEditExclusion: [
@@ -3818,6 +3827,7 @@ return {
     PriorityWidget: PriorityWidget,
     StatInfo: StatInfo,
     UrlWidget: UrlWidget,
+    SpeedscopeWidget: SpeedscopeWidget,
     TextCopyClipboard: TextCopyClipboard,
     CharCopyClipboard: CharCopyClipboard,
     URLCopyClipboard: URLCopyClipboard,

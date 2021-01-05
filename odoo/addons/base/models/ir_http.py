@@ -25,9 +25,6 @@ from odoo.tools import consteq, pycompat
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.modules.module import get_resource_path, get_module_path
 
-from odoo.http import ALLOWED_DEBUG_MODES
-from odoo.tools.misc import str2bool
-
 _logger = logging.getLogger(__name__)
 
 
@@ -133,21 +130,6 @@ class IrHttp(models.AbstractModel):
         return auth_method
 
     @classmethod
-    def _handle_debug(cls):
-        # Store URL debug mode (might be empty) into session
-        if 'debug' in request.httprequest.args:
-            debug_mode = []
-            for debug in request.httprequest.args['debug'].split(','):
-                if debug not in ALLOWED_DEBUG_MODES:
-                    debug = '1' if str2bool(debug, debug) else ''
-                debug_mode.append(debug)
-            debug_mode = ','.join(debug_mode)
-
-            # Write on session only when needed
-            if debug_mode != request.session.debug:
-                request.session.debug = debug_mode
-
-    @classmethod
     def _serve_attachment(cls):
         env = api.Environment(request.cr, SUPERUSER_ID, request.context)
         attach = env['ir.attachment'].get_serve_attachment(request.httprequest.path, extra_fields=['name', 'checksum'])
@@ -184,9 +166,6 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _handle_exception(cls, exception):
-        # in case of Exception, e.g. 404, we don't step into _dispatch
-        cls._handle_debug()
-
         # If handle_exception returns something different than None, it will be used as a response
 
         # This is done first as the attachment path may
@@ -212,8 +191,6 @@ class IrHttp(models.AbstractModel):
 
     @classmethod
     def _dispatch(cls):
-        cls._handle_debug()
-
         # locate the controller method
         try:
             rule, arguments = cls._match(request.httprequest.path)

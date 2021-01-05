@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ir_profile_session_view_list" model="ir.ui.view">
+        <field name="name">Profile Session List</field>
+        <field name="model">ir.profile.session</field>
+        <field name="arch" type="xml">
+            <tree string="Profile Session">
+                <field name="create_date"/>
+                <field name="name"/>
+                <field name="create_uid"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_profile_execution_view_list" model="ir.ui.view">
+        <field name="name">Profile execution List</field>
+        <field name="model">ir.profile.execution</field>
+        <field name="arch" type="xml">
+            <tree string="Profile Session">
+                <field name="create_date"/>
+                <field name="profile_session_id"/>
+                <field name="description"/>
+                <field name="speedscope_url" widget="url"/>
+                <field name="duration"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ir_profile_session_view_form" model="ir.ui.view">
+        <field name="name">Profile Session Form</field>
+        <field name="model">ir.profile.session</field>
+        <field name="arch" type="xml">
+            <form string="Profile Session">
+                <group>
+                    <field name="name"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                </group>
+                <group>
+                    <field name="execution_ids" widget="many2many">
+                        <tree>
+                            <field name="id"/>
+                            <field name="description"/>
+                            <field name="duration"/>
+                            <field name="speedscope_url" widget="url"/>
+                        </tree>
+                    </field>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record id="ir_profile_execution_view_form" model="ir.ui.view">
+        <field name="name">Profile execution Form</field>
+        <field name="model">ir.profile.execution</field>
+        <field name="arch" type="xml">
+            <form string="Profile execution">
+                <group>
+                    <field name="description"/>
+                    <field name="profile_session_id"/>
+                </group>
+                <group attrs="{'invisible': [('speedscope_url','=', False)]}">
+                    <field name="speedscope_url" string="Speedscope" widget="speedscope"/>
+                </group>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_generate_speedscope">
+        <field name="name">Generate speedscope</field>
+        <field name="model_id" ref="base.model_ir_profile_execution"/>
+        <field name="binding_model_id" ref="base.model_ir_profile_execution" />
+        <field name="state">code</field>
+        <field name="binding_view_types">form,list</field>
+        <field name="code">
+            action = records._action_generate_speedscope()
+        </field>
+    </record>
+
+    <record model="ir.actions.server" id="action_generate_speedscope_request">
+        <field name="name">Generate speedscope</field>
+        <field name="model_id" ref="base.model_ir_profile_session"/>
+        <field name="binding_model_id" ref="base.model_ir_profile_session" />
+        <field name="state">code</field>
+        <field name="binding_view_types">form</field>
+        <field name="code">
+            action = records._action_generate_speedscope()
+        </field>
+    </record>
+
+
+    <record id="action_menu_ir_profile_session" model="ir.actions.act_window">
+        <field name="name">Ir profile sessions</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.profile.session</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="action_menu_ir_profile_execution_entry" model="ir.actions.act_window">
+        <field name="name">Ir profile execution</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">ir.profile.execution</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="menu_ir_profile_execution" name="Performances" parent="base.menu_custom" sequence="50"/>
+
+    <menuitem action="action_menu_ir_profile_session" id="menu_ir_profile_session" parent="base.menu_ir_profile_execution"/>
+    <menuitem action="action_menu_ir_profile_execution_entry" id="menu_ir_profile_execution_entry" parent="base.menu_ir_profile_execution"/>
+
+</odoo>

@@ -145,8 +145,11 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
     loading_cursor_query_count = cr.sql_log_count
 
     models_updated = set()
-
     for index, package in enumerate(graph, 1):
+        module_name = package.name
+        ec = tools.profiler.ExecutionContext({'module': module_name})
+        ec.__enter__()
+
         module_name = package.name
         module_id = package.id
 
@@ -320,6 +323,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 module_name, len(test_results.failures), len(test_results.errors),
                 test_results.testsRun
             )
+        ec.__exit__()
 
     _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
                    len(graph),
@@ -377,6 +381,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         force.append('demo')
 
     models_to_check = set()
+
+    #profile_cr = db.cursor()
+    #profile_session_id = odoo.tools.profiler.create_session_id(profile_cr, 'loading', 1)
+    #profiler = odoo.tools.profiler.Profiler(
+    #    cr=profile_cr,
+    #    description='loading',
+    #    profile_session_id=profile_session_id
+    #)
+
 
     with db.cursor() as cr:
         if not odoo.modules.db.is_initialized(cr):

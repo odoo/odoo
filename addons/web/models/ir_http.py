@@ -42,6 +42,8 @@ class Http(models.AbstractModel):
             "partner_id": user.partner_id.id if request.session.uid and user.partner_id else None,
             "web.base.url": IrConfigSudo.get_param('web.base.url', default=''),
             "active_ids_limit": int(IrConfigSudo.get_param('web.active_ids_limit', default='20000')),
+            'profile_session_id': request.session.profile_session_id,
+            'profile_modes': request.session.profile_modes,
         }
         if self.env.user.has_group('base.group_user'):
             # the following is only useful in the context of a webclient bootstrapping
@@ -84,6 +86,8 @@ class Http(models.AbstractModel):
             'is_website_user': request.session.uid and self.env.user._is_public() or False,
             'user_id': request.session.uid and self.env.user.id or False,
             'is_frontend': True,
+            'profile_session_id': request.session.profile_session_id,
+            'profile_modes': request.session.profile_modes,
         }
         if request.session.uid:
             version_info = odoo.service.common.exp_version()

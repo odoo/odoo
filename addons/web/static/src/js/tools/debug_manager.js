@@ -16,6 +16,7 @@ var DebugManager = Widget.extend({
     xmlDependencies: ['/web/static/src/xml/debug.xml'],
     events: {
         "click a[data-action]": "perform_callback",
+        "click .profiling": "handle_profiling",
     },
     init: function () {
         this._super.apply(this, arguments);
@@ -23,6 +24,8 @@ var DebugManager = Widget.extend({
         var debug = odoo.debug;
         this.debug_mode = debug;
         this.debug_mode_help = debug && debug !== '1' ? ' (' + debug + ')' : '';
+        this.profile_session_id = odoo.session_info && odoo.session_info.profile_session_id || false
+        this.profile_modes = odoo.session_info && odoo.session_info.profile_modes || [];
     },
     start: function () {
         core.bus.on('rpc:result', this, function (req, resp) {
@@ -53,7 +56,40 @@ var DebugManager = Widget.extend({
             console.warn("No handler for ", callback);
         }
     },
-
+    handle_profiling: function (evt) {
+        evt.stopPropagation(); // prevent dropdown from closing
+        const $target = $(evt.target);
+        const target = $target[0];
+        const params = {};
+        if (target.id === 'enable_profiling') {
+            params.profile = target.checked;
+        } else if (target.localName === 'input' && target.id) {
+            params[target.id] = target.checked;
+        } else {
+            return;
+        }
+        this._rpc({
+            route: '/web/profiling',
+            params: params,
+        }).then(this.update_profiling_state.bind(this));
+    },
+    update_profiling_state: function(resp) {
+        /**
+         * Update the profiling dropdown menu state after any change to synchronyze server session and client 
+         * This is mainly usefull to avoid desync in case of multiple tabs
+         **/
+        if (resp) {
+            this.profile_session_id = resp.profile_session_id;
+            this.profile_modes = resp.profile_modes;
+        }
+        var self = this;
+        this.$('#enable_profiling')[0].checked = Boolean(this.profile_session_id)
+        this.$('.profile_switch').each(function() {
+            this.checked = (self.profile_modes.indexOf(this.id) !== -1)  // FIXME on frontend
+        });
+        this.$profiling_items.toggleClass('d-none', !this.profile_session_id);
+        
+    },
     _debug_events: function (events) {
         if (!this._events) {
             return;
@@ -73,6 +109,9 @@ var DebugManager = Widget.extend({
             .append(QWeb.render('WebClient.DebugManager.Global', {
                 manager: this,
             }));
+        this.$profiling_items = this.$(".profiling_items")
+
+        this.update_profiling_state()
         return Promise.resolve();
     },
     split_assets: function () {
