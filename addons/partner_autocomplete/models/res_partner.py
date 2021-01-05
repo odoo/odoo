@@ -33,12 +33,6 @@ class ResPartner(models.Model):
     def _format_data_company(self, company):
         self._replace_location_code_by_id(company)
 
-        if company.get('child_ids'):
-            child_ids = []
-            for child in company.get('child_ids'):
-                child_ids.append(self._replace_location_code_by_id(child))
-            company['child_ids'] = child_ids
-
         if company.get('additional_info'):
             company['additional_info'] = json.dumps(company['additional_info'])
 

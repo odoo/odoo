@@ -120,14 +120,11 @@ var FieldAutocomplete = FieldChar.extend({
 
             // Some fields are unnecessary in res.company
             if (self.model === 'res.company') {
-                var fields = 'comment,child_ids,bank_ids,additional_info'.split(',');
+                var fields = 'comment,bank_ids,additional_info'.split(',');
                 fields.forEach(function (field) {
                     delete data.company[field];
                 });
             }
-
-            self._setOne2ManyField('child_ids', data.company.child_ids);
-            delete data.company.child_ids;
 
             self._setOne2ManyField('bank_ids', data.company.bank_ids);
             delete data.company.bank_ids;
