@@ -34,7 +34,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
-from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr
+from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property, float_repr, osutil
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
 from odoo.tools.misc import str2bool, xlsxwriter, file_open
@@ -1884,11 +1884,19 @@ class ExportFormat(object):
         """ Provides the format's content type """
         raise NotImplementedError()
 
-    def filename(self, base):
-        """ Creates a valid filename for the format (with extension) from the
-         provided base name (exension-less)
-        """
+    @property
+    def extension(self):
         raise NotImplementedError()
+
+    def filename(self, base):
+        """ Creates a filename *without extension* for the item / format of
+        model ``base``.
+        """
+        if base not in request.env:
+            return base
+
+        model_description = request.env['ir.model']._get(base).name
+        return f"{model_description} ({base})"
 
     def from_data(self, fields, rows):
         """ Conversion method from Odoo's export data to whatever the
@@ -1939,9 +1947,11 @@ class ExportFormat(object):
             export_data = records.export_data(field_names).get('datas',[])
             response_data = self.from_data(columns_headers, export_data)
 
+        # TODO: call `clean_filename` directly in `content_disposition`?
         return request.make_response(response_data,
             headers=[('Content-Disposition',
-                            content_disposition(self.filename(model))),
+                            content_disposition(
+                                osutil.clean_filename(self.filename(model) + self.extension))),
                      ('Content-Type', self.content_type)],
             cookies={'fileToken': token})
 
@@ -1956,8 +1966,9 @@ class CSVExport(ExportFormat, http.Controller):
     def content_type(self):
         return 'text/csv;charset=utf8'
 
-    def filename(self, base):
-        return base + '.csv'
+    @property
+    def extension(self):
+        return '.csv'
 
     def from_group_data(self, fields, groups):
         raise UserError(_("Exporting grouped data to csv is not supported."))
@@ -1991,8 +2002,9 @@ class ExcelExport(ExportFormat, http.Controller):
     def content_type(self):
         return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
-    def filename(self, base):
-        return base + '.xlsx'
+    @property
+    def extension(self):
+        return '.xlsx'
 
     def from_group_data(self, fields, groups):
         with GroupExportXlsxWriter(fields, groups.count) as xlsx_writer:
