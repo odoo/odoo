@@ -135,6 +135,8 @@ class Attendee(models.Model):
                     attendee.ids,
                     compute_lang=True)[attendee.id]
                 attendee.event_id.with_context(no_document=True).message_notify(
+                    email_from=attendee.event_id.user_id.email_formatted or self.env.user.email_formatted,
+                    author_id=attendee.event_id.user_id.partner_id.id or self.env.user.partner_id.id,
                     body=body,
                     subject=subject,
                     partner_ids=attendee.partner_id.ids,
