@@ -45,9 +45,6 @@
     </template>
 
     <template id="language_selector" name="Language Selector">
-        <t t-if="lang not in (lg[0] for lg in languages)">
-            <t t-set="lang" t-value="website.default_lang_id.code"/>
-        </t>
         <t t-set="active_lang" t-value="list(filter(lambda lg : lg[0] == lang, languages))[0]"/>
         <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
         <div t-attf-class="js_language_selector #{_div_classes}" t-if="language_selector_visible">
