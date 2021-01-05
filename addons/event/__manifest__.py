@@ -55,6 +55,9 @@ Key Features
         'web.assets_qweb': [
             'event/static/src/xml/**/*',
         ],
+        'web.report_assets_common': [
+            '/event/static/src/scss/event_foldable_badge_report.scss',
+        ],
     },
     'license': 'LGPL-3',
 }
