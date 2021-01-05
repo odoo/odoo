@@ -5831,7 +5831,6 @@ Fields:
                 records -= self.env.protected(field)
                 if not records:
                     continue
-                recursively_marked = None
                 if field.compute and field.store:
                     if field.recursive:
                         recursively_marked = self.env.not_to_compute(field, records)
@@ -5839,11 +5838,11 @@ Fields:
                 else:
                     # Dont force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
-                    if not create and field.recursive:
+                    if field.recursive:
                         recursively_marked = records & self.env.cache.get_records(records, field)
                     self.env.cache.invalidate([(field, records._ids)])
                 # recursively trigger recomputation of field's dependents
-                if recursively_marked:
+                if field.recursive:
                     recursively_marked.modified([field.name])
 
     def _modified_triggers(self, tree, create=False):
