@@ -2336,6 +2336,7 @@ var FieldMany2ManyTags = AbstractField.extend({
 
         this.colorField = this.nodeOptions.color_field;
         this.hasDropdown = false;
+        this.openRecord = false;
 
         this._computeAvailableActions(this.record);
         // have listen to react to other fields changes to re-evaluate 'create' option
@@ -2422,6 +2423,7 @@ var FieldMany2ManyTags = AbstractField.extend({
             colorField: this.colorField,
             elements: elements,
             hasDropdown: this.hasDropdown,
+            openRecord: this.openRecord,
             readonly: this.mode === "readonly",
         };
     },
@@ -2569,7 +2571,9 @@ var FieldMany2ManyTagsAvatar = FieldMany2ManyTags.extend({
 var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
     events: _.extend({}, FieldMany2ManyTags.prototype.events, {
         'click .dropdown-toggle': '_onOpenColorPicker',
-        'mousedown .o_colorpicker a': '_onUpdateColor',
+        'click .badge > .o_open_record': '_onOpenRecord', // click on badge without color field
+        'mousedown .o_colorpicker .o_open_record': '_onOpenRecord', // mousedown on badge with color field
+        'mousedown .o_colorpicker .o_tag_color': '_onUpdateColor',
         'mousedown .o_colorpicker .o_hide_in_kanban': '_onUpdateColor',
     }),
     /**
@@ -2579,6 +2583,8 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
         this._super.apply(this, arguments);
 
         this.hasDropdown = !!this.colorField;
+        this.openRecord = toBoolElse(this.attrs.open_on_click || '', false);
+        this.can_write = 'can_write' in this.attrs ? JSON.parse(this.attrs.can_write) : true;
     },
 
     //--------------------------------------------------------------------------
@@ -2611,6 +2617,51 @@ var FormFieldMany2ManyTags = FieldMany2ManyTags.extend({
                 this.$('.custom-checkbox input').prop('checked', true);
             }
         }
+    },
+    /**
+     * Opens related record's form view
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onOpenRecord(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const $target = $(ev.currentTarget);
+        const id = $target.data('id');
+        const context = this.record.getContext(this.recordParams);
+        this._rpc({
+            model: this.field.relation,
+            method: 'get_formview_id',
+            args: [[id]],
+            context: context,
+        }).then((viewID) => {
+            if (this.mode === "edit") {
+                return new dialogs.FormViewDialog(this, {
+                    res_model: this.field.relation,
+                    res_id: id,
+                    context: context,
+                    title: _t("Open: ") + this.string,
+                    readonly: !this.can_write,
+                    view_id: viewID,
+                    on_saved: (record, changed) => {
+                        if (changed) {
+                            this._setValue({operation: 'TRIGGER_ONCHANGE'}, {forceChange: true})
+                                .then(() => {
+                                    const record = _.findWhere(this.value.data, {res_id: id});
+                                    this.trigger_up('reload', { db_id: record.id });
+                                });
+                        }
+                    },
+                }).open();
+            }
+            this.trigger_up('do_action', { action: {
+                type: 'ir.actions.act_window',
+                res_model: this.field.relation,
+                views: [[viewID, 'form']],
+                res_id: id,
+                context: context,
+            }});
+        });
     },
     /**
      * Update color based on target of ev

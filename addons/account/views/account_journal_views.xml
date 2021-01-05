@@ -101,7 +101,7 @@
                                     <group string="Control-Access" groups="account.group_account_manager">
                                         <div class="text-muted" colspan="2">Keep empty for no control</div>
                                         <field name="type_control_ids" widget="many2many_tags"/>
-                                        <field name="account_control_ids" widget="many2many_tags"/>
+                                        <field name="account_control_ids" widget="many2many_tags" open_on_click="True"/>
                                         <field name="restrict_mode_hash_table" groups="account.group_account_readonly" attrs="{'invisible': [('type', 'in', ['bank', 'cash'])]}"/>
                                     </group>
                                     <!-- email alias -->
@@ -226,7 +226,7 @@
                     <sheet>
                         <group>
                             <field name="name" placeholder="e.g. GAAP, IFRS, ..."/>
-                            <field name="excluded_journal_ids" widget="many2many_tags" options="{'no_create': True}"/>
+                            <field name="excluded_journal_ids" widget="many2many_tags" open_on_click="True" options="{'no_create': True}"/>
                             <field name="sequence" groups="base.group_no_one"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>

@@ -1189,7 +1189,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('widget many2many_tags', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
             this.data.turtle.records[0].partner_ids = [2];
 
             var form = await createView({
@@ -1209,6 +1209,8 @@ QUnit.module('fields', {}, function () {
                 form.$('.o_field_many2manytags.o_field_widget .badge .o_badge_text').attr('title'),
                 'second record', 'the title should be filled in'
             );
+            assert.doesNotHaveClass(form.$('.o_field_many2manytags .badge .o_badge_text'), 'o_open_record',
+                "'o_open_record' class should not be available if open_on_click attribute is not given");
 
             form.destroy();
         });
@@ -1551,6 +1553,148 @@ QUnit.module('fields', {}, function () {
             await testUtils.modal.clickButton('Save & Close');
 
             assert.containsOnce(form, '.o_field_many2manytags .badge');
+
+            form.destroy();
+        });
+
+        QUnit.test('many2many_tags widget: open record when tag is clicked, without color field', async function (assert) {
+            assert.expect(11);
+            this.data.turtle.records[0].partner_ids = [2];
+
+            const form = await createView({
+                View: FormView,
+                model: 'turtle',
+                data: this.data,
+                arch:
+                `<form string="Turtles">
+                    <sheet>
+                        <field name="display_name"/>
+                        <field name="partner_ids" widget="many2many_tags" open_on_click="True"/>
+                    </sheet>
+                </form>`,
+                archs: {
+                    'partner,false,form': '<form><field name="display_name"/></form>',
+                },
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === 'get_formview_id') {
+                        assert.deepEqual(args.args[0], [2], "should call get_formview_id with correct id");
+                        return Promise.resolve(false);
+                    }
+                    return this._super(route, args);
+                },
+                intercepts: {
+                    do_action: function (event) {
+                        assert.step("do_action");
+                        assert.deepEqual(event.data.action,
+                            {
+                                type: "ir.actions.act_window",
+                                res_id: 2,
+                                res_model: "partner",
+                                views: [[false, "form"]],
+                                context: {}
+                            },
+                            "should call the right action to open form view");
+                    }
+                },
+            });
+
+            assert.containsOnce(form, '.o_field_many2manytags.o_field_widget .badge',
+                'should contain 1 tag');
+            assert.hasClass(form.$('.o_field_many2manytags .badge .o_badge_text'), 'o_open_record',
+                "'o_open_record' class should be available if open_on_click attribute is given");
+
+            // click on badge in readonly mode should call do_action
+            await testUtils.dom.click(form.$('.o_field_many2manytags.o_field_widget .badge .o_open_record'));
+            assert.verifySteps(['do_action']);
+
+            await testUtils.form.clickEdit(form);
+            // click on badge in edit mode should open form view in dialog in edit mode
+            await testUtils.dom.click(form.$('.o_field_many2manytags.o_field_widget .badge .o_open_record'));
+            assert.containsOnce(document.body, '.modal',
+                "should have modal opened");
+            assert.hasClass($('.modal .o_form_view'), 'o_form_editable',
+                "form should be in editable mode");
+
+            await testUtils.fields.editInput($('.modal input[name="display_name"]'), 'test');
+            await testUtils.dom.click($('.modal button.btn-primary'));
+            assert.containsNone(document.body, '.modal',
+                "the modal should be closed");
+            assert.strictEqual(form.$('.o_field_many2manytags.o_field_widget .badge[data-id=2] .o_badge_text').text(), 'test',
+                "the partner name should have been updated to 'test'");
+
+            form.destroy();
+        });
+
+        QUnit.test('many2many_tags widget: open record when tag is clicked, with color field', async function (assert) {
+            assert.expect(12);
+            this.data.turtle.records[0].partner_ids = [2];
+
+            const form = await createView({
+                View: FormView,
+                model: 'turtle',
+                data: this.data,
+                arch:
+                `<form string="Turtles">
+                    <sheet>
+                        <field name="display_name"/>
+                        <field name="partner_ids" widget="many2many_tags" open_on_click="True" options="{'color_field': 'color'}"/>
+                    </sheet>
+                </form>`,
+                archs: {
+                    'partner,false,form': '<form><field name="display_name"/></form>',
+                },
+                res_id: 1,
+                mockRPC: function (route, args) {
+                    if (args.method === 'get_formview_id') {
+                        assert.deepEqual(args.args[0], [2], "should call get_formview_id with correct id");
+                        return Promise.resolve(false);
+                    }
+                    return this._super(route, args);
+                },
+                intercepts: {
+                    do_action: function (event) {
+                        assert.step("do_action");
+                        assert.deepEqual(event.data.action,
+                            {
+                                type: "ir.actions.act_window",
+                                res_id: 2,
+                                res_model: "partner",
+                                views: [[false, "form"]],
+                                context: {}
+                            },
+                            "should call the right action to open form view");
+                    }
+                },
+            });
+
+            assert.containsN(form, '.o_field_many2manytags .badge .dropdown-toggle', 1,
+                "should contain 1 tag");
+
+            // open color picker and check "open" option is there and click on it triggers do_action
+            let $dropdown = form.$('.o_field_many2manytags .badge[data-id=2] .dropdown-toggle'); // selects 'red' tag
+            await testUtils.dom.click($dropdown);
+            assert.containsOnce(document.body, '.o_colorpicker');
+            assert.containsOnce(document.body, '.o_colorpicker .o_open_record',
+                "'Open' option should be available in color picker");
+
+            // click on "open" in the colorpicker
+            await testUtils.dom.triggerEvents(form.$('.o_colorpicker .o_open_record'), ['mousedown']);
+            assert.verifySteps(['do_action']);
+
+            await testUtils.form.clickEdit(form);
+            $dropdown = form.$('.o_field_many2manytags .badge[data-id=2] .dropdown-toggle'); // selects 'red' tag
+            await testUtils.dom.click($dropdown);
+            assert.containsOnce(document.body, '.o_colorpicker');
+            assert.containsOnce(document.body, '.o_colorpicker .o_open_record',
+                "'Open' option should be available in color picker");
+
+            // click on "open" in the colorpicker
+            await testUtils.dom.triggerEvents(form.$('.o_colorpicker .o_open_record'), ['mousedown']);
+            assert.containsOnce(document.body, '.modal',
+                "should have modal opened");
+            assert.hasClass($('.modal .o_form_view'), 'o_form_editable',
+                "form should be in editable mode");
 
             form.destroy();
         });
