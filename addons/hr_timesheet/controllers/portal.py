@@ -19,8 +19,9 @@ class TimesheetCustomerPortal(CustomerPortal):
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
         if 'timesheet_count' in counters:
-            domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
-            values['timesheet_count'] = request.env['account.analytic.line'].sudo().search_count(domain)
+            Timesheet = request.env['account.analytic.line']
+            domain = Timesheet._timesheet_get_portal_domain()
+            values['timesheet_count'] = Timesheet.sudo().search_count(domain)
         return values
 
     def _get_searchbar_inputs(self):
@@ -63,9 +64,11 @@ class TimesheetCustomerPortal(CustomerPortal):
 
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='none', **kw):
-        Timesheet_sudo = request.env['account.analytic.line'].sudo()
+        Timesheet = request.env['account.analytic.line']
+        domain = Timesheet._timesheet_get_portal_domain()
+        Timesheet_sudo = Timesheet.sudo()
+
         values = self._prepare_portal_layout_values()
-        domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
         _items_per_page = 100
 
         searchbar_sortings = {
