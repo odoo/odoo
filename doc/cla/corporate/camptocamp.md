@@ -38,3 +38,4 @@ Alexandre Saunier alexandre.saunier@camptocamp.com https://github.com/asaunier
 Frédéric Junod frederic.junod@camptocamp.com https://github.com/fredj
 Thomas Nowicki thomas.nowicki@camptocamp.com https://github.com/Tonow-c2c
 Stéphane Mangin stephane.mangin@camptocamp.com https://github.com/StephaneMangin
+Telmo Santos telmo.santos@camptocamp.com https://github.com/santostelmo
