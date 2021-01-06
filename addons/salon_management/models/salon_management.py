@@ -172,7 +172,7 @@ class SalonOrder(models.Model):
             self.write({'start_date_only': salon_start_time_date})
             self.write({'start_time_only': str(self.start_time)[11:16]})
 
-    name = fields.Char(string='Salon', required=True, copy=False, readonly=True,
+    name = fields.Char(string='Sport', required=True, copy=False, readonly=True,
                        default='Draft Salon Order')
     start_time = fields.Datetime(string="Start time", default=datetime.now(), required=True)
     end_time = fields.Datetime(string="End time")
@@ -183,7 +183,7 @@ class SalonOrder(models.Model):
                                       "then you can add the customer in your database")
     customer_name = fields.Char(string="Name", required=True)
     amount = fields.Float(string="Amount")
-    chair_id = fields.Many2one('salon.chair', string="Chair", required=True)
+    chair_id = fields.Many2one('salon.chair', string="Court", required=True)
     price_subtotal = fields.Float(string='Total', compute='sub_total_update', readonly=True, store=True)
     time_taken_total = fields.Float(string="Total time taken")
     note = fields.Text('Terms and conditions')

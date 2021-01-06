@@ -34,7 +34,7 @@ class SalonBookingBackend(models.Model):
     phone = fields.Char(string="Phone")
     email = fields.Char(string="E-Mail")
     services = fields.Many2many('salon.service', string="Services")
-    chair_id = fields.Many2one('salon.chair', string="Chair")
+    chair_id = fields.Many2one('salon.chair', string="Court")
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company'].browse(1))
     lang = fields.Many2one('res.lang', 'Language',
