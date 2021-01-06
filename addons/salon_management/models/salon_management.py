@@ -30,19 +30,19 @@ from odoo.exceptions import UserError, ValidationError
 class PartnerSalon(models.Model):
     _inherit = 'res.partner'
 
-    partner_salon = fields.Boolean(string="Is a Salon Partner")
+    partner_salon = fields.Boolean(string="Is a Sport Partner")
 
 
 class SequenceUpdaterSalon(models.Model):
     _name = 'salon.sequence.updater'
 
-    sequence_salon = fields.Char(string="Salon Sequence")
+    sequence_salon = fields.Char(string="Sport Sequence")
 
 
 class UserSalon(models.Model):
     _inherit = 'res.users'
 
-    user_salon_active = fields.Boolean(string="Active Salon Users")
+    user_salon_active = fields.Boolean(string="Active Sport Users")
 
 
 class SalonChair(models.Model):
@@ -251,7 +251,7 @@ class SalonOrder(models.Model):
             if self.stage_id.id == 2 and values['stage_id'] == 3 and self.inv_stage_identifier is False:
                 self.salon_invoice_create()
 
-        if 'stage_id' in values.keys() and self.name == "Draft Salon Order":
+        if 'stage_id' in values.keys() and self.name == "Draft Sport Order":
             if values['stage_id'] == 2:
                 self.salon_confirm()
         return super(SalonOrder, self).write(values)
@@ -303,9 +303,9 @@ class SalonOrder(models.Model):
         if self.partner_id:
             supplier = self.partner_id
         else:
-            supplier = self.partner_id.search([("name", "=", "Salon Default Customer")])
+            supplier = self.partner_id.search([("name", "=", "Sport Default Customer")])
         lines = []
-        product_id = self.env['product.product'].search([("name", "=", "Salon Service")])
+        product_id = self.env['product.product'].search([("name", "=", "Sport Service")])
         for records in self.order_line:
             if product_id.property_account_income_id.id:
                 income_account = product_id.property_account_income_id.id
