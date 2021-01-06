@@ -29,6 +29,8 @@ class IrUiView(models.Model):
 
     @api.model
     def read_template(self, xml_id):
+        """ This method is deprecated
+        """
         if xml_id == 'web_editor.colorpicker' and self.env.user.has_group('base.group_user'):
             # TODO this should be handled another way but was required as a
             # stable fix in 14.0. The views are now private by default: they
