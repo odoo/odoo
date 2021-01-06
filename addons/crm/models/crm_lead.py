@@ -999,7 +999,7 @@ class Lead(models.Model):
         which fields has been merged and their new value. `self` is the resulting
         merge crm.lead record.
 
-        :param opportunities: see ``merge_dependences``
+        :param opportunities: see ``_merge_dependences``
         """
         # TODO JEM: mail template should be used instead of fix body, subject text
         self.ensure_one()
@@ -1016,7 +1016,7 @@ class Lead(models.Model):
         """ Move mail.message from the given opportunities to the current one. `self` is the
             crm.lead record destination for message of `opportunities`.
 
-        :param opportunities: see ``merge_dependences``
+        :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
         for opportunity in opportunities:
@@ -1035,7 +1035,7 @@ class Lead(models.Model):
         """ Move attachments of given opportunities to the current one `self`, and rename
             the attachments having same name than native ones.
 
-        :param opportunities: see ``merge_dependences``
+        :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
 
@@ -1057,7 +1057,7 @@ class Lead(models.Model):
                 attachment.write(values)
         return True
 
-    def merge_dependences(self, opportunities):
+    def _merge_dependences(self, opportunities):
         """ Merge dependences (messages, attachments, ...). These dependences will be
             transfered to `self`, the most important lead.
 
@@ -1102,7 +1102,7 @@ class Lead(models.Model):
             merged_data['team_id'] = team_id
 
         # merge other data (mail.message, attachments, ...) from tail into head
-        opportunities_head.merge_dependences(opportunities_tail)
+        opportunities_head._merge_dependences(opportunities_tail)
 
         # check if the stage is in the stages of the Sales Team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
@@ -1149,11 +1149,11 @@ class Lead(models.Model):
             lead.write(vals)
 
         if user_ids or team_id:
-            self.handle_salesmen_assignment(user_ids, team_id)
+            self._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
 
         return True
 
-    def handle_partner_assignment(self, force_partner_id=False, create_missing=True):
+    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True):
         """ Update customer (partner_id) of leads. Purpose is to set the same
         partner on most leads; either through a newly created partner either
         through a given partner_id.
@@ -1169,7 +1169,7 @@ class Lead(models.Model):
                 partner = lead._create_customer()
                 lead.partner_id = partner.id
 
-    def handle_salesmen_assignment(self, user_ids=None, team_id=False):
+    def _handle_salesmen_assignment(self, user_ids=False, team_id=False):
         """ Assign salesmen and salesteam to a batch of leads.  If there are more
         leads than salesmen, these salesmen will be assigned in round-robin. E.g.
         4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6) will assigned as
@@ -1179,7 +1179,7 @@ class Lead(models.Model):
         :param int team_id: salesteam to assign
         """
         update_vals = {'team_id': team_id} if team_id else {}
-        if not user_ids:
+        if not user_ids and team_id:
             self.write(update_vals)
         else:
             lead_ids = self.ids
