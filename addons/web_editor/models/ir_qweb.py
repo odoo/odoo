@@ -32,7 +32,7 @@ import odoo.modules
 from odoo import api, models, fields
 from odoo.tools import ustr, posix_to_ldml, pycompat
 from odoo.tools import html_escape as escape
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, babel_locale_parse
 from odoo.addons.base.models import ir_qweb
 
 REMOTE_CONNECTION_TIMEOUT = 2.5
@@ -248,7 +248,7 @@ class Date(models.AbstractModel):
                 return attrs
 
             lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
-            locale = babel.Locale.parse(lg.code)
+            locale = babel_locale_parse(lg.code)
             babel_format = value_format = posix_to_ldml(lg.date_format, locale=locale)
 
             if record[field_name]:
@@ -282,7 +282,7 @@ class DateTime(models.AbstractModel):
             value = record[field_name]
 
             lg = self.env['res.lang']._lang_get(self.env.user.lang) or get_lang(self.env)
-            locale = babel.Locale.parse(lg.code)
+            locale = babel_locale_parse(lg.code)
             babel_format = value_format = posix_to_ldml('%s %s' % (lg.date_format, lg.time_format), locale=locale)
             tz = record.env.context.get('tz') or self.env.user.tz
 
