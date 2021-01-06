@@ -1221,6 +1221,48 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('readonly email field field is properly rerendered after been changed by onchange', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records[0].foo = 'dolores.abernathy@delos';
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                '<sheet>' +
+                '<group>' +
+                '<field name="int_field" on_change="1"/>' + // onchange to update mobile in readonly mode directly
+                '<field name="foo" widget="email" readonly="1"/>' + // readonly only, we don't want to go through write mode
+                '</group>' +
+                '</sheet>' +
+                '</form>',
+            res_id: 1,
+            viewOptions: {mode: 'edit'},
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        value: {
+                            foo: 'lara.espin@unknown', // onchange to update foo in readonly mode directly
+                        },
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+        // check initial rendering
+        assert.strictEqual(form.$('.o_field_email').text(), 'dolores.abernathy@delos',
+            'Initial email text should be set');
+
+        // trigger the onchange to update phone field, but still in readonly mode
+        await testUtils.fields.editInput($('input[name="int_field"]'), '3');
+
+        // check rendering after changes
+        assert.strictEqual(form.$('.o_field_email').text(), 'lara.espin@unknown',
+            'email text should be updated');
+
+        form.destroy();
+    });
 
     QUnit.module('FieldChar');
 

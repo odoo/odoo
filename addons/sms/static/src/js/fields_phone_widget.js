@@ -90,7 +90,6 @@ Phone.include({
             $composerButton.on('click', this._onClickSMS.bind(this));
             this.$el = this.$el.add($composerButton);
         }
-
         return def;
     },
 });
