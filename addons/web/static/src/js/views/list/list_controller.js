@@ -604,7 +604,7 @@ var ListController = BasicController.extend({
     _toggleCreateButton: function () {
         if (this.hasButtons) {
             var state = this.model.get(this.handle);
-            var createHidden = this.renderer.isEditable() && state.groupedBy.length && state.data.length;
+            var createHidden = this.editable && state.groupedBy.length && state.data.length;
             this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
         }
     },
