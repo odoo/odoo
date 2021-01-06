@@ -16,7 +16,7 @@ class ProductionLot(models.Model):
         required=True, help="Unique Lot/Serial Number")
     ref = fields.Char('Internal Reference', help="Internal reference number in case it differs from the manufacturer's lot/serial number")
     product_id = fields.Many2one(
-        'product.product', 'Product',
+        'product.product', 'Product', index=True,
         domain=lambda self: self._domain_product_id(), required=True, check_company=True)
     product_uom_id = fields.Many2one(
         'uom.uom', 'Unit of Measure',
@@ -94,6 +94,7 @@ class ProductionLot(models.Model):
                 ))
         return super(ProductionLot, self).write(vals)
 
+    @api.depends('quant_ids', 'quant_ids.quantity')
     def _product_qty(self):
         for lot in self:
             # We only care for the quants in internal or transit locations.

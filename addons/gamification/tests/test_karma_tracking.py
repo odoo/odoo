@@ -10,7 +10,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.tests import common
 
 
-class TestKarmaTrackingCommon(common.SavepointCase):
+class TestKarmaTrackingCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -194,7 +194,7 @@ class TestKarmaTrackingCommon(common.SavepointCase):
         self.assertEqual(user.karma_tracking_ids[0].new_value, 32)
 
 
-class TestComputeRankCommon(common.SavepointCase):
+class TestComputeRankCommon(common.TransactionCase):
 
     @classmethod
     def setUpClass(cls):

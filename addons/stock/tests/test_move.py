@@ -3,10 +3,10 @@
 
 from odoo.exceptions import UserError
 from odoo.tests import Form
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class StockMove(SavepointCase):
+class StockMove(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockMove, cls).setUpClass()
@@ -3749,7 +3749,7 @@ class StockMove(SavepointCase):
         self.assertEqual(move1.product_uom_qty, 0)
         move1.product_uom_qty = 100
         move1.product_id = self.product_serial
-        move1.onchange_product_id()
+        move1._onchange_product_id()
         self.assertEqual(move1.product_uom_qty, 100)
 
     def test_scrap_1(self):
@@ -3841,7 +3841,7 @@ class StockMove(SavepointCase):
         })
         move1._action_confirm()
 
-        self.assertEqual(move1.state, 'confirmed')
+        self.assertEqual(move1.state, 'assigned')
         scrap = self.env['stock.scrap'].create({
             'product_id': self.product.id,
             'product_uom_id': self.product.uom_id.id,

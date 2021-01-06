@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="assets" inherit_id="point_of_sale.assets">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/pos_coupon/static/src/css/coupon.css"/>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/coupon.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/Orderline.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/PaymentScreen.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/ProductScreen.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/ActivePrograms.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/ControlButtons/PromoCodeButton.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/ControlButtons/ResetProgramsButton.js"></script>
+        </xpath>
+    </template>
+    <template id="pos_coupon.assets_tests" name="POS Coupon Test Assets" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/pos_coupon/static/src/js/tours/PosCouponTourMethods.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/tours/PosCoupon1.tour.js"></script>
+            <script type="text/javascript" src="/pos_coupon/static/src/js/tours/PosCoupon2.tour.js"></script>
+        </xpath>
+    </template>
+</odoo>

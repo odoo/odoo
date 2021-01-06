@@ -3,11 +3,11 @@ odoo.define('website.s_progress_bar_options', function (require) {
 
 const core = require('web.core');
 const utils = require('web.utils');
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
 const _t = core._t;
 
-snippetOptions.registry.progress = snippetOptions.SnippetOptionWidget.extend({
+options.registry.progress = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -18,7 +18,7 @@ snippetOptions.registry.progress = snippetOptions.SnippetOptionWidget.extend({
      *
      * @see this.selectClass for parameters
      */
-    display: async function (previewMode, widgetValue, params) {
+    display: function (previewMode, widgetValue, params) {
         // retro-compatibility
         if (this.$target.hasClass('progress')) {
             this.$target.removeClass('progress');
@@ -38,15 +38,13 @@ snippetOptions.registry.progress = snippetOptions.SnippetOptionWidget.extend({
         } else {
             $text.insertBefore(this.$target.find('.progress'));
         }
-
-        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Sets the progress bar value.
      *
      * @see this.selectClass for parameters
      */
-    progressBarValue: async function (previewMode, widgetValue, params) {
+    progressBarValue: function (previewMode, widgetValue, params) {
         let value = parseInt(widgetValue);
         value = utils.confine(value, 0, 100);
         const $progressBar = this.$target.find('.progress-bar');
@@ -56,8 +54,6 @@ snippetOptions.registry.progress = snippetOptions.SnippetOptionWidget.extend({
         $progressBarText.text($progressBarText.text().replace(/[0-9]+%/, value + '%'));
         $progressBar.attr("aria-valuenow", value);
         $progressBar.css("width", value + "%");
-
-        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

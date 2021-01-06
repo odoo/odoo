@@ -60,7 +60,7 @@
                                     <span role="separator">View</span>
                                 </div>
                                 <div>
-                                    <a role="menuitem" type="object" name="open_action">Statements</a>
+                                    <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_tree', 'search_default_journal': True}">Statements</a>
                                 </div>
                                 <div>
                                     <a role="menuitem" type="object" name="open_action_with_context" context="{'action_name': 'action_bank_statement_line', 'search_default_journal': True}">Operations</a>
@@ -255,8 +255,8 @@
                                 </div>
                             </t>
                             <t t-if="journal_type == 'cash'">
-                                <a t-if="dashboard.number_to_reconcile > 0" type="object" name="create_cash_statement" class="oe_inline" groups="account.group_account_invoice">New Transactions</a>
-                                <button t-if="dashboard.number_to_reconcile == 0" type="object" name="create_cash_statement" class="btn btn-primary" groups="account.group_account_invoice">New Transactions</button>
+                                <a t-if="dashboard.number_to_reconcile > 0" type="object" name="create_cash_statement" class="oe_inline" groups="account.group_account_invoice">New Transaction</a>
+                                <button t-if="dashboard.number_to_reconcile == 0" type="object" name="create_cash_statement" class="btn btn-primary" groups="account.group_account_invoice">New Transaction</button>
                             </t>
                         </div>
                         <!-- On the right, show other common informations/actions -->

@@ -28,8 +28,6 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
         }
 
         startSession() {
-            if(!parseFloat(this.cashBoxValue))
-                return;
             this.env.pos.bank_statement.balance_start = parseFloat(this.cashBoxValue);
             this.env.pos.pos_session.state = 'opened';
             this.rpc({
@@ -61,7 +59,6 @@ odoo.define('point_of_sale.CashOpeningPopup', function(require) {
             }
             this.render();
         }
-
     }
 
     CashOpeningPopup.template = 'CashOpeningPopup';

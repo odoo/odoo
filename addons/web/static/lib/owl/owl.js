@@ -1240,6 +1240,7 @@
 
     const patch = init([eventListenersModule, attrsModule, propsModule, classModule]);
 
+    let localStorage = null;
     const browser = {
         setTimeout: window.setTimeout.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
@@ -1249,7 +1250,12 @@
         random: Math.random,
         Date: window.Date,
         fetch: (window.fetch || (() => { })).bind(window),
-        localStorage: window.localStorage,
+        get localStorage() {
+            return localStorage || window.localStorage;
+        },
+        set localStorage(newLocalStorage) {
+            localStorage = newLocalStorage;
+        },
     };
 
     /**
@@ -1364,6 +1370,7 @@
     const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
     const lineBreakRE = /[\r\n]/;
     const whitespaceRE = /\s+/g;
+    const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
     const NODE_HOOKS_PARAMS = {
         create: "(_, n)",
         insert: "vn",
@@ -1718,7 +1725,8 @@
                 }
                 if (this.translateFn) {
                     if (node.parentNode.getAttribute("t-translation") !== "off") {
-                        text = this.translateFn(text);
+                        const match = translationRE.exec(text);
+                        text = match[1] + this.translateFn(match[2]) + match[3];
                     }
                 }
                 if (ctx.parentNode) {
@@ -2660,7 +2668,8 @@
         priority: 80,
         atNodeEncounter({ ctx, value, node, qweb }) {
             const slotKey = ctx.generateID();
-            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + '${value}'];`);
+            const valueExpr = value.match(INTERP_REGEXP) ? ctx.interpolate(value) : `'${value}'`;
+            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + ${valueExpr}];`);
             ctx.addIf(`slot${slotKey}`);
             let parentNode = `c${ctx.parentNode}`;
             if (!ctx.parentNode) {
@@ -3872,6 +3881,7 @@
                 if (!this.env.qweb) {
                     this.env.qweb = new QWeb();
                 }
+                // TODO: remove this in owl 2.0
                 if (!this.env.browser) {
                     this.env.browser = browser;
                 }
@@ -4036,7 +4046,7 @@
                 message += `\nMaybe the DOM is not ready yet? (in that case, you can use owl.utils.whenReady)`;
                 throw new Error(message);
             }
-            const fiber = new Fiber(null, this, false, target, position);
+            const fiber = new Fiber(null, this, true, target, position);
             fiber.shouldPatch = false;
             if (!__owl__.vnode) {
                 this.__prepareAndRender(fiber, () => { });
@@ -4427,6 +4437,23 @@
     Component.env = {};
     // expose scheduler s.t. it can be mocked for testing purposes
     Component.scheduler = scheduler;
+    async function mount(C, params) {
+        const { env, props, target } = params;
+        let origEnv = C.hasOwnProperty("env") ? C.env : null;
+        if (env) {
+            C.env = env;
+        }
+        const component = new C(null, props);
+        if (origEnv) {
+            C.env = origEnv;
+        }
+        else {
+            delete C.env;
+        }
+        const position = params.position || "last-child";
+        await component.mount(target, { position });
+        return component;
+    }
 
     /**
      * The `Context` object provides a way to share data between an arbitrary number
@@ -4533,16 +4560,6 @@
             __owl__.observer = new Observer();
             __owl__.observer.notifyCB = component.render.bind(component);
         }
-        const currentCB = __owl__.observer.notifyCB;
-        __owl__.observer.notifyCB = function () {
-            if (ctx.rev > mapping[id]) {
-                // in this case, the context has been updated since we were rendering
-                // last, and we do not need to render here with the observer. A
-                // rendering is coming anyway, with the correct props.
-                return;
-            }
-            currentCB();
-        };
         mapping[id] = 0;
         const renderFn = __owl__.renderFn;
         __owl__.renderFn = function (comp, params) {
@@ -4666,6 +4683,23 @@
         };
     }
     // -----------------------------------------------------------------------------
+    // "Builder" hooks
+    // -----------------------------------------------------------------------------
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the component calling them.
+     */
+    function useComponent() {
+        return Component.current;
+    }
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the env of the component calling them.
+     */
+    function useEnv() {
+        return Component.current.env;
+    }
+    // -----------------------------------------------------------------------------
     // useSubEnv
     // -----------------------------------------------------------------------------
     /**
@@ -4709,6 +4743,8 @@
         onWillStart: onWillStart,
         onWillUpdateProps: onWillUpdateProps,
         useRef: useRef,
+        useComponent: useComponent,
+        useEnv: useEnv,
         useSubEnv: useSubEnv,
         useExternalListener: useExternalListener
     });
@@ -5305,19 +5341,21 @@
     exports.QWeb = QWeb;
     exports.Store = Store$1;
     exports.__info__ = __info__;
+    exports.browser = browser;
     exports.config = config;
     exports.core = core;
     exports.hooks = hooks$1;
     exports.misc = misc;
+    exports.mount = mount;
     exports.router = router;
     exports.tags = tags;
     exports.useState = useState$1;
     exports.utils = utils;
 
 
-    __info__.version = '1.0.13';
-    __info__.date = '2020-10-26T07:38:42.693Z';
-    __info__.hash = 'd615ffd';
+    __info__.version = '1.2.0';
+    __info__.date = '2020-12-14T12:37:32.543Z';
+    __info__.hash = '144b323';
     __info__.url = 'https://github.com/odoo/owl';
 
 

@@ -40,6 +40,12 @@ class KeyboardUSBDriver(Driver):
         self.device_connection = 'direct'
         self.device_name = self._set_name()
 
+        self._actions.update({
+            'update_layout': self._update_layout,
+            'update_is_scanner': self._save_is_scanner,
+            '': self._action_default,
+        })
+
         # from https://github.com/xkbcommon/libxkbcommon/blob/master/test/evdev-scancodes.h
         self._scancode_to_modifier = {
             42: 'left_shift',
@@ -117,21 +123,6 @@ class KeyboardUSBDriver(Driver):
             _logger.warning(e)
             return _('Unknown input device')
 
-    def action(self, data):
-        if data.get('action', False) == 'update_layout':
-            layout = {
-                'layout': data.get('layout'),
-                'variant': data.get('variant'),
-            }
-            self._change_keyboard_layout(layout)
-            self.save_layout(layout)
-        elif data.get('action', False) == 'update_is_scanner':
-            is_scanner = {'is_scanner': data.get('is_scanner')}
-            self.save_is_scanner(is_scanner)
-        else:
-            self.data['value'] = ''
-            event_manager.device_changed(self)
-
     def run(self):
         try:
             for event in self.input_device.read_loop():
@@ -198,19 +189,6 @@ class KeyboardUSBDriver(Driver):
         data[self.device_identifier] = layout
         helpers.write_file('odoo-keyboard-layouts.conf', json.dumps(data))
 
-    def save_is_scanner(self, is_scanner):
-        """Save the type of device.
-        We need that in order to keep the selected type of device after a reboot.
-        """
-        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
-        if file_path.exists():
-            data = json.loads(file_path.read_text())
-        else:
-            data = {}
-        data[self.device_identifier] = is_scanner
-        helpers.write_file('odoo-keyboard-is-scanner.conf', json.dumps(data))
-        self._set_device_type('scanner') if is_scanner.get('is_scanner') else self._set_device_type()
-
     def load_layout(self):
         """Read the layout from the saved filed and set it as current layout.
         If no file or no layout is found we use 'us' by default.
@@ -222,6 +200,10 @@ class KeyboardUSBDriver(Driver):
         else:
             layout = {'layout': 'us'}
         self._change_keyboard_layout(layout)
+
+    def _action_default(self, data):
+        self.data['value'] = ''
+        event_manager.device_changed(self)
 
     def _is_scanner(self):
         """Read the device type from the saved filed and set it as current type.
@@ -267,6 +249,28 @@ class KeyboardUSBDriver(Driver):
             self._current_barcode = ''
         else:
             self._current_barcode += self._scancode_to_char(scancode)
+
+    def _save_is_scanner(self, data):
+        """Save the type of device.
+        We need that in order to keep the selected type of device after a reboot.
+        """
+        is_scanner = {'is_scanner': data.get('is_scanner')}
+        file_path = Path.home() / 'odoo-keyboard-is-scanner.conf'
+        if file_path.exists():
+            data = json.loads(file_path.read_text())
+        else:
+            data = {}
+        data[self.device_identifier] = is_scanner
+        helpers.write_file('odoo-keyboard-is-scanner.conf', json.dumps(data))
+        self._set_device_type('scanner') if is_scanner.get('is_scanner') else self._set_device_type()
+
+    def _update_layout(self, data):
+        layout = {
+            'layout': data.get('layout'),
+            'variant': data.get('variant'),
+        }
+        self._change_keyboard_layout(layout)
+        self.save_layout(layout)
 
     def _set_device_type(self, device_type='keyboard'):
         """Modify the device type between 'keyboard' and 'scanner'

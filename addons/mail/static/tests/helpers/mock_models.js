@@ -68,6 +68,8 @@ class MockModels {
             'mail.channel': {
                 fields: {
                     channel_type: { string: "Channel Type", type: "selection", default: 'channel' },
+                    // Equivalent to members but required due to some RPC giving this field in domain.
+                    channel_partner_ids: { string: "Channel Partner Ids", type: 'many2many', relation: 'res.partner' },
                     // In python this belongs to mail.channel.partner. Here for simplicity.
                     custom_channel_name: { string: "Custom channel name", type: 'char' },
                     fetched_message_id: { string: "Last Fetched", type: 'many2one', relation: 'mail.message' },
@@ -145,6 +147,7 @@ class MockModels {
                     res_model_name: { string: "Res Model Name", type: 'char' },
                     starred_partner_ids: { string: "Favorited By", type: 'many2many', relation: 'res.partner' },
                     subject: { string: "Subject", type: 'char' },
+                    subtype_id: { string: "Subtype id", type: 'many2one', relation: 'mail.message.subtype' },
                     tracking_value_ids: { relation: 'mail.tracking.value', string: "Tracking values", type: 'one2many' },
                 },
                 records: [],
@@ -235,6 +238,7 @@ class MockModels {
             },
             'res.fake': {
                 fields: {
+                    activity_ids: { string: "Activities", type: 'one2many', relation: 'mail.activity' },
                     email_cc: { type: 'char' },
                     partner_ids: {
                         string: "Related partners",

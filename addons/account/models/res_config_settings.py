@@ -73,8 +73,6 @@ class ResConfigSettings(models.TransientModel):
              '-This installs the account_batch_payment module.')
     module_account_sepa = fields.Boolean(string='SEPA Credit Transfer (SCT)')
     module_account_sepa_direct_debit = fields.Boolean(string='Use SEPA Direct Debit')
-    module_account_plaid = fields.Boolean(string="Plaid Connector")
-    module_account_yodlee = fields.Boolean("Bank Interface - Sync your bank feeds automatically")
     module_account_bank_statement_import_qif = fields.Boolean("Import .qif files")
     module_account_bank_statement_import_ofx = fields.Boolean("Import in .ofx format")
     module_account_bank_statement_import_csv = fields.Boolean("Import in .csv format")
@@ -148,11 +146,6 @@ class ResConfigSettings(models.TransientModel):
     def onchange_module_account_budget(self):
         if self.module_account_budget:
             self.group_analytic_accounting = True
-
-    @api.onchange('module_account_yodlee')
-    def onchange_account_yodlee(self):
-        if self.module_account_yodlee:
-            self.module_account_plaid = True
 
     @api.onchange('tax_exigibility')
     def _onchange_tax_exigibility(self):

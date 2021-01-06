@@ -317,7 +317,7 @@ class AccountBankStatement(models.Model):
 
                         st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
                         st_line_vals['counterpart_account_id'] = stmt.journal_id.profit_account_id.id
-                        
+
                     self.env['account.bank.statement.line'].create(st_line_vals)
                 else:
                     balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)
@@ -329,10 +329,14 @@ class AccountBankStatement(models.Model):
                     ))
         return True
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_only_if_open(self):
         for statement in self:
             if statement.state != 'open':
                 raise UserError(_('In order to delete a bank statement, you must first cancel it to delete related journal items.'))
+
+    def unlink(self):
+        for statement in self:
             # Explicitly unlink bank statement lines so it will check that the related journal entries have been deleted first
             statement.line_ids.unlink()
             # Some other bank statements might be link to this one, so in that case we have to switch the previous_statement_id
@@ -351,6 +355,13 @@ class AccountBankStatement(models.Model):
         for statement in self:
             if any(st_line.journal_id != statement.journal_id for st_line in statement.line_ids):
                 raise ValidationError(_('The journal of a bank statement line must always be the same as the bank statement one.'))
+
+    def _constrains_date_sequence(self):
+        # Multiple import methods set the name to things that are not sequences:
+        # i.e. Statement from {date1} to {date2}
+        # It makes this constraint not applicable, and it is less needed on bank statements as it
+        # is only an indication and not some thing legal.
+        return
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS
@@ -415,14 +426,12 @@ class AccountBankStatement(models.Model):
                     'res_id': statement.id
                 })
 
+        self._check_balance_end_real_same_as_computed()
         self.write({'state': 'confirm', 'date_done': fields.Datetime.now()})
 
     def button_validate_or_action(self):
         if self.journal_type == 'cash' and not self.currency_id.is_zero(self.difference):
-            action_rec = self.env['ir.model.data'].xmlid_to_object('account.action_view_account_bnk_stmt_check')
-            if action_rec:
-                action = action_rec.read()[0]
-                return action
+            return self.env['ir.actions.act_window']._for_xml_id('account.action_view_account_bnk_stmt_check')
 
         return self.button_validate()
 
@@ -460,8 +469,12 @@ class AccountBankStatement(models.Model):
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {'journal_id': self.journal_id.id}
 
-        sequence_number_reset = self._deduce_sequence_number_reset(self.search([('date', '<', self.date)], order='date desc', limit=1).name)
         if not relaxed:
+            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', '!=', False)]
+            previous_name = self.search(domain + [('date', '<', self.date)], order='date desc', limit=1).name
+            if not previous_name:
+                previous_name = self.search(domain, order='date desc', limit=1).name
+            sequence_number_reset = self._deduce_sequence_number_reset(previous_name)
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
@@ -1216,10 +1229,6 @@ class AccountBankStatementLine(models.Model):
                 continue
 
             (line + counterpart_line).reconcile()
-
-            # Update the payment date to match the current bank statement line's date.
-            if counterpart_line.payment_id:
-                counterpart_line.payment_id.date = self.date
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

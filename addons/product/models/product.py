@@ -55,17 +55,16 @@ class ProductCategory(models.Model):
     def _check_category_recursion(self):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive categories.'))
-        return True
 
     @api.model
     def name_create(self, name):
         return self.create({'name': name}).name_get()[0]
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_default_category(self):
         main_category = self.env.ref('product.product_category_all')
         if main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
-        return super().unlink()
 
 
 class ProductProduct(models.Model):

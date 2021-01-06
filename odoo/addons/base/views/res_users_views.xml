@@ -468,7 +468,7 @@
                                 </div>
                             </group>
                             <group string="Developer API Keys" help="test">
-                                <a href="https://www.odoo.com/documentation/master/webservice/odoo.html#api-keys" target="_blank">
+                                <a href="https://www.odoo.com/documentation/master/webservices/odoo.html#api-keys" target="_blank">
                                     <i class="fa fa-fw o_button_icon fa-arrow-right"></i>
                                     <span>Documentation</span>
                                 </a>
@@ -512,7 +512,7 @@
         <record model="ir.ui.view" id="view_apikeys">
             <field name="name">API Keys Listing</field>
             <field name="model">res.users.apikeys</field>
-            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="arch" type="xml">
                 <tree create="false" edit="false" delete="false" editable="bottom">
                     <field name="user_id"/>
@@ -527,7 +527,7 @@
             <field name="name">API Keys Listing</field>
             <field name="res_model">res.users.apikeys</field>
             <field name="view_mode">tree</field>
-            <field name="groups_id" eval="[(4, ref('base.group_system'))]"/>
+            <field name="groups_id" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="view_id" ref="base.view_apikeys"/>
         </record>
 

@@ -205,7 +205,7 @@
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
                                     <h4 class="modal-title">Validate Order</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                 </header>
                                 <main class="modal-body" id="sign-dialog">
                                     <p>
@@ -228,7 +228,7 @@
                             <div class="modal-content">
                                 <header class="modal-header">
                                     <h4 class="modal-title">Validate Order</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                 </header>
                                 <main class="modal-body" id="sign-dialog">
                                     <p>
@@ -262,7 +262,7 @@
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <header class="modal-header">
                                     <h4 class="modal-title">Reject This Quotation</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                                 </header>
                                 <main class="modal-body">
                                     <p>
@@ -280,7 +280,7 @@
 
                     <!-- status messages -->
                     <div t-if="message == 'sign_ok'" class="alert alert-success alert-dismissable d-print-none" role="status">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
                         <strong>Thank You!</strong><br/>
                         <t t-if="message == 'sign_ok' and sale_order.state in ['sale', 'done']">Your order has been confirmed.</t>
                         <t t-elif="message == 'sign_ok' and sale_order.has_to_be_paid()">Your order has been signed but still needs to be paid to be confirmed.</t>
@@ -288,7 +288,7 @@
                     </div>
 
                     <div t-if="message == 'cant_reject' and sale_order.has_to_be_signed()" class="alert alert-danger alert-dismissable d-print-none" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">&amp;times;</button>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
                         Your order is not in a state to be rejected.
                     </div>
 
@@ -300,12 +300,12 @@
                     </t>
 
                     <div t-if="sale_order.state == 'cancel'" class="alert alert-danger alert-dismissable d-print-none" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">×</button>
                         <strong>This quotation has been canceled.</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
                     </div>
 
                     <div t-if="sale_order.is_expired" class="alert alert-warning alert-dismissable d-print-none" role="alert">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="close">&amp;times;</button>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="close">×</button>
                         <strong>This offer expired!</strong> <a role="button" href="#discussion"><i class="fa fa-comment"/> Contact us to get a new quotation.</a>
                     </div>
 
@@ -414,7 +414,7 @@
                                         </a>
                                         <div class="small d-lg-inline-block">Date: <span class="text-muted" t-field="i.invoice_date"/></div>
                                     </div>
-                                    <span t-if="i.payment_state == 'paid'" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
+                                    <span t-if="i.payment_state in ('paid', 'in_payment')" class="small badge badge-success orders_label_text_align"><i class="fa fa-fw fa-check"/> <b>Paid</b></span>
                                     <span t-else="" class="small badge badge-info orders_label_text_align"><i class="fa fa-fw fa-clock-o"/> <b>Waiting Payment</b></span>
                                 </div>
                             </t>

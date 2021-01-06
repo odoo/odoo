@@ -114,18 +114,29 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeThreadShouldBeSetAsSeen() {
-            // FIXME condition should not be on "composer is focused" but "threadView is active"
-            // See task-2277543
-            const lastMessageIsVisible = this.lastVisibleMessage &&
-                this.lastVisibleMessage === this.lastMessage;
-            if (lastMessageIsVisible && this.hasComposerFocus && this.thread) {
-                this.thread.markAsSeen(this.lastMessage.id).catch(e => {
-                    // prevent crash when executing compute during destroy
-                    if (!(e instanceof RecordDeletedError)) {
-                        throw e;
-                    }
-                });
+            if (!this.thread) {
+                return;
             }
+            if (!this.thread.lastNonTransientMessage) {
+                return;
+            }
+            if (!this.lastVisibleMessage) {
+                return;
+            }
+            if (this.lastVisibleMessage !== this.lastMessage) {
+                return;
+            }
+            if (!this.hasComposerFocus) {
+                // FIXME condition should not be on "composer is focused" but "threadView is active"
+                // See task-2277543
+                return;
+            }
+            this.thread.markAsSeen(this.thread.lastNonTransientMessage).catch(e => {
+                // prevent crash when executing compute during destroy
+                if (!(e instanceof RecordDeletedError)) {
+                    throw e;
+                }
+            });
         }
 
         /**
@@ -136,6 +147,7 @@ function factory(dependencies) {
             if (this.threadCache) {
                 this.threadCache.update({ isCacheRefreshRequested: true });
             }
+            this.update({ lastVisibleMessage: [['unlink']] });
         }
 
         /**
@@ -225,16 +237,28 @@ function factory(dependencies) {
          * hint `message-received`.
          */
         hasAutoScrollOnMessageReceived: attr(),
+        /**
+         * Last message in the context of the currently displayed thread cache.
+         */
         lastMessage: many2one('mail.message', {
             related: 'thread.lastMessage',
         }),
         /**
+         * Serves as compute dependency.
+         */
+        lastNonTransientMessage: many2one('mail.message', {
+            related: 'thread.lastNonTransientMessage',
+        }),
+        /**
          * Most recent message in this ThreadView that has been shown to the
-         * current partner.
+         * current partner in the currently displayed thread cache.
          */
         lastVisibleMessage: many2one('mail.message'),
         messages: many2many('mail.message', {
             related: 'threadCache.messages',
+        }),
+        nonEmptyMessages: many2many('mail.message', {
+            related: 'threadCache.nonEmptyMessages',
         }),
         /**
          * Not a real field, used to trigger `_onThreadCacheChanged` when one of
@@ -270,6 +294,7 @@ function factory(dependencies) {
          */
         thread: many2one('mail.thread', {
             inverse: 'threadViews',
+            readonly: true,
             related: 'threadViewer.thread',
         }),
         /**
@@ -277,6 +302,7 @@ function factory(dependencies) {
          */
         threadCache: many2one('mail.thread_cache', {
             inverse: 'threadViews',
+            readonly: true,
             related: 'threadViewer.threadCache',
         }),
         threadCacheInitialScrollHeight: attr({
@@ -322,6 +348,7 @@ function factory(dependencies) {
             dependencies: [
                 'hasComposerFocus',
                 'lastMessage',
+                'lastNonTransientMessage',
                 'lastVisibleMessage',
                 'threadCache',
             ],
@@ -331,6 +358,7 @@ function factory(dependencies) {
          */
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'threadView',
+            readonly: true,
         }),
         uncheckedMessages: many2many('mail.message', {
             related: 'threadCache.uncheckedMessages',

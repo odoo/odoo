@@ -133,8 +133,8 @@
                 <button string="Approve" name="action_approve" states="confirm" type="object" class="oe_highlight"
                     attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
                 <button string="Validate" name="action_validate" states="validate1" type="object" class="oe_highlight"/>
-                <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"
-                    attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1'))]}"/>
+                <button string="Refuse" name="action_refuse" type="object"
+                    attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1','validate'))]}"/>
                 <button string="Mark as Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
             </xpath>
@@ -163,7 +163,7 @@
             <xpath expr="//field[@name='allocation_type']" position="after">
                 <label for="date_from" attrs="{'invisible': [('allocation_type', '=', 'regular')]}"/>
                 <div class="o_row" attrs="{'invisible': [('allocation_type', '=', 'regular')]}">
-                    <field name="date_from" widget="date" required="1" class="mr-2"/>
+                    <field name="date_from" widget="date" class="mr-2" attrs="{'required': [('allocation_type', '=', 'accrual')]}" />
                     Run until <field name="date_to" help="If no value set, runs indefinitely" class="ml-2" widget="date"/>
                 </div>
                 <label for="date_from" invisible="1"/>

@@ -2,7 +2,6 @@ odoo.define('web.kanban_tests', function (require) {
 "use strict";
 
 var AbstractField = require('web.AbstractField');
-const Domain = require('web.Domain');
 var fieldRegistry = require('web.field_registry');
 const FormRenderer = require("web.FormRenderer");
 var KanbanColumnProgressBar = require('web.KanbanColumnProgressBar');
@@ -1405,7 +1404,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('quick create record: cancel when not dirty', async function (assert) {
-        assert.expect(9);
+        assert.expect(11);
 
         var kanban = await createView({
             View: KanbanView,
@@ -1463,6 +1462,64 @@ QUnit.module('Views', {
 
         assert.containsOnce(kanban, '.o_kanban_group:first .o_kanban_record',
             "first column should still contain one record");
+
+        // click to reopen the quick create
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "should have open the quick create widget");
+
+        // clicking on the quick create itself should keep it open
+        await testUtils.dom.click(kanban.$('.o_kanban_quick_create'));
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "the quick create should not have been destroyed when clicked on itself");
+
+
+        kanban.destroy();
+    });
+
+    QUnit.test('quick create record: cancel when modal is opened', async function (assert) {
+        assert.expect(3);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                  '</kanban>',
+            archs: {
+                'partner,some_view_ref,form': '<form>' +
+                    '<field name="product_id"/>' +
+                '</form>',
+            },
+            groupBy: ['bar'],
+        });
+
+        // click to add an element
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "should have open the quick create widget");
+
+        kanban.$('.o_kanban_quick_create input')
+            .val('test')
+            .trigger('keyup')
+            .trigger('focusout');
+        await nextTick();
+
+        // When focusing out of the many2one, a modal to add a 'product' will appear.
+        // The following assertions ensures that a click on the body element that has 'modal-open'
+        // will NOT close the quick create.
+        // This can happen when the user clicks out of the input because of a race condition between
+        // the focusout of the m2o and the global 'click' handler of the quick create.
+        // Check odoo/odoo#61981 for more details.
+        const $body = kanban.$el.closest('body');
+        assert.hasClass($body, 'modal-open',
+            "modal should be opening after m2o focusout");
+        await testUtils.dom.click($body);
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "quick create should stay open while modal is opening");
 
         kanban.destroy();
     });
@@ -5926,6 +5983,50 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('column progressbars with an active filter are working with load more', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.records.push(
+            { id: 5, bar: true, foo: "blork" },
+            { id: 6, bar: true, foo: "blork" },
+            { id: 7, bar: true, foo: "blork" }
+        );
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            domain: [['bar', '=', true]],
+            arch:
+                `<kanban limit="1">
+                    <progressbar field="foo" colors='{"blork": "success"}'/>
+                    <field name="foo"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="id"/></div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ['bar'],
+        });
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_counter_progress .progress-bar[data-filter="blork"]'));
+
+        // we should have 1 record shown
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_kanban_record')].map(el => parseInt(el.innerText)),
+            [5]
+        );
+
+        // load 2 more and check it worked
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group .o_kanban_load_more'));
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group .o_kanban_load_more'));
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_kanban_record')].map(el => parseInt(el.innerText)),
+            [5, 6, 7]
+        );
+
+        kanban.destroy();
+    });
+
     QUnit.test('column progressbars on archiving records update counter', async function (assert) {
         assert.expect(4);
 
@@ -6077,6 +6178,54 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('RPCs when (de)activating kanban view progressbar filters', async function (assert) {
+        assert.expect(8);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="name"/></div>
+                    </t></templates>
+                </kanban>
+            `,
+            groupBy: ['bar'],
+            mockRPC(route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        // Activate "yop" on second column
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group:nth-child(2) .progress-bar[data-filter="yop"]'));
+        // Activate "gnap" on second column
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group:nth-child(2) .progress-bar[data-filter="gnap"]'));
+        // Deactivate "gnap" on second column
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group:nth-child(2) .progress-bar[data-filter="gnap"]'));
+
+        assert.verifySteps([
+            // initial load
+            'web_read_group',
+            'read_progress_bar',
+            '/web/dataset/search_read',
+            '/web/dataset/search_read',
+            // activate filter
+            '/web/dataset/search_read',
+            // activate another filter (switching)
+            '/web/dataset/search_read',
+            // deactivate active filter
+            '/web/dataset/search_read',
+        ]);
+
+        kanban.destroy();
+    });
+
     QUnit.test('drag & drop records grouped by m2o with progressbar', async function (assert) {
         assert.expect(4);
 
@@ -6128,32 +6277,150 @@ QUnit.module('Views', {
     QUnit.test('progress bar subgroup count recompute', async function (assert) {
         assert.expect(2);
 
-        var kanban = await createView({
+        const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
             arch:
-                '<kanban>' +
-                    '<progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>' +
-                    '<templates><t t-name="kanban-box">' +
-                        '<div>' +
-                            '<field name="foo"/>' +
-                        '</div>' +
-                    '</t></templates>' +
-                '</kanban>',
+                `<kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
             groupBy: ['bar'],
         });
 
-        var $secondGroup = kanban.$('.o_kanban_group:eq(1)');
-        var initialCount = parseInt($secondGroup.find('.o_kanban_counter_side').text());
-        assert.strictEqual(initialCount, 3,
+        let secondCounter = kanban.el.querySelector('.o_kanban_group:nth-child(2) .o_kanban_counter_side');
+        assert.strictEqual(parseInt(secondCounter.innerText), 3,
             "Initial count should be Three");
-        await testUtils.dom.click($secondGroup.find('.bg-success-full'));
-        var lastCount = parseInt($secondGroup.find('.o_kanban_counter_side').text());
-        assert.strictEqual(lastCount, 1,
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group:nth-child(2) .bg-success-full'));
+
+        secondCounter = kanban.el.querySelector('.o_kanban_group:nth-child(2) .o_kanban_counter_side');
+        assert.strictEqual(parseInt(secondCounter.innerText), 1,
             "kanban counters should vary according to what subgroup is selected");
 
         kanban.destroy();
+    });
+
+    QUnit.test('progress bar recompute after drag&drop to and from other column', async function (assert) {
+        assert.expect(4);
+
+        const view = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<kanban>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}'/>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ['bar'],
+        });
+
+        assert.deepEqual(
+            [...view.el.querySelectorAll('.progress-bar')].map(el => el.getAttribute('data-original-title')),
+            ['0 yop', '0 gnap', '1 blip', '0 __false', '1 yop', '1 gnap', '1 blip', '0 __false']
+        );
+
+        assert.deepEqual(
+            [...view.el.querySelectorAll('.o_kanban_counter_side')].map(el => parseInt(el.innerText)),
+            [1, 3]
+        );
+
+        // Drag the last kanban record to the first column
+        await testUtils.dom.dragAndDrop(
+            [...view.el.querySelectorAll('.o_kanban_record')].pop(),
+            [...view.el.querySelectorAll('.o_kanban_group')].shift()
+        );
+
+        assert.deepEqual(
+            [...view.el.querySelectorAll('.progress-bar')].map(el => el.getAttribute('data-original-title')),
+            ['0 yop', '1 gnap', '1 blip', '0 __false', '1 yop', '0 gnap', '1 blip', '0 __false']
+        );
+
+        assert.deepEqual(
+            [...view.el.querySelectorAll('.o_kanban_counter_side')].map(el => parseInt(el.innerText)),
+            [2, 2]
+        );
+
+        view.destroy();
+    });
+
+    QUnit.test('load more should load correct records after drag&drop event', async function (assert) {
+        assert.expect(3);
+
+        // Add a sequence number and initialize
+        this.data.partner.fields = Object.assign(this.data.partner.fields, {
+            sequence: { type: 'integer' }
+        });
+        this.data.partner.records.forEach((el, i) => {
+            el.sequence = i;
+        });
+
+        const view = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch:
+                `<kanban limit="1">
+                    <field name="id"/>
+                    <field name="foo"/>
+                    <field name="sequence"/>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="id"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ['bar'],
+            favoriteFilters: [
+                {
+                    domain: '[]',
+                    is_default: true,
+                    sort: '["sequence asc"]',
+                },
+            ],
+        });
+
+        assert.deepEqual(
+            [...view.el.querySelectorAll('.o_kanban_group:nth-child(1) .o_kanban_record span')]
+                .map(el => parseInt(el.innerText))[0],
+            4,
+            "first column's first record must be id 4"
+        );
+
+        assert.deepEqual(
+            [...view.el.querySelectorAll('.o_kanban_group:nth-child(2) .o_kanban_record span')]
+                .map(el => parseInt(el.innerText)),
+            [1],
+            "second column's records should be only the id 1"
+        );
+
+        // Drag the first kanban record on top of the last
+        await testUtils.dom.dragAndDrop(
+            [...view.el.querySelectorAll('.o_kanban_record')].shift(),
+            [...view.el.querySelectorAll('.o_kanban_record')].pop(),
+            { position: 'top' }
+        );
+
+        // load more twice to load all records of second column
+        await testUtils.dom.click(view.el.querySelector('.o_kanban_group:nth-child(2) .o_kanban_load_more'));
+        await testUtils.dom.click(view.el.querySelector('.o_kanban_group:nth-child(2) .o_kanban_load_more'));
+
+        // Check records of the second column
+        assert.deepEqual(
+            [...view.el.querySelectorAll('.o_kanban_group:nth-child(2) .o_kanban_record span')].map(el => parseInt(el.innerText)),
+            [4, 1, 2, 3]
+        );
+
+        view.destroy();
     });
 
     QUnit.test('column progressbars on quick create with quick_create_view are updated', async function (assert) {
@@ -6191,6 +6458,61 @@ QUnit.module('Views', {
         var lastCount = parseInt(kanban.$('.o_kanban_counter_side:first').text());
         assert.strictEqual(lastCount, initialCount + 44,
             "kanban counters should have been updated on quick create");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('column progressbars and active filter on quick create with quick_create_view are updated', async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="int_field"/>
+                    <field name="foo"/>
+                    <progressbar field="foo" colors='{"yop": "success", "gnap": "warning", "blip": "danger"}' sum_field="int_field"/>
+                    <templates><t t-name="kanban-box">
+                        <div><field name="name"/></div>
+                    </t></templates>
+                </kanban>
+            `,
+            archs: {
+                'partner,some_view_ref,form': `
+                    <form>
+                        <field name="int_field"/>
+                        <field name="foo"/>
+                    </form>
+                `,
+            },
+            groupBy: ['bar'],
+        });
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_group:nth-child(1) .progress-bar[data-filter="blip"]'));
+        const initialCount = parseInt(kanban.el.querySelector('.o_kanban_group:nth-child(1) .o_kanban_counter_side').innerText);
+        assert.strictEqual(initialCount, -4, "Initial count should be -4");
+
+        // open the quick create
+        await testUtils.kanban.clickCreate(kanban);
+
+        // fill it with a record that satisfies the activated filter
+        let quickCreate = kanban.el.querySelector('.o_kanban_group:nth-child(1) .o_kanban_quick_create');
+        await testUtils.fields.editInput(quickCreate.querySelector('.o_field_widget[name="int_field"]'), '44');
+        await testUtils.fields.editInput(quickCreate.querySelector('.o_field_widget[name="foo"]'), 'blip');
+        await testUtils.dom.click(quickCreate.querySelector('button.o_kanban_add'));
+
+        // fill it again with another record that DOES NOT satisfies the activated filter
+        quickCreate = kanban.el.querySelector('.o_kanban_group:nth-child(1) .o_kanban_quick_create');
+        await testUtils.fields.editInput(quickCreate.querySelector('.o_field_widget[name="int_field"]'), '1000');
+        await testUtils.fields.editInput(quickCreate.querySelector('.o_field_widget[name="foo"]'), 'yop');
+        await testUtils.dom.click(quickCreate.querySelector('button.o_kanban_add'));
+
+        // check counter
+        const lastCount = parseInt(kanban.el.querySelector('.o_kanban_group:nth-child(1) .o_kanban_counter_side').innerText);
+        assert.strictEqual(lastCount, initialCount + 44,
+            "kanban counters should have been updated on quick create, respecting the activated filter");
 
         kanban.destroy();
     });
@@ -6252,6 +6574,32 @@ QUnit.module('Views', {
         // since the field image is not set, kanban_image will generate an URL
         var imageOnRecord = kanban.$('img[data-src*="/web/image"][data-src*="&id=1"]');
         assert.strictEqual(imageOnRecord.length, 1, "partner with image display image by url");
+
+        kanban.destroy();
+    });
+
+    QUnit.test('test displaying image (__last_update field)', async function (assert) {
+        // the presence of __last_update field ensures that the image is reloaded when necessary
+        assert.expect(1);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban class="o_kanban_test">
+                    <field name="id"/>
+                    <templates><t t-name="kanban-box"><div>
+                        <img t-att-src="kanban_image('partner', 'image', record.id.raw_value)"/>
+                    </div></t></templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                if (route === '/web/dataset/search_read') {
+                    assert.deepEqual(args.fields, ['id', '__last_update']);
+                }
+                return this._super(...arguments);
+            },
+        });
 
         kanban.destroy();
     });

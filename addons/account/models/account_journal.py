@@ -87,7 +87,7 @@ class AccountJournal(models.Model):
              "receivable account.", string='Outstanding Receipts Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id)
+                             '|', ('user_type_id', '=', %s), ('id', '=', default_account_id)]" % self.env.ref('account.data_account_type_current_assets').id)
     payment_credit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         help="Outgoing payments entries triggered by bills/credit notes will be posted on the Outstanding Payments Account "
@@ -96,7 +96,7 @@ class AccountJournal(models.Model):
              "payable account.", string='Outstanding Payments Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_assets').id)
+                             '|', ('user_type_id', '=', %s), ('id', '=', default_account_id)]" % self.env.ref('account.data_account_type_current_assets').id)
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
@@ -133,6 +133,7 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'inbound')],
         string='Inbound Payment Methods',
         compute='_compute_inbound_payment_method_ids',
+        ondelete="restrict",
         store=True,
         readonly=False,
         help="Manual: Get paid by cash, check or any other method outside of Odoo.\n"
@@ -150,6 +151,7 @@ class AccountJournal(models.Model):
         domain=[('payment_type', '=', 'outbound')],
         string='Outbound Payment Methods',
         compute='_compute_outbound_payment_method_ids',
+        ondelete="restrict",
         store=True,
         readonly=False,
         help="Manual:Pay bill by cash or any other method outside of Odoo.\n"
@@ -209,7 +211,7 @@ class AccountJournal(models.Model):
         readonly=True, copy=False)
 
     _sql_constraints = [
-        ('code_company_uniq', 'unique (code, name, company_id)', 'The code and name of the journal must be unique per company !'),
+        ('code_company_uniq', 'unique (code, company_id)', 'Journal codes must be unique per company.'),
     ]
 
     @api.depends('type')
@@ -403,9 +405,29 @@ class AccountJournal(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         default = dict(default or {})
+
+        # Find a unique code for the copied journal
+        read_codes = self.env['account.journal'].with_context(active_test=False).search_read([('company_id', '=', self.company_id.id)], ['code'])
+        all_journal_codes = {code_data['code'] for code_data in read_codes}
+
+        copy_code = self.code
+        code_prefix = re.sub(r'\d+', '', self.code).strip()
+        counter = 1
+        while counter <= len(all_journal_codes) and  copy_code in all_journal_codes:
+            counter_str = str(counter)
+            copy_prefix = code_prefix[:self._fields['code'].size - len(counter_str)]
+            copy_code = ("%s%s" % (copy_prefix, counter_str))
+
+            counter += 1
+
+        if counter > len(all_journal_codes):
+            # Should never happen, but put there just in case.
+            raise UserError(_("Could not compute any code for the copy automatically. Please create it manually."))
+
         default.update(
-            code=_("%s (copy)") % (self.code or ''),
+            code=copy_code,
             name=_("%s (copy)") % (self.name or ''))
+
         return super(AccountJournal, self).copy(default)
 
     def _update_mail_alias(self, vals):
@@ -478,6 +500,16 @@ class AccountJournal(models.Model):
                 return journal_code
 
     @api.model
+    def _prepare_liquidity_account_vals(self, company, code, vals):
+        return {
+            'name': vals.get('name'),
+            'code': code,
+            'user_type_id': self.env.ref('account.data_account_type_liquidity').id,
+            'currency_id': vals.get('currency_id'),
+            'company_id': company.id,
+        }
+
+    @api.model
     def _fill_missing_values(self, vals):
         journal_type = vals.get('type')
 
@@ -518,17 +550,9 @@ class AccountJournal(models.Model):
 
             # === Fill missing accounts ===
             if not has_liquidity_accounts:
-                liquidity_account = self.env['account.account'].create({
-                    'name': vals.get('name'),
-                    'code': self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix),
-                    'user_type_id': liquidity_type.id,
-                    'currency_id': vals.get('currency_id'),
-                    'company_id': company.id,
-                })
-
-                vals.update({
-                    'default_account_id': liquidity_account.id,
-                })
+                default_account_code = self.env['account.account']._search_new_account_code(company, digits, liquidity_account_prefix)
+                default_account_vals = self._prepare_liquidity_account_vals(company, default_account_code, vals)
+                vals['default_account_id'] = self.env['account.account'].create(default_account_vals).id
             if not has_payment_accounts:
                 vals['payment_debit_account_id'] = self.env['account.account'].create({
                     'name': _("Outstanding Receipts"),
@@ -552,10 +576,6 @@ class AccountJournal(models.Model):
         # === Fill missing refund_sequence ===
         if 'refund_sequence' not in vals:
             vals['refund_sequence'] = vals['type'] in ('sale', 'purchase')
-
-        # === Fill missing alias name ===
-        if journal_type in ('sale', 'purchase') and 'alias_name' not in vals:
-            vals['alias_name'] = '%s-%s' % (company.name, vals.get('code'))
 
     @api.model
     def create(self, vals):
@@ -639,14 +659,20 @@ class AccountJournal(models.Model):
             'name': _('Generated Documents'),
             'domain': [('id', 'in', invoices.ids)],
             'res_model': 'account.move',
-            'views': [[False, "tree"], [False, "form"]],
             'type': 'ir.actions.act_window',
             'context': self._context
         }
         if len(invoices) == 1:
-            action_vals.update({'res_id': invoices[0].id, 'view_mode': 'form'})
+            action_vals.update({
+                'views': [[False, "form"]],
+                'view_mode': 'form',
+                'res_id': invoices[0].id,
+            })
         else:
-            action_vals['view_mode'] = 'tree,form'
+            action_vals.update({
+                'views': [[False, "tree"], [False, "kanban"], [False, "form"]],
+                'view_mode': 'tree, kanban, form',
+            })
         return action_vals
 
     def _create_invoice_from_single_attachment(self, attachment):
@@ -741,7 +767,12 @@ class AccountJournal(models.Model):
 
         accounts = self.payment_debit_account_id + self.payment_credit_account_id
         if not accounts:
-            return 0.0
+            return 0.0, 0
+
+        # Allow user managing payments without any statement lines.
+        # In that case, the user manages transactions only using the register payment wizard.
+        if self.default_account_id in accounts:
+            return 0.0, 0
 
         domain = (domain or []) + [
             ('account_id', 'in', tuple(accounts.ids)),

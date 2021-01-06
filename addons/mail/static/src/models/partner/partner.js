@@ -95,7 +95,8 @@ function factory(dependencies) {
                 if (partners.length < limit) {
                     if (
                         partner !== currentPartner &&
-                        searchRegexp.test(partner.name)
+                        searchRegexp.test(partner.name) &&
+                        partner.user
                     ) {
                         partners.push(partner);
                     }
@@ -224,7 +225,7 @@ function factory(dependencies) {
         static async _fetchImStatus() {
             const partnerIds = [];
             for (const partner of this.all()) {
-                if (partner.im_status !== 'im_partner') {
+                if (partner.im_status !== 'im_partner' && partner.id > 0) {
                     partnerIds.push(partner.id);
                 }
             }
@@ -290,6 +291,7 @@ function factory(dependencies) {
         }),
         correspondentThreads: one2many('mail.thread', {
             inverse: 'correspondent',
+            readonly: true,
         }),
         country: many2one('mail.country'),
         display_name: attr({
@@ -311,7 +313,9 @@ function factory(dependencies) {
         hasCheckedUser: attr({
             default: false,
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         im_status: attr(),
         memberThreads: many2many('mail.thread', {
             inverse: 'members',
@@ -319,6 +323,9 @@ function factory(dependencies) {
         messagesAsAuthor: one2many('mail.message', {
             inverse: 'author',
         }),
+        /**
+         * Serves as compute dependency.
+         */
         messaging: many2one('mail.messaging', {
             compute: '_computeMessaging',
         }),

@@ -808,6 +808,79 @@ class TestTemplating(ViewCase):
             initial.get('data-oe-xpath'),
             "The node's xpath position should be correct")
 
+    def test_branding_inherit_top_t_field(self):
+        view1 = self.View.create({
+            'name': "Base view",
+            'type': 'qweb',
+            'arch': """
+                <hello>
+                    <world></world>
+                    <world t-field="a"/>
+                    <world></world>
+                    <world></world>
+                </hello>
+            """
+        })
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <xpath expr="/hello/world[3]" position="after">
+                    <world t-field="b"/>
+                </xpath>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        # First t-field should have an indication of xpath
+        [node] = arch.xpath('//*[@t-field="a"]')
+        self.assertEqual(
+            node.get('data-oe-xpath'),
+            '/hello[1]/world[2]',
+            'First t-field has indication of xpath')
+
+        # Second t-field, from inheritance, should also have an indication of xpath
+        [node] = arch.xpath('//*[@t-field="b"]')
+        self.assertEqual(
+            node.get('data-oe-xpath'),
+            '/xpath/world',
+            'Inherited t-field has indication of xpath')
+
+        # The most important assert
+        # The last world xpath should not have been impacted by the t-field from inheritance
+        [node] = arch.xpath('//world[last()]')
+        self.assertEqual(
+            node.get('data-oe-xpath'),
+            '/hello[1]/world[4]',
+            "The node's xpath position should be correct")
+
+        # Also test inherit via non-xpath t-field node, direct children of data,
+        # is not impacted by the feature
+        self.View.create({
+            'name': "Extension",
+            'type': 'qweb',
+            'inherit_id': view1.id,
+            'arch': """
+                <data>
+                    <world t-field="a" position="replace">
+                        <world t-field="z"/>
+                    </world>
+                </data>
+            """
+        })
+        arch_string = view1.with_context(inherit_branding=True).read_combined(['arch'])['arch']
+        arch = etree.fromstring(arch_string)
+        self.View.distribute_branding(arch)
+
+        node = arch.xpath('//world')[1]
+        self.assertEqual(
+            node.get('t-field'),
+            'z',
+            "The node has properly been replaced")
+
     def test_branding_primary_inherit(self):
         view1 = self.View.create({
             'name': "Base view",
@@ -2280,7 +2353,7 @@ class TestViews(ViewCase):
                 'arch': arch,
             })
         message = str(catcher.exception.args[0])
-        self.assertIn('\nView name: %s\nError context:\n' % name, message)
+        self.assertEqual(catcher.exception.context['name'], name)
         if expected_message:
             self.assertIn(expected_message, message)
         else:
@@ -2295,12 +2368,13 @@ class TestViews(ViewCase):
             })
         self.assertEqual(len(log_catcher.output), 1, "Exactly one warning should be logged")
         message = log_catcher.output[0]
-        self.assertIn('\nView name: %s\nError context:\n' % name, message)
+        self.assertIn('View error context', message)
+        self.assertIn("'name': '%s'" % name, message)
         if expected_message:
             self.assertIn(expected_message, message)
 
 
-class TestViewTranslations(common.SavepointCase):
+class TestViewTranslations(common.TransactionCase):
     # these tests are essentially the same as in test_translate.py, but they use
     # the computed field 'arch' instead of the translated field 'arch_db'
 

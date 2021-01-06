@@ -16,7 +16,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//header" position="after">
                     <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
-                         attrs="{'invisible': ['|', ('edi_web_services_to_process', '=', ''), ('state', '=', 'draft')]}">
+                         attrs="{'invisible': ['|', ('edi_web_services_to_process', 'in', ['', False]), ('state', '=', 'draft')]}">
                          <div>The payment will be sent asynchronously to :
                             <field name="edi_web_services_to_process" class="oe_inline"/>
                          </div>
@@ -33,6 +33,18 @@
                     <field name="edi_document_ids" invisible="1" />
                     <field name="edi_state" invisible="1" />
                     <field name="edi_state" attrs="{'invisible': ['|', ('edi_document_ids', '=', []), ('state', '=', 'draft')]}"/>
+                </xpath>
+                <xpath expr="//group[@name='group3']" position="after">
+                    <group groups="base.group_no_one">
+                        <field name="edi_document_ids" string="EDI Documents" attrs="{'invisible': [('edi_document_ids', '=', [])]}">
+                            <tree create="false" delete="false" edit="false" decoration-danger="error">
+                                <field name="name"/>
+                                <field name="edi_format_name"/>
+                                <field name="state"/>
+                                <field name="error" invisible="1"/>
+                            </tree>
+                        </field>
+                    </group>
                 </xpath>
             </field>
         </record>

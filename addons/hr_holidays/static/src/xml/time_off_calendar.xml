@@ -75,4 +75,18 @@
             </div>
         </div>
     </t>
+
+    <t t-name="hr_holidays.calendar.sidebar.nofilter">
+        <div class="o_calendar_filter" id="o_calendar_filter_no_data">
+            <h5 t-esc="title"/>
+            <div class="o_calendar_filter_items">
+                <div class="w-100 position-relative mb-2">
+                    <p class="d-flex align-items-center m-0">
+                        <t t-if="description" t-esc="description"/>
+                        <t t-else=""></t>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </t>
 </templates>

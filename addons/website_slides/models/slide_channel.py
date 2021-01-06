@@ -45,7 +45,7 @@ class ChannelUsersRelation(models.Model):
         for record in self:
             record.completed_slides_count = mapped_data.get(record.channel_id.id, dict()).get(record.partner_id.id, 0)
             record.completion = 100.0 if record.completed else round(100.0 * record.completed_slides_count / (record.channel_id.total_slides or 1))
-            if not record.completed and record.completed_slides_count >= record.channel_id.total_slides:
+            if not record.completed and record.channel_id.active and record.completed_slides_count >= record.channel_id.total_slides:
                 completed_records += record
 
         if completed_records:
@@ -105,7 +105,7 @@ class ChannelUsersRelation(models.Model):
                 continue
 
             email_values.update(
-                author_id=self.channel_id.user_id.partner_id.id or self.env.company.partner_id.id,
+                author_id=record.channel_id.user_id.partner_id.id or self.env.company.partner_id.id,
                 auto_delete=True,
                 recipient_ids=[(4, pid) for pid in email_values['partner_ids']],
             )
@@ -155,7 +155,7 @@ class Channel(models.Model):
         'slide.channel.tag', 'slide_channel_tag_rel', 'channel_id', 'tag_id',
         string='Tags', help='Used to categorize and filter displayed channels/courses')
     # slides: promote, statistics
-    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories", context={'active_test': False})
+    slide_ids = fields.One2many('slide.slide', 'channel_id', string="Slides and categories")
     slide_content_ids = fields.One2many('slide.slide', string='Slides', compute="_compute_category_and_slide_ids")
     slide_category_ids = fields.One2many('slide.slide', string='Categories', compute="_compute_category_and_slide_ids")
     slide_last_update = fields.Date('Last Update', compute='_compute_slide_last_update', store=True)
@@ -171,10 +171,10 @@ class Channel(models.Model):
         string="Promoted Content", default='latest', required=False,
         help='Depending the promote strategy, a slide will appear on the top of the course\'s page :\n'
              ' * Latest Published : the slide created last.\n'
-             ' * Most Voted : the slide which have to most vote.\n'
-             ' * Most Viewed ; the slide which have been viewed the most.\n'
+             ' * Most Voted : the slide which has to most votes.\n'
+             ' * Most Viewed ; the slide which has been viewed the most.\n'
              ' * Specific : You choose the slide to appear.\n'
-             ' * None : There won\'t be any slide showing.\n')
+             ' * None : No slides will be shown.\n')
     promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
@@ -476,16 +476,28 @@ class Channel(models.Model):
         return res
 
     def toggle_active(self):
-        # archiving/unarchiving a channel does it on its slides, too
+        """ Archiving/unarchiving a channel does it on its slides, too.
+        1. When archiving
+        We want to be archiving the channel FIRST.
+        So that when slides are archived and the recompute is triggered,
+        it does not try to mark the channel as "completed".
+        That happens because it counts slide_done / slide_total, but slide_total
+        will be 0 since all the slides for the course have been archived as well.
+
+        2. When un-archiving
+        We want to archive the channel LAST.
+        So that when it recomputes stats for the channel and completion, it correctly
+        counts the slides_total by counting slides that are already un-archived. """
+
         to_archive = self.filtered(lambda channel: channel.active)
         to_activate = self.filtered(lambda channel: not channel.active)
-        res = super(Channel, self).toggle_active()
         if to_archive:
+            super(Channel, to_archive).toggle_active()
             to_archive.is_published = False
             to_archive.mapped('slide_ids').action_archive()
         if to_activate:
             to_activate.with_context(active_test=False).mapped('slide_ids').action_unarchive()
-        return res
+            super(Channel, to_activate).toggle_active()
 
     @api.returns('mail.message', lambda value: value.id)
     def message_post(self, *, parent_id=False, subtype_id=False, **kwargs):

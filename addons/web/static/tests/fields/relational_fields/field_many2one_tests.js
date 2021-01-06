@@ -2265,7 +2265,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
             'new partner', ['keyup', 'blur']);
             await testUtils.dom.click($('.modal .modal-footer .btn-primary').first());
-            assert.strictEqual($('.modal .modal-body').text().trim(), "Do you want to create new partner as a new Product?");
+            assert.strictEqual($('.modal .modal-body').text().trim(), "Create new partner as a new Product?");
 
             form.destroy();
         });
@@ -2365,19 +2365,23 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            // cancel the many2one creation with Cancel button
-            form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+            // cancel the many2one creation with Discard button
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
             await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
 
-            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Cancel)'));
+            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Discard)'));
             assert.strictEqual($('.modal').length, 0, "the modal should be closed");
             assert.strictEqual(form.$('.o_field_many2one input').val(), "",
                 'the many2one should not set a value as its creation has been cancelled (with Cancel button)');
 
             // cancel the many2one creation with Close button
-            await testUtils.fields.editAndTrigger(form.$('.o_field_many2one input'),
-                'new product', ['keyup', 'blur']);
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
+            await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
             await testUtils.dom.click($('.modal .modal-header button'));
             assert.strictEqual(form.$('.o_field_many2one input').val(), "",
@@ -2389,25 +2393,50 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.many2one.clickItem('product_id','o');
             assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone", "should have selected xphone");
 
-            form.$('.o_field_many2one input').focus().val('new product').trigger('keyup').trigger('blur');
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
             await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
 
-            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Cancel)'));
+            await testUtils.dom.click($('.modal .modal-footer .btn:contains(Discard)'));
             assert.strictEqual(form.$('.o_field_many2one input').val(), "xphone",
                 'should have restored the many2one with its previous selected value (xphone)');
 
             // confirm the many2one creation
-            form.$('.o_field_many2one input').focus().val('new partner').trigger('keyup').trigger('blur');
+            form.$('.o_field_many2one input').focus().val('new product').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
             await testUtils.nextTick();
             assert.strictEqual($('.modal').length, 1, "there should be one opened modal");
 
-            await testUtils.dom.click($('.modal .modal-footer .btn-primary:contains(Create and edit)'));
-            await testUtils.nextTick();
+            await testUtils.dom.click($('.modal .modal-footer .btn-primary:contains(Create)'));
             assert.strictEqual($('.modal .o_form_view').length, 1,
                 'a new modal should be opened and contain a form view');
 
             await testUtils.dom.click($('.modal .o_form_button_cancel'));
+
+            form.destroy();
+        });
+
+        QUnit.test("select a many2one value by focusing out", async function (assert) {
+            assert.expect(3);
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `<form><field name="product_id"/></form>`,
+            });
+
+            form.$('.o_field_many2one input').focus().val('xph').trigger('input').trigger('keyup');
+            await testUtils.nextTick();
+            form.$('.o_field_many2one input').trigger('blur');
+            await testUtils.nextTick();
+
+            assert.containsNone(document.body, '.modal');
+            assert.strictEqual(form.$('.o_field_many2one input').val(), 'xphone');
+            assert.containsOnce(form, '.o_external_button');
 
             form.destroy();
         });
@@ -3293,13 +3322,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();
@@ -3386,13 +3418,16 @@ QUnit.module('fields', {}, function () {
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
             await testUtils.dom.click($('li.ui-menu-item a:contains(xpad)').trigger('mouseenter'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column when the product_id is set");
             await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
                 '', 'keyup');
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
                 "should be 2 columns in the one2many when product_id is not set");
             await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+            await testUtils.owlCompatibilityExtraNextTick();
             assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
                 "should be 1 column after the value change");
             form.destroy();

@@ -9,7 +9,7 @@
                 'o-fullscreen': props.isFullscreen,
                 'o-mobile': env.messaging.device.isMobile,
                 'o-new-message': chatWindow and !chatWindow.thread,
-            }" t-on-click="_onClick" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.thread ? chatWindow.thread.localId : '') : undefined"
+            }" t-on-keydown="_onKeydown" t-on-focusout="_onFocusout" t-att-data-chat-window-local-id="chatWindow ? chatWindow.localId : undefined" t-att-data-thread-local-id="chatWindow ? (chatWindow.thread ? chatWindow.thread.localId : '') : undefined"
         >
             <t t-if="chatWindow">
                 <ChatWindowHeader
@@ -40,7 +40,6 @@
                         </span>
                         <AutocompleteInput
                             class="o_ChatWindow_newMessageFormInput"
-                            isHtml="true"
                             placeholder="newMessageFormInputPlaceholder"
                             select="_onAutocompleteSelect"
                             source="_onAutocompleteSource"

@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-02 14:12+0000\n"
-"PO-Revision-Date: 2020-10-02 14:12+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-12-11 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,11 +23,6 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
 msgid "# of Invoices"
-msgstr ""
-
-#. module: payment
-#: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
-msgid "&amp;times;"
 msgstr ""
 
 #. module: payment
@@ -98,13 +93,6 @@ msgid "<i class=\"fa fa-trash\"/> Delete"
 msgstr ""
 
 #. module: payment
-#. openerp-web
-#: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
-
-#. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<small class=\"text-muted\">(Some fees may apply)</small>"
 msgstr ""
@@ -143,7 +131,7 @@ msgstr ""
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
-msgid "A journal must be specified of the acquirer %s."
+msgid "A journal must be specified for the acquirer %s."
 msgstr ""
 
 #. module: payment
@@ -442,7 +430,10 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
-msgid "Capture the amount from Odoo, when the delivery is completed."
+msgid ""
+"Capture the amount from Odoo, when the delivery is completed. Use this if "
+"you want to charge your customers cards only once you are sure you can ship "
+"the goods to them."
 msgstr ""
 
 #. module: payment
@@ -478,6 +469,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
 msgid "Close"
+msgstr ""
+
+#. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_method_code
+msgid "Code"
 msgstr ""
 
 #. module: payment
@@ -687,6 +683,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__display_name
 #: model:ir.model.fields,field_description:payment.field_account_move__display_name
 #: model:ir.model.fields,field_description:payment.field_account_payment__display_name
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__display_name
 #: model:ir.model.fields,field_description:payment.field_ir_http__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__display_name
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__display_name
@@ -875,6 +872,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_account_chart_template__id
 #: model:ir.model.fields,field_description:payment.field_account_move__id
 #: model:ir.model.fields,field_description:payment.field_account_payment__id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__id
 #: model:ir.model.fields,field_description:payment.field_ir_http__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__id
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__id
@@ -1005,6 +1003,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:payment.field_account_chart_template____last_update
 #: model:ir.model.fields,field_description:payment.field_account_move____last_update
 #: model:ir.model.fields,field_description:payment.field_account_payment____last_update
+#: model:ir.model.fields,field_description:payment.field_account_payment_register____last_update
 #: model:ir.model.fields,field_description:payment.field_ir_http____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer____last_update
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard____last_update
@@ -1186,6 +1185,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,help:payment.field_account_payment_register__payment_token_id
 msgid ""
 "Note that tokens from acquirers set to only authorize transactions (instead "
 "of capturing the amount) are not available."
@@ -1535,6 +1535,11 @@ msgid "Reference of the TX as stored in the acquirer database"
 msgstr ""
 
 #. module: payment
+#: model:ir.model,name:payment.model_account_payment_register
+msgid "Register Payment"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__res_id
 msgid "Related Document ID"
 msgstr ""
@@ -1588,6 +1593,7 @@ msgstr ""
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_payment__payment_token_id
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__payment_token_id
 msgid "Saved payment token"
 msgstr ""
 
@@ -1691,6 +1697,11 @@ msgid "Stripe Secret Key"
 msgstr ""
 
 #. module: payment
+#: model:ir.model.fields,field_description:payment.field_account_payment_register__suitable_payment_token_partner_ids
+msgid "Suitable Payment Token Partner"
+msgstr ""
+
+#. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
 msgid "Supported Payment Icons"
 msgstr ""
@@ -1775,6 +1786,13 @@ msgstr ""
 msgid ""
 "This Transaction was automatically processed & refunded in order to validate"
 " a new credit card."
+msgstr ""
+
+#. module: payment
+#. openerp-web
+#: code:addons/payment/static/src/js/payment_form.js:0
+#, python-format
+msgid "This card is currently linked to the following records:"
 msgstr ""
 
 #. module: payment
@@ -1922,15 +1940,9 @@ msgstr ""
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
-#, python-format
-msgid "We are not able to add your payment method at the moment."
-msgstr ""
-
-#. module: payment
-#. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
-msgid "We are not able to add your payment method at the moment.</p>"
+msgid "We are not able to add your payment method at the moment."
 msgstr ""
 
 #. module: payment

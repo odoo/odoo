@@ -50,6 +50,7 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
     const channel = this.env.models['mail.thread'].create({
         id: 7,
         name: "General",
+        model: 'mail.channel',
     });
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
@@ -77,6 +78,7 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
     const channel = this.env.models['mail.thread'].create({
         id: 7,
         name: "General",
+        model: 'mail.channel',
     });
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,
@@ -102,7 +104,7 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
     );
 });
 
-QUnit.test('partner mention suggestion active', async function (assert) {
+QUnit.test('channel mention suggestion active', async function (assert) {
     assert.expect(2);
 
     this.data['mail.channel'].records.push({ id: 20 });
@@ -114,6 +116,7 @@ QUnit.test('partner mention suggestion active', async function (assert) {
     const channel = this.env.models['mail.thread'].create({
         id: 7,
         name: "General",
+        model: 'mail.channel',
     });
     await this.createComposerSuggestion({
         composerLocalId: thread.composer.localId,

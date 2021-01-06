@@ -3,9 +3,11 @@
 
 from datetime import timedelta
 import math
+from uuid import uuid4
 import babel.dates
 import logging
 import pytz
+from werkzeug.urls import url_join
 
 from odoo import api, fields, models
 from odoo import tools
@@ -78,6 +80,15 @@ class Meeting(models.Model):
                 partners |= self.env['res.partner'].browse(active_id)
         return partners
 
+    @api.model
+    def _default_videocall_location(self):
+        if self.env.context.get('calendar_no_videocall'):
+            return False
+        jitsi_url = self.env['ir.config_parameter'].sudo().get_param('website_jitsi.jitsi_server_domain', 'meet.jit.si')
+        if not jitsi_url.startswith('http'):
+            jitsi_url = 'https://' + jitsi_url
+        return url_join(jitsi_url, 'odoo-%s' % (uuid4().hex[:12]))
+
     def _find_my_attendee(self):
         """ Return the first attendee where the user connected has been invited
             from all the meeting_ids in parameters.
@@ -107,8 +118,13 @@ class Meeting(models.Model):
         return {'start', 'stop', 'start_date', 'stop_date'}
 
     @api.model
+    def _get_custom_fields(self):
+        all_fields = self.fields_get(attributes=['manual'])
+        return {fname for fname in all_fields if all_fields[fname]['manual']}
+
+    @api.model
     def _get_public_fields(self):
-        return self._get_recurrent_fields() | self._get_time_fields() | {
+        return self._get_recurrent_fields() | self._get_time_fields() | self._get_custom_fields() | {
             'id', 'active', 'allday',
             'duration', 'user_id', 'interval',
             'count', 'rrule', 'recurrence_id', 'show_as'}
@@ -206,8 +222,9 @@ class Meeting(models.Model):
          ('confidential', 'Only internal users')],
         'Privacy', default='public', required=True)
     location = fields.Char('Location', tracking=True, help="Location of Event")
+    videocall_location = fields.Char('Join Video Call', default=_default_videocall_location)
     show_as = fields.Selection(
-        [('free', 'Free'),
+        [('free', 'Available'),
          ('busy', 'Busy')], 'Show Time as', default='busy', required=True)
 
     # linked document
@@ -475,12 +492,11 @@ class Meeting(models.Model):
                 added_partner_ids += [command[1]] if command[1] not in self.partner_ids.ids else []
             # commands 0 and 1 not supported
 
-        if removed_partner_ids:
-            attendees_to_unlink = self.env['calendar.attendee'].search([
-                ('event_id', 'in', self.ids),
-                ('partner_id', 'in', removed_partner_ids),
-            ])
-            attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
+        attendees_to_unlink = self.env['calendar.attendee'].search([
+            ('event_id', 'in', self.ids),
+            ('partner_id', 'in', removed_partner_ids),
+        ])
+        attendee_commands += [[2, attendee.id] for attendee in attendees_to_unlink]  # Removes and delete
 
         attendee_commands += [
             [0, 0, dict(partner_id=partner_id)]
@@ -669,7 +685,10 @@ class Meeting(models.Model):
         if 'partner_ids' in values:
             (current_attendees - previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         if 'start' in values:
-            (current_attendees & previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_changedate', ignore_recurrence=not update_recurrence)
+            start_date = fields.Datetime.to_datetime(values.get('start'))
+            # Only notify on future events
+            if start_date and start_date >= fields.Datetime.now():
+                (current_attendees & previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_changedate', ignore_recurrence=not update_recurrence)
 
         return True
 
@@ -700,9 +719,8 @@ class Meeting(models.Model):
                                 activity_vals['user_id'] = user_id
                             values['activity_ids'] = [(0, 0, activity_vals)]
 
-        self_partner_id = [(4, self.env.user.partner_id.id)]
         vals_list = [
-            dict(vals, attendee_ids=self._attendees_values(vals.get('partner_ids', self_partner_id)))
+            dict(vals, attendee_ids=self._attendees_values(vals['partner_ids'])) if 'partner_ids' in vals else vals
             for vals in vals_list
         ]
         recurrence_fields = self._get_recurrent_fields()

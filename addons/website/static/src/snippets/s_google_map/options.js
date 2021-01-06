@@ -2,9 +2,9 @@ odoo.define('options.s_google_map_options', function (require) {
 'use strict';
 
 const {_t} = require('web.core');
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-snippetOptions.registry.GoogleMap = snippetOptions.SnippetOptionWidget.extend({
+options.registry.GoogleMap = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -37,8 +37,6 @@ snippetOptions.registry.GoogleMap = snippetOptions.SnippetOptionWidget.extend({
         } else if (!widgetValue && descriptionEl) {
             descriptionEl.remove();
         }
-
-        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

@@ -145,6 +145,6 @@ class EventTicket(models.Model):
         if self.start_sale_date:
             ticket = self._set_tz_context()
             current_date = fields.Date.context_today(ticket)
-            return ticket.start_sale_date < current_date
+            return ticket.start_sale_date <= current_date
         else:
             return True

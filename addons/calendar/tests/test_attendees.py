@@ -3,20 +3,20 @@
 
 from datetime import datetime
 
-from odoo.tests.common import SavepointCase, new_test_user
+from odoo.tests.common import TransactionCase, new_test_user
 
 
-class TestEventNotifications(SavepointCase):
+class TestEventNotifications(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox')
-        cls.event = cls.env['calendar.event'].with_user(cls.user).create({
+        cls.event = cls.env['calendar.event'].create({
             'name': "Doom's day",
             'start': datetime(2019, 10, 25, 8, 0),
             'stop': datetime(2019, 10, 27, 18, 0),
         }).with_context(mail_notrack=True)
+        cls.user = new_test_user(cls.env, 'xav', email='em@il.com', notification_type='inbox')
         cls.partner = cls.user.partner_id
 
     def test_attendee_added(self):

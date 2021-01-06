@@ -235,6 +235,7 @@ class frozendict(dict):
 
 
 class QWeb(object):
+    _empty_line = re.compile(r'\n\s*\n')
     __slots__ = ()
 
     _void_elements = frozenset([
@@ -254,9 +255,13 @@ class QWeb(object):
             * ``profile`` (float) profile the rendering (use astor lib) (filter
               profile line with time ms >= profile)
         """
+        values = values or {}
         body = []
-        self.compile(template, options)(self, body.append, values or {})
-        return u''.join(body).encode('utf8')
+        self.compile(template, options)(self, body.append, values)
+        joined = u''.join(body)
+        if not values.get('__keep_empty_lines'):
+            joined = QWeb._empty_line.sub('\n', joined.strip())
+        return joined.encode('utf8')
 
     def compile(self, template, options):
         """ Compile the given template into a rendering function::
@@ -359,7 +364,7 @@ class QWeb(object):
                 raise e
             except Exception as e:
                 template = options.get('caller_template', template)
-                path = options['last_path_node']
+                path = options.get('last_path_node')
                 raise QWebException("load could not load template", e, path, name=template)
 
         if document is None:

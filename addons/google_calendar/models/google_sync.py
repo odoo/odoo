@@ -72,7 +72,7 @@ class GoogleSync(models.AbstractModel):
         if 'google_id' in vals:
             self._from_google_ids.clear_cache(self)
         synced_fields = self._get_google_synced_fields()
-        if 'need_sync' not in vals and vals.keys() & synced_fields:
+        if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
 
         result = super().write(vals)
@@ -86,6 +86,9 @@ class GoogleSync(models.AbstractModel):
     def create(self, vals_list):
         if any(vals.get('google_id') for vals in vals_list):
             self._from_google_ids.clear_cache(self)
+        if self.env.user.google_synchronization_stopped:
+            for vals in vals_list:
+                vals.update({'need_sync': False})
         records = super().create(vals_list)
 
         google_service = GoogleCalendarService(self.env['google.service'])
@@ -93,6 +96,13 @@ class GoogleSync(models.AbstractModel):
         for record in records_to_sync:
             record._google_insert(google_service, record._google_values(), timeout=3)
         return records
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_synchronized(self):
+        if self.env.context.get('archive_on_error') and self._active_name:
+            return
+        if self.filtered('google_id'):
+            raise UserError(_("You cannot delete a record synchronized with Google Calendar, archive it instead."))
 
     def unlink(self):
         """We can't delete an event that is also in Google Calendar. Otherwise we would
@@ -103,8 +113,6 @@ class GoogleSync(models.AbstractModel):
         if self.env.context.get('archive_on_error') and self._active_name:
             synced.write({self._active_name: False})
             self = self - synced
-        elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Google Calendar, archive it instead."))
         return super().unlink()
 
     @api.model
@@ -163,7 +171,8 @@ class GoogleSync(models.AbstractModel):
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
             odoo_record = self.browse(gevent.odoo_id(self.env))
-            if updated >= pytz.utc.localize(odoo_record.write_date):
+            # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
+            if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
                 odoo_record.write(vals)
                 synced_records |= odoo_record
@@ -236,5 +245,12 @@ class GoogleSync(models.AbstractModel):
     def _get_google_synced_fields(self):
         """Return a set of field names. Changing one of these fields
         marks the record to be re-synchronized.
+        """
+        raise NotImplementedError()
+
+    @api.model
+    def _restart_google_sync(self):
+        """ Turns on the google synchronization for all the events of
+        a given user.
         """
         raise NotImplementedError()

@@ -53,6 +53,15 @@
                                     <div class="text-muted">
                                         Add quality checks to your work orders
                                     </div>
+                                    <div class="row mt-2" attrs="{'invisible': [('module_quality_control','=',False)]}">
+                                        <field name="module_quality_control_worksheet" widget="upgrade_boolean" class="col-lg-1 ml16 mr0"/>
+                                        <div class="col pl-0">
+                                            <label for="module_quality_control_worksheet"/>
+                                            <div class="text-muted">
+                                                Create customizable worksheets for your quality checks
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-12 o_setting_box" id="mrp_lock" title="Makes confirmed manufacturing orders locked rather than unlocked by default. This only applies to new manufacturing orders, not previously created ones.">
@@ -62,7 +71,7 @@
                                 <div class="o_setting_right_pane">
                                     <label for="group_locked_by_default"/>
                                     <div class="text-muted">
-                                        Prevent manufacturing users to modify quantities to consume, unless a manager has unlocked the document
+                                        Prevent manufacturing users from modifying quantities to consume, unless a manager has unlocked the document
                                     </div>
                                 </div>
                             </div>
@@ -125,7 +134,7 @@
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
             <field name="target">inline</field>
-            <field name="context">{'module' : 'mrp'}</field>
+            <field name="context">{'module' : 'mrp', 'bin_size': False}</field>
         </record>
 
         <menuitem id="menu_mrp_config" name="Settings" parent="menu_mrp_configuration"

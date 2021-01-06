@@ -27,14 +27,29 @@ class AliasMixin(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         """ Create a record with each ``vals`` or ``vals_list`` and create a corresponding alias. """
-        valid_vals_list = []
+        # prepare all alias values
+        alias_vals_list, record_vals_list = [], []
         for vals in vals_list:
             new_alias = not vals.get('alias_id')
             if new_alias:
                 alias_vals, record_vals = self._alias_filter_fields(vals)
                 alias_vals.update(self._alias_get_creation_values())
-                alias = self.env['mail.alias'].sudo().create(alias_vals)
-                record_vals['alias_id'] = alias.id
+                alias_vals_list.append(alias_vals)
+                record_vals_list.append(record_vals)
+
+        # create all aliases
+        alias_ids = []
+        if alias_vals_list:
+            alias_ids = iter(self.env['mail.alias'].sudo().create(alias_vals_list).ids)
+
+        # update alias values in create vals directly
+        valid_vals_list = []
+        record_vals_iter = iter(record_vals_list)
+        for vals in vals_list:
+            new_alias = not vals.get('alias_id')
+            if new_alias:
+                record_vals = next(record_vals_iter)
+                record_vals['alias_id'] = next(alias_ids)
                 valid_vals_list.append(record_vals)
             else:
                 valid_vals_list.append(vals)

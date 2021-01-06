@@ -180,8 +180,9 @@ class Orderpoint(models.Model):
 
     show_supplier = fields.Boolean('Show supplier column', compute='_compute_show_suppplier')
     supplier_id = fields.Many2one(
-        'product.supplierinfo', string='Vendor', check_company=True,
+        'product.supplierinfo', string='Product Supplier', check_company=True,
         domain="['|', ('product_id', '=', product_id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl_id)]")
+    vendor_id = fields.Many2one(related='supplier_id.name', string="Vendor", store=True)
 
     @api.depends('product_id.purchase_order_line_ids', 'product_id.purchase_order_line_ids.state')
     def _compute_qty(self):
@@ -200,8 +201,7 @@ class Orderpoint(models.Model):
         """ This function returns an action that display existing
         purchase orders of given orderpoint.
         """
-        action = self.env.ref('purchase.purchase_rfq')
-        result = action.read()[0]
+        result = self.env['ir.actions.act_window']._for_xml_id('purchase.purchase_rfq')
 
         # Remvove the context since the action basically display RFQ and not PO.
         result['context'] = {}

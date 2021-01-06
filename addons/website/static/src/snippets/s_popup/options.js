@@ -1,16 +1,15 @@
 odoo.define('website.s_popup_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-snippetOptions.registry.SnippetPopup = snippetOptions.SnippetOptionWidget.extend({
+options.registry.SnippetPopup = options.Class.extend({
     /**
      * @override
      */
     start: function () {
         // Note: the link are excluded here so that internal modal buttons do
         // not close the popup as we want to allow edition of those buttons.
-        this.trigger_up('snippet_option_visibility_update', {show: false});
         this.$target.on('click.SnippetPopup', '.js_close_popup:not(a, .btn)', ev => {
             ev.stopPropagation();
             this.onTargetHide();
@@ -53,8 +52,8 @@ snippetOptions.registry.SnippetPopup = snippetOptions.SnippetOptionWidget.extend
     /**
      * @override
      */
-    onTargetHide: async function (previewMode) {
-        await new Promise((resolve) => {
+    onTargetHide: async function () {
+        return new Promise(resolve => {
             const timeoutID = setTimeout(() => {
                 this.$target.off('hidden.bs.modal.popup_on_target_hide');
                 resolve();
@@ -65,13 +64,6 @@ snippetOptions.registry.SnippetPopup = snippetOptions.SnippetOptionWidget.extend
             });
             this.$target.modal('hide');
         });
-        await this.updateChangesInWysiwyg();
-    },
-    /**
-     * @override
-     */
-    cleanForSave: async function() {
-        await this.onTargetHide();
     },
 
     //--------------------------------------------------------------------------
@@ -84,22 +76,16 @@ snippetOptions.registry.SnippetPopup = snippetOptions.SnippetOptionWidget.extend
      *
      * @see this.selectClass for parameters
      */
-    moveBlock: async function (previewMode, widgetValue, params) {
+    moveBlock: function (previewMode, widgetValue, params) {
         const $container = $(widgetValue === 'moveToFooter' ? 'footer' : 'main');
         this.$target.closest('.s_popup').prependTo($container.find('.oe_structure:o_editable').first());
-        if (previewMode === false) {
-            await this.editorHelpers.prepend(this.wysiwyg.editor, $container.find('.oe_structure:o_editable').first()[0], this.$target.closest('.s_popup')[0])
-        }
-
     },
     /**
      * @see this.selectClass for parameters
      */
-    async setBackdrop(previewMode, widgetValue, params) {
+    setBackdrop(previewMode, widgetValue, params) {
         const color = widgetValue ? 'var(--black-50)' : '';
         this.$target[0].style.setProperty('background-color', color, 'important');
-
-        if (previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------

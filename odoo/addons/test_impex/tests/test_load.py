@@ -40,6 +40,7 @@ class ImporterCase(common.TransactionCase):
         super(ImporterCase, self).setUp()
         self.model = self.env[self.model_name]
         self.env['ir.model.data'].clear_caches()
+        self.cr.cache.clear()
 
     def import_(self, fields, rows, context=None):
         return self.model.with_context(context or {}).load(fields, rows)

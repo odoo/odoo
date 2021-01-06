@@ -27,7 +27,7 @@
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only" string="Sales Team"/>
                         <h1>
-                            <field name="name" placeholder="Sales Team name..."/>
+                            <field class="o_text_overflow" name="name" placeholder="Sales Team name..."/>
                         </h1>
                         <div name="options_active" />
                     </div>
@@ -128,7 +128,7 @@
                         <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''}">
                             <div t-attf-class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title">
-                                    <div class="o_primary"><field name="name"/></div>
+                                    <div class="o_primary o_text_overflow"><field name="name"/></div>
                                 </div>
                                 <div class="o_kanban_manage_button_section">
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>

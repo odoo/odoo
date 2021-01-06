@@ -111,7 +111,7 @@ SELECT
     fuel_type,
     date_start,
     COST,
-    cost_type
+    'service' as cost_type
 FROM
     service_costs sc
 UNION ALL (
@@ -124,7 +124,7 @@ UNION ALL (
         fuel_type,
         date_start,
         COST,
-        cost_type
+        'contract' as cost_type
     FROM
         contract_costs cc)
 """

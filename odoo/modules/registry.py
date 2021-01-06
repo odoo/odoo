@@ -236,10 +236,17 @@ class Registry(Mapping):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
+        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
+
+        # Uninstall registry hooks. Because of the condition, this only happens
+        # on a fully loaded registry, and not on a registry being loaded.
+        if self.ready:
+            for model in env.values():
+                model._unregister_hook()
+
         self.clear_caches()
         lazy_property.reset_all(self)
         self.registry_invalidated = True
-        env = odoo.api.Environment(cr, SUPERUSER_ID, {})
 
         if env.all.tocompute:
             _logger.error(
@@ -267,7 +274,12 @@ class Registry(Mapping):
         for model in models:
             model._setup_complete()
 
-        self.registry_invalidated = True
+        # Reinstall registry hooks. Because of the condition, this only happens
+        # on a fully loaded registry, and not on a registry being loaded.
+        if self.ready:
+            for model in env.values():
+                model._register_hook()
+            env['base'].flush()
 
     @lazy_property
     def field_computed(self):
@@ -302,12 +314,10 @@ class Registry(Mapping):
         def transitive_dependencies(field, seen=[]):
             if field in seen:
                 return
-            for seq1 in dependencies[field]:
+            for seq1 in dependencies.get(field, ()):
                 yield seq1
-                exceptions = (Exception,) if field.base_field.manual else ()
-                with ignore(*exceptions):
-                    for seq2 in transitive_dependencies(seq1[-1], seen + [field]):
-                        yield concat(seq1[:-1], seq2)
+                for seq2 in transitive_dependencies(seq1[-1], seen + [field]):
+                    yield concat(seq1[:-1], seq2)
 
         def concat(seq1, seq2):
             if seq1 and seq2:

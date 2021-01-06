@@ -71,13 +71,15 @@ FormRenderer.include({
         // while attempting to extend them.
         this.on('o_chatter_rendered', this, ev => this._onChatterRendered(ev));
         if (this.chatterFields.hasRecordReloadOnMessagePosted) {
-            this.on('o_message_posted', this, ev => this.trigger_up('reload'));
+            this.on('o_message_posted', this, ev => {
+                this.trigger_up('reload', { keepChanges: true });
+            });
         }
         if (this.chatterFields.hasRecordReloadOnAttachmentsChanged) {
-            this.on('o_attachments_changed', this, ev => this.trigger_up('reload'));
+            this.on('o_attachments_changed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
         if (this.chatterFields.hasRecordReloadOnFollowersUpdate) {
-            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload'));
+            owl.Component.env.bus.on('mail.thread:promptAddFollower-closed', this, ev => this.trigger_up('reload', { keepChanges: true }));
         }
     },
     /**

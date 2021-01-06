@@ -132,6 +132,7 @@ class AccountMove(models.Model):
         recs_invoice = self.filtered(lambda x: x.is_invoice())
         for invoice in recs_invoice:
             tax_lines = invoice.line_ids.filtered('tax_line_id')
+            currencies = invoice.line_ids.filtered(lambda x: x.currency_id == invoice.currency_id).mapped('currency_id')
             included_taxes = invoice.l10n_latam_document_type_id and \
                 invoice.l10n_latam_document_type_id._filter_taxes_included(tax_lines.mapped('tax_line_id'))
             if not included_taxes:
@@ -144,7 +145,8 @@ class AccountMove(models.Model):
                     sign = -1
                 else:
                     sign = 1
-                l10n_latam_amount_untaxed = invoice.amount_untaxed + sign * sum(included_invoice_taxes.mapped('balance'))
+                amount = 'amount_currency' if len(currencies) == 1 else 'balance'
+                l10n_latam_amount_untaxed = invoice.amount_untaxed + sign * sum(included_invoice_taxes.mapped(amount))
             invoice.l10n_latam_amount_untaxed = l10n_latam_amount_untaxed
             invoice.l10n_latam_tax_ids = not_included_invoice_taxes
         remaining = self - recs_invoice

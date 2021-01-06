@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class ResConfigSettings(models.TransientModel):
@@ -33,7 +34,7 @@ class ResConfigSettings(models.TransientModel):
     module_web_unsplash = fields.Boolean("Unsplash Image Library")
     module_partner_autocomplete = fields.Boolean("Partner Autocomplete")
     module_base_geolocalize = fields.Boolean("GeoLocalize")
-    module_google_recaptcha = fields.Boolean("reCAPTCHA: Easy on Humans, Hard on Bots")
+    module_google_recaptcha = fields.Boolean("reCAPTCHA")
     report_footer = fields.Text(related="company_id.report_footer", string='Custom Report Footer', help="Footer text displayed at the bottom of all reports.", readonly=False)
     group_multi_currency = fields.Boolean(string='Multi-Currencies',
             implied_group='base.group_multi_currency',
@@ -62,7 +63,10 @@ class ResConfigSettings(models.TransientModel):
 
     def open_default_user(self):
         action = self.env["ir.actions.actions"]._for_xml_id("base.action_res_users")
-        action['res_id'] = self.env.ref('base.default_user').id
+        if self.env.ref('base.default_user', raise_if_not_found=False):
+            action['res_id'] = self.env.ref('base.default_user').id
+        else:
+            raise UserError(_("Default User Template not found."))
         action['views'] = [[self.env.ref('base.view_users_form').id, 'form']]
         return action
 

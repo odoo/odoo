@@ -23,7 +23,7 @@ from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
 from reportlab.graphics.barcode import createBarcodeDrawing
-from PyPDF2 import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
 from collections.abc import Iterable
 from PIL import Image, ImageFile
@@ -149,6 +149,8 @@ class IrActionsReport(models.Model):
             # expected in the route /report/<converter>/<reportname> and must
             # not be removed by clean_action
             "context", "data",
+            # and this one is used by the frontend later on.
+            "close_on_report_download",
         }
 
     def associated_view(self):
@@ -676,7 +678,10 @@ class IrActionsReport(models.Model):
         if len(streams) == 1:
             result = streams[0].getvalue()
         else:
-            result = self._merge_pdfs(streams)
+            try:
+                result = self._merge_pdfs(streams)
+            except utils.PdfReadError:
+                raise UserError(_("One of the documents, you try to merge is encrypted"))
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
@@ -793,6 +798,7 @@ class IrActionsReport(models.Model):
         if not data:
             data = {}
         data.setdefault('report_type', 'text')
+        data.setdefault('__keep_empty_lines', True)
         data = self._get_rendering_context(docids, data)
         return self._render_template(self.sudo().report_name, data), 'text'
 

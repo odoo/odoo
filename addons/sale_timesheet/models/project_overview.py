@@ -27,6 +27,17 @@ class Project(models.Model):
 
         return values
 
+    def _plan_get_employee_ids(self):
+        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
+        user_ids = [user_id['user_id'][0] for user_id in user_ids]
+        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
+        # flatten the list of list
+        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
+
+        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
+        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
+        return employee_ids
+
     def _plan_prepare_values(self):
         currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
@@ -103,7 +114,7 @@ class Project(models.Model):
             profit['cost'] += data.get('timesheet_cost', 0.0)
             profit['expense_cost'] += data.get('expense_cost', 0.0)
             profit['expense_amount_untaxed_invoiced'] += data.get('expense_amount_untaxed_invoiced', 0.0)
-        profit['other_revenues'] = other_revenues or 0
+        profit['other_revenues'] = other_revenues - data.get('amount_untaxed_invoiced', 0.0) if other_revenues else 0.0
         profit['total'] = sum([profit[item] for item in profit.keys()])
         dashboard_values['profit'] = profit
 
@@ -112,15 +123,8 @@ class Project(models.Model):
         #
         # Time Repartition (per employee per billable types)
         #
-        user_ids = self.env['project.task'].sudo().read_group([('project_id', 'in', self.ids), ('user_id', '!=', False)], ['user_id'], ['user_id'])
-        user_ids = [user_id['user_id'][0] for user_id in user_ids]
-        employee_ids = self.env['res.users'].sudo().search_read([('id', 'in', user_ids)], ['employee_ids'])
-        # flatten the list of list
-        employee_ids = list(itertools.chain.from_iterable([employee_id['employee_ids'] for employee_id in employee_ids]))
-
-        aal_employee_ids = self.env['account.analytic.line'].read_group([('project_id', 'in', self.ids), ('employee_id', '!=', False)], ['employee_id'], ['employee_id'])
-        employee_ids.extend(list(map(lambda x: x['employee_id'][0], aal_employee_ids)))
-
+        employee_ids = self._plan_get_employee_ids()
+        employee_ids = list(set(employee_ids))
         # Retrieve the employees for which the current user can see theirs timesheets
         employee_domain = expression.AND([[('company_id', 'in', self.env.companies.ids)], self.env['account.analytic.line']._domain_employee_id()])
         employees = self.env['hr.employee'].sudo().browse(employee_ids).filtered_domain(employee_domain)
@@ -494,15 +498,24 @@ class Project(models.Model):
 
             sale_orders = self.mapped('sale_line_id.order_id') | self.env['sale.order'].browse(task_so_ids)
             if sale_orders:
+                so_action = dict(
+                    context={'create': False, 'edit': False, 'delete': False},
+                    domain=[('id', 'in', sale_orders.ids)],
+                )
+
+                if len(sale_orders) == 1:
+                    so_action.update({
+                        'action': self.env.ref('sale.action_sale_order_form_view').sudo(),
+                        'res_id': sale_orders.id,
+                    })
+                else:
+                    so_action['action'] = self.env.ref('sale.action_orders').sudo()
+
                 stat_buttons.append({
                     'name': _('Sales Orders'),
                     'count': len(sale_orders),
                     'icon': 'fa fa-dollar',
-                    'action': _to_action_data(
-                        action=self.env.ref('sale.action_orders').sudo(),
-                        domain=[('id', 'in', sale_orders.ids)],
-                        context={'create': False, 'edit': False, 'delete': False}
-                    )
+                    'action': _to_action_data(**so_action),
                 })
 
                 invoice_ids = self.env['sale.order'].search_read([('id', 'in', sale_orders.ids)], ['invoice_ids'])
@@ -529,6 +542,10 @@ class Project(models.Model):
         else:
             timesheet_label = [_('Hours'), _('Recorded')]
 
+        default_project_ctx = {}
+        if len(self) == 1:
+            default_project_ctx = {'default_project_id': self.id}
+
         stat_buttons.append({
             'name': timesheet_label,
             'count': sum(self.mapped('total_timesheet_time')),
@@ -537,6 +554,7 @@ class Project(models.Model):
                 'account.analytic.line',
                 domain=[('project_id', 'in', self.ids)],
                 views=[(ts_tree.id, 'list'), (ts_form.id, 'form')],
+                context=default_project_ctx,
             )
         })
 

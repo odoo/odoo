@@ -89,6 +89,9 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         self.assertEqual(self.sale_order.tasks_count, 2, "Adding a new service line on a confirmer SO should create a new task.")
 
+        # delete timesheets before deleting the task, so as to trigger the error
+        # about linked sales order lines and not the one about linked timesheets
+        task.timesheet_ids.unlink()
         # not possible to delete a task linked to a SOL
         with self.assertRaises(ValidationError):
             task.unlink()
@@ -528,14 +531,14 @@ class TestSaleService(TestCommonSaleTimesheet):
             'name': '%s: substask1' % (task.name,)
         })
 
-        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "By, default, a child task should have the same SO line than its mother")
-        self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line than its project")
-        self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line than its project")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "By, default, a child task should have the same SO line as its mother")
+        self.assertEqual(task2.sale_line_id, project.sale_line_id, "A new task in a billable project should have the same SO line as its project")
+        self.assertEqual(task2.partner_id, so_line_deliver_new_task_project.order_partner_id, "A new task in a billable project should have the same SO line as its project")
 
         # moving subtask in another project
         subtask.write({'project_id': self.project_global.id})
 
-        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line than its mother, even when changing project")
+        self.assertEqual(subtask.sale_line_id, task.sale_line_id, "A child task should always have the same SO line as its mother, even when changing project")
         self.assertEqual(subtask.sale_line_id, so_line_deliver_new_task_project)
 
         # changing the SO line of the mother task

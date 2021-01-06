@@ -10,7 +10,7 @@ from operator import itemgetter
 
 from psycopg2 import sql
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import pycompat, unique
@@ -150,7 +150,7 @@ class IrModel(models.Model):
     def _default_field_id(self):
         if self.env.context.get('install_mode'):
             return []                   # no default field when importing
-        return [(0, 0, {'name': 'x_name', 'field_description': 'Name', 'ttype': 'char', 'copied': True})]
+        return [Command.create({'name': 'x_name', 'field_description': 'Name', 'ttype': 'char', 'copied': True})]
 
     name = fields.Char(string='Model Description', translate=True, required=True)
     model = fields.Char(default='x_', required=True, index=True)
@@ -275,14 +275,16 @@ class IrModel(models.Model):
                 _logger.runbot('The model %s could not be dropped because it did not exist in the registry.', model.model)
         return True
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
         # Prevent manual deletion of module tables
-        if not self._context.get(MODULE_UNINSTALL_FLAG):
-            for model in self:
-                if model.state != 'manual':
-                    raise UserError(_("Model '%s' contains module data and cannot be removed.", model.name))
-                # prevent screwing up fields that depend on these models' fields
-                model.field_id._prepare_update()
+        for model in self:
+            if model.state != 'manual':
+                raise UserError(_("Model '%s' contains module data and cannot be removed.", model.name))
+
+    def unlink(self):
+        # prevent screwing up fields that depend on these models' fields
+        self.field_id._prepare_update()
 
         # delete fields whose comodel is being removed
         self.env['ir.model.fields'].search([('relation', 'in', self.mapped('model'))]).unlink()
@@ -411,9 +413,13 @@ class IrModel(models.Model):
     def _add_manual_models(self):
         """ Add extra models to the registry. """
         # clean up registry first
-        custom_models = [name for name, model_class in self.pool.items() if model_class._custom]
-        for name in custom_models:
-            del self.pool[name]
+        for name, Model in list(self.pool.items()):
+            if Model._custom:
+                del self.pool.models[name]
+                # remove the model's name from its parents' _inherit_children
+                for Parent in Model.__bases__:
+                    if hasattr(Parent, 'pool'):
+                        Parent._inherit_children.discard(name)
         # add manual models
         cr = self.env.cr
         cr.execute('SELECT * FROM ir_model WHERE state=%s', ['manual'])
@@ -795,14 +801,15 @@ class IrModelFields(models.Model):
             # the registry has been modified, restore it
             self.pool.setup_models(self._cr)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
+        # Prevent manual deletion of module columns
+        if any(field.state != 'manual' for field in self):
+            raise UserError(_("This column contains module data and cannot be removed!"))
+
     def unlink(self):
         if not self:
             return True
-
-        # Prevent manual deletion of module columns
-        if not self._context.get(MODULE_UNINSTALL_FLAG) and \
-                any(field.state != 'manual' for field in self):
-            raise UserError(_("This column contains module data and cannot be removed!"))
 
         # prevent screwing up fields that depend on these fields
         self._prepare_update()
@@ -1337,7 +1344,8 @@ class IrModelSelection(models.Model):
 
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_manual(self):
         # Prevent manual deletion of module columns
         if (
             self.pool.ready
@@ -1347,6 +1355,7 @@ class IrModelSelection(models.Model):
                               'Please modify them through Python code, '
                               'preferably through a custom addon!'))
 
+    def unlink(self):
         self._process_ondelete()
         result = super().unlink()
 
@@ -2001,7 +2010,9 @@ class IrModelData(models.Model):
             INSERT INTO ir_model_data (module, name, model, res_id, noupdate)
             VALUES {rows}
             ON CONFLICT (module, name)
-            DO UPDATE SET write_date=(now() at time zone 'UTC') {where}
+            DO UPDATE SET (model, res_id, write_date) =
+                (EXCLUDED.model, EXCLUDED.res_id, now() at time zone 'UTC')
+                {where}
         """.format(
             rows=", ".join([rowf] * len(sub_rows)),
             where="WHERE NOT ir_model_data.noupdate" if update else "",
@@ -2054,6 +2065,19 @@ class IrModelData(models.Model):
                 constraint_ids.append(data.res_id)
             else:
                 records_items.append((data.model, data.res_id))
+
+        # avoid prefetching fields that are going to be deleted: during uninstall, it is
+        # possible to perform a recompute (via flush_env) after the database columns have been
+        # deleted but before the new registry has been created, meaning the recompute will
+        # be executed on a stale registry, and if some of the data for executing the compute
+        # methods is not in cache it will be fetched, and fields that exist in the registry but not
+        # in the database will be prefetched, this will of course fail and prevent the uninstall.
+        for ir_field in self.env['ir.model.fields'].browse(field_ids):
+            model = self.pool.get(ir_field.model)
+            if model is not None:
+                field = model._fields.get(ir_field.name)
+                if field is not None:
+                    field.prefetch = False
 
         # to collect external ids of records that cannot be deleted
         undeletable_ids = []

@@ -170,13 +170,16 @@ class EventEvent(models.Model):
         compute='_compute_event_ticket_ids', readonly=False, store=True)
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
-        help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
+        help="Registrations are open if:\n"
+        "- the event is not ended\n"
+        "- there are seats available on event\n"
+        "- the tickets are sellable (if ticketing is used)")
     event_registrations_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_event_registrations_sold_out', compute_sudo=True,
-        help='Event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out event is sold out.')
+        help='The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.')
     start_sale_date = fields.Date(
         'Start sale date', compute='_compute_start_sale_date',
-        help='If ticketing is used, this is the lowest starting sale date of tickets.')
+        help='If ticketing is used, contains the earliest starting sale date of tickets.')
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
@@ -478,16 +481,18 @@ class EventEvent(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['event.stage'].search([])
 
-    @api.model
-    def create(self, vals):
-        # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
-        vals.update(self._sync_required_computed(vals))
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
+            vals.update(self._sync_required_computed(vals))
 
-        res = super(EventEvent, self).create(vals)
-        if res.organizer_id:
-            res.message_subscribe([res.organizer_id.id])
-        res.flush()
-        return res
+        events = super(EventEvent, self).create(vals_list)
+        for res in events:
+            if res.organizer_id:
+                res.message_subscribe([res.organizer_id.id])
+        events.flush()
+        return events
 
     def write(self, vals):
         res = super(EventEvent, self).write(vals)

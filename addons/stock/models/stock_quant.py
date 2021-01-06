@@ -33,18 +33,21 @@ class StockQuant(models.Model):
         ]
         if self.env.context.get('active_model') == 'product.product':
             domain.insert(0, "('product_id', '=', %s)" % self.env.context.get('active_id'))
-        if self.env.context.get('active_model') == 'product.template':
+        elif self.env.context.get('active_model') == 'product.template':
             product_template = self.env['product.template'].browse(self.env.context.get('active_id'))
             if product_template.exists():
                 domain.insert(0, "('product_id', 'in', %s)" % product_template.product_variant_ids.ids)
+        else:
+            domain.insert(0, "('product_id', '=', product_id)")
         return '[' + ', '.join(domain) + ']'
 
     def _domain_product_id(self):
         if not self._is_inventory_mode():
             return
         domain = [('type', '=', 'product')]
-        if self.env.context.get('product_tmpl_id'):
-            domain = expression.AND([domain, [('product_tmpl_id', '=', self.env.context['product_tmpl_id'])]])
+        if self.env.context.get('product_tmpl_ids') or self.env.context.get('product_tmpl_id'):
+            products = self.env.context.get('product_tmpl_ids', []) + [self.env.context.get('product_tmpl_id', 0)]
+            domain = expression.AND([domain, [('product_tmpl_id', 'in', products)]])
         return domain
 
     product_id = fields.Many2one(
@@ -63,7 +66,7 @@ class StockQuant(models.Model):
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number',
+        'stock.production.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', readonly=True, check_company=True,
         domain=lambda self: self._domain_lot_id())
     package_id = fields.Many2one(
@@ -89,7 +92,7 @@ class StockQuant(models.Model):
         'Available Quantity',
         help="On hand quantity which hasn't been reserved on a transfer, in the default unit of measure of the product",
         compute='_compute_available_quantity')
-    in_date = fields.Datetime('Incoming Date', readonly=True)
+    in_date = fields.Datetime('Incoming Date', readonly=True, required=True, default=fields.Datetime.now)
     tracking = fields.Selection(related='product_id.tracking', readonly=True)
     on_hand = fields.Boolean('On Hand', store=False, search='_search_on_hand')
 
@@ -237,7 +240,8 @@ class StockQuant(models.Model):
     @api.constrains('quantity')
     def check_quantity(self):
         for quant in self:
-            if float_compare(quant.quantity, 1, precision_rounding=quant.product_uom_id.rounding) > 0 and quant.lot_id and quant.product_id.tracking == 'serial':
+            if quant.location_id.usage != 'inventory' and quant.lot_id and quant.product_id.tracking == 'serial' \
+                    and float_compare(abs(quant.quantity), 1, precision_rounding=quant.product_uom_id.rounding) > 0:
                 raise ValidationError(_('The serial number has already been assigned: \n Product: %s, Serial Number: %s') % (quant.product_id.display_name, quant.lot_id.name))
 
     @api.constrains('location_id')
@@ -260,19 +264,16 @@ class StockQuant(models.Model):
     @api.model
     def _get_removal_strategy_order(self, removal_strategy):
         if removal_strategy == 'fifo':
-            return 'in_date ASC NULLS FIRST, id'
+            return 'in_date ASC, id'
         elif removal_strategy == 'lifo':
-            return 'in_date DESC NULLS LAST, id desc'
+            return 'in_date DESC, id DESC'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False):
-        self.env['stock.quant'].flush(['location_id', 'owner_id', 'package_id', 'lot_id', 'product_id'])
-        self.env['product.product'].flush(['virtual_available'])
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         removal_strategy_order = self._get_removal_strategy_order(removal_strategy)
-        domain = [
-            ('product_id', '=', product_id.id),
-        ]
+
+        domain = [('product_id', '=', product_id.id)]
         if not strict:
             if lot_id:
                 domain = expression.AND([[('lot_id', '=', lot_id.id)], domain])
@@ -287,17 +288,7 @@ class StockQuant(models.Model):
             domain = expression.AND([[('owner_id', '=', owner_id and owner_id.id or False)], domain])
             domain = expression.AND([[('location_id', '=', location_id.id)], domain])
 
-        # Copy code of _search for special NULLS FIRST/LAST order
-        self.check_access_rights('read')
-        query = self._where_calc(domain)
-        self._apply_ir_rules(query, 'read')
-        from_clause, where_clause, where_clause_params = query.get_sql()
-        where_str = where_clause and (" WHERE %s" % where_clause) or ''
-        query_str = 'SELECT "%s".id FROM ' % self._table + from_clause + where_str + " ORDER BY "+ removal_strategy_order
-        self._cr.execute(query_str, where_clause_params)
-        res = self._cr.fetchall()
-        # No uniquify list necessary as auto_join is not applied anyways...
-        return self.browse([x[0] for x in res])
+        return self.search(domain, order=removal_strategy_order)
 
     @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
@@ -410,7 +401,7 @@ class StockQuant(models.Model):
 
         for quant in quants:
             try:
-                with self._cr.savepoint():
+                with self._cr.savepoint(flush=False):  # Avoid flush compute store of package
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
                     quant.write({
                         'quantity': quant.quantity + quantity,
@@ -421,6 +412,9 @@ class StockQuant(models.Model):
                 if e.pgcode == '55P03':  # could not obtain the lock
                     continue
                 else:
+                    # Because savepoint doesn't flush, we need to invalidate the cache
+                    # when there is a error raise from the write (other than lock-error)
+                    self.clear_caches()
                     raise
         else:
             self.create({
@@ -669,6 +663,12 @@ class QuantPackage(models.Model):
     owner_id = fields.Many2one(
         'res.partner', 'Owner', compute='_compute_package_info', search='_search_owner',
         index=True, readonly=True, compute_sudo=True)
+    package_use = fields.Selection([
+        ('disposable', 'Disposable Box'),
+        ('reusable', 'Reusable Box'),
+        ], string='Package Use', default='disposable', required=True,
+        help="""Reusable boxes are used for batch picking and emptied afterwards to be reused. In the barcode application, scanning a reusable box will add the products in this box.
+        Disposable boxes aren't reused, when scanning a disposable box in the barcode application, the contained products are added to the transfer.""")
 
     @api.depends('quant_ids.package_id', 'quant_ids.location_id', 'quant_ids.company_id', 'quant_ids.owner_id', 'quant_ids.quantity', 'quant_ids.reserved_quantity')
     def _compute_package_info(self):
@@ -683,17 +683,6 @@ class QuantPackage(models.Model):
             package.location_id = values['location_id']
             package.company_id = values.get('company_id')
             package.owner_id = values['owner_id']
-
-    def name_get(self):
-        return list(self._compute_complete_name().items())
-
-    def _compute_complete_name(self):
-        """ Forms complete name of location from parent location to child location. """
-        res = {}
-        for package in self:
-            name = package.name
-            res[package.id] = name
-        return res
 
     def _search_owner(self, operator, value):
         if value:
@@ -717,8 +706,7 @@ class QuantPackage(models.Model):
 
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.env['stock.quant']._merge_quants()
-        self.env['stock.quant']._unlink_zero_quants()
+        self.env['stock.quant']._quant_tasks()
 
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")

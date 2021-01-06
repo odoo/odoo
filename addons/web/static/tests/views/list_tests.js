@@ -2863,6 +2863,30 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('editable list view, click on m2o dropdown do not close editable row', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                '<field name="m2o"/>' +
+                '</tree>',
+        });
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        const $dropdown = list.$('.o_selected_row .o_data_cell .o_field_many2one input').autocomplete('widget');
+        await testUtils.dom.click($dropdown);
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        await testUtils.dom.click($dropdown.find("li:first"));
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        list.destroy();
+    });
+
     QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
         const assertions = [
             { field: 'bar', expected: 70, type: 'Boolean' },
@@ -3347,6 +3371,37 @@ QUnit.module('Views', {
         await testUtils.dom.click($('body .modal button span:contains(Ok)'));
 
         assert.containsN(list, 'tbody td.o_list_record_selector', 3, "should have 3 records");
+        list.destroy();
+    });
+
+    QUnit.test('deleting record which throws UserError should close confirmation dialog', async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            viewOptions: {hasActionMenus: true},
+            arch: '<tree><field name="foo"/></tree>',
+            mockRPC: function (route, args) {
+                if (args.method === 'unlink') {
+                    return Promise.reject({ message: "Odoo Server Error" });
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('tbody td.o_list_record_selector:first input'));
+
+        assert.containsOnce(list.el, 'div.o_control_panel .o_cp_action_menus');
+
+        await cpHelpers.toggleActionMenu(list);
+        await cpHelpers.toggleMenuItem(list, "Delete");
+        assert.containsOnce(document.body, '.modal', 'should have open the confirmation dialog');
+
+        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        assert.containsNone(document.body, ".modal", "confirmation dialog should be closed");
+
         list.destroy();
     });
 
@@ -6161,6 +6216,8 @@ QUnit.module('Views', {
 
         // Press 'Tab' -> should get out of the one to many and go to the next field of the form
         await testUtils.fields.triggerKeydown(form.$('.o_field_widget[name=o2m] .o_selected_row input'), 'tab');
+        // use of owlCompatibilityExtraNextTick because the x2many control panel is updated twice
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "the next field should be selected");
 
@@ -8173,6 +8230,52 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with many2one: click out does not discard the row', async function (assert) {
+        // In this test, we simulate a long click by manually triggering a mousedown and later on
+        // mouseup and click events
+        assert.expect(5);
+
+        this.data.bar.fields.m2o = {string: "M2O field", type: "many2one", relation: "foo"};
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="o2m">
+                        <tree editable="bottom">
+                            <field name="m2o" required="1"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(form, '.o_data_row');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        assert.containsOnce(form, '.o_data_row');
+
+        // focus and write something in the m2o
+        form.$('.o_field_many2one input').focus().val('abcdef').trigger('keyup');
+        await testUtils.nextTick();
+
+        // then simulate a mousedown outside
+        form.$('.o_field_widget[name="display_name"]').focus().trigger('mousedown');
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal', "should ask confirmation to create a record");
+
+        // trigger the mouseup and the click
+        form.$('.o_field_widget[name="display_name"]').trigger('mouseup').trigger('click');
+        await testUtils.nextTick();
+
+        assert.containsOnce(document.body, '.modal', "modal should still be displayed");
+        assert.containsOnce(form, '.o_data_row', "the row should still be there");
+
+        form.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
@@ -10094,10 +10197,10 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the second last element');
-        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields dropdown is the last element');
 
@@ -10162,10 +10265,10 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the last element');
-        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields is the last element');
 
@@ -10868,6 +10971,52 @@ QUnit.module('Views', {
         list.destroy();
         unpatchDate();
         testUtils.mock.unpatch(BasicModel);
+    });
+
+    QUnit.test("update control panel while list view is mounting", async function (assert) {
+        const ControlPanel = require('web.ControlPanel');
+        const ListController = require('web.ListController');
+
+        let mountedCounterCall = 0;
+
+        ControlPanel.patch('test.ControlPanel', T => {
+            class ControlPanelPatchTest extends T {
+                mounted() {
+                    mountedCounterCall = mountedCounterCall + 1;
+                    assert.step(`mountedCounterCall-${mountedCounterCall}`);
+                    super.mounted(...arguments);
+                }
+            }
+            return ControlPanelPatchTest;
+        });
+
+        const MyListView = ListView.extend({
+            config: Object.assign({}, ListView.prototype.config, {
+                Controller: ListController.extend({
+                    async start() {
+                        await this._super(...arguments);
+                        this.renderer._updateSelection();
+                    },
+                }),
+            }),
+        });
+
+        assert.expect(2);
+
+        const list = await createView({
+            View: MyListView,
+            model: 'event',
+            data: this.data,
+            arch: '<tree><field name="name"/></tree>',
+        });
+
+        assert.verifySteps([
+            'mountedCounterCall-1',
+        ]);
+
+        ControlPanel.unpatch('test.ControlPanel');
+
+        list.destroy();
     });
 });
 

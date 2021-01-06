@@ -8,6 +8,7 @@ import odoo
 from odoo.tests import common, tagged
 from odoo.tools.misc import file_open, mute_logger
 from odoo.tools.translate import _, _lt, TranslationFileReader, TranslationModuleReader
+from odoo import Command
 
 
 TRANSLATED_TERM = _lt("Klingon")
@@ -176,7 +177,7 @@ class TestTermCount(common.TransactionCase):
         trans_count = self.env['ir.translation'].search_count([('lang', '=', 'tlh')])
         self.assertEqual(trans_count, 1, "The imported translations were not created")
 
-        self.env.context = dict(self.env.context, lang="tlh")
+        self.env = self.env(context=dict(self.env.context, lang="tlh"))
         self.assertEqual(_("Klingon"), "tlhIngan", "The code translation was not applied")
 
     def test_lazy_translation(self):
@@ -204,6 +205,10 @@ class TestTermCount(common.TransactionCase):
 
         context = {'lang': "tlh"}
         self.assertEqual(str(TRANSLATED_TERM), "tlhIngan", "The lazy code translation was not applied")
+
+        self.assertEqual("Do you speak " + TRANSLATED_TERM, "Do you speak tlhIngan", "str + _lt concatenation failed")
+        self.assertEqual(TRANSLATED_TERM + ", I speak it", "tlhIngan, I speak it", "_lt + str concatenation failed")
+        self.assertEqual(TRANSLATED_TERM + TRANSLATED_TERM, "tlhIngantlhIngan", "_lt + _lt concatenation failed")
 
     def test_import_from_csv_file(self):
         """Test the import from a single CSV file works"""
@@ -258,7 +263,7 @@ class TestTermCount(common.TransactionCase):
         export = self.env["base.language.export"].create({
             'lang': 'dot',
             'format': 'po',
-            'modules': [(6, 0, [module.id])]
+            'modules': [Command.set([module.id])]
         })
         export.act_getfile()
         po_file = export.data
@@ -360,7 +365,7 @@ class TestTranslationFlow(common.TransactionCase):
         export = self.env["base.language.export"].create({
             'lang': 'fr_FR',
             'format': 'po',
-            'modules': [(6, 0, [module.id])]
+            'modules': [Command.set([module.id])]
         })
         export.act_getfile()
         po_file = export.data
@@ -394,7 +399,7 @@ class TestTranslationFlow(common.TransactionCase):
         export = self.env["base.language.export"].create({
             'lang': 'fr_FR',
             'format': 'csv',
-            'modules': [(6, 0, [module.id])]
+            'modules': [Command.set([module.id])]
         })
         export.act_getfile()
         po_file = export.data

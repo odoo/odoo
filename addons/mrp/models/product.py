@@ -177,7 +177,9 @@ class ProductProduct(models.Model):
                     # products have 0 qty available.
                     continue
                 uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id)
+                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, raise_if_failure=False)
+                if not qty_per_kit:
+                    continue
                 ratios_virtual_available.append(component.virtual_available / qty_per_kit)
                 ratios_qty_available.append(component.qty_available / qty_per_kit)
                 ratios_incoming_qty.append(component.incoming_qty / qty_per_kit)
@@ -205,3 +207,18 @@ class ProductProduct(models.Model):
         action = self.product_tmpl_id.action_view_mos()
         action['domain'] = [('state', '=', 'done'), ('product_id', 'in', self.ids)]
         return action
+
+    def action_open_quants(self):
+        bom_kits = {}
+        for product in self:
+            bom = self.env['mrp.bom']._bom_find(product=product, bom_type='phantom')
+            if bom:
+                bom_kits[product] = bom
+        components = self - self.env['product.product'].concat(*list(bom_kits.keys()))
+        for product in bom_kits:
+            boms, bom_sub_lines = bom_kits[product].explode(product, 1)
+            components |= self.env['product.product'].concat(*[l[0].product_id for l in bom_sub_lines])
+        res = super(ProductProduct, components).action_open_quants()
+        if bom_kits:
+            res['context']['single_product'] = False
+        return res

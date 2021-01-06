@@ -85,7 +85,7 @@ class StockRule(models.Model):
     auto = fields.Selection([
         ('manual', 'Manual Operation'),
         ('transparent', 'Automatic No Step Added')], string='Automatic Move',
-        default='manual', index=True, required=True,
+        default='manual', required=True,
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
@@ -164,13 +164,15 @@ class StockRule(models.Model):
         Care this function is not call by method run. It is called explicitely
         in stock_move.py inside the method _push_apply
         """
+        self.ensure_one()
         new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
         if self.auto == 'transparent':
+            old_dest_location = move.location_dest_id
             move.write({'date': new_date, 'location_dest_id': self.location_id.id})
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
-            if self.location_id != move.location_dest_id:
+            if self.location_id != old_dest_location:
                 # TDE FIXME: should probably be done in the move model IMO
-                move._push_apply()
+                return move._push_apply()[:1]
         else:
             new_move_vals = self._push_prepare_move_copy_values(move, new_date)
             new_move = move.sudo().copy(new_move_vals)
@@ -178,7 +180,7 @@ class StockRule(models.Model):
                 new_move.write({'procure_method': 'make_to_stock'})
             if not new_move.location_id.should_bypass_reservation():
                 move.write({'move_dest_ids': [(4, new_move.id)]})
-            new_move._action_confirm()
+            return new_move
 
     def _push_prepare_move_copy_values(self, move_to_copy, new_date):
         company_id = self.company_id.id
@@ -299,7 +301,7 @@ class StockRule(models.Model):
             'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
             'date': date_scheduled,
-            'date_deadline': date_deadline,
+            'date_deadline': False if self.group_propagation_option == 'fixed' else date_deadline,
             'propagate_cancel': self.propagate_cancel,
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),
@@ -482,21 +484,29 @@ class ProcurementGroup(models.Model):
             ('product_id', '=', values['product_id'].id)]
 
     @api.model
-    def _get_moves_to_assign_domain(self):
-        return expression.AND([
-            [('state', 'in', ['confirmed', 'partially_available'])],
-            [('product_uom_qty', '!=', 0.0)]
-        ])
+    def _get_moves_to_assign_domain(self, company_id):
+        moves_domain = [
+            ('state', 'in', ['confirmed', 'partially_available']),
+            ('product_uom_qty', '!=', 0.0)
+        ]
+        moves_domain = expression.AND([moves_domain, ['|', ('picking_type_id.reservation_method', '=', 'at_confirm'),
+                                                           ('reservation_date', '<=', fields.Date.today())]])
+        if company_id:
+            moves_domain = expression.AND([[('company_id', '=', company_id)], moves_domain])
+        return moves_domain
 
     @api.model
     def _run_scheduler_tasks(self, use_new_cursor=False, company_id=False):
         # Minimum stock rules
         domain = self._get_orderpoint_domain(company_id=company_id)
         orderpoints = self.env['stock.warehouse.orderpoint'].search(domain)
+        # ensure that qty_* which depends on datetime.now() are correctly
+        # recomputed
+        orderpoints.sudo()._compute_qty_to_order()
         orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
 
         # Search all confirmed stock_moves and try to assign them
-        domain = self._get_moves_to_assign_domain()
+        domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='priority desc, date asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
@@ -509,6 +519,12 @@ class ProcurementGroup(models.Model):
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()
+
+        if use_new_cursor:
+            self._cr.commit()
+
+        # Run cyclic inventories
+        self.env['stock.inventory']._run_inventory_tasks(company_id)
 
         if use_new_cursor:
             self._cr.commit()

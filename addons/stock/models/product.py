@@ -363,14 +363,11 @@ class Product(models.Model):
 
     @api.onchange('tracking')
     def onchange_tracking(self):
-        products = self.filtered(lambda self: self.tracking and self.tracking != 'none')
-        if products:
-            unassigned_quants = self.env['stock.quant'].search_count([('product_id', 'in', products.ids), ('lot_id', '=', False), ('location_id.usage','=', 'internal')])
-            if unassigned_quants:
-                return {
-                    'warning': {
-                        'title': _('Warning!'),
-                        'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
+        if self.tracking != "none" and self.qty_available > 0:
+            return {
+                'warning': {
+                    'title': _('Warning!'),
+                    'message': _("You have product(s) in stock that have no lot/serial number. You can assign lot/serial numbers by doing an inventory adjustment.")}}
 
     @api.model
     def view_header_get(self, view_id, view_type):
@@ -487,13 +484,13 @@ class Product(models.Model):
                 single_product=True
             )
         else:
-            self = self.with_context(product_tmpl_id=self.product_tmpl_id.id)
+            self = self.with_context(product_tmpl_ids=self.product_tmpl_id.ids)
         action = self.env['stock.quant']._get_quants_action(domain)
         action["name"] = _('Update Quantity')
         return action
 
     def action_update_quantity_on_hand(self):
-        return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
+        return self.product_tmpl_id.with_context(default_product_id=self.id, create=True).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
         self.ensure_one()
@@ -602,7 +599,7 @@ class ProductTemplate(models.Model):
     # TDE FIXME: seems only visible in a view - remove me ?
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
-        related='categ_id.total_route_ids', readonly=False)
+        related='categ_id.total_route_ids', readonly=False, related_sudo=False)
 
     @api.depends('type')
     def _compute_has_available_route_ids(self):
@@ -702,9 +699,22 @@ class ProductTemplate(models.Model):
 
     @api.onchange('type')
     def _onchange_type(self):
-        res = super(ProductTemplate, self)._onchange_type()
+        res = super(ProductTemplate, self)._onchange_type() or {}
         if self.type == 'consu' and self.tracking != 'none':
             self.tracking = 'none'
+
+        # Return a warning when trying to change the product type
+        if self.ids and self.product_variant_ids.ids and self.env['stock.move.line'].sudo().search_count([
+            ('product_id', 'in', self.product_variant_ids.ids), ('state', '!=', 'cancel')
+        ]):
+            res['warning'] = {
+                'title': _('Warning!'),
+                'message': _(
+                    'This product has been used in at least one inventory movement. '
+                    'It is not advised to change the Product Type since it can lead to inconsistencies. '
+                    'A better solution could be to archive the product and create a new one instead.'
+                )
+            }
         return res
 
     def write(self, vals):
@@ -741,7 +751,7 @@ class ProductTemplate(models.Model):
         if (self.env.user.user_has_groups(','.join(advanced_option_groups))):
             return self.action_open_quants()
         else:
-            default_product_id = len(self.product_variant_ids) == 1 and self.product_variant_id.id
+            default_product_id = self.env.context.get('default_product_id', len(self.product_variant_ids) == 1 and self.product_variant_id.id)
             action = self.env["ir.actions.actions"]._for_xml_id("stock.action_change_product_quantity")
             action['context'] = dict(
                 self.env.context,

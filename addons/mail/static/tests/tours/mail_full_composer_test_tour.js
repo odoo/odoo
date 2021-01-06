@@ -40,7 +40,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
 }, {
     content: "Open full composer",
     trigger: '.o_Composer_buttonFullComposer',
-    extra_trigger: '.o_Attachment:not(.o-temporary)' // waiting the attachment to be uploaded
+    extra_trigger: '.o_Attachment:not(.o-isUploading)' // waiting the attachment to be uploaded
 }, {
     content: "Check the earlier provided attachment is listed",
     trigger: '.o_attachment[title="text.txt"]',
@@ -60,7 +60,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     content: "Check composer content is kept",
     trigger: '.oe_form_field[name="body"]',
     run() {
-        const bodyContent = document.querySelector('.oe_form_field[name="body"] jw-shadow').shadowRoot.textContent;
+        const bodyContent = document.querySelector('.oe_form_field[name="body"] textarea').textContent;
         if (!bodyContent.includes("blahblah")) {
             console.error(
                 `Full composer should contain text from small composer ("blahblah") in body input (actual: ${bodyContent})`

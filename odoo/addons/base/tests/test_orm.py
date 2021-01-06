@@ -6,6 +6,7 @@ from collections import defaultdict
 from odoo.exceptions import AccessError, MissingError
 from odoo.tests.common import TransactionCase
 from odoo.tools import mute_logger
+from odoo import Command
 
 
 class TestORM(TransactionCase):
@@ -26,7 +27,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+            'groups_id': [Command.set([self.ref('base.group_user')])],
         })
         ps = (p1 + p2).with_user(user)
         self.assertEqual([{'id': p2.id, 'name': 'Y'}], ps.read(['name']), "read() should skip deleted records")
@@ -61,7 +62,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test user',
             'login': 'test2',
-            'groups_id': [(6, 0, [self.ref('base.group_user')])],
+            'groups_id': [Command.set([self.ref('base.group_user')])],
         })
 
         partner_model = self.env['ir.model'].search([('model','=','res.partner')])
@@ -216,14 +217,14 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'test',
             'login': 'test_m2m_store_trigger',
-            'groups_id': [(6, 0, [])],
+            'groups_id': [Command.set([])],
         })
         self.assertTrue(user.share)
 
-        group_user.write({'users': [(4, user.id)]})
+        group_user.write({'users': [Command.link(user.id)]})
         self.assertFalse(user.share)
 
-        group_user.write({'users': [(3, user.id)]})
+        group_user.write({'users': [Command.unlink(user.id)]})
         self.assertTrue(user.share)
 
     @mute_logger('odoo.models')
@@ -232,7 +233,7 @@ class TestORM(TransactionCase):
         user = self.env['res.users'].create({
             'name': 'Justine Bridou',
             'login': 'saucisson',
-            'groups_id': [(6, 0, [self.ref('base.group_partner_manager')])],
+            'groups_id': [Command.set([self.ref('base.group_partner_manager')])],
         })
         p1 = self.env['res.partner'].with_user(user).create({'name': 'Zorro'})
         self.env['ir.property'].with_user(user)._set_multi("ref", "res.partner", {p1.id: "Nain poilu"})
@@ -272,16 +273,16 @@ class TestORM(TransactionCase):
         vals_list = [{
             'name': 'Foo',
             'state_ids': [
-                (0, 0, {'name': 'North Foo', 'code': 'NF'}),
-                (0, 0, {'name': 'South Foo', 'code': 'SF'}),
-                (0, 0, {'name': 'West Foo', 'code': 'WF'}),
-                (0, 0, {'name': 'East Foo', 'code': 'EF'}),
+                Command.create({'name': 'North Foo', 'code': 'NF'}),
+                Command.create({'name': 'South Foo', 'code': 'SF'}),
+                Command.create({'name': 'West Foo', 'code': 'WF'}),
+                Command.create({'name': 'East Foo', 'code': 'EF'}),
             ],
         }, {
             'name': 'Bar',
             'state_ids': [
-                (0, 0, {'name': 'North Bar', 'code': 'NB'}),
-                (0, 0, {'name': 'South Bar', 'code': 'SB'}),
+                Command.create({'name': 'North Bar', 'code': 'NB'}),
+                Command.create({'name': 'South Bar', 'code': 'SB'}),
             ],
         }]
         foo, bar = self.env['res.country'].create(vals_list)

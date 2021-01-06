@@ -146,5 +146,5 @@ def randint(a, b, seed=None):
     :rtype: function (iterator, str, str) -> dict
     """
     def get_rand_int(random=None, **kwargs):
-        random.randint(a, b)
+        return random.randint(a, b)
     return compute(get_rand_int, seed=seed)

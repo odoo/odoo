@@ -113,7 +113,9 @@ function factory(dependencies) {
                 thread.model === 'mail.channel' &&
                 thread.public === 'private'
             );
-            if (!chat) {
+            if (!chat ||!chat.isPinned) {
+                // if chat is not pinned then it has to be pinned client-side
+                // and server-side, which is a side effect of following rpc
                 chat = await this.async(() =>
                     this.env.models['mail.thread'].performRpcCreateChat({
                         partnerIds: [this.partner.id],
@@ -201,7 +203,9 @@ function factory(dependencies) {
     }
 
     User.fields = {
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         display_name: attr({
             compute: '_computeDisplayName',
             dependencies: [

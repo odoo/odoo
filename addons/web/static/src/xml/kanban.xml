@@ -32,14 +32,14 @@
                 <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
             </div>
         </div>
-        <div t-if="widget.remaining > 0" class="o_kanban_load_more">
+        <div t-if="widget.loadMoreCount > 0" class="o_kanban_load_more">
             <t t-call="KanbanView.LoadMore"/>
         </div>
     </div>
 </t>
 
 <t t-name="KanbanView.LoadMore">
-    <a href="#">Load more... (<t t-esc="widget.remaining"/> remaining)</a>
+    <a href="#">Load more... (<t t-esc="widget.loadMoreCount"/> remaining)</a>
 </t>
 
 <t t-name="KanbanView.ColumnQuickCreate">
@@ -69,10 +69,12 @@
 </t>
 
 <t t-name="KanbanView.RecordQuickCreate.buttons">
-    <div>
-        <button class="btn btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-primary o_kanban_edit">Edit</button>
-        <button class="btn btn-secondary o_kanban_cancel ml8">Discard</button>
+    <div class="d-flex">
+        <button class="btn btn-primary o_kanban_add mr-1 text-truncate">Add</button>
+        <button class="btn btn-primary o_kanban_edit mr-1 text-truncate">Edit</button>
+        <button class="btn btn-secondary o_kanban_cancel ml-auto">
+            <i class="fa fa-trash"/>
+        </button>
     </div>
 </t>
 

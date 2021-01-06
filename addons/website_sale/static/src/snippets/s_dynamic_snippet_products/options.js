@@ -1,7 +1,7 @@
 odoo.define('website_sale.s_dynamic_snippet_products_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 const s_dynamic_snippet_carousel_options = require('website.s_dynamic_snippet_carousel_options');
 
 const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend({
@@ -68,8 +68,9 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
      * @override
      * @private
      */
-    _renderCustomXML: function (uiFragment) {
-        return Promise.all([this._super.apply(this, arguments), this._renderProductCategorySelector(uiFragment)]);
+    _renderCustomXML: async function (uiFragment) {
+        await this._super.apply(this, arguments);
+        await this._renderProductCategorySelector(uiFragment);
     },
     /**
      * Renders the product categories option selector content into the provided uiFragment.
@@ -87,7 +88,7 @@ const dynamicSnippetProductsOptions = s_dynamic_snippet_carousel_options.extend(
 
 });
 
-snippetOptions.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
+options.registry.dynamic_snippet_products = dynamicSnippetProductsOptions;
 
 return dynamicSnippetProductsOptions;
 });

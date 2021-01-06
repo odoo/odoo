@@ -136,9 +136,9 @@ class AccountAnalyticAccount(models.Model):
     # use auto_join to speed up name_search call
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, check_company=True)
 
-    balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance')
-    debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit')
-    credit = fields.Monetary(compute='_compute_debit_credit_balance', string='Credit')
+    balance = fields.Monetary(compute='_compute_debit_credit_balance', string='Balance',  groups='account.group_account_readonly')
+    debit = fields.Monetary(compute='_compute_debit_credit_balance', string='Debit', groups='account.group_account_readonly')
+    credit = fields.Monetary(compute='_compute_debit_credit_balance', string='Credit', groups='account.group_account_readonly')
 
     currency_id = fields.Many2one(related="company_id.currency_id", string="Currency", readonly=True)
 
@@ -155,7 +155,7 @@ class AccountAnalyticAccount(models.Model):
 
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
-        if operator not in ('ilike', 'like', '=', '=like', '=ilike'):
+        if operator not in ('ilike', 'like', '=', '=like', '=ilike', 'not ilike'):
             return super(AccountAnalyticAccount, self)._name_search(name, args, operator, limit, name_get_uid=name_get_uid)
         args = args or []
         if operator == 'ilike' and not (name or '').strip():
@@ -164,7 +164,8 @@ class AccountAnalyticAccount(models.Model):
             # `partner_id` is in auto_join and the searches using ORs with auto_join fields doesn't work
             # we have to cut the search in two searches ... https://github.com/odoo/odoo/issues/25175
             partner_ids = self.env['res.partner']._search([('name', operator, name)], limit=limit, access_rights_uid=name_get_uid)
-            domain = ['|', '|', ('code', operator, name), ('name', operator, name), ('partner_id', 'in', partner_ids)]
+            domain_operator = '&' if operator == 'not ilike' else '|'
+            domain = [domain_operator, domain_operator, ('code', operator, name), ('name', operator, name), ('partner_id', 'in', partner_ids)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
 

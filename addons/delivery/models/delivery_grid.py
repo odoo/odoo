@@ -97,6 +97,8 @@ class ProviderGrid(models.Model):
         price = 0.0
         criteria_found = False
         price_dict = {'price': total, 'volume': volume, 'weight': weight, 'wv': volume * weight, 'quantity': quantity}
+        if self.free_over and total >= self.amount:
+            return 0
         for line in self.price_rule_ids:
             test = safe_eval(line.variable + line.operator + str(line.max_value), price_dict)
             if test:

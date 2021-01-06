@@ -140,12 +140,7 @@ class MrpWorkorder(models.Model):
     production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
     json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
-    consumption = fields.Selection([
-        ('strict', 'Strict'),
-        ('warning', 'Warning'),
-        ('flexible', 'Flexible')],
-        required=True,
-    )
+    consumption = fields.Selection(related='production_id.consumption')
 
     @api.depends('production_state', 'date_planned_start', 'date_planned_finished')
     def _compute_json_popover(self):
@@ -192,7 +187,7 @@ class MrpWorkorder(models.Model):
                 if conflicted_dict.get(wo.id):
                     infos.append({
                         'color': 'text-danger',
-                        'msg': _("Planned at the same time than other workorder(s) at %s", wo.workcenter_id.display_name)
+                        'msg': _("Planned at the same time as other workorder(s) at %s", wo.workcenter_id.display_name)
                     })
             color_icon = infos and infos[-1]['color'] or False
             wo.show_json_popover = bool(color_icon)

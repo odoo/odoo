@@ -1,9 +1,9 @@
 odoo.define('website.s_dynamic_snippet_options', function (require) {
 'use strict';
 
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
-const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
+const dynamicSnippetOptions = options.Class.extend({
 
     /**
      *
@@ -62,8 +62,9 @@ const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
      * @override
      * @private
      */
-    _renderCustomXML: function (uiFragment) {
-        return Promise.all([this._renderDynamicFiltersSelector(uiFragment), this._renderDynamicFilterTemplatesSelector(uiFragment)]);
+    _renderCustomXML: async function (uiFragment) {
+        await this._renderDynamicFiltersSelector(uiFragment);
+        await this._renderDynamicFilterTemplatesSelector(uiFragment);
     },
     /**
      * Renders the dynamic filter option selector content into the provided uiFragment.
@@ -129,7 +130,7 @@ const dynamicSnippetOptions = snippetOptions.SnippetOptionWidget.extend({
     },
 });
 
-snippetOptions.registry.dynamic_snippet = dynamicSnippetOptions;
+options.registry.dynamic_snippet = dynamicSnippetOptions;
 
 return dynamicSnippetOptions;
 });

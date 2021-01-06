@@ -325,7 +325,15 @@ class Lead(models.Model):
     def _inverse_phone(self):
         for lead in self:
             if lead.partner_id and lead.phone != lead.partner_id.phone:
-                lead.partner_id.phone = lead.phone
+                # force reset
+                if not lead.phone or not lead.partner_id.phone:
+                    lead.partner_id.phone = lead.phone
+                # compare formatted values as we may have encoding differences between equivalent numbers
+                else:
+                    lead_phone_formatted = lead.phone_format(lead.phone)
+                    partner_phone_formatted = lead.phone_format(lead.partner_id.phone)
+                    if lead_phone_formatted != partner_phone_formatted:
+                        lead.partner_id.phone = lead.phone
 
     @api.depends('phone', 'country_id.code')
     def _compute_phone_state(self):
@@ -359,7 +367,7 @@ class Lead(models.Model):
         for lead in self:
             lead.is_automated_probability = tools.float_compare(lead.probability, lead.automated_probability, 2) == 0
 
-    @api.depends(lambda self: ['tag_ids', 'stage_id', 'team_id'] + self._pls_get_safe_fields())
+    @api.depends(lambda self: ['stage_id', 'team_id'] + self._pls_get_safe_fields())
     def _compute_probabilities(self):
         lead_probabilities = self._pls_get_naive_bayes_probabilities()
         for lead in self:
@@ -398,9 +406,18 @@ class Lead(models.Model):
     @api.depends('email_from', 'phone', 'partner_id')
     def _compute_ribbon_message(self):
         for lead in self:
-            partner_formatted_phone = lead.partner_id.phone and self.phone_format(lead.partner_id.phone)
             will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
-            will_write_phone = lead.partner_id and lead.phone != partner_formatted_phone
+            will_write_phone = False
+            if lead.partner_id and lead.phone != lead.partner_id.phone:
+                # if reset -> obviously new value will be propagated
+                if not lead.phone or not lead.partner_id.phone:
+                    will_write_phone = True
+                # otherwise compare formatted values as we may have encoding differences
+                else:
+                    lead_phone_formatted = lead.phone_format(lead.phone)
+                    partner_phone_formatted = lead.phone_format(lead.partner_id.phone)
+                    if lead_phone_formatted != partner_phone_formatted:
+                        will_write_phone = True
 
             if will_write_email and will_write_phone:
                 lead.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
@@ -771,6 +788,7 @@ class Lead(models.Model):
     def _get_rainbowman_message(self):
         message = False
         if self.user_id and self.team_id and self.expected_revenue:
+            self.flush()  # flush fields to make sure DB is up to date
             query = """
                 SELECT
                     SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
@@ -1379,17 +1397,12 @@ class Lead(models.Model):
             through message_process.
             This override updates the document according to the email.
         """
-
-        # remove external users
-        if self.env.user.has_group('base.group_portal'):
-            self = self.with_context(default_user_id=False)
-
         # remove default author when going through the mail gateway. Indeed we
-        # do not want to explicitly set user_id to False; however we do not
-        # want the gateway user to be responsible if no other responsible is
-        # found.
-        if self._uid == self.env.ref('base.user_root').id:
-            self = self.with_context(default_user_id=False)
+        # do not want to explicitly set an user as responsible. We prefer that
+        # assignment is done automatically (scoring) or manually. Otherwise it
+        # would always be either root (gateway user) either alias owner (through
+        # alias_user_id). It also allows to exclude portal / public users.
+        self = self.with_context(default_user_id=False)
 
         if custom_values is None:
             custom_values = {}
@@ -1915,8 +1928,7 @@ class Lead(models.Model):
     def _pls_prepare_frequencies(self, lead_values, leads_pls_fields, target_state=None):
         """new state is used when getting frequencies for leads that are changing to lost or won.
         Stays none if we are checking frequencies for leads already won or lost."""
-        # Frequencies must include tag_id
-        pls_fields = set(leads_pls_fields + ['tag_id'])
+        pls_fields = leads_pls_fields.copy()
         frequencies = dict((field, {}) for field in pls_fields)
 
         stage_ids = self.env['crm.stage'].search_read([], ['sequence', 'name', 'id'], order='sequence')
@@ -1985,6 +1997,11 @@ class Lead(models.Model):
         leads_values_dict = OrderedDict()
         pls_fields = ["stage_id", "team_id"] + self._pls_get_safe_fields()
 
+        # Check if tag_ids is in the pls_fields and removed it from the list. The tags will be managed separately.
+        use_tags = 'tag_ids' in pls_fields
+        if use_tags:
+            pls_fields.remove('tag_ids')
+
         if domain:
             # active_test = False as domain should take active into 'active' field it self
             from_clause, where_clause, where_params = self.env['crm.lead'].with_context(active_test=False)._where_calc(domain).get_sql()
@@ -2000,15 +2017,19 @@ class Lead(models.Model):
             self._cr.execute(query, where_params)
             lead_results = self._cr.dictfetchall()
 
-            # Get tags values
-            query = """SELECT crm_lead.id as lead_id, t.id as tag_id
+            if use_tags:
+                # Get tags values
+                query = """SELECT crm_lead.id as lead_id, t.id as tag_id
                             FROM %s
                             LEFT JOIN crm_tag_rel rel ON crm_lead.id = rel.lead_id
                             LEFT JOIN crm_tag t ON rel.tag_id = t.id
                             WHERE %s order by crm_lead.team_id asc"""
-            query = sql.SQL(query % (from_clause, where_clause)).format(*args)
-            self._cr.execute(query, where_params)
-            tag_results = self._cr.dictfetchall()
+                args.append(sql.Identifier('tag_id'))
+                query = sql.SQL(query % (from_clause, where_clause)).format(*args)
+                self._cr.execute(query, where_params)
+                tag_results = self._cr.dictfetchall()
+            else:
+                tag_results = []
 
             # get all (variable, value) couple for all in self
             for lead in lead_results:
@@ -2036,7 +2057,8 @@ class Lead(models.Model):
                     value = lead[field].id if isinstance(lead[field], models.BaseModel) else lead[field]
                     if value or field in ('email_state', 'phone_state'):
                         lead_values.append((field, value))
-                for tag in lead.tag_ids:
-                    lead_values.append(('tag_id', tag.id))
+                if use_tags:
+                    for tag in lead.tag_ids:
+                        lead_values.append(('tag_id', tag.id))
                 leads_values_dict[lead.id] = {'values': lead_values, 'team_id': lead['team_id'].id}
             return leads_values_dict

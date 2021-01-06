@@ -28,7 +28,7 @@ const ReplenishReport = clientAction.extend({
         this._super.apply(this, arguments);
         this.context = action.context;
         this.productId = this.context.active_id;
-        this.resModel = this.context.active_model || 'product.template';
+        this.resModel = this.context.active_model || this.context.params.active_model || 'product.template';
         const isTemplate = this.resModel === 'product.template';
         this.actionMethod = `action_product_${isTemplate ? 'tmpl_' : ''}forecast_report`;
         const reportName = `report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
@@ -58,6 +58,10 @@ const ReplenishReport = clientAction.extend({
     on_attach_callback: function () {
         this._super();
         this._createGraphView();
+        this.iframe.addEventListener("load",
+            () => this._bindAdditionalActionHandlers(),
+            { once: true }
+        );
     },
 
     //--------------------------------------------------------------------------
@@ -77,6 +81,11 @@ const ReplenishReport = clientAction.extend({
             in_DOM: true,
             callbacks: [{ widget: graphController }],
         });
+        // Hack to put the res_model on the url. This way, the report always know on with res_model it refers.
+        if (location.href.indexOf('active_model') === -1) {
+            const url = window.location.href + `&active_model=${this.resModel}`;
+            window.history.pushState({}, "", url);
+        }
     },
 
     /**
@@ -200,6 +209,19 @@ const ReplenishReport = clientAction.extend({
         });
     },
 
+    /**
+     * Bind additional action handlers (<button>, <a>)
+     * 
+     * @returns {Promise}
+     */
+    _bindAdditionalActionHandlers: function () {
+        let rr = this.$el.find('iframe').contents().find('.o_report_replenishment');
+        rr.on('click', '.o_report_replenish_change_priority', this._onClickChangePriority.bind(this));
+        rr.on('mouseenter', '.o_report_replenish_change_priority', this._onMouseEnterPriority.bind(this));
+        rr.on('mouseleave', '.o_report_replenish_change_priority', this._onMouseLeavePriority.bind(this));
+        rr.on('click', '.o_report_replenish_unreserve', this._onClickUnreserve.bind(this));
+    },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -251,9 +273,55 @@ const ReplenishReport = clientAction.extend({
         const data = ev.target.dataset;
         const warehouse_id = Number(data.warehouseId);
         return this._reloadReport({warehouse: warehouse_id});
+    },
+
+    /**
+     * Change the priority of the specified model/id, then reload this report.
+     *
+     * @returns {Promise}
+     */
+    _onClickChangePriority: function(ev) {
+        const model = ev.target.getAttribute('model');
+        const modelId = parseInt(ev.target.getAttribute('model-id'));
+        const value = ev.target.classList.contains('zero')?'1':'0';
+        this._rpc( {
+            model: model,
+            args: [[modelId], {priority: value}],
+            method: 'write'
+        }).then((result) => {
+            return this._reloadReport();
+        });
+    },
+    _onMouseEnterPriority: function(ev) {
+        ev.target.classList.toggle('fa-star');
+        ev.target.classList.toggle('fa-star-o');
+    },
+    _onMouseLeavePriority: function(ev) {
+        ev.target.classList.toggle('fa-star');
+        ev.target.classList.toggle('fa-star-o');
+    },
+
+    /**
+     * Unreserve the specified model/id, then reload this report.
+     *
+     * @returns {Promise}
+     */
+    _onClickUnreserve: function(ev) {
+        const model = ev.target.getAttribute('model');
+        const modelId = parseInt(ev.target.getAttribute('model-id'));
+        this._rpc( {
+            model: model,
+            args: [[modelId]],
+            method: 'do_unreserve'
+        }).then((result) => {
+            return this._reloadReport();
+        });
     }
+
 });
 
 core.action_registry.add('replenish_report', ReplenishReport);
+
+return(ReplenishReport);
 
 });

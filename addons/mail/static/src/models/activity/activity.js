@@ -43,7 +43,7 @@ function factory(dependencies) {
             if ('can_write' in data) {
                 data2.canWrite = data.can_write;
             }
-            if ('create_data' in data) {
+            if ('create_date' in data) {
                 data2.dateCreate = data.create_date;
             }
             if ('date_deadline' in data) {
@@ -160,11 +160,15 @@ function factory(dependencies) {
                 method: 'activity_format',
                 args: [this.id],
             }, { shadow: true }));
+            let shouldDelete = false;
             if (data) {
                 this.update(this.constructor.convertData(data));
-                this.thread.refresh();
             } else {
-                this.thread.refresh();
+                shouldDelete = true;
+            }
+            this.thread.refreshActivities();
+            this.thread.refresh();
+            if (shouldDelete) {
                 this.delete();
             }
         }
@@ -283,7 +287,9 @@ function factory(dependencies) {
             default: false,
         }),
         icon: attr(),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isCurrentPartnerAssignee: attr({
             compute: '_computeIsCurrentPartnerAssignee',
             default: false,

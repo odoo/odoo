@@ -35,8 +35,9 @@ class SlidePartnerRelation(models.Model):
     completed = fields.Boolean('Completed')
     quiz_attempts_count = fields.Integer('Quiz attempts count', default=0)
 
-    def create(self, values):
-        res = super(SlidePartnerRelation, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
         completed = res.filtered('completed')
         if completed:
             completed._set_completed_callback()
@@ -345,7 +346,7 @@ class Slide(models.Model):
                     # embed youtube video
                     query = urls.url_parse(record.url).query
                     query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
+                    record.embed_code = '<iframe src="//www.youtube-nocookie.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -466,9 +467,12 @@ class Slide(models.Model):
         rec.sequence = 0
         return rec
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_already_taken(self):
         if self.question_ids and self.channel_id.channel_partner_ids:
             raise UserError(_("People already took this quiz. To keep course progression it should not be deleted."))
+
+    def unlink(self):
         for category in self.filtered(lambda slide: slide.is_category):
             category.channel_id._move_category_slides(category, False)
         super(Slide, self).unlink()
@@ -632,6 +636,7 @@ class Slide(models.Model):
         ])
         if quiz_attempts_inc and existing_sudo:
             sql.increment_field_skiplock(existing_sudo, 'quiz_attempts_count')
+            SlidePartnerSudo.invalidate_cache(fnames=['quiz_attempts_count'], ids=existing_sudo.ids)
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         return SlidePartnerSudo.create([{
@@ -740,7 +745,7 @@ class Slide(models.Model):
         url_obj = urls.url_parse(url)
         if url_obj.ascii_host == 'youtu.be':
             return ('youtube', url_obj.path[1:] if url_obj.path else False)
-        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com'):
+        elif url_obj.ascii_host in ('youtube.com', 'www.youtube.com', 'm.youtube.com', 'www.youtube-nocookie.com'):
             v_query_value = url_obj.decode_query().get('v')
             if v_query_value:
                 return ('youtube', v_query_value)
@@ -815,7 +820,7 @@ class Slide(models.Model):
             error = str(error)
 
         if error == 'keyInvalid':
-            return _('Your Google API key is invalid, please update it into your settings.\nSettings > Website > Features > API Key')
+            return _('Your Google API key is invalid, please update it in your settings.\nSettings > Website > Features > API Key')
 
         return _('Could not fetch data from url. Document or access right not available:\n%s', error)
 

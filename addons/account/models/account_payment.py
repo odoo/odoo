@@ -100,8 +100,7 @@ class AccountPayment(models.Model):
         store=True, readonly=False,
         compute='_compute_destination_account_id',
         domain="[('user_type_id.type', 'in', ('receivable', 'payable')), ('company_id', '=', company_id)]",
-        check_company=True,
-        help="The payment's currency.")
+        check_company=True)
 
     # == Stat buttons ==
     reconciled_invoice_ids = fields.Many2many('account.move', string="Reconciled Invoices",
@@ -158,7 +157,11 @@ class AccountPayment(models.Model):
         writeoff_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id in (self.journal_id.payment_debit_account_id, self.journal_id.payment_credit_account_id):
+            if line.account_id in (
+                    self.journal_id.default_account_id,
+                    self.journal_id.payment_debit_account_id,
+                    self.journal_id.payment_credit_account_id,
+            ):
                 liquidity_lines += line
             elif line.account_id.internal_type in ('receivable', 'payable') or line.partner_id == line.company_id.partner_id:
                 counterpart_lines += line
@@ -180,8 +183,8 @@ class AccountPayment(models.Model):
 
         if not self.journal_id.payment_debit_account_id or not self.journal_id.payment_credit_account_id:
             raise UserError(_(
-                "You can't create a new payment without an outstanding payments/receipts accounts set on the %s journal."
-            ) % self.journal_id.display_name)
+                "You can't create a new payment without an outstanding payments/receipts account set on the %s journal.",
+                self.journal_id.display_name))
 
         # Compute amounts.
         write_off_amount = write_off_line_vals.get('amount', 0.0)
@@ -285,11 +288,16 @@ class AccountPayment(models.Model):
                 pay.is_reconciled = True
                 pay.is_matched = True
             else:
-                # The journal entry seems reconciled.
                 residual_field = 'amount_residual' if pay.currency_id == pay.company_id.currency_id else 'amount_residual_currency'
+                if pay.journal_id.default_account_id and pay.journal_id.default_account_id in liquidity_lines.account_id:
+                    # Allow user managing payments without any statement lines by using the bank account directly.
+                    # In that case, the user manages transactions only using the register payment wizard.
+                    pay.is_matched = True
+                else:
+                    pay.is_matched = pay.currency_id.is_zero(sum(liquidity_lines.mapped(residual_field)))
+
                 reconcile_lines = (counterpart_lines + writeoff_lines).filtered(lambda line: line.account_id.reconcile)
                 pay.is_reconciled = pay.currency_id.is_zero(sum(reconcile_lines.mapped(residual_field)))
-                pay.is_matched = pay.currency_id.is_zero(sum(liquidity_lines.mapped(residual_field)))
 
     @api.model
     def _get_method_codes_using_bank_account(self):
@@ -404,7 +412,7 @@ class AccountPayment(models.Model):
                 and pay.currency_id:
 
                 if pay.partner_bank_id:
-                    qr_code = pay.partner_bank_id.build_qr_code_url(pay.amount, pay.ref, None, pay.currency_id, pay.partner_id)
+                    qr_code = pay.partner_bank_id.build_qr_code_url(pay.amount, pay.ref, pay.ref, pay.currency_id, pay.partner_id)
                 else:
                     qr_code = None
 
@@ -508,6 +516,17 @@ class AccountPayment(models.Model):
             pay.reconciled_statements_count = len(statement_ids)
 
     # -------------------------------------------------------------------------
+    # ONCHANGE METHODS
+    # -------------------------------------------------------------------------
+
+    @api.onchange('posted_before', 'state', 'journal_id', 'date')
+    def _onchange_journal_date(self):
+        # Before the record is created, the move_id doesn't exist yet, and the name will not be
+        # recomputed correctly if we change the journal or the date, leading to inconsitencies
+        if not self.move_id:
+            self.name = False
+
+    # -------------------------------------------------------------------------
     # CONSTRAINT METHODS
     # -------------------------------------------------------------------------
 
@@ -601,6 +620,12 @@ class AccountPayment(models.Model):
             return
 
         for pay in self.with_context(skip_account_move_synchronization=True):
+
+            # After the migration to 14.0, the journal entry could be shared between the account.payment and the
+            # account.bank.statement.line. In that case, the synchronization will only be made with the statement line.
+            if pay.move_id.statement_line_id:
+                continue
+
             move = pay.move_id
             move_vals_to_write = {}
             payment_vals_to_write = {}

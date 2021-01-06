@@ -88,7 +88,7 @@ $-seen-urls: ();
 
 #wrapwrap {
     // When the modal is in #wrapwrap, position top should be size of the navbar
-    .modal {
+    .modal:not(.s_popup_bottom) {
         top: $o-navbar-height;
     }
 
@@ -357,6 +357,9 @@ font[class*='bg-'] {
     &.o_bg_img_opt_repeat {
         background-size: auto;
         background-repeat: repeat;
+    }
+    &.o_bg_img_center {
+        background-position: center;
     }
 
     // Compatibility <= 13.0, TODO remove?
@@ -804,11 +807,13 @@ $-hamburger-left: o-website-value('hamburger-position') == 'left';
 $-hamburger-center: o-website-value('hamburger-position') == 'center';
 $-hamburger-right: o-website-value('hamburger-position') == 'right';
 
-$zindex-website-header: $zindex-modal - 20;
+$zindex-website-header: $zindex-fixed !default;
 
 header {
     &#top {
-        // We need this z-index for the shadow option of the header
+        // We need this z-index for the shadow option of the header but also
+        // to create a stacking context so that header dropdowns appear below
+        // and above the same elements as the header.
         z-index: $zindex-website-header;
     }
     &:not(.o_header_no_transition) {
@@ -897,6 +902,7 @@ header {
             @include o-position-absolute(0, 0, 0, 0);
             z-index: $zindex-sticky;
             height: 100vh;
+            max-height: 100vh;
             transition: none;
             transform: none;
 

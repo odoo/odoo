@@ -75,8 +75,8 @@
                                     <button icon="fa-code-fork" attrs="{'invisible': [('triggering_question_id', '=', False)]}"
                                         title="This question depends on another question's answer." class="icon_rotates"/>
                                     <control>
-                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
                                         <create name="add_question_control" string="Add a question"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_is_page': True, 'default_questions_selection': 'all'}"/>
                                     </control>
                                 </tree>
                             </field>
@@ -121,10 +121,11 @@
                                             icon="fa-external-link"  target="_blank" class="btn-link pt-0"/>
                                     </div>
                                     <field name="certification_give_badge" attrs="{'invisible': ['|', ('certification', '=', False), ('users_login_required', '=', False)]}" />
-                                    <field name="certification_badge_id" attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)]}"
+                                    <field name="certification_badge_id"
+                                           attrs="{'invisible': ['|', ('certification_give_badge', '=', False), ('certification_badge_id', '!=', False)], 'required': [('certification_give_badge', '=', True)]}"
                                            domain="[('survey_id', '=', active_id), ('survey_id', '!=', False)]"
                                            context="{'default_name': title,
-                                                   'default_description': 'Congratulation, you succeeded this certification',
+                                                   'default_description': 'Congratulations, you have succeeded this certification',
                                                    'default_rule_auth': 'nobody',
                                                    'default_level': None,
                                                    'form_view_ref': 'survey.gamification_badge_form_view_simplified',

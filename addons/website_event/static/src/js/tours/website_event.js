@@ -9,8 +9,8 @@ odoo.define("website_event.tour", function (require) {
     tour.register("event", {
         url: "/",
     }, [{
+        content: _t("Click here to add new content to your website."),
         trigger: '#new-content-menu > a',
-        auto: true,
         position: 'bottom',
     }, {
         trigger: "a[data-action=new_event]",
@@ -19,7 +19,7 @@ odoo.define("website_event.tour", function (require) {
     }, {
         trigger: '.modal-dialog #editor_new_event input[type=text]',
         content: _t("Create a name for your new event and click <em>\"Continue\"</em>. e.g: Technical Training"),
-        position: "right",
+        position: "left",
     }, {
         trigger: '.modal-footer button.btn-primary.btn-continue',
         extra_trigger: '#editor_new_event input[type=text][value!=""]',
@@ -31,9 +31,10 @@ odoo.define("website_event.tour", function (require) {
         position: "bottom",
         run: "drag_and_drop",
     }, {
-        trigger: "button[name=save]",
+        trigger: "button[data-action=save]",
         content: _t("Once you click on save, your event is updated."),
         position: "bottom",
+        extra_trigger: ".o_dirty",
     }, {
         trigger: ".js_publish_management .js_publish_btn",
         extra_trigger: "body:not(.editor_enable)",

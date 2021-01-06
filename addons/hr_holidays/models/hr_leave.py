@@ -199,7 +199,7 @@ class HolidaysRequest(models.Model):
     request_date_to = fields.Date('Request End Date')
     # Interface fields used when using hour-based computation
     request_hour_from = fields.Selection([
-        ('0', '12:00 AM'), ('0.5', '0:30 AM'),
+        ('0', '12:00 AM'), ('0.5', '12:30 AM'),
         ('1', '1:00 AM'), ('1.5', '1:30 AM'),
         ('2', '2:00 AM'), ('2.5', '2:30 AM'),
         ('3', '3:00 AM'), ('3.5', '3:30 AM'),
@@ -211,7 +211,7 @@ class HolidaysRequest(models.Model):
         ('9', '9:00 AM'), ('9.5', '9:30 AM'),
         ('10', '10:00 AM'), ('10.5', '10:30 AM'),
         ('11', '11:00 AM'), ('11.5', '11:30 AM'),
-        ('12', '12:00 PM'), ('12.5', '0:30 PM'),
+        ('12', '12:00 PM'), ('12.5', '12:30 PM'),
         ('13', '1:00 PM'), ('13.5', '1:30 PM'),
         ('14', '2:00 PM'), ('14.5', '2:30 PM'),
         ('15', '3:00 PM'), ('15.5', '3:30 PM'),
@@ -224,7 +224,7 @@ class HolidaysRequest(models.Model):
         ('22', '10:00 PM'), ('22.5', '10:30 PM'),
         ('23', '11:00 PM'), ('23.5', '11:30 PM')], string='Hour from')
     request_hour_to = fields.Selection([
-        ('0', '12:00 AM'), ('0.5', '0:30 AM'),
+        ('0', '12:00 AM'), ('0.5', '12:30 AM'),
         ('1', '1:00 AM'), ('1.5', '1:30 AM'),
         ('2', '2:00 AM'), ('2.5', '2:30 AM'),
         ('3', '3:00 AM'), ('3.5', '3:30 AM'),
@@ -236,7 +236,7 @@ class HolidaysRequest(models.Model):
         ('9', '9:00 AM'), ('9.5', '9:30 AM'),
         ('10', '10:00 AM'), ('10.5', '10:30 AM'),
         ('11', '11:00 AM'), ('11.5', '11:30 AM'),
-        ('12', '12:00 PM'), ('12.5', '0:30 PM'),
+        ('12', '12:00 PM'), ('12.5', '12:30 PM'),
         ('13', '1:00 PM'), ('13.5', '1:30 PM'),
         ('14', '2:00 PM'), ('14.5', '2:30 PM'),
         ('15', '3:00 PM'), ('15.5', '3:30 PM'),
@@ -256,6 +256,8 @@ class HolidaysRequest(models.Model):
     request_unit_half = fields.Boolean('Half Day', compute='_compute_request_unit_half', store=True, readonly=False)
     request_unit_hours = fields.Boolean('Custom Hours', compute='_compute_request_unit_hours', store=True, readonly=False)
     request_unit_custom = fields.Boolean('Days-long custom hours', compute='_compute_request_unit_custom', store=True, readonly=False)
+    # view
+    is_hatched = fields.Boolean('Hatched', compute='_compute_is_hatched')
 
     _sql_constraints = [
         ('type_value',
@@ -282,7 +284,7 @@ class HolidaysRequest(models.Model):
         is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
                 leave.name = leave.sudo().private_name
             else:
                 leave.name = '*****'
@@ -291,7 +293,7 @@ class HolidaysRequest(models.Model):
         is_officer = self.user_has_groups('hr_holidays.group_hr_holidays_user')
 
         for leave in self:
-            if is_officer or leave.user_id == self.env.user or leave.manager_id == self.env.user:
+            if is_officer or leave.user_id == self.env.user or leave.employee_id.leave_manager_id == self.env.user:
                 leave.sudo().private_name = leave.name
 
     def _search_description(self, operator, value):
@@ -520,9 +522,10 @@ class HolidaysRequest(models.Model):
     def _compute_number_of_hours_text(self):
         # YTI Note: All this because a readonly field takes all the width on edit mode...
         for leave in self:
-            leave.number_of_hours_text = '%s%s Hours%s' % (
+            leave.number_of_hours_text = '%s%g %s%s' % (
                 '' if leave.request_unit_half or leave.request_unit_hours else '(',
                 float_round(leave.number_of_hours_display, precision_digits=2),
+                _('Hours'),
                 '' if leave.request_unit_half or leave.request_unit_hours else ')')
 
     @api.depends('state', 'employee_id', 'department_id')
@@ -548,11 +551,10 @@ class HolidaysRequest(models.Model):
             else:
                 holiday.can_approve = True
 
-    @api.constrains('date_from', 'date_to')
-    def _check_number_of_days(self):
-        leaves = self.filtered(lambda l: l.employee_id and not l.number_of_days)
-        if leaves:
-            raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
+    @api.depends('state')
+    def _compute_is_hatched(self):
+        for holiday in self:
+            holiday.is_hatched = holiday.state not in ['refuse', 'validate']
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
@@ -814,7 +816,8 @@ class HolidaysRequest(models.Model):
                     holiday.add_follower(employee_id)
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_correct_states(self):
         error_message = _('You cannot delete a time off which is in %s state')
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
 
@@ -824,7 +827,6 @@ class HolidaysRequest(models.Model):
         else:
             for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
-        return super(HolidaysRequest, self).unlink()
 
     def copy_data(self, default=None):
         if default and 'date_from' in default and 'date_to' in default:
@@ -875,6 +877,7 @@ class HolidaysRequest(models.Model):
             meeting_values = meeting_holidays._prepare_holidays_meeting_values()
             meetings = self.env['calendar.event'].with_context(
                 no_mail_to_attendees=True,
+                calendar_no_videocall=True,
                 active_model=self._name
             ).create(meeting_values)
             for holiday, meeting in zip(meeting_holidays, meetings):
@@ -900,7 +903,6 @@ class HolidaysRequest(models.Model):
                 'privacy': 'confidential',
                 'event_tz': holiday.user_id.tz,
                 'activity_ids': [(5, 0, 0)],
-                'partner_ids': [],
             }
             # Add the partner_id (if exist) as an attendee
             if holiday.user_id and holiday.user_id.partner_id:
@@ -908,10 +910,6 @@ class HolidaysRequest(models.Model):
                     (4, holiday.user_id.partner_id.id)]
             result.append(meeting_values)
         return result
-
-    # YTI TODO: Remove me in master
-    def _prepare_holiday_values(self, employee):
-        return self._prepare_employees_holiday_values(employee)[0]
 
     def _prepare_employees_holiday_values(self, employees):
         self.ensure_one()
@@ -984,6 +982,10 @@ class HolidaysRequest(models.Model):
 
     def action_validate(self):
         current_employee = self.env.user.employee_id
+        leaves = self.filtered(lambda l: l.employee_id and not l.number_of_days)
+        if leaves:
+            raise ValidationError(_('The following employees are not supposed to work during that period:\n %s') % ','.join(leaves.mapped('employee_id.name')))
+
         if any(holiday.state not in ['confirm', 'validate1'] and holiday.validation_type != 'no_validation' for holiday in self):
             raise UserError(_('Time off request must be confirmed in order to approve it.'))
 
@@ -1092,7 +1094,7 @@ class HolidaysRequest(models.Model):
         validated_holidays.write({'state': 'refuse', 'first_approver_id': current_employee.id})
         (self - validated_holidays).write({'state': 'refuse', 'second_approver_id': current_employee.id})
         # Delete the meeting
-        self.mapped('meeting_id').unlink()
+        self.mapped('meeting_id').write({'active': False})
         # If a category that created several holidays, cancel all related
         linked_requests = self.mapped('linked_request_ids')
         if linked_requests:

@@ -595,6 +595,78 @@ QUnit.test('close attachment viewer', async function (assert) {
     );
 });
 
+QUnit.test('clicking on the delete attachment button multiple times should do the rpc only once', async function (assert) {
+    assert.expect(2);
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === "unlink" && args.model === "ir.attachment") {
+                assert.step('attachment_unlink');
+                return;
+            }
+            return this._super(...arguments);
+        },
+    });
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.txt",
+        id: 750,
+        mimetype: 'text/plain',
+        name: "test.txt",
+    });
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'hover',
+    });
+    await afterNextRender(() => {
+        document.querySelector('.o_Attachment_actionUnlink').click();
+    });
+
+    await afterNextRender(() => {
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+        document.querySelector('.o_AttachmentDeleteConfirmDialog_confirmButton').click();
+    });
+    assert.verifySteps(
+        ['attachment_unlink'],
+        "The unlink method must be called once"
+    );
+});
+
+QUnit.test('[technical] does not crash when the viewer is closed before image load', async function (assert) {
+    /**
+     * When images are displayed using `src` attribute for the 1st time, it fetches the resource.
+     * In this case, images are actually displayed (fully fetched and rendered on screen) when
+     * `<image>` intercepts `load` event.
+     *
+     * Current code needs to be aware of load state of image, to display spinner when loading
+     * and actual image when loaded. This test asserts no crash from mishandling image becoming
+     * loaded from being viewed for 1st time, but viewer being closed while image is loading.
+     */
+    assert.expect(1);
+
+    await this.start({ hasDialog: true });
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.png",
+        id: 750,
+        mimetype: 'image/png',
+        name: "test.png",
+    });
+    await this.createAttachmentComponent(attachment);
+    await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
+    const imageEl = document.querySelector('.o_AttachmentViewer_viewImage');
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentViewer_headerItemButtonClose').click()
+    );
+    // Simulate image becoming loaded.
+    let successfulLoad;
+    try {
+        imageEl.dispatchEvent(new Event('load', { bubbles: true }));
+        successfulLoad = true;
+    } catch (err) {
+        successfulLoad = false;
+    } finally {
+        assert.ok(successfulLoad, 'should not crash when the image is loaded');
+    }
+});
+
 });
 });
 });

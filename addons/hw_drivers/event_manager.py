@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 from threading import Event
 import time
 
+from odoo.http import request
 
 class EventManager(object):
     def __init__(self):
+        self.events = []
         self.sessions = {}
 
     def _delete_expired_sessions(self, max_time=70):
@@ -37,10 +40,16 @@ class EventManager(object):
         return self.sessions[listener['session_id']]
 
     def device_changed(self, device):
+        event = {
+            **device.data,
+            'device_identifier': device.device_identifier,
+            'time': time.time(),
+            'request_data': json.loads(request.params['data']) if request else None,
+        }
+        self.events.append(event)
         for session in self.sessions:
-            if device.device_identifier in self.sessions[session]['devices']:
-                self.sessions[session]['result'] = device.data
-                self.sessions[session]['result']['device_identifier'] = device.device_identifier
+            if device.device_identifier in self.sessions[session]['devices'] and not self.sessions[session]['event'].isSet():
+                self.sessions[session]['result'] = event
                 self.sessions[session]['event'].set()
 
 

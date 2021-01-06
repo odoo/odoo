@@ -51,6 +51,7 @@ class CouponProgram(models.Model):
     currency_id = fields.Many2one(string="Currency", related='company_id.currency_id', readonly=True)
     validity_duration = fields.Integer(default=30,
         help="Validity duration for a coupon after its generation")
+    total_order_count = fields.Integer("Total Order Count", compute="_compute_total_order_count")
 
     @api.constrains('promo_code')
     def _check_promo_code_constraint(self):
@@ -108,9 +109,12 @@ class CouponProgram(models.Model):
             self.mapped('discount_line_product_id').write({'name': self[0].reward_id.display_name})
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_active(self):
         if self.filtered('active'):
             raise UserError(_('You can not delete a program in active state'))
+
+    def unlink(self):
         # get reference to rule and reward
         rule = self.rule_id
         reward = self.reward_id
@@ -133,7 +137,7 @@ class CouponProgram(models.Model):
         return self.currency_id._convert(self[field], currency_to, self.company_id, fields.Date.today())
 
     def _is_valid_partner(self, partner):
-        if self.rule_partners_domain:
+        if self.rule_partners_domain and self.rule_partners_domain != '[]':
             domain = ast.literal_eval(self.rule_partners_domain) + [('id', '=', partner.id)]
             return bool(self.env['res.partner'].search_count(domain))
         else:
@@ -144,3 +148,17 @@ class CouponProgram(models.Model):
             domain = ast.literal_eval(self.rule_products_domain)
             return products.filtered_domain(domain)
         return products
+
+    def _generate_coupons(self, partner_id):
+        '''Generate coupons that can be used in the next order for the given partner_id.'''
+        generated_coupons = self.env['coupon.coupon']
+        for program in self:
+            generated_coupons |= self.env['coupon.coupon'].create({
+                'program_id': program.id,
+                'partner_id': partner_id,
+            })
+        return generated_coupons
+
+    def _compute_total_order_count(self):
+        for program in self:
+            program.total_order_count = 0

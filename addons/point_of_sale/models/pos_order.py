@@ -314,10 +314,10 @@ class PosOrder(models.Model):
         if self.partner_id:
             self.pricelist_id = self.partner_id.property_product_pricelist.id
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_draft_or_cancel(self):
         for pos_order in self.filtered(lambda pos_order: pos_order.state not in ['draft', 'cancel']):
             raise UserError(_('In order to delete a sale, it must be new or cancelled.'))
-        return super(PosOrder, self).unlink()
 
     @api.model
     def create(self, values):
@@ -342,8 +342,7 @@ class PosOrder(models.Model):
 
     def action_stock_picking(self):
         self.ensure_one()
-        action_picking = self.env.ref('stock.action_picking_tree_ready')
-        action = action_picking.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('stock.action_picking_tree_ready')
         action['context'] = {}
         action['domain'] = [('id', 'in', self.picking_ids.ids)]
         return action
@@ -929,7 +928,7 @@ class AccountCashRounding(models.Model):
 
     @api.constrains('rounding', 'rounding_method', 'strategy')
     def _check_session_state(self):
-        open_session = self.env['pos.session'].search([('config_id.rounding_method', '=', self.id), ('state', '!=', 'closed')])
+        open_session = self.env['pos.session'].search([('config_id.rounding_method', 'in', self.ids), ('state', '!=', 'closed')], limit=1)
         if open_session:
             raise ValidationError(
                 _("You are not allowed to change the cash rounding configuration while a pos session using it is already opened."))

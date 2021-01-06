@@ -160,6 +160,14 @@ var DebouncedField = AbstractField.extend({
      * @returns {*}
      */
     _getValue: function () {},
+    /**
+     * Should make an action on lost focus.
+     *
+     * @abstract
+     * @private
+     * @returns {*}
+     */
+    _onBlur: function () {},
 });
 
 var InputField = DebouncedField.extend({
@@ -169,6 +177,7 @@ var InputField = DebouncedField.extend({
     events: _.extend({}, DebouncedField.prototype.events, {
         'input': '_onInput',
         'change': '_onChange',
+        'blur' : '_onBlur',
     }),
 
     /**
@@ -1489,7 +1498,7 @@ var ListFieldText = FieldText.extend({
 var HandleWidget = AbstractField.extend({
     description: _lt("Handle"),
     noLabel: true,
-    className: 'o_row_handle fa fa-arrows ui-sortable-handle',
+    className: 'o_row_handle fa fa-sort ui-sortable-handle',
     widthInList: '33px',
     tagName: 'span',
     supportedFieldTypes: ['integer'],
@@ -1739,6 +1748,23 @@ var CharCopyClipboard = FieldChar.extend(CopyClipboard, {
     description: _lt("Copy to Clipboard"),
     clipboardTemplate: 'CopyClipboardChar',
     className: 'o_field_copy o_text_overflow',
+});
+
+var URLCopyClipboard = FieldChar.extend(CopyClipboard, {
+    description: _lt("Copy to Clipboard"),
+    clipboardTemplate: 'CopyClipboardChar',
+    className: 'o_field_copy o_text_overflow o_field_copy_url',
+    events: _.extend({}, FieldChar.prototype.events, {
+        'click': '_onClick',
+    }),
+
+    _onClick: function(ev) {
+        if(ev.target.className.includes('o_field_copy_url')) {
+            ev.stopPropagation();
+
+            window.open(this.value, '_blank');
+        }
+    }
 });
 
 var AbstractFieldBinary = AbstractField.extend({
@@ -3747,6 +3773,7 @@ return {
     UrlWidget: UrlWidget,
     TextCopyClipboard: TextCopyClipboard,
     CharCopyClipboard: CharCopyClipboard,
+    URLCopyClipboard: URLCopyClipboard,
     JournalDashboardGraph: JournalDashboardGraph,
     AceEditor: AceEditor,
     FieldColor: FieldColor,

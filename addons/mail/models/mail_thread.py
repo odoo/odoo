@@ -19,11 +19,12 @@ import threading
 
 from collections import namedtuple
 from email.message import EmailMessage
+from email import message_from_string, policy
 from lxml import etree
 from werkzeug import urls
 from xmlrpc import client as xmlrpclib
 
-from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID
+from odoo import _, api, exceptions, fields, models, tools, registry, SUPERUSER_ID, Command
 from odoo.exceptions import MissingError
 from odoo.osv import expression
 
@@ -232,7 +233,8 @@ class MailThread(models.AbstractModel):
 
     @api.model
     def _search_message_has_error(self, operator, operand):
-        return ['&', ('message_ids.has_error', operator, operand), ('message_ids.author_id', '=', self.env.user.partner_id.id)]
+        message_ids = self.env['mail.message']._search([('has_error', operator, operand), ('author_id', '=', self.env.user.partner_id.id)])
+        return [('message_ids', 'in', message_ids)]
 
     def _compute_message_attachment_count(self):
         read_group_var = self.env['ir.attachment'].read_group([('res_id', 'in', self.ids), ('res_model', '=', self._name)],
@@ -457,7 +459,7 @@ class MailThread(models.AbstractModel):
     # WRAPPERS AND TOOLS
     # ------------------------------------------------------
 
-    def message_change_thread(self, new_thread):
+    def message_change_thread(self, new_thread, new_parent_message=False):
         """
         Transfer the list of the mail thread messages from an model to another
 
@@ -487,8 +489,14 @@ class MailThread(models.AbstractModel):
             ('subtype_id', '!=', subtype_comment)])
 
         # update the messages
-        msg_comment.write({"res_id": new_thread.id, "model": new_thread._name})
-        msg_not_comment.write({"res_id": new_thread.id, "model": new_thread._name, "subtype_id": None})
+        msg_vals = {"res_id": new_thread.id, "model": new_thread._name}
+        if new_parent_message:
+            msg_vals["parent_id"] = new_parent_message.id
+        msg_comment.write(msg_vals)
+
+        # other than comment: reset subtype
+        msg_vals["subtype_id"] = None
+        msg_not_comment.write(msg_vals)
         return True
 
     # ------------------------------------------------------
@@ -1306,7 +1314,7 @@ class MailThread(models.AbstractModel):
         if not isinstance(email_message, EmailMessage):
             raise TypeError('message must be an email.message.EmailMessage at this point')
 
-        email_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/rfc822'), None)
+        email_part = next((part for part in email_message.walk() if part.get_content_type() in {'message/rfc822', 'text/rfc822-headers'}), None)
         dsn_part = next((part for part in email_message.walk() if part.get_content_type() == 'message/delivery-status'), None)
 
         bounced_email = False
@@ -1321,7 +1329,11 @@ class MailThread(models.AbstractModel):
         bounced_msg_id = False
         bounced_message = self.env['mail.message'].sudo()
         if email_part:
-            email_payload = email_part.get_payload()[0]
+            if email_part.get_content_type() == 'text/rfc822-headers':
+                # Convert the message body into a message itself
+                email_payload = message_from_string(email_part.get_payload(), policy=policy.SMTP)
+            else:
+                email_payload = email_part.get_payload()[0]
             bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
             if bounced_msg_id:
                 bounced_message = self.env['mail.message'].sudo().search([('message_id', 'in', bounced_msg_id)])
@@ -1659,7 +1671,7 @@ class MailThread(models.AbstractModel):
             if not self.env.user.has_group('base.group_user'):
                 attachment_ids = filtered_attachment_ids.ids
 
-            m2m_attachment_ids += [(4, id) for id in attachment_ids]
+            m2m_attachment_ids += [Command.link(id) for id in attachment_ids]
         # Handle attachments parameter, that is a dictionary of attachments
 
         if attachments: # generate 
@@ -1690,6 +1702,8 @@ class MailThread(models.AbstractModel):
                     continue
                 if isinstance(content, str):
                     content = content.encode('utf-8')
+                elif isinstance(content, EmailMessage):
+                    content = content.as_bytes()
                 elif content is None:
                     continue
                 attachement_values= {
@@ -2058,8 +2072,8 @@ class MailThread(models.AbstractModel):
             # Avoid warnings about non-existing fields
             for x in ('from', 'to', 'cc', 'canned_response_ids'):
                 create_values.pop(x, None)
-            create_values['partner_ids'] = [(4, pid) for pid in create_values.get('partner_ids', [])]
-            create_values['channel_ids'] = [(4, cid) for cid in create_values.get('channel_ids', [])]
+            create_values['partner_ids'] = [Command.link(pid) for pid in create_values.get('partner_ids', [])]
+            create_values['channel_ids'] = [Command.link(cid) for cid in create_values.get('channel_ids', [])]
             create_values_list.append(create_values)
         if 'default_child_ids' in self._context:
             ctx = {key: val for key, val in self._context.items() if key != 'default_child_ids'}
@@ -2098,7 +2112,7 @@ class MailThread(models.AbstractModel):
 
         message_values = {}
         if rdata['channels']:
-            message_values['channel_ids'] = [(6, 0, [r['id'] for r in rdata['channels']])]
+            message_values['channel_ids'] = [Command.set([r['id'] for r in rdata['channels']])]
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
         if notify_by_email:
@@ -2118,7 +2132,7 @@ class MailThread(models.AbstractModel):
         """
         channel_ids = [r['id'] for r in recipients_data['channels']]
         if channel_ids:
-            message.write({'channel_ids': [(6, 0, channel_ids)]})
+            message.write({'channel_ids': [Command.set(channel_ids)]})
 
         inbox_pids = [r['id'] for r in recipients_data['partners'] if r['notif'] == 'inbox']
         if inbox_pids:
@@ -2206,7 +2220,14 @@ class MailThread(models.AbstractModel):
         }
         base_mail_values = self._notify_by_email_add_values(base_mail_values)
 
-        Mail = self.env['mail.mail'].sudo()
+        # Clean the context to get rid of residual default_* keys that could cause issues during
+        # the mail.mail creation.
+        # Example: 'default_state' would refer to the default state of a previously created record
+        # from another model that in turns triggers an assignation notification that ends up here.
+        # This will lead to a traceback when trying to create a mail.mail with this state value that
+        # doesn't exist.
+        SafeMail = self.env['mail.mail'].sudo().with_context(clean_context(self._context))
+        SafeNotification = self.env['mail.notification'].sudo().with_context(clean_context(self._context))
         emails = self.env['mail.mail'].sudo()
 
         # loop on groups (customer, portal, user,  ... + model specific like group_sale_salesman)
@@ -2234,12 +2255,12 @@ class MailThread(models.AbstractModel):
                 create_values = {
                     'body_html': mail_body,
                     'subject': mail_subject,
-                    'recipient_ids': [(4, pid) for pid in recipient_ids],
+                    'recipient_ids': [Command.link(pid) for pid in recipient_ids],
                 }
                 if email_to:
                     create_values['email_to'] = email_to
                 create_values.update(base_mail_values)  # mail_message_id, mail_server_id, auto_delete, references, headers
-                email = Mail.create(create_values)
+                email = SafeMail.create(create_values)
 
                 if email and recipient_ids:
                     tocreate_recipient_ids = list(recipient_ids)
@@ -2266,7 +2287,7 @@ class MailThread(models.AbstractModel):
                 emails |= email
 
         if notif_create_values:
-            self.env['mail.notification'].sudo().create(notif_create_values)
+            SafeNotification.create(notif_create_values)
 
         # NOTE:
         #   1. for more than 50 followers, use the queue system

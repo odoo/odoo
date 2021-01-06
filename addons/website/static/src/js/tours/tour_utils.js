@@ -4,6 +4,8 @@ odoo.define("website.tour_utils", function (require) {
 const core = require("web.core");
 const _t = core._t;
 
+var tour = require("web_tour.tour");
+
 /**
 
 const snippets = [
@@ -62,6 +64,17 @@ function changeBackgroundColor(position = "bottom") {
     };
 }
 
+function selectColorPalette(position = "left") {
+    return {
+        trigger: ".o_we_customize_panel .o_we_so_color_palette we-selection-items",
+        alt_trigger: ".o_we_customize_panel .o_we_color_preview",
+        content: _t(`<b>Select</b> a Color Palette.`),
+        position: position,
+        run: 'click',
+        location: position === 'left' ? '#oe_snippets' : undefined,
+    };
+}
+
 function changeColumnSize(position = "right") {
     return {
         trigger: `.oe_overlay.ui-draggable.o_we_overlay_sticky.oe_active .o_handle.e`,
@@ -73,7 +86,7 @@ function changeColumnSize(position = "right") {
 function changeIcon(snippet, index = 0, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} i:eq(${index})`,
-        content: _t("<b>Double click on an icon</b> to change it with one of our choice."),
+        content: _t("<b>Double click on an icon</b> to change it with one of your choice."),
         position: position,
         run: "dblclick",
     };
@@ -82,7 +95,7 @@ function changeIcon(snippet, index = 0, position = "bottom") {
 function changeImage(snippet, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} img`,
-        content: _t("<b>Double click on an image</b> to change it with one of our choice."),
+        content: _t("<b>Double click on an image</b> to change it with one of your choice."),
         position: position,
         run: "dblclick",
     };
@@ -98,6 +111,18 @@ function changeOption(optionName, weName = '', optionTooltipLabel = '', position
         content: _t(`<b>Click</b> on this option to change the ${optionTooltipLabel} of the block.`),
         position: position,
         run: "click",
+    };
+}
+
+function selectNested(trigger, optionName, alt_trigger = null, optionTooltipLabel = '', position = "top") {
+    const option_block = `we-customizeblock-option[class='snippet-option-${optionName}']`;
+    return {
+        trigger: trigger,
+        content: _t(`<b>Select</b> a ${optionTooltipLabel}.`),
+        alt_trigger: alt_trigger == null ? undefined : `${option_block} ${alt_trigger}`,
+        position: position,
+        run: 'click',
+        location: position === 'left' ? '#oe_snippets' : undefined,
     };
 }
 
@@ -159,7 +184,7 @@ function clickOnSave(position = "bottom") {
 function clickOnText(snippet, element, position = "bottom") {
     return {
         trigger: `#wrapwrap .${snippet.id} ${element}`,
-        content: _t("Even if this title is cool, you can change it. <b>Click on a text</b> to start editing it."),
+        content: _t("<b>Click on a text</b> to start editing it."),
         position: position,
         run: "text",
         consumeEvent: "input",
@@ -216,7 +241,28 @@ function selectSnippetColumn(snippet, index = 0, position = "bottom") {
          position: position,
         run: "click",
      };
- }
+}
+
+function prepend_trigger(steps, prepend_text='') {
+    for (const step of steps) {
+        if (!step.noPrepend && prepend_text) {
+            step.trigger = prepend_text + step.trigger;
+        }
+    }
+    return steps;
+}
+
+function registerThemeHomepageTour(name, steps) {
+    tour.register(name, {
+        url: "/?enable_editor=1",
+        sequence: 1010,
+        saveAs: "homepage",
+    }, prepend_trigger(
+        steps,
+        "html[data-view-xmlid='website.homepage'] "
+    ));
+}
+
 
 return {
     addMedia,
@@ -234,7 +280,11 @@ return {
     dragNDrop,
     goBackToBlocks,
     goToOptions,
+    selectColorPalette,
     selectHeader,
+    selectNested,
     selectSnippetColumn,
+
+    registerThemeHomepageTour,
 };
 });

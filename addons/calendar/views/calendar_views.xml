@@ -112,6 +112,11 @@
                                 class="oe_inline"/>
                         </h2>
                     </div>
+                    <group>
+                        <group>
+                            <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" attrs="{'invisible': [('videocall_location', '=', False)]}" />
+                        </group>
+                    </group>
                     <notebook>
                         <page name="page_details" string="Meeting Details">
                             <group>
@@ -255,6 +260,7 @@
                 event_open_popup="true"
                 event_limit="5"
                 color="user_id">
+                <field name="videocall_location" string="Join Video Call" widget="CopyClipboardURL" />
                 <field name="attendee_status"/>
                 <field name="user_id" string="Responsible" filters="1" widget="many2one_avatar_user"/>
                 <field name="partner_ids" widget="many2manyattendee" write_model="calendar.contacts" write_field="partner_id" avatar_field="image_128"/>
@@ -278,8 +284,7 @@
                 <field name="categ_ids"/>
                 <field name="user_id"/>
                 <field name="show_as"/>
-                <!-- TODO clean this filter and context key -->
-                <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
+                <filter string="My Meetings" help="My Meetings" name="mymeetings" domain="[('partner_ids.user_ids', 'in', [uid])]"/>
                 <separator/>
                 <filter string="Date" name="filter_start_date" date="start_date"/>
                 <separator/>

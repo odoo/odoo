@@ -3,12 +3,12 @@ odoo.define('website_form_editor', function (require) {
 
 const core = require('web.core');
 const FormEditorRegistry = require('website_form.form_editor_registry');
-const snippetOptions = require('web_editor.snippets.options');
+const options = require('web_editor.snippets.options');
 
 const qweb = core.qweb;
 const _t = core._t;
 
-const FormEditor = snippetOptions.SnippetOptionWidget.extend({
+const FormEditor = options.Class.extend({
     xmlDependencies: [
         '/website_form/static/src/xml/website_form_editor.xml',
         '/google_recaptcha/static/src/xml/recaptcha.xml',
@@ -135,21 +135,13 @@ const FieldEditor = FormEditor.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
+        this.formEl = this.$target[0].closest('form');
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * Returns the target parent form dom object
-     *
-     * @private
-     * @returns {Object}
-     */
-    _getFormEl: function () {
-        return this.$target[0].closest('form');
-    },
     /**
      * Returns the target as a field Object
      *
@@ -300,8 +292,8 @@ const FieldEditor = FormEditor.extend({
     },
 });
 
-snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
-    events: _.extend({}, snippetOptions.SnippetOptionWidget.prototype.events || {}, {
+options.registry.WebsiteFormEditor = FormEditor.extend({
+    events: _.extend({}, options.Class.prototype.events || {}, {
         'click .toggle-edit-message': '_onToggleEndMessageClick',
     }),
 
@@ -347,7 +339,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
     /**
      * @override
      */
-    start: async function () {
+    start: function () {
         const proms = [this._super(...arguments)];
         // Disable text edition
         this.$target.attr('contentEditable', false);
@@ -361,13 +353,12 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         if (!this.$target[0].dataset.model_name) {
             proms.push(this._applyFormModel());
         }
-
-        await Promise.all(proms);
+        return Promise.all(proms);
     },
     /**
      * @override
      */
-    cleanForSave: async function () {
+    cleanForSave: function () {
         const model = this.$target[0].dataset.model_name;
         // because apparently this can be called on the wrong widget and
         // we may not have a model, or fields...
@@ -386,9 +377,8 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             }
         }
         if (this.$message.length) {
-            await this.editorHelpers.removeClass(this.wysiwyg.editor, this.$target[0], 'd-none');
-            await this.editorHelpers.addClass(context, this.$message[0], 'd-none');
-
+            this.$target.removeClass('d-none');
+            this.$message.addClass("d-none");
         }
     },
     /**
@@ -431,8 +421,7 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             const htmlField = this._renderField(field);
             data.$target.after(htmlField);
             this.trigger_up('activate_snippet', {
-                $element: $(htmlField),
-                saveTarget: true,
+                $snippet: $(htmlField),
             });
         }
     },
@@ -445,19 +434,17 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
      * Select the value of a field (hidden) that will be used on the model as a preset.
      * ie: The Job you apply for if the form is on that job's page.
      */
-    addActionField: async function (previewMode, value, params) {
+    addActionField: function (previewMode, value, params) {
         const fieldName = params.fieldName;
         if (params.isSelect === 'true') {
             value = parseInt(value);
         }
         this._addHiddenField(value, fieldName);
-
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Changes the onSuccess event.
      */
-    onSuccess: async function (previewMode, value, params) {
+    onSuccess: function (previewMode, value, params) {
         this.$target[0].dataset.successMode = value;
         if (value === 'message') {
             if (!this.$message.length) {
@@ -468,7 +455,6 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
             this.showEndMessage = false;
             this.$message.remove();
         }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Select the model to create with the form.
@@ -479,42 +465,38 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         }
         await this._applyFormModel(parseInt(value));
         this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * @override
      */
-    selectClass: async function (previewMode, value, params) {
-        await this._super(...arguments);
+    selectClass: function (previewMode, value, params) {
+        this._super(...arguments);
         if (params.name === 'field_mark_select') {
             this._setLabelsMark();
         }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Set the mark string on the form
      */
-    setMark: async function (previewMode, value, params) {
+    setMark: function (previewMode, value, params) {
         this.$target[0].dataset.mark = value.trim();
         this._setLabelsMark();
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Toggle the recaptcha legal terms
      */
-    toggleRecaptchaLegal: async function (previewMode, value, params) {
+    toggleRecaptchaLegal: function (previewMode, value, params) {
         const recaptchaLegalEl = this.$target[0].querySelector('.s_website_form_recaptcha');
         if (recaptchaLegalEl) {
             recaptchaLegalEl.remove();
         } else {
             const template = document.createElement('template');
             const labelWidth = this.$target[0].querySelector('.s_website_form_label').style.width;
-            template.innerHTML = qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth});
+            $(template).html(qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth}));
             const legal = template.content.firstElementChild;
             legal.setAttribute('contentEditable', true);
             this.$target.find('.s_website_form_submit').before(legal);
         }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //--------------------------------------------------------------------------
@@ -727,12 +709,14 @@ snippetOptions.registry.WebsiteFormEditor = FormEditor.extend({
         this.showEndMessage = !this.showEndMessage;
         this.updateUIEndMessage();
         this.trigger_up('activate_snippet', {
-            $element: this.showEndMessage ? this.$message : this.$target,
+            $snippet: this.showEndMessage ? this.$message : this.$target,
         });
     },
 });
 
-snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
+const authorizedFieldsCache = {};
+
+options.registry.WebsiteFieldEditor = FieldEditor.extend({
     events: _.extend({}, FieldEditor.prototype.events, {
         'click we-button.o_we_select_remove_option': '_onRemoveItemClick',
         'click we-button.o_we_list_add_optional': '_onAddCustomItemClick',
@@ -754,11 +738,20 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     willStart: async function () {
         const _super = this._super.bind(this);
         // Get the authorized existing fields for the form model
-        this.existingFields = await this._rpc({
-            model: "ir.model",
-            method: "get_authorized_fields",
-            args: [this._getFormEl().dataset.model_name],
-        }).then(fields => {
+        const model = this.formEl.dataset.model_name;
+        let getFields;
+        if (model in authorizedFieldsCache) {
+            getFields = authorizedFieldsCache[model];
+        } else {
+            getFields = this._rpc({
+                model: "ir.model",
+                method: "get_authorized_fields",
+                args: [model],
+            });
+            authorizedFieldsCache[model] = getFields;
+        }
+
+        this.existingFields = await getFields.then(fields => {
             this.fields = _.each(fields, function (field, fieldName) {
                 field.name = fieldName;
                 field.domain = field.domain || [];
@@ -777,10 +770,20 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     /**
      * @override
      */
-    cleanForSave: async function () {
+    cleanForSave: function () {
         this.$target[0].querySelectorAll('#editable_select').forEach(el => el.remove());
-        this._renderSelect(true);
-        await this.updateChangesInWysiwyg();
+        const select = this._getSelect();
+        if (select && this.listTable) {
+            select.style.display = '';
+            $(select).empty();
+            // Rebuild the select from the we-list
+            this.listTable.querySelectorAll('input').forEach(el => {
+                const option = document.createElement('option');
+                option.textContent = el.value;
+                option.value = this._isFieldCustom() ? el.value : el.name;
+                select.appendChild(option);
+            });
+        }
     },
     /**
      * @override
@@ -829,7 +832,6 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         this._setActiveProperties(field);
         await this._replaceField(field);
         this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Replace the current field with the existing field selected.
@@ -843,12 +845,11 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         this._setActiveProperties(field);
         await this._replaceField(field);
         this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Set the name of the field on the label
      */
-    setLabelText: async function (previewMode, value, params) {
+    setLabelText: function (previewMode, value, params) {
         this.$target.find('.s_website_form_label_content').text(value);
         if (this._isFieldCustom()) {
             const multiple = this.$target[0].querySelector('.s_website_form_multiple');
@@ -857,14 +858,12 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
             }
             this.$target[0].querySelectorAll('.s_website_form_input').forEach(el => el.name = value);
         }
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /*
     * Set the placeholder of the input
     */
-    setPlaceholder: async function (previewMode, value, params) {
+    setPlaceholder: function (previewMode, value, params) {
         this._setPlaceholder(value);
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Replace the field with the same field having the label in a different position.
@@ -874,7 +873,6 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         field.formatInfo.labelPosition = value;
         await this._replaceField(field);
         this.rerender = true;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     selectType: async function (previewMode, value, params) {
         const field = this._getActiveField();
@@ -884,7 +882,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     /**
      * Select the display of the multicheckbox field (vertical & horizontal)
      */
-    multiCheckboxDisplay: async function (previewMode, value, params) {
+    multiCheckboxDisplay: function (previewMode, value, params) {
         const target = this._getMultipleInputs();
         target.querySelectorAll('.checkbox, .radio').forEach(el => {
             if (value === 'horizontal') {
@@ -894,12 +892,11 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
             }
         });
         target.dataset.display = value;
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
     /**
      * Set the field as required or not
      */
-    toggleRequired: async function (previewMode, value, params) {
+    toggleRequired: function (previewMode, value, params) {
         const isRequired = this.$target[0].classList.contains(params.activeValue);
         this.$target[0].classList.toggle(params.activeValue, !isRequired);
         this.$target[0].querySelectorAll('input, select, textarea').forEach(el => el.toggleAttribute('required', !isRequired));
@@ -907,7 +904,6 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
             optionName: 'WebsiteFormEditor',
             name: 'field_mark',
         });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 
     //----------------------------------------------------------------------
@@ -964,7 +960,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     _renderCustomXML: function (uiFragment) {
         const selectEl = uiFragment.querySelector('we-select[data-name="type_opt"]');
         const currentFieldName = this._getFieldName();
-        const fieldsInForm = Array.from(this._getFormEl().querySelectorAll('.s_website_form_field:not(.s_website_form_custom) .s_website_form_input')).map(el => el.name).filter(el => el !== currentFieldName);
+        const fieldsInForm = Array.from(this.formEl.querySelectorAll('.s_website_form_field:not(.s_website_form_custom) .s_website_form_input')).map(el => el.name).filter(el => el !== currentFieldName);
         const availableFields = this.existingFields.filter(el => !fieldsInForm.includes(el.dataset.existingField));
         if (availableFields.length) {
             const title = document.createElement('we-title');
@@ -987,7 +983,6 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         [...htmlField.childNodes].forEach(node => this.$target[0].appendChild(node));
         [...htmlField.attributes].forEach(el => this.$target[0].removeAttribute(el.nodeName));
         [...htmlField.attributes].forEach(el => this.$target[0].setAttribute(el.nodeName, el.nodeValue));
-        this.$target.addClass('o_snippet_editor_updated');
     },
 
     /**
@@ -1055,7 +1050,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     _loadListDropdown: function (selectMenu) {
         selectMenu = selectMenu || this.el.querySelector('we-list we-selection-items');
         if (selectMenu) {
-            selectMenu.innerHTML = '';
+            $(selectMenu).empty();
             const field = Object.assign({}, this.fields[this._getFieldName()]);
             this._fetchFieldRecords(field).then(() => {
                 let buttonItems;
@@ -1146,7 +1141,7 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
         const name = this._getFieldName();
         if (multiInputsWrap) {
             const type = multiInputsWrap.querySelector('.radio') ? 'radio' : 'checkbox';
-            multiInputsWrap.innerHTML = '';
+            $(multiInputsWrap).empty();
             const params = {
                 field: {
                     name: name,
@@ -1161,11 +1156,11 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
                 params.record_index = idx;
                 params.record = record;
                 const template = document.createElement('template');
-                template.innerHTML = qweb.render(`website_form.${type}`, params);
+                $(template).html(qweb.render(`website_form.${type}`, params));
                 multiInputsWrap.appendChild(template.content.firstElementChild);
             });
         } else if (selectWrap) {
-            selectWrap.innerHTML = '';
+            $(selectWrap).empty();
             this.listTable.querySelectorAll('input').forEach(el => {
                 const option = document.createElement('div');
                 option.id = (el.name || el.value);
@@ -1173,7 +1168,6 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
                 option.textContent = el.value;
                 selectWrap.appendChild(option);
             });
-            this._renderSelect();
         }
     },
     /**
@@ -1204,20 +1198,6 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _getSelect: function () {
         return this.$target[0].querySelector('select');
-    },
-    _renderSelect: function (show = false) {
-        const select = this._getSelect();
-        if (select && this.listTable) {
-            if (show) select.style.display = '';
-            select.innerHTML = '';
-            // Rebuild the select from the we-list
-            this.listTable.querySelectorAll('input').forEach(el => {
-                const option = document.createElement('option');
-                option.textContent = el.value;
-                option.value = this._isFieldCustom() ? el.value : el.name;
-                select.appendChild(option);
-            });
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -1268,8 +1248,9 @@ snippetOptions.registry.WebsiteFieldEditor = FieldEditor.extend({
     },
 });
 
-snippetOptions.registry.AddFieldForm = FormEditor.extend({
+options.registry.AddFieldForm = FormEditor.extend({
     isTopOption: true,
+    isTopFirstOption: true,
 
     //--------------------------------------------------------------------------
     // Options
@@ -1285,15 +1266,14 @@ snippetOptions.registry.AddFieldForm = FormEditor.extend({
         const htmlField = this._renderField(field);
         this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(htmlField);
         this.trigger_up('activate_snippet', {
-            $element: $(htmlField),
-            saveTarget: true,
+            $snippet: $(htmlField),
         });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 });
 
-snippetOptions.registry.AddField = FieldEditor.extend({
+options.registry.AddField = FieldEditor.extend({
     isTopOption: true,
+    isTopFirstOption: true,
 
     //--------------------------------------------------------------------------
     // Options
@@ -1312,12 +1292,11 @@ snippetOptions.registry.AddField = FieldEditor.extend({
                 $target: this.$target,
             },
         });
-        if(previewMode === false) await this.updateChangesInWysiwyg();
     },
 });
 
 // Superclass for options that need to disable a button from the snippet overlay
-const DisableOverlayButtonOption = snippetOptions.SnippetOptionWidget.extend({
+const DisableOverlayButtonOption = options.Class.extend({
     // Disable a button of the snippet overlay
     disableButton: function (buttonName, message) {
         // TODO refactor in master
@@ -1337,7 +1316,7 @@ const DisableOverlayButtonOption = snippetOptions.SnippetOptionWidget.extend({
 });
 
 // Disable duplicate button for model fields
-snippetOptions.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.extend({
+options.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.extend({
     start: function () {
         this.disableButton('clone', _t('You can\'t duplicate a model field.'));
         return this._super.apply(this, arguments);
@@ -1345,7 +1324,7 @@ snippetOptions.registry.WebsiteFormFieldModel = DisableOverlayButtonOption.exten
 });
 
 // Disable delete button for model required fields
-snippetOptions.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
+options.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.extend({
     start: function () {
         this.disableButton('remove', _t('You can\'t remove a field that is required by the model itself.'));
         return this._super.apply(this, arguments);
@@ -1353,7 +1332,7 @@ snippetOptions.registry.WebsiteFormFieldRequired = DisableOverlayButtonOption.ex
 });
 
 // Disable delete and duplicate button for submit
-snippetOptions.registry.WebsiteFormSubmitRequired = DisableOverlayButtonOption.extend({
+options.registry.WebsiteFormSubmitRequired = DisableOverlayButtonOption.extend({
     start: function () {
         this.disableButton('remove', _t('You can\'t remove the submit button of the form'));
         this.disableButton('clone', _t('You can\'t duplicate the submit button of the form.'));

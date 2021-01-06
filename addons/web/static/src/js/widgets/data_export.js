@@ -84,6 +84,7 @@ var DataExport = Dialog.extend({
         this.opened().then(function () {
             self.$('.o_fields_list').sortable({
                 axis: 'y',
+                cursor: 'grabbing',
                 handle: '.o_short_field',
                 forcePlaceholderSize: true,
                 placeholder: 'o-field-placeholder',
@@ -119,6 +120,7 @@ var DataExport = Dialog.extend({
         let exportedFields = this.defaultExportFields.map(field => ({
             name: field,
             label: this.record.fields[field].string,
+            store: this.record.fields[field].store,
         }));
         this._exportData(exportedFields, 'xlsx', false);
     },
@@ -139,7 +141,7 @@ var DataExport = Dialog.extend({
         if (!$fieldList.find(".o_export_field[data-field_id='" + fieldID + "']").length) {
             $fieldList.append(
                 $('<li>', {'class': 'o_export_field', 'data-field_id': fieldID}).append(
-                    $('<span>', {'class': "fa fa-arrows o_short_field mx-1"}),
+                    $('<span>', {'class': "fa fa-sort o_short_field mx-1"}),
                     label.trim(),
                     $('<span>', {'class': 'fa fa-trash m-1 pull-right o_remove_field', 'title': _t("Remove field")})
                 )
@@ -264,7 +266,6 @@ var DataExport = Dialog.extend({
             var $el = $(el);
             $el.find('.o_tree_column').first().toggleClass('o_required', !!self.records[$el.data('id')].required);
         });
-        this.$('#o-export-search-filter').val('');
     },
     /**
      * @private
@@ -318,7 +319,6 @@ var DataExport = Dialog.extend({
                 $child.show();
             }
         }
-        this.$('#o-export-search-filter').val('');
     },
     /**
      * Fetches the saved export list for the current model

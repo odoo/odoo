@@ -3,6 +3,7 @@ odoo.define('website_forum.website_forum', function (require) {
 
 const dom = require('web.dom');
 var core = require('web.core');
+var weDefaultOptions = require('web_editor.wysiwyg.default_options');
 var wysiwygLoader = require('web_editor.loader');
 var publicWidget = require('web.public.widget');
 var session = require('web.session');
@@ -113,9 +114,10 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
         });
 
-        _.each($('textarea.o_wysiwyg_loader'), async function (textarea) {
+        _.each($('textarea.o_wysiwyg_loader'), function (textarea) {
             var $textarea = $(textarea);
             var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
+            var $form = $textarea.closest('form');
             var hasFullEdit = parseInt($("#karma").val()) >= editorKarma;
             var toolbar = [
                 ['style', ['style']],
@@ -124,7 +126,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 ['table', ['table']],
             ];
             if (hasFullEdit) {
-                toolbar.push(['insert', ['linkPlugin', 'mediaPlugin']]);
+                toolbar.push(['insert', ['link', 'picture']]);
             }
             toolbar.push(['history', ['undo', 'redo']]);
 
@@ -133,13 +135,12 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 minHeight: 80,
                 toolbar: toolbar,
                 styleWithSpan: false,
-                wrapperClass: 'note-editable flex-grow-1 ',
+                styleTags: _.without(weDefaultOptions.styleTags, 'h1', 'h2', 'h3'),
                 recordInfo: {
                     context: self._getContext(),
                     res_model: 'forum.post',
                     res_id: +window.location.pathname.split('-').pop(),
                 },
-                value: textarea.value.trim() ? textarea.value : '<p><br/></p>',
             };
             if (!hasFullEdit) {
                 options.plugins = {
@@ -147,8 +148,13 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     MediaPlugin: false,
                 };
             }
-
-            await wysiwygLoader.loadFromTextarea(this, $textarea, options);
+            wysiwygLoader.load(self, $textarea[0], options).then(wysiwyg => {
+                // float-left class messes up the post layout OPW 769721
+                $form.find('.note-editable').find('img.float-left').removeClass('float-left');
+                $form.on('click', 'button .a-submit', () => {
+                    wysiwyg.save();
+                });
+            });
         });
 
         _.each(this.$('.o_wforum_bio_popover'), authorBox => {
@@ -187,7 +193,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         let $title = $form.find('input[name=post_name]');
         let $textarea = $form.find('textarea[name=content]');
         // It's not really in the textarea that the user write at first
-        let textareaContent = $form.find('.note-editable').text().trim();
+        let textareaContent = $form.find('.o_wysiwyg_wrapper .note-editable.panel-body').text().trim();
 
         if ($title.length && $title[0].required) {
             if ($title.val()) {
@@ -200,7 +206,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
 
         // Because the textarea is hidden, we add the red or green border to its container
         if ($textarea[0] && $textarea[0].required) {
-            let $textareaContainer = $form.find('.note-editable');
+            let $textareaContainer = $form.find('.o_wysiwyg_wrapper .note-editor.panel.panel-default');
             if (!textareaContent.length) {
                 $textareaContainer.addClass('border border-danger rounded-top');
                 validForm = false;

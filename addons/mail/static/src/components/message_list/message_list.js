@@ -6,6 +6,7 @@ const components = {
 };
 const useRefs = require('mail/static/src/component_hooks/use_refs/use_refs.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -36,6 +37,7 @@ class MessageList extends Component {
             },
         });
         this._getRefs = useRefs();
+        useUpdate({ func: () => this._update() });
         /**
          * Determine whether the auto-scroll on load is active or not. This
          * is useful to disable some times, such as when mounting message list
@@ -55,11 +57,7 @@ class MessageList extends Component {
          * Snapshot computed during willPatch, which is used by patched.
          */
         this._willPatchSnapshot = undefined;
-        this._onScroll = _.throttle(this._onScroll.bind(this), 100);
-    }
-
-    mounted() {
-        this._update();
+        this._onScrollThrottled = _.throttle(this._onScrollThrottled.bind(this), 100);
     }
 
     willPatch() {
@@ -71,10 +69,6 @@ class MessageList extends Component {
             scrollHeight: this.el.scrollHeight,
             scrollTop: this.el.scrollTop,
         };
-    }
-
-    patched() {
-        this._update();
     }
 
     //--------------------------------------------------------------------------
@@ -111,6 +105,9 @@ class MessageList extends Component {
      */
     async adjustFromComponentHints() {
         if (!this.threadView) {
+            return;
+        }
+        if (!this.el) {
             return;
         }
         for (const hint of this.threadView.componentHintList) {
@@ -540,6 +537,7 @@ class MessageList extends Component {
      * @private
      */
     _update() {
+        this.adjustFromComponentHints();
         this._checkMostRecentMessageIsVisible();
     }
 
@@ -560,7 +558,23 @@ class MessageList extends Component {
      * @private
      * @param {ScrollEvent} ev
      */
-    _onScroll(ev) {
+    onScroll(ev) {
+        if (!this.threadView) {
+            return;
+        }
+        // Clear pending hints to prevent them from potentially overriding the
+        // new scroll position.
+        for (const hint of this.threadView.componentHintList) {
+            this.threadView.markComponentHintProcessed(hint);
+        }
+        this._onScrollThrottled(ev);
+    }
+
+    /**
+     * @private
+     * @param {ScrollEvent} ev
+     */
+    _onScrollThrottled(ev) {
         if (!this.el) {
             // could be unmounted in the meantime (due to throttled behavior)
             return;
@@ -613,10 +627,6 @@ Object.assign(MessageList, {
         order: {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
-        },
-        selectedMessageLocalId: {
-            type: String,
-            optional: true,
         },
         threadViewLocalId: String,
     },

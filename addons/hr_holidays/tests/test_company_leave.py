@@ -4,11 +4,11 @@
 from datetime import date, datetime
 
 from odoo.tests import tagged
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
 @tagged('company_leave')
-class TestCompanyLeave(SavepointCase):
+class TestCompanyLeave(TransactionCase):
     """ Test leaves for a whole company, conflict resolutions """
 
     @classmethod
@@ -313,7 +313,7 @@ class TestCompanyLeave(SavepointCase):
         })
         company_leave._compute_date_from_to()
 
-        count = 863
+        count = 865
         with self.assertQueryCount(__system__=count, admin=count):
             # Original query count: 1987
             # Without tracking/activity context keys: 5154

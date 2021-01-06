@@ -115,7 +115,7 @@ class Applicant(models.Model):
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
         'res.users', "Recruiter", compute='_compute_user',
-        tracking=True, default=lambda self: self.env.uid, store=True, readonly=False)
+        tracking=True, store=True, readonly=False)
     date_closed = fields.Datetime("Closed", compute='_compute_date_closed', store=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
@@ -176,7 +176,7 @@ class Applicant(models.Model):
 
     @api.depends('email_from')
     def _compute_application_count(self):
-        application_data = self.env['hr.applicant'].read_group([
+        application_data = self.env['hr.applicant'].with_context(active_test=False).read_group([
             ('email_from', 'in', list(set(self.mapped('email_from'))))], ['email_from'], ['email_from'])
         application_data_mapped = dict((data['email_from'], data['email_from_count']) for data in application_data)
         applicants = self.filtered(lambda applicant: applicant.email_from)
@@ -349,8 +349,7 @@ class Applicant(models.Model):
         return res
 
     def action_get_attachment_tree_view(self):
-        attachment_action = self.env.ref('base.action_attachment')
-        action = attachment_action.read()[0]
+        action = self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
         action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
         action['domain'] = str(['&', ('res_model', '=', self._name), ('res_id', 'in', self.ids)])
         action['search_view_id'] = (self.env.ref('hr_recruitment.ir_attachment_view_search_inherit_hr_recruitment').id, )
@@ -359,10 +358,13 @@ class Applicant(models.Model):
     def action_applications_email(self):
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Applications'),
+            'name': _('Job Applications'),
             'res_model': self._name,
             'view_mode': 'kanban,tree,form,pivot,graph,calendar,activity',
             'domain': [('email_from', 'in', self.mapped('email_from'))],
+            'context': {
+                'active_test': False
+            },
         }
 
     def _track_template(self, changes):

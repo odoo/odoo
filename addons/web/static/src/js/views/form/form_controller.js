@@ -514,7 +514,10 @@ var FormController = BasicController.extend({
      * @private
      */
     _onDiscard: function () {
-        this._discardChanges();
+        this._disableButtons();
+        this._discardChanges()
+            .then(this._enableButtons.bind(this))
+            .guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * Called when the user clicks on 'Duplicate Record' in the action menus
@@ -533,9 +536,13 @@ var FormController = BasicController.extend({
      * @private
      */
     _onEdit: function () {
+        this._disableButtons();
         // wait for potential pending changes to be saved (done with widgets
         // allowing to edit in readonly)
-        this.mutex.getUnlockedDef().then(this._setMode.bind(this, 'edit'));
+        this.mutex.getUnlockedDef()
+            .then(this._setMode.bind(this, 'edit'))
+            .then(this._enableButtons.bind(this))
+            .guardedCatch(this._enableButtons.bind(this));
     },
     /**
      * This method is called when someone tries to freeze the order, most likely
@@ -610,6 +617,7 @@ var FormController = BasicController.extend({
             parentID: data.parentID,
             readonly: data.readonly,
             deletable: record ? data.deletable : false,
+            disable_multiple_selection: data.disable_multiple_selection,
             recordID: record && record.id,
             res_id: record && record.res_id,
             res_model: data.field.relation,

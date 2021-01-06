@@ -113,6 +113,9 @@ var registerSteps = [{
     content: "Click on 'register favorites talks' button",
     trigger: 'a:contains("register to your favorites talks now")',
     run: 'click',
+},  {
+    trigger: 'h1:contains("Book your talks")',
+    run: function() {},
 }];
 
 /**

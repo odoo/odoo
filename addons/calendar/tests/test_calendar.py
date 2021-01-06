@@ -274,7 +274,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             self.env['res.partner'].create({'name': 'testuser1', 'email': u'alice@example.com'}),
         ]
         partner_ids = [(6, False, [p.id for p in partners]),]
-        now = fields.Datetime.now()
+        now = fields.Datetime.context_timestamp(partners[0], fields.Datetime.now())
         m = self.CalendarEvent.create({
             'name': "mailTest1",
             'allday': False,

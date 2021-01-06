@@ -3960,7 +3960,10 @@ QUnit.module('Views', {
             "Clicking out of a dirty line while editing should trigger a warning modal.");
 
         await testUtils.dom.click($('.modal').find('.btn-primary'));
-
+        // use of owlCompatibilityExtraNextTick because there are two sequential updates of the
+        // control panel (which is written in owl): each of them waits for the next animation frame
+        // to complete
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.strictEqual(form.$('.o_data_cell').first().text(), "first record",
             "Value should have been reset to what it was before editing began.");
         assert.containsOnce(form, '.o_data_row',
@@ -4494,6 +4497,7 @@ QUnit.module('Views', {
 
         await testUtils.form.clickEdit(form);
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'trigger an onchange');
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.strictEqual(form.$('.o_data_row td:first').text(), 'foo changed',
             "onchange should have been correctly applied on field in o2m list");
@@ -4554,6 +4558,7 @@ QUnit.module('Views', {
             "the initial value should be the default one");
 
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'trigger an onchange');
+        await testUtils.owlCompatibilityExtraNextTick();
 
         assert.strictEqual(form.$('.o_data_row td:first').text(), 'foo changed',
             "onchange should have been correctly applied on field in o2m list");
@@ -5258,6 +5263,7 @@ QUnit.module('Views', {
             'display_name cell should not be visible in edit mode');
 
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(form.$('.o_form_view .o_list_view tbody tr:first input[name="display_name"]'),
             'oe_read_only', 'display_name input should have oe_read_only class');
 
@@ -5296,6 +5302,7 @@ QUnit.module('Views', {
             'display_name cell should be visible in edit mode');
 
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.hasClass(form.$('.o_form_view .o_list_view tbody tr:first input[name="display_name"]'),
             'oe_edit_only', 'display_name input should have oe_edit_only class');
 
@@ -5546,6 +5553,44 @@ QUnit.module('Views', {
 
         assert.containsOnce(form.$('.o_control_panel'), 'button.infooter');
         assert.containsNone(form.$('.o_form_view'), 'button.infooter');
+
+        form.destroy();
+    });
+
+    QUnit.test('open new record even with warning message', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.onchanges = { foo: true };
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<group><field name="foo"/></group>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (args.method === 'onchange') {
+                    return Promise.resolve({
+                        warning: {
+                            title: "Warning",
+                            message: "Any warning."
+                        }
+                    });
+                }
+                return this._super.apply(this, arguments);
+            },
+
+        });
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('input').val(), 'blip', 'input should contain record value');
+        await testUtils.fields.editInput(form.$('input[name="foo"]'), "tralala");
+        assert.strictEqual(form.$('input').val(), 'tralala', 'input should contain new value');
+
+        await form.reload({ currentId: false });
+        assert.strictEqual(form.$('input').val(), '',
+            'input should have no value after reload');
 
         form.destroy();
     });

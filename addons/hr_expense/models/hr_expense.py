@@ -74,9 +74,11 @@ class HrExpense(models.Model):
         domain="[('company_id', '=', company_id), ('type_tax_use', '=', 'purchase')]", string='Taxes')
     untaxed_amount = fields.Float("Subtotal", store=True, compute='_compute_amount', digits='Account')
     total_amount = fields.Monetary("Total", compute='_compute_amount', store=True, currency_field='currency_id', tracking=True)
+    amount_residual = fields.Monetary(string='Amount Due', compute='_compute_amount_residual')
     company_currency_id = fields.Many2one('res.currency', string="Report Company Currency", related='sheet_id.currency_id', store=True, readonly=False)
     total_amount_company = fields.Monetary("Total (Company Currency)", compute='_compute_total_amount_company', store=True, currency_field='company_currency_id')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company)
+    # TODO make required in master (sgv)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)], 'refused': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', check_company=True)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', states={'post': [('readonly', True)], 'done': [('readonly', True)]}, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
@@ -94,7 +96,7 @@ class HrExpense(models.Model):
         ('approved', 'Approved'),
         ('done', 'Paid'),
         ('refused', 'Refused')
-    ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, help="Status of the expense.")
+    ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft', help="Status of the expense.")
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     reference = fields.Char("Bill Reference")
     is_refused = fields.Boolean("Explicitly Refused by manager or accountant", readonly=True, copy=False)
@@ -124,6 +126,20 @@ class HrExpense(models.Model):
             expense.untaxed_amount = expense.unit_amount * expense.quantity
             taxes = expense.tax_ids.compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id, expense.employee_id.user_id.partner_id)
             expense.total_amount = taxes.get('total_included')
+
+    @api.depends("sheet_id.account_move_id.line_ids")
+    def _compute_amount_residual(self):
+        for expense in self:
+            if not expense.sheet_id:
+                expense.amount_residual = expense.total_amount
+                continue
+            if not expense.currency_id or expense.currency_id == expense.company_id.currency_id:
+                residual_field = 'amount_residual'
+            else:
+                residual_field = 'amount_residual_currency'
+            payment_term_lines = expense.sheet_id.account_move_id.line_ids \
+                .filtered(lambda line: line.expense_id == self and line.account_internal_type in ('receivable', 'payable'))
+            expense.amount_residual = -sum(payment_term_lines.mapped(residual_field))
 
     @api.depends('date', 'total_amount', 'company_currency_id')
     def _compute_total_amount_company(self):
@@ -194,8 +210,12 @@ class HrExpense(models.Model):
 
     @api.constrains('product_id', 'product_uom_id')
     def _check_product_uom_category(self):
-        if self.product_id and self.product_uom_id.category_id != self.product_id.uom_id.category_id:
-            raise UserError(_('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.'))
+        for expense in self:
+            if expense.product_id and expense.product_uom_id.category_id != expense.product_id.uom_id.category_id:
+                raise UserError(_(
+                    'Selected Unit of Measure for expense %(expense)s does not belong to the same category as the Unit of Measure of product %(product)s.',
+                    expense=expense.name, product=expense.product_id.name,
+                ))
 
     def create_expense_from_attachments(self, attachment_ids=None, view_type='tree'):
         ''' Create the expenses from files.
@@ -251,11 +271,11 @@ class HrExpense(models.Model):
     # ORM Overrides
     # ----------------------------------------
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted_or_approved(self):
         for expense in self:
             if expense.state in ['done', 'approved']:
                 raise UserError(_('You cannot delete a posted or approved expense.'))
-        return super(HrExpense, self).unlink()
 
     def write(self, vals):
         if 'tax_ids' in vals or 'analytic_account_id' in vals or 'account_id' in vals:
@@ -441,6 +461,13 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             for tax in taxes['taxes']:
                 balance = expense.currency_id._convert(tax['amount'], company_currency, expense.company_id, account_date)
                 amount_currency = tax['amount']
+
+                if tax['tax_repartition_line_id']:
+                    rep_ln = self.env['account.tax.repartition.line'].browse(tax['tax_repartition_line_id'])
+                    base_amount = self.env['account.move']._get_base_amount_to_display(tax['base'], rep_ln)
+                else:
+                    base_amount = None
+
                 move_line_tax_values = {
                     'name': tax['name'],
                     'quantity': 1,
@@ -450,7 +477,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                     'account_id': tax['account_id'] or move_line_src['account_id'],
                     'tax_repartition_line_id': tax['tax_repartition_line_id'],
                     'tax_tag_ids': tax['tag_ids'],
-                    'tax_base_amount': tax['base'],
+                    'tax_base_amount': base_amount,
                     'expense_id': expense.id,
                     'partner_id': partner_id,
                     'currency_id': expense.currency_id.id,
@@ -569,7 +596,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
         for expense in expenses:
             state = expense['state']
-            currency = self.env['res.currency'].browse(expense['currency_id'][0])
+            currency = self.env['res.currency'].browse(expense['currency_id'][0]) if expense['currency_id'] else target_currency
             amount = currency._convert(
                     expense['total_amount'], target_currency, self.env.company, fields.Date.today())
             expense_state[state]['amount'] += amount
@@ -863,11 +890,11 @@ class HrExpenseSheet(models.Model):
         sheet.activity_update()
         return sheet
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_posted_or_paid(self):
         for expense in self:
             if expense.state in ['post', 'done']:
                 raise UserError(_('You cannot delete a posted or paid expense.'))
-        super(HrExpenseSheet, self).unlink()
 
     # --------------------------------------------
     # Mail Thread

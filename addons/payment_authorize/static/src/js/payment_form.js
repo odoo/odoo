@@ -45,7 +45,6 @@ PaymentForm.include({
         } else {
             var button = ev.target;
         }
-        this.disableButton(button);
         var acquirerID = this.getAcquirerIdFromRadio($checkedRadio);
         var acquirerForm = this.$('#o_payment_add_token_acq_' + acquirerID);
         var inputsForm = $('input', acquirerForm);
@@ -69,7 +68,6 @@ PaymentForm.include({
                     errorMessage += message.code + ": " + message.text;
                 })
                 acquirerForm.removeClass('d-none');
-                self.enableButton(button);
                 return self.displayError(_t('Server Error'), errorMessage);
             }
 
@@ -91,7 +89,6 @@ PaymentForm.include({
                 // if the rpc fails, pretty obvious
                 error.event.preventDefault();
                 acquirerForm.removeClass('d-none');
-                self.enableButton(button);
                 self.displayError(
                     _t('Server Error'),
                     _t("We are not able to add your payment method at the moment.") +

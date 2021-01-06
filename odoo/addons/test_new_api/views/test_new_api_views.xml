@@ -146,7 +146,7 @@
         <record id="action_discussions_2" model="ir.actions.act_window">
             <field name="name">Discussions 2</field>
             <field name="res_model">test_new_api.discussion</field>
-            <field name="view_ids" eval="[(5,0,0),
+            <field name="view_ids" eval="[Command.clear(),
                           (0,0,{'view_mode':'tree'}),
                           (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_2')})]"/>
         </record>
@@ -181,7 +181,7 @@
         <record id="action_discussions_3" model="ir.actions.act_window">
             <field name="name">Discussions 3</field>
             <field name="res_model">test_new_api.discussion</field>
-            <field name="view_ids" eval="[(5,0,0),
+            <field name="view_ids" eval="[Command.clear(),
                           (0,0,{'view_mode':'tree'}),
                           (0,0,{'view_mode':'form', 'view_id': ref('discussion_form_3')})]"/>
         </record>
@@ -341,5 +341,31 @@
                 </form>
             </field>
         </record>
+
+        <!-- compute_editable view -->
+        <record id="compute_editable_form" model="ir.ui.view">
+            <field name="name">test_new_api.compute_editable.form</field>
+            <field name="model">test_new_api.compute_editable</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <field name="line_ids" mode="tree">
+                            <tree editable="bottom">
+                                <field name="value"/>
+                                <field name="edit"/>
+                                <field name="count"/>
+                            </tree>
+                            <form>
+                                <!-- this view makes sure that field "same" is not considered -->
+                                <field name="value"/>
+                                <field name="edit"/>
+                                <field name="count"/>
+                            </form>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
     </data>
 </odoo>

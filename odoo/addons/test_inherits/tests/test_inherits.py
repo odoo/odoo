@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.tests import common
 from odoo.exceptions import ValidationError
+from odoo import Command
 
 
 class test_inherits(common.TransactionCase):
@@ -17,6 +18,24 @@ class test_inherits(common.TransactionCase):
         self.assertEqual(pallet.field_in_box, 'box')
         self.assertEqual(pallet.field_in_pallet, 'pallet')
 
+    def test_create_3_levels_inherits_with_defaults(self):
+        unit = self.env['test.unit'].create({
+            'name': 'U',
+            'state': 'a',
+            'size': 1,
+        })
+        ctx = {
+            'default_state': 'b',       # 'state' is inherited from 'test.unit'
+            'default_size': 2,          # 'size' is inherited from 'test.box'
+        }
+        pallet = self.env['test.pallet'].with_context(ctx).create({
+            'name': 'P',
+            'unit_id': unit.id,         # grand-parent field is set
+        })
+        # default 'state' should be ignored, but default 'size' should not
+        self.assertEqual(pallet.state, 'a')
+        self.assertEqual(pallet.size, 2)
+
     def test_read_3_levels_inherits(self):
         """ Check that we can read an inherited field on 3 levels """
         pallet = self.env.ref('test_inherits.pallet_a')
@@ -31,19 +50,19 @@ class test_inherits(common.TransactionCase):
     def test_write_4_one2many(self):
         """ Check that we can write on an inherited one2many field. """
         box = self.env.ref('test_inherits.box_a')
-        box.write({'line_ids': [(0, 0, {'name': 'Line 1'})]})
+        box.write({'line_ids': [Command.create({'name': 'Line 1'})]})
         self.assertTrue(all(box.line_ids._ids))
         self.assertEqual(box.line_ids.mapped('name'), ['Line 1'])
         self.assertEqual(box.line_ids, box.unit_id.line_ids)
         box.flush()
         box.invalidate_cache(['line_ids'])
-        box.write({'line_ids': [(0, 0, {'name': 'Line 2'})]})
+        box.write({'line_ids': [Command.create({'name': 'Line 2'})]})
         self.assertTrue(all(box.line_ids._ids))
         self.assertEqual(box.line_ids.mapped('name'), ['Line 1', 'Line 2'])
         self.assertEqual(box.line_ids, box.unit_id.line_ids)
         box.flush()
         box.invalidate_cache(['line_ids'])
-        box.write({'line_ids': [(1, box.line_ids[0].id, {'name': 'First line'})]})
+        box.write({'line_ids': [Command.update(box.line_ids[0].id, {'name': 'First line'})]})
         self.assertTrue(all(box.line_ids._ids))
         self.assertEqual(box.line_ids.mapped('name'), ['First line', 'Line 2'])
         self.assertEqual(box.line_ids, box.unit_id.line_ids)
@@ -120,3 +139,13 @@ class test_inherits(common.TransactionCase):
         self.assertIn('lang', Unit.display_name.depends_context)
         self.assertIn('lang', Box.display_name.depends_context)
         self.assertIn('lang', Pallet.display_name.depends_context)
+
+    def test_multi_write_m2o_inherits(self):
+        """Verify that an inherits m2o field can be written to in batch"""
+        unit_foo = self.env['test.unit'].create({'name': 'foo'})
+        boxes = self.env['test.box'].create([{'unit_id': unit_foo.id}] * 5)
+
+        unit_bar = self.env['test.unit'].create({'name': 'bar'})
+        boxes.unit_id = unit_bar
+
+        self.assertEqual(boxes.mapped('unit_id.name'), ['bar'])

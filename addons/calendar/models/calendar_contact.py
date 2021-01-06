@@ -13,7 +13,7 @@ class Contacts(models.Model):
     active = fields.Boolean('Active', default=True)
 
     _sql_constraints = [
-        ('user_id_partner_id_unique', 'UNIQUE(user_id, partner_id)', 'A user cannot have twice the same contact.')
+        ('user_id_partner_id_unique', 'UNIQUE(user_id, partner_id)', 'A user cannot have the same contact twice.')
     ]
 
     @api.model

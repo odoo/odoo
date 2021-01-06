@@ -4,7 +4,6 @@
 {
     'name': "Lithuania - Accounting",
     'version': '1.0.0',
-    'summary': 'accounting, Lithuanian',
     'description': """
         Chart of Accounts (COA) Template for Lithuania's Accounting.
 

@@ -108,8 +108,8 @@ class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        if (this.thread.lastMessage) {
-            this.thread.markAsSeen(this.thread.lastMessage.id);
+        if (this.thread.lastNonTransientMessage) {
+            this.thread.markAsSeen(this.thread.lastNonTransientMessage);
         }
     }
 

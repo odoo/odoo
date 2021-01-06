@@ -50,6 +50,13 @@ function factory(dependencies) {
             if (thread && notifyServer) {
                 thread.notifyFoldStateToServer('closed');
             }
+            if (this.env.device.isMobile && !this.env.messaging.discuss.isOpen) {
+                // If we are in mobile and discuss is not open, it means the
+                // chat window was opened from the messaging menu. In that
+                // case it should be re-opened to simulate it was always
+                // there in the background.
+                this.env.messaging.messagingMenu.update({ isOpen: true });
+            }
         }
 
         expand() {
@@ -118,17 +125,17 @@ function factory(dependencies) {
         }
 
         /**
-         * Shift this chat window to the left on screen.
+         * Swap this chat window with the previous one.
          */
-        shiftLeft() {
-            this.manager.shiftLeft(this);
+        shiftPrev() {
+            this.manager.shiftPrev(this);
         }
 
         /**
-         * Shift this chat window to the right on screen.
+         * Swap this chat window with the next one.
          */
-        shiftRight() {
-            this.manager.shiftRight(this);
+        shiftNext() {
+            this.manager.shiftNext(this);
         }
 
         /**
@@ -160,7 +167,7 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeHasShiftLeft() {
+        _computeHasShiftPrev() {
             if (!this.manager) {
                 return false;
             }
@@ -176,7 +183,7 @@ function factory(dependencies) {
          * @private
          * @returns {boolean}
          */
-        _computeHasShiftRight() {
+        _computeHasShiftNext() {
             if (!this.manager) {
                 return false;
             }
@@ -342,13 +349,13 @@ function factory(dependencies) {
                 'thread',
             ],
         }),
-        hasShiftLeft: attr({
-            compute: '_computeHasShiftLeft',
+        hasShiftPrev: attr({
+            compute: '_computeHasShiftPrev',
             dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
-        hasShiftRight: attr({
-            compute: '_computeHasShiftRight',
+        hasShiftNext: attr({
+            compute: '_computeHasShiftNext',
             dependencies: ['managerAllOrderedVisible'],
             default: false,
         }),
@@ -434,6 +441,7 @@ function factory(dependencies) {
             default: [['create']],
             inverse: 'chatWindow',
             isCausal: true,
+            readonly: true,
         }),
         /**
          * This field handle the "order" (index) of the visible chatWindow inside the UI.

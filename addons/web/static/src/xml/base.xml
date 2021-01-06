@@ -1273,10 +1273,12 @@
 
 <t t-name="FieldReference" t-extend="FieldMany2One">
     <t t-jquery=".o_input_dropdown" t-operation="before">
-        <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
-            <option/>
-            <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
-        </select>
+        <t t-if="!widget.nodeOptions.model_field">
+            <select t-att-class="'o_input o_field_widget' + (widget.nodeOptions.hide_model and ' d-none' or '')">
+                <option/>
+                <option t-foreach="widget.field.selection" t-as="model" t-att-value="model[0]"><t t-esc="model[1]"/></option>
+            </select>
+        </t>
     </t>
 </t>
 <t t-name="FieldMany2ManyTag">
@@ -1405,12 +1407,12 @@
 </t>
 <t t-name="CopyClipboardText">
     <button class="btn btn-sm btn-primary o_clipboard_button o_btn_text_copy">
-        <span class="fa fa-clipboard"></span><span> Copy Text</span>
+        <span class="fa fa-clipboard"></span><span> Copy</span>
     </button>
 </t>
 <t t-name="CopyClipboardChar">
     <button class="btn btn-sm btn-primary o_clipboard_button o_btn_char_copy">
-        <span class="fa fa-clipboard"></span><span> Copy Text</span>
+        <span class="fa fa-clipboard"></span><span> Copy</span>
     </button>
 </t>
 <t t-name="FieldBinaryFile">
@@ -1652,7 +1654,7 @@
 </t>
 <t t-name="M2ODialog">
     <div>
-        Do you want to create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
+        Create <strong t-esc="widget.value"/> as a new <t t-esc="widget.name"/>?
     </div>
 </t>
 <t t-name="FieldMany2ManyCheckBoxes">

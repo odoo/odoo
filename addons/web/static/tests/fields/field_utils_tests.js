@@ -316,7 +316,7 @@ QUnit.test('parse percentage', function(assert) {
 });
 
 QUnit.test('parse datetime', function (assert) {
-    assert.expect(6);
+    assert.expect(7);
 
     var originalParameters = _.clone(core._t.database.parameters);
     var originalLocale = moment.locale();
@@ -349,6 +349,9 @@ QUnit.test('parse datetime', function (assert) {
     assert.throws(function () {
         fieldUtils.parse.datetime("10000-01-01 12:00:00", {}, {});
     }, /is not a correct/, "Dates after 9999 should be invalid");
+    assert.throws(function () {
+        fieldUtils.parse.datetime("999-01-01 12:00:00", {}, {});
+    }, /is not a correct/, "Dates before 1000 should be invalid");
 
     dateStr = '01/13/2019 10:05:45';
     date1 = fieldUtils.parse.datetime(dateStr);
@@ -360,7 +363,7 @@ QUnit.test('parse datetime', function (assert) {
     date2 = moment.utc(dateStr, ['M/D/YYYY H:m:s'], true);
     assert.equal(date1.format(), date2.format(), "Date without leading 0");
 
-    dateStr = '01/01/0001 10:15:45';
+    dateStr = '01/01/1000 10:15:45';
     date1 = fieldUtils.parse.datetime(dateStr);
     date2 = moment.utc(dateStr, ['MM/DD/YYYY HH:mm:ss'], true);
     assert.equal(date1.format(), date2.format(), "can parse dates of year 1");

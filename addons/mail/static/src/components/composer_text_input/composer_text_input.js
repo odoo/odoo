@@ -2,6 +2,7 @@ odoo.define('mail/static/src/components/composer_text_input/composer_text_input.
 'use strict';
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const components = {
     ComposerSuggestionList: require('mail/static/src/components/composer_suggestion_list/composer_suggestion_list.js'),
@@ -23,11 +24,20 @@ class ComposerTextInput extends Component {
         super(...args);
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const thread = composer && composer.thread;
+            const correspondent = thread ? thread.correspondent : undefined;
             return {
                 composer: composer ? composer.__state : undefined,
+                correspondent: correspondent ? correspondent.__state : undefined,
                 isDeviceMobile: this.env.messaging.device.isMobile,
+                thread: thread ? thread.__state : undefined,
             };
         });
+        /**
+         * Updates the composer text input content when composer is mounted
+         * as textarea content can't be changed from the DOM.
+         */
+        useUpdate({ func: () => this._update() });
         /**
          * Last content of textarea from input event. Useful to determine
          * whether the current partner is typing something.
@@ -37,22 +47,12 @@ class ComposerTextInput extends Component {
          * Reference of the textarea. Useful to set height, selection and content.
          */
         this._textareaRef = useRef('textarea');
-    }
-
-    /**
-     * Updates the composer text input content when composer is mounted
-     * as textarea content can't be changed from the DOM.
-     */
-    mounted() {
-        this._update();
-    }
-
-    /**
-     * Updates the composer text input content when composer has changed
-     * as textarea content can't be changed from the DOM.
-     */
-    patched() {
-        this._update();
+        /**
+         * This is the invisible textarea used to compute the composer height
+         * based on the text content. We need it to downsize the textarea
+         * properly without flicker.
+         */
+        this._mirroredTextareaRef = useRef('mirroredTextarea');
     }
 
     //--------------------------------------------------------------------------
@@ -73,13 +73,19 @@ class ComposerTextInput extends Component {
         if (!this.composer) {
             return "";
         }
-        if (this.composer.thread && this.composer.thread.model !== 'mail.channel') {
-            if (this.composer.isLog) {
-                return this.env._t("Log an internal note...");
-            }
-            return this.env._t("Send a message to followers...");
+        if (!this.composer.thread) {
+            return "";
         }
-        return this.env._t("Write something...");
+        if (this.composer.thread.model === 'mail.channel') {
+            if (this.composer.thread.correspondent) {
+                return _.str.sprintf("Message %s...", this.composer.thread.correspondent.nameOrDisplayName)
+            }
+            return _.str.sprintf("Message #%s...", this.composer.thread.displayName);
+        }
+        if (this.composer.isLog) {
+            return this.env._t("Log an internal note...");
+        }
+        return this.env._t("Send a message to followers...");
     }
 
     focus() {
@@ -97,8 +103,9 @@ class ComposerTextInput extends Component {
     saveStateInStore() {
         this.composer.update({
             textInputContent: this._getContent(),
-            textInputCursorStart: this._getSelectionStart(),
             textInputCursorEnd: this._getSelectionEnd(),
+            textInputCursorStart: this._getSelectionStart(),
+            textInputSelectionDirection: this._textareaRef.el.selectionDirection,
         });
     }
 
@@ -153,11 +160,18 @@ class ComposerTextInput extends Component {
      * @private
      */
     _update() {
+        if (!this.composer) {
+            return;
+        }
         this._textareaRef.el.value = this.composer.textInputContent;
-        this._textareaRef.el.setSelectionRange(
-            this.composer.textInputCursorStart,
-            this.composer.textInputCursorEnd
-        );
+        this._mirroredTextareaRef.el.value = this.composer.textInputContent;
+        if (this.composer.hasFocus) {
+            this._textareaRef.el.setSelectionRange(
+                this.composer.textInputCursorStart,
+                this.composer.textInputCursorEnd,
+                this.composer.textInputSelectionDirection,
+            );
+        }
         this._updateHeight();
     }
 
@@ -167,8 +181,7 @@ class ComposerTextInput extends Component {
      * @private
      */
     _updateHeight() {
-        this._textareaRef.el.style.height = "0px";
-        this._textareaRef.el.style.height = (this._textareaRef.el.scrollHeight) + "px";
+        this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
     }
 
     //--------------------------------------------------------------------------
@@ -179,13 +192,14 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onFocusinTextarea() {
-        this.composer.update({ hasFocus: true });
+        this.composer.focus();
     }
 
     /**
      * @private
      */
     _onFocusoutTextarea() {
+        this.saveStateInStore();
         this.composer.update({ hasFocus: false });
     }
 
@@ -302,32 +316,54 @@ class ComposerTextInput extends Component {
             case 'PageUp':
                 if (this.composer.hasSuggestions) {
                     this.composer.setPreviousSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'ArrowDown':
             case 'PageDown':
                 if (this.composer.hasSuggestions) {
                     this.composer.setNextSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'Home':
                 if (this.composer.hasSuggestions) {
                     this.composer.setFirstSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'End':
                 if (this.composer.hasSuggestions) {
                     this.composer.setLastSuggestionActive();
+                    this.composer.update({ hasToScrollToActiveSuggestion: true });
                 }
                 break;
             case 'Tab':
                 if (this.composer.hasSuggestions) {
                     if (ev.shiftKey) {
                         this.composer.setPreviousSuggestionActive();
+                        this.composer.update({ hasToScrollToActiveSuggestion: true });
                     } else {
                         this.composer.setNextSuggestionActive();
+                        this.composer.update({ hasToScrollToActiveSuggestion: true });
                     }
                 }
+                break;
+            case 'Alt':
+            case 'AltGraph':
+            case 'CapsLock':
+            case 'Control':
+            case 'Fn':
+            case 'FnLock':
+            case 'Hyper':
+            case 'Meta':
+            case 'NumLock':
+            case 'ScrollLock':
+            case 'Shift':
+            case 'ShiftSuper':
+            case 'Symbol':
+            case 'SymbolLock':
+                // prevent modifier keys from resetting the suggestion state
                 break;
             // Otherwise, check if a mention is typed
             default:

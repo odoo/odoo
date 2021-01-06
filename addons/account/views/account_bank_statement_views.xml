@@ -78,7 +78,7 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="not is_difference_zero and state=='open'" decoration-info="state=='open' and is_difference_zero" string="Statements">
+                <tree decoration-danger="not is_difference_zero" decoration-info="state=='open' and is_difference_zero" string="Statements">
                     <field name="name"/>
                     <field name="date"/>
                     <field name="journal_id"/>
@@ -100,8 +100,9 @@
                 <search string="Search Bank Statements">
                     <field name="name" string="Bank Statement"/>
                     <field name="date"/>
-                    <filter string="Draft" name="draft" domain="[('state','=','open')]"/>
-                    <filter string="Confirmed" name="confirmed" domain="[('state','=','confirm')]"/>
+                    <filter string="New" name="draft" domain="[('state','=','open')]"/>
+                    <filter string="Processing" name="processing" domain="[('state','=','posted')]"/>
+                    <filter string="Validated" name="confirmed" domain="[('state','=','confirm')]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
                     <field name="journal_id" domain="[('type', '=', 'bank')]" />
@@ -325,7 +326,7 @@
             <field name="model">account.bank.statement.line</field>
             <field name="priority">8</field>
             <field name="arch" type="xml">
-                <tree string="Statement lines" create="false">
+                <tree string="Statement lines" create="false" default_order="date desc, statement_id desc, sequence desc, id desc">
                     <!-- Invisible fields -->
                     <field name="state" invisible="1"/>
                     <field name="sequence" readonly="1" invisible="1"/>

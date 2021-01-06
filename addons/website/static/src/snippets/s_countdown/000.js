@@ -13,6 +13,7 @@ const CountdownWidget = publicWidget.Widget.extend({
     selector: '.s_countdown',
     xmlDependencies: ['/website/static/src/snippets/s_countdown/000.xml'],
     disabledInEditableMode: false,
+    defaultColor: 'rgba(0, 0, 0, 255)',
 
     /**
      * @override
@@ -76,7 +77,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         if (ColorpickerWidget.isCSSColor(color)) {
             return color;
         }
-        return weUtils.getCSSVariableValue(color);
+        return weUtils.getCSSVariableValue(color) || this.defaultColor;
     },
     /**
      * Gets the time difference in seconds between now and countdown due date.

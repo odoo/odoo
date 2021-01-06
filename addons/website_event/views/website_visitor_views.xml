@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="website.website_visitor_view_search"/>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='group_by_lang']" position="after">
-                <filter string="Main Contact" name="group_by_parent_id" context="{'group_by': 'parent_id'}"/>
+                <filter string="Main Contact" name="group_by_parent_id" groups="base.group_no_one" context="{'group_by': 'parent_id'}"/>
             </xpath>
         </field>
     </record>
@@ -18,7 +18,7 @@
         <field name="inherit_id" ref="website.website_visitor_view_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='page_ids']" position="after">
-                <field name="event_registration_count"/>
+                <field name="event_registration_count" optional="hide"/>
             </xpath>
         </field>
     </record>
@@ -37,29 +37,8 @@
                 </button>
             </xpath>
             <xpath expr="//field[@name='page_ids']" position="after">
-                <field name="parent_id"/>
+                <field name="parent_id" groups="base.group_no_one"/>
             </xpath>
         </field>
     </record>
-
-    <record id="website_visitor_view_kanban" model="ir.ui.view">
-        <field name="name">website.visitor.view.kanban.inherit.event</field>
-        <field name="model">website.visitor</field>
-        <field name="inherit_id" ref="website.website_visitor_view_kanban"/>
-        <field name="arch" type="xml">
-            <field name="page_ids" position="after">
-                <field name="event_registration_count"/>
-            </field>
-            <xpath expr="//div[@id='o_page_count']" position="after">
-                <div>Registrations<span class="float-right font-weight-bold"><field name="event_registration_count"/></span></div>
-            </xpath>
-            <xpath expr="//div[hasclass('w_visitor_kanban_actions_ungrouped')]" position="before">
-                <div class="col">
-                    <b><field name="event_registration_count"/></b>
-                    <div>Registrations</div>
-                </div>
-            </xpath>
-        </field>
-    </record>
-
 </data></odoo>

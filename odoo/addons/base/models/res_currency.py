@@ -247,6 +247,29 @@ class CurrencyRate(models.Model):
         ('currency_rate_check', 'CHECK (rate>0)', 'The currency rate must be strictly positive.'),
     ]
 
+    @api.onchange('rate')
+    def _onchange_rate_warning(self):
+        if not self.currency_id.id:
+            return
+
+        latest_rate = self.search([
+            ('currency_id', '=', self.currency_id.id),
+            ('company_id', '=', self.company_id.id or self.env.company.id),
+            ('name', '<=', self.name or fields.Date.today()),
+        ], order="name desc", limit=1)
+        if latest_rate and latest_rate.rate:
+            diff = (latest_rate.rate - self.rate) / latest_rate.rate
+            if abs(diff) > 0.2:
+                return {
+                    'warning': {
+                        'title': _("Warning for %s", self.currency_id.name),
+                        'message': _(
+                            "The new rate is quite far from the previous rate.\n"
+                            "Incorrect currency rates may cause critical problems, make sure the rate is correct !"
+                        )
+                    }
+                }
+
     @api.model
     def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
         if operator in ['=', '!=']:

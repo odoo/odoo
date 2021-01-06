@@ -88,7 +88,7 @@ class HolidaysAllocation(models.Model):
         help='This area is automatically filled by the user who validates the allocation')
     second_approver_id = fields.Many2one(
         'hr.employee', string='Second Approval', readonly=True, copy=False,
-        help='This area is automaticly filled by the user who validates the allocation with second level (If allocation type need second validation)')
+        help='This area is automatically filled by the user who validates the allocation with second level (If allocation type need second validation)')
     validation_type = fields.Selection(string='Validation Type', related='holiday_status_id.allocation_validation_type', readonly=True)
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
@@ -229,7 +229,7 @@ class HolidaysAllocation(models.Model):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
 
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.name = allocation.sudo().private_name
             else:
                 allocation.name = '*****'
@@ -237,7 +237,7 @@ class HolidaysAllocation(models.Model):
     def _inverse_description(self):
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         for allocation in self:
-            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.manager_id == self.env.user:
+            if is_officer or allocation.employee_id.user_id == self.env.user or allocation.employee_id.leave_manager_id == self.env.user:
                 allocation.sudo().private_name = allocation.name
 
     def _search_description(self, operator, value):
@@ -449,11 +449,11 @@ class HolidaysAllocation(models.Model):
         self.add_follower(employee_id)
         return result
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_correct_states(self):
         state_description_values = {elem[0]: elem[1] for elem in self._fields['state']._description_selection(self.env)}
         for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
             raise UserError(_('You cannot delete an allocation request which is in %s state.') % (state_description_values.get(holiday.state),))
-        return super(HolidaysAllocation, self).unlink()
 
     def _get_mail_redirect_suggested_company(self):
         return self.holiday_status_id.company_id
@@ -484,7 +484,7 @@ class HolidaysAllocation(models.Model):
 
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
-            raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to reset to Draft.'))
+            raise UserError(_('Allocation request state must be "Refused" or "To Approve" in order to be reset to Draft.'))
         self.write({
             'state': 'draft',
             'first_approver_id': False,

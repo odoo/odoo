@@ -214,7 +214,12 @@ class FleetVehicle(models.Model):
 
     @api.model
     def create(self, vals):
+        # Fleet administrator may not have rights to create the plan_to_change_car value when the driver_id is a res.user
+        # This trick is used to prevent access right error.
+        ptc_value = 'plan_to_change_car' in vals.keys() and {'plan_to_change_car': vals.pop('plan_to_change_car')}
         res = super(FleetVehicle, self).create(vals)
+        if ptc_value:
+            res.sudo().write(ptc_value)
         if 'driver_id' in vals and vals['driver_id']:
             res.create_driver_history(vals['driver_id'])
         if 'future_driver_id' in vals and vals['future_driver_id']:
@@ -231,7 +236,13 @@ class FleetVehicle(models.Model):
     def write(self, vals):
         if 'driver_id' in vals and vals['driver_id']:
             driver_id = vals['driver_id']
-            self.filtered(lambda v: v.driver_id.id != driver_id).create_driver_history(driver_id)
+            for vehicle in self.filtered(lambda v: v.driver_id.id != driver_id):
+                vehicle.create_driver_history(driver_id)
+                if vehicle.driver_id:
+                    vehicle.activity_schedule(
+                        'mail.mail_activity_data_todo',
+                        user_id=vehicle.manager_id.id or self.env.user.id,
+                        note=_('Specify the End date of %s') % vehicle.driver_id.name)
 
         if 'future_driver_id' in vals and vals['future_driver_id']:
             state_waiting_list = self.env.ref('fleet.fleet_vehicle_state_waiting_list', raise_if_not_found=False)
@@ -248,13 +259,6 @@ class FleetVehicle(models.Model):
             self.mapped('log_contracts').write({'active': False})
         return res
 
-    def _close_driver_history(self):
-        self.env['fleet.vehicle.assignation.log'].search([
-            ('vehicle_id', 'in', self.ids),
-            ('driver_id', 'in', self.mapped('driver_id').ids),
-            ('date_end', '=', False)
-        ]).write({'date_end': fields.Date.today()})
-
     def create_driver_history(self, driver_id):
         for vehicle in self:
             self.env['fleet.vehicle.assignation.log'].create({
@@ -264,12 +268,10 @@ class FleetVehicle(models.Model):
             })
 
     def action_accept_driver_change(self):
-        self._close_driver_history()
         # Find all the vehicles for which the driver is the future_driver_id
         # remove their driver_id and close their history using current date
         vehicles = self.search([('driver_id', 'in', self.mapped('future_driver_id').ids)])
         vehicles.write({'driver_id': False})
-        vehicles._close_driver_history()
 
         for vehicle in self:
             if vehicle.vehicle_type == 'bike':

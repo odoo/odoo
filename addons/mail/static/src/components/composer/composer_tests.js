@@ -126,7 +126,7 @@ QUnit.test('composer text input: basic rendering when logging note', async funct
 });
 
 QUnit.test('composer text input: basic rendering when linked thread is a mail.channel', async function (assert) {
-    assert.expect(5);
+    assert.expect(4);
 
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -153,10 +153,48 @@ QUnit.test('composer text input: basic rendering when linked thread is a mail.ch
         1,
         "should have editable part inside composer text input"
     );
+});
+
+QUnit.test('composer text input placeholder should contain channel name when thread does not have specific correspondent', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        channel_type: 'channel',
+        id: 20,
+        name: 'General',
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
-        "Write something...",
-        "should have 'Write something...' as placeholder in composer text input if composer is for a 'mail.channel'"
+        "Message #General...",
+        "should have 'Message #General...' as placeholder for composer text input when thread does not have specific correspondent"
+    );
+});
+
+QUnit.test('composer text input placeholder should contain correspondent name when thread has exactly one correspondent', async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 7, name: 'Marc Demo' });
+    this.data['mail.channel'].records.push({
+        channel_type: 'chat',
+        id: 20,
+        members: [this.data.currentPartnerId, 7],
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        "Message Marc Demo...",
+        "should have 'Message Marc Demo...' as placeholder for composer text input when thread has exactly one correspondent"
     );
 });
 
@@ -1711,7 +1749,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(
@@ -1733,7 +1771,7 @@ QUnit.test('composer: send button is disabled if attachment upload is not finish
     );
     assert.containsNone(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed should be uploaded"
     );
     assert.containsOnce(
@@ -1803,7 +1841,7 @@ QUnit.test('warning on send with shortcut when attempting to post message with s
     );
     assert.containsOnce(
         document.body,
-        '.o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "attachment displayed is being uploaded"
     );
     assert.containsOnce(
@@ -1898,7 +1936,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_Composer .o_Attachment.o-temporary',
+        '.o_Attachment.o-isUploading',
         "should have an uploading attachment"
     );
 
@@ -1907,7 +1945,7 @@ QUnit.test('remove an uploading attachment', async function (assert) {
     assert.containsNone(
         document.body,
         '.o_Composer .o_Attachment',
-        "should not have any attachment left after unlinking temporary one"
+        "should not have any attachment left after unlinking uploading one"
     );
 });
 
@@ -1988,6 +2026,183 @@ QUnit.test("Show a thread name in the recipient status text.", async function (a
         document.querySelector('.o_Composer_followers').textContent.replace(/\s+/g, ''),
         "To:Followersof\"testname\"",
         "basic rendering when sending a message to the followers and thread does have a name"
+    );
+});
+
+QUnit.test('send message only once when button send is clicked twice quickly', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].find(thread =>
+        thread.id === 20 &&
+        thread.model === 'mail.channel'
+    );
+    await this.createComposerComponent(thread.composer);
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_Composer_buttonSend`).click();
+        document.querySelector(`.o_Composer_buttonSend`).click();
+    });
+    assert.verifySteps(
+        ['message_post'],
+        "The message has been posted only once"
+    );
+});
+
+QUnit.test('send message only once when enter is pressed twice quickly', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({ id: 20 });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].find(thread =>
+        thread.id === 20 &&
+        thread.model === 'mail.channel'
+    );
+    await this.createComposerComponent(thread.composer, {
+        textInputSendShortcuts: ['enter'],
+    });
+    // Type message
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "test message");
+    });
+    await afterNextRender(() => {
+        const enterEvent = new window.KeyboardEvent('keydown', { key: 'Enter' });
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(enterEvent);
+    });
+    assert.verifySteps(
+        ['message_post'],
+        "The message has been posted only once"
+    );
+});
+
+QUnit.test("mentioned partners should not be notified if they are not member of current channel", async function (assert) {
+    assert.expect(4);
+
+    this.data['res.partner'].records.push({
+        email: "testpartner@example.com",
+        name: "TestPartner",
+    });
+    this.data['mail.channel'].records.push({
+        id: 10,
+        members: [this.data.currentPartnerId],
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.model === 'mail.channel' && args.method === 'message_post') {
+                assert.step('message_post');
+                assert.strictEqual(
+                    args.kwargs.partner_ids.length,
+                    0,
+                    "message_post should not contain mentioned partners that are not members of channel"
+                );
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 10,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    await afterNextRender(() => document.querySelector('.o_ComposerSuggestion').click());
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value.replace(/\s/, " "),
+        "@TestPartner ",
+        "text content of composer should have mentioned partner + additional whitespace afterwards"
+    );
+    await afterNextRender(() => document.querySelector('.o_Composer_buttonSend').click());
+    assert.verifySteps(['message_post'], "the message should be posted");
+});
+
+QUnit.test('[technical] does not crash when an attachment is removed before its upload starts', async function (assert) {
+    // Uploading multiple files uploads attachments one at a time, this test
+    // ensures that there is no crash when an attachment is destroyed before its
+    // upload started.
+    assert.expect(1);
+
+    // Promise to block attachment uploading
+    const uploadPromise = makeTestPromise();
+    await this.start({
+        async mockFetch(resource) {
+            const _super = this._super.bind(this, ...arguments);
+            if (resource === '/web/binary/upload_attachment') {
+                await uploadPromise;
+            }
+            return _super();
+        },
+    });
+    const composer = this.env.models['mail.composer'].create();
+    await this.createComposerComponent(composer);
+    const file1 = await createFile({
+        name: 'text1.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    const file2 = await createFile({
+        name: 'text2.txt',
+        content: 'hello, world',
+        contentType: 'text/plain',
+    });
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file1, file2]
+        )
+    );
+    await afterNextRender(() => {
+            Array.from(document.querySelectorAll('div'))
+            .find(el => el.textContent === 'text2.txt')
+            .closest('.o_Attachment')
+            .querySelector('.o_Attachment_asideItemUnlink')
+            .click();
+        }
+    );
+    // Simulates the completion of the upload of the first attachment
+    uploadPromise.resolve();
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment:contains("text1.txt")',
+        "should only have the first attachment after cancelling the second attachment"
     );
 });
 

@@ -62,6 +62,8 @@ from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_F
 from .tools.translate import _
 from .tools import date_utils
 from .tools import populate
+from .tools import unique
+from .tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -672,6 +674,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # reset properties memoized on cls
         cls._constraint_methods = BaseModel._constraint_methods
+        cls._ondelete_methods = BaseModel._ondelete_methods
         cls._onchange_methods = BaseModel._onchange_methods
 
     @property
@@ -693,6 +696,18 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # optimization: memoize result on cls, it will not be recomputed
         cls._constraint_methods = methods
+        return methods
+
+    @property
+    def _ondelete_methods(self):
+        """ Return a list of methods implementing checks before unlinking. """
+        def is_ondelete(func):
+            return callable(func) and hasattr(func, '_ondelete')
+
+        cls = type(self)
+        methods = [func for _, func in getmembers(cls, is_ondelete)]
+        # optimization: memoize results on cls, it will not be recomputed
+        cls._ondelete_methods = methods
         return methods
 
     @property
@@ -1077,7 +1092,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # make 'flush' available to the methods below, in the case where XMLID
         # resolution fails, for instance
-        flush_self = self.with_context(import_flush=flush)
+        flush_self = self.with_context(import_flush=flush, import_cache=LRU(1024))
 
         # TODO: break load's API instead of smuggling via context?
         limit = self._context.get('_import_limit')
@@ -1300,10 +1315,11 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # convert default values to the right format
         #
         # we explicitly avoid using _convert_to_write() for x2many fields,
-        # because the latter leaves values like [(4, 2), (4, 3)], which are not
-        # supported by the web client as default values; stepping through the
-        # cache allows to normalize such a list to [(6, 0, [2, 3])], which is
-        # properly supported by the web client
+        # because the latter leaves values like [(Command.LINK, 2), 
+        # (Command.LINK, 3)], which are not supported by the web client as
+        # default values; stepping through the cache allows to normalize
+        # such a list to [(Command.SET, 0, [2, 3])], which is properly
+        # supported by the web client
         for fname, value in defaults.items():
             if fname in self._fields:
                 field = self._fields[fname]
@@ -1807,18 +1823,33 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     @api.model
     def _add_missing_default_values(self, values):
         # avoid overriding inherited values when parent is set
-        avoid_models = {
-            parent_model
-            for parent_model, parent_field in self._inherits.items()
-            if parent_field in values
-        }
+        avoid_models = set()
+
+        def collect_models_to_avoid(model):
+            for parent_mname, parent_fname in model._inherits.items():
+                if parent_fname in values:
+                    avoid_models.add(parent_mname)
+                else:
+                    # manage the case where an ancestor parent field is set
+                    collect_models_to_avoid(self.env[parent_mname])
+
+        collect_models_to_avoid(self)
+
+        def avoid(field):
+            # check whether the field is inherited from one of avoid_models
+            if avoid_models:
+                while field.inherited:
+                    field = field.related_field
+                    if field.model_name in avoid_models:
+                        return True
+            return False
 
         # compute missing fields
         missing_defaults = {
             name
             for name, field in self._fields.items()
             if name not in values
-            if not (field.inherited and field.related_field.model_name in avoid_models)
+            if not avoid(field)
         }
 
         if not missing_defaults:
@@ -1829,10 +1860,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for name, value in defaults.items():
             if self._fields[name].type == 'many2many' and value and isinstance(value[0], int):
                 # convert a list of ids into a list of commands
-                defaults[name] = [(6, 0, value)]
+                defaults[name] = [Command.set(value)]
             elif self._fields[name].type == 'one2many' and value and isinstance(value[0], dict):
                 # convert a list of dicts into a list of commands
-                defaults[name] = [(0, 0, x) for x in value]
+                defaults[name] = [Command.create(x) for x in value]
         defaults.update(values)
         return defaults
 
@@ -1954,7 +1985,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :param list data: the data containing groups
         :param list groupby: name of the first group by
         :param list aggregated_fields: list of aggregated fields in the query
-        :param relativedelta interval: interval between to temporal groups
+        :param relativedelta interval: interval between two temporal groups
                 expressed as a relativedelta month by default
         :rtype: list
         :return: list
@@ -2790,7 +2821,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 "Invalid _rec_name=%r for model %r" % (cls._rec_name, cls._name)
         elif 'name' in cls._fields:
             cls._rec_name = 'name'
-        elif 'x_name' in cls._fields:
+        elif cls._custom and 'x_name' in cls._fields:
             cls._rec_name = 'x_name'
 
         # 6. determine and validate active_name
@@ -3397,10 +3428,16 @@ Fields:
         self.check_access_rights('unlink')
         self._check_concurrency()
 
+        from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+        for func in self._ondelete_methods:
+            # func._ondelete is True if it should be called during uninstallation
+            if func._ondelete or not self._context.get(MODULE_UNINSTALL_FLAG):
+                func(self)
+
         # mark fields that depend on 'self' to recompute them after 'self' has
         # been deleted (like updating a sum of lines after deleting one line)
         self.flush()
-        self.modified(self._fields)
+        self.modified(self._fields, before=True)
 
         with self.env.norecompute():
             self.check_access_rule('unlink')
@@ -3514,37 +3551,18 @@ Fields:
               :const:`odoo.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`
         * .. _openerp/models/relationals/format:
 
-          :class:`~odoo.fields.One2many` and
-          :class:`~odoo.fields.Many2many` use a special "commands" format to
-          manipulate the set of records stored in/associated with the field.
-
-          This format is a list of triplets executed sequentially, where each
-          triplet is a command to execute on the set of records. Not all
-          commands apply in all situations. Possible commands are:
-
-          ``(0, 0, values)``
-              adds a new record created from the provided ``value`` dict.
-          ``(1, id, values)``
-              updates an existing record of id ``id`` with the values in
-              ``values``. Can not be used in :meth:`~.create`.
-          ``(2, id, 0)``
-              removes the record of id ``id`` from the set, then deletes it
-              (from the database). Can not be used in :meth:`~.create`.
-          ``(3, id, 0)``
-              removes the record of id ``id`` from the set, but does not
-              delete it. Can not be used in
-              :meth:`~.create`.
-          ``(4, id, 0)``
-              adds an existing record of id ``id`` to the set.
-          ``(5, 0, 0)``
-              removes all records from the set, equivalent to using the
-              command ``3`` on every record explicitly. Can not be used in
-              :meth:`~.create`.
-          ``(6, 0, ids)``
-              replaces all existing records in the set by the ``ids`` list,
-              equivalent to using the command ``5`` followed by a command
-              ``4`` for each ``id`` in ``ids``.
-        """
+          The expected value of a :class:`~odoo.fields.One2many` or
+          :class:`~odoo.fields.Many2many` relational field is a list of
+          :class:`~odoo.fields.Command` that manipulate the relation the
+          implement. There are a total of 7 commands:
+          :meth:`~odoo.fields.Command.create`,
+          :meth:`~odoo.fields.Command.update`,
+          :meth:`~odoo.fields.Command.delete`,
+          :meth:`~odoo.fields.Command.unlink`,
+          :meth:`~odoo.fields.Command.link`,
+          :meth:`~odoo.fields.Command.clear`, and
+          :meth:`~odoo.fields.Command.set`.
+          """
         if not self:
             return True
 
@@ -3600,8 +3618,25 @@ Fields:
 
         # protect fields being written against recomputation
         with env.protecting(protected, self):
-            # determine records depending on values
-            self.modified(relational_names)
+            # Determine records depending on values. When modifying a relational
+            # field, you have to recompute what depends on the field's values
+            # before and after modification.  This is because the modification
+            # has an impact on the "data path" between a computed field and its
+            # dependency.  Note that this double call to modified() is only
+            # necessary for relational fields.
+            #
+            # It is best explained with a simple example: consider two sales
+            # orders SO1 and SO2.  The computed total amount on sales orders
+            # indirectly depends on the many2one field 'order_id' linking lines
+            # to their sales order.  Now consider the following code:
+            #
+            #   line = so1.line_ids[0]      # pick a line from SO1
+            #   line.order_id = so2         # move the line to SO2
+            #
+            # In this situation, the total amount must be recomputed on *both*
+            # sales order: the line's order before the modification, and the
+            # line's order after the modification.
+            self.modified(relational_names, before=True)
 
             real_recs = self.filtered('id')
 
@@ -4519,11 +4554,11 @@ Fields:
                 # duplicate following the order of the ids because we'll rely on
                 # it later for copying translations in copy_translation()!
                 lines = [rec.copy_data()[0] for rec in self[name].sorted(key='id')]
-                # the lines are duplicated using the wrong (old) parent, but then
-                # are reassigned to the correct one thanks to the (0, 0, ...)
-                default[name] = [(0, 0, line) for line in lines if line]
+                # the lines are duplicated using the wrong (old) parent, but then are
+                # reassigned to the correct one thanks to the (Command.CREATE, 0, ...)
+                default[name] = [Command.create(line) for line in lines if line]
             elif field.type == 'many2many':
-                default[name] = [(6, 0, self[name].ids)]
+                default[name] = [Command.set(self[name].ids)]
             else:
                 default[name] = field.convert_to_write(self[name], self)
 
@@ -4825,6 +4860,10 @@ Fields:
 
     def _register_hook(self):
         """ stuff to do right after the registry is built """
+        pass
+
+    def _unregister_hook(self):
+        """ Clean up what `~._register_hook` has done. """
         pass
 
     @classmethod
@@ -5266,7 +5305,7 @@ Fields:
                         model = model[fname]
                 if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
                     value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
-                records_ids = set()
+                records_ids = OrderedSet()
                 for rec in self:
                     data = rec.mapped(key)
                     if comparator in ('child_of', 'parent_of'):
@@ -5685,14 +5724,14 @@ Fields:
                [(invf, None) for f in fields for invf in self._field_inverses[f]]
         self.env.cache.invalidate(spec)
 
-    def modified(self, fnames, create=False):
-        """ Notify that fields have been modified on ``self``. This invalidates
-            the cache, and prepares the recomputation of stored function fields
-            (new-style fields only).
+    def modified(self, fnames, create=False, before=False):
+        """ Notify that fields will be or have been modified on ``self``. This
+        invalidates the cache where necessary, and prepares the recomputation of
+        dependent stored fields.
 
-            :param fnames: iterable of field names that have been modified on
-                records ``self``
-            :param create: whether modified is called in the context of record creation
+        :param fnames: iterable of field names modified on records ``self``
+        :param create: whether called in the context of record creation
+        :param before: whether called before modifying records ``self``
         """
         if not self or not fnames:
             return
@@ -5725,34 +5764,58 @@ Fields:
                 node = self.pool.field_triggers.get(self._fields[fname])
                 if node:
                     trigger_tree_merge(tree, node)
-        if tree:
-            self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
 
-    def _modified_triggers(self, tree, create=False):
-        """ Process a tree of field triggers on ``self``. """
-        if not self:
-            return
-        for key, val in tree.items():
-            if key is None:
-                # val is a list of fields to mark as todo
-                for field in val:
-                    records = self - self.env.protected(field)
-                    if not records:
-                        continue
+        if tree:
+            # determine what to compute (through an iterator)
+            tocompute = self.sudo().with_context(active_test=False)._modified_triggers(tree, create)
+
+            # When called after modification, one should traverse backwards
+            # dependencies by taking into account all fields already known to be
+            # recomputed.  In that case, we mark fieds to compute as soon as
+            # possible.
+            #
+            # When called before modification, one should mark fields to compute
+            # after having inversed all dependencies.  This is because we
+            # determine what currently depends on self, and it should not be
+            # recomputed before the modification!
+            if before:
+                tocompute = list(tocompute)
+
+            # process what to compute
+            for field, records, create in tocompute:
+                records -= self.env.protected(field)
+                if not records:
+                    continue
+                if field.compute and field.store:
+                    if field.recursive:
+                        recursively_marked = self.env.not_to_compute(field, records)
+                    self.env.add_to_compute(field, records)
+                else:
                     # Dont force the recomputation of compute fields which are
                     # not stored as this is not really necessary.
-                    recursive = not create and field.recursive
-                    if field.compute and field.store:
-                        if recursive:
-                            added = self.env.not_to_compute(field, records)
-                        self.env.add_to_compute(field, records)
-                    else:
-                        if recursive:
-                            added = self & self.env.cache.get_records(self, field)
-                        self.env.cache.invalidate([(field, records._ids)])
-                    # recursively trigger recomputation of field's dependents
-                    if recursive:
-                        added.modified([field.name])
+                    if field.recursive:
+                        recursively_marked = records & self.env.cache.get_records(records, field)
+                    self.env.cache.invalidate([(field, records._ids)])
+                # recursively trigger recomputation of field's dependents
+                if field.recursive:
+                    recursively_marked.modified([field.name], create)
+
+    def _modified_triggers(self, tree, create=False):
+        """ Return an iterator traversing a tree of field triggers on ``self``,
+        traversing backwards field dependencies along the way, and yielding
+        tuple ``(field, records, created)`` to recompute.
+        """
+        if not self:
+            return
+
+        # first yield what to compute
+        for field in tree.get(None, ()):
+            yield field, self, create
+
+        # then traverse dependencies backwards, and proceed recursively
+        for key, val in tree.items():
+            if key is None:
+                continue
             elif create and key.type in ('many2one', 'many2one_reference'):
                 # upon creation, no other record has a reference to self
                 continue
@@ -5792,7 +5855,7 @@ Fields:
                     if new_records:
                         cache_records = self.env.cache.get_records(model, key)
                         records |= cache_records.filtered(lambda r: set(r[key.name]._ids) & set(self._ids))
-                records._modified_triggers(val)
+                yield from records._modified_triggers(val)
 
     @api.model
     def recompute(self, fnames=None, records=None):
@@ -6028,7 +6091,7 @@ Fields:
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
                         # x2many fields: serialize value as commands
-                        result[name] = commands = [(5,)]
+                        result[name] = commands = [Command.clear()]
                         # The purpose of the following line is to enable the prefetching.
                         # In the loop below, line._prefetch_ids actually depends on the
                         # value of record[name] in cache (see prefetch_ids on x2many
@@ -6036,14 +6099,16 @@ Fields:
                         # diff(), therefore evaluating line._prefetch_ids with an empty
                         # cache simply returns nothing, which discards the prefetching
                         # optimization!
-                        record[name]
+                        record._cache[name] = tuple(
+                            line_snapshot['<record>'].id for line_snapshot in self[name]
+                        )
                         for line_snapshot in self[name]:
                             line = line_snapshot['<record>']
                             line = line._origin or line
                             if not line.id:
                                 # new line: send diff from scratch
                                 line_diff = line_snapshot.diff({})
-                                commands.append((0, line.id.ref or 0, line_diff))
+                                commands.append((Command.CREATE, line.id.ref or 0, line_diff))
                             else:
                                 # existing line: check diff from database
                                 # (requires a clean record cache!)
@@ -6052,19 +6117,21 @@ Fields:
                                     # send all fields because the web client
                                     # might need them to evaluate modifiers
                                     line_diff = line_snapshot.diff({})
-                                    commands.append((1, line.id, line_diff))
+                                    commands.append(Command.update(line.id, line_diff))
                                 else:
-                                    commands.append((4, line.id))
+                                    commands.append(Command.link(line.id))
                 return result
 
         nametree = PrefixTree(self.browse(), field_onchange)
 
         if first_call:
-            values.update(self.default_get([
-                name
-                for name in nametree
-                if name not in values
-            ]))
+            names = [name for name in values if name != 'id']
+            missing_names = [name for name in nametree if name not in values]
+            defaults = self.default_get(missing_names)
+            for name in missing_names:
+                values[name] = defaults.get(name, False)
+                if name in defaults:
+                    names.append(name)
 
         # prefetch x2many lines: this speeds up the initial snapshot by avoiding
         # to compute fields on new records as much as possible, as that can be
@@ -6074,9 +6141,9 @@ Fields:
                 # retrieve all line ids in commands
                 line_ids = set()
                 for cmd in values[name]:
-                    if cmd[0] in (1, 4):
+                    if cmd[0] in (Command.UPDATE, Command.LINK):
                         line_ids.add(cmd[1])
-                    elif cmd[0] == 6:
+                    elif cmd[0] == Command.SET:
                         line_ids.update(cmd[2])
                 # prefetch stored fields on lines
                 lines = self[name].browse(line_ids)
@@ -6131,14 +6198,17 @@ Fields:
         # store changed values in cache; also trigger recomputations based on
         # subfields (e.g., line.a has been modified, line.b is computed stored
         # and depends on line.a, but line.b is not in the form view)
-        record._update_cache(changed_values, validate=True)
+        record._update_cache(changed_values, validate=False)
 
         # update snapshot0 with changed values
         for name in names:
             snapshot0.fetch(name)
 
-        # determine which field(s) should be triggered an onchange
-        todo = list(names or nametree)
+        # Determine which field(s) should be triggered an onchange. On the first
+        # call, 'names' only contains fields with a default. If 'self' is a new
+        # line in a one2many field, 'names' also contains the one2many's inverse
+        # field, and that field may not be in nametree.
+        todo = list(unique(itertools.chain(names, nametree))) if first_call else list(names)
         done = set()
 
         # dummy assignment: trigger invalidations on the record
@@ -6222,8 +6292,9 @@ Fields:
 
             It is the responsibility of the generator to handle the field_name correctly.
             The generator could generate values for multiple fields together. In this case,
-            the field_name should be more a "field_group", covering the different fields
-            updated by the generator (e.g. "_address" for a generator updating multiple address fields).
+            the field_name should be more a "field_group" (should be begin by a "_"), covering
+            the different fields updated by the generator (e.g. "_address" for a generator
+            updating multiple address fields).
         """
         return []
 
@@ -6487,4 +6558,4 @@ def lazy_name_get(self):
 
 # keep those imports here to avoid dependency cycle errors
 from .osv import expression
-from .fields import Field, Datetime
+from .fields import Field, Datetime, Command

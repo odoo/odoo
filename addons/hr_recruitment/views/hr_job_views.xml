@@ -32,7 +32,7 @@
                                     <div class="o_primary col-12">
                                         <span><t t-esc="record.name.value"/></span>
                                     </div>
-                                    <div class="o_kanban_record_subtitle col-12 text-muted">
+                                    <div class="col-12 text-muted">
                                         <field name="user_id" />
                                     </div>
                                     <field name="is_favorite" widget="boolean_favorite" nolabel="1"/>
@@ -44,7 +44,7 @@
                                     <a class="o_kanban_manage_toggle_button" href="#"><i class="fa fa-ellipsis-v" role="img" aria-label="Manage" title="Manage"/></a>
                                 </div>
                             </div>
-                            <div class="container o_kanban_card_content">
+                            <div class="container o_kanban_card_content mt-0 mt-sm-3">
                                 <t t-if="record.state.raw_value == 'recruit'">
                                     <div class="row">
                                         <div class="col-6">
@@ -69,7 +69,7 @@
                                     <div class="o_recruitment_kanban_box o_kanban_primary_bottom bottom_block" style="padding-left:8px;">
                                         <div class="col-6"></div>
                                         <div class="col-6 o_link_trackers">
-                                            <a role="button" name="%(hr_recruitment.action_hr_job_sources)d" type="action" class="btn btn-sm ">
+                                            <a role="button" name="%(hr_recruitment.action_hr_job_sources)d" type="action" class="btn btn-sm py-0">
                                                 <span title="Link Trackers"><i class="fa fa-lg fa-envelope" role="img" aria-label="Link Trackers"/></span> 
                                             </a>
                                         </div>

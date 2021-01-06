@@ -44,6 +44,12 @@ odoo.define('point_of_sale.ClientDetailsEdit', function(require) {
                     processedChanges[key] = value;
                 }
             }
+            if ((!this.props.partner.name && !processedChanges.name) ||
+                processedChanges.name === '' ){
+                return this.showPopup('ErrorPopup', {
+                  title: _('A Customer Name Is Required'),
+                });
+            }
             processedChanges.id = this.props.partner.id || false;
             this.trigger('save-changes', { processedChanges });
         }

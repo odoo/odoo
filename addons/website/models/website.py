@@ -16,6 +16,7 @@ from odoo import api, fields, models, tools
 from odoo.addons.http_routing.models.ir_http import slugify, _guess_mimetype, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.portal.controllers.portal import pager
+from odoo.exceptions import UserError
 from odoo.http import request
 from odoo.modules.module import get_resource_path
 from odoo.osv.expression import FALSE_DOMAIN
@@ -219,6 +220,12 @@ class Website(models.Model):
     def _handle_favicon(self, vals):
         if 'favicon' in vals:
             vals['favicon'] = tools.image_process(vals['favicon'], size=(256, 256), crop='center', output_format='ICO')
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_last_remaining_website(self):
+        website = self.search([('id', 'not in', self.ids)], limit=1)
+        if not website:
+            raise UserError(_('You must keep at least one website.'))
 
     def unlink(self):
         # Do not delete invoices, delete what's strictly necessary
@@ -861,7 +868,9 @@ class Website(models.Model):
                 record['lastmod'] = page['write_date'].date()
             yield record
 
-    def _get_website_pages(self, domain=[], order='name', limit=None):
+    def _get_website_pages(self, domain=None, order='name', limit=None):
+        if domain is None:
+            domain = []
         domain += self.get_current_website().website_domain()
         pages = self.env['website.page'].sudo().search(domain, order=order, limit=limit)
         return pages

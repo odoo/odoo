@@ -20,7 +20,7 @@ class AccountMove(models.Model):
 
     def get_portal_last_transaction(self):
         self.ensure_one()
-        return self.transaction_ids.get_last_transaction()
+        return self.with_context(active_test=False).transaction_ids.get_last_transaction()
 
     def _create_payment_transaction(self, vals):
         '''Similar to self.env['payment.transaction'].create(vals) but the values are filled with the
@@ -67,7 +67,7 @@ class AccountMove(models.Model):
 
         # Check a journal is set on acquirer.
         if not acquirer.journal_id:
-            raise ValidationError(_('A journal must be specified of the acquirer %s.', acquirer.name))
+            raise ValidationError(_('A journal must be specified for the acquirer %s.', acquirer.name))
 
         if not acquirer_id and acquirer:
             vals['acquirer_id'] = acquirer.id

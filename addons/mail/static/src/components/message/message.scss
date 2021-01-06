@@ -56,6 +56,11 @@
     > p:last-of-type {
         margin-bottom: 0;
     }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
 }
 
 .o_Message_core {
@@ -226,6 +231,10 @@
         .o_Message_commands {
             display: flex;
         }
+    }
+
+    &.o-has-message-selection:not(.o-selected) {
+        opacity: 0.5;
     }
 }
 

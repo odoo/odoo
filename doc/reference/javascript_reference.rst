@@ -1187,7 +1187,7 @@ may need to directly call a controller (available on some route).
 Notifications
 ==============
 
-The Odoo framework has a standard way to communicate various informations to the
+The Odoo framework has a standard way to communicate various information to the
 user: notifications, which are displayed on the top right of the user interface.
 
 There are two types of notifications:
@@ -2274,6 +2274,11 @@ reference (FieldReference)
   arbitrary model.
 
   - Supported field types: *char, reference*
+
+    Options:
+
+    - model_field: name of a FieldMany2One('ir.model') containing the model of the records that can be selected.
+       When this option is set, the select part of the FieldReference isn't displayed.
 
 
 Client actions

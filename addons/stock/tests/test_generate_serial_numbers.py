@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.exceptions import UserError, ValidationError
-from odoo.tests.common import Form, SavepointCase
+from odoo.tests.common import Form, TransactionCase
 
 
-class StockGenerate(SavepointCase):
+class StockGenerate(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super(StockGenerate, cls).setUpClass()

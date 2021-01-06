@@ -539,6 +539,22 @@ class _lt:
     def __lt__(self, other):
         raise NotImplementedError()
 
+    def __add__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return _._get_translation(self._source) + other
+        elif isinstance(other, _lt):
+            return _._get_translation(self._source) + _._get_translation(other._source)
+        return NotImplemented
+
+    def __radd__(self, other):
+        # Call _._get_translation() like _() does, so that we have the same number
+        # of stack frames calling _get_translation()
+        if isinstance(other, str):
+            return other + _._get_translation(self._source)
+        return NotImplemented
+
 _ = GettextAlias()
 
 
@@ -640,7 +656,7 @@ class PoFileReader:
             translation = entry.msgstr
             found_code_occurrence = False
             for occurrence, line_number in entry.occurrences:
-                match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([\w-]+)', occurrence)
+                match = re.match(r'(model|model_terms):([\w.]+),([\w]+):(\w+)\.([^ ]+)', occurrence)
                 if match:
                     type, model_name, field_name, module, xmlid = match.groups()
                     yield {
@@ -1130,17 +1146,17 @@ class TranslationModuleReader:
                 for fname in fnmatch.filter(files, '*.py'):
                     self._babel_extract_terms(fname, path, root,
                                               extract_keywords={'_': None, '_lt': None})
-                # Javascript source files in the static/src/js directory, rest is ignored (libs)
-                if fnmatch.fnmatch(root, '*/static/src/js*'):
+                if fnmatch.fnmatch(root, '*/static/src*'):
+                    # Javascript source files
                     for fname in fnmatch.filter(files, '*.js'):
                         self._babel_extract_terms(fname, path, root, 'javascript',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT],
                                                   extract_keywords={'_t': None, '_lt': None})
-                # QWeb template files
-                if fnmatch.fnmatch(root, '*/static/src/xml*'):
+                    # QWeb template files
                     for fname in fnmatch.filter(files, '*.xml'):
                         self._babel_extract_terms(fname, path, root, 'odoo.tools.translate:babel_extract_qweb',
                                                   extra_comments=[WEB_TRANSLATION_COMMENT])
+
                 if not recursive:
                     # due to topdown, first iteration is in first level
                     break

@@ -7,15 +7,16 @@ from unittest.mock import patch
 from odoo.addons.event.tests.common import TestEventCommon
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.fields import Datetime as FieldsDatetime, Date as FieldsDate
-from odoo.tests.common import SavepointCase
+from odoo.tests.common import TransactionCase
 
 
-class EventDtPatcher(SavepointCase):
+class EventDtPatcher(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
         super(EventDtPatcher, cls).setUpClass()
 
+        # Mock dates to have reproducible computed fields based on time
         cls.reference_now = datetime(2020, 7, 6, 10, 0, 0)
         cls.reference_today = datetime(2020, 7, 6)
 

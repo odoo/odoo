@@ -5,7 +5,7 @@ import ast
 import base64
 import re
 
-from odoo import _, api, fields, models, tools
+from odoo import _, api, fields, models, tools, Command
 from odoo.exceptions import UserError
 
 
@@ -63,25 +63,22 @@ class MailComposer(models.TransientModel):
             if missing_author:
                 result['author_id'] = author_id
 
-        result['composition_mode'] = result.get('composition_mode', 'comment')
-        result['model'] = result.get('model', self._context.get('active_model'))
-        result['res_id'] = result.get('res_id', self._context.get('active_id'))
-        if 'no_auto_thread' not in result and (result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post')):
-            result['no_auto_thread'] = True
+        if 'model' in fields and 'model' not in result:
+            result['model'] = self._context.get('active_model')
+        if 'res_id' in fields and 'res_id' not in result:
+            result['res_id'] = self._context.get('active_id')
+        if 'no_auto_thread' in fields and 'no_auto_thread' not in result and result.get('model'):
+            # doesn't support threading
+            if result['model'] not in self.env or not hasattr(self.env[result['model']], 'message_post'):
+                result['no_auto_thread'] = True
 
-        vals = {}
         if 'active_domain' in self._context:  # not context.get() because we want to keep global [] domains
-            vals['active_domain'] = '%s' % self._context.get('active_domain')
-        if result['composition_mode'] == 'comment':
-            vals.update(self.get_record_data(result))
+            result['active_domain'] = '%s' % self._context.get('active_domain')
+        if result.get('composition_mode') == 'comment' and (set(fields) & set(['model', 'res_id', 'partner_ids', 'record_name', 'subject'])):
+            result.update(self.get_record_data(result))
 
-        for field in vals:
-            if field in fields:
-                result[field] = vals[field]
-
-        if fields is not None:
-            [result.pop(field, None) for field in list(result) if field not in fields]
-        return result
+        filtered_result = dict((fname, result[fname]) for fname in result if fname in fields)
+        return filtered_result
 
     # content
     subject = fields.Char('Subject')
@@ -137,7 +134,8 @@ class MailComposer(models.TransientModel):
         'wizard_id', 'partner_id', 'Additional Contacts')
     # mass mode options
     notify = fields.Boolean('Notify followers', help='Notify followers of the document (mass post only)')
-    auto_delete = fields.Boolean('Delete Emails', help='This option permanently removes any track of email after send, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
+    auto_delete = fields.Boolean('Delete Emails',
+        help='This option permanently removes any track of email after it\'s been sent, including from the Technical menu in the Settings, in order to preserve storage space of your Odoo database.')
     auto_delete_message = fields.Boolean('Delete Message Copy', help='Do not keep a copy of the email in the document communication history (mass mailing only)')
     mail_server_id = fields.Many2one('ir.mail_server', 'Outgoing mail server')
 
@@ -177,7 +175,7 @@ class MailComposer(models.TransientModel):
     # to ensure the context is passed correctly
     def action_send_mail(self):
         self.send_mail()
-        return {'type': 'ir.actions.act_window_close', 'infos': 'mail_sent'}
+        return {'type': 'ir.actions.act_window_close'}
 
     def send_mail(self, auto_commit=False):
         """ Process the wizard content and proceed with sending the related
@@ -203,7 +201,7 @@ class MailComposer(models.TransientModel):
                     else:
                         new_attachment_ids.append(attachment.id)
                 new_attachment_ids.reverse()
-                wizard.write({'attachment_ids': [(6, 0, new_attachment_ids)]})
+                wizard.write({'attachment_ids': [Command.set(new_attachment_ids)]})
 
             # Mass Mailing
             mass_mode = wizard.composition_mode in ('mass_mail', 'mass_post')
@@ -328,7 +326,7 @@ class MailComposer(models.TransientModel):
                     mail_values['reply_to'] = mail_values['email_from']
                 # mail_mail values: body -> body_html, partner_ids -> recipient_ids
                 mail_values['body_html'] = mail_values.get('body', '')
-                mail_values['recipient_ids'] = [(4, id) for id in mail_values.pop('partner_ids', [])]
+                mail_values['recipient_ids'] = [Command.link(id) for id in mail_values.pop('partner_ids', [])]
 
                 # process attachments: should not be encoded before being processed by message_post / mail_mail create
                 mail_values['attachments'] = [(name, base64.b64decode(enc_cont)) for name, enc_cont in email_dict.pop('attachments', list())]
@@ -394,7 +392,7 @@ class MailComposer(models.TransientModel):
                 }
                 attachment_ids.append(Attachment.create(data_attach).id)
             if values.get('attachment_ids', []) or attachment_ids:
-                values['attachment_ids'] = [(6, 0, values.get('attachment_ids', []) + attachment_ids)]
+                values['attachment_ids'] = [Command.set(values.get('attachment_ids', []) + attachment_ids)]
         else:
             default_values = self.with_context(default_composition_mode=composition_mode, default_model=model, default_res_id=res_id).default_get(['composition_mode', 'model', 'res_id', 'parent_id', 'partner_ids', 'subject', 'body', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'])
             values = dict((key, default_values[key]) for key in ['subject', 'body', 'partner_ids', 'email_from', 'reply_to', 'attachment_ids', 'mail_server_id'] if key in default_values)
@@ -419,7 +417,7 @@ class MailComposer(models.TransientModel):
                 'subject': record.subject or False,
                 'body_html': record.body or False,
                 'model_id': model.id or False,
-                'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])],
+                'attachment_ids': [Command.set([att.id for att in record.attachment_ids])],
             }
             template = self.env['mail.template'].create(values)
             # generate the saved template

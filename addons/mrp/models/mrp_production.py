@@ -8,7 +8,6 @@ import re
 
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
-from itertools import groupby
 
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
@@ -75,7 +74,7 @@ class MrpProduction(models.Model):
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
     priority = fields.Selection(
-        PROCUREMENT_PRIORITIES, string='Priority', default='0', index=True,
+        PROCUREMENT_PRIORITIES, string='Priority', default='0',
         help="Components will be reserved first for the MO with the highest priorities.")
     backorder_sequence = fields.Integer("Backorder Sequence", default=0, copy=False, help="Backorder sequence, if equals to 0 means there is not related backorder")
     origin = fields.Char(
@@ -137,8 +136,8 @@ class MrpProduction(models.Model):
     date_deadline = fields.Datetime(
         'Deadline', copy=False, store=True, readonly=True, compute='_compute_date_deadline', inverse='_set_date_deadline',
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
-    date_start = fields.Datetime('Start Date', copy=False, index=True, readonly=True)
-    date_finished = fields.Datetime('End Date', copy=False, index=True, readonly=True)
+    date_start = fields.Datetime('Start Date', copy=False, readonly=True, help="Date of the WO")
+    date_finished = fields.Datetime('End Date', copy=False, readonly=True, help="Date when the MO has been close")
     bom_id = fields.Many2one(
         'mrp.bom', 'Bill of Material',
         readonly=True, states={'draft': [('readonly', False)]},
@@ -398,6 +397,8 @@ class MrpProduction(models.Model):
 
     @api.depends('product_id', 'company_id')
     def _compute_production_location(self):
+        if not self.company_id:
+            return
         location_by_company = self.env['stock.location'].read_group([
             ('company_id', 'in', self.company_id.ids),
             ('usage', '=', 'production')
@@ -521,7 +522,7 @@ class MrpProduction(models.Model):
         return ['|', ('move_raw_ids', 'in', late_stock_moves.ids), ('move_finished_ids', 'in', late_stock_moves.ids)]
 
     @api.onchange('company_id')
-    def onchange_company_id(self):
+    def _onchange_company_id(self):
         if self.company_id:
             if self.move_raw_ids:
                 self.move_raw_ids.update({'company_id': self.company_id})
@@ -532,7 +533,7 @@ class MrpProduction(models.Model):
                 ], limit=1).id
 
     @api.onchange('product_id', 'picking_type_id', 'company_id')
-    def onchange_product_id(self):
+    def _onchange_product_id(self):
         """ Finds UoM of changed product. """
         if not self.product_id:
             self.bom_id = False
@@ -567,9 +568,9 @@ class MrpProduction(models.Model):
         self.move_finished_ids = [(2, move.id) for move in self.move_finished_ids]
         self.picking_type_id = self.bom_id.picking_type_id or self.picking_type_id
 
-    @api.onchange('date_planned_start')
+    @api.onchange('date_planned_start', 'product_id')
     def _onchange_date_planned_start(self):
-        if not self.is_planned:
+        if self.date_planned_start and not self.is_planned:
             date_planned_finished = self.date_planned_start + relativedelta(days=self.product_id.produce_delay)
             date_planned_finished = date_planned_finished + relativedelta(days=self.company_id.manufacturing_lead)
             if date_planned_finished == self.date_planned_start:
@@ -644,16 +645,12 @@ class MrpProduction(models.Model):
         self.move_finished_ids = update_value_list
 
     @api.onchange('picking_type_id')
-    def onchange_picking_type(self):
-        location = self.env.ref('stock.stock_location_stock')
-        try:
-            location.check_access_rule('read')
-        except (AttributeError, AccessError):
-            location = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1).lot_stock_id
-        self.move_raw_ids.update({'picking_type_id': self.picking_type_id})
-        self.move_finished_ids.update({'picking_type_id': self.picking_type_id})
-        self.location_src_id = self.picking_type_id.default_location_src_id.id or location.id
-        self.location_dest_id = self.picking_type_id.default_location_dest_id.id or location.id
+    def _onchange_picking_type(self):
+        if not self.picking_type_id.default_location_src_id or not self.picking_type_id.default_location_dest_id.id:
+            company_id = self.company_id.id if (self.company_id and self.company_id in self.env.companies) else self.env.company.id
+            fallback_loc = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).lot_stock_id
+        self.location_src_id = self.picking_type_id.default_location_src_id.id or fallback_loc.id
+        self.location_dest_id = self.picking_type_id.default_location_dest_id.id or fallback_loc.id
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
@@ -759,15 +756,17 @@ class MrpProduction(models.Model):
             production._onchange_move_finished()
         return production
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_done(self):
         if any(production.state == 'done' for production in self):
             raise UserError(_('Cannot delete a manufacturing order in done state.'))
-        self.action_cancel()
         not_cancel = self.filtered(lambda m: m.state != 'cancel')
         if not_cancel:
             productions_name = ', '.join([prod.display_name for prod in not_cancel])
             raise UserError(_('%s cannot be deleted. Try to cancel them before.', productions_name))
 
+    def unlink(self):
+        self.action_cancel()
         workorders_to_delete = self.workorder_ids.filtered(lambda wo: wo.state != 'done')
         if workorders_to_delete:
             workorders_to_delete.unlink()
@@ -799,7 +798,6 @@ class MrpProduction(models.Model):
                         'product_uom_id': production.product_uom_id.id,
                         'operation_id': operation.id,
                         'state': 'pending',
-                        'consumption': production.consumption,
                     }]
             production.workorder_ids = [(5, 0)] + [(0, 0, value) for value in workorders_values]
             for workorder in production.workorder_ids:
@@ -1378,6 +1376,7 @@ class MrpProduction(models.Model):
                 for move in production.move_raw_ids | production.move_finished_ids:
                     if not move.additional:
                         qty_to_split = move.product_uom_qty - move.unit_factor * production.qty_producing
+                        qty_to_split = move.product_uom._compute_quantity(qty_to_split, move.product_id.uom_id, rounding_method='HALF-UP')
                         move_vals = move._split(qty_to_split)
                         if not move_vals:
                             continue
@@ -1388,8 +1387,8 @@ class MrpProduction(models.Model):
                         new_moves_vals.append(move_vals[0])
                 new_moves = self.env['stock.move'].create(new_moves_vals)
             backorders |= backorder_mo
-            for wo in backorder_mo.workorder_ids:
-                wo.qty_produced = 0
+            for old_wo, wo in zip(production.workorder_ids, backorder_mo.workorder_ids):
+                wo.qty_produced = max(old_wo.qty_produced - old_wo.qty_producing, 0)
                 if wo.product_tracking == 'serial':
                     wo.qty_producing = 1
                 else:
@@ -1523,14 +1522,7 @@ class MrpProduction(models.Model):
             order._check_sn_uniqueness()
 
     def do_unreserve(self):
-        for production in self:
-            production.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
-        return True
-
-    def button_unreserve(self):
-        self.ensure_one()
-        self.do_unreserve()
-        return True
+        self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))._do_unreserve()
 
     def button_scrap(self):
         self.ensure_one()

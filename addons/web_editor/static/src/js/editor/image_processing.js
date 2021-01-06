@@ -305,17 +305,19 @@ async function activateCropper(image, aspectRatio, dataset) {
  *   this would be passed as 'this._rpc.bind(this)' from widgets.
  */
 async function loadImageInfo(img, rpc) {
+    const src = img.getAttribute('src');
     // If there is a marked originalSrc, the data is already loaded.
-    if (img.dataset.originalSrc) {
+    if (img.dataset.originalSrc || !src) {
         return;
     }
 
     const {original} = await rpc({
         route: '/web_editor/get_image_info',
-        params: {src: img.getAttribute('src').split(/[?#]/)[0]},
+        params: {src: src.split(/[?#]/)[0]},
     });
     // Check that url is local.
-    if (original && new URL(original.image_src, window.location.origin).origin === window.location.origin) {
+    const isLocal = original && new URL(original.image_src, window.location.origin).origin === window.location.origin;
+    if (isLocal && original.image_src) {
         img.dataset.originalId = original.id;
         img.dataset.originalSrc = original.image_src;
         img.dataset.mimetype = original.mimetype;

@@ -76,7 +76,7 @@
                     <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object"/>
                     <button name="button_plan" attrs="{'invisible': ['|', '|', ('state', 'not in', ('confirmed', 'progress', 'to_close')), ('workorder_ids', '=', []), ('is_planned', '=', True)]}" type="object" string="Plan" class="oe_highlight"/>
                     <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': ['|', '|', ('is_planned', '!=', 'True'), ('date_planned_start', '=', False), ('date_planned_finished', '=', False)]}"/>
-                    <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
+                    <button name="do_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
                     <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
                     <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}" string="Unlock" groups="mrp.group_mrp_manager" type="object" help="Unlock the manufacturing order to adjust what has been consumed or produced."/>
@@ -173,7 +173,7 @@
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
-                                    attrs="{'readonly': ['|', ('is_planned', '=', True), ('state', 'in', ['close', 'cancel'])]}"
+                                    attrs="{'readonly': ['|', ('is_planned', '=', True), ('state', 'in', ['done', 'cancel'])]}"
                                     decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
@@ -282,7 +282,7 @@
                             </field>
                         </page>
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'form_view_ref': 'mrp.mrp_production_workorder_form_view_inherit', 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'form_view_ref': 'mrp.mrp_production_workorder_form_view_inherit', 'default_product_uom_id': product_uom_id}"/>
                         </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
                             <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
@@ -425,15 +425,6 @@
             </field>
         </record>
 
-        <record id="view_production_gantt" model="ir.ui.view">
-            <field name="name">mrp.production.gantt</field>
-            <field name="model">mrp.production</field>
-            <field name="arch" type="xml">
-                <gantt date_stop="date_finished" date_start="date_start" string="Productions" create="0">
-                </gantt>
-            </field>
-        </record>
-
         <record id="view_production_pivot" model="ir.ui.view">
             <field name="name">mrp.production.pivot</field>
             <field name="model">mrp.production</field>
@@ -448,8 +439,9 @@
             <field name="name">mrp.production.graph</field>
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
-                <graph string="Manufacturing Orders" type="line" sample="1">
+                <graph string="Manufacturing Orders" type="bar" stacked="False" sample="1">
                     <field name="date_planned_finished"/>
+                    <field name="product_uom_qty" type="measure" />                    
                 </graph>
             </field>
         </record>
@@ -555,6 +547,7 @@
             <field name="res_model">mrp.production</field>
             <field name="view_mode">graph,pivot,form</field>
             <field name="target">current</field>
+            <field name="context">{'search_default_scheduled_date': 1, 'search_default_product': 2, 'default_company_id': allowed_company_ids[0]}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No data yet!

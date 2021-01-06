@@ -4,6 +4,7 @@
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.exceptions import AccessError
 from odoo.tools.translate import _
 
 
@@ -58,12 +59,17 @@ class MailNotification(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        messages = self.env['mail.message'].browse(vals['mail_message_id'] for vals in vals_list)
+        messages.check_access_rights('read')
+        messages.check_access_rule('read')
         for vals in vals_list:
             if vals.get('is_read'):
                 vals['read_date'] = fields.Datetime.now()
         return super(MailNotification, self).create(vals_list)
 
     def write(self, vals):
+        if ('mail_message_id' in vals or 'res_partner_id' in vals) and not self.env.is_admin():
+            raise AccessError(_("Can not update the message or recipient of a notification."))
         if vals.get('is_read'):
             vals['read_date'] = fields.Datetime.now()
         return super(MailNotification, self).write(vals)
@@ -100,5 +106,5 @@ class MailNotification(models.Model):
             'notification_type': notif.notification_type,
             'notification_status': notif.notification_status,
             'failure_type': notif.failure_type,
-            'res_partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name],
+            'res_partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name] if notif.res_partner_id else False,
         } for notif in self]

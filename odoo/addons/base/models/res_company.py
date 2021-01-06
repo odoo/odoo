@@ -7,7 +7,7 @@ import logging
 import os
 import re
 
-from odoo import api, fields, models, tools, _
+from odoo import api, fields, models, tools, _, Command
 from odoo.exceptions import ValidationError, UserError
 from odoo.modules.module import get_resource_path
 
@@ -82,9 +82,10 @@ class Company(models.Model):
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
+    mobile = fields.Char(related='partner_id.mobile', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
     vat = fields.Char(related='partner_id.vat', string="Tax ID", readonly=False)
-    company_registry = fields.Char()
+    company_registry = fields.Char(compute='_compute_company_registry', store=True, readonly=False)
     paperformat_id = fields.Many2one('report.paperformat', 'Paper format', default=lambda self: self.env.ref('base.paperformat_euro', raise_if_not_found=False))
     external_report_layout_id = fields.Many2one('ir.ui.view', 'Document Template')
     base_onboarding_company_state = fields.Selection([
@@ -115,6 +116,11 @@ class Company(models.Model):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
 
+    def _compute_company_registry(self):
+        # exists to allow overrides
+        for company in self:
+            company.company_registry = company.company_registry
+    
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
     def _compute_address(self):
@@ -212,7 +218,7 @@ class Company(models.Model):
         self.clear_caches()
         company = super(Company, self).create(vals)
         # The write is made on the user to set it automatically in the multi company group.
-        self.env.user.write({'company_ids': [(4, company.id)]})
+        self.env.user.write({'company_ids': [Command.link(company.id)]})
 
         # Make sure that the selected currency is enabled
         if vals.get('currency_id'):

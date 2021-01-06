@@ -374,6 +374,45 @@ QUnit.test("suggested recipients list display 3 suggested recipient and 'show mo
     );
 });
 
+QUnit.test("suggested recipients should not be notified when posting an internal note", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({
+        display_name: "John Jane",
+        email: "john@jane.be",
+        id: 100,
+    });
+    this.data['res.fake'].records.push({
+        id: 10,
+        partner_ids: [100],
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.model === 'res.fake' && args.method === 'message_post') {
+                assert.strictEqual(
+                    args.kwargs.partner_ids.length,
+                    0,
+                    "message_post should not contain suggested recipients when posting an internal note"
+                );
+            }
+            return this._super(...arguments);
+        },
+    });
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 10,
+        threadModel: 'res.fake',
+    });
+    await this.createChatterComponent({ chatter });
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
+    );
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+});
+
 });
 });
 });

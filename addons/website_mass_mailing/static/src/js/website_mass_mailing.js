@@ -79,7 +79,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             return false;
         }
         this.$target.removeClass('o_has_error').find('.form-control').removeClass('is-invalid');
-        const tokenObj = await this._recaptcha.getToken('website_form');
+        const tokenObj = await this._recaptcha.getToken('website_mass_mailing_subscribe');
         if (tokenObj.error) {
             self.displayNotification({
                 type: 'danger',
@@ -108,7 +108,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             }
             self.displayNotification({
                 type: toastType,
-                title: _t(`${toastType === 'success' ? 'Success' : 'Error'}`),
+                title: toastType === 'success' ? _t('Success') : _t('Error'),
                 message: result.toast_content,
                 sticky: true,
             });
@@ -194,8 +194,8 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
             renderFooter: false,
             size: 'medium',
         });
-        this.massMailingPopup.opened().then(async function () {
-            var $modal = self.$('.modal');
+        this.massMailingPopup.opened().then(function () {
+            var $modal = self.massMailingPopup.$modal;
             $modal.find('header button.close').on('mouseup', function (ev) {
                 ev.stopPropagation();
             });
@@ -204,15 +204,16 @@ publicWidget.registry.newsletter_popup = publicWidget.Widget.extend({
             $modal.find('.modal-dialog').addClass('modal-dialog-centered');
             $modal.find('.js_subscribe').data('list-id', self.listID)
                   .find('input.js_subscribe_email').val(email);
-
-            // hack to make the modal editable in the wysiwyg internal architecture
-            const snippetOption = self.$el.data('snippetOption');
-            if (snippetOption) await snippetOption.updateChangesInWysiwyg();
-
             self.trigger_up('widgets_start_request', {
                 editableMode: self.editableMode,
                 $target: $modal,
             });
+        });
+        this.massMailingPopup.on('closed', this, function () {
+            var $modal = self.massMailingPopup.$modal;
+            if ($modal) { // The dialog might have never been opened
+                self.$el.data('content', $modal.find('.modal-body').html());
+            }
         });
     },
     /**

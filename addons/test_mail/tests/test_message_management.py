@@ -79,6 +79,7 @@ class TestMailResend(TestMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_remove_mail_become_canceled(self):
         # two failure sent on bus, one for each mail
+        self._reset_bus()
         with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 2):
             message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
 
@@ -101,6 +102,7 @@ class TestMailResend(TestMailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_mail')
     def test_cancel_all(self):
+        self._reset_bus()
         with self.mock_mail_gateway(), self.assertBus([(self.cr.dbname, 'res.partner', self.partner_admin.id)] * 2):
             message = self.test_record.with_user(self.user_admin).message_post(partner_ids=self.partners.ids, subtype_xmlid='mail.mt_comment', message_type='notification')
 

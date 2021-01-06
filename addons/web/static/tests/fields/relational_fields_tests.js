@@ -39,6 +39,7 @@ QUnit.module('relational_fields', {
                     user_id: {string: "User", type: 'many2one', relation: 'user'},
                     reference: {string: "Reference Field", type: 'reference', selection: [
                         ["product", "Product"], ["partner_type", "Partner Type"], ["partner", "Partner"]]},
+                    model_id: {string: "Model", type:'many2one', relation:'ir.model'}
                 },
                 records: [{
                     id: 1,
@@ -147,6 +148,25 @@ QUnit.module('relational_fields', {
                     id: 19,
                     name: "Christine",
                 }]
+            },
+            'ir.model': {
+                fields: {
+                    model: {string: "Model", type: "char"},
+                },
+                records: [{
+                    id: 17,
+                    name: "Partner",
+                    model: 'partner',
+                }, {
+                    id: 20,
+                    name: "Product",
+                    model: 'product',
+                }, {
+                    id: 21,
+                    name: "Partner Type",
+                    model: 'partner_type',
+                }],
+                onchanges: {},
             },
         };
     },
@@ -497,9 +517,11 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         // add a line (virtual record)
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.owlCompatibilityExtraNextTick();
         await testUtils.fields.editInput(form.$('.o_input'), 'pi');
         // delete the line above it
         await testUtils.dom.click(form.$('.o_list_record_remove').first());
+        await testUtils.owlCompatibilityExtraNextTick();
         // the next line should be displayed below the newly added one
         assert.strictEqual(form.$('.o_data_row').length, 2, "should have 2 records");
         assert.strictEqual(form.$('.o_data_row .o_data_cell:first-child').text(), 'pikawa',
@@ -2558,6 +2580,7 @@ QUnit.module('relational_fields', {
         });
 
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        await testUtils.owlCompatibilityExtraNextTick();
         await testUtils.fields.many2one.searchAndClickItem('product_id',
             {selector: '.modal', search: 'new record'});
 
@@ -2988,6 +3011,81 @@ QUnit.module('relational_fields', {
         list.destroy();
     });
 
+    QUnit.test('widget reference with model_field option', async function (assert) {
+        assert.expect(5);
+        this.data.partner.records[0].reference = false;
+        this.data.partner.records[0].model_id = 20;
+        this.data.partner.records[1].display_name = "John Smith";
+        this.data.product.records[0].display_name = "Product 1";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                        <field name="model_id"/>
+                        <field name="reference"  options='{"model_field": "model_id"}'/>
+                   </form>`,
+            res_id: 1,
+        });
+
+        await testUtils.form.clickEdit(form);
+        assert.containsNone(form.$('select'), 'the selection list of the reference field should not exist.');
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), '',
+            'no record should be selected in the reference field');
+
+        await testUtils.fields.editInput(form.$('.o_field_many2one[name="reference"] input'), 'Product 1');
+        await testUtils.dom.click($('.ui-autocomplete .ui-menu-item:first-child'));
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), 'Product 1',
+            'the Product 1 record should be selected in the reference field');
+
+        await testUtils.fields.editInput(form.$('.o_field_many2one[name="model_id"] input'), 'Partner');
+        await testUtils.dom.click($('.ui-autocomplete .ui-menu-item:first-child'));
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), '',
+            'no record should be selected in the reference field');
+
+        await testUtils.fields.editInput(form.$('.o_field_many2one[name="reference"] input'), 'John');
+        await testUtils.dom.click($('.ui-autocomplete .ui-menu-item:first-child'));
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), 'John Smith',
+            'the John Smith record should be selected in the reference field');
+
+        form.destroy();
+    });
+
+    QUnit.test('widget reference with model_field option (model_field not synchronized with reference)', async function (assert) {
+        // Checks that the data is not modified even though it is not synchronized.
+        // Not synchronized = model_id contains a different model than the one used in reference.
+        assert.expect(5);
+        this.data.partner.records[0].reference = 'partner,1';
+        this.data.partner.records[0].model_id = 20;
+        this.data.partner.records[0].display_name = "John Smith";
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form string="Partners">
+                        <field name="model_id"/>
+                        <field name="reference"  options='{"model_field": "model_id"}'/>
+                   </form>`,
+            res_id: 1,
+        });
+
+        assert.containsNone(form.$('select'), 'the selection list of the reference field should not exist.');
+        assert.strictEqual(form.$('.o_field_widget[name="model_id"] span').text(), 'Product',
+            'the value of model_id field should be Product');
+        assert.strictEqual(form.$('.o_field_widget[name="reference"] span').text(), 'John Smith',
+            'the value of model_id field should be John Smith');
+
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual(form.$('.o_field_many2one[name="model_id"] input').val(), 'Product',
+            'the Product model should be selected in the model_id field');
+        assert.strictEqual(form.$('.o_field_many2one[name="reference"] input').val(), 'John Smith',
+            'the John Smith record should be selected in the reference field');
+
+        form.destroy();
+    });
+
     QUnit.test('one2many with extra field from server not in form', async function (assert) {
         assert.expect(6);
 
@@ -3093,13 +3191,16 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.fields.many2one.clickOpenDropdown("product_id");
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
         form.destroy();
@@ -3187,13 +3288,16 @@ QUnit.module('relational_fields', {
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_field_many2one[name="product_id"] input'));
         await testUtils.fields.many2one.clickHighlightedItem("product_id");
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column when the product_id is set");
         await testUtils.fields.editAndTrigger(form.$('.o_field_many2one[name="product_id"] input'),
             '', 'keyup');
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsN(form, 'th:not(.o_list_record_remove_header)', 2,
             "should be 2 columns in the one2many when product_id is not set");
         await testUtils.dom.click(form.$('.o_field_boolean[name="bar"] input'));
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsOnce(form, 'th:not(.o_list_record_remove_header)',
             "should be 1 column after the value change");
         form.destroy();
@@ -3253,6 +3357,13 @@ QUnit.module('relational_fields', {
         assert.containsN(form.$('.o_field_one2many'), 'div.o_optional_columns div.dropdown-item:visible', 2,
             "dropdown is still open");
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+        // use of owlCompatibilityExtraNextTick because the x2many field is reset, meaning that
+        // 1) its list renderer is updated (updateState is called): this is async and as it
+        // contains a FieldBoolean, which is written in Owl, it completes in the nextAnimationFrame
+        // 2) when this is done, the control panel is updated: as it is written in owl, this is
+        // done in the nextAnimationFrame
+        // -> we need to wait for 2 nextAnimationFrame to ensure that everything is fine
+        await testUtils.owlCompatibilityExtraNextTick();
         assert.containsN(form.$('.o_field_one2many'), 'div.o_optional_columns div.dropdown-item:visible', 0,
             "dropdown is closed");
         var $selectedRow = form.$('.o_field_one2many tr.o_selected_row');
@@ -3352,6 +3463,7 @@ QUnit.module('relational_fields', {
            which: $.ui.keyCode.TAB,
            keyCode: $.ui.keyCode.TAB,
        }));
+       await testUtils.owlCompatibilityExtraNextTick();
        await testUtils.dom.click(document.activeElement);
        assert.strictEqual(assert.strictEqual(form.$el.find('input[name="turtle_foo"]')[0],
                            document.activeElement,

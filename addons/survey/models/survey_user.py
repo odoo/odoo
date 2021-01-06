@@ -16,8 +16,9 @@ _logger = logging.getLogger(__name__)
 class SurveyUserInput(models.Model):
     """ Metadata for a set of one user's answers to a particular survey """
     _name = "survey.user_input"
-    _rec_name = 'survey_id'
-    _description = 'Survey User Input'
+    _description = "Survey User Input"
+    _rec_name = "survey_id"
+    _order = "create_date desc"
 
     # answer description
     survey_id = fields.Many2one('survey.survey', string='Survey', required=True, readonly=True, ondelete='cascade')
@@ -511,7 +512,7 @@ class SurveyUserInputLine(models.Model):
     def _check_answer_type_skipped(self):
         for line in self:
             if (line.skipped == bool(line.answer_type)):
-                raise ValidationError(_('A question is either skipped, either answered. Not both.'))
+                raise ValidationError(_('A question can either be skipped or answered, not both.'))
 
             # allow 0 for numerical box
             if line.answer_type == 'numerical_box' and float_is_zero(line['value_numerical_box'], precision_digits=6):

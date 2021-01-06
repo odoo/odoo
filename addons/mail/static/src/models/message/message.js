@@ -4,7 +4,8 @@ odoo.define('mail/static/src/models/message/message.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2many } = require('mail/static/src/model/model_field.js');
-const { addLink, htmlToTextContentInline, parseAndTransform } = require('mail.utils');
+const { clear } = require('mail/static/src/model/model_field_command.js');
+const { addLink, htmlToTextContentInline, parseAndTransform, timeFromNow } = require('mail.utils');
 
 const { str_to_datetime } = require('web.time');
 
@@ -315,6 +316,13 @@ function factory(dependencies) {
         }
 
         /**
+         * Refreshes the value of `dateFromNow` field to the "current now".
+         */
+        refreshDateFromNow() {
+            this.update({ dateFromNow: this._computeDateFromNow() });
+        }
+
+        /**
          * Action to initiate reply to current message in Discuss Inbox. Assumes
          * that Discuss and Inbox are already opened.
          */
@@ -358,6 +366,16 @@ function factory(dependencies) {
          */
         static _createRecordLocalId(data) {
             return `${this.modelName}_${data.id}`;
+        }
+
+        /**
+         * @returns {string}
+         */
+        _computeDateFromNow() {
+            if (!this.date) {
+                return clear();
+            }
+            return timeFromNow(this.date);
         }
 
         /**
@@ -408,7 +426,8 @@ function factory(dependencies) {
             return (
                 (!this.body || htmlToTextContentInline(this.body) === '') &&
                 this.attachments.length === 0 &&
-                this.tracking_value_ids.length === 0
+                this.tracking_value_ids.length === 0 &&
+                !this.subtype_description
             );
         }
 
@@ -511,9 +530,19 @@ function factory(dependencies) {
         }),
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
+            readonly: true,
         }),
         date: attr({
             default: moment(),
+        }),
+        /**
+         * States the time elapsed since date up to now.
+         */
+        dateFromNow: attr({
+            compute: '_computeDateFromNow',
+            dependencies: [
+                'date',
+            ],
         }),
         email_from: attr(),
         failureNotifications: one2many('mail.notification', {
@@ -525,7 +554,9 @@ function factory(dependencies) {
             default: false,
             dependencies: ['isModeratedByCurrentPartner'],
         }),
-        id: attr(),
+        id: attr({
+            required: true,
+        }),
         isCurrentPartnerAuthor: attr({
             compute: '_computeIsCurrentPartnerAuthor',
             default: false,
@@ -651,7 +682,9 @@ function factory(dependencies) {
         /**
          * Origin thread of this message (if any).
          */
-        originThread: many2one('mail.thread'),
+        originThread: many2one('mail.thread', {
+            inverse: 'messagesAsOriginThread',
+        }),
         originThreadIsModeratedByCurrentPartner: attr({
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',

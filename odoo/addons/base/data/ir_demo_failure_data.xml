@@ -8,7 +8,7 @@ failures = env['ir.demo_failure'].search([
     ('wizard_id', '=', False),
 ])
 record = model.create({
-    'failure_ids': [(6, 0, failures.ids)],
+    'failure_ids': [Command.set(failures.ids)],
 })
 action = {
     'type': 'ir.actions.act_window',

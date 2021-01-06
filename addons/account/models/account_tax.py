@@ -297,32 +297,29 @@ class AccountTax(models.Model):
 
         rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
 
-        # The reconciliation widget calls this function to generate writeoffs on bank journals,
-        # so the sign of the tags might need to be inverted, so that the tax report
-        # computation can treat them as any other miscellaneous operations, while
-        # keeping a computation in line with the effect the tax would have had on an invoice.
-
-        if (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund):
-            base_tags = self.env['account.account.tag'].browse(rslt['base_tags'])
-            rslt['base_tags'] = self.env['account.move.line']._revert_signed_tags(base_tags).ids
-
-            for tax_result in rslt['taxes']:
-                tax_tags = self.env['account.account.tag'].browse(tax_result['tag_ids'])
-                tax_result['tag_ids'] = self.env['account.move.line']._revert_signed_tags(tax_tags).ids
-
         return rslt
 
-    def flatten_taxes_hierarchy(self):
+    def flatten_taxes_hierarchy(self, create_map=False):
         # Flattens the taxes contained in this recordset, returning all the
         # children at the bottom of the hierarchy, in a recordset, ordered by sequence.
         #   Eg. considering letters as taxes and alphabetic order as sequence :
         #   [G, B([A, D, F]), E, C] will be computed as [A, D, F, C, E, G]
+        # If create_map is True, an additional value is returned, a dictionary
+        # mapping each child tax to its parent group
         all_taxes = self.env['account.tax']
+        groups_map = {}
         for tax in self.sorted(key=lambda r: r.sequence):
             if tax.amount_type == 'group':
-                all_taxes += tax.children_tax_ids.flatten_taxes_hierarchy()
+                flattened_children = tax.children_tax_ids.flatten_taxes_hierarchy()
+                all_taxes += flattened_children
+                for flat_child in flattened_children:
+                    groups_map[flat_child] = tax
             else:
                 all_taxes += tax
+
+        if create_map:
+            return all_taxes, groups_map
+
         return all_taxes
 
     def get_tax_tags(self, is_refund, repartition_type):
@@ -358,7 +355,7 @@ class AccountTax(models.Model):
             company = self[0].company_id
 
         # 1) Flatten the taxes.
-        taxes = self.flatten_taxes_hierarchy()
+        taxes, groups_map = self.flatten_taxes_hierarchy(create_map=True)
 
         # 2) Avoid mixing taxes having price_include=False && include_base_amount=True
         # with taxes having price_include=True. This use case is not supported as the
@@ -452,9 +449,12 @@ class AccountTax(models.Model):
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
         sign = 1
+        if currency.is_zero(base):
+            sign = self._context.get('force_sign', 1)
+        elif base < 0:
+            sign = -1
         if base < 0:
             base = -base
-            sign = -1
 
         # Store the totals to reach when using price_include taxes (only the last price included in row)
         total_included_checkpoints = {}
@@ -570,6 +570,7 @@ class AccountTax(models.Model):
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
+                    'group': groups_map.get(tax),
                     'tag_ids': (repartition_line.tag_ids + subsequent_tags).ids,
                     'tax_ids': subsequent_taxes.ids,
                 })
@@ -636,7 +637,8 @@ class AccountTaxRepartitionLine(models.Model):
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')
     tax_fiscal_country_id = fields.Many2one(string="Fiscal Country", comodel_name='res.country', related='company_id.account_tax_fiscal_country_id', help="Technical field used to restrict tags domain in form view.")
     company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this distribution line belongs to.")
-    sequence = fields.Integer(string="Sequence", default=1, help="The order in which display and match distribution lines. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
+    sequence = fields.Integer(string="Sequence", default=1,
+        help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")
 
     @api.onchange('account_id')

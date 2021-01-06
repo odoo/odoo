@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:29+0000\n"
-"PO-Revision-Date: 2020-09-01 07:29+0000\n"
+"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"PO-Revision-Date: 2020-12-11 07:29+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -35,11 +35,6 @@ msgid ""
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
-msgid "<span class=\"fa fa-comments mr-2\"/>Speaking With"
-msgstr ""
-
-#. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.res_config_settings_view_form
 msgid ""
 "<span class=\"o_form_label\">Live Chat</span>\n"
@@ -57,13 +52,15 @@ msgid "Available"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
-msgid "Bad"
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Avatar"
 msgstr ""
 
 #. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
-msgid "Busy"
+#: model_terms:ir.ui.view,arch_db:website_livechat.channel_page
+msgid "Bad"
 msgstr ""
 
 #. module: website_livechat
@@ -78,7 +75,14 @@ msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Chat"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Chats"
 msgstr ""
 
 #. module: website_livechat
@@ -122,6 +126,13 @@ msgid "Happy face"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "History"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__id
 #: model:ir.model.fields,field_description:website_livechat.field_ir_http__id
 #: model:ir.model.fields,field_description:website_livechat.field_mail_channel__id
@@ -132,8 +143,20 @@ msgid "ID"
 msgstr ""
 
 #. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_search
+msgid "In Conversation"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_im_livechat_channel__is_published
 msgid "Is Published"
+msgstr ""
+
+#. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Lang"
 msgstr ""
 
 #. module: website_livechat
@@ -203,6 +226,18 @@ msgid "Okay"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Online"
+msgstr ""
+
+#. module: website_livechat
+#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_kanban
+msgid "Operator Avatar"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.model.fields,field_description:website_livechat.field_website_visitor__livechat_operator_name
 msgid "Operator Name"
 msgstr ""
@@ -227,13 +262,7 @@ msgstr ""
 
 #. module: website_livechat
 #: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_tree
 msgid "Send chat request"
-msgstr ""
-
-#. module: website_livechat
-#: model_terms:ir.ui.view,arch_db:website_livechat.website_visitor_view_form
-msgid "Sessions"
 msgstr ""
 
 #. module: website_livechat
@@ -293,6 +322,13 @@ msgid "Visitor"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
+#, python-format
+msgid "Visitor is online"
+msgstr ""
+
+#. module: website_livechat
 #: model:ir.actions.act_window,name:website_livechat.website_visitor_livechat_session_action
 msgid "Visitor's Sessions"
 msgstr ""
@@ -308,7 +344,10 @@ msgid "Visitors"
 msgstr ""
 
 #. module: website_livechat
+#. openerp-web
+#: code:addons/website_livechat/static/src/components/visitor_banner/visitor_banner.xml:0
 #: model:ir.model,name:website_livechat.model_website
+#, python-format
 msgid "Website"
 msgstr ""
 

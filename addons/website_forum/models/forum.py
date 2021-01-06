@@ -34,7 +34,7 @@ class Forum(models.Model):
         ('public', 'Public'),
         ('connected', 'Signed In'),
         ('private', 'Some users')],
-        help="Public: Forum is pubic\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
+        help="Public: Forum is public\nSigned In: Forum is visible for signed in users\nSome users: Forum and their content are hidden for non members of selected group",
         default='public')
     authorized_group_id = fields.Many2one('res.groups', 'Authorized Group')
     menu_id = fields.Many2one('website.menu', 'Menu', copy=False)
@@ -180,11 +180,14 @@ class Forum(models.Model):
     def _set_default_faq(self):
         self.faq = self.env['ir.ui.view']._render_template('website_forum.faq_accordion', {"forum": self}).decode('utf-8')
 
-    @api.model
-    def create(self, values):
-        res = super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
-        res._set_default_faq()  # will trigger a write and call update_website_count
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        forums = super(
+            Forum,
+            self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)
+        ).create(vals_list)
+        forums._set_default_faq()  # will trigger a write and call update_website_count
+        return forums
 
     def write(self, vals):
         if 'privacy' in vals:
@@ -270,7 +273,7 @@ class Post(models.Model):
     plain_content = fields.Text('Plain Content', compute='_get_plain_content', store=True)
     tag_ids = fields.Many2many('forum.tag', 'forum_tag_rel', 'forum_id', 'forum_tag_id', string='Tags')
     state = fields.Selection([('active', 'Active'), ('pending', 'Waiting Validation'), ('close', 'Closed'), ('offensive', 'Offensive'), ('flagged', 'Flagged')], string='Status', default='active')
-    views = fields.Integer('Views', default=0, readonly=True)
+    views = fields.Integer('Views', default=0, readonly=True, copy=False)
     active = fields.Boolean('Active', default=True)
     website_message_ids = fields.One2many(domain=lambda self: [('model', '=', self._name), ('message_type', 'in', ['email', 'comment'])])
     website_id = fields.Many2one(related='forum_id.website_id', readonly=True)
@@ -310,9 +313,9 @@ class Post(models.Model):
     moderator_id = fields.Many2one('res.users', string='Reviewed by', readonly=True)
 
     # closing
-    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason')
-    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True)
-    closed_date = fields.Datetime('Closed on', readonly=True)
+    closed_reason_id = fields.Many2one('forum.post.reason', string='Reason', copy=False)
+    closed_uid = fields.Many2one('res.users', string='Closed by', index=True, readonly=True, copy=False)
+    closed_date = fields.Datetime('Closed on', readonly=True, copy=False)
 
     # karma calculation and access
     karma_accept = fields.Integer('Convert comment to answer', compute='_get_post_karma_rights', compute_sudo=False)
@@ -724,10 +727,13 @@ class Post(models.Model):
         _logger.info('User %s marked as spams (in batch): %s' % (self.env.uid, spams))
         return spams.mark_as_offensive(reason_id)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_enough_karma(self):
         for post in self:
             if not post.can_unlink:
                 raise AccessError(_('%d karma required to unlink a post.', post.karma_unlink))
+
+    def unlink(self):
         # if unlinking an answer with accepted answer: remove provided karma
         for post in self:
             if post.is_correct:

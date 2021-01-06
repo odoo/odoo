@@ -5,6 +5,7 @@ import logging
 import re
 import time
 import requests
+import werkzeug.urls
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
@@ -12,10 +13,12 @@ from base64 import b64decode, b64encode
 
 from odoo.http import request
 from odoo import http, tools, _, SUPERUSER_ID
-from odoo.addons.http_routing.models.ir_http import slug
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError
 from odoo.modules.module import get_module_path, get_resource_path
 from odoo.tools.misc import file_open
+
+from ..models.ir_attachment import SUPPORTED_IMAGE_MIMETYPES
 
 logger = logging.getLogger(__name__)
 DEFAULT_LIBRARY_ENDPOINT = 'https://media-api.odoo.com'
@@ -224,7 +227,10 @@ class Web_Editor(http.Controller):
         else:
             # Find attachment by url. There can be multiple matches because of default
             # snippet images referencing the same image in /static/, so we limit to 1
-            attachment = request.env['ir.attachment'].search([('url', '=like', src)], limit=1)
+            attachment = request.env['ir.attachment'].search([
+                ('url', '=like', src),
+                ('mimetype', 'in', SUPPORTED_IMAGE_MIMETYPES),
+            ], limit=1)
         if not attachment:
             return {
                 'attachment': False,
@@ -514,8 +520,11 @@ class Web_Editor(http.Controller):
         """
         svg = None
         if module == 'illustration':
-            attachment = request.env['ir.attachment'].sudo().search([('url', '=like', request.httprequest.path), ('public', '=', True)], limit=1)
-            if not attachment:
+            attachment = request.env['ir.attachment'].sudo().browse(unslug(filename)[1])
+            if (not attachment.exists()
+                    or attachment.type != 'binary'
+                    or not attachment.public
+                    or not attachment.url.startswith(request.httprequest.path)):
                 raise werkzeug.exceptions.NotFound()
             svg = b64decode(attachment.datas).decode('utf-8')
         else:
@@ -526,13 +535,20 @@ class Web_Editor(http.Controller):
                 svg = file.read()
 
         user_colors = []
-        for key, color in kwargs.items():
-            match = re.match('^c([1-5])$', key)
-            if match:
+        for key, value in kwargs.items():
+            colorMatch = re.match('^c([1-5])$', key)
+            if colorMatch:
                 # Check that color is hex or rgb(a) to prevent arbitrary injection
-                if not re.match(r'(?i)^#[0-9A-F]{6,8}$|^rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)$', color.replace(' ', '')):
+                if not re.match(r'(?i)^#[0-9A-F]{6,8}$|^rgba?\(\d{1,3},\d{1,3},\d{1,3}(?:,[0-9.]{1,4})?\)$', value.replace(' ', '')):
                     raise werkzeug.exceptions.BadRequest()
-                user_colors.append([tools.html_escape(color), match.group(1)])
+                user_colors.append([tools.html_escape(value), colorMatch.group(1)])
+            elif key == 'flip':
+                if value == 'x':
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
+                elif value == 'y':
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
+                elif value == 'xy':
+                    svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
 
         default_palette = {
             '1': '#3AADAA',
@@ -575,6 +591,7 @@ class Web_Editor(http.Controller):
                 <media_id>: {
                     'query': 'space separated search terms',
                     'is_dynamic_svg': True/False,
+                    'dynamic_colors': maps color names to their color,
                 }, ...
             }
         """
@@ -606,7 +623,8 @@ class Web_Editor(http.Controller):
                 'res_id': 0,
             })
             if media[id]['is_dynamic_svg']:
-                attachment['url'] = '/web_editor/shape/illustration/%s' % slug(attachment)
+                colorParams = werkzeug.urls.url_encode(media[id]['dynamic_colors'])
+                attachment['url'] = '/web_editor/shape/illustration/%s?%s' % (slug(attachment), colorParams)
             attachments.append(attachment._get_media_info())
 
         return attachments

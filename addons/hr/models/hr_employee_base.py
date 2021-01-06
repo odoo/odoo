@@ -62,7 +62,7 @@ class HrEmployeeBase(models.AbstractModel):
         """
         # Check on login
         check_login = literal_eval(self.env['ir.config_parameter'].sudo().get_param('hr.hr_presence_control_login', 'False'))
-        employee_to_check_working = self.filtered(lambda e: e.user_id.im_status)
+        employee_to_check_working = self.filtered(lambda e: e.user_id.im_status == 'offline')
         working_now_list = employee_to_check_working._get_employee_working_now()
         for employee in self:
             state = 'to_define'
@@ -133,7 +133,7 @@ class HrEmployeeBase(models.AbstractModel):
         This method compute the state defining the display icon in the kanban view.
         It can be overriden to add other possibilities, like time off or attendances recordings.
         """
-        working_now_list = self._get_employee_working_now()
+        working_now_list = self.filtered(lambda e: e.hr_presence_state == 'present')._get_employee_working_now()
         for employee in self:
             if employee.hr_presence_state == 'present':
                 if employee.id in working_now_list:
@@ -170,7 +170,7 @@ class HrEmployeeBase(models.AbstractModel):
                 to_datetime = utc.localize(stop_dt).astimezone(timezone(tz or 'UTC'))
                 # Getting work interval of the first is working. Functions called on resource_calendar_id
                 # are waiting for singleton
-                work_interval = res_employee_ids[0].resource_calendar_id._work_intervals(from_datetime, to_datetime)
+                work_interval = res_employee_ids[0].resource_calendar_id._work_intervals_batch(from_datetime, to_datetime)[False]
                 # Employee that is not supposed to work have empty items.
                 if len(work_interval._items) > 0:
                     # The employees should be working now according to their work schedule

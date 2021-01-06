@@ -312,6 +312,13 @@ exports.PosModel = Backbone.Model.extend({
             }
        },
     },{
+      model: 'stock.picking.type',
+      fields: ['use_create_lots', 'use_existing_lots'],
+      domain: function(self){ return [['id', '=', self.config.picking_type_id[0]]]; },
+      loaded: function(self, picking_type) {
+          self.picking_type = picking_type[0];
+      },
+    },{
         model:  'res.users',
         fields: ['name','company_id', 'id', 'groups_id', 'lang'],
         domain: function(self){ return [['company_ids', 'in', self.config.company_id[0]],'|', ['groups_id','=', self.config.group_pos_manager_id[0]],['groups_id','=', self.config.group_pos_user_id[0]]]; },
@@ -1605,6 +1612,7 @@ exports.Orderline = Backbone.Model.extend({
         this.selected = false;
         this.description = '';
         this.price_extra = 0;
+        this.full_product_name = '';
         this.id = orderline_id++;
         this.price_manually_set = false;
 
@@ -1622,6 +1630,7 @@ exports.Orderline = Backbone.Model.extend({
         this.set_quantity(json.qty, 'do not recompute unit price');
         this.set_description(json.description);
         this.set_price_extra(json.price_extra);
+        this.set_full_product_name(json.full_product_name);
         this.id = json.id ? json.id : orderline_id++;
         orderline_id = Math.max(this.id+1,orderline_id);
         var pack_lot_lines = json.pack_lot_ids;
@@ -1723,6 +1732,9 @@ exports.Orderline = Backbone.Model.extend({
     set_price_extra: function(price_extra){
         this.price_extra = parseFloat(price_extra) || 0.0;
     },
+    set_full_product_name: function(full_product_name){
+        this.full_product_name = full_product_name || '';
+    },
     get_price_extra: function () {
         return this.price_extra;
     },
@@ -1735,7 +1747,7 @@ exports.Orderline = Backbone.Model.extend({
             this.order.remove_orderline(this);
             return;
         }else{
-            var quant = field_utils.parse.float('' + quantity) || 0;
+            var quant = typeof(quantity) === 'number' ? quantity : (field_utils.parse.float('' + quantity) || 0);
             var unit = this.get_unit();
             if(unit){
                 if (unit.rounding) {
@@ -1776,6 +1788,10 @@ exports.Orderline = Backbone.Model.extend({
         }
     },
 
+    get_lot_lines: function() {
+        return this.pack_lot_lines.models;
+    },
+
     get_required_number_of_lots: function(){
         var lots_required = 1;
 
@@ -1803,6 +1819,9 @@ exports.Orderline = Backbone.Model.extend({
         return this.product;
     },
     get_full_product_name: function () {
+        if (this.full_product_name) {
+            return this.full_product_name
+        }
         var full_name = this.product.display_name;
         if (this.description) {
             full_name += ` (${this.description})`;
@@ -1835,7 +1854,7 @@ exports.Orderline = Backbone.Model.extend({
         }else if(!utils.float_is_zero(price - order_line_price - orderline.get_price_extra(),
                     this.pos.currency.decimals)){
             return false;
-        }else if(this.product.tracking == 'lot') {
+        }else if(this.product.tracking == 'lot' && (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)) {
             return false;
         }else if (this.description !== orderline.description) {
             return false;
@@ -1889,6 +1908,7 @@ exports.Orderline = Backbone.Model.extend({
             tax:                this.get_tax(),
             product_description:      this.get_product().description,
             product_description_sale: this.get_product().description_sale,
+            pack_lot_lines:      this.get_lot_lines()
         };
     },
     generate_wrapped_product_name: function() {
@@ -1957,7 +1977,7 @@ exports.Orderline = Backbone.Model.extend({
             return round_pr(price_unit * (1.0 - (this.get_discount() / 100.0)), rounding);
         } else {
             var product =  this.get_product();
-            var taxes_ids = product.taxes_id;
+            var taxes_ids = this.tax_ids || product.taxes_id;
             var taxes =  this.pos.taxes;
             var product_taxes = [];
 
@@ -1995,7 +2015,7 @@ exports.Orderline = Backbone.Model.extend({
         var i;
         // Shenaningans because we need
         // to keep the taxes ordering.
-        var ptaxes_ids = this.get_product().taxes_id;
+        var ptaxes_ids = this.tax_ids || this.get_product().taxes_id;
         var ptaxes_set = {};
         for (i = 0; i < ptaxes_ids.length; i++) {
             ptaxes_set[ptaxes_ids[i]] = true;
@@ -2012,7 +2032,7 @@ exports.Orderline = Backbone.Model.extend({
         return this.get_all_prices().taxDetails;
     },
     get_taxes: function(){
-        var taxes_ids = this.get_product().taxes_id;
+        var taxes_ids = this.tax_ids || this.get_product().taxes_id;
         var taxes = [];
         for (var i = 0; i < taxes_ids.length; i++) {
             taxes.push(this.pos.taxes_by_id[taxes_ids[i]]);
@@ -2227,7 +2247,7 @@ exports.Orderline = Backbone.Model.extend({
         var taxtotal = 0;
 
         var product =  this.get_product();
-        var taxes_ids = product.taxes_id;
+        var taxes_ids = this.tax_ids || product.taxes_id;
         var taxes =  this.pos.taxes;
         var taxdetail = {};
         var product_taxes = [];
@@ -2268,7 +2288,9 @@ exports.Orderline = Backbone.Model.extend({
             var self = this;
             _(taxes).each(function(tax) {
                 var line_taxes = self._map_tax_fiscal_position(tax);
-                new_included_taxes = new_included_taxes.concat(line_taxes)
+                if (line_taxes.length && line_taxes[0].price_include){
+                    new_included_taxes = new_included_taxes.concat(line_taxes);
+                }
                 if(tax.price_include && !_.contains(line_taxes, tax)){
                     mapped_included_taxes.push(tax);
                 }
@@ -2296,6 +2318,13 @@ exports.Orderline = Backbone.Model.extend({
       this.order.assert_editable();
       this.product.lst_price = round_di(parseFloat(price) || 0, this.pos.dp['Product Price']);
       this.trigger('change',this);
+    },
+    is_last_line: function() {
+        var order = this.pos.get_order();
+        var last_id = Object.keys(order.orderlines._byId)[Object.keys(order.orderlines._byId).length-1];
+        var selectedLine = order? order.selected_orderline: null;
+
+        return !selectedLine ? false : last_id === selectedLine.cid;
     },
 });
 
@@ -2931,42 +2960,7 @@ exports.Order = Backbone.Model.extend({
         var line = new exports.Orderline({}, {pos: this.pos, order: this, product: product});
         this.fix_tax_included_price(line);
 
-        if(options.quantity !== undefined){
-            line.set_quantity(options.quantity);
-        }
-
-        if(options.price !== undefined){
-            line.set_unit_price(options.price);
-            this.fix_tax_included_price(line);
-        }
-
-        if (options.price_extra !== undefined){
-            line.price_extra = options.price_extra;
-            line.set_unit_price(line.get_unit_price() + options.price_extra);
-            this.fix_tax_included_price(line);
-        }
-
-        if(options.lst_price !== undefined){
-            line.set_lst_price(options.lst_price);
-        }
-
-        if(options.discount !== undefined){
-            line.set_discount(options.discount);
-        }
-
-        if (options.description !== undefined){
-            line.description += options.description;
-        }
-
-        if(options.extras !== undefined){
-            for (var prop in options.extras) {
-                line[prop] = options.extras[prop];
-            }
-        }
-        if (options.is_tip) {
-            this.is_tipped = true;
-            this.tip_amount = options.price;
-        }
+        this.set_orderline_options(line, options);
 
         var to_merge_orderline;
         for (var i = 0; i < this.orderlines.length; i++) {
@@ -2987,6 +2981,44 @@ exports.Order = Backbone.Model.extend({
         }
         if (this.pos.config.iface_customer_facing_display) {
             this.pos.send_current_order_to_customer_facing_display();
+        }
+    },
+    set_orderline_options: function(orderline, options) {
+        if(options.quantity !== undefined){
+            orderline.set_quantity(options.quantity);
+        }
+
+        if(options.price !== undefined){
+            orderline.set_unit_price(options.price);
+            this.fix_tax_included_price(orderline);
+        }
+
+        if (options.price_extra !== undefined){
+            orderline.price_extra = options.price_extra;
+            orderline.set_unit_price(orderline.get_unit_price() + options.price_extra);
+            this.fix_tax_included_price(orderline);
+        }
+
+        if(options.lst_price !== undefined){
+            orderline.set_lst_price(options.lst_price);
+        }
+
+        if(options.discount !== undefined){
+            orderline.set_discount(options.discount);
+        }
+
+        if (options.description !== undefined){
+            orderline.description += options.description;
+        }
+
+        if(options.extras !== undefined){
+            for (var prop in options.extras) {
+                orderline[prop] = options.extras[prop];
+            }
+        }
+        if (options.is_tip) {
+            this.is_tipped = true;
+            this.tip_amount = options.price;
         }
     },
     get_selected_orderline: function(){
@@ -3213,8 +3245,8 @@ exports.Order = Backbone.Model.extend({
             tax_set[tax_id[i]] = true;
         }
 
-        this.orderlines.each(function(line){
-            var taxes_ids = line.get_product().taxes_id;
+        this.orderlines.each(line => {
+            var taxes_ids = this.tax_ids || line.get_product().taxes_id;
             for (var i = 0; i < taxes_ids.length; i++) {
                 if (tax_set[taxes_ids[i]]) {
                     total += line.get_price_with_tax();
@@ -3258,20 +3290,29 @@ exports.Order = Backbone.Model.extend({
     },
     get_rounding_applied: function() {
         if(this.pos.config.cash_rounding) {
-            var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
+            const only_cash = this.pos.config.only_round_cash_method;
+            const has_cash = _.some(this.get_paymentlines(), function(pl) { return pl.payment_method.is_cash_count == true;});
+            if (!only_cash || (only_cash && has_cash)) {
+                var total = round_pr(this.get_total_with_tax(), this.pos.cash_rounding[0].rounding);
+                var sign = total > 0 ? 1.0 : -1.0;
 
-            var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
-            // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
-            if (utils.float_is_zero(rounding_applied)){
-                // https://xkcd.com/217/
+                var rounding_applied = total - (this.pos.config['iface_tax_included'] === "total"? this.get_subtotal(): this.get_total_with_tax());
+                rounding_applied *= sign;
+                // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
+                if (utils.float_is_zero(rounding_applied, this.pos.currency.decimals)){
+                    // https://xkcd.com/217/
+                    return 0;
+                } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
+                    rounding_applied += this.pos.cash_rounding[0].rounding;
+                }
+                else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
+                    rounding_applied -= this.pos.cash_rounding[0].rounding;
+                }
+                return sign * rounding_applied;
+            }
+            else {
                 return 0;
-            } else if(this.pos.cash_rounding[0].rounding_method === "UP" && rounding_applied < 0) {
-                rounding_applied += this.pos.cash_rounding[0].rounding;
             }
-            else if(this.pos.cash_rounding[0].rounding_method === "DOWN" && rounding_applied > 0){
-                rounding_applied -= this.pos.cash_rounding[0].rounding;
-            }
-            return rounding_applied;
         }
         return 0;
     },

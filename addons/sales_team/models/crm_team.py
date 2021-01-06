@@ -85,12 +85,11 @@ class CrmTeam(models.Model):
     # CRUD
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        team = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(values)
-        if values.get('member_ids'):
-            team._add_members_to_favorites()
-        return team
+    @api.model_create_multi
+    def create(self, vals_list):
+        teams = super(CrmTeam, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
+        teams.filtered(lambda t: t.member_ids)._add_members_to_favorites()
+        return teams
 
     def write(self, values):
         res = super(CrmTeam, self).write(values)
@@ -98,7 +97,8 @@ class CrmTeam(models.Model):
             self._add_members_to_favorites()
         return res
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_default(self):
         default_teams = [
             self.env.ref('sales_team.salesteam_website_sales'),
             self.env.ref('sales_team.pos_sales_team'),
@@ -107,7 +107,6 @@ class CrmTeam(models.Model):
         for team in self:
             if team in default_teams:
                 raise UserError(_('Cannot delete default team "%s"', team.name))
-        return super(CrmTeam,self).unlink()
 
     # ------------------------------------------------------------
     # ACTIONS

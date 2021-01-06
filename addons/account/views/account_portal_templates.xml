@@ -54,10 +54,10 @@
                         <td><span t-field="invoice.invoice_date"/></td>
                         <td class='d-none d-md-table-cell'><span t-field="invoice.invoice_date_due"/></td>
                         <td class="tx_status">
-                            <t t-if="invoice.state == 'posted' and invoice.payment_state not in ('paid', 'reversed')">
+                            <t t-if="invoice.state == 'posted' and invoice.payment_state not in ('in_payment', 'paid', 'reversed')">
                                 <span class="badge badge-pill badge-info"><i class="fa fa-fw fa-clock-o" aria-label="Opened" title="Opened" role="img"></i><span class="d-none d-md-inline"> Waiting for Payment</span></span>
                             </t>
-                            <t t-if="invoice.state == 'posted' and invoice.payment_state == 'paid'">
+                            <t t-if="invoice.state == 'posted' and invoice.payment_state in ('paid', 'in_payment')">
                                 <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check" aria-label="Paid" title="Paid" role="img"></i><span class="d-none d-md-inline"> Paid</span></span>
                             </t>
                             <t t-if="invoice.state == 'posted' and invoice.payment_state == 'reversed'">
@@ -92,7 +92,7 @@
                             <b t-if="invoice.amount_residual > 0" t-field="invoice.amount_residual"/>
                             <b t-else="1" t-field="invoice.amount_total"/>
                         </h2>
-                        <div class="small" t-if="invoice.payment_state != 'paid' and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
+                        <div class="small" t-if="invoice.payment_state not in ('paid', 'in_payment') and invoice.move_type == 'out_invoice'"><i class="fa fa-clock-o"/><span class="o_portal_sidebar_timeago ml4" t-att-datetime="invoice.invoice_date_due"/></div>
                     </t>
 
                     <t t-set="entries">

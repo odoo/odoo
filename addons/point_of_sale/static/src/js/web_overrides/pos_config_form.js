@@ -8,7 +8,7 @@ odoo.define('point_of_sale.pos_config_form', function (require) {
     var PosConfigFormController = FormController.extend({
         _enableButtons: function (changedFields) {
             let shouldReload = false;
-            for (let field of changedFields) {
+            for (let field of (changedFields || [])) {
                 if (
                     field.startsWith('module_') ||
                     field.startsWith('group_') ||

@@ -6,6 +6,7 @@ const components = {
     DiscussSidebarItem: require('mail/static/src/components/discuss_sidebar_item/discuss_sidebar_item.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -21,7 +22,7 @@ class DiscussSidebar extends Component {
             (...args) => this._useStoreSelector(...args),
             { compareDepth: () => this._useStoreCompareDepth() }
         );
-
+        useUpdate({ func: () => this._update() });
         /**
          * Reference of the quick search input. Useful to filter channels and
          * chats based on this input content.
@@ -33,14 +34,6 @@ class DiscussSidebar extends Component {
         this._onAddChannelAutocompleteSource = this._onAddChannelAutocompleteSource.bind(this);
         this._onAddChatAutocompleteSelect = this._onAddChatAutocompleteSelect.bind(this);
         this._onAddChatAutocompleteSource = this._onAddChatAutocompleteSource.bind(this);
-    }
-
-    mounted() {
-        this._update();
-    }
-
-    patched() {
-        this._update();
     }
 
     //--------------------------------------------------------------------------
@@ -140,6 +133,9 @@ class DiscussSidebar extends Component {
      * @private
      */
     _update() {
+        if (!this.discuss) {
+            return;
+        }
         if (this._quickSearchInputRef.el) {
             this._quickSearchInputRef.el.value = this.discuss.sidebarQuickSearchValue;
         }

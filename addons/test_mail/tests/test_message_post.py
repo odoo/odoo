@@ -11,7 +11,9 @@ from odoo.addons.test_mail.tests.common import TestMailCommon, TestRecipients
 from odoo.exceptions import AccessError
 from odoo.tools import mute_logger, formataddr
 from odoo.api import call_kw
+from odoo.tests import tagged
 
+import urllib.parse
 
 class TestMessagePost(TestMailCommon, TestRecipients):
 

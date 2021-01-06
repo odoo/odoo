@@ -59,7 +59,7 @@ class AccountAccount(models.Model):
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
     deprecated = fields.Boolean(index=True, default=False)
-    used = fields.Boolean(store=False, search='_search_used')
+    used = fields.Boolean(compute='_compute_used', search='_search_used')
     user_type_id = fields.Many2one('account.account.type', string='Type', required=True,
         help="Account Type is used for information purpose, to generate country-specific legal reports, and set the rules to close a fiscal year and generate opening entries.")
     internal_type = fields.Selection(related='user_type_id.type', string="Internal Type", store=True, readonly=True)
@@ -214,6 +214,11 @@ class AccountAccount(models.Model):
         """)
         return [('id', 'in' if value else 'not in', [r[0] for r in self._cr.fetchall()])]
 
+    def _compute_used(self):
+        ids = set(self._search_used('=', True)[0][2])
+        for record in self:
+            record.used = record.id in ids
+
     @api.model
     def _search_new_account_code(self, company, digits, prefix):
         for num in range(1, 10000):
@@ -224,7 +229,10 @@ class AccountAccount(models.Model):
         raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_opening_debit_credit(self):
-        if not self:
+        self.opening_debit = 0
+        self.opening_credit = 0
+        self.opening_balance = 0
+        if not self.ids:
             return
         self.env.cr.execute("""
             SELECT line.account_id,
@@ -445,9 +453,13 @@ class AccountAccount(models.Model):
 
         return super(AccountAccount, self).write(vals)
 
-    def unlink(self):
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_contains_journal_items(self):
         if self.env['account.move.line'].search([('account_id', 'in', self.ids)], limit=1):
             raise UserError(_('You cannot perform this action on an account that contains journal items.'))
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_account_set_on_customer(self):
         #Checking whether the account is set as a property to any Partner or not
         values = ['account.account,%s' % (account_id,) for account_id in self.ids]
         partner_prop_acc = self.env['ir.property'].sudo().search([('value_reference', 'in', values)], limit=1)
@@ -456,7 +468,6 @@ class AccountAccount(models.Model):
             raise UserError(
                 _('You cannot remove/deactivate the account %s which is set on a customer or vendor.', account_name)
             )
-        return super(AccountAccount, self).unlink()
 
     def action_read_account(self):
         self.ensure_one()

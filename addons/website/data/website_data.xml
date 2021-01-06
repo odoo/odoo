@@ -240,8 +240,13 @@
             <field name="url">/</field>
             <field name="target">self</field>
         </record>
+        <record id="action_website_edit" model="ir.actions.act_url">
+            <field name="name">Website Edit Mode</field>
+            <field name="url">/?enable_editor=1</field>
+            <field name="target">self</field>
+        </record>
         <record id="base.open_menu" model="ir.actions.todo">
-            <field name="action_id" ref="action_website"/>
+            <field name="action_id" ref="action_website_edit"/>
             <field name="state">open</field>
         </record>
 

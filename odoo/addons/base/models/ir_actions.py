@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import odoo
-from odoo import api, fields, models, tools, SUPERUSER_ID, _
+from odoo import api, fields, models, tools, SUPERUSER_ID, _, Command
 from odoo.exceptions import MissingError, UserError, ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval, test_python_expr
@@ -76,6 +76,7 @@ class IrActions(models.Model):
             'timezone': timezone,
             'b64encode': base64.b64encode,
             'b64decode': base64.b64decode,
+            'Command': Command,
         }
 
     @api.model
@@ -321,6 +322,13 @@ class IrActionsActWindowclose(models.Model):
 
     type = fields.Char(default='ir.actions.act_window_close')
 
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            # 'effect' is not a real field of ir.actions.act_window_close but is
+            # used to display the rainbowman
+            "effect"
+        }
+
 
 class IrActionsActUrl(models.Model):
     _name = 'ir.actions.act_url'
@@ -376,6 +384,7 @@ class IrActionsServer(models.Model):
 #  - time, datetime, dateutil, timezone: useful Python libraries
 #  - log: log(message, level='info'): logging function to record debug information in ir.logging table
 #  - UserError: Warning Exception to use with raise
+#  - Command: x2Many commands namespace
 # To return an action, assign: action = {...}\n\n\n\n"""
 
     @api.model
@@ -522,7 +531,7 @@ class IrActionsServer(models.Model):
         if self.link_field_id:
             record = self.env[self.model_id.model].browse(self._context.get('active_id'))
             if self.link_field_id.ttype in ['one2many', 'many2many']:
-                record.write({self.link_field_id.name: [(4, res.id)]})
+                record.write({self.link_field_id.name: [Command.link(res.id)]})
             else:
                 record.write({self.link_field_id.name: res.id})
 
@@ -604,6 +613,16 @@ class IrActionsServer(models.Model):
                     raise
 
             eval_context = self._get_eval_context(action)
+            records = eval_context.get('record') or eval_context['model']
+            records |= eval_context.get('records') or eval_context['model']
+            if records:
+                try:
+                    records.check_access_rule('write')
+                except AccessError:
+                    _logger.warning("Forbidden server action %r executed while the user %s does not have access to %s.",
+                        action.name, self.env.user.login, records,
+                    )
+                    raise
 
             runner, multi = action._get_runner()
             if runner and multi:

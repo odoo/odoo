@@ -6,6 +6,7 @@ var ajax = require('web.ajax');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
+var pyUtils = require('web.py_utils');
 var session = require('web.session');
 var time = require('web.time');
 var web_client = require('web.web_client');
@@ -65,8 +66,8 @@ var Dashboard = AbstractAction.extend({
 
     start: function() {
         var self = this;
+        this._computeControlPanelProps();
         return this._super().then(function() {
-            self.update_cp();
             self.render_graphs();
         });
     },
@@ -343,7 +344,6 @@ var Dashboard = AbstractAction.extend({
     on_reverse_breadcrumb: function() {
         var self = this;
         web_client.do_push_state({});
-        this.update_cp();
         this.fetch_data().then(function() {
             self.$('.o_website_dashboard').empty();
             self.render_dashboards();
@@ -353,6 +353,7 @@ var Dashboard = AbstractAction.extend({
 
     on_dashboard_action: function (ev) {
         ev.preventDefault();
+        var self = this
         var $action = $(ev.currentTarget);
         var additional_context = {};
         if (this.date_range === 'week') {
@@ -362,9 +363,18 @@ var Dashboard = AbstractAction.extend({
         } else if (this.date_range === 'year') {
             additional_context = {search_default_year: true};
         }
-        this.do_action($action.attr('name'), {
-            additional_context: additional_context,
-            on_reverse_breadcrumb: this.on_reverse_breadcrumb
+        this._rpc({
+            route: '/web/action/load',
+            params: {
+                'action_id': $action.attr('name'),
+            },
+        })
+        .then(function (action) {
+            action.domain = pyUtils.assembleDomains([action.domain, `[('website_id', '=', ${self.website_id})]`]);
+            return self.do_action(action, {
+                'additional_context': additional_context,
+                'on_reverse_breadcrumb': self.on_reverse_breadcrumb
+            });
         });
     },
 
@@ -382,33 +392,28 @@ var Dashboard = AbstractAction.extend({
         });
     },
 
-    update_cp: function() {
-        var self = this;
-        if (!this.$searchview) {
-            this.$searchview = $(QWeb.render("website.DateRangeButtons", {
-                widget: this,
-            }));
-            this.$searchview.find('button.js_date_range').click(function(ev) {
-                self.$searchview.find('button.js_date_range.active').removeClass('active');
-                $(ev.target).addClass('active');
-                self.on_date_range_button($(ev.target).data('date'));
-            });
-            this.$searchview.find('button.js_website').click(function(ev) {
-                self.$searchview.find('button.js_website.active').removeClass('active');
-                $(ev.target).addClass('active');
-                self.on_website_button($(ev.target).data('website-id'));
-            });
-        }
+    /**
+     * @private
+     */
+    _computeControlPanelProps() {
+        const $searchview = $(QWeb.render("website.DateRangeButtons", {
+            widget: this,
+        }));
+        $searchview.find('button.js_date_range').click((ev) => {
+            $searchview.find('button.js_date_range.active').removeClass('active');
+            $(ev.target).addClass('active');
+            this.on_date_range_button($(ev.target).data('date'));
+        });
+        $searchview.find('button.js_website').click((ev) => {
+            $searchview.find('button.js_website.active').removeClass('active');
+            $(ev.target).addClass('active');
+            this.on_website_button($(ev.target).data('website-id'));
+        });
 
-        var $buttons = $(QWeb.render("website.GoToButtons"));
+        const $buttons = $(QWeb.render("website.GoToButtons"));
         $buttons.on('click', this.on_go_to_website.bind(this));
 
-        this.updateControlPanel({
-            cp_content: {
-                $searchview: this.$searchview,
-                $buttons: $buttons,
-            },
-        });
+        this.controlPanelProps.cp_content = { $searchview, $buttons };
     },
 
     // Loads Analytics API

@@ -143,6 +143,7 @@ var FileWidget = SearchableMediaWidget.extend({
 
         this.options = _.extend({
             mediaWidth: media && media.parentElement && $(media.parentElement).width(),
+            useMediaLibrary: true,
         }, options || {});
 
         this.attachments = [];
@@ -301,6 +302,9 @@ var FileWidget = SearchableMediaWidget.extend({
         if (needle && needle.length) {
             domain.push(['name', 'ilike', needle]);
         }
+        if (!this.options.useMediaLibrary) {
+            domain.push('!', ['url', '=ilike', '/web_editor/shape/%']);
+        }
         domain.push('!', ['name', '=like', '%.crop']);
         domain.push('|', ['type', '=', 'binary'], '!', ['url', '=like', '/%/static/%']);
         return domain;
@@ -383,6 +387,7 @@ var FileWidget = SearchableMediaWidget.extend({
             media.id, {
                 query: media.query || '',
                 is_dynamic_svg: !!media.isDynamicSVG,
+                dynamic_colors: media.dynamicColors,
             }
         ]));
         let mediaAttachments = [];
@@ -395,10 +400,15 @@ var FileWidget = SearchableMediaWidget.extend({
             });
         }
         const selected = this.selectedAttachments.concat(mediaAttachments).map(attachment => {
-            // Color-customize dynamic SVGs with the primary theme color
+            // Color-customize dynamic SVGs with the theme colors
             if (attachment.image_src && attachment.image_src.startsWith('/web_editor/shape/')) {
                 const colorCustomizedURL = new URL(attachment.image_src, window.location.origin);
-                colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
+                colorCustomizedURL.searchParams.forEach((value, key) => {
+                    const match = key.match(/^c([1-5])$/);
+                    if (match) {
+                        colorCustomizedURL.searchParams.set(key, getCSSVariableValue(`o-color-${match[1]}`))
+                    }
+                })
                 attachment.image_src = colorCustomizedURL.pathname + colorCustomizedURL.search;
             }
             return attachment;
@@ -408,7 +418,7 @@ var FileWidget = SearchableMediaWidget.extend({
         }
 
         const img = selected[0];
-        if (!img || !img.id) {
+        if (!img || !img.id || this.$media.attr('src') === img.image_src) {
             return this.media;
         }
 
@@ -448,19 +458,13 @@ var FileWidget = SearchableMediaWidget.extend({
             }
             href += 'unique=' + img.checksum + '&download=true';
             this.$media.attr('href', href);
-            this.$media.addClass('o_image').attr('title', img.name);
-            this.$media.append($(`<img src="${this._getFileImageUrl(img.mimetype, img.name, this.$media.data('ext'))}"/>`))
+            this.$media.addClass('o_image').attr('title', img.name).attr('data-mimetype', img.mimetype);
         }
 
         this.$media.attr('alt', img.alt || img.description || '');
         var style = this.style;
         if (style) {
             this.$media.css(style);
-        }
-
-        if (this.options.onUpload) {
-            // We consider that when selecting an image it is as if we upload it in the html content.
-            this.options.onUpload(img);
         }
 
         // Remove image modification attributes
@@ -521,142 +525,6 @@ var FileWidget = SearchableMediaWidget.extend({
             .prop('disabled', !isURL);
         this.$urlSuccess.toggleClass('d-none', !isURL);
         this.$urlError.toggleClass('d-none', emptyValue || isURL);
-    },
-    /**
-     * Returns the static url of an image representing the given mimetype.
-     *
-     * @see /web/static/src/scss/mimetypes.scss
-     *
-     * @param {string} mimetype
-     * @param {string} [title]
-     * @param {string} [ext]
-     * @returns {string}
-     */
-    _getFileImageUrl: function(mimetype, title, ext) {
-        title = title || '';
-        ext = ext || '';
-        const prefix = '/web/static/src/img/mimetypes';
-        if (mimetype.startsWith('image')) {
-            return `${prefix}/image.svg`;
-        } else if (mimetype.startsWith('audio')) {
-            return `${prefix}/audio.svg`;
-        } else if (
-            mimetype.startsWith('text') ||
-            mimetype.endsWith('rtf')
-        ) {
-            return `${prefix}/text.svg`;
-        } else if (
-            mimetype.includes('octet-stream') ||
-            mimetype.includes('download') ||
-            mimetype.includes('python')
-        ) {
-            return `${prefix}/binary.svg`;
-        } else if (
-            mimetype.startsWith('video') ||
-            title.endsWith('.mp4') ||
-            title.endsWith('.avi')
-        ) {
-            return `${prefix}/video.svg`;
-        } else if (
-            mimetype.endsWith('archive') ||
-            mimetype.endsWith('compressed') ||
-            mimetype.includes('zip') ||
-            mimetype.endsWith('tar') ||
-            mimetype.includes('package')
-        ) {
-            return `${prefix}/archive.svg`;
-        } else if (mimetype === 'application/pdf') {
-            return `${prefix}/pdf.svg`;
-        } else if (
-            mimetype.startsWith('text-master') ||
-            mimetype.includes('document') ||
-            mimetype.includes('msword') ||
-            mimetype.includes('wordprocessing')
-        ) {
-            return `${prefix}/document.svg`;
-        } else if (
-            mimetype.includes('application/xml') ||
-            mimetype.endsWith('html')
-        ) {
-            return `${prefix}/web_code.svg`;
-        } else if (
-            mimetype.endsWith('css') ||
-            mimetype.endsWith('less') ||
-            ext.endsWith('less')
-        ) {
-            return `${prefix}/web_style.svg`;
-        } else if (
-            mimetype.includes('-image') ||
-            mimetype.includes('diskimage') ||
-            ext.endsWith('dmg')
-        ) {
-            return `${prefix}/disk.svg`;
-        } else if (
-            mimetype.endsWith('csv') ||
-            mimetype.includes('vc') ||
-            mimetype.includes('excel') ||
-            mimetype.endsWith('numbers') ||
-            mimetype.endsWith('calc') ||
-            mimetype.includes('mods') ||
-            mimetype.includes('spreadsheet')
-        ) {
-            return `${prefix}/spreadsheet.svg`;
-        } else if (mimetype.startsWith('key')) {
-            return `${prefix}/certificate.svg`;
-        } else if (
-            mimetype.includes('presentation') ||
-            mimetype.includes('keynote') ||
-            mimetype.includes('teacher') ||
-            mimetype.includes('slideshow') ||
-            mimetype.includes('powerpoint')) {
-            return `${prefix}/presentation.svg`;
-        } else if (
-            mimetype.includes('cert') ||
-            mimetype.includes('rules') ||
-            mimetype.includes('pkcs') ||
-            mimetype.endsWith('stl') ||
-            mimetype.endsWith('crl')
-        ) {
-            return `${prefix}/certificate.svg`;
-        } else if (
-            mimetype.includes('-font') ||
-            mimetype.includes('font-') ||
-            ext.endsWith('ttf')
-        ) {
-            return `${prefix}/font.svg`;
-        } else if (mimetype.includes('-dvi')) {
-            return `${prefix}/print.svg`;
-        } else if (
-            mimetype.includes('script') ||
-            mimetype.includes('x-sh') ||
-            ext.includes('bat') ||
-            mimetype.endsWith('bat') ||
-            mimetype.endsWith('cgi') ||
-            mimetype.endsWith('-c') ||
-            mimetype.includes('java') ||
-            mimetype.includes('ruby')
-        ) {
-            return `${prefix}/script.svg`;
-        } else if (mimetype.includes('javascript')) {
-            return `${prefix}/javascript.svg`;
-        } else if (
-            mimetype.includes('calendar') ||
-            mimetype.endsWith('ldif')
-        ) {
-            return `${prefix}/calendar.svg`;
-        } else if (
-            mimetype.endsWith('postscript') ||
-            mimetype.endsWith('cdr') ||
-            mimetype.endsWith('xara') ||
-            mimetype.endsWith('cgm') ||
-            mimetype.endsWith('graphics') ||
-            mimetype.endsWith('draw') ||
-            mimetype.includes('svg')
-        ) {
-            return `${prefix}/vector.svg`;
-        } else {
-            return `${prefix}/unknown.svg`;
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -886,13 +754,21 @@ var ImageWidget = FileWidget.extend({
         }
         const result = await this._super(number, offset);
         // Color-substitution for dynamic SVG attachment
-        const primaryColor = getCSSVariableValue('o-color-1');
+        const primaryColors = {};
+        for (let color = 1; color <= 5; color++) {
+            primaryColors[color] = getCSSVariableValue('o-color-' + color);
+        }
         this.attachments.forEach(attachment => {
             if (attachment.image_src.startsWith('/')) {
                 const newURL = new URL(attachment.image_src, window.location.origin);
-                // Set the main color of dynamic SVGs to o-color-1
+                // Set the main colors of dynamic SVGs to o-color-1~5
                 if (attachment.image_src.startsWith('/web_editor/shape/')) {
-                    newURL.searchParams.set('c1', primaryColor);
+                    newURL.searchParams.forEach((value, key) => {
+                        const match = key.match(/^c([1-5])$/);
+                        if (match) {
+                            newURL.searchParams.set(key, primaryColors[match[1]]);
+                        }
+                    })
                 } else {
                     // Set height so that db images load faster
                     newURL.searchParams.set('height', 2 * this.MIN_ROW_HEIGHT);
@@ -900,7 +776,7 @@ var ImageWidget = FileWidget.extend({
                 attachment.thumbnail_src = newURL.pathname + newURL.search;
             }
         });
-        if (this.needle) {
+        if (this.needle && this.options.useMediaLibrary) {
             try {
                 const response = await this._rpc({
                     route: '/web_editor/media_library_search',
@@ -1026,17 +902,25 @@ var ImageWidget = FileWidget.extend({
             try {
                 const response = await fetch(mediaUrl);
                 if (response.headers.get('content-type') === 'image/svg+xml') {
-                    const svg = await response.text();
-                    const colorRegex = new RegExp(DEFAULT_PALETTE['1'], 'gi');
-                    if (colorRegex.test(svg)) {
-                        const fileName = mediaUrl.split('/').pop();
-                        const file = new File([svg.replace(colorRegex, getCSSVariableValue('o-color-1'))], fileName, {
+                    let svg = await response.text();
+                    const fileName = mediaUrl.split('/').pop();
+                    const dynamicColors = {};
+                    const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
+                    svg = svg.replace(combinedColorsRegex, match => {
+                        const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
+                        const colorKey = 'c' + colorId
+                        dynamicColors[colorKey] = getCSSVariableValue('o-color-' + colorId);
+                        return dynamicColors[colorKey];
+                    });
+                    if (Object.keys(dynamicColors).length) {
+                        const file = new File([svg], fileName, {
                             type: "image/svg+xml",
                         });
                         img.src = URL.createObjectURL(file);
                         const media = this.libraryMedia.find(media => media.id === parseInt(cell.dataset.mediaId));
                         if (media) {
                             media.isDynamicSVG = true;
+                            media.dynamicColors = dynamicColors;
                         }
                         // We changed the src: wait for the next load event to do the styling
                         return;

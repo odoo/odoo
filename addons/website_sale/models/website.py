@@ -213,7 +213,7 @@ class Website(models.Model):
         addr = partner.address_get(['delivery'])
         if not request.website.is_public_user():
             last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
-            if last_sale_order:  # first = me
+            if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
                 addr['delivery'] = last_sale_order.partner_shipping_id.id
         default_user_id = partner.parent_id.user_id.id or partner.user_id.id
         values = {
@@ -261,10 +261,10 @@ class Website(models.Model):
         # Do not reload the cart of this user last visit if the Fiscal Position has changed.
         if check_fpos and sale_order:
             fpos_id = (
-                self.env['account.fiscal.position']
+                self.env['account.fiscal.position'].sudo()
                 .with_company(sale_order.company_id.id)
                 .get_fiscal_position(sale_order.partner_id.id, delivery_id=sale_order.partner_shipping_id.id)
-            )
+            ).id
             if sale_order.fiscal_position_id.id != fpos_id:
                 sale_order = None
 
@@ -394,7 +394,7 @@ class WebsiteSaleExtraField(models.Model):
     sequence = fields.Integer(default=10)
     field_id = fields.Many2one(
         'ir.model.fields',
-        domain=[('model_id.model', '=', 'product.template')]
+        domain=[('model_id.model', '=', 'product.template'), ('ttype', 'in', ['char', 'binary'])]
     )
     label = fields.Char(related='field_id.field_description')
     name = fields.Char(related='field_id.name')

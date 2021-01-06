@@ -52,6 +52,8 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_cancel()
         self.generated_coupon_ids.write({'state': 'expired'})
         self.applied_coupon_ids.write({'state': 'new'})
+        self.applied_coupon_ids.sales_order_id = False
+        self.recompute_coupon_lines()
         return res
 
     def action_draft(self):
@@ -228,7 +230,7 @@ class SaleOrder(models.Model):
         if coupon:
             coupon.write({'state': 'reserved'})
         else:
-            coupon = self.env['coupon.coupon'].create({
+            coupon = self.env['coupon.coupon'].sudo().create({
                 'program_id': program.id,
                 'state': 'reserved',
                 'partner_id': self.partner_id.id,
@@ -239,7 +241,7 @@ class SaleOrder(models.Model):
         return coupon
 
     def _send_reward_coupon_mail(self):
-        template = self.env.ref('coupon.mail_template_sale_coupon', raise_if_not_found=False)
+        template = self.env.ref('sale_coupon.mail_template_sale_coupon', raise_if_not_found=False)
         if template:
             for order in self:
                 for coupon in order.generated_coupon_ids:
@@ -469,14 +471,16 @@ class SaleOrderLine(models.Model):
     # Another possibility is to add on product.product a one2many to sale.order.line 'order_line_ids',
     # and then add the depends @api.depends('discount_line_product_id.order_line_ids'),
     # but I am not sure this will as efficient as the below.
-    def modified(self, fnames, create=False):
-        super(SaleOrderLine, self).modified(fnames, create)
+    def modified(self, fnames, *args, **kwargs):
+        super(SaleOrderLine, self).modified(fnames, *args, **kwargs)
         if 'product_id' in fnames:
             Program = self.env['coupon.program'].sudo()
             field_order_count = Program._fields['order_count']
+            field_total_order_count = Program._fields['total_order_count']
             programs = self.env.cache.get_records(Program, field_order_count)
+            programs |= self.env.cache.get_records(Program, field_total_order_count)
             if programs:
                 products = self.filtered('is_reward_line').mapped('product_id')
                 for program in programs:
                     if program.discount_line_product_id in products:
-                        self.env.cache.invalidate([(field_order_count, program.ids)])
+                        self.env.cache.invalidate([(field_order_count, program.ids), (field_total_order_count, program.ids)])

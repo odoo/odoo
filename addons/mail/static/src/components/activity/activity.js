@@ -153,9 +153,10 @@ class Activity extends Component {
      * @private
      * @param {MouseEvent} ev
      */
-    _onClickCancel(ev) {
+    async _onClickCancel(ev) {
         ev.preventDefault();
-        this.activity.deleteServerRecord();
+        await this.activity.deleteServerRecord();
+        this.trigger('reload', { keepChanges: true });
     }
 
     /**

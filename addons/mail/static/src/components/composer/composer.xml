@@ -83,6 +83,7 @@
                         t-on-o-composer-suggestion-clicked="_onComposerSuggestionClicked"
                         t-on-o-composer-text-input-send-shortcut="_onComposerTextInputSendShortcut"
                         t-on-paste="_onPasteTextInput"
+                        t-key="composer.localId"
                         t-ref="textInput"
                     />
                     <div class="o_Composer_buttons" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-mobile': env.messaging.device.isMobile }">
@@ -134,6 +135,7 @@
                                 t-att-class="{ 'o-composer-is-compact': props.isCompact }"
                                 areAttachmentsEditable="true"
                                 attachmentsDetailsMode="props.attachmentsDetailsMode"
+                                attachmentsImageSize="'small'"
                                 attachmentLocalIds="composer.attachments.map(attachment => attachment.localId)"
                                 showAttachmentsExtensions="props.showAttachmentsExtensions"
                                 showAttachmentsFilenames="props.showAttachmentsFilenames"

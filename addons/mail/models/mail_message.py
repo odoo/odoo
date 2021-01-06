@@ -8,8 +8,8 @@ from binascii import Error as binascii_error
 from collections import defaultdict
 from operator import itemgetter
 
-from odoo import _, api, fields, models, modules, tools
-from odoo.exceptions import AccessError
+from odoo import _, api, Command, fields, models, modules, tools
+from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import groupby
@@ -160,9 +160,9 @@ class Message(models.Model):
 
     @api.model
     def _search_needaction(self, operator, operand):
-        if operator == '=' and operand:
-            return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', False)]
-        return ['&', ('notification_ids.res_partner_id', '=', self.env.user.partner_id.id), ('notification_ids.is_read', '=', True)]
+        is_read = False if operator == '=' and operand else True
+        notification_ids = self.env['mail.notification']._search([('res_partner_id', '=', self.env.user.partner_id.id), ('is_read', '=', is_read)])
+        return [('notification_ids', 'in', notification_ids)]
 
     def _compute_has_error(self):
         error_from_notification = self.env['mail.notification'].sudo().search([
@@ -204,7 +204,7 @@ class Message(models.Model):
                     ('res_id', 'in', self.env.user.moderation_channel_ids.ids)]
 
         # no support for other operators
-        return ValueError(_('Unsupported search filter on moderation status'))
+        raise UserError(_('Unsupported search filter on moderation status'))
 
     # ------------------------------------------------------
     # CRUD / ORM
@@ -761,7 +761,7 @@ class Message(models.Model):
         partner_id = self.env.user.partner_id.id
 
         starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
-        starred_messages.write({'starred_partner_ids': [(3, partner_id)]})
+        starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
 
         ids = [m.id for m in starred_messages]
         notification = {'type': 'toggle_star', 'message_ids': ids, 'starred': False}
@@ -775,9 +775,9 @@ class Message(models.Model):
         self.check_access_rule('read')
         starred = not self.starred
         if starred:
-            self.sudo().write({'starred_partner_ids': [(4, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [Command.link(self.env.user.partner_id.id)]})
         else:
-            self.sudo().write({'starred_partner_ids': [(3, self.env.user.partner_id.id)]})
+            self.sudo().write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
 
         notification = {'type': 'toggle_star', 'message_ids': [self.id], 'starred': starred}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), notification)

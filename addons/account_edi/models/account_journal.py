@@ -59,4 +59,4 @@ class AccountJournal(models.Model):
             # with_context: we don't want to import the attachment since the invoice was just created from it.
             invoice.with_context(no_new_invoice=True).message_post(attachment_ids=attachment.ids)
             return invoice
-        return super()._create_invoice_from_single_attachment(attachment)
+        return super(AccountJournal, self.with_context(no_new_invoice=True))._create_invoice_from_single_attachment(attachment)

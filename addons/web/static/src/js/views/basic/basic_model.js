@@ -231,7 +231,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise} resolved when the fieldInfo have been set on the given
      *   datapoint and all its children, and all rawChanges have been applied
      */
-    addFieldsInfo: function (dataPointID, viewInfo) {
+    addFieldsInfo: async function (dataPointID, viewInfo) {
         var dataPoint = this.localData[dataPointID];
         dataPoint.fields = _.extend({}, dataPoint.fields, viewInfo.fields);
         // complete the given fieldInfo with the fields of the main view, so
@@ -245,7 +245,9 @@ var BasicModel = AbstractModel.extend({
         // so we might have stored changes for them (e.g. coming from onchange
         // RPCs), that we haven't been able to process earlier (because those
         // fields were unknown at that time). So we now try to process them.
-        return this.applyRawChanges(dataPointID, viewInfo.viewType).then(() => {
+        if (dataPoint.type === 'record') {
+            await this.applyRawChanges(dataPointID, viewInfo.viewType);
+        }
             const proms = [];
             const fieldInfo = dataPoint.fieldsInfo[viewInfo.viewType];
             // recursively apply the new field info on sub datapoints
@@ -278,8 +280,6 @@ var BasicModel = AbstractModel.extend({
                 });
             }
             return Promise.all(proms);
-        });
-
     },
     /**
      * Onchange RPCs may return values for fields that are not in the current
@@ -2366,6 +2366,58 @@ var BasicModel = AbstractModel.extend({
         return evaluated;
     },
     /**
+     * Fetch the type of model (e.g. 'res.partner') contained in the model_field
+     * @private
+     * @param {Object} record - an element from the localData
+     * @param {Object} fieldName - the name of the field
+     * @param {Object} fieldInfo - the info of the field
+     * @returns {Promise}
+     */
+    _fetchModelFieldReference: async function (record, fieldName, fieldInfo) {
+        const modelField = fieldInfo.options.model_field;
+        const value = record._changes && record._changes[modelField] || record.data[modelField];
+        if (value) {
+            if (record.fields[modelField].type !== "many2one"
+                || record.fields[modelField].relation !== 'ir.model') {
+                throw new Error(`The model_field of the reference field
+                                 ${fieldName} must be a many2one('ir.model').`);
+            }
+            const modelId = this.localData[value].res_id;
+            const resourceRef = record.specialData[fieldName];
+            if (resourceRef && modelId === resourceRef.modelId) {
+                resourceRef.hasChanged = false;
+                return Promise.resolve(resourceRef);
+            } else {
+                const result = await this._rpc({
+                    model: 'ir.model',
+                    method: 'read',
+                    args: [modelId, ['id', 'model']],
+                });
+                // Checks the case where the data on the backend side are not synchronized
+                // (modelFieldName != referenceFieldName) when opening the edit view (!_changes).
+                // We want to avoid resynchronization in order not to modify the data 
+                // without being requested.
+                if (!record._changes && record.data[fieldName]
+                    && result[0].model !== this.localData[record.data[fieldName]].model) {
+                    const modelFieldName = record.fields[modelField].string;
+                    const referenceFieldName = record.fields[fieldName].string;
+
+                    this.do_warn(_t(`'${referenceFieldName}' is unsynchronized
+                                     with '${modelFieldName}'.`),
+                                 _t(`If you change ${modelFieldName} or
+                                     ${referenceFieldName}, the synchronization
+                                     will be reapplied and the data will be modified.`), true);
+                    return false;
+                }
+                return {
+                    modelName: result[0].model,
+                    modelId: result[0].id,
+                    hasChanged: true,
+                };
+            }
+        }
+    },
+    /**
      * Fetch name_get for a record datapoint.
      *
      * @param {Object} dataPoint
@@ -2846,17 +2898,19 @@ var BasicModel = AbstractModel.extend({
      * @private
      * @param {Object} record - an element from the localData
      * @param {Object} fieldName - the name of the field
+     * @param {Object} fieldInfo - the info of the field
      * @returns {Promise}
      */
-    _fetchSpecialReference: function (record, fieldName) {
-        var def;
+    _fetchSpecialReference: function (record, fieldName, fieldInfo) {
         var field = record.fields[fieldName];
         if (field.type === 'char') {
             // if the widget reference is set on a char field, the name_get
             // needs to be fetched a posteriori
-            def = this._fetchReference(record, fieldName);
+            return Promise.resolve(this._fetchReference(record, fieldName));
+        } else if (fieldInfo.options.model_field) {
+            return this._fetchModelFieldReference(record, fieldName, fieldInfo);
         }
-        return Promise.resolve(def);
+        return Promise.resolve();
     },
     /**
      * Fetches all the m2o records associated to the given fieldName. If the
@@ -3661,6 +3715,39 @@ var BasicModel = AbstractModel.extend({
         return Object.keys(fieldsInfo && fieldsInfo[viewType] || {});
     },
     /**
+     * Get a subset of a list resource keeping only the props to keep.
+     * This permits to a web_read_group to keep some of the properties
+     * of a previous list if it is still in its results.
+     *
+     * @private
+     * @param {Object} list
+     * @param {boolean} options.onlyGroup true when we only fetched the group's own data
+     * @param {boolean} options.hasSubgroups true when the fetched group has subgroups
+     * @returns {Object} subset of list
+     */
+    _getGroupedListPropsToKeep(list, options) {
+        const { isOpen, offset, id } = list;
+        let propsToKeep = { isOpen, offset, id };
+
+        if (options.onlyGroup || isOpen && options.hasSubgroups) {
+            // If the group is opened and contains subgroups,
+            // also keep its data to keep internal state of
+            // sub-groups
+            // Also keep data if we only reload groups' own data
+            propsToKeep.data = list.data;
+            if (options.onlyGroup) {
+                // keep count and res_ids as in this case the group
+                // won't be search_read again. This situation happens
+                // when using kanban quick_create where the record is manually
+                // added to the datapoint before getting here.
+                propsToKeep.res_ids = list.res_ids;
+                propsToKeep.count = list.count;
+            }
+        }
+
+        return propsToKeep;
+    },
+    /**
      * Get many2one fields names in a datapoint. This is useful in order to
      * fetch their names in the case of a default_get.
      *
@@ -3744,6 +3831,16 @@ var BasicModel = AbstractModel.extend({
 
         }
         return context;
+    },
+    /**
+     * Get the domain for a list resource.
+     *
+     * @private
+     * @param {Object} list
+     * @returns {Array[]} list domain
+     */
+    _getUngroupedListDomain(list) {
+        return list.domain || [];
     },
     /**
      * Invalidates the DataManager's cache if the main model (i.e. the model of
@@ -4603,23 +4700,11 @@ var BasicModel = AbstractModel.extend({
                     if (oldGroup) {
                         delete self.localData[newGroup.id];
                         // restore the internal state of the group
-                        var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
-                        if (options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
-                            // If the group is opened and contains subgroups,
-                            // also keep its data to keep internal state of
-                            // sub-groups
-                            // Also keep data if we only reload groups' own data
-                            updatedProps.data = oldGroup.data;
-                            if (options.onlyGroups) {
-                                // keep count and res_ids as in this case the group
-                                // won't be search_read again. This situation happens
-                                // when using kanban quick_create where the record is manually
-                                // added to the datapoint before getting here.
-                                updatedProps.res_ids = oldGroup.res_ids;
-                                updatedProps.count = oldGroup.count;
-                            }
-                        }
-                        _.extend(newGroup, updatedProps);
+                        const oldPropsToKeep = self._getGroupedListPropsToKeep(oldGroup, {
+                            onlyGroup: options.onlyGroups,
+                            hasSubgroups: newGroup.groupedBy.length
+                        });
+                        Object.assign(newGroup, oldPropsToKeep);
                         // set the limit such that all previously loaded records
                         // (e.g. if we are coming back to the kanban view from a
                         // form view) are reloaded
@@ -4764,6 +4849,7 @@ var BasicModel = AbstractModel.extend({
                     fieldsInfo: element.fieldsInfo,
                     fields: element.fields,
                     viewType: element.viewType,
+                    allowWarning: true,
                 };
                 return this._makeDefaultRecord(element.model, params);
             }
@@ -4879,7 +4965,7 @@ var BasicModel = AbstractModel.extend({
                 model: list.model,
                 fields: fieldNames,
                 context: _.extend({}, list.getContext(), {bin_size: true}),
-                domain: list.domain || [],
+                domain: this._getUngroupedListDomain(list),
                 limit: list.limit,
                 offset: list.loadMoreOffset + list.offset,
                 orderBy: list.orderedBy,

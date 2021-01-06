@@ -3,6 +3,7 @@
 // ------------------------------------------------------------------
 
 .o_Chatter {
+    position: relative;
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
@@ -15,6 +16,10 @@
         border-left: $border-width solid;
         border-right: $border-width solid;
     }
+}
+
+.o_Chatter_scrollPanel {
+    overflow-y: auto;
 }
 
 // ------------------------------------------------------------------

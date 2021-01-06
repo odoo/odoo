@@ -31,7 +31,7 @@ class AccountReconcileModelLine(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
-    model_id = fields.Many2one('account.reconcile.model', readonly=True)
+    model_id = fields.Many2one('account.reconcile.model', readonly=True, ondelete='cascade')
     match_total_amount = fields.Boolean(related='model_id.match_total_amount')
     match_total_amount_param = fields.Float(related='model_id.match_total_amount_param')
     rule_type = fields.Selection(related='model_id.rule_type')
@@ -94,7 +94,7 @@ class AccountReconcileModelLine(models.Model):
         for record in self:
             if record.amount_type == 'fixed' and record.amount == 0:
                 raise UserError(_('The amount is not a number'))
-            if record.amount_type == 'percentage' and not 0 < record.amount <= 100:
+            if record.amount_type == 'percentage' and not 0 < record.amount:
                 raise UserError(_('The amount is not a percentage'))
             if record.amount_type == 'regex':
                 try:
@@ -119,13 +119,13 @@ class AccountReconcileModel(models.Model):
         default=lambda self: self.env.company)
 
     rule_type = fields.Selection(selection=[
-        ('writeoff_button', 'Manually create a write-off on clicked button.'),
-        ('writeoff_suggestion', 'Suggest counterpart values.'),
-        ('invoice_matching', 'Match existing invoices/bills.'),
+        ('writeoff_button', 'Manually create a write-off on clicked button'),
+        ('writeoff_suggestion', 'Suggest counterpart values'),
+        ('invoice_matching', 'Match existing invoices/bills'),
     ], string='Type', default='writeoff_button', required=True)
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
-    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
+    to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the information of the counterpart.')
     matching_order = fields.Selection(
         selection=[
             ('old_first', 'Oldest first'),
@@ -317,7 +317,8 @@ class AccountReconcileModel(models.Model):
         lines_vals_list = []
 
         for line in self.line_ids:
-            if not line.account_id or st_line.company_currency_id.is_zero(residual_balance):
+            currency_id = st_line.currency_id or st_line.journal_id.currency_id or self.company_id.currency_id
+            if not line.account_id or currency_id.is_zero(residual_balance):
                 return []
 
             if line.amount_type == 'percentage':
@@ -384,26 +385,45 @@ class AccountReconcileModel(models.Model):
         liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
 
         if st_line.to_check:
-            residual_balance = -liquidity_lines.balance
+            st_line_residual = -liquidity_lines.balance
         elif suspense_lines.account_id.reconcile:
-            residual_balance = sum(suspense_lines.mapped('amount_residual'))
+            st_line_residual = sum(suspense_lines.mapped('amount_residual'))
         else:
-            residual_balance = sum(suspense_lines.mapped('balance'))
+            st_line_residual = sum(suspense_lines.mapped('balance'))
 
         partner = partner or st_line.partner_id
-        lines_vals_list = [{'id': aml_id} for aml_id in aml_ids]
+
+        lines_vals_list = []
+        amls = self.env['account.move.line'].browse(aml_ids)
+        st_line_residual_before = st_line_residual
+        aml_total_residual = 0
+        for aml in amls:
+            aml_total_residual += aml.amount_residual
+
+            if aml.balance * st_line_residual > 0:
+                # Meaning they have the same signs, so they can't be reconciled together
+                assigned_balance = -aml.amount_residual
+            else:
+                assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
+                st_line_residual -= assigned_balance
+
+            lines_vals_list.append({
+                'id': aml.id,
+                'balance': assigned_balance,
+                'currency_id': st_line.move_id.company_id.currency_id.id,
+            })
+
+        write_off_amount = max(aml_total_residual, -st_line_residual_before, key=abs) + st_line_residual_before + st_line_residual
+
         reconciliation_overview, open_balance_vals = st_line._prepare_reconciliation(lines_vals_list)
 
-        for reconciliation_vals in reconciliation_overview:
-            residual_balance -= reconciliation_vals['line_vals']['debit'] - reconciliation_vals['line_vals']['credit']
-
-        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, residual_balance)
+        writeoff_vals_list = self._get_write_off_move_lines_dict(st_line, write_off_amount)
 
         for line_vals in writeoff_vals_list:
-            residual_balance -= st_line.company_currency_id.round(line_vals['balance'])
+            st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
 
         # Check we have enough information to create an open balance.
-        if not st_line.company_currency_id.is_zero(residual_balance):
+        if not st_line.company_currency_id.is_zero(st_line_residual):
             if st_line.amount > 0:
                 open_balance_account = partner.property_account_receivable_id
             else:
@@ -794,8 +814,10 @@ class AccountReconcileModel(models.Model):
             lines_vals_list = self._prepare_reconciliation(st_line, aml_ids=rslt['aml_ids'], partner=partner)
 
             # A write-off must be applied if there are some 'new' lines to propose.
-            if not lines_vals_list or any(not line_vals.get('id') for line_vals in lines_vals_list):
+            write_off_lines_vals = list(filter(lambda x: 'id' not in x, lines_vals_list))
+            if not lines_vals_list or write_off_lines_vals:
                 rslt['status'] = 'write_off'
+                rslt['write_off_vals'] = write_off_lines_vals
 
             # Process auto-reconciliation. We only do that for the first two priorities, if they are not matched elsewhere.
             if lines_vals_list and priorities & {1, 3} and self.auto_reconcile:

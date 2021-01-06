@@ -3,13 +3,11 @@
 
 import json
 import logging
-from datetime import datetime, timedelta
+from datetime import timedelta
 from collections import defaultdict
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
-from odoo.tools.float_utils import float_repr
-from odoo.tools.misc import format_date
+from odoo.tools import float_compare, float_round
 from odoo.exceptions import UserError
 
 
@@ -305,7 +303,7 @@ class SaleOrderLine(models.Model):
         for line in self.filtered(lambda l: l.state == 'sale'):
             if not line.display_qty_widget:
                 continue
-            moves = line.move_ids
+            moves = line.move_ids.filtered(lambda m: m.product_id == line.product_id)
             line.forecast_expected_date = max(moves.filtered("forecast_expected_date").mapped("forecast_expected_date"), default=False)
             line.qty_available_today = 0
             line.free_qty_today = 0
@@ -342,11 +340,13 @@ class SaleOrderLine(models.Model):
                 line.free_qty_today = free_qty_today - qty_processed_per_product[line.product_id.id]
                 line.virtual_available_at_date = virtual_available_at_date - qty_processed_per_product[line.product_id.id]
                 line.forecast_expected_date = False
+                product_qty = line.product_uom_qty
                 if line.product_uom and line.product_id.uom_id and line.product_uom != line.product_id.uom_id:
                     line.qty_available_today = line.product_id.uom_id._compute_quantity(line.qty_available_today, line.product_uom)
                     line.free_qty_today = line.product_id.uom_id._compute_quantity(line.free_qty_today, line.product_uom)
                     line.virtual_available_at_date = line.product_id.uom_id._compute_quantity(line.virtual_available_at_date, line.product_uom)
-                qty_processed_per_product[line.product_id.id] += line.product_uom_qty
+                    product_qty = line.product_uom._compute_quantity(product_qty, line.product_id.uom_id)
+                qty_processed_per_product[line.product_id.id] += product_qty
             treated |= lines
         remaining = (self - treated)
         remaining.virtual_available_at_date = False
@@ -587,6 +587,14 @@ class SaleOrderLine(models.Model):
                 line.name, line.order_id.name, line.order_id.company_id, values))
         if procurements:
             self.env['procurement.group'].run(procurements)
+
+        # This next block is currently needed only because the scheduler trigger is done by picking confirmation rather than stock.move confirmation
+        orders = self.mapped('order_id')
+        for order in orders:
+            pickings_to_confirm = order.picking_ids.filtered(lambda p: p.state not in ['cancel', 'done'])
+            if pickings_to_confirm:
+                # Trigger the Scheduler for Pickings
+                pickings_to_confirm.action_confirm()
         return True
 
     def _check_package(self):

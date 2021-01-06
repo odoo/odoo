@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/message/message_tests.js', function (req
 const components = {
     Message: require('mail/static/src/components/message/message.js'),
 };
+const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const {
     afterEach,
     afterNextRender,
@@ -110,7 +111,7 @@ QUnit.test('basic rendering', async function (assert) {
         "message should display the content"
     );
     assert.strictEqual(
-        messageEl.querySelector(`:scope .o_Message_content`).innerHTML,
+        messageEl.querySelector(`:scope .o_Message_prettyBody`).innerHTML,
         "<p>Test</p>",
         "message should display the correct content"
     );
@@ -266,6 +267,7 @@ QUnit.test('Notification Sent', async function (assert) {
 QUnit.test('Notification Error', async function (assert) {
     assert.expect(8);
 
+    const openResendActionDef = makeDeferred();
     const bus = new Bus();
     bus.on('do-action', null, payload => {
         assert.step('do_action');
@@ -279,6 +281,7 @@ QUnit.test('Notification Error', async function (assert) {
             10,
             "action should have correct message id"
         );
+        openResendActionDef.resolve();
     });
 
     await this.start({ env: { bus } });
@@ -323,10 +326,8 @@ QUnit.test('Notification Error', async function (assert) {
         'fa-envelope',
         "icon should represent email error"
     );
-
-    await afterNextRender(() => {
-        document.querySelector('.o_Message_notificationIconClickable').click();
-    });
+    document.querySelector('.o_Message_notificationIconClickable').click();
+    await openResendActionDef;
     assert.verifySteps(
         ['do_action'],
         "should do an action to display the resend email dialog"
@@ -342,6 +343,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
+        channel_type: 'chat',
         id: 11,
         members: [
             [['link', currentPartner]],
@@ -403,6 +405,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
+        channel_type: 'chat',
         id: 11,
         members: [
             [['link', currentPartner]],
@@ -463,6 +466,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
+        channel_type: 'chat',
         id: 11,
         members: [
             [['link', currentPartner]],
@@ -540,6 +544,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         display_name: "Demo User"
     });
     const thread = this.env.models['mail.thread'].create({
+        channel_type: 'chat',
         id: 11,
         partnerSeenInfos: [['create', [
             {
@@ -588,6 +593,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         display_name: "Demo User",
     });
     const thread = this.env.models['mail.thread'].create({
+        channel_type: 'chat',
         id: 11,
         messageSeenIndicators: [['insert', {
             channelId: 11,
@@ -611,20 +617,18 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: 99,
         originThread: [['link', thread]],
     });
-    thread.update({
-       partnerSeenInfos: [['create', [
-            {
-                channelId: 11,
-                lastSeenMessage: [['link', lastSeenMessage]],
-                partnerId: this.env.messaging.currentPartner.id,
-            },
-            {
-                channelId: 11,
-                lastSeenMessage: [['link', lastSeenMessage]],
-                partnerId: 100,
-            },
-        ]]],
-    });
+    this.env.models['mail.thread_partner_seen_info'].insert([
+        {
+            channelId: 11,
+            lastSeenMessage: [['link', lastSeenMessage]],
+            partnerId: this.env.messaging.currentPartner.id,
+        },
+        {
+            channelId: 11,
+            lastSeenMessage: [['link', lastSeenMessage]],
+            partnerId: 100,
+        },
+    ]);
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
     });
@@ -655,6 +659,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         display_name: "Demo User"
     });
     const thread = this.env.models['mail.thread'].create({
+        channel_type: 'chat',
         id: 11,
         partnerSeenInfos: [['create', [
             {

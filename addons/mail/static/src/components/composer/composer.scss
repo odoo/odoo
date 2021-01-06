@@ -40,6 +40,11 @@
     &.o-composer-is-compact {
         max-height: 100px;
     }
+
+    &:not(.o-composer-is-compact) {
+        overflow-y: auto;
+        max-height: 300px;
+    }
 }
 
 .o_Composer_buttons {

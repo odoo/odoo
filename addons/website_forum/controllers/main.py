@@ -143,6 +143,8 @@ class WebsiteForum(WebsiteProfile):
             url_args['search'] = search
         if filters:
             url_args['filters'] = filters
+        if my:
+            url_args['my'] = my
         pager = request.website.pager(url=url, total=question_count, page=page,
                                       step=self._post_per_page, scope=self._post_per_page,
                                       url_args=url_args)
@@ -155,6 +157,7 @@ class WebsiteForum(WebsiteProfile):
             'edit_in_backend': not tag,
             'question_ids': question_ids,
             'question_count': question_count,
+            'search_count': question_count,
             'pager': pager,
             'tag': tag,
             'filters': filters,
