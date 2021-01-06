@@ -116,6 +116,7 @@ class AccountMoveLine(models.Model):
 
         # create the sale lines in batch
         new_sale_lines = self.env['sale.order.line'].create(sale_line_values_to_create)
+        new_sale_lines._onchange_discount()
 
         # build result map by replacing index with newly created record of sale.order.line
         result = {}
