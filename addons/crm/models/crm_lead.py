@@ -509,7 +509,7 @@ class Lead(models.Model):
 
         for lead, values in zip(leads, vals_list):
             if any(field in ['active', 'stage_id'] for field in values):
-                lead._handle_won_lost(vals)
+                lead._handle_won_lost(values)
 
         return leads
 
