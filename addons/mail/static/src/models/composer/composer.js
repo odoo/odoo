@@ -273,25 +273,108 @@ function factory(dependencies) {
         }
 
         /**
+         * Function that process the message stored to be sent.
+         */
+        async processMessagesToBeSent() {
+            if (!this.isProcessingMessagesToBeSent) {
+                this.update({
+                    isSendingMessages: true,
+                });
+                const messages = this.thread.pendingMessagesToBeSent.filter((message) => !message.hasSendError);
+                const message = messages[0];
+                try {
+                    if (message) {
+                        const thread = this.thread;
+                        let postData = {
+                            attachment_ids: message.attachments.map(attachement => attachement.id),
+                            body: message.body,
+                            channel_ids: message.channel_ids,
+                            message_type: 'comment',
+                            partner_ids: message.partner_ids,
+                            subject: message.subject,
+                        };
+                        let messageId;
+                        if (thread.model === 'mail.channel') {
+                            const command = this._getCommandFromText(postData.body);
+                            Object.assign(postData, {
+                                subtype_xmlid: 'mail.mt_comment',
+                            });
+                            if (command) {
+                                messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
+                                    channelId: thread.id,
+                                    command: command.name,
+                                    postData,
+                                }));
+                            } else {
+                                messageId = await this.async(() =>
+                                    this.env.models['mail.thread'].performRpcMessagePost({
+                                        postData,
+                                        threadId: thread.id,
+                                        threadModel: thread.model,
+                                    })
+                                );
+                            }
+                        } else {
+                            Object.assign(postData, {
+                                subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
+                            });
+                            if (!this.isLog) {
+                                postData.context = {
+                                    mail_post_autofollow: true,
+                                };
+                            }
+                            messageId = await this.async(() =>
+                                this.env.models['mail.thread'].performRpcMessagePost({
+                                    postData,
+                                    threadId: thread.id,
+                                    threadModel: thread.model,
+                                })
+                            );
+                            const [messageData] = await this.async(() => this.env.services.rpc({
+                                model: 'mail.message',
+                                method: 'message_format',
+                                args: [[messageId]],
+                            }, { shadow: true }));
+                            this.env.models['mail.message'].insert(Object.assign(
+                                {},
+                                this.env.models['mail.message'].convertData(messageData),
+                                {
+                                    originThread: [['insert', {
+                                        id: thread.id,
+                                        model: thread.model,
+                                    }]],
+                                })
+                            );
+                            thread.loadNewMessages();
+                        }
+                        message.delete();
+                    }
+                    if (!messages.length) {
+                        this.thread.refreshFollowers();
+                        this.thread.fetchAndUpdateSuggestedRecipients();
+                    }
+                } catch (error) {
+                    message.update({ hasSendError: true });
+                } finally {
+                    this.update({
+                        isSendingMessages: false,
+                    });
+                    if (messages.length > 0) {
+                        this.processMessagesToBeSent();
+                    }
+                }
+            }
+        }
+
+        /**
          * Post a message in provided composer's thread based on current composer fields values.
          */
         async postMessage() {
             const thread = this.thread;
             this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
             let postData = {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
-                body,
+                body: this._convertMessageToHtml(),
                 channel_ids: this.mentionedChannels.map(channel => channel.id),
                 message_type: 'comment',
                 partner_ids: this.recipients.map(partner => partner.id),
@@ -299,38 +382,19 @@ function factory(dependencies) {
             if (this.subjectContent) {
                 postData.subject = this.subjectContent;
             }
-            try {
-                let messageId;
-                this.update({ isPostingMessage: true });
-                if (thread.model === 'mail.channel') {
-                    const command = this._getCommandFromText(body);
-                    Object.assign(postData, {
-                        subtype_xmlid: 'mail.mt_comment',
-                    });
-                    if (command) {
-                        messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
-                            channelId: thread.id,
-                            command: command.name,
-                            postData,
-                        }));
-                    } else {
-                        messageId = await this.async(() =>
-                            this.env.models['mail.thread'].performRpcMessagePost({
-                                postData,
-                                threadId: thread.id,
-                                threadModel: thread.model,
-                            })
-                        );
-                    }
+            let messageId;
+            if (thread.model === 'mail.channel') {
+                const command = this._getCommandFromText(body);
+                Object.assign(postData, {
+                    subtype_xmlid: 'mail.mt_comment',
+                });
+                if (command) {
+                    messageId = await this.async(() => this.env.models['mail.thread'].performRpcExecuteCommand({
+                        channelId: thread.id,
+                        command: command.name,
+                        postData,
+                    }));
                 } else {
-                    Object.assign(postData, {
-                        subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
-                    });
-                    if (!this.isLog) {
-                        postData.context = {
-                            mail_post_autofollow: true,
-                        };
-                    }
                     messageId = await this.async(() =>
                         this.env.models['mail.thread'].performRpcMessagePost({
                             postData,
@@ -338,33 +402,47 @@ function factory(dependencies) {
                             threadModel: thread.model,
                         })
                     );
-                    const [messageData] = await this.async(() => this.env.services.rpc({
-                        model: 'mail.message',
-                        method: 'message_format',
-                        args: [[messageId]],
-                    }, { shadow: true }));
-                    this.env.models['mail.message'].insert(Object.assign(
-                        {},
-                        this.env.models['mail.message'].convertData(messageData),
-                        {
-                            originThread: [['insert', {
-                                id: thread.id,
-                                model: thread.model,
-                            }]],
-                        })
-                    );
-                    thread.loadNewMessages();
                 }
-                for (const threadView of this.thread.threadViews) {
-                    // Reset auto scroll to be able to see the newly posted message.
-                    threadView.update({ hasAutoScrollOnMessageReceived: true });
+            } else {
+                Object.assign(postData, {
+                    subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
+                });
+                if (!this.isLog) {
+                    postData.context = {
+                        mail_post_autofollow: true,
+                    };
                 }
-                thread.refreshFollowers();
-                thread.fetchAndUpdateSuggestedRecipients();
-                this._reset();
-            } finally {
-                this.update({ isPostingMessage: false });
+                messageId = await this.async(() =>
+                    this.env.models['mail.thread'].performRpcMessagePost({
+                        postData,
+                        threadId: thread.id,
+                        threadModel: thread.model,
+                    })
+                );
+                const [messageData] = await this.async(() => this.env.services.rpc({
+                    model: 'mail.message',
+                    method: 'message_format',
+                    args: [[messageId]],
+                }, { shadow: true }));
+                this.env.models['mail.message'].insert(Object.assign(
+                    {},
+                    this.env.models['mail.message'].convertData(messageData),
+                    {
+                        originThread: [['insert', {
+                            id: thread.id,
+                            model: thread.model,
+                        }]],
+                    })
+                );
+                thread.loadNewMessages();
             }
+            for (const threadView of this.thread.threadViews) {
+                // Reset auto scroll to be able to see the newly posted message.
+                threadView.update({ hasAutoScrollOnMessageReceived: true });
+            }
+            thread.refreshFollowers();
+            thread.fetchAndUpdateSuggestedRecipients();
+            this._reset();
         }
 
         /**
@@ -381,6 +459,39 @@ function factory(dependencies) {
             } else {
                 this.thread.registerCurrentPartnerIsTyping();
             }
+        }
+
+        /**
+         * Queue a message and start to process it.
+         */
+        insertMessageToBeSent() {
+            this.thread.update({
+                pendingMessagesToBeSent: [['insert', {
+                    attachments: [['link', this.attachments]],
+                    author: [['link', this.env.messaging.currentPartner]],
+                    body: this._convertMessageToHtml(),
+                    channel_ids: this.mentionedChannels.map(channel => channel.id),
+                    composer: [['link', this]],
+                    date: moment(),
+                    id: this.env.models['mail.message'].getNextTemporaryId(),
+                    isPendingSend: true,
+                    isTemporary: true,
+                    isTransient: true,
+                    is_discussion: true,
+                    message_type: 'comment',
+                    originThread: [['insert', {
+                        id: this.thread.id,
+                        model: this.thread.model,
+                    }]],
+                    partner_ids: this.recipients.map(partner => partner.id),
+                    subject: (this.subjectContent) ? this.subjectContent : undefined,
+                }]]
+            });
+            this._reset();
+            for (const threadView of this.thread.threadViews) {
+                threadView.addComponentHint('new-message-posted');
+            }
+            this.processMessagesToBeSent();
         }
 
         setFirstSuggestionActive() {
@@ -494,7 +605,7 @@ function factory(dependencies) {
             if (!this.textInputContent && this.attachments.length === 0) {
                 return false;
             }
-            return !this.hasUploadingAttachment && !this.isPostingMessage;
+            return !this.hasUploadingAttachment;
         }
 
         /**
@@ -597,6 +708,27 @@ function factory(dependencies) {
                 }
             }
             return [['unlink', unmentionedChannels]];
+        }
+
+        /**
+         * Convert text message to HTML.
+         *
+         * @private
+         * @returns {String}
+         */
+        _convertMessageToHtml() {
+            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            // This message will be received from the mail composer as html content
+            // subtype but the urls will not be linkified. If the mail composer
+            // takes the responsibility to linkify the urls we end up with double
+            // linkification a bit everywhere. Ideally we want to keep the content
+            // as text internally and only make html enrichment at display time but
+            // the current design makes this quite hard to do.
+            body = this._generateMentionsLinks(body);
+            body = parseAndTransform(body, addLink);
+            body = this._generateEmojisOnHtml(body);
+            return body;
         }
 
         /**
@@ -947,7 +1079,6 @@ function factory(dependencies) {
             dependencies: [
                 'attachments',
                 'hasUploadingAttachment',
-                'isPostingMessage',
                 'textInputContent',
             ],
             default: false,
@@ -1030,6 +1161,12 @@ function factory(dependencies) {
          */
         isLog: attr({
             default: false,
+        }),
+        /**
+         * Determines whether messages are sent to the server
+         */
+        isSendingMessages: attr({
+            default: false
         }),
         /**
          * Determines whether a post_message request is currently pending.

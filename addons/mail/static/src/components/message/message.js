@@ -591,6 +591,15 @@ class Message extends Component {
 
     /**
      * @private
+     */
+    _onClickSendAgain(ev) {
+        ev.preventDefault();
+        this.message.update({ hasSendError: false });
+        this.message.composer.processMessagesToBeSent();
+    }
+
+    /**
+     * @private
      * @param {MouseEvent} ev
      */
     _onClickStar(ev) {

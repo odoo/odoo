@@ -389,9 +389,8 @@ QUnit.test("suggested recipients should not be notified when posting an internal
     await this.start({
         async mockRPC(route, args) {
             if (args.model === 'res.fake' && args.method === 'message_post') {
-                assert.strictEqual(
-                    args.kwargs.partner_ids.length,
-                    0,
+                assert.notOk(
+                    args.kwargs.partner_ids,
                     "message_post should not contain suggested recipients when posting an internal note"
                 );
             }

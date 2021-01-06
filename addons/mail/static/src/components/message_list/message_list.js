@@ -149,6 +149,7 @@ class MessageList extends Component {
                     break;
                 case 'message-received':
                 case 'messages-loaded':
+                case 'new-message-posted':
                 case 'new-messages-loaded':
                     // messages have been added at the end, either scroll to the
                     // end or keep the current position
@@ -255,7 +256,12 @@ class MessageList extends Component {
                 )
             )
             .map(([refId, ref]) => ref)
-            .sort((ref1, ref2) => (ref1.message.id < ref2.message.id ? -1 : 1));
+            .sort((ref1, ref2) => {
+                if (ref1.message.id < 0 || ref2.message.id < 0) {
+                    return (ref1.message.id < ref2.message.id ? 1 : -1);
+                }
+                return (ref1.message.id < ref2.message.id ? -1 : 1);
+            });
         if (order === 'desc') {
             return ascOrderedMessageRefs.reverse();
         }

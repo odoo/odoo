@@ -2056,9 +2056,8 @@ QUnit.test("mentioned partners should not be notified if they are not member of 
         async mockRPC(route, args) {
             if (args.model === 'mail.channel' && args.method === 'message_post') {
                 assert.step('message_post');
-                assert.strictEqual(
-                    args.kwargs.partner_ids.length,
-                    0,
+                assert.notOk(
+                    args.kwargs.partner_ids,
                     "message_post should not contain mentioned partners that are not members of channel"
                 );
             }

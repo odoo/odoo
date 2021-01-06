@@ -585,6 +585,10 @@ function factory(dependencies) {
         checkedThreadCaches: many2many('mail.thread_cache', {
             inverse: 'checkedMessages',
         }),
+        /**
+         * Allow the message component to retry the `processMessagesToBeSent`.
+         */
+        composer: many2one('mail.composer'),
         date: attr({
             default: moment(),
         }),
@@ -713,6 +717,10 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether the message as pending: not sent to the server yet.
+         */
+        isPendingSend: attr(),
+        /**
          * Determine whether the message is starred. Useful to make it present
          * in starred mailbox.
          */
@@ -764,6 +772,13 @@ function factory(dependencies) {
             related: 'originThread.name',
         }),
         /**
+         * State whether that the message has not been sent to the server because of an
+         * error.
+         */
+        hasSendError: attr({
+            default: false,
+        }),
+        /**
          * This value is meant to be based on field body which is
          * returned by the server (and has been sanitized before stored into db).
          * Do not use this value in a 't-raw' if the message has been created
@@ -806,6 +821,14 @@ function factory(dependencies) {
             inverse: 'messagesAsServerChannel',
         }),
     };
+
+    Message.getNextTemporaryId = function() {
+        let tmpId = 0;
+        return () => {
+            tmpId -= 1;
+            return tmpId;
+        };
+    }();
 
     Message.modelName = 'mail.message';
 

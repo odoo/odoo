@@ -1801,6 +1801,187 @@ QUnit.test('composer should be focused automatically after clicking on the send 
     );
 });
 
+QUnit.test('After pressing the send button, message should be pending actual posting', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+    }];
+
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                // Simulate pending message post indefinitely
+                await new Promise(() => {});
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+
+    assert.containsOnce(
+        document.body,
+        '.o-pending.o_Message_prettyBody',
+        "chatter should contain 1 pending message"
+    );
+});
+
+QUnit.test('After pressing the send button for 2 messages, 2 messages should be pending actual posting', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+    }];
+
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                // Simulate pending message post indefinitely
+                await new Promise(() => {});
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    assert.containsN(
+        document.body,
+        '.o-pending.o_Message_prettyBody',
+        2,
+        "chatter should contain 2 pending messages"
+    );
+});
+
+QUnit.test('Message in thread view should display a retry button when the message failed to be sent', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+    }];
+
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                // Simulate posting error
+                throw Error();
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_sendAgain',
+        "Message should have a retry button"
+    );
+});
+
+QUnit.test('Pressing retry button should post the message', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records = [{
+        channel_type: 'channel',
+        id: 20,
+        is_pinned: true,
+        message_unread_counter: 0,
+        name: "General",
+    }];
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                // Simulate posting error
+                throw Error();
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "hey !"));
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonSend').click()
+    );
+
+    assert.containsOnce(
+        document.body,
+        '.o-pending.o_Message_prettyBody',
+        "chatter should contain 1 pending message"
+    );
+
+});
+
 });
 });
 });

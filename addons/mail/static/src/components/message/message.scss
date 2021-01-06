@@ -221,6 +221,10 @@
         }
     }
 
+    &.o-pending {
+        opacity: 0.65;
+    }
+
     &.o-selected {
         background-color: gray('400');
 
@@ -238,6 +242,14 @@
         .o_Message_commands {
             display: flex;
         }
+    }
+
+    .not-delivred {
+        color: $red;
+    }
+
+    a.not-delivred:hover, a.not-delivred:focus {
+        color: darken($red, 15%);
     }
 }
 
@@ -371,6 +383,12 @@
 
 .o_Message_subject {
     font-style: italic;
+}
+
+// Server will add <p> when processing the message
+// This will add the margin on temporary message to avoid flickers
+.o_Message_prettyBody.o-pending {
+    margin-bottom: $paragraph-margin-bottom;
 }
 
 // Used to hide buttons on rating emails in chatter

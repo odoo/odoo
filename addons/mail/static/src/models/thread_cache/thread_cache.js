@@ -155,7 +155,7 @@ function factory(dependencies) {
                     message.id > this.lastFetchedMessage.id
                 );
             }
-            messages = messages.concat(newerMessages);
+            messages = messages.concat(newerMessages, this.thread.pendingMessagesToBeSent);
             return [['replace', messages]];
         }
 
@@ -181,7 +181,12 @@ function factory(dependencies) {
          * @returns {mail.message[]}
          */
         _computeOrderedMessages() {
-            return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
+            return [['replace', this.messages.sort((m1, m2) => {
+                if (m1.id < 0 || m2.id < 0) {
+                    return (m1.id < m2.id ? 1 : -1);
+                }
+                return m1.id < m2.id ? -1 : 1;
+            })]];
         }
 
         /**
@@ -487,6 +492,7 @@ function factory(dependencies) {
             dependencies: [
                 'fetchedMessages',
                 'threadMessages',
+                'threadPendingMessagesToBeSent',
             ],
         }),
         /**
@@ -584,6 +590,9 @@ function factory(dependencies) {
         }),
         threadMessages: many2many('mail.message', {
             related: 'thread.messages',
+        }),
+        threadPendingMessagesToBeSent: one2many('mail.message', {
+            related: 'thread.pendingMessagesToBeSent',
         }),
         /**
          * Serves as compute dependency.

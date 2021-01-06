@@ -504,7 +504,7 @@ function factory(dependencies) {
                 method: 'message_post',
                 args: [threadId],
                 kwargs: postData,
-            });
+            }, { shadow: true });
         }
 
         /**
@@ -2113,6 +2113,12 @@ function factory(dependencies) {
          * server.
          */
         pendingSeenMessageId: attr(),
+        /**
+         * Determine the messages pending to be sent to the server by
+         * `processMessageToBeSent`. They will be sent one by one in queue order
+         * (lastest to newest).
+         */
+        pendingMessagesToBeSent: one2many('mail.message'),
         public: attr(),
         /**
          * Determine the last fold state known by the server, which is the fold

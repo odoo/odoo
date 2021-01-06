@@ -9,6 +9,7 @@
                 'o-mobile': env.messaging.device.isMobile,
                 'o-not-discussion': message and !(message.is_discussion or message.is_notification),
                 'o-notification': message and message.message_type === 'notification',
+                'o-pending': message and message.isPendingSend,
                 'o-selected': props.isSelected,
                 'o-squashed': props.isSquashed,
                 'o-starred': message and message.isStarred,
@@ -156,7 +157,17 @@
                         </t>
                     </t>
                     <div class="o_Message_content" t-ref="content">
-                        <div class="o_Message_prettyBody" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
+                        <t t-if="message.hasSendError">
+                            <span class="not-delivred">
+                                <i class="fa fa-exclamation-circle" />
+                                This message was not delivered
+                            </span>
+                            <br />
+                            <a href="" class="o_Message_sendAgain not-delivred" t-on-click="_onClickSendAgain" title="Try again">
+                                <span class="fa fa-repeat" /> Retry
+                            </a>
+                        </t>
+                        <div class="o_Message_prettyBody" t-att-class="{ 'o-pending': message and message.isPendingSend }" t-ref="prettyBody"/><!-- message.prettyBody is inserted here from _update() -->
                         <t t-if="message.subtype_description and !message.isBodyEqualSubtypeDescription">
                             <p t-esc="message.subtype_description"/>
                         </t>
