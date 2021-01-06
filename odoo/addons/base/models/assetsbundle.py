@@ -147,9 +147,16 @@ class AssetsBundle(object):
                     for style in self.stylesheets:
                         response.append(style.to_node())
 
-            if js:
-                for jscript in self.javascripts:
-                    response.append(jscript.to_node())
+            if js and self.javascripts:
+                attr = OrderedDict([
+                    ["async", "async" if async_load else None],
+                    ["defer", "defer" if defer_load or lazy_load else None],
+                    ["type", "text/javascript"],
+                    ["data-src" if lazy_load else "src", self.js().url],
+                    ['data-asset-xmlid', self.name],
+                    ['data-asset-version', self.version],
+                ])
+                response.append(("script", attr, None))
         else:
             if css and self.stylesheets:
                 css_attachments = self.css() or []
@@ -170,7 +177,7 @@ class AssetsBundle(object):
                     ["async", "async" if async_load else None],
                     ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
-                    ["data-src" if lazy_load else "src", self.js().url],
+                    ["data-src" if lazy_load else "src", self.js_minify().url],
                     ['data-asset-xmlid', self.name],
                     ['data-asset-version', self.version],
                 ])
@@ -248,7 +255,7 @@ class AssetsBundle(object):
 
         return True
 
-    def get_attachments(self, type, ignore_version=False):
+    def get_attachments(self, type, ignore_version=False, is_minified=False):
         """ Return the ir.attachment records for a given bundle. This method takes care of mitigating
         an issue happening when parallel transactions generate the same bundle: while the file is not
         duplicated on the filestore (as it is stored according to its hash), there are multiple
@@ -262,7 +269,7 @@ class AssetsBundle(object):
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
             sep='',
-            type='.%s' % type
+            type=('.min.%s' if is_minified else '.%s') % type
         )
         self.env.cr.execute("""
              SELECT max(id)
@@ -275,7 +282,7 @@ class AssetsBundle(object):
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
 
-    def save_attachment(self, type, content):
+    def save_attachment(self, type, content, is_minified=False):
         assert type in ('js', 'css')
         ira = self.env['ir.attachment']
 
@@ -284,6 +291,8 @@ class AssetsBundle(object):
         # and allow to only clear the current direction bundle
         # (this applies to css bundles only)
         fname = '%s.%s' % (self.name, type)
+        if is_minified:
+            fname = '%s.min.%s' % (self.name, type)
         mimetype = 'application/javascript' if type == 'js' else 'text/css'
         values = {
             'name': fname,
@@ -327,8 +336,15 @@ class AssetsBundle(object):
     def js(self):
         attachments = self.get_attachments('js')
         if not attachments:
-            content = ';\n'.join(asset.minify() for asset in self.javascripts)
+            content = ';\n'.join(asset.with_header(asset.content, minimal=False) for asset in self.javascripts)
             return self.save_attachment('js', content)
+        return attachments[0]
+
+    def js_minify(self):
+        attachments = self.get_attachments('js', is_minified=True)
+        if not attachments:
+            content = ';\n'.join(asset.minify() for asset in self.javascripts)
+            return self.save_attachment('js', content, is_minified=True)
         return attachments[0]
 
     def css(self):
@@ -695,7 +711,7 @@ class WebAsset(object):
     def with_header(self, content=None):
         if content is None:
             content = self.content
-        return '\n/* %s */\n%s' % (self.name, content)
+        return ('\n/* %s */\n%s' % (self.name, content))
 
 
 class JavascriptAsset(WebAsset):
@@ -734,6 +750,21 @@ class JavascriptAsset(WebAsset):
                 ['data-asset-xmlid', self.bundle.name],
                 ['data-asset-version', self.bundle.version],
             ]), self.with_header())
+
+    def with_header(self, content=None, minimal=True):
+        if minimal:
+            return super(JavascriptAsset, self).with_header(content)
+        else:
+            header = [
+                "*  Filepath: %s" % self.url,
+                "*  Bundle: %s" % self.bundle.name,
+                "*  Lines: %s" % len(content.splitlines()),
+            ]
+            length = max([len(line) for line in header])
+            header = [line + " " * (length - len(line) + 2) + "*" for line in header]
+            begin = "/" + "*" * (length + 2)
+            end = "*" * (length + 2) + "/"
+            return "\n".join(["", begin, *header, end, content])
 
 
 class StylesheetAsset(WebAsset):
