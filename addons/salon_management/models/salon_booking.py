@@ -49,7 +49,7 @@ class SalonBookingBackend(models.Model):
                                                                 ('start_date_only', '=', date_only)])
         self.filtered_orders = [(6, 0, [x.id for x in all_salon_service_obj])]
 
-    filtered_orders = fields.Many2many('salon.order', string="Salon Orders", compute="all_salon_orders")
+    filtered_orders = fields.Many2many('salon.order', string="Sport Orders", compute="all_salon_orders")
 
     def booking_approve(self):
         salon_order_obj = self.env['salon.order']

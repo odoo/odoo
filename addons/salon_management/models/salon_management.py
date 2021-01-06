@@ -48,8 +48,8 @@ class UserSalon(models.Model):
 class SalonChair(models.Model):
     _name = 'salon.chair'
 
-    name = fields.Char(string="Chair", required=True,
-                       default=lambda self: self.env['salon.sequence.updater'].browse(1).sequence_salon or "Chair-1")
+    name = fields.Char(string="Court", required=True,
+                       default=lambda self: self.env['salon.sequence.updater'].browse(1).sequence_salon or "Court-1")
     number_of_orders = fields.Integer(string="No.of Orders")
     collection_today = fields.Float(string="Today's Collection")
     user_of_chair = fields.Many2one('res.users', string="User", readonly=True,
@@ -58,7 +58,7 @@ class SalonChair(models.Model):
     date = fields.Datetime(string="Date", readonly=True)
     user_line = fields.One2many('salon.chair.user', 'salon_chair', string="Users")
     total_time_taken_chair = fields.Float(string="Time Reserved(Hrs)")
-    active_booking_chairs = fields.Boolean(string="Active booking chairs")
+    active_booking_chairs = fields.Boolean(string="Active booking courts")
     chair_created_user = fields.Integer(string="Salon Chair Created User",
                                         default=lambda self: self._uid)
 
@@ -128,7 +128,7 @@ class SalonChairUserLines(models.Model):
     user_id = fields.Many2one('res.users', string="User", required=True)
     start_date = fields.Datetime(string="Start Date", default=datetime.today(), required=True)
     end_date = fields.Datetime(string="End Date", readonly=True, default=False)
-    salon_chair = fields.Many2one('salon.chair', string="Chair", required=True, ondelete='cascade',
+    salon_chair = fields.Many2one('salon.chair', string="Court", required=True, ondelete='cascade',
                                   index=True, copy=False)
 
     @api.model
@@ -196,7 +196,7 @@ class SalonOrder(models.Model):
     booking_identifier = fields.Boolean(string="Booking Identifier")
     start_time_only = fields.Char(string="Start Time Only")
     end_time_only = fields.Char(string="End Time Only")
-    chair_user = fields.Many2one('res.users', string="Chair User")
+    chair_user = fields.Many2one('res.users', string="Court User")
     salon_order_created_user = fields.Integer(string="Salon Order Created User",
                                               default=lambda self: self._uid)
 
