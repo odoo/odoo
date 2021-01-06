@@ -105,7 +105,7 @@
                     <filter string="Validated" name="confirmed" domain="[('state','=','confirm')]"/>
                     <separator/>
                     <filter name="filter_date" date="date"/>
-                    <field name="journal_id" domain="[('type', '=', 'bank')]" />
+                    <field name="journal_id" domain="[('type', 'in', ('bank', 'cash'))]" />
                     <group expand="0" string="Group By">
                         <filter string="Journal" name="journal" context="{'group_by': 'journal_id'}"/>
                         <filter string="Status" name="status" context="{'group_by': 'state'}"/>
