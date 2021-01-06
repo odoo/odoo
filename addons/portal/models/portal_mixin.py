@@ -60,16 +60,16 @@ class PortalMixin(models.AbstractModel):
 
         return '%s?%s' % ('/mail/view' if redirect else self.access_url, url_encode(params))
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         access_token = self._portal_ensure_token()
-        groups = super(PortalMixin, self)._notify_get_groups()
+        groups = super(PortalMixin, self)._notify_get_groups(msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
+
         if access_token and 'partner_id' in self._fields and self['partner_id']:
             customer = self['partner_id']
-            additional_params = {
-                'access_token': self.access_token,
-            }
-            additional_params.update(customer.signup_get_auth_param()[customer.id])
-            access_link = self._notify_get_action_link('view', **additional_params)
+            msg_vals['access_token'] = self.access_token
+            msg_vals.update(customer.signup_get_auth_param()[customer.id])
+            access_link = self._notify_get_action_link('view', **msg_vals)
 
             new_group = [
                 ('portal_customer', lambda pdata: pdata['id'] == customer.id, {
