@@ -5827,7 +5827,7 @@ Fields:
                 tocompute = list(tocompute)
 
             # process what to compute
-            for field, records in tocompute:
+            for field, records, create in tocompute:
                 records -= self.env.protected(field)
                 if not records:
                     continue
@@ -5843,19 +5843,19 @@ Fields:
                     self.env.cache.invalidate([(field, records._ids)])
                 # recursively trigger recomputation of field's dependents
                 if field.recursive:
-                    recursively_marked.modified([field.name])
+                    recursively_marked.modified([field.name], create)
 
     def _modified_triggers(self, tree, create=False):
         """ Return an iterator traversing a tree of field triggers on ``self``,
         traversing backwards field dependencies along the way, and yielding
-        pairs ``(field, records)`` to recompute.
+        tuple ``(field, records, created)`` to recompute.
         """
         if not self:
             return
 
         # first yield what to compute
         for field in tree.get(None, ()):
-            yield field, self
+            yield field, self, create
 
         # then traverse dependencies backwards, and proceed recursively
         for key, val in tree.items():
