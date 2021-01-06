@@ -152,7 +152,7 @@ class AssetsBundle(object):
                     ["async", "async" if async_load else None],
                     ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
-                    ["data-src" if lazy_load else "src", self.js().url],
+                    ["data-src" if lazy_load else "src", self.js(is_minified=False).url],
                     ['data-asset-xmlid', self.name],
                     ['data-asset-version', self.version],
                 ])
@@ -177,7 +177,7 @@ class AssetsBundle(object):
                     ["async", "async" if async_load else None],
                     ["defer", "defer" if defer_load or lazy_load else None],
                     ["type", "text/javascript"],
-                    ["data-src" if lazy_load else "src", self.js_minify().url],
+                    ["data-src" if lazy_load else "src", self.js(is_minified=True).url],
                     ['data-asset-xmlid', self.name],
                     ['data-asset-version', self.version],
                 ])
@@ -333,18 +333,12 @@ class AssetsBundle(object):
 
         return attachment
 
-    def js(self):
-        attachments = self.get_attachments('js')
+    def js(self, is_minified=True):
+        attachments = self.get_attachments('js', is_minified=is_minified)
         if not attachments:
-            content = ';\n'.join(asset.with_header(asset.content, minimal=False) for asset in self.javascripts)
-            return self.save_attachment('js', content)
-        return attachments[0]
-
-    def js_minify(self):
-        attachments = self.get_attachments('js', is_minified=True)
-        if not attachments:
-            content = ';\n'.join(asset.minify() for asset in self.javascripts)
-            return self.save_attachment('js', content, is_minified=True)
+            content = ';\n'.join(asset.minify() if is_minified else asset.with_header(asset.content, minimal=False)
+                                 for asset in self.javascripts)
+            return self.save_attachment('js', content, is_minified=is_minified)
         return attachments[0]
 
     def css(self):
