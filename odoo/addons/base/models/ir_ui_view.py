@@ -1589,15 +1589,6 @@ actual arch.
         return arch
 
     @api.model
-    def read_template(self, xml_id):
-        """ Return a template content based on external id
-        Read access on ir.ui.view required
-        """
-        template_id = self.get_view_id(xml_id)
-        self.browse(template_id)._check_view_access()
-        return self._read_template(template_id)
-
-    @api.model
     def get_view_id(self, template):
         """ Return the view ID corresponding to ``template``, which may be a
         view ID or an XML ID. Note that this method may be overridden for other

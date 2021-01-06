@@ -11,6 +11,8 @@ const weUtils = require('web_editor.utils');
 
 const qweb = core.qweb;
 
+let colorpickerArch;
+
 const ColorPaletteWidget = Widget.extend({
     // ! for xmlDependencies, see loadDependencies function
     template: 'web_editor.snippet.option.colorpicker',
@@ -67,9 +69,7 @@ const ColorPaletteWidget = Widget.extend({
         const res = this._super.apply(this, arguments);
 
         const $colorSection = this.$('.o_colorpicker_sections[data-color-tab="theme-colors"]');
-        const $clpicker = qweb.has_template('web_editor.colorpicker')
-            ? $(qweb.render('web_editor.colorpicker'))
-            : $(`<colorpicker><div class="o_colorpicker_section" data-name="common"></div></colorpicker>`);
+        const $clpicker = $(colorpickerArch || `<colorpicker><div class="o_colorpicker_section" data-name="common"></div></colorpicker>`);
         $clpicker.find('button').addClass('o_we_color_btn');
         $clpicker.appendTo($colorSection);
 
@@ -371,14 +371,12 @@ ColorPaletteWidget.loadDependencies = async function (rpcCapableObj) {
     // the default summernote ones.
     if (!session.is_website_user) {
         // We can call the colorPalette multiple times but only need 1 rpc
-        if (!colorpickerTemplateProm && !qweb.has_template('web_editor.colorpicker')) {
+        if (!colorpickerTemplateProm && !colorpickerArch) {
             colorpickerTemplateProm = rpcCapableObj._rpc({
                 model: 'ir.ui.view',
-                method: 'read_template',
-                args: ['web_editor.colorpicker'],
-            }).then(template => {
-                return qweb.add_template('<templates>' + template + '</templates>');
-            });
+                method: 'render_public_asset',
+                args: ['web_editor.colorpicker', {}],
+            }).then(arch => colorpickerArch = arch);
         }
         proms.push(colorpickerTemplateProm);
     }
