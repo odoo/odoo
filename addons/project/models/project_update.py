@@ -48,7 +48,7 @@ class ProjectUpdate(models.Model):
             ('draft', 'Draft'),
             ('posted', 'Posted')
         ],
-        default="new", copy=False, required=True, string="Status")
+        default="new", copy=False, required=True)
     progress = fields.Integer()
     user_id = fields.Many2one('res.users', string="Author", required=True, default=lambda self: self.env.user)
     description = fields.Html(default=_get_default_description)

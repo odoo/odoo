@@ -247,7 +247,7 @@
             <field name="name">project.project.form</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <form string="Project" delete="0" js_class="project_form">
+                <form string="Project" delete="0">
                     <header>
                         <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only" groups="project.group_project_manager"/>
                     </header>
@@ -547,7 +547,7 @@
                     <field name="analytic_account_id"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} o_project_tasks oe_kanban_global_click o_has_icon" >
+                            <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click o_has_icon">
                                 <div class="o_project_kanban_main">
                                     <div class="o_kanban_card_content mw-100">
                                         <div class="o_kanban_primary_left">
@@ -1194,4 +1194,5 @@
             parent="menu_project_report"
             groups="project.group_project_rating"
             sequence="40"/>
+
 </odoo>
