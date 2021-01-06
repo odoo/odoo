@@ -24,9 +24,11 @@ odoo.define('@tests/comments', function (require) {
 
   // another one
 
-  const x = "this is a // nice string and should be kept";
   const y = "this is a /* nice string and should be kept */";
   const z = "this is a /* nice string and should be kept";
+  const x = __exports.x = "this is a // nice string and should be kept";
+  const w = "this is a */ nice string and should be kept";
+
   // This isn't a string
   /*
     comments
