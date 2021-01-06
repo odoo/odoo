@@ -393,6 +393,8 @@ class AccountReconcileModel(models.Model):
 
         partner = partner or st_line.partner_id
 
+        has_full_write_off= any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
+
         lines_vals_list = []
         amls = self.env['account.move.line'].browse(aml_ids)
         st_line_residual_before = st_line_residual
@@ -403,6 +405,9 @@ class AccountReconcileModel(models.Model):
             if aml.balance * st_line_residual > 0:
                 # Meaning they have the same signs, so they can't be reconciled together
                 assigned_balance = -aml.amount_residual
+            elif has_full_write_off:
+                assigned_balance = -aml.amount_residual
+                st_line_residual -= min(-aml.amount_residual, st_line_residual, key=abs)
             else:
                 assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
                 st_line_residual -= assigned_balance
