@@ -9059,6 +9059,44 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('control panel buttons in multi editable grouped list views', async function (assert) {
+        assert.expect(8);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            arch:
+                `<tree multi_edit="1">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsNone(list, '.o_data_row', "all groups should be closed");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
+
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+        assert.containsN(list, '.o_data_row', 1, "first group should be opened");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_list_record_selector input:enabled',
+            "should have selected first record");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
+
+        await testUtils.dom.click(list.$('.o_group_header:last'));
+        assert.containsN(list, '.o_data_row', 2, "two groups should be opened");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
+
+        list.destroy();
+    });
+
     QUnit.test('edit a line and discard it in grouped editable', async function (assert) {
         assert.expect(5);
 
