@@ -45,7 +45,7 @@
                     attrs="{'invisible': [('l10n_latam_use_documents', '=', False)], 'required': [('l10n_latam_use_documents', '=', True)], 'readonly': [('posted_before', '=', True)]}"
                     domain="[('id', 'in', l10n_latam_available_document_type_ids)]" options="{'no_open': True, 'no_create': True}"/>
                 <field name="l10n_latam_document_number"
-                    attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('l10n_latam_manual_document_number', '=', False), '|', '|', ('l10n_latam_use_documents', '=', False), ('highest_name', '!=', False), ('state', '!=', 'draft')], 'required': ['|', ('l10n_latam_manual_document_number', '=', True), ('highest_name', '=', False)], 'readonly': [('posted_before', '=', True)]}"/>
+                    attrs="{'invisible': ['|', ('l10n_latam_use_documents', '=', False), ('l10n_latam_manual_document_number', '=', False), '|', '|', ('l10n_latam_use_documents', '=', False), ('highest_name', '!=', False), ('state', '!=', 'draft')], 'required': ['|', ('l10n_latam_manual_document_number', '=', True), ('highest_name', '=', False)], 'readonly': [('posted_before', '=', True), ('state', '!=', 'draft')]}"/>
             </xpath>
 
             <!-- on latam_documents we use document_number to set name -->
