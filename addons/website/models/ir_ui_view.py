@@ -324,13 +324,6 @@ class View(models.Model):
             return view.id
         return super(View, self.sudo()).get_view_id(xml_id)
 
-    @api.model
-    def read_template(self, xml_id):
-        view = self._view_obj(self.get_view_id(xml_id))
-        if view.visibility and view._handle_visibility(do_raise=False):
-            self = self.sudo()
-        return super(View, self).read_template(xml_id)
-
     def _get_original_view(self):
         """Given a view, retrieve the original view it was COW'd from.
         The given view might already be the original one. In that case it will
