@@ -68,7 +68,7 @@ class CrmLead(models.Model):
             lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude)
             partner = self.env['res.partner'].browse(partner_id)
             if partner.user_id:
-                lead.handle_salesmen_assignment(partner.user_id.ids, team_id=partner.team_id.id)
+                lead._handle_salesmen_assignment(user_ids=partner.user_id.ids, team_id=partner.team_id.id)
             lead.write({'partner_assigned_id': partner_id})
         return res
 

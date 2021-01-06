@@ -291,6 +291,6 @@ class TestCRMLead(TestCrmCommon):
             subtype_xmlid='mail.mt_comment')
         self.assertEqual(message.author_id, self.user_sales_manager.partner_id)
 
-        new_lead.handle_partner_assignment(create_missing=True)
+        new_lead._handle_partner_assignment(create_missing=True)
         self.assertEqual(new_lead.partner_id.email, 'unknown.sender@test.example.com')
         self.assertEqual(new_lead.partner_id.team_id, self.sales_team_1)
