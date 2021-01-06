@@ -831,7 +831,7 @@ class AccountInvoice(models.Model):
         destination_emails = email_split((msg_dict.get('to') or '') + ',' + (msg_dict.get('cc') or ''))
         alias_names = [mail_to.split('@')[0] for mail_to in destination_emails]
         journal = self.env['account.journal'].search([
-            ('type', '=', 'purchase'), ('alias_name', 'in', alias_names)
+            ('type', 'in', ('purchase', 'sale')), ('alias_name', 'in', alias_names)
         ], limit=1)
 
         # Create the message and the bill.
@@ -839,7 +839,7 @@ class AccountInvoice(models.Model):
         if journal:
             values['journal_id'] = journal.id
         # Passing `type` in context so that _default_journal(...) can correctly set journal for new vendor bill
-        invoice = super(AccountInvoice, self.with_context(type=values.get('type'))).message_new(msg_dict, values)
+        invoice = super(AccountInvoice, self.with_context(type=values.get('type'), journal_type=journal.type)).message_new(msg_dict, values)
 
         # Subscribe internal users on the newly created bill
         partners = self.env['res.partner'].browse(seen_partner_ids)
