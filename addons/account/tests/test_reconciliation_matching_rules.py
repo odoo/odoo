@@ -448,12 +448,14 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         ])
 
     def test_larger_invoice_auto_reconcile(self):
-        ''' Test auto reconciliation with an invoice with larger amount than the statement line's.'''
+        ''' Test auto reconciliation with an invoice with larger amount than the
+        statement line's, for rules without write-offs.'''
         self.bank_line_1.amount = 40
         self.invoice_line_1.move_id.payment_reference = self.bank_line_1.payment_ref
 
         self.rule_1.sequence = 2
         self.rule_1.auto_reconcile = True
+        self.rule_1.line_ids = [(5, 0, 0)]
 
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.bank_line_1.partner_id},
@@ -767,3 +769,24 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         }
 
         self.assertDictEqual(expected_write_off, to_compare)
+
+    def test_inv_matching_with_write_off_autoreconcile(self):
+        self.bank_line_1.amount = 95
+
+        self.rule_1.sequence = 2
+        self.rule_1.auto_reconcile = True
+        self.rule_1.match_total_amount_param = 90
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, statements=self.bank_st)
+
+        # Check first line has been properly reconciled.
+        self.assertRecordValues(self.bank_line_1.line_ids, [
+            {'partner_id': self.partner_1.id, 'debit': 95.0, 'credit': 0.0, 'account_id': self.bank_journal.default_account_id.id, 'reconciled': False},
+            {'partner_id': self.partner_1.id, 'debit': 5.0, 'credit': 0.0, 'account_id': self.current_assets_account.id, 'reconciled': False},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 100.0, 'account_id': self.invoice_line_1.account_id.id, 'reconciled': True},
+        ])
+
+        self.assertEqual(self.invoice_line_1.amount_residual, 0.0, "The invoice should have been fully reconciled")
