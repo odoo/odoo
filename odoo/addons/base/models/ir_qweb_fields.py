@@ -10,6 +10,7 @@ from lxml import etree
 import math
 
 from odoo.tools import html_escape as escape, posix_to_ldml, safe_eval, float_utils, format_date, pycompat
+from odoo.tools.misc import babel_locale_parse
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -232,7 +233,7 @@ class DateTimeConverter(models.AbstractModel):
         if not value:
             return ''
         lang = self.user_lang()
-        locale = babel.Locale.parse(lang.code)
+        locale = babel_locale_parse(lang.code)
 
         if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
@@ -521,7 +522,7 @@ class DurationConverter(models.AbstractModel):
     def value_to_html(self, value, options):
         units = dict(TIMEDELTA_UNITS)
 
-        locale = babel.Locale.parse(self.user_lang().code)
+        locale = babel_locale_parse(self.user_lang().code)
         factor = units[options.get('unit', 'second')]
         round_to = units[options.get('round', 'second')]
 
@@ -574,7 +575,7 @@ class RelativeDatetimeConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        locale = babel.Locale.parse(self.user_lang().code)
+        locale = babel_locale_parse(self.user_lang().code)
 
         if isinstance(value, pycompat.string_types):
             value = fields.Datetime.from_string(value)
