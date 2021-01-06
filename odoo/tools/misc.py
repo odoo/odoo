@@ -1131,6 +1131,15 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
+def babel_locale_parse(lang_code):
+    try:
+        return babel.Locale.parse(lang_code)
+    except:
+        try:
+            return babel.Locale.default()
+        except:
+            return babel.Locale.parse("en_US")
+
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
     """
         Assuming 'Account' decimal.precision=3:
@@ -1193,7 +1202,7 @@ def format_date(env, value, lang_code=False, date_format=False):
             value = odoo.fields.Datetime.from_string(value)
 
     lang = env['res.lang']._lang_get(lang_code or env.context.get('lang') or 'en_US')
-    locale = babel.Locale.parse(lang.code)
+    locale = babel_locale_parse(lang.code)
     if not date_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
