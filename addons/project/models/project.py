@@ -238,6 +238,7 @@ class Project(models.Model):
         ('monthly', 'Once a Month'),
         ('quarterly', 'Quarterly'),
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
+    default_view_type = fields.Selection([('kanban', 'Cards'), ('tree', 'List')], string="Default View", default='kanban')
 
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! Project start date must be before project end date.')
@@ -473,6 +474,11 @@ class Project(models.Model):
             .env.ref('project.act_project_project_2_project_task_all') \
             .sudo().read()[0]
         action['display_name'] = self.name
+        if self.default_view_type:
+            if 'views' in action:
+                action['views'] = [(False, self.default_view_type)] + [(state, view) for state, view in action['views'] if view != self.default_view_type]
+            else:
+                action['views'] = [(False, self.default_view_type)]
         return action
 
     def action_view_account_analytic_line(self):

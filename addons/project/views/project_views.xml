@@ -255,8 +255,8 @@
                         <button  class="oe_stat_button" name="attachment_tree_view" type="object" icon="fa-file-text-o">
                             <field string="Documents" name="doc_count" widget="statinfo"/>
                         </button>
-                        <button class="oe_stat_button" type="action"
-                            name="%(act_project_project_2_project_task_all)d" icon="fa-tasks">
+                        <button class="oe_stat_button" type="object"
+                            name="action_view_tasks" icon="fa-tasks">
                             <field string="Tasks In Progress" name="task_count" widget="statinfo" options="{'label_field': 'label_tasks'}"/>
                         </button>
                         <button name="action_view_all_rating" type="object" attrs="{'invisible': ['|', ('rating_active', '=', False), ('rating_percentage_satisfaction', '=', -1)]}" class="oe_stat_button oe_percent oe_read_only" icon="fa-smile-o" groups="project.group_project_rating">
@@ -323,6 +323,7 @@
                                            attrs="{'invisible': ['|', ('alias_name', '=', ''), ('alias_name', '=', False)]}"/>
                                 </group>
                                 <group>
+                                    <field name="default_view_type" widget="radio" options="{'horizontal': true}"/>
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
                                     <field name="privacy_visibility" widget="radio"/>
                                     <field name="allowed_internal_user_ids" widget="many2many_tags" attrs="{'invisible': [('privacy_visibility', '!=', 'followers')]}"/>
@@ -450,18 +451,30 @@
             <field name="arch" type="xml">
                 <form string="Project">
                     <group>
-                        <field name="name" class="o_project_name oe_inline"
-                            string="Project Name" placeholder="e.g. Office Party"/>
-                        <field name="user_id" invisible="1"/>
-                        <field name="allow_recurring_tasks" groups="project.group_project_recurring_tasks" />
+                        <div class="oe_title" colspan="4">
+                            <h2>
+                                <field name="name" class="o_project_name" placeholder="Project Name"/>
+                            </h2>
+                        </div>
+                        <group>
+                            <field name="user_id" invisible="1"/>
+                            <field name="default_view_type" widget="radio" options="{'horizontal': true}"/>
+                            <field name="allow_recurring_tasks" groups="project.group_project_recurring_tasks" />
+                            <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <label for="alias_name" class="oe_inline" string="Create tasks by sending an email to"/>
+                                <field name="alias_enabled" invisible="1"/>
+                                <span>
+                                    <field name="alias_name" class="oe_inline" placeholder="e.g. office-party"/>@<field name="alias_domain" class="oe_inline" readonly="1" />
+                                </span>
+                            </div>
+                        </group>
+                        <group>
+                            <div>
+                                <img src="/project/static/src/img/kanban.png" alt="Kanban" width="354" height="200" attrs="{'invisible': [('default_view_type', '=', 'tree')]}"/>
+                                <img src="/project/static/src/img/tree.png" alt="Tree" width="354" height="200" attrs="{'invisible': [('default_view_type', '=', 'kanban')]}"/>
+                            </div>
+                        </group>
                     </group>
-                    <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <label for="alias_name" class="oe_inline" string="Create tasks by sending an email to"/>
-                        <field name="alias_enabled" invisible="1"/>
-                        <span>
-                            <field name="alias_name" class="oe_inline" placeholder="e.g. office-party"/>@<field name="alias_domain" class="oe_inline" readonly="1" />
-                        </span>
-                    </div>
                 </form>
             </field>
         </record>
