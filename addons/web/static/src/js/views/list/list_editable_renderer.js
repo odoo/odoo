@@ -1807,7 +1807,7 @@ ListRenderer.include({
 
         // ignore clicks if there is a modal, except if the list is in the last
         // (active) modal
-        var $modal = $('.modal:last');
+        var $modal = $('body > .modal:last');
         if ($modal.length) {
             var $listModal = this.$el.closest('.modal');
             if ($modal.prop('id') !== $listModal.prop('id')) {

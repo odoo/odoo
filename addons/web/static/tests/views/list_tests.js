@@ -8276,6 +8276,38 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('editable list alongside html field: click out to unselect the row', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="text" widget="html"/>
+                    <field name="o2m">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(form, '.o_data_row');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        assert.containsOnce(form, '.o_data_row');
+        assert.hasClass(form.$('.o_data_row'), 'o_selected_row');
+
+        // click outside to unselect the row
+        await testUtils.dom.click(document.body);
+        assert.containsOnce(form, '.o_data_row');
+        assert.doesNotHaveClass(form.$('.o_data_row'), 'o_selected_row');
+
+        form.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
