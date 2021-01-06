@@ -42,12 +42,12 @@ class TestJavascriptAssetsBundle(FileTouchable):
         files, remains = env['ir.qweb']._get_asset_content(xmlid, env.context)
         return AssetsBundle(xmlid, files, env=env)
 
-    def _any_ira_for_bundle(self, type, lang=None):
+    def _any_ira_for_bundle(self, type, lang=None, is_minified=True):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
         user_direction = self.env['res.lang']._lang_get(lang or self.env.user.lang).direction
         bundle = self.jsbundle_xmlid if type == 'js' else self.cssbundle_xmlid
-        url = '/web/content/%-%/{0}{1}.{2}'.format(('rtl/' if type == 'css' and user_direction == 'rtl' else ''), bundle, type)
+        url = '/web/content/%-%/{0}{1}.{2}'.format(('rtl/' if type == 'css' and user_direction == 'rtl' else ''), bundle, "min.%s" % type if is_minified else type)
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
 
