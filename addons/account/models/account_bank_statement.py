@@ -1135,17 +1135,23 @@ class AccountBankStatementLine(models.Model):
         # Step 3: If the journal entry is not yet balanced, create an open balance.
 
         if self.company_currency_id.round(total_balance):
-            if self.amount > 0:
-                open_balance_account = self.partner_id.with_company(self.company_id).property_account_receivable_id
-            else:
-                open_balance_account = self.partner_id.with_company(self.company_id).property_account_payable_id
-
-            open_balance_vals = self._prepare_counterpart_move_line_vals({
+            counterpart_vals = {
                 'name': '%s: %s' % (self.payment_ref, _('Open Balance')),
-                'account_id': open_balance_account.id,
                 'balance': -total_balance,
                 'currency_id': self.company_currency_id.id,
-            })
+            }
+
+            partner = self.partner_id or existing_lines.mapped('partner_id')[:1]
+            if partner:
+                if self.amount > 0:
+                    open_balance_account = partner.with_company(self.company_id).property_account_receivable_id
+                else:
+                    open_balance_account = partner.with_company(self.company_id).property_account_payable_id
+
+                counterpart_vals['account_id'] = open_balance_account.id
+                counterpart_vals['partner_id'] = partner.id
+
+            open_balance_vals = self._prepare_counterpart_move_line_vals(counterpart_vals)
         else:
             open_balance_vals = None
 
@@ -1229,6 +1235,15 @@ class AccountBankStatementLine(models.Model):
                 continue
 
             (line + counterpart_line).reconcile()
+
+        # Assign partner if needed (for example, when reconciling a statement
+        # line with no partner, with an invoice; assign the partner of this invoice)
+        if not self.partner_id:
+            rec_overview_partners = set(overview['counterpart_line'].partner_id
+                                        for overview in reconciliation_overview
+                                        if overview.get('counterpart_line') and overview['counterpart_line'].partner_id)
+            if len(rec_overview_partners) == 1:
+                self.line_ids.write({'partner_id': rec_overview_partners.pop()})
 
     # -------------------------------------------------------------------------
     # BUSINESS METHODS

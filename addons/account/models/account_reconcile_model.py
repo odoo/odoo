@@ -428,13 +428,8 @@ class AccountReconcileModel(models.Model):
             st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
 
         # Check we have enough information to create an open balance.
-        if not st_line.company_currency_id.is_zero(st_line_residual):
-            if st_line.amount > 0:
-                open_balance_account = partner.property_account_receivable_id
-            else:
-                open_balance_account = partner.property_account_payable_id
-            if not open_balance_account:
-                return []
+        if open_balance_vals and not open_balance_vals.get('account_id'):
+            return []
 
         return lines_vals_list + writeoff_vals_list
 
