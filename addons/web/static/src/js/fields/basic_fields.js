@@ -1588,6 +1588,7 @@ var FieldEmail = InputField.extend({
      */
     _renderReadonly: function () {
         if (this.value) {
+            this.el.innerHTML = '';
             this.el.classList.add("o_form_uri", "o_text_overflow");
             const anchorEl = Object.assign(document.createElement('a'), {
                 text: this.value,
