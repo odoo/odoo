@@ -274,19 +274,18 @@ class AccountMove(models.Model):
 
         return invoice_form.save()
 
-    @api.returns('mail.message', lambda value: value.id)
-    def message_post(self, **kwargs):
+    def _message_post_process_attachments(self, attachments, attachment_ids, message_values):
         # OVERRIDE
         # /!\ 'default_res_id' in self._context is used to don't process attachment when using a form view.
-        res = super(AccountMove, self).message_post(**kwargs)
-
+        return_values = super()._message_post_process_attachments(attachments, attachment_ids, message_values)
         if not self.env.context.get('no_new_invoice') and len(self) == 1 and self.state == 'draft' and (
             self.env.context.get('default_type', self.type) in self.env['account.move'].get_invoice_types(include_receipts=True)
             or self.env['account.journal'].browse(self.env.context.get('default_journal_id')).type in ('sale', 'purchase')
         ):
-            for attachment in self.env['ir.attachment'].browse(kwargs.get('attachment_ids', [])):
+            attachments = self.env['ir.attachment'].browse([c[1] for c in return_values['attachment_ids']])
+            for attachment in attachments:
                 self._create_invoice_from_attachment(attachment)
-        return res
+        return return_values
 
     def _create_invoice_from_attachment(self, attachment):
         if 'pdf' in attachment.mimetype:
