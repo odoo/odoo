@@ -64,13 +64,13 @@
             <field name="context">{}</field>
         </record>
         <record id="salon_chair_action" model="ir.actions.act_window">
-            <field name="name">Chair</field>
+            <field name="name">Court</field>
             <field name="res_model">salon.chair</field>
             <field name="view_mode">tree,form</field>
         </record>
-        <menuitem id="salon_management_menu" name="Salon" groups="salon_management.group_salon_user"/>
+        <menuitem id="salon_management_menu" name="Sport" groups="salon_management.group_salon_user"/>
         <menuitem id="salon_management_dashboard" parent="salon_management_menu" action="salon_dashboard_action"/>
-        <menuitem id="salon_management_salon" name="Salon" parent="salon_management_menu"/>
-        <menuitem id="salon_management_chair" name="Chair" parent="salon_management_salon" action="salon_chair_action"/>
+        <menuitem id="salon_management_salon" name="Sport" parent="salon_management_menu"/>
+        <menuitem id="salon_management_chair" name="Court" parent="salon_management_salon" action="salon_chair_action"/>
     </data>
 </odoo>

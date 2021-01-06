@@ -208,7 +208,7 @@
             </field>
         </record>
         <record id="salon_order_action" model="ir.actions.act_window">
-            <field name="name">Salon</field><!--            <field name="view_type">form</field>-->
+            <field name="name">Orders</field><!--            <field name="view_type">form</field>-->
 
             <field name="res_model">salon.order</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -219,6 +219,6 @@
             <field name="view_mode">kanban,tree,form</field>
             <field name="domain">[('chair_id', '=', active_id)]</field>
         </record>
-        <menuitem id="salon_order" parent="salon_management_salon" name="Salon Orders" action="salon_order_action"/>
+        <menuitem id="salon_order" parent="salon_management_salon" name="Orders" action="salon_order_action"/>
     </data>
 </odoo>
