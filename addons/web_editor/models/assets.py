@@ -273,6 +273,3 @@ class Assets(models.AbstractModel):
             dict
         """
         return {}
-
-    def _get_public_asset_xmlids(self):
-        return ["web_editor.compiled_assets_wysiwyg"]

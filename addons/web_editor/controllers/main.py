@@ -472,10 +472,7 @@ class Web_Editor(http.Controller):
         values = len_args > 1 and args[1] or {}
 
         View = request.env['ir.ui.view']
-        if request.env.user._is_public() \
-                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
-            View = View.sudo()
-        return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+        return View.render_public_asset(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
 
     @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
     def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):
