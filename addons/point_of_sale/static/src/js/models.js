@@ -1894,11 +1894,14 @@ exports.Orderline = Backbone.Model.extend({
                 return pack_lot_ids.push([0, 0, item.export_as_JSON()]);
             }, this));
         }
+
+        var all_price = this.get_all_prices();
+
         return {
             qty: this.get_quantity(),
             price_unit: this.get_unit_price(),
-            price_subtotal: this.get_price_without_tax(),
-            price_subtotal_incl: this.get_price_with_tax(),
+            price_subtotal: all_price.priceWithoutTax,
+            price_subtotal_incl: all_price.priceWithTax,
             discount: this.get_discount(),
             product_id: this.get_product().id,
             tax_ids: [[6, false, _.map(this.get_applicable_taxes(), function(tax){ return tax.id; })]],
@@ -2263,7 +2266,8 @@ exports.Orderline = Backbone.Model.extend({
     get_all_prices: function(){
         var self = this;
 
-        var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
+        var unit_price = this.get_unit_price();
+        var price_unit = unit_price * (1.0 - (this.get_discount() / 100.0));
         var taxtotal = 0;
 
         var product =  this.get_product();
@@ -2281,7 +2285,7 @@ exports.Orderline = Backbone.Model.extend({
         product_taxes = _.uniq(product_taxes, function(tax) { return tax.id; });
 
         var all_taxes = this.compute_all(product_taxes, price_unit, this.get_quantity(), this.pos.currency.rounding);
-        var all_taxes_before_discount = this.compute_all(product_taxes, this.get_unit_price(), this.get_quantity(), this.pos.currency.rounding);
+
         _(all_taxes.taxes).each(function(tax) {
             taxtotal += tax.amount;
             taxdetail[tax.id] = tax.amount;
@@ -2291,7 +2295,7 @@ exports.Orderline = Backbone.Model.extend({
             "priceWithTax": all_taxes.total_included,
             "priceWithoutTax": all_taxes.total_excluded,
             "priceSumTaxVoid": all_taxes.total_void,
-            "priceWithTaxBeforeDiscount": all_taxes_before_discount.total_included,
+            "priceWithTaxBeforeDiscount": unit_price,
             "tax": taxtotal,
             "taxDetails": taxdetail,
         };
