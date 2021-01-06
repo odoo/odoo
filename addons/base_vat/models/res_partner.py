@@ -474,6 +474,20 @@ class ResPartner(models.Model):
             return any(re.compile(rx).match(vat) for rx in all_gstin_re)
         return False
 
+    def check_vat_au(self, vat):
+        '''
+        The Australian equivalent of a VAT number is an ABN number.
+        TFN (Australia Tax file numbers) are private and not to be
+        entered into systems or publicly displayed, so ABN numbers
+        are the public facing number that legally must be displayed
+        on all invoices
+        '''
+        check_func = getattr(stdnum.util.get_cc_module('au', 'abn'), 'is_valid', None)
+        if not check_func:
+            vat = vat.replace(" ", "")
+            return len(vat) == 11 and vat.isdigit()
+        return check_func(vat)
+
     def format_vat_ch(self, vat):
         stdnum_vat_format = getattr(stdnum.util.get_cc_module('ch', 'vat'), 'format', None)
         return stdnum_vat_format('CH' + vat)[2:] if stdnum_vat_format else vat
