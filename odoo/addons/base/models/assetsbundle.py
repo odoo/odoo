@@ -224,7 +224,7 @@ class AssetsBundle(object):
             **self._get_asset_url_values(id=id, unique=unique, extra=extra, name=name, sep=sep, type=type)
         )
 
-    def clean_attachments(self, type):
+    def clean_attachments(self, type, is_minified=False):
         """ Takes care of deleting any outdated ir.attachment records associated to a bundle before
         saving a fresh one.
 
@@ -239,7 +239,7 @@ class AssetsBundle(object):
             extra='%s' % ('rtl/' if type == 'css' and self.user_direction == 'rtl' else ''),
             name=self.name,
             sep='',
-            type='.%s' % type
+            type=('.min.%s' if is_minified else '.%s') % type
         )
         domain = [
             ('url', '=like', url),
@@ -321,7 +321,7 @@ class AssetsBundle(object):
         if self.env.context.get('commit_assetsbundle') is True:
             self.env.cr.commit()
 
-        self.clean_attachments(type)
+        self.clean_attachments(type, is_minified=is_minified)
 
         # For end-user assets (common and backend), send a message on the bus
         # to invite the user to refresh their browser
