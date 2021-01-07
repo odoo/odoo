@@ -427,7 +427,6 @@ return AbstractRenderer.extend({
                 }
             },
             select: function (selectionInfo) {
-                // Clicking on the view, dispose any visible popover. Otherwise create a new event.
                 if (self.$('.o_cw_popover').length) {
                     self._unselectEvent();
                 }
