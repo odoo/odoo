@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-from odoo import api, fields, models, _
+from odoo import api, fields, Command, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_is_zero, float_repr
+from odoo.tools.misc import clean_context, format_date
 from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 
@@ -197,7 +198,7 @@ class HrExpense(models.Model):
         attachment_data = self.env['ir.attachment'].read_group([('res_model', '=', 'hr.expense'), ('res_id', 'in', self.ids)], ['res_id'], ['res_id'])
         attachment = dict((data['res_id'], data['res_id_count']) for data in attachment_data)
         for expense in self:
-            expense.attachment_number = attachment.get(expense.id, 0)
+            expense.attachment_number = attachment.get(expense._origin.id, 0)
 
     @api.depends('employee_id')
     def _compute_is_editable(self):
@@ -385,7 +386,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'res_id': self.sheet_id.id
         }
 
-    def _create_sheet_from_expenses(self):
+    def _get_default_expense_sheet_values(self):
         if any(expense.state != 'draft' or expense.sheet_id for expense in self):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
@@ -394,24 +395,33 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             raise UserError(_("You can not create report without category."))
 
         todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
-        sheet = self.env['hr.expense.sheet'].create({
-            'company_id': self.company_id.id,
-            'employee_id': self[0].employee_id.id,
-            'name': todo[0].name if len(todo) == 1 else _('Expense Report'),
-            'expense_line_ids': [(6, 0, todo.ids)]
-        })
-        return sheet
+        if len(todo) == 1:
+            expense_name = todo.name
+        else:
+            dates = todo.mapped('date')
+            min_date = format_date(self.env, min(dates))
+            max_date = format_date(self.env, max(dates))
+            expense_name = min_date if max_date == min_date else "%s - %s" % (min_date, max_date)
+
+        values = {
+            'default_company_id': self.company_id.id,
+            'default_employee_id': self[0].employee_id.id,
+            'default_name': expense_name,
+            'default_expense_line_ids': [Command.set(todo.ids)],
+            'default_state': 'submit',
+            'create': False
+        }
+        return values
 
     def action_submit_expenses(self):
-        sheet = self._create_sheet_from_expenses()
-        sheet.action_submit_sheet()
+        context_vals = self._get_default_expense_sheet_values()
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'hr.expense.sheet',
             'target': 'current',
-            'res_id': sheet.id,
+            'context': context_vals,
         }
 
     def action_get_attachment_view(self):
@@ -921,12 +931,14 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.is_multiple_currency = len(sheet.expense_line_ids.mapped('currency_id')) > 1
 
+    @api.depends('employee_id')
     def _compute_can_reset(self):
         is_expense_user = self.user_has_groups('hr_expense.group_hr_expense_team_approver')
         for sheet in self:
             sheet.can_reset = is_expense_user if is_expense_user else sheet.employee_id.user_id == self.env.user
 
     @api.depends_context('uid')
+    @api.depends('employee_id')
     def _compute_can_approve(self):
         is_approver = self.user_has_groups('hr_expense.group_hr_expense_team_approver, hr_expense.group_hr_expense_user')
         is_manager = self.user_has_groups('hr_expense.group_hr_expense_manager')
@@ -962,7 +974,12 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        sheet = super(HrExpenseSheet, self.with_context(mail_create_nosubscribe=True, mail_auto_subscribe_no_notify=True)).create(vals)
+        context = clean_context(self.env.context)
+        context.update({
+            'mail_create_nosubscribe': True,
+            'mail_auto_subscribe_no_notify': True
+        })
+        sheet = super(HrExpenseSheet, self.with_context(context)).create(vals)
         sheet.activity_update()
         return sheet
 
@@ -1014,7 +1031,7 @@ class HrExpenseSheet(models.Model):
 
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
-        res = expense_line_ids.action_move_create()
+        res = expense_line_ids.with_context(clean_context(self.env.context)).action_move_create()
         for sheet in self.filtered(lambda s: not s.accounting_date):
             sheet.accounting_date = sheet.account_move_id.date
         to_post = self.filtered(lambda sheet: sheet.payment_mode == 'own_account' and sheet.expense_line_ids)
