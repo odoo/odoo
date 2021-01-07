@@ -3938,6 +3938,56 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test('calendar: disableQuickCreate in data event', async function (assert) {
+        assert.expect(3);
+
+        testUtils.mock.patch(CalendarRenderer, {
+            _preOpenCreate: function (data) {
+                data = Object.assign({}, data, {
+                    extendedProps: {disableQuickCreate: true},
+                });
+                return this._super.call(this, data);
+            },
+        });
+
+        let calendar = await testUtils.createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch: `<calendar mode="day" date_start="start" date_stop="stop"></calendar>`,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+            intercepts: {
+                do_action(ev) {
+                    assert.step('do_action');
+                    assert.deepEqual(ev.data.action.context, {
+                            default_start: "2016-12-12 06:30:00",
+                            default_stop: "2016-12-12 11:00:00",
+                        }, "should send the correct data to create events");
+                },
+            },
+        }, {positionalClicks: true});
+
+        // Create event
+        var $initCell = calendar.$('.fc-time-grid .fc-minor[data-time="06:30:00"] .fc-widget-content:last-child');
+        var $endCell = calendar.$('.fc-time-grid .fc-minor[data-time="10:30:00"] .fc-widget-content:last-child');
+
+        var left = $initCell.offset().left;
+        var top = $initCell.offset().top;
+        testUtils.dom.triggerPositionalMouseEvent(left, top, "mousedown");
+        top = $endCell.offset().top;
+        testUtils.dom.triggerPositionalMouseEvent(left, top, "mousemove");
+        testUtils.dom.triggerPositionalMouseEvent(left, top, "mouseup");
+        await testUtils.nextTick();
+
+        assert.verifySteps(['do_action']);
+
+        calendar.destroy();
+
+        testUtils.mock.unpatch(CalendarRenderer);
+    });
 });
 
 });

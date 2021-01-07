@@ -338,6 +338,7 @@ return AbstractRenderer.extend({
                     r_end: fc4Event.extendedProps.r_end && moment(fc4Event.extendedProps.r_end).utcOffset(0, true),
                     record: fc4Event.extendedProps.record,
                     attendees: fc4Event.extendedProps.attendees,
+                    disableQuickCreate: fc4Event.extendedProps.disableQuickCreate,
                 });
             }
         }
