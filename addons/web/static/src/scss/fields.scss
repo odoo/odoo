@@ -538,6 +538,13 @@
         @include o-text-overflow;
         transition: none; // remove transition to prevent badges from flickering at reload
     }
+
+    // Use hidden-like input in fields to handle key-events without displaying anything 
+    input.o_hidden_input {
+        border: 0;
+        padding: 0;
+        width: 0;
+    }
 }
 
 span.o_field_copy:empty {

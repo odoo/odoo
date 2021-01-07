@@ -1344,6 +1344,13 @@
         </div><div class="o_progressbar_value"/>
     </div>
 </t>
+<t t-name="BasicProgressBar">
+    <div class="o_progressbar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div t-if="widget.title" class="o_progressbar_title"><t t-esc="widget.title"/></div><input class="o_progress_keydown o_hidden_input"><div class="o_progress">
+            <div class="o_progressbar_complete"/>
+        </div></input><div class="o_progressbar_value"/>
+    </div>
+</t>
 <t t-name="FieldPercentPie">
     <div class="o_field_percent_pie">
         <div class="o_pie">

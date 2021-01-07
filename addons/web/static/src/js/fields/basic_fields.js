@@ -3031,6 +3031,126 @@ var FieldProgressBar = AbstractField.extend({
 });
 
 /**
+ * Node options:
+ *
+ * - max_field: get the max_value for the widget from a field which must be present in the view
+ * - max_num: A numeric max_value for the widget if the max_field is not found or set (default: 100)
+ * - title: title of the bar, displayed on top of the bar options
+ * - step: Round the clicked value on the progressbar to the nearest multiple of step (default: 5, min: 1)
+ */
+var FieldBasicProgressBar = AbstractField.extend({
+    description: _lt("Basic Progress Bar"),
+    template: "BasicProgressBar",
+    events: {
+        'click .o_progress': '_onClick',
+        'keydown .o_progress_keydown': '_onKeydown',
+        'mousedown .o_progress': '_onMousedown',
+        'mousemove .o_progress': '_onMousemove',
+    },
+    supportedFieldTypes: ['integer', 'float'],
+    init: function () {
+        this._super.apply(this, arguments);
+        this.canWrite = !this.nodeOptions.readonly && this.mode === 'edit';
+        this.max_value = this.recordData[this.nodeOptions.max_field] || this.nodeOptions.max_num || 100;
+        this.step = this.nodeOptions.step !== undefined ? this.nodeOptions.step : 5;
+        this.title = _t(this.attrs.title || this.nodeOptions.title) || '';
+        this.moused_down = false;
+    },
+    _render: function () {
+        this._render_value();
+        return this._super();
+    },
+    /**
+     * Updates the widget with value
+     *
+     * @param {Number} value
+     */
+    on_update: function (value) {
+        // _setValues accepts string and will parse it
+        var formattedValue = this._formatValue(value);
+        this._setValue(formattedValue);
+    },
+    /**
+     * Get the value of the click on the progress bar
+     * 
+     * @param {Event} event 
+     */
+    get_progress_value: function (event) {
+        var $target = $(event.currentTarget);
+        var numValue = Math.floor((event.pageX - $target.offset().left) / $target.outerWidth() * this.max_value);
+        if(this.step > 0){
+            numValue = Math.round(numValue/this.step)*this.step;
+        }
+        return numValue;
+    },
+    /**
+     * Renders the value
+     *
+     * @private
+     * @param {Number} v
+     */
+    _render_value: function (v) {
+        var value = this.value;
+        var max_value = this.max_value;
+        if (!isNaN(v)) {
+            value = v;
+        }
+        value = value || 0;
+        max_value = max_value || 0;
+
+        var widthComplete;
+        if (value <= max_value) {
+            widthComplete = value/max_value * 100;
+        } else {
+            widthComplete = 100;
+        }
+
+        this.$('.o_progress').toggleClass('o_progress_overflow', value > max_value)
+            .attr('aria-valuemin', '0')
+            .attr('aria-valuemax', max_value)
+            .attr('aria-valuenow', value);
+        this.$('.o_progressbar_complete').css('width', widthComplete + '%');
+
+        if (max_value !== 100) {
+            this.$('.o_progressbar_value').text(utils.human_number(value) + " / " + utils.human_number(max_value));
+        } else {
+            this.$('.o_progressbar_value').text(utils.human_number(value) + "%");
+        }
+    },
+    _onClick: function (event) {
+        this.moused_down = false;
+        if (this.canWrite) {
+            this.on_update(this.get_progress_value(event));
+            this.$('.o_progress_keydown').focus();
+        }
+    },
+    _onMousedown:function(event) {
+        if (this.canWrite) {
+            this.moused_down = true;
+            this._render_value(this.get_progress_value(event));
+        }
+    },
+    _onMousemove:function(event) {
+        if (this.moused_down) {
+            this._render_value(this.get_progress_value(event));
+        }
+    },
+    _onKeydown: function (event){
+        if (this.canWrite) {
+            var increment = (this.step > 0 ? this.step : 1);
+            if(event.keyCode === $.ui.keyCode.UP || event.keyCode === $.ui.keyCode.RIGHT){
+                this.on_update(this.value + increment);
+            } else if (event.keyCode === $.ui.keyCode.DOWN || event.keyCode === $.ui.keyCode.LEFT) {
+                this.on_update(this.value - increment);
+            }
+        }
+    },
+    isSet: function () {
+        return true;
+    },
+});
+
+/**
  * This widget is intended to be used on boolean fields. It toggles a button
  * switching between a green bullet / gray bullet.
 */
@@ -3805,6 +3925,7 @@ return {
     FieldPercentPie: FieldPercentPie,
     FieldPhone: FieldPhone,
     FieldProgressBar: FieldProgressBar,
+    FieldBasicProgressBar: FieldBasicProgressBar,
     FieldText: FieldText,
     ListFieldText: ListFieldText,
     FieldToggleBoolean: FieldToggleBoolean,
