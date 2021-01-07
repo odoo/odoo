@@ -497,10 +497,15 @@ eventHandler.modules.imageDialog.showImageDialog = function ($editable) {
             onUpload: $editable.data('callbacks').onUpload,
             noVideos: options && options.noVideos,
         },
-        onSave: function (media) {
-            if(media && !document.body.contains(media)) {
-            r.insertNode(media);
-            };
+        onSave: function (newMedia) {
+            if (!newMedia) {
+                return;
+            }
+            if (media) {
+                $(media).replaceWith(newMedia);
+            } else {
+                r.insertNode(newMedia);
+            }
         },
     });
     return new $.Deferred().reject();
