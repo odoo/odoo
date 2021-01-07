@@ -352,7 +352,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             'res_id': self.sheet_id.id
         }
 
-    def _create_sheet_from_expenses(self):
+    def _get_default_expense_sheet_values(self):
         if any(expense.state != 'draft' or expense.sheet_id for expense in self):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
@@ -361,24 +361,30 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
             raise UserError(_("You can not create report without category."))
 
         todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
-        sheet = self.env['hr.expense.sheet'].create({
-            'company_id': self.company_id.id,
-            'employee_id': self[0].employee_id.id,
-            'name': todo[0].name if len(todo) == 1 else '',
-            'expense_line_ids': [(6, 0, todo.ids)]
-        })
-        return sheet
+        if len(todo) == 1:
+            expense_name = todo.name
+        else:
+            dates = todo.mapped('date')
+            expense_name = min(dates) if max(dates) == min(dates) else "%s - %s" % (min(dates), max(dates))
+
+        values = {
+            'default_company_id': self.company_id.id,
+            'default_employee_id': self[0].employee_id.id,
+            'default_name': expense_name,
+            'default_expense_line_ids': [(6, 0, todo.ids)],
+            'default_state': 'submit'
+        }
+        return values
 
     def action_submit_expenses(self):
-        sheet = self._create_sheet_from_expenses()
-        sheet.action_submit_sheet()
+        context_vals = self._get_default_expense_sheet_values()
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'hr.expense.sheet',
             'target': 'current',
-            'res_id': sheet.id,
+            'context': context_vals,
         }
 
     def action_get_attachment_view(self):
@@ -925,7 +931,13 @@ class HrExpenseSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        sheet = super(HrExpenseSheet, self.with_context(mail_create_nosubscribe=True, mail_auto_subscribe_no_notify=True)).create(vals)
+        context = dict(self.env.context)
+        context.pop('default_expense_line_ids', None)
+        context.update({
+            'mail_create_nosubscribe': True,
+            'mail_auto_subscribe_no_notify': True
+        })
+        sheet = super(HrExpenseSheet, self.with_context(context)).create(vals)
         sheet.activity_update()
         return sheet
 
@@ -975,9 +987,11 @@ class HrExpenseSheet(models.Model):
         if any(not sheet.journal_id for sheet in self):
             raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
 
+        context = dict(self.env.context)
+        context.pop('default_state', None)
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
-        res = expense_line_ids.action_move_create()
+        res = expense_line_ids.with_context(context).action_move_create()
         for sheet in self.filtered(lambda s: not s.accounting_date):
             sheet.accounting_date = sheet.account_move_id.date
         to_post = self.filtered(lambda sheet: sheet.payment_mode == 'own_account' and sheet.expense_line_ids)
