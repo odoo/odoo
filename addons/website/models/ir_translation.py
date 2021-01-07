@@ -8,7 +8,7 @@ class IrTranslation(models.Model):
 
     def _load_module_terms(self, modules, langs, overwrite=False):
         """ Add missing website specific translation """
-        res = super()._load_module_terms(modules, langs)
+        res = super()._load_module_terms(modules, langs, overwrite=overwrite)
 
         if not langs or not modules:
             return res
