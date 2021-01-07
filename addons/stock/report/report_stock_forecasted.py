@@ -227,7 +227,8 @@ class ReplenishmentReport(models.AbstractModel):
         res['warehouses'] = self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
         res['active_warehouse'] = self.env.context.get('warehouse', False)
         if not res['active_warehouse']:
-            res['active_warehouse'] = self.env.context.get('allowed_company_ids')[0]
+            company_id = self.env.context.get('allowed_company_ids')[0]
+            res['active_warehouse'] = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).id
         return res
 
 
