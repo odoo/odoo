@@ -558,6 +558,8 @@ class AccountChartTemplate(models.Model):
 
         # Stop the generations if limited_install is specified
         if limited_install:
+            # Generate account groups, from template
+            self.generate_account_groups(company)
             return account_ref, taxes_ref
 
         # Generating Accounts from templates.
