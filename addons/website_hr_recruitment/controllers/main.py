@@ -82,9 +82,6 @@ class WebsiteHrRecruitment(http.Controller):
 
     @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_detail(self, job, **kwargs):
-        if not job.can_access_from_current_website():
-            raise NotFound()
-
         return request.render("website_hr_recruitment.detail", {
             'job': job,
             'main_object': job,
@@ -92,9 +89,6 @@ class WebsiteHrRecruitment(http.Controller):
 
     @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_apply(self, job, **kwargs):
-        if not job.can_access_from_current_website():
-            raise NotFound()
-
         error = {}
         default = {}
         if 'website_hr_recruitment_error' in request.session:

@@ -169,9 +169,6 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/page/<path:page>'''], type='http', auth="public", website=True, sitemap=False)
     def event_page(self, event, page, **post):
-        if not event.can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
         values = {
             'event': event,
         }
@@ -193,9 +190,6 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>'''], type='http', auth="public", website=True, sitemap=True)
     def event(self, event, **post):
-        if not event.can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
         if event.menu_id and event.menu_id.child_id:
             target_url = event.menu_id.child_id[0].url
         else:
@@ -206,9 +200,6 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/register'''], type='http', auth="public", website=True, sitemap=False)
     def event_register(self, event, **post):
-        if not event.can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
         values = self._prepare_event_register_values(event, **post)
         return request.render("website_event.event_description_full", values)
 
@@ -300,9 +291,6 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['/event/<model("event.event"):event>/registration/new'], type='json', auth="public", methods=['POST'], website=True)
     def registration_new(self, event, **post):
-        if not event.can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
         tickets = self._process_tickets_form(event, post)
         availability_check = True
         if event.seats_limited:
@@ -398,9 +386,6 @@ class WebsiteEventController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/registration/confirm'''], type='http', auth="public", methods=['POST'], website=True)
     def registration_confirm(self, event, **post):
-        if not event.can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
         registrations = self._process_attendees_form(event, post)
         attendees_sudo = self._create_attendees_from_registration_post(event, registrations)
 

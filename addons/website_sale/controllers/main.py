@@ -305,9 +305,6 @@ class WebsiteSale(http.Controller):
 
     @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
-        if not product.can_access_from_current_website():
-            raise NotFound()
-
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
 
     @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
