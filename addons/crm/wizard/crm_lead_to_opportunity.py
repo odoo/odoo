@@ -152,18 +152,18 @@ class Lead2OpportunityPartner(models.TransientModel):
                 self._convert_handle_partner(
                     lead, self.action, self.partner_id.id or lead.partner_id.id)
 
-            lead.convert_opportunity(lead.partner_id.id, [], False)
+            lead.convert_opportunity(lead.partner_id.id, user_ids=False, team_id=False)
 
         leads_to_allocate = leads
         if not self.force_assignment:
             leads_to_allocate = leads_to_allocate.filtered(lambda lead: not lead.user_id)
 
         if user_ids:
-            leads_to_allocate.handle_salesmen_assignment(user_ids, team_id=team_id)
+            leads_to_allocate._handle_salesmen_assignment(user_ids, team_id=team_id)
 
     def _convert_handle_partner(self, lead, action, partner_id):
         # used to propagate user_id (salesman) on created partners during conversion
-        lead.with_context(default_user_id=self.user_id.id).handle_partner_assignment(
+        lead.with_context(default_user_id=self.user_id.id)._handle_partner_assignment(
             force_partner_id=partner_id,
             create_missing=(action == 'create')
         )

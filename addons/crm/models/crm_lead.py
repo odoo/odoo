@@ -857,6 +857,43 @@ class Lead(models.Model):
         return True
 
     # ------------------------------------------------------------
+    # VIEWS
+    # ------------------------------------------------------------
+
+    def redirect_lead_opportunity_view(self):
+        self.ensure_one()
+        return {
+            'name': _('Lead or Opportunity'),
+            'view_mode': 'form',
+            'res_model': 'crm.lead',
+            'domain': [('type', '=', self.type)],
+            'res_id': self.id,
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'context': {'default_type': self.type}
+        }
+
+    @api.model
+    def get_empty_list_help(self, help):
+        help_title, sub_title = "", ""
+        if self._context.get('default_type') == 'lead':
+            help_title = _('Create a new lead')
+        else:
+            help_title = _('Create an opportunity to start playing with your pipeline.')
+        alias_record = self.env['mail.alias'].search([
+            ('alias_name', '!=', False),
+            ('alias_name', '!=', ''),
+            ('alias_model_id.model', '=', 'crm.lead'),
+            ('alias_parent_model_id.model', '=', 'crm.team'),
+            ('alias_force_thread_id', '=', False)
+        ], limit=1)
+        if alias_record and alias_record.alias_domain and alias_record.alias_name:
+            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
+            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
+            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
+        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
+
+    # ------------------------------------------------------------
     # BUSINESS
     # ------------------------------------------------------------
 
@@ -872,7 +909,7 @@ class Lead(models.Model):
         return self.message_post(body=message)
 
     # ------------------------------------------------------------
-    # MERGE LEADS / OPPS
+    # MERGE AND CONVERT LEADS / OPPORTUNITIES
     # ------------------------------------------------------------
 
     def _merge_get_result_type(self):
@@ -962,7 +999,7 @@ class Lead(models.Model):
         which fields has been merged and their new value. `self` is the resulting
         merge crm.lead record.
 
-        :param opportunities: see ``merge_dependences``
+        :param opportunities: see ``_merge_dependences``
         """
         # TODO JEM: mail template should be used instead of fix body, subject text
         self.ensure_one()
@@ -979,7 +1016,7 @@ class Lead(models.Model):
         """ Move mail.message from the given opportunities to the current one. `self` is the
             crm.lead record destination for message of `opportunities`.
 
-        :param opportunities: see ``merge_dependences``
+        :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
         for opportunity in opportunities:
@@ -998,7 +1035,7 @@ class Lead(models.Model):
         """ Move attachments of given opportunities to the current one `self`, and rename
             the attachments having same name than native ones.
 
-        :param opportunities: see ``merge_dependences``
+        :param opportunities: see ``_merge_dependences``
         """
         self.ensure_one()
 
@@ -1020,7 +1057,7 @@ class Lead(models.Model):
                 attachment.write(values)
         return True
 
-    def merge_dependences(self, opportunities):
+    def _merge_dependences(self, opportunities):
         """ Merge dependences (messages, attachments, ...). These dependences will be
             transfered to `self`, the most important lead.
 
@@ -1065,7 +1102,7 @@ class Lead(models.Model):
             merged_data['team_id'] = team_id
 
         # merge other data (mail.message, attachments, ...) from tail into head
-        opportunities_head.merge_dependences(opportunities_tail)
+        opportunities_head._merge_dependences(opportunities_tail)
 
         # check if the stage is in the stages of the Sales Team. If not, assign the stage with the lowest sequence
         if merged_data.get('team_id'):
@@ -1082,16 +1119,6 @@ class Lead(models.Model):
             opportunities_tail.sudo().unlink()
 
         return opportunities_head
-
-    def _sort_by_confidence_level(self, reverse=False):
-        """ Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
-        The confidence level increases with the stage sequence
-        An Opportunity always has higher confidence level than a lead
-        """
-        def opps_key(opportunity):
-            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity._origin.id
-
-        return self.sorted(key=opps_key, reverse=reverse)
 
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
@@ -1122,9 +1149,56 @@ class Lead(models.Model):
             lead.write(vals)
 
         if user_ids or team_id:
-            self.handle_salesmen_assignment(user_ids, team_id)
+            self._handle_salesmen_assignment(user_ids=user_ids, team_id=team_id)
 
         return True
+
+    def _handle_partner_assignment(self, force_partner_id=False, create_missing=True):
+        """ Update customer (partner_id) of leads. Purpose is to set the same
+        partner on most leads; either through a newly created partner either
+        through a given partner_id.
+
+        :param int force_partner_id: if set, update all leads to that customer;
+        :param create_missing: for leads without customer, create a new one
+          based on lead information;
+        """
+        for lead in self:
+            if force_partner_id:
+                lead.partner_id = force_partner_id
+            if not lead.partner_id and create_missing:
+                partner = lead._create_customer()
+                lead.partner_id = partner.id
+
+    def _handle_salesmen_assignment(self, user_ids=False, team_id=False):
+        """ Assign salesmen and salesteam to a batch of leads.  If there are more
+        leads than salesmen, these salesmen will be assigned in round-robin. E.g.
+        4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6) will assigned as
+        following: L1 - S1, L2 - S2, L3 - S3, L4 - S4, L5 - S1, L6 - S2.
+
+        :param list user_ids: salesmen to assign
+        :param int team_id: salesteam to assign
+        """
+        update_vals = {'team_id': team_id} if team_id else {}
+        if not user_ids and team_id:
+            self.write(update_vals)
+        else:
+            lead_ids = self.ids
+            steps = len(user_ids)
+            # pass 1 : lead_ids[0:6:3] = [L1,L4]
+            # pass 2 : lead_ids[1:6:3] = [L2,L5]
+            # pass 3 : lead_ids[2:6:3] = [L3,L6]
+            # ...
+            for idx in range(0, steps):
+                subset_ids = lead_ids[idx:len(lead_ids):steps]
+                update_vals['user_id'] = user_ids[idx]
+                self.env['crm.lead'].browse(subset_ids).write(update_vals)
+
+    # ------------------------------------------------------------
+    # MERGE / CONVERT TOOLS
+    # ---------------------------------------------------------
+
+    # CLASSIFICATION TOOLS
+    # --------------------------------------------------
 
     def _get_lead_duplicates(self, partner=None, email=None, include_lost=False):
         """ Search for leads that seem duplicated based on partner / email.
@@ -1154,6 +1228,43 @@ class Lead(models.Model):
             domain += ['&', ('active', '=', True), '|', ('probability', '=', False), ('probability', '<', 100)]
 
         return self.with_context(active_test=False).search(domain)
+
+    def _sort_by_confidence_level(self, reverse=False):
+        """ Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
+        The confidence level increases with the stage sequence
+        An Opportunity always has higher confidence level than a lead
+        """
+        def opps_key(opportunity):
+            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity._origin.id
+
+        return self.sorted(key=opps_key, reverse=reverse)
+
+    # CUSTOMER TOOLS
+    # --------------------------------------------------
+
+    def _find_matching_partner(self, email_only=False):
+        """ Try to find a matching partner with available information on the
+        lead, using notably customer's name, email, ...
+
+        :param email_only: Only find a matching based on the email. To use
+            for automatic process where ilike based on name can be too dangerous
+        :return: partner browse record
+        """
+        self.ensure_one()
+        partner = self.partner_id
+
+        if not partner and self.email_from:
+            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
+
+        if not partner and not email_only:
+            # search through the existing partners based on the lead's partner or contact name
+            # to be aligned with _create_customer, search on lead's name as last possibility
+            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
+                partner = self.env['res.partner'].search([('name', 'ilike', '%' + customer_potential_name + '%')], limit=1)
+                if partner:
+                    break
+
+        return partner
 
     def _create_customer(self):
         """ Create a partner from lead data and link it to the lead.
@@ -1188,7 +1299,7 @@ class Lead(models.Model):
 
         :return: dictionary of values to give at res_partner.create()
         """
-        email_split = tools.email_split(self.email_from)
+        email_parts = tools.email_split(self.email_from)
         res = {
             'name': partner_name,
             'user_id': self.env.context.get('default_user_id') or self.user_id.id,
@@ -1197,7 +1308,7 @@ class Lead(models.Model):
             'parent_id': parent_id,
             'phone': self.phone,
             'mobile': self.mobile,
-            'email': email_split[0] if email_split else False,
+            'email': email_parts[0] if email_parts else False,
             'title': self.title.id,
             'function': self.function,
             'street': self.street,
@@ -1213,107 +1324,6 @@ class Lead(models.Model):
         if self.lang_id:
             res['lang'] = self.lang_id.code
         return res
-
-    def _find_matching_partner(self, email_only=False):
-        """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, ...
-
-        :param email_only: Only find a matching based on the email. To use
-            for automatic process where ilike based on name can be too dangerous
-        :return: partner browse record
-        """
-        self.ensure_one()
-        partner = self.partner_id
-
-        if not partner and self.email_from:
-            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
-
-        if not partner and not email_only:
-            # search through the existing partners based on the lead's partner or contact name
-            # to be aligned with _create_customer, search on lead's name as last possibility
-            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', '%' + customer_potential_name + '%')], limit=1)
-                if partner:
-                    break
-
-        return partner
-
-    def handle_partner_assignment(self, force_partner_id=False, create_missing=True):
-        """ Update customer (partner_id) of leads. Purpose is to set the same
-        partner on most leads; either through a newly created partner either
-        through a given partner_id.
-
-        :param int force_partner_id: if set, update all leads to that customer;
-        :param create_missing: for leads without customer, create a new one
-          based on lead information;
-        """
-        for lead in self:
-            if force_partner_id:
-                lead.partner_id = force_partner_id
-            if not lead.partner_id and create_missing:
-                partner = lead._create_customer()
-                lead.partner_id = partner.id
-
-    def handle_salesmen_assignment(self, user_ids=None, team_id=False):
-        """ Assign salesmen and salesteam to a batch of leads.  If there are more
-        leads than salesmen, these salesmen will be assigned in round-robin. E.g.
-        4 salesmen (S1, S2, S3, S4) for 6 leads (L1, L2, ... L6) will assigned as
-        following: L1 - S1, L2 - S2, L3 - S3, L4 - S4, L5 - S1, L6 - S2.
-
-        :param list user_ids: salesmen to assign
-        :param int team_id: salesteam to assign
-        """
-        update_vals = {'team_id': team_id} if team_id else {}
-        if not user_ids:
-            self.write(update_vals)
-        else:
-            lead_ids = self.ids
-            steps = len(user_ids)
-            # pass 1 : lead_ids[0:6:3] = [L1,L4]
-            # pass 2 : lead_ids[1:6:3] = [L2,L5]
-            # pass 3 : lead_ids[2:6:3] = [L3,L6]
-            # ...
-            for idx in range(0, steps):
-                subset_ids = lead_ids[idx:len(lead_ids):steps]
-                update_vals['user_id'] = user_ids[idx]
-                self.env['crm.lead'].browse(subset_ids).write(update_vals)
-
-    # ------------------------------------------------------------
-    # TOOLS
-    # ------------------------------------------------------------
-
-    def redirect_lead_opportunity_view(self):
-        self.ensure_one()
-        return {
-            'name': _('Lead or Opportunity'),
-            'view_mode': 'form',
-            'res_model': 'crm.lead',
-            'domain': [('type', '=', self.type)],
-            'res_id': self.id,
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'context': {'default_type': self.type}
-        }
-
-    @api.model
-    def get_empty_list_help(self, help):
-        help_title, sub_title = "", ""
-        if self._context.get('default_type') == 'lead':
-            help_title = _('Create a new lead')
-        else:
-            help_title = _('Create an opportunity to start playing with your pipeline.')
-        alias_record = self.env['mail.alias'].search([
-            ('alias_name', '!=', False),
-            ('alias_name', '!=', ''),
-            ('alias_model_id.model', '=', 'crm.lead'),
-            ('alias_parent_model_id.model', '=', 'crm.team'),
-            ('alias_force_thread_id', '=', False)
-        ], limit=1)
-        if alias_record and alias_record.alias_domain and alias_record.alias_name:
-            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
-            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
-        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     # ------------------------------------------------------------
     # MAILING
