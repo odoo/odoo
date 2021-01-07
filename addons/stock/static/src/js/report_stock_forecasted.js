@@ -33,11 +33,31 @@ const ReplenishReport = clientAction.extend({
         this.actionMethod = `action_product_${isTemplate ? 'tmpl_' : ''}forecast_report`;
         const reportName = `report_product_${isTemplate ? 'template' : 'product'}_replenishment`;
         this.report_url = `/report/html/stock.${reportName}/${this.productId}`;
-        if (this.context.warehouse) {
-            this.active_warehouse = {id: this.context.warehouse};
-        }
-        this.report_url += `?context=${JSON.stringify(this.context)}`;
         this._title = action.name;
+    },
+
+    /**
+     * @override
+     */
+    willStart: function() {
+        var loadWarehouses = this._rpc({
+            model: 'report.stock.report_product_product_replenishment',
+            method: 'get_warehouses',
+        }).then((res) => {
+            this.warehouses = res;
+            if (this.context.warehouse) {
+                this.active_warehouse = this.warehouses.find(w => w.id == this.context.warehouse);
+            }
+            else {
+                this.active_warehouse = this.warehouses[0];
+                this.context.warehouse = this.active_warehouse.id;
+            }
+            this.report_url += `?context=${JSON.stringify(this.context)}`;
+        });
+        return Promise.all([
+            this._super.apply(this, arguments),
+            loadWarehouses
+        ]);
     },
 
     /**
@@ -46,8 +66,8 @@ const ReplenishReport = clientAction.extend({
     start: function () {
         return Promise.all([
             this._super(...arguments),
-            this._renderWarehouseFilters(),
         ]).then(() => {
+            this._renderWarehouseFilters();
             this._renderButtons();
         });
     },
@@ -183,30 +203,17 @@ const ReplenishReport = clientAction.extend({
     },
 
     /**
-     * TODO
-     * @returns {Promise}
+     * Renders the Warehouses filter
      */
     _renderWarehouseFilters: function () {
-        return this._rpc({
-            model: 'report.stock.report_product_product_replenishment',
-            method: 'get_filter_state',
-        }).then((res) => {
-            const warehouses = res.warehouses;
-            const active_warehouse = (this.active_warehouse && this.active_warehouse.id) || res.active_warehouse;
-            if (active_warehouse) {
-                this.active_warehouse = _.findWhere(warehouses, {id: active_warehouse});
-            } else {
-                this.active_warehouse = warehouses[0];
-            }
-            const $filters = $(qweb.render('warehouseFilter', {
-                active_warehouse: this.active_warehouse,
-                warehouses: warehouses,
-                displayWarehouseFilter: (warehouses.length > 1),
-            }));
-            // Bind handlers.
-            $filters.on('click', '.warehouse_filter', this._onClickFilter.bind(this));
-            this.$('.o_search_options').append($filters);
-        });
+        const $filters = $(qweb.render('warehouseFilter', {
+            active_warehouse: this.active_warehouse,
+            warehouses: this.warehouses,
+            displayWarehouseFilter: (this.warehouses.length > 1),
+        }));
+        // Bind handlers.
+        $filters.on('click', '.warehouse_filter', this._onClickFilter.bind(this));
+        this.$('.o_search_options').append($filters);
     },
 
     /**
