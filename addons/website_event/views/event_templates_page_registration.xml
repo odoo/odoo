@@ -149,7 +149,7 @@
         <div id="o_wevent_tickets" class="bg-white shadow-sm o_wevent_js_ticket_details" data-folded-by-default="0">
             <t t-set="tickets" t-value="event.event_ticket_ids.filtered(lambda ticket: not ticket.is_expired)"/>
             <!-- If some tickets expired and there is only one type left, we keep the same layout -->
-            <t t-if="len(event.event_ticket_ids) &gt; 1">
+            <t t-if="len(event.event_ticket_ids) &gt; 1 or tickets.description">
                 <div class="d-flex justify-content-between align-items-center py-2 pl-3 pr-2 border-bottom">
                     <div id="price-range" class="pr-3 d-none"/>
                     <span t-if="not event.event_registrations_open" class="text-danger">
