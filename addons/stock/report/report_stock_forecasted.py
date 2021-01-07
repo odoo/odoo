@@ -74,19 +74,15 @@ class ReplenishmentReport(models.AbstractModel):
         assert product_template_ids or product_variant_ids
         res = {}
 
-        # Get the warehouse we're working on as well as its locations.
         if self.env.context.get('warehouse'):
-            warehouse = self.env['stock.warehouse'].browse(self.env.context['warehouse'])
+            warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
         else:
-            warehouse = self.env['stock.warehouse'].search([
-                ('company_id', '=', self.env.company.id)
-            ], limit=1)
-            self.env.context = dict(self.env.context, warehouse=warehouse.id)
+            warehouse = self.env['stock.warehouse'].browse(self.get_warehouses()[0]['id'])
+
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
             [('id', 'child_of', warehouse.view_location_id.id)],
             ['id'],
         )]
-        res['active_warehouse'] = warehouse.display_name
 
         # Get the products we're working, fill the rendering context with some of their attributes.
         if product_template_ids:
@@ -223,13 +219,8 @@ class ReplenishmentReport(models.AbstractModel):
         return lines
 
     @api.model
-    def get_filter_state(self):
-        res = {}
-        res['warehouses'] = self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
-        res['active_warehouse'] = self.env.context.get('warehouse', False)
-        if not res['active_warehouse']:
-            res['active_warehouse'] = self.env.context.get('allowed_company_ids')[0]
-        return res
+    def get_warehouses(self):
+        return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
 
 
 class ReplenishmentTemplateReport(models.AbstractModel):
