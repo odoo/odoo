@@ -857,6 +857,43 @@ class Lead(models.Model):
         return True
 
     # ------------------------------------------------------------
+    # VIEWS
+    # ------------------------------------------------------------
+
+    def redirect_lead_opportunity_view(self):
+        self.ensure_one()
+        return {
+            'name': _('Lead or Opportunity'),
+            'view_mode': 'form',
+            'res_model': 'crm.lead',
+            'domain': [('type', '=', self.type)],
+            'res_id': self.id,
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'context': {'default_type': self.type}
+        }
+
+    @api.model
+    def get_empty_list_help(self, help):
+        help_title, sub_title = "", ""
+        if self._context.get('default_type') == 'lead':
+            help_title = _('Create a new lead')
+        else:
+            help_title = _('Create an opportunity to start playing with your pipeline.')
+        alias_record = self.env['mail.alias'].search([
+            ('alias_name', '!=', False),
+            ('alias_name', '!=', ''),
+            ('alias_model_id.model', '=', 'crm.lead'),
+            ('alias_parent_model_id.model', '=', 'crm.team'),
+            ('alias_force_thread_id', '=', False)
+        ], limit=1)
+        if alias_record and alias_record.alias_domain and alias_record.alias_name:
+            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
+            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
+            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
+        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
+
+    # ------------------------------------------------------------
     # BUSINESS
     # ------------------------------------------------------------
 
@@ -872,7 +909,7 @@ class Lead(models.Model):
         return self.message_post(body=message)
 
     # ------------------------------------------------------------
-    # MERGE LEADS / OPPS
+    # MERGE AND CONVERT LEADS / OPPORTUNITIES
     # ------------------------------------------------------------
 
     def _merge_get_result_type(self):
@@ -1083,16 +1120,6 @@ class Lead(models.Model):
 
         return opportunities_head
 
-    def _sort_by_confidence_level(self, reverse=False):
-        """ Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
-        The confidence level increases with the stage sequence
-        An Opportunity always has higher confidence level than a lead
-        """
-        def opps_key(opportunity):
-            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity._origin.id
-
-        return self.sorted(key=opps_key, reverse=reverse)
-
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity
             :param customer : res.partner record
@@ -1125,118 +1152,6 @@ class Lead(models.Model):
             self.handle_salesmen_assignment(user_ids, team_id)
 
         return True
-
-    def _get_lead_duplicates(self, partner=None, email=None, include_lost=False):
-        """ Search for leads that seem duplicated based on partner / email.
-
-        :param partner : optional customer when searching duplicated
-        :param email: email (possibly formatted) to search
-        :param boolean include_lost: if True, search includes archived opportunities
-          (still only active leads are considered). If False, search for active
-          and not won leads and opportunities;
-        """
-        if not email and not partner:
-            return self.env['crm.lead']
-
-        domain = []
-        for normalized_email in [tools.email_normalize(email) for email in tools.email_split(email)]:
-            domain.append(('email_normalized', '=', normalized_email))
-        if partner:
-            domain.append(('partner_id', '=', partner.id))
-
-        if not domain:
-            return self.env['crm.lead']
-
-        domain = ['|'] * (len(domain) - 1) + domain
-        if include_lost:
-            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
-        else:
-            domain += ['&', ('active', '=', True), '|', ('probability', '=', False), ('probability', '<', 100)]
-
-        return self.with_context(active_test=False).search(domain)
-
-    def _create_customer(self):
-        """ Create a partner from lead data and link it to the lead.
-
-        :return: newly-created partner browse record
-        """
-        Partner = self.env['res.partner']
-        contact_name = self.contact_name
-        if not contact_name:
-            contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
-
-        if self.partner_name:
-            partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
-        elif self.partner_id:
-            partner_company = self.partner_id
-        else:
-            partner_company = None
-
-        if contact_name:
-            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id if partner_company else False))
-
-        if partner_company:
-            return partner_company
-        return Partner.create(self._prepare_customer_values(self.name, is_company=False))
-
-    def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
-        """ Extract data from lead to create a partner.
-
-        :param name : furtur name of the partner
-        :param is_company : True if the partner is a company
-        :param parent_id : id of the parent partner (False if no parent)
-
-        :return: dictionary of values to give at res_partner.create()
-        """
-        email_split = tools.email_split(self.email_from)
-        res = {
-            'name': partner_name,
-            'user_id': self.env.context.get('default_user_id') or self.user_id.id,
-            'comment': self.description,
-            'team_id': self.team_id.id,
-            'parent_id': parent_id,
-            'phone': self.phone,
-            'mobile': self.mobile,
-            'email': email_split[0] if email_split else False,
-            'title': self.title.id,
-            'function': self.function,
-            'street': self.street,
-            'street2': self.street2,
-            'zip': self.zip,
-            'city': self.city,
-            'country_id': self.country_id.id,
-            'state_id': self.state_id.id,
-            'website': self.website,
-            'is_company': is_company,
-            'type': 'contact'
-        }
-        if self.lang_id:
-            res['lang'] = self.lang_id.code
-        return res
-
-    def _find_matching_partner(self, email_only=False):
-        """ Try to find a matching partner with available information on the
-        lead, using notably customer's name, email, ...
-
-        :param email_only: Only find a matching based on the email. To use
-            for automatic process where ilike based on name can be too dangerous
-        :return: partner browse record
-        """
-        self.ensure_one()
-        partner = self.partner_id
-
-        if not partner and self.email_from:
-            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
-
-        if not partner and not email_only:
-            # search through the existing partners based on the lead's partner or contact name
-            # to be aligned with _create_customer, search on lead's name as last possibility
-            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
-                partner = self.env['res.partner'].search([('name', 'ilike', '%' + customer_potential_name + '%')], limit=1)
-                if partner:
-                    break
-
-        return partner
 
     def handle_partner_assignment(self, force_partner_id=False, create_missing=True):
         """ Update customer (partner_id) of leads. Purpose is to set the same
@@ -1279,41 +1194,136 @@ class Lead(models.Model):
                 self.env['crm.lead'].browse(subset_ids).write(update_vals)
 
     # ------------------------------------------------------------
-    # TOOLS
-    # ------------------------------------------------------------
+    # MERGE / CONVERT TOOLS
+    # ---------------------------------------------------------
 
-    def redirect_lead_opportunity_view(self):
-        self.ensure_one()
-        return {
-            'name': _('Lead or Opportunity'),
-            'view_mode': 'form',
-            'res_model': 'crm.lead',
-            'domain': [('type', '=', self.type)],
-            'res_id': self.id,
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-            'context': {'default_type': self.type}
-        }
+    # CLASSIFICATION TOOLS
+    # --------------------------------------------------
 
-    @api.model
-    def get_empty_list_help(self, help):
-        help_title, sub_title = "", ""
-        if self._context.get('default_type') == 'lead':
-            help_title = _('Create a new lead')
+    def _get_lead_duplicates(self, partner=None, email=None, include_lost=False):
+        """ Search for leads that seem duplicated based on partner / email.
+
+        :param partner : optional customer when searching duplicated
+        :param email: email (possibly formatted) to search
+        :param boolean include_lost: if True, search includes archived opportunities
+          (still only active leads are considered). If False, search for active
+          and not won leads and opportunities;
+        """
+        if not email and not partner:
+            return self.env['crm.lead']
+
+        domain = []
+        for normalized_email in [tools.email_normalize(email) for email in tools.email_split(email)]:
+            domain.append(('email_normalized', '=', normalized_email))
+        if partner:
+            domain.append(('partner_id', '=', partner.id))
+
+        if not domain:
+            return self.env['crm.lead']
+
+        domain = ['|'] * (len(domain) - 1) + domain
+        if include_lost:
+            domain += ['|', ('type', '=', 'opportunity'), ('active', '=', True)]
         else:
-            help_title = _('Create an opportunity to start playing with your pipeline.')
-        alias_record = self.env['mail.alias'].search([
-            ('alias_name', '!=', False),
-            ('alias_name', '!=', ''),
-            ('alias_model_id.model', '=', 'crm.lead'),
-            ('alias_parent_model_id.model', '=', 'crm.team'),
-            ('alias_force_thread_id', '=', False)
-        ], limit=1)
-        if alias_record and alias_record.alias_domain and alias_record.alias_name:
-            email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
-            email_link = "<b><a href='mailto:%s'>%s</a></b>" % (email, email)
-            sub_title = _('Use the top left <i>Create</i> button, or send an email to %s to test the email gateway.') % (email_link)
-        return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
+            domain += ['&', ('active', '=', True), '|', ('probability', '=', False), ('probability', '<', 100)]
+
+        return self.with_context(active_test=False).search(domain)
+
+    def _sort_by_confidence_level(self, reverse=False):
+        """ Sorting the leads/opps according to the confidence level of its stage, which relates to the probability of winning it
+        The confidence level increases with the stage sequence
+        An Opportunity always has higher confidence level than a lead
+        """
+        def opps_key(opportunity):
+            return opportunity.type == 'opportunity', opportunity.stage_id.sequence, -opportunity._origin.id
+
+        return self.sorted(key=opps_key, reverse=reverse)
+
+    # CUSTOMER TOOLS
+    # --------------------------------------------------
+
+    def _find_matching_partner(self, email_only=False):
+        """ Try to find a matching partner with available information on the
+        lead, using notably customer's name, email, ...
+
+        :param email_only: Only find a matching based on the email. To use
+            for automatic process where ilike based on name can be too dangerous
+        :return: partner browse record
+        """
+        self.ensure_one()
+        partner = self.partner_id
+
+        if not partner and self.email_from:
+            partner = self.env['res.partner'].search([('email', '=', self.email_from)], limit=1)
+
+        if not partner and not email_only:
+            # search through the existing partners based on the lead's partner or contact name
+            # to be aligned with _create_customer, search on lead's name as last possibility
+            for customer_potential_name in [self[field_name] for field_name in ['partner_name', 'contact_name', 'name'] if self[field_name]]:
+                partner = self.env['res.partner'].search([('name', 'ilike', '%' + customer_potential_name + '%')], limit=1)
+                if partner:
+                    break
+
+        return partner
+
+    def _create_customer(self):
+        """ Create a partner from lead data and link it to the lead.
+
+        :return: newly-created partner browse record
+        """
+        Partner = self.env['res.partner']
+        contact_name = self.contact_name
+        if not contact_name:
+            contact_name = Partner._parse_partner_name(self.email_from)[0] if self.email_from else False
+
+        if self.partner_name:
+            partner_company = Partner.create(self._prepare_customer_values(self.partner_name, is_company=True))
+        elif self.partner_id:
+            partner_company = self.partner_id
+        else:
+            partner_company = None
+
+        if contact_name:
+            return Partner.create(self._prepare_customer_values(contact_name, is_company=False, parent_id=partner_company.id if partner_company else False))
+
+        if partner_company:
+            return partner_company
+        return Partner.create(self._prepare_customer_values(self.name, is_company=False))
+
+    def _prepare_customer_values(self, partner_name, is_company=False, parent_id=False):
+        """ Extract data from lead to create a partner.
+
+        :param name : furtur name of the partner
+        :param is_company : True if the partner is a company
+        :param parent_id : id of the parent partner (False if no parent)
+
+        :return: dictionary of values to give at res_partner.create()
+        """
+        email_parts = tools.email_split(self.email_from)
+        res = {
+            'name': partner_name,
+            'user_id': self.env.context.get('default_user_id') or self.user_id.id,
+            'comment': self.description,
+            'team_id': self.team_id.id,
+            'parent_id': parent_id,
+            'phone': self.phone,
+            'mobile': self.mobile,
+            'email': email_parts[0] if email_parts else False,
+            'title': self.title.id,
+            'function': self.function,
+            'street': self.street,
+            'street2': self.street2,
+            'zip': self.zip,
+            'city': self.city,
+            'country_id': self.country_id.id,
+            'state_id': self.state_id.id,
+            'website': self.website,
+            'is_company': is_company,
+            'type': 'contact'
+        }
+        if self.lang_id:
+            res['lang'] = self.lang_id.code
+        return res
 
     # ------------------------------------------------------------
     # MAILING
