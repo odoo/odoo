@@ -188,11 +188,11 @@ class StockWarehouse(models.Model):
 
     def _get_locations_values(self, vals, code=False):
         values = super(StockWarehouse, self)._get_locations_values(vals, code=code)
-        def_values = self.default_get(['manufacture_steps'])
+        def_values = self.default_get(['company_id', 'manufacture_steps'])
         manufacture_steps = vals.get('manufacture_steps', def_values['manufacture_steps'])
         code = vals.get('code') or code or ''
         code = code.replace(' ', '').upper()
-        company_id = vals.get('company_id', self.company_id.id)
+        company_id = vals.get('company_id', def_values['company_id'])
         values.update({
             'pbm_loc_id': {
                 'name': _('Pre-Production'),

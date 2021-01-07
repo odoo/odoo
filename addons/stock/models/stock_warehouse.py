@@ -29,7 +29,11 @@ class Warehouse(models.Model):
     # namedtuple used in helper methods generating values for routes
     Routing = namedtuple('Routing', ['from_loc', 'dest_loc', 'picking_type', 'action'])
 
-    name = fields.Char('Warehouse', index=True, required=True, default=lambda self: self.env.company.name)
+    def _default_name(self):
+        count = self.env['stock.warehouse'].with_context(active_test=False).search_count([('company_id', '=', self.env.company.id)])
+        return "%s - warehouse # %s" % (self.env.company.name, count + 1) if count else self.env.company.name
+
+    name = fields.Char('Warehouse', index=True, required=True, default=_default_name)
     active = fields.Boolean('Active', default=True)
     company_id = fields.Many2one(
         'res.company', 'Company', default=lambda self: self.env.company,
@@ -85,7 +89,7 @@ class Warehouse(models.Model):
         help="Gives the sequence of this line when displaying the warehouses.")
     _sql_constraints = [
         ('warehouse_name_uniq', 'unique(name, company_id)', 'The name of the warehouse must be unique per company!'),
-        ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
+        ('warehouse_code_uniq', 'unique(code, company_id)', 'The short name of the warehouse must be unique per company!'),
     ]
 
     @api.model
