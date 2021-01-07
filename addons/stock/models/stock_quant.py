@@ -76,6 +76,8 @@ class StockQuant(models.Model):
     @api.constrains('quantity')
     def check_quantity(self):
         for quant in self:
+            if quant.location_id.usage in ('supplier', 'customer', 'inventory'):
+                continue
             if float_compare(quant.quantity, 1, precision_rounding=quant.product_uom_id.rounding) > 0 and quant.lot_id and quant.product_id.tracking == 'serial':
                 message_base = _('A serial number should only be linked to a single product.')
                 message_quant = _('Please check the following serial number (name, id): ')
