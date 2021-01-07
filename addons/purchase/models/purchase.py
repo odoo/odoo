@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
+from functools import partial
 from itertools import groupby
 from pytz import timezone, UTC
 from werkzeug.urls import url_encode
@@ -115,6 +116,7 @@ class PurchaseOrder(models.Model):
     date_calendar_start = fields.Datetime(compute='_compute_date_calendar_start', readonly=True, store=True)
 
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, compute='_amount_all', tracking=True)
+    amount_by_group = fields.Binary(string="Tax amount by group", compute='_amount_by_group', help="type: [(name, amount, base, formated amount, formated base)]")
     amount_tax = fields.Monetary(string='Taxes', store=True, readonly=True, compute='_amount_all')
     amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
 
@@ -254,6 +256,27 @@ class PurchaseOrder(models.Model):
         elif 'state' in init_values and self.state == 'done':
             return self.env.ref('purchase.mt_rfq_done')
         return super(PurchaseOrder, self)._track_subtype(init_values)
+
+    def _amount_by_group(self):
+        for order in self:
+            currency = order.currency_id or order.company_id.currency_id
+            fmt = partial(formatLang, self.with_context(lang=order.partner_id.lang).env, currency_obj=currency)
+            res = {}
+            for line in order.order_line:
+                taxes = line.taxes_id.compute_all(line.price_unit, quantity=line.product_qty, product=line.product_id, partner=order.partner_id)['taxes']
+                for tax in line.taxes_id:
+                    group = tax.tax_group_id
+                    res.setdefault(group, {'amount': 0.0, 'base': 0.0})
+                    for t in taxes:
+                        if t['id'] == tax.id or t['id'] in tax.children_tax_ids.ids:
+                            res[group]['amount'] += t['amount']
+                            res[group]['base'] += t['base']
+            res = sorted(res.items(), key=lambda l: l[0].sequence)
+            order.amount_by_group = [(
+                l[0].name, l[1]['amount'], l[1]['base'],
+                fmt(l[1]['amount']), fmt(l[1]['base']),
+                len(res),
+            ) for l in res]
 
     def _get_report_base_filename(self):
         self.ensure_one()
