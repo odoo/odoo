@@ -39,6 +39,19 @@ class Warehouse(models.Model):
     _populate_sizes = {'small': 6, 'medium': 12, 'large': 24}
     _populate_dependencies = ['res.company']
 
+    def _populate(self, size):
+        # Activate options used in the stock populate to have a ready Database
+
+        _logger.info("Activate settings for stock populate")
+        self.env['res.config.settings'].create({
+            'group_stock_production_lot': True,  # Activate lot
+            'group_stock_tracking_lot': True,  # Activate package
+            'group_stock_multi_locations': True,  # Activate multi-locations
+            'group_stock_tracking_owner': True,  # Activate owner_id
+        }).execute()
+
+        return super()._populate(size)
+
     def _populate_factories(self):
         company_ids = self.env.registry.populated_models['res.company'][:COMPANY_NB_WITH_STOCK]
 
@@ -426,6 +439,14 @@ class Picking(models.Model):
             company = picking_type.company_id
             return partners_by_company.get(company.id) and random.choice(partners_by_company[company.id]).id or False
 
+        def get_owner_id(values, counter, random):
+            picking_type = self.env['stock.picking.type'].browse(values['picking_type_id'])
+            company = picking_type.company_id
+            if company.id not in partners_by_company:
+                return False
+            if random.random() < 0.10:  # For 10 % of picking, force owner_id
+                random.choice(partners_by_company[company.id]).id
+
         def _compute_locations(iterator, field_name, model_name):
             locations_out = cross_company_locations.filtered_domain([('usage', '=', 'customer')])
             locations_in = cross_company_locations.filtered_domain([('usage', '=', 'supplier')])
@@ -467,6 +488,7 @@ class Picking(models.Model):
             ('scheduled_date', populate.compute(get_until_date)),
             ('picking_type_id', populate.iterate(picking_types_ids)),
             ('partner_id', populate.compute(get_partner_id)),
+            ('owner_id', populate.compute(get_owner_id)),
             ('_compute_locations', _compute_locations),
         ]
 
@@ -485,11 +507,91 @@ class StockMove(models.Model):
             random = populate.Random('confirm_pickings')
             picking_ids = moves.picking_id.ids
             picking_to_confirm = self.env['stock.picking'].browse(random.sample(picking_ids, int(len(picking_ids) * sample_ratio)))
-            _logger.info("Confirm %d of pickings" % len(picking_to_confirm))
+            _logger.info("Confirm %d pickings" % len(picking_to_confirm))
             picking_to_confirm.action_confirm()
+            return picking_to_confirm
+
+        def assign_picking(pickings):
+            _logger.info("Assign %d pickings" % len(pickings))
+            pickings.action_assign()
+
+        def validate_pickings(pickings, sample_ratio):
+            # Fill picking and validate it
+            random = populate.Random('validate_pickings')
+            picking_ids = pickings.ids
+            picking_to_validate = self.env['stock.picking'].browse(random.sample(picking_ids, int(len(picking_ids) * sample_ratio)))
+
+            _logger.info("Fill %d pickings with sml" % len(picking_to_validate))
+            sml_values = []
+            lot_values = []
+            package_values = []
+            for picking in picking_to_validate:
+                package_for_picking = None
+                if random.random() < 0.20:  # 20 % of chance to use package
+                    package_for_picking = {'name': picking.name}
+                for move in picking.move_lines:
+                    # For assigned moves
+                    for move_line in move._get_move_lines():
+                        move_line.qty_done = move_line.product_uom_qty
+                    # Create move line for remaining qty
+                    missing_to_do = move.product_qty - move.quantity_done
+                    missing_to_do = move.product_uom._compute_quantity(missing_to_do, move.product_uom, rounding_method='HALF-UP')
+                    if move.product_id.tracking == 'serial':
+                        for i in range(int(missing_to_do)):
+                            lot_values.append({
+                                'name': "ValPick-%d-%d--%d" % (move.id, move.product_id.id, i),
+                                'product_id': move.product_id.id,
+                                'company_id': move.company_id.id
+                            })
+                            sml_values.append(dict(
+                                **move._prepare_move_line_vals(),
+                                qty_done=1,
+                                lot_id=len(lot_values) - 1,
+                                package_id=package_for_picking and len(package_values) - 1 or False
+                            ))
+                    elif move.product_id.tracking == 'lot':
+                        lot_values.append({
+                            'name': "ValPick-%d-%d" % (move.id, move.product_id.id),
+                            'product_id': move.product_id.id,
+                            'company_id': move.company_id.id
+                        })
+                        sml_values.append(dict(
+                            **move._prepare_move_line_vals(),
+                            qty_done=missing_to_do,
+                            lot_id=len(lot_values) - 1,
+                            package_id=package_for_picking and len(package_values) - 1 or False
+                        ))
+                    else:
+                        sml_values.append(dict(
+                            **move._prepare_move_line_vals(),
+                            qty_done=missing_to_do,
+                            package_id=package_for_picking and len(package_values) - 1 or False
+                        ))
+                if package_for_picking:
+                    package_values.append(package_for_picking)
+
+            _logger.info("Create lots (%d) for pickings to validate" % len(lot_values))
+            lots = self.env["stock.production.lot"].create(lot_values)
+            _logger.info("Create packages (%d) for pickings to validate" % len(package_values))
+            packages = self.env["stock.quant.package"].create(package_values)
+
+            _logger.info("Create sml (%d) for pickings to validate" % len(sml_values))
+            for vals in sml_values:
+                if vals.get('package_id') is not None:
+                    vals['package_id'] = packages[vals['package_id']].id
+                if 'lot_id' in vals:
+                    vals['lot_id'] = lots[vals['lot_id']].id
+            self.env['stock.move.line'].create(sml_values)
+
+            _logger.info("Validate %d of pickings" % len(picking_to_validate))
+            picking_to_validate.with_context(skip_backorder=True, skip_sms=True).button_validate()
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal confirmed moves, e.g. for testing of forecasted report
-        # confirm_pickings(0.8)
+        # pickings = confirm_pickings(0.8)
+
+        # (Un)comment to test a DB with a lot of outgoing/incoming/internal finished moves
+        # assign_picking(pickings)
+        # validate_pickings(pickings, 1)
 
         return moves.exists()  # Confirm picking can unlink some moves
 
