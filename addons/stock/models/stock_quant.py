@@ -481,7 +481,7 @@ class StockQuant(models.Model):
         return reserved_quants
 
     @api.model
-    def _unlink_zero_quants(self):
+    def _unlink_zero_quants(self, product_ids=None):
         """ _update_available_quantity may leave quants with no
         quantity and no reserved_quantity. It used to directly unlink
         these zero quants but this proved to hurt the performance as
@@ -490,14 +490,18 @@ class StockQuant(models.Model):
         """
         precision_digits = max(6, self.sudo().env.ref('product.decimal_product_uom').digits * 2)
         # Use a select instead of ORM search for UoM robustness.
-        query = """SELECT id FROM stock_quant WHERE (round(quantity::numeric, %s) = 0 OR quantity IS NULL) AND round(reserved_quantity::numeric, %s) = 0;"""
-        params = (precision_digits, precision_digits)
+        query = """SELECT id FROM stock_quant WHERE (round(quantity::numeric, %(precision_digits)s) = 0 OR quantity IS NULL) AND round(reserved_quantity::numeric, %(precision_digits)s) = 0"""
+        params = {'precision_digits': precision_digits}
+        if product_ids:
+            query += """ AND product_id IN %(product_ids)s """
+            params['product_ids'] = tuple(product_ids)
+        
         self.env.cr.execute(query, params)
         quant_ids = self.env['stock.quant'].browse([quant['id'] for quant in self.env.cr.dictfetchall()])
         quant_ids.sudo().unlink()
 
     @api.model
-    def _merge_quants(self):
+    def _merge_quants(self, product_ids=None):
         """ In a situation where one transaction is updating a quant via
         `_update_available_quantity` and another concurrent one calls this function with the same
         argument, we’ll create a new quant in order for these transactions to not rollback. This
@@ -511,6 +515,7 @@ class StockQuant(models.Model):
                                 SUM(quantity) as quantity,
                                 MIN(in_date) as in_date
                             FROM stock_quant
+                            {where_clause}
                             GROUP BY product_id, company_id, location_id, lot_id, package_id, owner_id
                             HAVING count(id) > 1
                         ),
@@ -524,17 +529,25 @@ class StockQuant(models.Model):
                         )
                    DELETE FROM stock_quant WHERE id in (SELECT unnest(to_delete_quant_ids) from dupes)
         """
+        where_clause = ''
+        params = {}
+        if product_ids:
+            where_clause = ' WHERE product_id IN %(product_ids)s'
+            params['product_ids'] = tuple(product_ids)
+        
+        query = query.format(where_clause=where_clause)
         try:
             with self.env.cr.savepoint():
-                self.env.cr.execute(query)
+                self.env.cr.execute(query, params)
                 self.invalidate_cache()
         except Error as e:
             _logger.info('an error occured while merging quants: %s', e.pgerror)
 
     @api.model
-    def _quant_tasks(self):
-        self._merge_quants()
-        self._unlink_zero_quants()
+    @api.autovacuum
+    def _quant_tasks(self, product_ids=None):
+        self._merge_quants(product_ids)
+        self._unlink_zero_quants(product_ids)
 
     @api.model
     def _is_inventory_mode(self):
@@ -598,7 +611,14 @@ class StockQuant(models.Model):
         :param domain: List for the domain, empty by default.
         :param extend: If True, enables form, graph and pivot views. False by default.
         """
-        self._quant_tasks()
+        product_ids = None
+        if domain:
+            product_ids = [d['product_id'][0] for d in self.env['stock.quant'].read_group(
+                    domain,
+                    ['product_id'],
+                    ['product_id']
+                )]
+        self._quant_tasks(product_ids)
         ctx = dict(self.env.context or {})
         ctx.pop('group_by', None)
         action = {
@@ -695,6 +715,7 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
+        products = self.env['product.product']
         for package in self:
             move_line_to_modify = self.env['stock.move.line'].search([
                 ('package_id', '=', package.id),
@@ -702,11 +723,13 @@ class QuantPackage(models.Model):
                 ('product_qty', '!=', 0),
             ])
             move_line_to_modify.write({'package_id': False})
+            products |= move_line_to_modify.product_id
             package.mapped('quant_ids').sudo().write({'package_id': False})
 
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        self.env['stock.quant']._quant_tasks()
+        if products:
+            self.env['stock.quant']._quant_tasks(products.ids)
 
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")
