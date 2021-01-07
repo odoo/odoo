@@ -65,6 +65,7 @@ registry
     .add('float_factor', basic_fields.FieldFloatFactor)
     .add('float_toggle', basic_fields.FieldFloatToggle)
     .add('progressbar', basic_fields.FieldProgressBar)
+    .add('basic_progressbar', basic_fields.FieldBasicProgressBar)
     .add('toggle_button', basic_fields.FieldToggleBoolean)
     .add('dashboard_graph', basic_fields.JournalDashboardGraph)
     .add('ace', basic_fields.AceEditor)
