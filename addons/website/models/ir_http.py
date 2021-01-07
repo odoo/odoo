@@ -16,6 +16,7 @@ from functools import partial
 import odoo
 from odoo import api, models
 from odoo import registry, SUPERUSER_ID
+from odoo.exceptions import AccessError
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
@@ -157,6 +158,22 @@ class Http(models.AbstractModel):
             request.env['website.visitor']._handle_webpage_dispatch(response, website_page)
 
         return False
+
+    @classmethod
+    def _postprocess_args(cls, arguments, rule):
+        processing = super()._postprocess_args(arguments, rule)
+        if processing:
+            return processing
+
+        for record in arguments.values():
+            if isinstance(record, models.BaseModel) and hasattr(record, 'can_access_from_current_website'):
+                try:
+                    if not record.can_access_from_current_website():
+                        return request.env['ir.http']._handle_exception(werkzeug.exceptions.NotFound())
+                except AccessError:
+                    # record.website_id might not be readable as unpublished `event.event` due to ir.rule,
+                    # return 403 instead of using `sudo()` for perfs as this is low level
+                    return request.env['ir.http']._handle_exception(werkzeug.exceptions.Forbidden())
 
     @classmethod
     def _dispatch(cls):
