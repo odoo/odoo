@@ -112,6 +112,10 @@
                     'date_planned': DateTime.today() + relativedelta(days=5)})
             ]"/>
         </record>
+        <function model="purchase.order" name="write">
+            <value eval="[ref('purchase_order_4')]"/>
+            <value eval="{'state': 'sent'}"/>
+        </function>
 
         <record id="purchase_order_5" model="purchase.order">
             <field name="partner_id" ref="base.res_partner_2"/>
