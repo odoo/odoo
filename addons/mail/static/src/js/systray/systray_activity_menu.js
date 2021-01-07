@@ -161,7 +161,13 @@ var ActivityMenu = Widget.extend({
         // So, duplicates are faking the count and "Load more" doesn't show up
         context['force_search_count'] = 1;
         
-        var domain = [['activity_ids.user_id', '=', session.uid]]
+        var domain = [
+            ['activity_ids.user_id', '=', session.uid],
+            // filter activities on current company
+            '|',
+            ['company_id', '=', false],
+            ['company_id', 'child_of', [session.company_id]]
+        ];
         if (data.domain) {
             domain = domain.concat(data.domain)
         }
