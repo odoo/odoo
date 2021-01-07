@@ -12,9 +12,6 @@ class WebsiteEventTrackQuizMeetController(EventCommunityController):
 
     @http.route(['/event/<model("event.event"):event>/community'], type='http', auth="public", website=True, sitemap=False)
     def community(self, event, page=1, lang=None, **kwargs):
-        if not event.can_access_from_current_website():
-            raise Forbidden()
-
         # website_event_track_quiz
         values = self._get_community_leaderboard_render_values(event, kwargs.get('search'), page)
 

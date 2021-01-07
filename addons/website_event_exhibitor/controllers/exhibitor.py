@@ -34,9 +34,6 @@ class ExhibitorController(WebsiteEventController):
         '/event/<model("event.event"):event>/exhibitor'
     ], type='http', auth="public", website=True, sitemap=False)
     def event_exhibitors(self, event, **searches):
-        if not event.can_access_from_current_website():
-            raise NotFound()
-
         return request.render(
             "website_event_exhibitor.event_exhibitors",
             self._event_exhibitors_get_values(event, **searches)
@@ -117,9 +114,6 @@ class ExhibitorController(WebsiteEventController):
     @http.route(['''/event/<model("event.event", "[('exhibitor_menu', '=', True)]"):event>/exhibitor/<model("event.sponsor", "[('event_id', '=', event.id)]"):sponsor>'''],
                 type='http', auth="public", website=True, sitemap=True)
     def event_exhibitor(self, event, sponsor, **options):
-        if not event.can_access_from_current_website():
-            raise NotFound()
-
         try:
             sponsor.check_access_rule('read')
         except exceptions.AccessError:

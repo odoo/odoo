@@ -453,9 +453,6 @@ class WebsiteSlides(WebsiteProfile):
         """
         Will return all necessary data to display the requested slide_channel along with a possible category.
         """
-        if not channel.can_access_from_current_website():
-            raise werkzeug.exceptions.NotFound()
-
         domain = self._get_channel_slides_base_domain(channel)
 
         pager_url = "/slides/%s" % (channel.id)

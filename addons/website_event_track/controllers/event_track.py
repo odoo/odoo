@@ -52,9 +52,6 @@ class EventTrackController(http.Controller):
           * 'search': search string;
           * 'tags': list of tag IDs for filtering;
         """
-        if not event.can_access_from_current_website():
-            raise NotFound()
-
         return request.render(
             "website_event_track.tracks_session",
             self._event_tracks_get_values(event, tag=tag, **searches)
@@ -153,9 +150,6 @@ class EventTrackController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/agenda'''], type='http', auth="public", website=True, sitemap=False)
     def event_agenda(self, event, tag=None, **post):
-        if not event.can_access_from_current_website():
-            raise NotFound()
-
         event = event.with_context(tz=event.date_tz or 'UTC')
         vals = {
             'event': event,
@@ -394,16 +388,10 @@ class EventTrackController(http.Controller):
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal'''], type='http', auth="public", website=True, sitemap=False)
     def event_track_proposal(self, event, **post):
-        if not event.can_access_from_current_website():
-            raise NotFound()
-
         return request.render("website_event_track.event_track_proposal", {'event': event, 'main_object': event})
 
     @http.route(['''/event/<model("event.event"):event>/track_proposal/post'''], type='http', auth="public", methods=['POST'], website=True)
     def event_track_proposal_post(self, event, **post):
-        if not event.can_access_from_current_website():
-            raise NotFound()
-
         tags = []
         for tag in event.allowed_track_tag_ids:
             if post.get('tag_' + str(tag.id)):
