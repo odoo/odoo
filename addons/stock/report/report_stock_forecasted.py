@@ -219,8 +219,19 @@ class ReplenishmentReport(models.AbstractModel):
         return lines
 
     @api.model
+<<<<<<< HEAD
     def get_warehouses(self):
         return self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
+=======
+    def get_filter_state(self):
+        res = {}
+        res['warehouses'] = self.env['stock.warehouse'].search_read(fields=['id', 'name', 'code'])
+        res['active_warehouse'] = self.env.context.get('warehouse', False)
+        if not res['active_warehouse']:
+            company_id = self.env.context.get('allowed_company_ids')[0]
+            res['active_warehouse'] = self.env['stock.warehouse'].search([('company_id', '=', company_id)], limit=1).id
+        return res
+>>>>>>> ce1a44b5cd4... temp
 
 
 class ReplenishmentTemplateReport(models.AbstractModel):
