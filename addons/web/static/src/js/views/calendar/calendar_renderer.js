@@ -375,6 +375,20 @@ return AbstractRenderer.extend({
             return field_utils.format[field.type](record[fieldName], field, {forceString: true});
         }
     },
+    _preOpenCreate: function (data) {
+        if (this.$('.o_cw_popover').length) {
+            this._unselectEvent();
+        }
+        if (this.state.context.default_name) {
+            data.title = this.state.context.default_name;
+        }
+        this.trigger_up('openCreate', this._convertEventToFC3Event(data));
+        if (this.state.scale === 'year') {
+            this.calendar.view.unselect();
+        } else {
+            this.calendar.unselect();
+        }
+    },
     /**
      * Return the Object options for FullCalendar
      *
@@ -427,19 +441,8 @@ return AbstractRenderer.extend({
                 }
             },
             select: function (selectionInfo) {
-                if (self.$('.o_cw_popover').length) {
-                    self._unselectEvent();
-                }
                 var data = {start: selectionInfo.start, end: selectionInfo.end, allDay: selectionInfo.allDay};
-                if (self.state.context.default_name) {
-                    data.title = self.state.context.default_name;
-                }
-                self.trigger_up('openCreate', self._convertEventToFC3Event(data));
-                if (self.state.scale === 'year') {
-                    self.calendar.view.unselect();
-                } else {
-                    self.calendar.unselect();
-                }
+                self._preOpenCreate(data);
             },
             eventRender: function (info) {
                 var event = info.event;
