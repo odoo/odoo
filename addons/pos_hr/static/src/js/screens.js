@@ -43,7 +43,11 @@ ScreenWidget.include({
     },
     show: function() {
         this._super();
-        this.pos.barcode_reader.set_action_callback('cashier', _.bind(this.barcode_cashier_action, this));
+        if (this.gui.get_current_screen() == 'login'){
+            this.pos.barcode_reader.save_callbacks();
+            this.pos.barcode_reader.reset_action_callbacks();
+            this.pos.barcode_reader.set_action_callback('cashier', _.bind(this.barcode_cashier_action, this));
+        }
     },
 });
 
@@ -92,6 +96,7 @@ var LoginScreenWidget = ScreenWidget.extend({
     },
 
     unlock_screen: function() {
+        this.pos.barcode_reader.restore_callbacks();
         var screen = (this.gui.pos.get_order() ? this.gui.pos.get_order().get_screen_data('previous-screen') : this.gui.startup_screen) || this.gui.startup_screen;
         this.gui.show_screen(screen);
     }
