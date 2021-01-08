@@ -25,7 +25,8 @@
                     attrs="{'invisible': [('assignment_enabled', '=', False)]}">
                     <field name="assignment_max" invisible="1"/>
                     <field name="lead_month_count" widget="gauge"
-                            options="{'max_field': 'assignment_max'}"/>
+                        options="{'max_field': 'assignment_max'}"
+                        attrs="{'invisible': [('assignment_max', '=', 0)]}"/>
                 </div>
             </xpath>
         </field>
@@ -47,7 +48,8 @@
                         <span class="oe_inline"> (max) </span>
                     </div>
                     <field name="assignment_domain" string="Domain" widget="domain"
-                        options="{'model': 'crm.lead'}"/>
+                        options="{'model': 'crm.lead'}"
+                        attrs="{'invisible': [('assignment_max', '=', 0)]}"/>
                 </group>
             </xpath>
         </field>
