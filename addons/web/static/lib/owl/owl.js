@@ -3417,6 +3417,7 @@
             this.parent = parent;
             let oldFiber = __owl__.currentFiber;
             if (oldFiber && !oldFiber.isCompleted) {
+                this.force = true;
                 if (oldFiber.root === oldFiber && !parent) {
                     // both oldFiber and this fiber are root fibers
                     this._reuseFiber(oldFiber);
@@ -4778,6 +4779,10 @@
             }, ...payload);
             return result;
         }
+        __notifyComponents() {
+            this.trigger("before-update");
+            return super.__notifyComponents();
+        }
     }
     const isStrictEqual = (a, b) => a === b;
     function useStore(selector, options = {}) {
@@ -4800,12 +4805,15 @@
             const newRevNumber = hashFn(result);
             if ((newRevNumber > 0 && revNumber !== newRevNumber) || !isEqual(oldResult, result)) {
                 revNumber = newRevNumber;
-                if (options.onUpdate) {
-                    options.onUpdate(result);
-                }
                 return true;
             }
             return false;
+        }
+        if (options.onUpdate) {
+            store.on("before-update", component, () => {
+                const newValue = selector(store.state, component.props);
+                options.onUpdate(newValue);
+            });
         }
         store.updateFunctions[componentId].push(function () {
             return selectCompareUpdate(store.state, component.props);
@@ -4825,6 +4833,9 @@
         const __destroy = component.__destroy;
         component.__destroy = (parent) => {
             delete store.updateFunctions[componentId];
+            if (options.onUpdate) {
+                store.off("before-update", component);
+            }
             __destroy.call(component, parent);
         };
         if (typeof result !== "object" || result === null) {
@@ -5353,9 +5364,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.2.0';
-    __info__.date = '2020-12-14T12:37:32.543Z';
-    __info__.hash = '144b323';
+    __info__.version = '1.2.1';
+    __info__.date = '2021-01-08T14:30:24.560Z';
+    __info__.hash = '25738a1';
     __info__.url = 'https://github.com/odoo/owl';
 
 
