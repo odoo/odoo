@@ -30,7 +30,7 @@ class SalonBookingBackend(models.Model):
 
     name = fields.Char(string="Name")
     state = fields.Selection([('draft', 'Draft'), ('approved', 'Approved'), ('rejected', 'Rejected')], default="draft")
-    time = fields.Datetime(string="Date")
+    time = fields.Datetime(string="Booking Date")
     phone = fields.Char(string="Phone")
     email = fields.Char(string="E-Mail")
     services = fields.Many2many('salon.service', string="Services")

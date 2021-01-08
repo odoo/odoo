@@ -59,7 +59,7 @@ class SalonChair(models.Model):
     user_line = fields.One2many('salon.chair.user', 'salon_chair', string="Users")
     total_time_taken_chair = fields.Float(string="Time Reserved(Hrs)")
     active_booking_chairs = fields.Boolean(string="Active booking courts")
-    chair_created_user = fields.Integer(string="Salon Chair Created User",
+    chair_created_user = fields.Integer(string="Sport Chair Created User",
                                         default=lambda self: self._uid)
 
     @api.model
@@ -173,10 +173,10 @@ class SalonOrder(models.Model):
             self.write({'start_time_only': str(self.start_time)[11:16]})
 
     name = fields.Char(string='Sport', required=True, copy=False, readonly=True,
-                       default='Draft Salon Order')
+                       default='Draft Sport Order')
     start_time = fields.Datetime(string="Start time", default=datetime.now(), required=True)
     end_time = fields.Datetime(string="End time")
-    date = fields.Datetime(string="Date", required=True, default=datetime.now())
+    date = fields.Datetime(string="Create Order Date", required=True, default=datetime.now())
     color = fields.Integer(string="Colour", default=6)
     partner_id = fields.Many2one('res.partner', string="Customer", required=False,
                                  help="If the customer is a regular customer, "
