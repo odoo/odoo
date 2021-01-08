@@ -9,6 +9,9 @@ from psycopg2.extensions import TransactionRollbackError
 from textwrap import dedent
 import werkzeug
 from werkzeug.utils import escape as _escape
+
+from odoo.tools import wrap_values
+
 from itertools import izip, tee
 import __builtin__
 builtin_defaults = {name: getattr(__builtin__, name) for name in dir(__builtin__)}
@@ -314,6 +317,7 @@ class QWeb(object):
         def _compiled_fn(self, append, values):
             log = {'last_path_node': None}
             values = dict(self.default_values(), **values)
+            wrap_values(values)
             try:
                 return compiled(self, append, values, options, log)
             except (QWebException, TransactionRollbackError) as e:
