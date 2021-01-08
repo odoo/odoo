@@ -1490,7 +1490,7 @@ class StockMove(models.Model):
     def _action_done(self, cancel_backorder=False):
         self.filtered(lambda move: move.state == 'draft')._action_confirm()  # MRP allows scrapping draft moves
         moves = self.exists().filtered(lambda x: x.state not in ('done', 'cancel'))
-        moves_todo = self.env['stock.move']
+        moves_ids_todo = OrderedSet()
 
         # Cancel moves where necessary ; we should do it before creating the extra moves because
         # this operation could trigger a merge of moves.
@@ -1504,8 +1504,9 @@ class StockMove(models.Model):
             if move.state == 'cancel' or move.quantity_done <= 0:
                 continue
 
-            moves_todo |= move._create_extra_move()
+            moves_ids_todo |= move._create_extra_move().ids
 
+        moves_todo = self.browse(moves_ids_todo)
         moves_todo._check_company()
         # Split moves where necessary and move quants
         backorder_moves_vals = []
