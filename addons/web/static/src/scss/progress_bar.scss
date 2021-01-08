@@ -26,6 +26,23 @@
             background-color: $o-brand-primary;
             height: 100%;
         }
+
+        .o_progressbar_thumb {
+            float: right;
+            border-radius: 50%;
+            background-color: lighten($o-brand-primary, 5%);
+            width: 13px;
+            height: 13px;
+            margin-right: -7px;
+
+            &:focus, &:active {
+                background-color: lighten($o-brand-primary, 10%);
+            }
+
+            &:active {
+                cursor: grabbing;
+            }
+        }
     }
 
     .o_progressbar_value {
