@@ -697,7 +697,6 @@ class AdyenPayout(models.Model):
             response = self.adyen_account_id._adyen_rpc('v1/payout_request', {
                 'accountCode': self.code,
                 'accountHolderCode': self.adyen_account_id.account_holder_code,
-                'bankAccountUUID': self.adyen_bank_account_id.bank_account_uuid or None,
                 'amount': balance,
             })
             if notify and response['resultCode'] == 'Received':
