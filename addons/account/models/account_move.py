@@ -1489,7 +1489,10 @@ class AccountMove(models.Model):
         ''', [tuple(moves.ids)])
         res = self._cr.fetchone()
         if res:
-            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.'))
+            wrong_moves = self.env['account.move'].browse(res)
+            raise ValidationError(_('Posted journal entry must have an unique sequence number per company.\n'
+                                    'These sequences numbers already exist:\n'
+                                    '%s') % ('\n'.join([m.name for m in wrong_moves])))
 
     @api.constrains('ref', 'type', 'partner_id', 'journal_id', 'invoice_date')
     def _check_duplicate_supplier_reference(self):
