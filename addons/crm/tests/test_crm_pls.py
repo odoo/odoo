@@ -2,7 +2,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.tests.common import TransactionCase
+from odoo.tests import Form
 from odoo import tools
+from odoo.fields import Date
 
 
 class TestCRMPLS(TransactionCase):
@@ -50,6 +52,40 @@ class TestCRMPLS(TransactionCase):
         leads_with_tags = Lead.create(leads_to_create)
 
         return leads_with_tags
+
+    def test_crm_lead_pls_update(self):
+        """ We test here that the wizard for updating probabilities from settings
+            is getting correct value from config params and after updating values
+            from the wizard, the config params are correctly updated
+        """
+        # Set the PLS config
+        frequency_fields = self.env['crm.lead.scoring.frequency.field'].search([])
+        pls_fields_str = ','.join(frequency_fields.mapped('field_id.name'))
+        pls_start_date_str = "2021-01-01"
+        IrConfigSudo = self.env['ir.config_parameter'].sudo()
+        IrConfigSudo.set_param("crm.pls_start_date", pls_start_date_str)
+        IrConfigSudo.set_param("crm.pls_fields", pls_fields_str)
+
+        date_to_update = "2021-02-02"
+        fields_to_remove = frequency_fields.filtered(lambda f: f.field_id.name in ['source_id', 'lang_id'])
+        fields_after_updation_str = ','.join((frequency_fields - fields_to_remove).mapped('field_id.name'))
+
+        # Check that wizard to update lead probabilities has correct value set by default
+        pls_update_wizard = Form(self.env['crm.lead.pls.update'])
+        with pls_update_wizard:
+            self.assertEqual(Date.to_string(pls_update_wizard.pls_start_date), pls_start_date_str, 'Correct date is taken from config')
+            self.assertEqual(','.join([f.field_id.name for f in pls_update_wizard.pls_fields]), pls_fields_str, 'Correct fields are taken from config')
+            # Update the wizard values and check that config values and probabilities are updated accordingly
+            pls_update_wizard.pls_start_date =  date_to_update
+            for field in fields_to_remove:
+                pls_update_wizard.pls_fields.remove(field.id)
+
+        pls_update_wizard0 = pls_update_wizard.save()
+        pls_update_wizard0.action_update_crm_lead_probabilities()
+
+        # Config params should have been updated
+        self.assertEqual(IrConfigSudo.get_param("crm.pls_start_date"), date_to_update, 'Correct date is updated in config')
+        self.assertEqual(IrConfigSudo.get_param("crm.pls_fields"), fields_after_updation_str, 'Correct fields are updated in config')
 
     def test_predictive_lead_scoring(self):
         """ We test here computation of lead probability based on PLS Bayes.
