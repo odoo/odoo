@@ -7,10 +7,10 @@ import math
 import threading
 import random
 
+from ast import literal_eval
+
 from odoo import api, exceptions, fields, models, _
-from odoo.addons.crm.models.crm_lead import LEAD_ASSIGN_EVAL_CONTEXT
 from odoo.osv import expression
-from odoo.tools import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -38,10 +38,14 @@ class Team(models.Model):
     def _constrains_assignment_domain(self):
         for member in self:
             try:
-                domain = safe_eval.safe_eval(member.assignment_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT)
-                self.env['crm.lead'].search(domain, limit=1)
+                domain = literal_eval(member.assignment_domain or '[]')
+                if domain:
+                    self.env['crm.lead'].search(domain, limit=1)
             except Exception:
-                raise exceptions.UserError(_('Team membership assign domain is incorrectly formatted'))
+                raise exceptions.ValidationEreror(_(
+                    'Member assignment domain for user %(user)s and team %(team)s is incorrectly formatted',
+                    user=member.user_id.name, team=member.crm_team_id.name
+                ))
 
     def _get_lead_month_domain(self):
         limit_date = fields.Datetime.now() - datetime.timedelta(days=30)
@@ -133,7 +137,7 @@ class Team(models.Model):
         # could probably be optimized
         for member in members:
             lead_domain = expression.AND([
-                safe_eval.safe_eval(member.assignment_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT),
+                literal_eval(member.assignment_domain or '[]'),
                 ['&', '&', ('user_id', '=', False), ('date_open', '=', False), ('team_id', '=', member.crm_team_id.id)]
             ])
 

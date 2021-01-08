@@ -71,12 +71,6 @@ PARTNER_ADDRESS_FIELDS_TO_SYNC = [
 PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
 PLS_UPDATE_BATCH_STEP = 5000
 
-# Evaluation context for all domain-based lead auto assignment
-LEAD_ASSIGN_EVAL_CONTEXT = {
-    'datetime': safe_eval.datetime,
-    'context_today': datetime.now,
-}
-
 
 class Lead(models.Model):
     _name = "crm.lead"

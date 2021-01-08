@@ -9,7 +9,6 @@ import threading
 from ast import literal_eval
 
 from odoo import api, exceptions, fields, models, _
-from odoo.addons.crm.models.crm_lead import LEAD_ASSIGN_EVAL_CONTEXT
 from odoo.osv import expression
 from odoo.tools.safe_eval import safe_eval
 
@@ -118,10 +117,11 @@ class Team(models.Model):
     def _constrains_assignment_domain(self):
         for team in self:
             try:
-                domain = safe_eval(team.assignment_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT)
-                self.env['crm.lead'].search_count(domain)
+                domain = literal_eval(team.assignment_domain or '[]')
+                if domain:
+                    self.env['crm.lead'].search(domain, limit=1)
             except Exception:
-                raise Warning('Domain for %s is incorrectly formatted' % team.name)
+                raise exceptions.ValidationError(_('Assignment domain for team %(team)s is incorrectly formatted', team=team.name))
 
     # ------------------------------------------------------------
     # ORM
@@ -419,7 +419,7 @@ class Team(models.Model):
 
         # compute assign domain for each team before looping on them by bundle size
         teams_domain = dict(
-            (team, safe_eval(team.assignment_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT))
+            (team, literal_eval(team.assignment_domain or '[]'))
             for team in remaining_teams
         )
         # compute limit of leads to assign to each team: 2 times team capacity, based on given work_days
