@@ -7,10 +7,11 @@ from odoo import api, fields, models, _, _lt
 from PIL import Image
 import babel
 import babel.dates
-from lxml import etree
+from lxml import etree, html
 import math
 
 from odoo.tools import html_escape as escape, posix_to_ldml, float_utils, format_date, format_duration, pycompat
+from odoo.tools.mail import safe_attrs
 from odoo.tools.misc import get_lang, babel_locale_parse
 
 import logging
@@ -665,11 +666,15 @@ class BarcodeConverter(models.AbstractModel):
             barcode_symbology,
             value,
             **{key: value for key, value in options.items() if key in ['width', 'height', 'humanreadable', 'quiet', 'mask']})
-        img_attributes = {k[4:]: v for k, v in options.items() if k.startswith('img_')}
-        if 'alt' not in img_attributes:
-            img_attributes.update({'alt': 'Barcode %s' % value})
-        attributes = ' '.join(['%s="%s"' % attrs for attrs in img_attributes.items()])
-        return u'<img src="data:png;base64,%s" %s>' % (base64.b64encode(barcode).decode('ascii'), attributes)
+
+        img_element = html.Element('img')
+        for k, v in options.items():
+            if k.startswith('img_') and k[4:] in safe_attrs:
+                img_element.set(k[4:], v)
+        if not img_element.get('alt'):
+            img_element.set('alt', _('Barcode %s') % value)
+        img_element.set('src', 'data:image/png;base64,%s' % base64.b64encode(barcode).decode())
+        return html.tostring(img_element, encoding='unicode')
 
 
 class Contact(models.AbstractModel):
