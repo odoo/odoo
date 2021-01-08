@@ -36,7 +36,7 @@ class ProductProduct(models.Model):
 class Warehouse(models.Model):
     _inherit = 'stock.warehouse'
 
-    _populate_sizes = {'small': 6, 'medium': 12, 'large': 24}
+    _populate_sizes = {'small': 6, 'medium': 6, 'large': 24}
     _populate_dependencies = ['res.company']
 
     def _populate(self, size):
@@ -70,7 +70,7 @@ class Warehouse(models.Model):
 class Location(models.Model):
     _inherit = 'stock.location'
 
-    _populate_sizes = {'small': 50, 'medium': 2_000, 'large': 50_000}
+    _populate_sizes = {'small': 50, 'medium': 20, 'large': 50_000}
     _populate_dependencies = ['stock.warehouse']
 
     def _populate(self, size):
@@ -444,7 +444,7 @@ class Picking(models.Model):
             company = picking_type.company_id
             if company.id not in partners_by_company:
                 return False
-            if random.random() < 0.10:  # For 10 % of picking, force owner_id
+            if random.random() < 0.20:  # For 10 % of picking, force owner_id
                 random.choice(partners_by_company[company.id]).id
 
         def _compute_locations(iterator, field_name, model_name):
@@ -496,7 +496,7 @@ class Picking(models.Model):
 class StockMove(models.Model):
     _inherit = 'stock.move'
 
-    _populate_sizes = {'small': 1_000, 'medium': 20_000, 'large': 1_000_000}
+    _populate_sizes = {'small': 1_000, 'medium': 30_000, 'large': 1_000_000}
     _populate_dependencies = ['stock.picking']
 
     def _populate(self, size):
@@ -587,7 +587,7 @@ class StockMove(models.Model):
             picking_to_validate.with_context(skip_backorder=True, skip_sms=True).button_validate()
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal confirmed moves, e.g. for testing of forecasted report
-        pickings = confirm_pickings(0.8)
+        pickings = confirm_pickings(1)
 
         # (Un)comment to test a DB with a lot of outgoing/incoming/internal finished moves
         assign_picking(pickings)
