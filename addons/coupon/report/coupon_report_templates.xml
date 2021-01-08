@@ -67,7 +67,7 @@
                                     </small>
                                 </p>
                                 <br/>
-                                <img alt="Barcode" t-att-src="'/report/barcode/Code128/%s' % o.code"/>
+                                <div t-field="o.code" t-options="{'widget': 'barcode', 'width': 600, 'height': 100}"/>
                                 <br/><br/>
                                 <h4>Thank you,</h4>
                                 <br/>

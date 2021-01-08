@@ -9,7 +9,7 @@
                         <div class="page">
                             <div class="row justify-content-end mb16">
                                 <div class="col-4" name="right_box">
-                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)" style="width:300px;height:50px;" alt="Barcode"/>
+                                    <div t-field="o.name" t-options="{'widget': 'barcode', 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;'}"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -113,15 +113,13 @@
                                                     </div>
                                                 </td>
                                                 <td class=" text-center h6" t-if="has_serial_number">
-                                                    <img t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', ml.lot_id.name or ml.lot_name, 400, 100)" style="width:100%;height:35px;" alt="Barcode"/>
+                                                    <div t-if="has_serial_number and (ml.lot_id or ml.lot_name)" t-field="ml.lot_id.name or ml.lot_name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 400, 'height': 100, 'img_style': 'width:100%;height:35px;'}"/>
 
                                                 </td>
                                                 <td class="text-center" t-if="has_barcode">
                                                     <t t-if="product_barcode != move.product_id.barcode">
                                                         <span t-if="move.product_id and move.product_id.barcode">
-                                                            <img t-if="len(move.product_id.barcode) == 13" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s' % ('EAN13', move.product_id.barcode, 400, 100, 0)" style="height:35px" alt="Barcode"/>
-                                                            <img t-elif="len(move.product_id.barcode) == 8" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s' % ('EAN8', move.product_id.barcode, 400, 100, 0)" style="height:35px" alt="Barcode"/>
-                                                            <img t-else="" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;quiet=%s' % ('Code128', move.product_id.barcode, 400, 100, 0)" style="height:35px" alt="Barcode"/>
+                                                            <div t-field="move.product_id.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 400, 'height': 100, 'quiet': 0, 'img_style': 'height:35px;'}"/>
 
                                                         </span>
                                                         <t t-set="product_barcode" t-value="move.product_id.barcode"/>
@@ -144,7 +142,7 @@
                                     <tr t-foreach="o.package_level_ids.sorted(key=lambda p: p.package_id.name)" t-as="package">
                                         <t t-set="package" t-value="package.with_context(picking_id=o.id)" />
                                         <td name="td_pk_barcode">
-                                            <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', package.package_id.name, 600, 100)" style="width:300px;height:50px; margin-left: -50px;" alt="Barcode"/><br/>
+                                            <div t-field="package.package_id.name" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 100, 'img_style': 'width:300px;height:50px;margin-left: -50px;'}"/><br/>
                                         </td>
                                         <td t-if="o.picking_type_id.code != 'incoming'" groups="stock.group_stock_multi_locations">
                                             <span t-field="package.location_id"/>
