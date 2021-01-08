@@ -306,10 +306,10 @@ class Team(models.Model):
               are also merged. Purpose is to clean database and avoid assigning
               duplicates to same or different teams;
 
-          * for all teams that still have capacity (aka: a search on unassigned
-            available leads with team domain still give results), do another
-            assignment round. Each round teams are randomized so that team order
-            is not always the same;
+          * evaluate which teams still need to receive leads. This is based on
+            team maximum capacity. We consider a team should receive twice its
+            capacity as leads. That way members will receive leads and can pick
+            some leads in team unassigned pool of leads;
 
         Note that leads are assigned in batch meaning a team could receive
         leads that could better fit another team. However this heuristics is
@@ -356,6 +356,9 @@ class Team(models.Model):
             raise ValueError(
                 _('Leads team allocation should be done for at least 1 or maximum 30 work days, not %s.', work_days)
             )
+        # assignment_max is valid for "30 days" -> divide by requested work_days
+        # to have number of leads to assign
+        assign_ratio = work_days / 30.0
 
         BUNDLE_HOURS_DELAY = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.delay', default=0))
         BUNDLE_SIZE = int(self.env['ir.config_parameter'].sudo().get_param('crm.assignment.bundle', default=50))
@@ -365,14 +368,21 @@ class Team(models.Model):
         remaining_teams = self.env['crm.team'].browse(random.sample(self.ids, k=len(self.ids)))
 
         # compute assign domain for each team before looping on them by bundle size
-        teams_domain = dict.fromkeys(remaining_teams, False)
-        for team in remaining_teams:
-            teams_domain[team] = safe_eval(team.assignment_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT)
-
+        teams_domain = dict(
+            (team, safe_eval(team.assignment_domain or '[]', LEAD_ASSIGN_EVAL_CONTEXT))
+            for team in remaining_teams
+        )
+        # compute limit of leads to assign to each team: 2 times team capacity, based on given work_days
+        teams_limit = dict(
+            (team, 2 * team.assignment_max * assign_ratio)
+            for team in remaining_teams
+        )
+        # assignment process data
         teams_data = dict.fromkeys(remaining_teams, False)
         for team in remaining_teams:
             teams_data[team] = dict(assigned=set(), merged=set(), duplicates=set())
 
+        remaining_teams = remaining_teams.filtered('assignment_max')
         while remaining_teams:
             for team in remaining_teams:
                 lead_domain = expression.AND([
@@ -381,19 +391,23 @@ class Team(models.Model):
                     ['&', ('team_id', '=', False), ('user_id', '=', False)],
                     ['|', ('stage_id.is_won', '=', False), ('probability', 'not in', [False, 0, 100])]
                 ])
-                leads = self.env["crm.lead"].search(lead_domain, limit=BUNDLE_SIZE)
-
-                if len(leads) < BUNDLE_SIZE:
-                    team_done += team
+                # assign only to reach asked team limit
+                remaining = teams_limit[team] - (len(teams_data[team]['assigned']) + len(teams_data[team]['merged']))
+                lead_limit = min([BUNDLE_SIZE, remaining if remaining > 0 else 1])
+                leads = self.env["crm.lead"].search(lead_domain, limit=lead_limit)
 
                 # assign + deduplicate and concatenate results in teams_data to keep some history
                 assign_res = team._allocate_leads_deduplicate(leads)
-                _logger.info('Assigned %s leads to team %s' % (len(leads), team.id))
+                _logger.info('Assigned %d leads among %d candidates to team %s' % (len(assign_res['assigned']) + len(assign_res['merged']), len(leads), team.id))
                 _logger.info('\tLeads: direct assign %s / merge result %s / duplicates merged: %s' % (
                     assign_res['assigned'], assign_res['merged'], assign_res['duplicates']
                 ))
                 for key in ('assigned', 'merged', 'duplicates'):
                     teams_data[team][key].update(assign_res[key])
+
+                # either no more lead matching domain, either asked capacity assigned
+                if len(leads) < lead_limit or (len(teams_data[team]['assigned']) + len(teams_data[team]['merged'])) >= teams_limit[team]:
+                    team_done += team
 
                 # auto-commit except in testing mode. As this process may be time consuming or we
                 # may encounter errors, already commit what is allocated to avoid endless cron loops.
