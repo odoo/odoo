@@ -489,6 +489,9 @@ class IrActionsReport(models.Model):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
+        elif barcode_type == 'auto':
+            symbology_guess = {8: 'EAN8', 13: 'EAN13'}
+            barcode_type = symbology_guess.get(len(value), 'Code128')
         # add QR_quiet type for QR type with no border (not in 13.0 since there is quiet argument)
         if barcode_type == 'QR_quiet':
             kwargs['quiet'] = 1
