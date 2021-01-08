@@ -740,6 +740,75 @@ class TestPickShip(TestStockCommon):
         self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, return_location), 5.0)
         self.assertEqual(len(self.env['stock.quant'].search([('product_id', '=', self.productA.id), ('quantity', '!=', 0)])), 2)
 
+    def test_return_lot(self):
+        """ With two distinct deliveries for the same product tracked by lot, ensure that the
+        return of the second picking suggest the lot from the picking returned.
+        """
+        self.productA.tracking = 'lot'
+        lot1 = self.env['stock.production.lot'].create({
+            'name': 'lot1',
+            'product_id': self.productA.id,
+            'company_id': self.env.company.id,
+        })
+        lot2 = self.env['stock.production.lot'].create({
+            'name': 'lot2',
+            'product_id': self.productA.id,
+            'company_id': self.env.company.id,
+        })
+        lot3 = self.env['stock.production.lot'].create({
+            'name': 'lot3',
+            'product_id': self.productA.id,
+            'company_id': self.env.company.id,
+        })
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 7.0, lot_id=lot1)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 7.0, lot_id=lot2)
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 7.0, lot_id=lot3)
+
+        picking_pick, picking_client = self.create_pick_ship()
+        picking_pick.action_confirm()
+        picking_pick.action_assign()
+        for move_line in picking_pick.move_line_ids:
+            move_line.qty_done = move_line.product_uom_qty
+        picking_pick._action_done()
+        picking_client.action_confirm()
+        picking_client.action_assign()
+        for move_line in picking_client.move_line_ids:
+            move_line.qty_done = move_line.product_uom_qty
+        picking_client._action_done()
+
+        picking_pick, picking_client = self.create_pick_ship()
+        picking_pick.action_confirm()
+        picking_pick.action_assign()
+        for move_line in picking_pick.move_line_ids:
+            move_line.qty_done = move_line.product_uom_qty
+        picking_pick._action_done()
+        picking_client.action_confirm()
+        picking_client.action_assign()
+        for move_line in picking_client.move_line_ids:
+            move_line.qty_done = move_line.product_uom_qty
+        picking_client._action_done()
+
+        # Following FIFO strategy, First picking should have empty lot1 and took 3 of lot2.
+        # So the second picking contains 4 lot2 and 6 lot3
+        self.assertEqual(picking_client.move_line_ids[0].lot_id, lot2)
+        self.assertEqual(picking_client.move_line_ids[0].qty_done, 4)
+        self.assertEqual(picking_client.move_line_ids[1].lot_id, lot3)
+        self.assertEqual(picking_client.move_line_ids[1].qty_done, 6)
+
+        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=picking_client.ids, active_id=picking_client.ids[0], active_model='stock.picking'))
+        stock_return_picking = stock_return_picking_form.save()
+        stock_return_picking.product_return_moves.quantity = 10.0
+        return_pick = self.env['stock.picking'].browse(stock_return_picking.create_returns()['res_id'])
+
+        self.assertEqual(len(return_pick.move_line_ids), 2)
+        self.assertEqual(return_pick.move_line_ids[0].lot_id, lot2)
+        self.assertEqual(return_pick.move_line_ids[0].product_uom_qty, 4)
+        self.assertEqual(return_pick.move_line_ids[1].lot_id, lot3)
+        self.assertEqual(return_pick.move_line_ids[1].product_uom_qty, 6)
+        self.assertEqual(return_pick.picking_type_id, picking_client.location_id.warehouse_id.return_type_id)
 
 class TestSinglePicking(TestStockCommon):
     def test_backorder_1(self):
