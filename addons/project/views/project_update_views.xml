@@ -25,8 +25,7 @@
                                 <field name="status_id" widget="status_with_color" domain="[('project_ids','=', project_id)]"
                                         context="{'default_project_id': project_id}"
                                         attrs="{'readonly': [('state', '=', 'posted')]}"/>
-                                <field name="progress" widget="progressbar" options="{'current_value': 'progress', 'max_value': '100', 'editable': true}" 
-                                        attrs="{'readonly': [('state', '=', 'posted')]}"/>
+                                <field name="progress" widget="basic_progressbar" attrs="{'readonly': [('state', '=', 'posted')]}"/>
                             </group>
                             <separator class="form-divider-h"/>
                             <field name="description" attrs="{'readonly': [('state', '=', 'posted')]}"/>
