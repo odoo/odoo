@@ -28,7 +28,7 @@
     margin-inline-end: map-get($spacers, 2);
 }
 
-.o_Message_commandStar {
+.o_Message_commandStar, .o_Message_commandEdit {
     font-size: 1.3em;
 }
 
@@ -61,6 +61,7 @@
 .o_Message_core {
     min-width: 0; // allows this flex child to shrink more than its content
     margin-inline-end: map-get($spacers, 3);
+    width: 100%;
 }
 
 .o_Message_footer {
@@ -77,6 +78,7 @@
 .o_Message_headerCommands {
     margin-inline-end: map-get($spacers, 2);
     align-self: center;
+    border: none !important;
 
     .o_Message_headerCommand {
         padding-left: map-get($spacers, 2);
@@ -185,7 +187,16 @@
 .o_Message {
     background-color: white;
 
+    &:not(.o-clicked) {
+        &.o-mobile {
+            .o_Message_commands {
+                opacity: 0;
+            }
+        }
+    }
+
     &:hover, &.o-clicked {
+        background-color: lighten(gray('200'), 5%);
 
         .o_Message_commands {
             opacity: 1;
@@ -300,7 +311,7 @@
     }
 }
 
-.o_Message_headerCommands:not(.o-mobile) {
+.o_Message_headerCommands {
     opacity: 0;
 }
 

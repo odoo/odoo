@@ -3,6 +3,7 @@ odoo.define('mail/static/src/components/message/message.js', function (require) 
 
 const components = {
     AttachmentList: require('mail/static/src/components/attachment_list/attachment_list.js'),
+    Composer: require('mail/static/src/components/composer/composer.js'),
     MessageSeenIndicator: require('mail/static/src/components/message_seen_indicator/message_seen_indicator.js'),
     ModerationBanDialog: require('mail/static/src/components/moderation_ban_dialog/moderation_ban_dialog.js'),
     ModerationDiscardDialog: require('mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js'),
@@ -407,10 +408,15 @@ class Message extends Component {
         if (!this.message) {
             return;
         }
-        if (this._prettyBodyRef.el && this.message.prettyBody !== this._lastPrettyBody) {
+        if (
+            this._prettyBodyRef.el &&
+            (this.message.prettyBody !== this._lastPrettyBody ||
+            this.message.isEditingMessage !== this._last_message_editing)
+        ) {
             this._prettyBodyRef.el.innerHTML = this.message.prettyBody;
             this._lastPrettyBody = this.message.prettyBody;
         }
+        this._last_message_editing = this.message.isEditingMessage;
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
         // This is needed because _insertReadMoreLess is working with direct DOM mutations
         // which are not sync with Owl.
@@ -470,7 +476,8 @@ class Message extends Component {
         if (
             !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
             !isEventHandled(ev, 'Message.ClickAuthorName') &&
-            !isEventHandled(ev, 'Message.ClickFailure')
+            !isEventHandled(ev, 'Message.ClickFailure') &&
+            !this.env.messaging.device.isMobile
         ) {
             this.state.isClicked = !this.state.isClicked;
         }
@@ -498,6 +505,32 @@ class Message extends Component {
             return;
         }
         this.message.author.openProfile();
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    async _onClickEditMessage(ev) {
+        if (this.env.messaging.device.isMobile) {
+            this.message.originThread.composer.update(
+                Object.assign(
+                    {isLastStateChangeProgrammatic: true},
+                    this.message.originThread.composer._getComposerValues(this.message)
+                )
+            );
+            this.composerRecord = this.message.originThread.composer;
+            document.querySelector('.o_ComposerTextInput_textarea').focus();
+        }
+        else {
+            const messageBeingEdited = this.message.originThread.messages.find(
+                message => message.isEditingMessage
+            );
+            if (messageBeingEdited) {
+                messageBeingEdited.update({ isEditingMessage: false });
+            }
+            this.message.originThread.composer._createComposer(this.message);
+        }
     }
 
     /**
@@ -619,6 +652,23 @@ class Message extends Component {
         this.state.hasModerationRejectDialog = false;
     }
 
+    /**
+     * @private
+     */
+    _onTouchStart(ev) {
+        this.Touchtimer = setTimeout(() => {
+            this.state.isClicked = true;
+        }, 1000);
+    }
+
+    /**
+     * @private
+     */
+    _onTouchEnd(ev) {
+        if (this.Touchtimer) {
+            clearTimeout(this.Touchtimer);
+        }
+    }
 }
 
 Object.assign(Message, {

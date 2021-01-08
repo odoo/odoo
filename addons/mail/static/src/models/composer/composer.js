@@ -10,6 +10,7 @@ const {
     addLink,
     escapeAndCompactTextContent,
     parseAndTransform,
+    htmlToTextContentInline,
 } = require('mail.utils');
 
 function factory(dependencies) {
@@ -148,6 +149,20 @@ function factory(dependencies) {
             this.update({ hasFocus: true });
         }
 
+        getBody() {
+            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
+            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
+            // This message will be received from the mail composer as html content
+            // subtype but the urls will not be linkified. If the mail composer
+            // takes the responsibility to linkify the urls we end up with double
+            // linkification a bit everywhere. Ideally we want to keep the content
+            // as text internally and only make html enrichment at display time but
+            // the current design makes this quite hard to do.
+            body = this._generateMentionsLinks(body);
+            body = parseAndTransform(body, addLink);
+            return this._generateEmojisOnHtml(body);
+        }
+
         /**
          * Inserts text content in text input based on selection.
          *
@@ -278,17 +293,7 @@ function factory(dependencies) {
         async postMessage() {
             const thread = this.thread;
             this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
-            let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
-            // This message will be received from the mail composer as html content
-            // subtype but the urls will not be linkified. If the mail composer
-            // takes the responsibility to linkify the urls we end up with double
-            // linkification a bit everywhere. Ideally we want to keep the content
-            // as text internally and only make html enrichment at display time but
-            // the current design makes this quite hard to do.
-            body = this._generateMentionsLinks(body);
-            body = parseAndTransform(body, addLink);
-            body = this._generateEmojisOnHtml(body);
+            const body = this.getBody();
             let postData = {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
                 body,
@@ -364,6 +369,63 @@ function factory(dependencies) {
                 this._reset();
             } finally {
                 this.update({ isPostingMessage: false });
+            }
+        }
+
+        updateMentions() {
+            const channels = [];
+            const partners = [];
+            const div = document.createElement('div');
+            div.innerHTML = this.message.body;
+            const anchors = div.querySelectorAll('a');
+
+            anchors.forEach((element) => {
+                const id = parseInt(element.dataset.oeId);
+                if (element.dataset.oeModel === 'res.partner') {
+                    const partner = this.env.models["mail.partner"].find(partner => partner.id === id);
+                    if (partner) {
+                        partners.push(partner);
+                    }
+                } else if (element.dataset.oeModel === 'mail.channel') {
+                    const channel = this.env.models["mail.thread"].find(channel => channel.id === id);
+                    if (channel) {
+                        channels.push(channel);
+                    }
+                }
+            });
+            this.update({
+                mentionedPartners: [['link', partners]],
+                mentionedChannels: [['link', channels]],
+            });
+        }
+
+        async updateMessage() {
+            const attachmentIds = this.attachments.map((attachment) => attachment.id);
+            if (
+                htmlToTextContentInline(this.message.body) === this.textInputContent &&
+                JSON.stringify(attachmentIds) === JSON.stringify(this.messageAttachments)
+            ) {
+                this.message.update({ isEditingMessage: false });
+                return;
+            }
+            this.updateMentions();
+            const vals = {
+                body: this.getBody(),
+                attachment_ids: attachmentIds,
+            };
+            const [messageData] = await this.async(() => this.env.services.rpc({
+                model: 'mail.message',
+                method: 'update_message',
+                args: [[this.message.id], vals],
+            }));
+
+            const data = this.env.models['mail.message'].convertData(messageData);
+            this.message.update(Object.assign(data, { isEditingMessage: false }));
+            if (this.thread) {
+                this.update({
+                    textInputContent: "",
+                    isLastStateChangeProgrammatic: true,
+                });
             }
         }
 
@@ -600,6 +662,17 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @param {object} message
+         */
+        async _createComposer(message) {
+            message.composerRecord = this.env.models["mail.composer"].create(
+                this._getComposerValues(message)
+            );
+            message.update({ isEditingMessage: true });
+        }
+
+        /**
          * Executes the given async function, only when the last function
          * executed by this method terminates. If there is already a pending
          * function it is replaced by the new one. This ensures the result of
@@ -715,6 +788,20 @@ function factory(dependencies) {
                 });
             }
             return undefined;
+        }
+
+        /**
+         * @private
+         * @param {object} message
+         * @returns {Object}
+         */
+        _getComposerValues(message) {
+            return {
+                textInputContent: htmlToTextContentInline(message.body),
+                attachments: [['link', message.attachments]],
+                message: [['link', message]],
+                messageAttachments: message.attachments.map((attachment) => attachment.localId),
+            };
         }
 
         /**
@@ -1059,6 +1146,10 @@ function factory(dependencies) {
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
             dependencies: ['textInputContent'],
+        }),
+        message: one2one('mail.message'),
+        messageAttachments: attr({
+            default: [],
         }),
         /**
          * Determines the extra `mail.partner` (on top of existing followers)

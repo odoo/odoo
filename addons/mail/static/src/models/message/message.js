@@ -76,6 +76,9 @@ function factory(dependencies) {
             if ('date' in data && data.date) {
                 data2.date = moment(str_to_datetime(data.date));
             }
+            if ('date' in data && 'write_date' in data) {
+                data2.is_edited = data.date !== data.write_date;
+            }
             if ('email_from' in data) {
                 data2.email_from = data.email_from;
             }
@@ -138,6 +141,9 @@ function factory(dependencies) {
             }
             if ('tracking_value_ids' in data) {
                 data2.tracking_value_ids = data.tracking_value_ids;
+            }
+            if ('write_date' in data) {
+                data2.edit_date = data.write_date;
             }
 
             return data2;
@@ -427,7 +433,8 @@ function factory(dependencies) {
                 (!this.body || htmlToTextContentInline(this.body) === '') &&
                 this.attachments.length === 0 &&
                 this.tracking_value_ids.length === 0 &&
-                !this.subtype_description
+                !this.subtype_description &&
+                !this.isEditingMessage
             );
         }
 
@@ -544,6 +551,7 @@ function factory(dependencies) {
                 'date',
             ],
         }),
+        edit_date: attr(),
         email_from: attr(),
         failureNotifications: one2many('mail.notification', {
             compute: '_computeFailureNotifications',
@@ -604,6 +612,7 @@ function factory(dependencies) {
                 'attachments',
                 'body',
                 'tracking_value_ids',
+                'isEditingMessage'
             ],
         }),
         isModeratedByCurrentPartner: attr({
@@ -622,6 +631,12 @@ function factory(dependencies) {
             default: false,
         }),
         is_discussion: attr({
+            default: false,
+        }),
+        is_edited: attr({
+            default: false,
+        }),
+        isEditingMessage: attr({
             default: false,
         }),
         /**

@@ -207,7 +207,9 @@ class ComposerTextInput extends Component {
      * @private
      */
     _onFocusinTextarea() {
-        this.composer.focus();
+        if (!this.composer.message) {
+            this.composer.focus();
+        }
         this.trigger('o-focusin-composer');
     }
 
@@ -242,6 +244,9 @@ class ComposerTextInput extends Component {
                     ev.preventDefault();
                     this.composer.closeSuggestions();
                     markEventHandled(ev, 'ComposerTextInput.closeSuggestions');
+                } else if (this.composer.message) {
+                    this.trigger('o-composer-text-input-esc-shortcut');
+                    ev.preventDefault();
                 }
                 break;
             // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
@@ -255,6 +260,9 @@ class ComposerTextInput extends Component {
                 if (this.composer.hasSuggestions) {
                     // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
                     ev.preventDefault();
+                }
+                if (ev.key == 'ArrowUp' && !this.composer.message) {
+                    this.trigger('o-composer-text-input-up-shortcut');
                 }
                 break;
             // ENTER: submit the message only if the dropdown mention proposition is not displayed
@@ -414,6 +422,10 @@ Object.assign(ComposerTextInput, {
                 }
                 return true;
             },
+        },
+        tooltip: {
+            type: String,
+            optional: true,
         },
     },
     template: 'mail.ComposerTextInput',

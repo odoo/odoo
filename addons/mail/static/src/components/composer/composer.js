@@ -82,6 +82,9 @@ class Composer extends Component {
 
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
+        if (this.composer.message) {
+            this._textInputRef.comp.focus();
+        }
     }
 
     willUnmount() {
@@ -228,6 +231,22 @@ class Composer extends Component {
         }
     }
 
+    /**
+     * @private
+     */
+    _updateMessage() {
+        if (!this.composer.canPostMessage) {
+            if (this.composer.hasUploadingAttachment) {
+                this.env.services['notification'].notify({
+                    message: this.env._t("Please wait while the file is uploading."),
+                    type: 'warning',
+                });
+            }
+            return;
+        }
+        this.composer.updateMessage();
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -282,7 +301,11 @@ class Composer extends Component {
      * @private
      */
     _onClickSend() {
-        this._postMessage();
+        if (this.composer.message) {
+            this._updateMessage();
+        } else {
+            this._postMessage();
+        }
         this.focus();
     }
 
@@ -296,8 +319,29 @@ class Composer extends Component {
     /**
      * @private
      */
+    _onComposerTextInputEscShortcut() {
+        this.composer.message.update({ isEditingMessage: false });
+    }
+
+    /**
+     * @private
+     */
     _onComposerTextInputSendShortcut() {
-        this._postMessage();
+        if (this.composer.message) {
+            this._updateMessage();
+        } else {
+            this._postMessage();
+        }
+    }
+
+    /**
+     * @private
+     */
+    _onComposerTextInputUpShortcut() {
+        const messages = this.composer.thread.messages.filter((message) => message.isCurrentPartnerAuthor);
+        if (messages.length) {
+            this.composer._createComposer(messages[0]);
+        }
     }
 
     /**
