@@ -76,6 +76,7 @@ class Warehouse(models.Model):
     out_type_id = fields.Many2one('stock.picking.type', 'Out Type', check_company=True)
     in_type_id = fields.Many2one('stock.picking.type', 'In Type', check_company=True)
     int_type_id = fields.Many2one('stock.picking.type', 'Internal Type', check_company=True)
+    return_type_id = fields.Many2one('stock.picking.type', 'Return Type', check_company=True)
     crossdock_route_id = fields.Many2one('stock.location.route', 'Crossdock Route', ondelete='restrict')
     reception_route_id = fields.Many2one('stock.location.route', 'Receipt Route', ondelete='restrict')
     delivery_route_id = fields.Many2one('stock.location.route', 'Delivery Route', ondelete='restrict')
@@ -332,7 +333,7 @@ class Warehouse(models.Model):
                 warehouse_data[picking_type] = PickingType.create(values).id
 
         if 'out_type_id' in warehouse_data:
-            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data.get('in_type_id', False)})
+            PickingType.browse(warehouse_data['out_type_id']).write({'return_picking_type_id': warehouse_data.get('return_type_id', False)})
         if 'in_type_id' in warehouse_data:
             PickingType.browse(warehouse_data['in_type_id']).write({'return_picking_type_id': warehouse_data.get('out_type_id', False)})
         return warehouse_data
@@ -915,6 +916,10 @@ class Warehouse(models.Model):
             'int_type_id': {
                 'barcode': self.code.replace(" ", "").upper() + "-INTERNAL",
             },
+            'return_type_id': {
+                'default_location_dest_id': output_loc.id,
+                'barcode': self.code.replace(" ", "").upper() + "-RETURNS",
+            },
         }
 
     def _get_picking_type_create_values(self, max_sequence):
@@ -976,6 +981,16 @@ class Warehouse(models.Model):
                 'sequence': max_sequence + 2,
                 'sequence_code': 'INT',
                 'company_id': self.company_id.id,
+            }, 'return_type_id': {
+                'name': _('Returns'),
+                'code': 'incoming',
+                'use_create_lots': False,
+                'use_existing_lots': True,
+                'default_location_src_id': False,
+                'sequence': max_sequence + 6,
+                'show_reserved': True,
+                'sequence_code': 'IN',
+                'company_id': self.company_id.id,
             },
         }, max_sequence + 6
 
@@ -1007,6 +1022,11 @@ class Warehouse(models.Model):
             'int_type_id': {
                 'name': self.name + ' ' + _('Sequence internal'),
                 'prefix': self.code + '/INT/', 'padding': 5,
+                'company_id': self.company_id.id,
+            },
+            'return_type_id': {
+                'name': self.name + ' ' + _('Sequence return'),
+                'prefix': self.code + '/RET/', 'padding': 5,
                 'company_id': self.company_id.id,
             },
         }
