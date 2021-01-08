@@ -507,6 +507,9 @@ class IrActionsReport(models.Model):
             barcode_type = 'EAN13'
             if len(value) in (11, 12):
                 value = '0%s' % value
+        elif barcode_type == 'auto':
+            symbology_guess = {8: 'EAN8', 13: 'EAN13'}
+            barcode_type = symbology_guess.get(len(value), 'Code128')
         try:
             width, height, humanreadable, quiet = int(width), int(height), bool(int(humanreadable)), bool(int(quiet))
             # for `QR` type, `quiet` is not supported. And is simply ignored.
