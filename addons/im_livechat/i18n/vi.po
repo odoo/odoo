@@ -41,7 +41,7 @@ msgstr "SL Phiên"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "# of speakers"
-msgstr "SL Diễn giả"
+msgstr "SL Cộng sự"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
@@ -62,7 +62,7 @@ msgstr ""
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.livechat_email_template
 msgid ", on the"
-msgstr ""
+msgstr ", vào"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -196,7 +196,7 @@ msgstr "Tồi"
 #: model:ir.actions.act_window,name:im_livechat.im_livechat_canned_response_action
 #: model:ir.ui.menu,name:im_livechat.canned_responses
 msgid "Canned Responses"
-msgstr "Trả lời tự động"
+msgstr "Trả lời mẫu"
 
 #. module: im_livechat
 #: model_terms:ir.actions.act_window,help:im_livechat.im_livechat_canned_response_action
@@ -206,6 +206,10 @@ msgid ""
 "                replaced directly in your message, so that you can still edit\n"
 "                it before sending."
 msgstr ""
+"Trả lời mẫu cho phép bạn thêm các trả lời được viết sẵn vào đoạn\n"
+"                hội thoại của bạn bằng cách gõ<i>:shortcut</i>. shortcut được\n"
+"                thay thế bằng câu trả lời viết sẵn và bạn vẫn có thể sửa nó\n"
+"                trước khi gửi đi."
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__channel_id
@@ -304,7 +308,7 @@ msgstr "Hội thoại với %s"
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_form
 msgid ""
 "Copy and paste this code into your website, within the &lt;head&gt; tag:"
-msgstr "Copy và paste mã này vào website của bạn, ở giữa thẻ &lt;head&gt;:"
+msgstr "Sao chép và dán mã này vào website của bạn, ở bên trong thẻ head:"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__country_ids
@@ -379,7 +383,7 @@ msgstr "Ngày trong tuần của phiên (1 là Thứ Hai, 7 là Chủ nhật)"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__days_of_activity
 msgid "Days of activity"
-msgstr ""
+msgstr "Số ngày hoạt động"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel__button_text
@@ -398,6 +402,9 @@ msgid ""
 "selected action must be 'Auto popup' otherwise this parameter will not be "
 "taken into account."
 msgstr ""
+"Độ trễ (tính bằng giây) để tự động mở cửa sổ hội thoại. Chú ý: hành động được "
+"lựa chọn phải là 'Popup tự động', nếu không, tham số này sẽ không được sử "
+"dụng."
 
 #. module: im_livechat
 #. openerp-web
@@ -449,6 +456,8 @@ msgid ""
 "Settings and select the Website Live Chat Channel you want to add on your "
 "website."
 msgstr ""
+"Đối với website xây dựng trên nền tảng Odoo, hãy đến Website &gt; Cấu hình &gt; "
+"Thiết lập và chọn Kênh mà bạn muốn thêm vào website"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_channel_rule__sequence
@@ -528,7 +537,7 @@ msgstr "Địa chỉ email không hợp lệ"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_anonymous
 msgid "Is visitor anonymous"
-msgstr "Khách có bực mình không"
+msgstr "Là khách nặc danh"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -708,7 +717,7 @@ msgstr "Số ngày kể từ phiên đầu tiên của người vận hành"
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_speaker
 msgid "Number of different speakers"
-msgstr ""
+msgstr "Số lượng các cộng sự khác nhau"
 
 #. module: im_livechat
 #: model:ir.model.fields,help:im_livechat.field_im_livechat_report_channel__nbr_message
@@ -730,7 +739,7 @@ msgstr "Odoo"
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.res_users_form_view_simple_modif
 msgid "Online Chat Name"
-msgstr "Tên chat trực tuyên"
+msgstr "Tên chat trực tuyến"
 
 #. module: im_livechat
 #. openerp-web
@@ -824,7 +833,7 @@ msgstr "Đánh giá độ hài lòng"
 #: code:addons/im_livechat/static/src/js/im_livechat.js:0
 #, python-format
 msgid "Rating: %s"
-msgstr "Đánh giá %s"
+msgstr "Đánh giá: %s"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_channel_view_kanban
@@ -1053,19 +1062,19 @@ msgstr "Thời gian để trả lời"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__time_to_answer
 msgid "Time to answer (sec)"
-msgstr ""
+msgstr "Thời gian trả lời (giây)"
 
 #. module: im_livechat
 #: model_terms:ir.ui.view,arch_db:im_livechat.im_livechat_report_channel_view_search
 msgid "Treated sessions"
-msgstr ""
+msgstr "Các phiên nhiều hơn 1 cộng sự"
 
 #. module: im_livechat
 #. openerp-web
 #: code:addons/im_livechat/static/src/xml/im_livechat.xml:0
 #, python-format
 msgid "Try again"
-msgstr ""
+msgstr "Thử lại"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel_rule__regex_url
@@ -1107,7 +1116,7 @@ msgstr "Khách"
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_report_channel__is_happy
 msgid "Visitor is Happy"
-msgstr ""
+msgstr "Khách hàng hài lòng"
 
 #. module: im_livechat
 #: model:ir.model.fields,field_description:im_livechat.field_im_livechat_channel__web_page
