@@ -28,13 +28,6 @@ _logger = logging.getLogger(__name__)
 # HTML Sanitizer
 #----------------------------------------------------------
 
-tags_to_kill = ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
-                'noscript', 'object', 'script', 'style', 'title']
-
-tags_to_remove = ['html', 'body']
-
-# allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment])
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
@@ -43,6 +36,13 @@ safe_attrs = clean.defs.safe_attrs | frozenset(
      'data-class', 'data-mimetype', 'data-original-src', 'data-original-id', 'data-gl-filter', 'data-quality', 'data-resize-width',
      'data-shape', 'data-shape-colors', 'data-file-name', 'data-original-mimetype',
      ])
+SANITIZE_TAGS = {
+    # allow new semantic HTML5 tags
+    'allow_tags': clean.defs.tags | frozenset('article bdi section header footer hgroup nav aside figure main'.split() + [etree.Comment]),
+    'kill_tags': ['base', 'embed', 'frame', 'head', 'iframe', 'link', 'meta',
+                  'noscript', 'object', 'script', 'style', 'title'],
+    'remove_tags': ['html', 'body'],
+}
 
 
 class _Cleaner(clean.Cleaner):
@@ -199,17 +199,9 @@ def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=Fals
         'processing_instructions': False
     }
     if sanitize_tags:
-        kwargs['allow_tags'] = allowed_tags
-        if etree.LXML_VERSION >= (2, 3, 1):
-            # kill_tags attribute has been added in version 2.3.1
-            kwargs.update({
-                'kill_tags': tags_to_kill,
-                'remove_tags': tags_to_remove,
-            })
-        else:
-            kwargs['remove_tags'] = tags_to_kill + tags_to_remove
+        kwargs.update(SANITIZE_TAGS)
 
-    if sanitize_attributes and etree.LXML_VERSION >= (3, 1, 0):  # lxml < 3.1.0 does not allow to specify safe_attrs. We keep all attributes in order to keep "style"
+    if sanitize_attributes:  # We keep all attributes in order to keep "style"
         if strip_classes:
             current_safe_attrs = safe_attrs - frozenset(['class'])
         else:
