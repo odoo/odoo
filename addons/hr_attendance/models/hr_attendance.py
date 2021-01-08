@@ -20,7 +20,7 @@ class HrAttendance(models.Model):
     check_in = fields.Datetime(string="Check In", default=fields.Datetime.now, required=True)
     check_out = fields.Datetime(string="Check Out")
     worked_hours = fields.Float(string='Worked Hours', compute='_compute_worked_hours', store=True, readonly=True)
-    extra_hours = fields.Float(string="Extra Hours", default=0,
+    extra_hours = fields.Float(string="Extra Hours", default=0,  # TODO make compute stored ? instead of override create / unlink
         help="""
             This amount of extra hours is for the whole day.
             It is computed with other attendances of the same day, compared to the calendar.
@@ -121,22 +121,11 @@ class HrAttendance(models.Model):
         ])
         return same_day_attendances, day_before, day_after
 
-    def _get_day_planned_hours(self, day_before, day_after):
-        """
-        This methods computes the total of hours that are planned for a single day (between day_before & day_after)
-        which should be respectively 23:59:59 and 00:00:00.
-        """
-        day_planned_hours = 0
-        work_intervals = self.employee_id.resource_calendar_id._work_intervals(day_before, day_after, resource=self.employee_id.resource_id)
-        for dt_start, dt_end, meta in work_intervals:
-            day_planned_hours += (dt_end - dt_start).total_seconds() / 3600
-        return day_planned_hours
-
     def write(self, vals):
         super(HrAttendance, self).write(vals)
         if any(check in vals for check in ['check_in', 'check_out']):
             same_day_attendances, day_before, day_after = self._get_same_day_attendances()
-            day_planned_hours = self._get_day_planned_hours(day_before, day_after)
+            day_planned_hours = sum([wk[1] for wk in self.employee_id.list_work_time_per_day(day_before, day_after)])
             day_worked_hours = sum(attendance.worked_hours for attendance in same_day_attendances)
             same_day_attendances.update({'extra_hours': day_worked_hours - day_planned_hours})
 
@@ -144,7 +133,7 @@ class HrAttendance(models.Model):
         for attendance_to_delete in self:
             same_day_attendances, day_before, day_after = attendance_to_delete._get_same_day_attendances()
             same_day_attendances = same_day_attendances.filtered(lambda attendance: attendance.id != attendance_to_delete.id)
-            day_planned_hours = attendance_to_delete._get_day_planned_hours(day_before, day_after)
+            day_planned_hours = sum([wk[1] for wk in self.employee_id.list_work_time_per_day(day_before, day_after)])
             day_worked_hours = sum(attendance.worked_hours for attendance in same_day_attendances)
             super(HrAttendance, attendance_to_delete).unlink()
             same_day_attendances.update({'extra_hours': day_worked_hours - day_planned_hours})

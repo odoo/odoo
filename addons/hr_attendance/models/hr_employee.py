@@ -2,11 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from collections import defaultdict
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import models, fields, api, exceptions, _, SUPERUSER_ID
+from odoo import models, fields, api, exceptions, _
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -29,10 +28,7 @@ class HrEmployeeBase(models.AbstractModel):
                 start_date = employee.company_id.extra_hours_start_date
                 date_start = pytz.utc.localize(start_date) if not start_date.tzinfo else start_date
                 date_end = pytz.utc.localize(datetime.now()) if not datetime.now().tzinfo else datetime.now()
-                work_intervals = employee.resource_calendar_id._work_intervals(date_start, date_end, resource=employee.resource_id)
-                daily_planned_hours = defaultdict(float)
-                for dt_start, dt_end, meta in work_intervals:
-                    daily_planned_hours[dt_start.date()] += (dt_end - dt_start).total_seconds() / 3600
+                daily_planned_hours = {wk[0]: wk[1] for wk in employee.list_work_time_per_day(date_start, date_end)}
                 attendances_by_day = self.env['hr.attendance'].read_group(
                     [('employee_id', '=', employee.id), ('check_in', '>=', date_start), ('check_out', '!=', False)],
                     ['worked_hours'],
