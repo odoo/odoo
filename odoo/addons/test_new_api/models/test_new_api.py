@@ -663,19 +663,27 @@ class ComputeUnassigned(models.Model):
 
     @api.depends('foo')
     def _compute_bar(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bar = record.foo
 
     @api.depends('foo')
     def _compute_bare(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bare = record.foo
 
     @api.depends('foo')
     def _compute_bars(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bars = record.foo
 
     @api.depends('foo')
     def _compute_bares(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bares = record.foo
 
 
 class ModelBinary(models.Model):
