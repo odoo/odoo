@@ -14,7 +14,7 @@
                 <t t-foreach="page_row" t-as="o">
                   <td>
                     <div style="text-align: center; font-size: 2em"><span t-field="o.name"/></div>
-                    <img t-if="o.barcode" class="barcode" t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s&amp;humanreadable=1' % ('Code128', o.barcode, 600, 150)" alt="Barcode"/>
+                    <div t-if="o.barcode" t-field="o.barcode" t-options="{'widget': 'barcode', 'humanreadable': 1, 'width': 600, 'height': 150}"/>
                   </td>
                 </t>
               </tr>
