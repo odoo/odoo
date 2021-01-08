@@ -1242,6 +1242,53 @@ class Response(werkzeug.wrappers.Response):
             self.response.append(self.render())
             self.template = None
 
+    def call_on_close(self, func, *args, **kwargs):
+        """
+        Adds a function to the internal list of functions that should be called
+        as part of closing down the response. Returns the function that was
+        passed so that this can be used as a decorator.
+
+        Beware the ``request`` object is destroyed prior of calling the
+        function.
+
+        In case the function is an Odoo model method, the call is performed in
+        a copy of the environment extracted from the recordset.
+
+        Beware in case of sql serialisation erros (two workers writing on the
+        same record at the same time), the changes made by the fonction will be
+        discarded. Make sure it exists a CRON capable of redoing the changes in
+        case they were discarded.
+        """
+        records = getattr(func, '__self__', None)
+
+        if not isinstance(records, odoo.models.BaseModel):
+            # not an Odoo model method
+            return super().call_on_close(functools.partial(func, *args, **kwargs))
+
+        # Copy the current environment using the recordset attached to ``func``
+        # and the environment of the request. The request is not yet destroyed
+        # in ``call_on_close`` but will be in ``call_in_environ``.
+        model = records.__class__._name
+        ids = records._ids
+        user = records.env.uid
+        ctx = records.env.context
+        su = records.env.su
+        db = request.db
+
+        def call_in_environ():
+            with odoo.api.Environment.manage(), odoo.sql_db.db_connect(db).cursor() as cr:
+                env = odoo.api.Environment(cr, user, ctx, su)
+                try:
+                    with cr.savepoint():
+                        records = env[model].browse(ids)
+                        getattr(records, func.__name__)(*args, **kwargs)
+                except odoo.exceptions.UserError as exc:
+                    _logger.warning("%s while post-processing request", exc)
+                except Exception as exc:
+                    _logger.error("%s while post-processing request", exc, exc_info=True)
+
+        return super().call_on_close(call_in_environ)
+
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
