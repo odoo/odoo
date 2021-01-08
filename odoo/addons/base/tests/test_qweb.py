@@ -570,16 +570,16 @@ class TestQWebNS(TransactionCase):
 
         view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'width': 100, 'height': 30}"/>"""
         rendered = view._render(values={'partner': partner}).strip().decode()
-        self.assertRegex(rendered,r'<div><img src="data:png;base64,\S+" alt="Barcode test"></div>')
+        self.assertRegex(rendered, r'<div><img alt="Barcode test" src="data:image/png;base64,\S+"></div>')
 
         partner.barcode = '4012345678901'
         view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'EAN13', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
         ean_rendered = view._render(values={'partner': partner}).strip().decode()
-        self.assertRegex(ean_rendered,r'<div><img src="data:png;base64,\S+" style="width:100%;" alt="Barcode"></div>')
+        self.assertRegex(ean_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
         view.arch = u"""<div t-field="partner.barcode" t-options="{'widget': 'barcode', 'symbology': 'auto', 'width': 100, 'height': 30, 'img_style': 'width:100%;', 'img_alt': 'Barcode'}"/>"""
         auto_rendered = view._render(values={'partner': partner}).strip().decode()
-        self.assertRegex(auto_rendered,r'<div><img src="data:png;base64,\S+" style="width:100%;" alt="Barcode"></div>')
+        self.assertRegex(auto_rendered, r'<div><img style="width:100%;" alt="Barcode" src="data:image/png;base64,\S+"></div>')
 
 
 from copy import deepcopy
