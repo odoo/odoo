@@ -19,12 +19,12 @@
 #
 ###################################################################################
 {
-    'name': 'Beauty Spa Management',
-    'summary': """Beauty Parlour Management with Online Booking System""",
+    'name': 'Sport Management',
+    'summary': """Sport Management with Online Booking System""",
     'version': '14.0.1.0.0',
-    'author': 'Cybrosys Techno Solutions',
-    'website': "https://www.cybrosys.com",
-    'company': 'Cybrosys Techno Solutions',
+    'author': 'Hong Tean (A2A Digital)',
+    'website': "https://a2a-digital.com/",
+    'company': 'A2A Digital',
     "category": "Industries",
     'depends': ['base','base_setup', 'account', 'mail', 'website'],
     'data': [
