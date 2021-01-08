@@ -370,7 +370,10 @@ class PosOrder(models.Model):
     def action_pos_order_paid(self):
         self.ensure_one()
 
-        if not self.config_id.cash_rounding:
+        # TODO: add support for mix of cash and non-cash payments when both cash_rounding and only_round_cash_method are True
+        if not self.config_id.cash_rounding \
+           or self.config_id.only_round_cash_method \
+           and not any(p.payment_method_id.is_cash_count for p in self.payment_ids):
             total = self.amount_total
         else:
             total = float_round(self.amount_total, precision_rounding=self.config_id.rounding_method.rounding, rounding_method=self.config_id.rounding_method.rounding_method)
