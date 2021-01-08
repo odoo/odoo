@@ -12,7 +12,7 @@ class SaleOrderLine(models.Model):
     purchase_price = fields.Float(string='Cost', digits=dp.get_precision('Product Price'))
 
     def _compute_margin(self, order_id, product_id, product_uom_id):
-        frm_cur = self.env.user.company_id.currency_id
+        frm_cur = order_id.company_id.currency_id or self.env.user.company_id.currency_id
         to_cur = order_id.pricelist_id.currency_id
         purchase_price = product_id.standard_price
         if product_uom_id != product_id.uom_id:
