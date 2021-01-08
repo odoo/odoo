@@ -672,7 +672,7 @@ function on_chat_session_notification (chat_session) {
     if ((chat_session.channel_type === "channel") && (chat_session.state === "open")) {
         add_channel(chat_session, {autoswitch: false});
         if (!chat_session.is_minimized && chat_session.info !== 'creation') {
-            web_client.do_notify(_t("Invitation"), _t("You have been invited to: ") + chat_session.name);
+            web_client.do_notify(_t("Invitation"), _.str.sprintf(_t("You have been invited to: %s"), _.escape(chat_session.name)));
         }
     }
     // partner specific change (open a detached window for example)
