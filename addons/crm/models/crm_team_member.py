@@ -52,7 +52,8 @@ class Team(models.Model):
         return [
             ('user_id', '=', self.user_id.id),
             ('team_id', '=', self.crm_team_id.id),
-            ('date_open', '>=', limit_date)
+            ('date_open', '>=', limit_date),
+            ('probability', '<', 100)
         ]
 
     # ------------------------------------------------------------
