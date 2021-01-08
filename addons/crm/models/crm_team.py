@@ -439,7 +439,7 @@ class Team(models.Model):
                     teams_domain[team],
                     [('create_date', '<', max_create_dt)],
                     ['&', ('team_id', '=', False), ('user_id', '=', False)],
-                    ['|', ('stage_id.is_won', '=', False), ('probability', 'not in', [False, 0, 100])]
+                    ['|', ('stage_id.is_won', '=', False), ('probability', 'not in', [False, 0])]
                 ])
                 # assign only to reach asked team limit
                 remaining = teams_limit[team] - (len(teams_data[team]['assigned']) + len(teams_data[team]['merged']))
