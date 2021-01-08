@@ -696,27 +696,45 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(record.bares, False)
 
     def test_16_compute_unassigned_access_error(self):
-        # create a real record
-        record = self.env['test_new_api.compute.unassigned'].create({})
-        record.flush()
+        # create two records
+        records = self.env['test_new_api.compute.unassigned'].create([{}, {}])
+        records.flush()
 
-        # alter access rights: regular users cannot read 'record'
+        # alter access rights: regular users cannot read 'records'
         access = self.env.ref('test_new_api.access_test_new_api_compute_unassigned')
         access.perm_read = False
+        access.flush()
 
         # switch to environment with user demo
-        record = record.with_user(self.user_demo)
-        record.env.cache.invalidate()
+        records = records.with_user(self.user_demo)
+        records.env.cache.invalidate()
 
-        # check that the record is not accessible
+        # check that records are not accessible
         with self.assertRaises(AccessError):
-            record.bars
+            records[0].bars
+        with self.assertRaises(AccessError):
+            records[1].bars
 
-        # modify the record and flush() changes with the current environment:
-        # this should not trigger an access error, even if unassigned computed
-        # fields are fetched from database
-        record.foo = "X"
-        record.flush()
+        # Modify the records and flush() changes with the current environment:
+        # this should not trigger an access error, whatever the order in which
+        # records are considered.  It may fail in the following scenario:
+        #  - mark field 'bars' to compute on records
+        #  - access records[0].bars
+        #     - recompute bars on records (both) -> assign records[0] only
+        #     - return records[0].bars from cache
+        #  - access records[1].bars
+        #     - recompute nothing (done already)
+        #     - records[1].bars is not in cache
+        #     - fetch records[1].bars -> access error
+        records[0].foo = "assign"
+        records[1].foo = "x"
+        records.flush()
+
+        # try the other way around, too
+        records.env.cache.invalidate()
+        records[0].foo = "x"
+        records[1].foo = "assign"
+        records.flush()
 
     def test_20_float(self):
         """ test rounding of float fields """
