@@ -48,6 +48,7 @@ class ResConfigSettings(models.TransientModel):
     predictive_lead_scoring_start_date_str = fields.Char(string='Lead Scoring Starting Date in String', config_parameter='crm.pls_start_date')
     predictive_lead_scoring_fields = fields.Many2many('crm.lead.scoring.frequency.field', string='Lead Scoring Frequency Fields', compute="_compute_pls_fields", inverse="_inverse_pls_fields_str")
     predictive_lead_scoring_fields_str = fields.Char(string='Lead Scoring Frequency Fields in String', config_parameter='crm.pls_fields')
+    predictive_lead_scoring_field_labels = fields.Char(compute='_compute_predictive_lead_scoring_field_labels')
 
     @api.depends('crm_use_auto_assignment')
     def _compute_crm_auto_assignment_data(self):
@@ -110,6 +111,15 @@ class ResConfigSettings(models.TransientModel):
             if setting.predictive_lead_scoring_start_date:
                 setting.predictive_lead_scoring_start_date_str = fields.Date.to_string(setting.predictive_lead_scoring_start_date)
 
+    @api.depends('predictive_lead_scoring_fields')
+    def _compute_predictive_lead_scoring_field_labels(self):
+        for setting in self:
+            if setting.predictive_lead_scoring_fields:
+                field_names = [_('Stage')] + [field.name for field in setting.predictive_lead_scoring_fields]
+                setting.predictive_lead_scoring_field_labels = _('%s and %s', ', '.join(field_names[:-1]), field_names[-1])
+            else:
+                setting.predictive_lead_scoring_field_labels = _('Stage')
+
     def set_values(self):
         group_lead_before = self.env.ref('crm.group_use_lead') in self.env.user.groups_id
         super(ResConfigSettings, self).set_values()
@@ -136,11 +146,6 @@ class ResConfigSettings(models.TransientModel):
         if run_interval == 'manual':
             return run_datetime if run_datetime else False
         return fields.Datetime.now() + relativedelta(**{run_interval: run_interval_number})
-
-    # ACTIONS
-    def action_reset_lead_probabilities(self):
-        if self.env.user._is_admin():
-            self.env['crm.lead'].sudo()._cron_update_automated_probabilities()
 
     def action_crm_assign_leads(self):
         self.ensure_one()

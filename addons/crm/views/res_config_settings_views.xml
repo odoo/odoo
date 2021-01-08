@@ -56,26 +56,22 @@
                         <div class="col-lg-6 o_setting_box"
                             title="This can be used to compute statistical probability to close a lead"
                             name="predictive_lead_setting_container">
+                            <field name="predictive_lead_scoring_fields_str" invisible="1"/>
+                            <field name="predictive_lead_scoring_start_date_str" invisible="1"/>
                             <div class="o_setting_left_pane"></div>
                             <div class="o_setting_right_pane">
                                 <b>Predictive Lead Scoring</b>
                                 <div class="text-muted">
-                                    The success rate is computed based on the stage, but you can add more fields in the statistical analysis.
-                                </div>
-                                <div class="mt16">
-                                    <field name="predictive_lead_scoring_fields" class="oe_inline" widget="many2many_tags" placeholder="Extra fields..."/>
-                                    <field name="predictive_lead_scoring_fields_str" invisible="1"/>
-                                </div>
-                                <div class="mt16">
-                                    Consider leads created as of the
-                                    <field name="predictive_lead_scoring_start_date_str" invisible="1"/>
-                                    <field name="predictive_lead_scoring_start_date" class="oe_inline" required="1"/>
-                                </div>
+                                    The success rate is computed based on <b>
+                                        <field name="predictive_lead_scoring_field_labels" class="d-inline"/>
+                                    </b>
+                                    for the leads created as of the
+                                    <b><field name="predictive_lead_scoring_start_date" class="oe_inline" readonly="1"/></b>.
+                                 </div>
                                 <div class="mt16" groups="base.group_erp_manager">
-                                    <div class="text-muted mb-3">
-                                        Use this button to update the probabilities of all leads. This can take up to several minutes depending on how many there are.
-                                    </div>
-                                    <button name="action_reset_lead_probabilities" type="object" string="Update Probabilities" class="btn-primary"/>
+                                    <button name="%(crm_lead_pls_update_action)d" type="action"
+                                        string="Update Probabilities"
+                                        class="btn-primary"/>
                                 </div>
                             </div>
                         </div>
