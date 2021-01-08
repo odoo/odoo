@@ -95,6 +95,7 @@ class wizard_user(osv.osv_memory):
         error_empty = []
         error_emails = []
         error_user = []
+        error_internal = []
         ctx = dict(context or {}, active_test=False)
         for wizard_user in self.browse(cr, SUPERUSER_ID, ids, ctx):
             if wizard_user.in_portal and not wizard_user.partner_id.user_ids:
@@ -108,6 +109,11 @@ class wizard_user(osv.osv_memory):
                     error_user.append(wizard_user.partner_id)
                 emails.append(email)
 
+        for wizard_user in self.browse(cr, SUPERUSER_ID, ids, ctx):
+            for u in wizard_user.partner_id.user_ids:
+                if u.has_group('base.group_user'):
+                    error_internal.append(wizard_user.partner_id)
+
         error_msg = []
         if error_empty:
             error_msg.append("%s\n- %s" % (_("Some contacts don't have a valid email: "),
@@ -118,10 +124,14 @@ class wizard_user(osv.osv_memory):
         if error_user:
             error_msg.append("%s\n- %s" % (_("Some contacts have the same email as an existing portal user:"),
                                 '\n- '.join(['%s <%s>' % (p.display_name, p.email) for p in error_user])))
+        if error_internal:
+            error_msg.append("%s\n- %s" % (_("Some contacts are already internal users:"),
+                                           '\n- '.join(p.email for p in error_internal)))
         if error_msg:
             error_msg.append(_("To resolve this error, you can: \n"
                 "- Correct the emails of the relevant contacts\n"
                 "- Grant access only to contacts with unique emails"))
+            error_msg[-1] += _("\n- Switch the internal users to portal manually")
         return error_msg
 
     def action_apply(self, cr, uid, ids, context=None):
