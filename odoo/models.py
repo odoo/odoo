@@ -5872,10 +5872,10 @@ Fields:
                 # recomputed by accessing the field on the records
                 recs = recs.filtered('id')
                 try:
-                    recs.mapped(field.name)
+                    field.recompute(recs)
                 except MissingError:
                     existing = recs.exists()
-                    existing.mapped(field.name)
+                    field.recompute(existing)
                     # mark the field as computed on missing records, otherwise
                     # they remain forever in the todo list, and lead to an
                     # infinite loop...
