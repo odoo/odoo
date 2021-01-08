@@ -3320,10 +3320,14 @@ exports.Order = Backbone.Model.extend({
         if(!this.pos.config.cash_rounding)
             return false;
 
+        const only_cash = this.pos.config.only_round_cash_method;
         var lines = this.paymentlines.models;
 
         for(var i = 0; i < lines.length; i++) {
             var line = lines[i];
+            if (only_cash && !line.payment_method.is_cash_count)
+                continue;
+
             if(!utils.float_is_zero(line.amount - round_pr(line.amount, this.pos.cash_rounding[0].rounding), 6))
                 return line;
         }
