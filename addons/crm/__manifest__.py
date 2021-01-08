@@ -41,6 +41,7 @@
         'wizard/crm_lead_to_opportunity_views.xml',
         'wizard/crm_lead_to_opportunity_mass_views.xml',
         'wizard/crm_merge_opportunities_views.xml',
+        'wizard/crm_lead_pls_update_views.xml',
 
         'views/assets.xml',
         'views/calendar_views.xml',
