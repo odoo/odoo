@@ -946,6 +946,14 @@ class Lead(models.Model):
         }
         return action
 
+    def action_reschedule_meeting(self):
+        self.ensure_one()
+        action = self.action_schedule_meeting()
+        next_activity = self.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+        if next_activity.calendar_event_id:
+            action['context']['initial_date'] = next_activity.calendar_event_id.start
+        return action
+
     def action_snooze(self):
         self.ensure_one()
         today = date.today()
