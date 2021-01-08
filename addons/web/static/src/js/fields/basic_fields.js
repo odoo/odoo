@@ -3046,6 +3046,7 @@ var FieldBasicProgressBar = AbstractField.extend({
         'keydown .o_progress_keydown': '_onKeydown',
         'mousedown .o_progress': '_onMousedown',
         'mousemove .o_progress': '_onMousemove',
+        'mouseout .o_progress': '_onMouseout',
     },
     supportedFieldTypes: ['integer', 'float'],
     init: function () {
@@ -3124,6 +3125,16 @@ var FieldBasicProgressBar = AbstractField.extend({
             this.$('.o_progress_keydown').focus();
         }
     },
+    _onKeydown: function (event){
+        if (this.canWrite) {
+            var increment = (this.step > 0 ? this.step : 1);
+            if(event.keyCode === $.ui.keyCode.UP || event.keyCode === $.ui.keyCode.RIGHT){
+                this.on_update(this.value + increment);
+            } else if (event.keyCode === $.ui.keyCode.DOWN || event.keyCode === $.ui.keyCode.LEFT) {
+                this.on_update(this.value - increment);
+            }
+        }
+    },
     _onMousedown:function(event) {
         if (this.canWrite) {
             this.moused_down = true;
@@ -3135,14 +3146,11 @@ var FieldBasicProgressBar = AbstractField.extend({
             this._render_value(this.get_progress_value(event));
         }
     },
-    _onKeydown: function (event){
-        if (this.canWrite) {
-            var increment = (this.step > 0 ? this.step : 1);
-            if(event.keyCode === $.ui.keyCode.UP || event.keyCode === $.ui.keyCode.RIGHT){
-                this.on_update(this.value + increment);
-            } else if (event.keyCode === $.ui.keyCode.DOWN || event.keyCode === $.ui.keyCode.LEFT) {
-                this.on_update(this.value - increment);
-            }
+    _onMouseout:function(event) {
+        if (this.moused_down) {
+            // Update the value of the field before going out of the progress bar.
+            this.on_update(this.get_progress_value(event));
+            this.moused_down = false;
         }
     },
     isSet: function () {
