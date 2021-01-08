@@ -197,9 +197,9 @@ class StockMove(models.Model):
             return False
         return super()._should_bypass_set_qty_producing()
 
-    def _should_bypass_reservation(self):
+    def _should_bypass_reservation(self, forced_location=False):
         """ If the move is subcontracted then ignore the reservation. """
-        should_bypass_reservation = super(StockMove, self)._should_bypass_reservation()
+        should_bypass_reservation = super()._should_bypass_reservation(forced_location=forced_location)
         if not should_bypass_reservation and self.is_subcontract:
             return True
         return should_bypass_reservation

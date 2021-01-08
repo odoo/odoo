@@ -218,7 +218,7 @@ class TestPacking(TestPackingCommon):
         })
         picking = self.env['stock.picking'].create({
             'picking_type_id': self.warehouse.in_type_id.id,
-            'location_id': self.stock_location.id,
+            'location_id': self.customer_location.id,
             'location_dest_id': self.stock_location.id,
             'state': 'draft',
         })
