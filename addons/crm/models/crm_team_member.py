@@ -21,7 +21,7 @@ class Team(models.Model):
     # assignment
     assignment_enabled = fields.Boolean(related="crm_team_id.assignment_enabled")
     assignment_domain = fields.Char('Assignment Domain', tracking=True)
-    assignment_max = fields.Integer('Max Leads (last 30 days)')
+    assignment_max = fields.Integer('Max Leads (last 30 days)', default=30)
     lead_month_count = fields.Integer(
         'Leads (30 days)', compute='_compute_lead_month_count',
         help='Lead assigned to this member those last 30 days')
