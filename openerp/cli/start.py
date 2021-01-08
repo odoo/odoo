@@ -5,6 +5,7 @@ import glob
 import os
 import sys
 
+import openerp
 from . import Command
 from .server import main
 from openerp.modules.module import get_module_root, MANIFEST
@@ -53,6 +54,7 @@ class Start(Command):
         # TODO: forbid some database names ? eg template1, ...
         try:
             _create_empty_database(args.db_name)
+            openerp.tools.config['init']['base'] = True
         except DatabaseExists, e:
             pass
         except Exception, e:
