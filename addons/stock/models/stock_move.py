@@ -602,12 +602,52 @@ class StockMove(models.Model):
             odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
             doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
 
+    def _prefill_return_move_lines(self):
+        """ Ease encoding of returns with tracked products by prefilling move lines
+        """
+        if self.origin_returned_move_id and float_is_zero(self.quantity_done, precision_rounding=self.product_uom.rounding):
+            move_lines_commands = []
+            origin_quantity = self.origin_returned_move_id.product_uom._compute_quantity(self.origin_returned_move_id.product_uom_qty, self.product_uom, round=False)
+            if self.product_id.tracking == 'lot':
+                if float_compare(self.product_qty, origin_quantity, precision_rounding=self.product_uom.rounding) == 0:
+                    for move_line in self.origin_returned_move_id.move_line_ids:
+                        move_line_vals = self._prepare_move_line_vals()
+                        move_line_vals['qty_done'] = move_line.product_uom_id._compute_quantity(move_line.qty_done, self.product_uom)
+                        move_line_vals['product_uom_id'] = self.product_uom.id
+                        move_line_vals['lot_id'] = move_line.lot_id.id
+                        move_lines_commands.append((0, 0, move_line_vals))
+                elif len(self.origin_returned_move_id.move_line_ids.lot_id) == 1:
+                    move_line_vals = self._prepare_move_line_vals()
+                    move_line_vals['qty_done'] = self.product_uom_qty
+                    move_line_vals['product_uom_id'] = self.product_uom.id
+                    move_line_vals['lot_id'] = self.origin_returned_move_id.move_line_ids[0].lot_id.id
+                    move_lines_commands.append((0, 0, move_line_vals))
+                else:
+                    for move_line in self.origin_returned_move_id.move_line_ids:
+                        move_line_vals = self._prepare_move_line_vals()
+                        # no qty_done prefill when partial return on multiple lots
+                        move_line_vals['product_uom_id'] = self.product_uom.id
+                        move_line_vals['lot_id'] = move_line.lot_id.id
+                        move_lines_commands.append((0, 0, move_line_vals))
+            elif self.product_id.tracking == 'serial':
+                if float_compare(self.product_qty, origin_quantity, precision_rounding=self.product_uom.rounding) == 0:
+                    for move_line in self.origin_returned_move_id.move_line_ids:
+                        move_line_vals = self._prepare_move_line_vals()
+                        move_line_vals['qty_done'] = move_line.product_uom_id._compute_quantity(move_line.qty_done, self.product_uom, round=False)
+                        move_line_vals['product_uom_id'] = self.product_uom.id
+                        move_line_vals['lot_id'] = move_line.lot_id.id
+                        move_lines_commands.append((0, 0, move_line_vals))
+            if move_lines_commands:
+                self.write({'move_line_ids': move_lines_commands})
+
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
         move lines of a particular move. This form view is used when "show operations" is not
         checked on the picking type.
         """
         self.ensure_one()
+
+        self._prefill_return_move_lines()
 
         # If "show suggestions" is not checked on the picking type, we have to filter out the
         # reserved move lines. We do this by displaying `move_line_nosuggest_ids`. We use
