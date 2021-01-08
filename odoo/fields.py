@@ -1438,7 +1438,7 @@ class _String(Field):
                 update_trans = True
             elif lang != 'en_US' and lang is not None:
                 # update the translations only except if emptying
-                update_column = cache_value is None
+                update_column = not cache_value
                 update_trans = True
             # else: lang = None
 
@@ -1448,7 +1448,7 @@ class _String(Field):
             for rid in real_recs._ids:
                 # cache_value is already in database format
                 towrite[rid][self.name] = cache_value
-            if self.translate is True and cache_value is not None:
+            if self.translate is True and cache_value:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, real_recs._ids, value)
             if self.translate:
@@ -1471,7 +1471,7 @@ class _String(Field):
                     source_recs[self.name] = value
                     source_value = value
                 tname = "%s,%s" % (self.model_name, self.name)
-                if value is None:
+                if not value:
                     records.env['ir.translation'].search([
                         ('name', '=', tname),
                         ('type', '=', 'model'),
