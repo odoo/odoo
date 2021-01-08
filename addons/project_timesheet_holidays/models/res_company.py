@@ -23,7 +23,10 @@ class Company(models.Model):
                     raise ValidationError(_('The Internal Project of a company should be in that company.'))
 
     def init(self):
-        type_ids = [(4, self.env.ref('hr_timesheet.internal_project_default_stage').id)]
+        # TODO in master LTU - Remove this test as done for stable
+        internal_project_default_stage = self.env.ref('hr_timesheet.internal_project_default_stage',
+                                                      raise_if_not_found=False)
+        type_ids = [(4, internal_project_default_stage.id)] if internal_project_default_stage else []
         for company in self.search([('leave_timesheet_project_id', '=', False)]):
             company = company.with_company(company)
             project = company.env['project.project'].search([

@@ -48,7 +48,10 @@ class ResCompany(models.Model):
 
     def _create_internal_project_task(self):
         results = []
-        type_ids = [(4, self.env.ref('hr_timesheet.internal_project_default_stage').id)]
+        # TODO in master LTU - Remove this test as done for stable
+        internal_project_default_stage = self.env.ref('hr_timesheet.internal_project_default_stage',
+                                                      raise_if_not_found=False)
+        type_ids = [(4, internal_project_default_stage.id)] if internal_project_default_stage else []
         for company in self:
             company = company.with_company(company)
             results += [{
