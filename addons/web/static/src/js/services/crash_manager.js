@@ -360,7 +360,8 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
                         {
                             additional_context: additional_context,
                         });
-                }},
+                        self.destroy();
+                }, close: true},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ]
         }, {
