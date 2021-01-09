@@ -11,17 +11,18 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # Jakub Snášel <jakub@potisk-tricek.cz>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # Martin Trigaux, 2020
 # trendspotter, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 14:19+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: trendspotter, 2020\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -517,7 +518,7 @@ msgstr "Stav aktivity"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Ikona typu aktivity"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.mail_activity_type_action_config_project_types
@@ -632,6 +633,8 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Analytický účet, se kterým je tento projekt spojen pro finanční řízení. "
+"Použijte analytický účet k zaznamenání nákladů a výnosů na váš projekt."
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__april
@@ -720,7 +723,7 @@ msgstr "Datum přiřazení"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_assign
 msgid "Assignment Date"
-msgstr ""
+msgstr "Datum přiřazení"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
@@ -829,18 +832,21 @@ msgid ""
 "By saving this change, the customer email and phone number will also be "
 "updated."
 msgstr ""
+"Uložením této změny bude také aktualizován e-mail a telefonní číslo "
+"zákazníka."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer email will also be updated."
-msgstr ""
+msgstr "Uložením této změny bude také aktualizován e-mail zákazníka."
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "By saving this change, the customer phone number will also be updated."
 msgstr ""
+"Uložením této změny bude také aktualizováno telefonní číslo zákazníka."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_delete_wizard_form
@@ -1054,7 +1060,7 @@ msgstr "Současná fáze tohoto úkolu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_bounced_content
 msgid "Custom Bounced Message"
-msgstr ""
+msgstr "Vlastní odrazená zpráva"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1524,7 +1530,7 @@ msgstr "Sledující (partneři)"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Skvělá ikona písma, např. fa-úkoly"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_type__forever
@@ -1731,6 +1737,8 @@ msgid ""
 "If set, this content will automatically be sent out to unauthorized users "
 "instead of the default message."
 msgstr ""
+"Pokud je nastaveno, bude tento obsah místo výchozí zprávy automaticky "
+"odeslán neoprávněným uživatelům."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__active
@@ -2506,7 +2514,7 @@ msgstr "Telefon"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid ""
-"Plan resource allocation accross projets and tasks, and estimate deadlines "
+"Plan resource allocation across projets and tasks, and estimate deadlines "
 "more accurately"
 msgstr ""
 
@@ -2873,7 +2881,7 @@ msgstr "Opakování"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurrence_update
 msgid "Recurrence Update"
-msgstr ""
+msgstr "Aktualizace opakování"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__recurring_task
@@ -3024,7 +3032,7 @@ msgstr "Obnovit"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ribbon_message
 msgid "Ribbon message"
-msgstr ""
+msgstr "Lem zprávy"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
@@ -3089,7 +3097,7 @@ msgstr "Hledat ve Zprávách"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Project"
-msgstr ""
+msgstr "Hledat v projektu"
 
 #. module: project
 #: code:addons/project/controllers/portal.py:0
@@ -3306,7 +3314,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Sub-tasks Planned Hours"
-msgstr ""
+msgstr "Dílčí úkoly Plánované hodiny"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__subtask_planned_hours

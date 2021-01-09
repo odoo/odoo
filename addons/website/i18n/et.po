@@ -3,25 +3,26 @@
 # 	* website
 # 
 # Translators:
-# Maidu Targama <m.targama@gmail.com>, 2020
 # Algo Kärp <algokarp@gmail.com>, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
 # Egon Raamat <egon@avalah.ee>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
+# Martin Aavastik <martin@avalah.ee>, 2020
 # Martin Trigaux, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
-# Martin Aavastik <martin@avalah.ee>, 2020
-# Triine Aavik <triine@avalah.ee>, 2020
+# Maidu Targama <m.targama@gmail.com>, 2020
+# Andre Roomet <andreroomet@gmail.com>, 2020
+# Piia Paurson <piia@avalah.ee>, 2020
+# atriine <triine@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:08+0000\n"
+"POT-Creation-Date: 2020-12-04 15:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Triine Aavik <triine@avalah.ee>, 2020\n"
+"Last-Translator: atriine <triine@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -102,12 +103,6 @@ msgid "&amp;lt;head&amp;gt;"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_popup
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
 #: model_terms:ir.ui.view,arch_db:website.sitemap_xml
 msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
@@ -124,13 +119,6 @@ msgstr ""
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -163,10 +151,16 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
+#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
+#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 691-3277"
 msgstr ""
 
@@ -194,16 +188,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "...and switch the timeline contents to fit your needs."
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.footer_custom
-#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
-#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
-#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "1 (650) 691-3277"
 msgstr ""
 
 #. module: website
@@ -379,6 +363,13 @@ msgstr ""
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Click on a text</b> to start editing it."
+msgstr "<b>Vajutage tekstile</b>, et seda muuta."
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/tours/homepage.js:0
 #, python-format
 msgid ""
@@ -457,6 +448,20 @@ msgid ""
 "<b>My Company</b><br/>250 Executive Park Blvd, Suite 3400 <br/> San "
 "Francisco CA 94134 <br/>United States"
 msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a ${optionTooltipLabel}."
+msgstr "<b>Vali</b> a ${optionTooltipLabel}."
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a Color Palette."
+msgstr "<b>Vali</b> värvipalett."
 
 #. module: website
 #. openerp-web
@@ -1379,12 +1384,12 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_db
 msgid "Arch Blob"
-msgstr ""
+msgstr "Arch Blob"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__arch_fs
 msgid "Arch Filename"
-msgstr ""
+msgstr "Arch Faili nimi"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_ui_view__arch_fs
@@ -1731,7 +1736,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_website_form_view_themes_modal
 #, python-format
 msgid "Cancel"
-msgstr "Loobu"
+msgstr "Tühista"
 
 #. module: website
 #: code:addons/website/models/res_lang.py:0
@@ -1985,6 +1990,7 @@ msgstr ""
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
+#: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
@@ -2271,7 +2277,7 @@ msgstr "Riikide rühmad"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Course"
-msgstr ""
+msgstr "Kursus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.record_cover
@@ -2714,7 +2720,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_text
 msgid "Discover more"
-msgstr ""
+msgstr "Avasta rohkem"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3140,15 +3146,6 @@ msgid "Error"
 msgstr "Viga"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/tour_utils.js:0
-#, python-format
-msgid ""
-"Even if this title is cool, you can change it. <b>Click on a text</b> to "
-"start editing it."
-msgstr ""
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Event"
 msgstr "Sündmus"
@@ -3378,7 +3375,7 @@ msgstr "Fikseeritud"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flag"
-msgstr ""
+msgstr "Lipp"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5669,7 +5666,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Pay"
-msgstr ""
+msgstr "Maksa"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.theme_install_kanban_action
@@ -7582,7 +7579,7 @@ msgstr "URL"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__country_flag
 msgid "Url of static flag image"
-msgstr ""
+msgstr "Staatilise lipupildi url"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_search
@@ -7789,7 +7786,7 @@ msgstr "Vaate tüüp"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__mode
 msgid "View inheritance mode"
-msgstr ""
+msgstr "Vaate pärimise režiim"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_product_list
@@ -7810,7 +7807,7 @@ msgstr ""
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Vaated, mis pärivad sellest"
 
 #. module: website
 #. openerp-web
@@ -8181,7 +8178,7 @@ msgstr "Veebilehe Url"
 #: model:ir.model,name:website.model_website_visitor
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Website Visitor"
-msgstr ""
+msgstr "Veebilehe Külastaja"
 
 #. module: website
 #: code:addons/website/models/website_visitor.py:0
@@ -8426,6 +8423,12 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "You may opt-out of a third-party's use of cookies by visiting the"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "You must keep at least one website."
 msgstr ""
 
 #. module: website
@@ -8887,12 +8890,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "valuation, rank"
-msgstr ""
-
-#. module: website
-#: code:addons/website/models/website.py:162
-#, python-format
-msgid "You must keep at least one website."
 msgstr ""
 
 #. module: website

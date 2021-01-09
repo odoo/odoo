@@ -33,20 +33,21 @@
 # as co02 <asco02@163.com>, 2020
 # mao luo <dooms21day@163.com>, 2020
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # Zang <minoscc@gmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
-# Lin Li <ljsrzc007@gmail.com>, 2020
+# ljsrzc007 <ljsrzc007@gmail.com>, 2020
+# 洋 任 <1042636194@qq.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Lin Li <ljsrzc007@gmail.com>, 2020\n"
+"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -88,10 +89,9 @@ msgstr ""
 #: model:mail.template,subject:sale.email_template_edi_sale
 msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
-"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
+"(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order'} (Ref "
+"${object.name or 'n/a' })"
 msgstr ""
-"${object.company_id.name} ${object.state in ('draft', 'sent') and '报价单' or "
-"'订单'} (编号 ${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -103,11 +103,6 @@ msgstr "&amp;nbsp;"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
 msgstr "&amp;nbsp;<span>在</span>&amp;nbsp;"
-
-#. module: sale
-#: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
-msgid "&amp;times;"
-msgstr "&amp;times;"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
@@ -545,7 +540,7 @@ msgstr "<span>金额为：</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<span>Pro-Forma Invoice # </span>"
-msgstr "<span>形式发票＃</span>"
+msgstr "<span>形式结算单＃</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -560,7 +555,7 @@ msgstr "<span>付款条款:</span>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Invoices</strong>"
-msgstr "<strong class=\"d-block mb-1\">发票</strong>"
+msgstr "<strong class=\"d-block mb-1\">结算单</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
@@ -676,7 +671,7 @@ msgid ""
 "A standard invoice is issued with all the order lines ready for invoicing,"
 "         according to their invoicing policy (based on ordered or delivered "
 "quantity)."
-msgstr "标准发票是根据所有订单行的发票政策（基于订购或交付数量）随所有订单行一起开具的。"
+msgstr "标准结算单是根据所有订单行的结算单政策（基于订购或交付数量）随所有订单行一起开具的。"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -798,7 +793,7 @@ msgstr "添加产品"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Add a section"
-msgstr "添加章节"
+msgstr "添加节"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -813,12 +808,12 @@ msgstr "在销售订单中的地址"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Allows you to send Pro-Forma Invoice to your customers"
-msgstr "允许你发送形式发票给客户"
+msgstr "允许你发送形式结算单给客户"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_res_config_settings__group_proforma_sales
 msgid "Allows you to send pro-forma invoice."
-msgstr "允许你发送形式发票"
+msgstr "允许你发送形式结算单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_sale_amazon
@@ -839,7 +834,7 @@ msgstr "金额不匹配 (%s)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_amount
 msgid "Amount of quotations to invoice"
-msgstr "发票金额"
+msgstr "结算单金额"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -1145,7 +1140,7 @@ msgstr "创建日期"
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create Invoice"
-msgstr "创建发票"
+msgstr "创建结算单"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action
@@ -1165,12 +1160,12 @@ msgstr "创建一个报价是新销售的第一步!"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Create and View Invoice"
-msgstr "创建并查看发票"
+msgstr "创建并查看结算单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
 msgid "Create invoices"
-msgstr "创建发票"
+msgstr "创建结算单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__create_uid
@@ -1431,7 +1426,7 @@ msgstr "交货方式"
 #: model:ir.model.fields,help:sale.field_account_move__partner_shipping_id
 #: model:ir.model.fields,help:sale.field_account_payment__partner_shipping_id
 msgid "Delivery address for current invoice."
-msgstr "当前发票的交货地址"
+msgstr "当前结算单的交货地址"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__expected_date
@@ -1587,7 +1582,7 @@ msgstr "预付款按 %s%%"
 msgid ""
 "Down payments are made when creating invoices from a sales order. They are "
 "not copied when duplicating a sales order."
-msgstr "从销售订单创建发票时，将进行预付款。 复制销售订单时不会复制它们。"
+msgstr "从销售订单创建结算单时，将进行预付款。 复制销售订单时不会复制它们。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -1707,7 +1702,7 @@ msgid ""
 "Fiscal positions are used to adapt taxes and accounts for particular "
 "customers or sales orders/invoices.The default value comes from the "
 "customer."
-msgstr "财政状况是用来调整税收和特殊账户的。 客户或销售订单/发票。默认值来自客户”。"
+msgstr "财政状况是用来调整税收和特殊账户的。 客户或销售订单/结算单。默认值来自客户”。"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_follower_ids
@@ -1745,13 +1740,13 @@ msgid ""
 "From this report, you can have an overview of the amount invoiced to your "
 "customer. The search tool can also be used to personalise your Invoices "
 "reports and so, match this analysis to your needs."
-msgstr "从此报表，你可以得到一个客户的总发票金额的概览。搜索功能也能用来个性化你的发票报表，并且以此匹配此分析到你的需要。"
+msgstr "从此报表，你可以得到一个客户的总结算单金额的概览。搜索功能也能用来个性化你的结算单报表，并且以此匹配此分析到你的需要。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__invoice_status__invoiced
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__invoice_status__invoiced
 msgid "Fully Invoiced"
-msgstr "已开具全额发票"
+msgstr "已开具全额结算单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -1772,7 +1767,7 @@ msgstr "生成支付链接"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr "当在线支付确认时，自动生成发票"
+msgstr "当在线支付确认时，自动生成结算单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1873,7 +1868,7 @@ msgstr "如果勾选此项， 某些消息将会产生传递错误。"
 msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
-msgstr "如果一个销售订单已冻结（完成状态），你就不能手动修改它。但你仍然可以开具发票或交付。"
+msgstr "如果一个销售订单已冻结（完成状态），你就不能手动修改它。但你仍然可以开具结算单或交付。"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -1937,37 +1932,37 @@ msgstr "找不到该伙伴的对应路由 %s != %s"
 #: code:addons/sale/models/account_invoice.py:0
 #, python-format
 msgid "Invoice %s paid"
-msgstr "发票 %s 已付"
+msgstr "结算单 %s 已付"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_invoice_id
 msgid "Invoice Address"
-msgstr "发票地址"
+msgstr "结算单地址"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_cancel__display_invoice_alert
 msgid "Invoice Alert"
-msgstr "发票警报"
+msgstr "结算单警报"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_confirmed
 msgid "Invoice Confirmed"
-msgstr "发票已确认"
+msgstr "结算单已确认"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr "发票笔数"
+msgstr "结算单笔数"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
 msgid "Invoice Created"
-msgstr "发票已创建"
+msgstr "结算单已创建"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_lines
 msgid "Invoice Lines"
-msgstr "发票明细行"
+msgstr "结算单明细行"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -1978,7 +1973,7 @@ msgstr "销售订单开票"
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_status
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__invoice_status
 msgid "Invoice Status"
-msgstr "发票状态"
+msgstr "结算单状态"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced
@@ -1986,17 +1981,17 @@ msgid ""
 "Invoice revenue for the current month. This is the amount the sales channel "
 "has invoiced this month. It is used to compute the progression ratio of the "
 "current and target revenue on the kanban view."
-msgstr "当月的发票收入。 这是销售渠道本月开具的发票金额。 它用于计算当前和目标收入在看板视图上的进展比率。"
+msgstr "当月的结算单收入。 这是销售渠道本月开具的结算单金额。 它用于计算当前和目标收入在看板视图上的进展比率。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__delivery
 msgid "Invoice what is delivered"
-msgstr " 发货发票"
+msgstr " 发货结算单"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__default_invoice_policy__order
 msgid "Invoice what is ordered"
-msgstr "订单发票"
+msgstr "订单结算单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -2006,7 +2001,7 @@ msgstr "已开票"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_invoiced
 msgid "Invoiced Quantity"
-msgstr "已开发票数量"
+msgstr "已开结算单数量"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2017,7 +2012,7 @@ msgstr "已开票数量: %s"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced
 msgid "Invoiced This Month"
-msgstr "本月已开发票"
+msgstr "本月已开结算单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_invoice_salesteams
@@ -2025,24 +2020,24 @@ msgstr "本月已开发票"
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Invoices"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_account_invoice_report_salesteam
 msgid "Invoices Analysis"
-msgstr "发票分析"
+msgstr "结算单分析"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_invoice_report
 msgid "Invoices Statistics"
-msgstr "发票统计"
+msgstr "结算单统计"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid ""
 "Invoices will be created in draft so that you can review\n"
 "                        them before validation."
-msgstr "草稿发票将被创建，以便于在验证前检查"
+msgstr "草稿结算单将被创建，以便于在验证前检查"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
@@ -2271,8 +2266,8 @@ msgid ""
 "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
-"手动设置订单数量：基于手动输入数量的发票，不创建分析账户。\n"
-"时间表：在合同的基础上对相关发票跟踪小时时间表。\n"
+"手动设置订单数量：基于手动输入数量的结算单，不创建分析账户。\n"
+"时间表：在合同的基础上对相关结算单跟踪小时时间表。\n"
 "创建任务和跟踪时间：在销售订单验证上创建任务并跟踪工作时间。"
 
 #. module: sale
@@ -2481,12 +2476,12 @@ msgstr "发送错误的消息数量"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
 msgid "Number of quotations to invoice"
-msgstr "发票报价单"
+msgstr "结算单报价单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr "销售到发票的数量"
+msgstr "销售到结算单的数量"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread_counter
@@ -2620,7 +2615,7 @@ msgstr "订单由%s签名"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr "订单到发票"
+msgstr "订单到结算单"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2635,8 +2630,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"订购数量：客户订购的发票数量\n"
-"已交货数量：交付给客户的发票数量。"
+"订购数量：客户订购的结算单数量\n"
+"已交货数量：交付给客户的结算单数量。"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -2654,7 +2649,7 @@ msgstr "订单"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr "订单到发票"
+msgstr "订单到结算单"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -2680,7 +2675,7 @@ msgstr "PDT身份令牌"
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr "形式发票"
+msgstr "形式结算单"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -2836,12 +2831,12 @@ msgstr "打印"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr "形式发票"
+msgstr "形式结算单"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
 msgid "Pro-forma Invoices"
-msgstr "形式发票"
+msgstr "形式结算单"
 
 #. module: sale
 #: model:ir.model,name:sale.model_product_product
@@ -2953,14 +2948,14 @@ msgstr "待开票数量"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr "从销售订单到发票的数量"
+msgstr "从销售订单到结算单的数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Quantity"
-msgstr "购买量"
+msgstr "数量"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
@@ -3080,7 +3075,7 @@ msgstr "重新开票费用"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_expense_policy
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_expense_policy
 msgid "Re-Invoice Policy visible"
-msgstr "重开发票策略可见"
+msgstr "重开结算单策略可见"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3102,7 +3097,7 @@ msgstr "生成此销售订单相关的文档"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_advance_payment_inv__advance_payment_method__delivered
 msgid "Regular invoice"
-msgstr "普通发票"
+msgstr "普通结算单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -3154,7 +3149,7 @@ msgstr "负责用户"
 #: model:ir.model.fields,help:sale.field_crm_team__invoiced_target
 msgid ""
 "Revenue target for the current month (untaxed total of confirmed invoices)."
-msgstr "本月的收入目标（已确认发票的未含税总额）。"
+msgstr "本月的收入目标（已确认结算单的未含税总额）。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.utm_campaign_view_form
@@ -3221,7 +3216,7 @@ msgstr "销售"
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
 msgid "Sales Advance Payment Invoice"
-msgstr "销售预付款发票"
+msgstr "销售预付款结算单"
 
 #. module: sale
 #: code:addons/sale/models/sales_team.py:0
@@ -3406,12 +3401,12 @@ msgstr "搜索销售订单"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__display_type__line_section
 msgid "Section"
-msgstr "章节"
+msgstr "节"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Section Name (eg. Products, Services)"
-msgstr "章节名称(如：产品，服务)"
+msgstr "节名称(如：产品，服务)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_token
@@ -3433,7 +3428,7 @@ msgstr "从销售订单中选择产品属性和可选产品"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Select specific invoice and delivery addresses"
-msgstr "选择特定的发票和送货地址"
+msgstr "选择特定的结算单和送货地址"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_product_product__sale_line_warn
@@ -3467,12 +3462,12 @@ msgstr "使用产品变体(大小、颜色等)销售产品的产品变体"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr "发送形式发票"
+msgstr "发送形式结算单"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Send a product-specific email once the invoice is validated"
-msgstr "发票验证后，发送针对特定产品的EMail"
+msgstr "结算单验证后，发送针对特定产品的EMail"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
@@ -3821,9 +3816,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
-"当付款收单方确认交易时，发票自动生成并在客户门户中可用。\n"
-"发票标记为已付款，付款已在付款获取方配置中定义的付款日记账中注册。\n"
-"如果您在订单处而不是在交货后发出最终发票，则建议使用此模式。"
+"当付款收单方确认交易时，结算单自动生成并在客户门户中可用。\n"
+"结算单标记为已付款，付款已在付款获取方配置中定义的付款日记账中注册。\n"
+"如果您在订单处而不是在交货后发出最终结算单，则建议使用此模式。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3868,7 +3863,7 @@ msgstr "预先开票金额的百分比，不含税。"
 msgid ""
 "The product used to invoice a down payment should be of type 'Service'. "
 "Please use another product or update this product."
-msgstr "此产品用于开具预付定金发票，开票策略应该设为“订购数量”。请更新你的定金产品，以创建定金发票。"
+msgstr "此产品用于开具预付定金结算单，开票策略应该设为“订购数量”。请更新你的定金产品，以创建定金结算单。"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -3877,7 +3872,7 @@ msgid ""
 "The product used to invoice a down payment should have an invoice policy set"
 " to \"Ordered quantities\". Please update your deposit product to be able to"
 " create a deposit invoice."
-msgstr "此产品用于首付开票，开票策略应该设为“订购数量”。请更新你的押金产品，以创建押金发票。"
+msgstr "此产品用于首付开票，开票策略应该设为“订购数量”。请更新你的押金产品，以创建押金结算单。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__currency_rate
@@ -3960,7 +3955,7 @@ msgid ""
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
 "这个报表会对你的报价单和销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，合作伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。"
-" 如果你想分析你的营业额，你应该用会计模块里的发票分析报表。"
+" 如果你想分析你的营业额，你应该用会计模块里的结算单分析报表。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_quotation_salesteam
@@ -3972,7 +3967,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "这个报表会对你的报价单和销售订单进行分析。检查你的销售收入，并且按照不同的标准排序（业务员，业务伙伴，产品等）。用这个报表对还没有开票的销售订单进行分析。"
-" 如果你想分析你的营业额，你应该用会计模块里的发票分析报表功能。"
+" 如果你想分析你的营业额，你应该用会计模块里的结算单分析报表功能。"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_so_salesteam
@@ -3984,7 +3979,7 @@ msgid ""
 "Invoice Analysis report in the Accounting application."
 msgstr ""
 "这个报表会对你的销售订单进行分析。分析检查你的销售收入，并且按照不同的标准分组（业务员，业务伙伴，产品等）进行排序。用这个报表对还没有开票的销售订单进行分析。"
-" 如果你想分析你的营业额，你应该用会计模块里的发票分析报表。"
+" 如果你想分析你的营业额，你应该用会计模块里的结算单分析报表。"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4003,7 +3998,7 @@ msgstr "待开票"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__qty_to_invoice
 msgid "To Invoice Quantity"
-msgstr "发票数量"
+msgstr "结算单数量"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_view_search_inherit_sale
@@ -4169,7 +4164,7 @@ msgstr "未含税待开票金额"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__untaxed_amount_invoiced
 msgid "Untaxed Invoiced Amount"
-msgstr "未含税的发票金额"
+msgstr "未含税的结算单金额"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__price_subtotal
@@ -4303,8 +4298,8 @@ msgid ""
 "You can select all orders and invoice them in batch,<br>\n"
 "                or check every order and invoice them one by one."
 msgstr ""
-"您可以选择所有订单并批量发票，<br>\n"
-"               或检查每个订单并逐一开具发票。"
+"您可以选择所有订单并批量结算单，<br>\n"
+"               或检查每个订单并逐一开具结算单。"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_payment_acquirer__so_reference_type

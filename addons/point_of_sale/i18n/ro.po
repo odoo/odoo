@@ -5,19 +5,19 @@
 # Translators:
 # Fekete Mihai <mihai.fekete@forestandbiomass.ro>, 2020
 # Iulian Cutui <iulian.cutui@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
-# Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -177,7 +177,7 @@ msgstr "<span class=\"pos-change_amount\">$ 0.86</span>"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
 #: model_terms:pos.config,customer_facing_display_html:point_of_sale.pos_config_main
 msgid "<span class=\"pos-change_title\">Change</span>"
-msgstr "<span class=\"pos-change_title\">Change</span>"
+msgstr "<span class=\"pos-change_title\">Rest</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -242,7 +242,7 @@ msgstr "= Estimat"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "= Expected in Cash"
-msgstr "= Așteptat în numerar"
+msgstr "= Numerar așteptat"
 
 #. module: point_of_sale
 #. openerp-web
@@ -402,7 +402,7 @@ msgstr "Pictograma tipului de activitate"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Actual in Cash"
-msgstr "Curent în numerar"
+msgstr "Numerar curent"
 
 #. module: point_of_sale
 #. openerp-web
@@ -591,8 +591,8 @@ msgid ""
 "At the session closing: A picking is created for the entire session when it's closed\n"
 " In real time: Each order sent to the server create its own picking"
 msgstr ""
-"La sesiunea de închidere: o selecție este creată pentru întreaga sesiune când este închisă\n"
-" În timp real: Fiecare comandă trimisă serverului își creează propria alegere"
+"La sesiunea de închidere: Un transfer este creat pentru întreaga sesiune când este închisă\n"
+" În timp real: Fiecare comandă trimisă serverului își creează propriul transfer."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_attachment_count
@@ -741,7 +741,7 @@ msgstr "Valoare bază"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_difference
 msgid "Before Closing Difference"
-msgstr "Înainte de închiderea diferenței"
+msgstr "Diferența înainte de închidere"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -765,7 +765,7 @@ msgstr "Evită tipărirea din browser și tipărirea prin proxy hardware"
 #: code:addons/point_of_sale/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml:0
 #, python-format
 msgid "CHANGE"
-msgstr "SCHIMBĂ"
+msgstr "REST"
 
 #. module: point_of_sale
 #. openerp-web
@@ -843,7 +843,7 @@ msgstr "Controlul numerarului"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Cash In/Out"
-msgstr "Cash In / Out"
+msgstr "Scoate / Pune bani "
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__cash_journal_id
@@ -1534,6 +1534,12 @@ msgid "Difference"
 msgstr "Diferență"
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Difference at closing PoS session"
+msgstr ""
+
+#. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
 msgid ""
 "Difference between the theoretical closing balance and the real closing "
@@ -1925,7 +1931,7 @@ msgstr "Urmăritori (Parteneri)"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Pictogramă minunată pentru font, de ex. fa-sarcini"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -2935,7 +2941,7 @@ msgstr "Data deschiderii"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Opening amount:"
-msgstr ""
+msgstr "Valoare deschidere:"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.account_cashbox_line_action
@@ -3160,7 +3166,7 @@ msgstr "Plată"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_payment
 msgid "Pay Order"
-msgstr "Ordin de plată"
+msgstr "Plată comandă"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3380,7 +3386,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Please configure a payment method in your POS."
-msgstr "Vă rugăm să configurați o metodă de plată în POS-ul dvs.\\."
+msgstr "Vă rugăm să configurați o metodă de plată în POS-ul dvs."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -3639,7 +3645,7 @@ msgstr "Sesiuni Punct de Vânzare"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Pos closed."
-msgstr ""
+msgstr "Casă închisă."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_posbox
@@ -4375,7 +4381,7 @@ msgstr "Setați greutatea"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/CashBoxOpening.xml:0
 #, python-format
 msgid "Set a cash opening"
-msgstr ""
+msgstr "Stabilite numerar la deschidere"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4538,7 +4544,7 @@ msgstr "Sold inițial"
 #: code:addons/point_of_sale/static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml:0
 #, python-format
 msgid "State"
-msgstr "Status"
+msgstr "Județ"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4981,7 +4987,7 @@ msgid ""
 "There are still orders in draft state in the session. Pay or cancel the following orders to validate the session:\n"
 "%s"
 msgstr ""
-"În sesiune există încă comenzi în starea de proiectare. Plătește sau anulează următoarele comenzi pentru validarea sesiunii:\n"
+"În sesiune există încă comenzi în starea de ciornă. Încasează sau anulează următoarele comenzi pentru validarea sesiunii:\n"
 "%s"
 
 #. module: point_of_sale
@@ -5155,7 +5161,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
-msgstr ""
+msgstr "Această sesiune este deja închisă."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5183,7 +5189,7 @@ msgstr "Sfat"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__tip_amount
 msgid "Tip Amount"
-msgstr ""
+msgstr "Valoare bacșiș"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__tip_product_id

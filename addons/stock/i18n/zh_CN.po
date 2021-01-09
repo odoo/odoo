@@ -38,19 +38,21 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # ryan ryan <itechr@outlook.com>, 2020
 # mao luo <dooms21day@163.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # snow wang <147156565@qq.com>, 2020
 # Zang <minoscc@gmail.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
+# Melvin Liu <betien@msn.cn>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: ljsrzc007 <ljsrzc007@gmail.com>, 2020\n"
+"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -589,7 +591,7 @@ msgstr "<strong>你要把产品发送到哪里？</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "？这可能会导致库存不一致。"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -774,16 +776,16 @@ msgid "Allowed Route"
 msgstr "允许的路线"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
+msgid ""
+"Allows to start with a pre-filled counted quantity for each lines or with "
+"all counted quantities set to zero."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
 msgstr "允许从空库存开始。"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
-msgid ""
-"Allows to start with prefill counted quantity for each lines or with all "
-"counted quantity set to zero."
-msgstr "允许从每行的预填充计数开始，或将所有计数数量设置为零。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -2271,13 +2273,13 @@ msgstr ""
 #: code:addons/stock/static/src/xml/forecast_widget.xml:0
 #, python-format
 msgid "Exp"
-msgstr "试验"
+msgstr "预计"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Exp %s"
-msgstr ""
+msgstr "预计%s"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__products_availability_state__expected
@@ -2453,7 +2455,7 @@ msgstr "预测的交货"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__forecast_expected_date
 msgid "Forecasted Expected date"
-msgstr ""
+msgstr "预测的预计日期"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action
@@ -3230,7 +3232,7 @@ msgstr "指定货物是部分交货，还是一次性交货"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__json_popover
 msgid "JSON data for the popover widget"
-msgstr ""
+msgstr "弹出式窗口小部件的JSON数据"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__json_lead_days_popover
@@ -3850,7 +3852,6 @@ msgstr "新建"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
-#: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "New Move:"
 msgstr "新移动："
@@ -3920,7 +3921,7 @@ msgstr "此批号没有作业"
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.product_template_action_product
 msgid "No product found. Let's create one!"
-msgstr ""
+msgstr "现在还没有产品， 我们先创建一个"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -4553,7 +4554,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Planning Issues"
-msgstr ""
+msgstr "规划问题"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -6218,7 +6219,7 @@ msgstr "库存数量报告"
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
 #: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "库存补货报告"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -6726,6 +6727,16 @@ msgstr ""
 "这个拣货显示和别的作业链接起来. 稍后, 如果你正在接收退回的货物，确保<b>逆转</b> ，这样是为了防止同样的物流规则再次被执行 (创建重复作业)"
 
 #. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
@@ -6782,7 +6793,7 @@ msgstr "至"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_backorder_confirmation_line__to_backorder
 msgid "To Backorder"
-msgstr ""
+msgstr "创建欠单"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready

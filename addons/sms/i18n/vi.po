@@ -18,7 +18,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 14:34+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
 "Last-Translator: Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2020\n"
 "Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
@@ -116,6 +116,13 @@ msgid ""
 msgstr ""
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/notification_group/notification_group.xml:0
+#, python-format
+msgid "An error occurred when sending an SMS."
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__model_id
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__model_id
 msgid "Applies to"
@@ -125,7 +132,7 @@ msgstr "Áp dụng cho"
 #: code:addons/sms/wizard/sms_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s SMS delivery failures. You won't be able"
+"Are you sure you want to discard %s SMS delivery failures? You won't be able"
 " to re-send these SMS later!"
 msgstr ""
 
@@ -142,12 +149,12 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__mobile_blacklisted
 msgid "Blacklisted Phone Is Mobile"
-msgstr ""
+msgstr "Số điện thoại vào sổ đen là Di động"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_blacklisted
 msgid "Blacklisted Phone is Phone"
-msgstr ""
+msgstr "Số điện thoại vào sổ đen là Điện thoại thường"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__body
@@ -363,6 +370,8 @@ msgid ""
 "Field used to store sanitized phone number. Helps speeding up searches and "
 "comparisons."
 msgstr ""
+"Trường được sử dụng để lưu trữ số điện thoại đã qua xử lý. Giúp tăng tốc tìm"
+" kiếm và so sánh."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_template__copyvalue
@@ -492,6 +501,8 @@ msgid ""
 "If the sanitized phone number is on the blacklist, the contact won't receive"
 " mass mailing sms anymore, from any list"
 msgstr ""
+"Nếu số điện thoại được làm sạch nằm trong danh sách đen, thì liên hệ sẽ "
+"không nhận được sms gửi thư hàng loạt nữa, từ bất kỳ danh sách nào"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_cancel
@@ -518,6 +529,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Cho biết số điện thoại được xử lý trong danh sách đen có phải là số di động "
+"hay không. Giúp phân biệt số nào nằm trong danh sách đen             khi có "
+"cả trường di động và trường điện thoại trong đối tượng."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_res_partner__phone_blacklisted
@@ -526,6 +540,9 @@ msgid ""
 "distinguish which number is blacklisted             when there is both a "
 "mobile and phone field in a model."
 msgstr ""
+"Cho biết số điện thoại đã được xử lý trong danh sách đen có phải là số điện "
+"thoại hay không. Giúp phân biệt số nào nằm trong danh sách đen             "
+"khi có cả trường di động và điện thoại trong một đối tượng."
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__comment_single_recipient
@@ -616,7 +633,7 @@ msgstr "Cập nhật lần cuối vào"
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_mass_keep_log
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_mass_keep_log
 msgid "Log as Note"
-msgstr ""
+msgstr "Ghi chú"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_sms__mail_message_id
@@ -691,7 +708,7 @@ msgstr "Tên"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__no_record
 msgid "No Record"
-msgstr ""
+msgstr "Không có dữ liệu"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__notification_id
@@ -701,7 +718,7 @@ msgstr "Thông báo"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Loại thông báo"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -737,7 +754,7 @@ msgstr "Số lượng tin gửi đi bị lỗi"
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__res_ids_count
 msgid ""
-"Number of recipients that will recieve the SMS if sent in mass mode, without"
+"Number of recipients that will receive the SMS if sent in mass mode, without"
 " applying the Active Domain value"
 msgstr ""
 
@@ -786,7 +803,7 @@ msgstr ""
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized_blacklisted
 msgid "Phone Blacklisted"
-msgstr ""
+msgstr "Số điện thoại đã vào sổ đen"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template__copyvalue
@@ -796,7 +813,7 @@ msgstr "Biểu thức Placeholder"
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_composer__composition_mode__comment
 msgid "Post on a document"
-msgstr ""
+msgstr "Đưa vào tài liệu"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -872,12 +889,16 @@ msgid "Resend Notification"
 msgstr ""
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/components/message/message.xml:0
+#: code:addons/sms/static/src/components/message/message.xml:0
 #: model:ir.actions.act_window,name:sms.sms_sms_action
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_id
 #: model:ir.model.fields.selection,name:sms.selection__mail_message__message_type__sms
 #: model:ir.model.fields.selection,name:sms.selection__mail_notification__notification_type__sms
 #: model:ir.ui.menu,name:sms.sms_sms_menu
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
+#, python-format
 msgid "SMS"
 msgstr ""
 
@@ -922,6 +943,13 @@ msgid "SMS Delivery error"
 msgstr "Lỗi gửi SMS"
 
 #. module: sms
+#. openerp-web
+#: code:addons/sms/static/src/models/notification_group/notification_group.js:0
+#, python-format
+msgid "SMS Failures"
+msgstr ""
+
+#. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__sms_number
 msgid "SMS Number"
 msgstr ""
@@ -955,7 +983,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_ir_cron__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "SMS Template"
-msgstr ""
+msgstr "Mẫu SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
@@ -987,7 +1015,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_sanitized
 #: model:ir.model.fields,field_description:sms.field_sms_composer__sanitized_numbers
 msgid "Sanitized Number"
-msgstr ""
+msgstr "Số đã xử lý"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_sms_view_search
@@ -1142,7 +1170,7 @@ msgstr "Xem trước Mẫu"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "Ngôn ngữ mẫu xem trước"
 
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_action
@@ -1160,6 +1188,8 @@ msgstr "Kiểu tài liệu mà mẫu này có thể được sử dụng với"
 msgid ""
 "This phone number is blacklisted for SMS Marketing. Click to unblacklist."
 msgstr ""
+"Số điện thoại này được đưa vào danh sách đen cho SMS Marketing. Nhấp để bỏ "
+"danh sách đen."
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_mail__message_type
