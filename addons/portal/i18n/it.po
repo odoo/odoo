@@ -43,7 +43,7 @@ msgstr ""
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
-msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Ritorna alla modalità modifica"
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Ritorna alla modalità di modifica"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -338,6 +338,8 @@ msgid ""
 "Changing VAT number is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Impossibile modificare la partita IVA dopo l'emissione dei documenti per il "
+"conto. Per questa operazione contattarci direttamente."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -345,13 +347,15 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Impossibile modificare il nome dell'azienda dopo l'emissione dei documenti "
+"per il conto. Per questa operazione contattarci direttamente."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Controllo fallito"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -446,6 +450,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Attualmente disponibile a chiunque visioni il documento, fare clic per "
+"limitarlo ai dipendenti interni."
 
 #. module: portal
 #. openerp-web
@@ -455,6 +461,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Attualmente riservato ai dipendenti interni, fare clic per renderlo "
+"disponibile a chiunque visioni il documento."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -509,7 +517,7 @@ msgstr "Scade tra %d giorni"
 #: code:addons/portal/static/src/js/portal_sidebar.js:0
 #, python-format
 msgid "Due today"
-msgstr ""
+msgstr "Scade oggi"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__email
@@ -653,6 +661,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Il modello %(model_name)s non supporta la firma del token, non contiene il "
+"campo %(field_name)s."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -694,8 +704,7 @@ msgstr "Logo Odoo"
 #, python-format
 msgid "Oops! Something went wrong. Try to reload the page and log in."
 msgstr ""
-"Ops! Qualcosa è andato storto. Ricaricare la pagina e provare nuovamente ad "
-"accedere."
+"Ops! Qualcosa è andato storto. Ricaricare la pagina e riprovare ad accedere."
 
 #. module: portal
 #. openerp-web
@@ -724,7 +733,7 @@ msgstr "Telefono"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please confirm your password to continue"
-msgstr ""
+msgstr "Confermare la password per proseguire"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -789,7 +798,7 @@ msgstr "Modello documento collegato"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
 msgid "Search"
-msgstr "Cerca"
+msgstr "Ricerca"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
@@ -831,7 +840,7 @@ msgstr "Invia"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Several contacts have the same email: "
-msgstr "Diversi contatti hanno la stessa e-mail: "
+msgstr "Alcuni contatti hanno la stessa e-mail: "
 
 #. module: portal
 #: model:ir.actions.act_window,name:portal.portal_share_action
@@ -853,15 +862,14 @@ msgstr "Accedi"
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts don't have a valid email: "
-msgstr "Alcuni contatti non hanno un indirizzo email valido: "
+msgstr "Alcuni contatti non hanno una e-mail valida: "
 
 #. module: portal
 #: code:addons/portal/wizard/portal_wizard.py:0
 #, python-format
 msgid "Some contacts have the same email as an existing portal user:"
 msgstr ""
-"Alcuni contatti hanno la stessa e-mail di un utente già esistente del "
-"portale:"
+"Alcuni contatti hanno la stessa e-mail di un utente esistente del portale:"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -872,7 +880,7 @@ msgstr "Alcuni campi obbligatori sono vuoti."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "State / Province"
-msgstr "Provincia"
+msgstr "Stato / Provincia"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -899,6 +907,7 @@ msgstr ""
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
+"Impossibile rimuovere l'allegato %s, non si trova in uno stato in sospeso."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
@@ -933,7 +942,7 @@ msgstr "La nuova password e quella di conferma devono corrispondere."
 msgid ""
 "The old password you provided is incorrect, your password was not changed."
 msgstr ""
-"La vecchia password fornita non è corretta, nessuna modifica effettuata."
+"La password precedente fornita non è corretta, nessuna modifica effettuata."
 
 #. module: portal
 #. openerp-web
@@ -951,7 +960,7 @@ msgstr "Questo documento non esiste."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "This is a preview of the customer portal."
-msgstr "Questa è una anteprima del portale clienti."
+msgstr "Anteprima del portale clienti."
 
 #. module: portal
 #. openerp-web
@@ -961,7 +970,7 @@ msgid ""
 "This is necessary for security-related changes. The authorization will last "
 "for a few minutes."
 msgstr ""
-"Risulta necessario per modifiche relative alla sicurezza. L'autorizzazione "
+"È obbligatorio per le modifiche relative alla sicurezza. L'autorizzazione "
 "durerà pochi minuti."
 
 #. module: portal
@@ -984,9 +993,9 @@ msgid ""
 "- Correct the emails of the relevant contacts\n"
 "- Grant access only to contacts with unique emails"
 msgstr ""
-"Per risolvere questo errore, puoi: \n"
-"- Correggere l'email dei contatti relativi\n"
-"- Concedere l'accesso solamente ai contatti con indirizzi email univoci"
+"Per risolvere l'errore è possibile: \n"
+"- correggere l'email dei contatti pertinenti\n"
+"- concedere l'accesso ai soli contatti con e-mail univoche"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_searchbar
@@ -1006,7 +1015,7 @@ msgstr "Partita IVA"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Verifica nuova password:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1116,7 +1125,7 @@ msgstr "La password non può essere vuota."
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_share_template
 msgid "You have been invited to access the following document:"
-msgstr "Sei stato/a invitato/a ad accedere al seguente documento:"
+msgstr "Hai ricevuto un invito per accedere al seguente documento:"
 
 #. module: portal
 #. openerp-web
@@ -1131,8 +1140,8 @@ msgstr "Devi essere"
 msgid ""
 "You must have an email address in your User Preferences to send emails."
 msgstr ""
-"È necessario avere un indirizzo mail nelle Preferenze Utente per spedire "
-"email."
+"Per inviare una e-mail deve essere presente un indirizzo nelle preferenze "
+"utente."
 
 #. module: portal
 #: model:mail.template,subject:portal.mail_template_data_portal_welcome

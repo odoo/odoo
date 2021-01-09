@@ -7,7 +7,7 @@
 # Martin Trigaux, 2020
 # Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Manami Hashi <manami@roomsfor.hk>, 2020
-# NOKA Shigekazu <shigekazu.noka@gmail.com>, 2020
+# Shigekazu N. <shigekazu.noka@gmail.com>, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Noma Yuki, 2020
 # 
@@ -147,6 +147,14 @@ msgstr "作成日"
 #, python-format
 msgid "Creating google drive may only be done by one at a time."
 msgstr "Googleドライブの作成は、一度に1つだけ行うことができます。"
+
+#. module: google_drive
+#: code:addons/google_drive/models/google_drive.py:161
+#, python-format
+msgid ""
+"The document filter must not include any 'dynamic' part, so it should not be"
+" based on the current time or current user, for example."
+msgstr ""
 
 #. module: google_drive
 #: model:ir.filters,name:google_drive.filter_partner
