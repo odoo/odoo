@@ -24,7 +24,7 @@
 # liAnGjiA <liangjia@qq.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN <jeffery9@gmail.com>, 2020
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -32,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020\n"
+"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -2488,7 +2488,7 @@ msgid ""
 "Number of pieces that can be produced in parallel. In case the work center "
 "has a capacity of 5 and you have to produce 10 units on your work order, the"
 " usual operation time will be multiplied by 2."
-msgstr ""
+msgstr "可以并行生产的件数。 如果工作中心的产能为5件，您需要在工单上生产10件，那么通常的操作时间将乘以2。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_unread_counter
@@ -2591,7 +2591,7 @@ msgstr "原始生产数量"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__oee_target
 msgid "Overall Effective Efficiency Target in percentage"
-msgstr ""
+msgstr "总体有效效率目标百分比"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_workcenter_productivity_report
@@ -2648,7 +2648,7 @@ msgstr "父级工艺"
 msgid ""
 "Paste the url of your Google Slide. Make sure the access to the document is "
 "public."
-msgstr ""
+msgstr "粘贴您的Google幻灯片的网址。 确保对文档的访问是公开的。"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -2812,7 +2812,7 @@ msgstr "单板层"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__possible_bom_product_template_attribute_value_ids
 msgid "Possible Bom Product Template Attribute Value"
-msgstr ""
+msgstr "可能的物料清单产品模板属性值"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2843,7 +2843,7 @@ msgstr "打印"
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Print Unfolded"
-msgstr ""
+msgstr "打印展开部分"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__priority
@@ -2882,6 +2882,8 @@ msgid ""
 "Produce : Move the components to the production location        directly and start the manufacturing process.\n"
 "Pick / Produce : Unload        the components from the Stock to Input location first, and then        transfer it to the Production location."
 msgstr ""
+"生产：将组件直接移动到生产位置并开始制造过程。\n"
+"拣配/生产：首先将组件从“库存”卸载到“输入”位置，然后将其转移到“生产”位置。"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_byproducts
@@ -3511,7 +3513,7 @@ msgstr "显示所有的在今天之前的下一个行动日期的记录"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__leave_id
 msgid "Slot into workcenter calendar once planned"
-msgstr ""
+msgstr "一旦计划就插入工作中心日历"
 
 #. module: mrp
 #: model:product.product,description:mrp.product_product_computer_desk_head
@@ -3539,7 +3541,7 @@ msgstr ""
 msgid ""
 "Some of your byproducts are tracked, you have to specify a manufacturing "
 "order in order to retrieve the correct byproducts."
-msgstr ""
+msgstr "某些副产品已被跟踪，您必须指定制造订单才能检索正确的副产品。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -3554,7 +3556,7 @@ msgstr "跟踪了一些组件，必须指定生产单才能检索正确的组件
 msgid ""
 "Some product moves have already been confirmed, this manufacturing order "
 "can't be completely cancelled. Are you still sure you want to process ?"
-msgstr ""
+msgstr "已经确认了一些产品移库，无法完全取消此制造订单。 您还确定要处理吗？"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3562,7 +3564,7 @@ msgstr ""
 msgid ""
 "Some work orders are already done, you cannot unplan this manufacturing "
 "order."
-msgstr ""
+msgstr "一些工作订单已经完成，您不能取消该制造订单的计划。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -3570,7 +3572,7 @@ msgstr ""
 msgid ""
 "Some work orders have already started, you cannot unplan this manufacturing "
 "order."
-msgstr ""
+msgstr "一些工单已经开始，您不能取消该制造订单的计划。    "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__origin
@@ -3873,7 +3875,7 @@ msgstr "生产这个BOM的操作。 在指定工艺时，将通过工单执行�
 msgid ""
 "The planned end date of the work order cannot be prior to the planned start "
 "date, please correct this to save the work order."
-msgstr ""
+msgstr "工作订单的计划结束日期不能早于计划开始日期，请更正此日期以保存工单。"
 
 #. module: mrp
 #: code:addons/mrp/wizard/mrp_product_produce.py:0
@@ -3912,7 +3914,7 @@ msgstr "工艺包含所有使用的工作中心以及使用时间。 这将在�
 msgid ""
 "The unit of measure you choose is in a different category than the product "
 "unit of measure."
-msgstr ""
+msgstr "您选择的计量单位与产品计量单位属于不同的类别。"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_rule.py:0
@@ -3920,7 +3922,7 @@ msgstr ""
 msgid ""
 "There is no Bill of Material of type manufacture or kit found for the "
 "product %s. Please define a Bill of Material for this product."
-msgstr ""
+msgstr "没有找到产品%s类型为制造或套件的的物料清单。 请为此产品定义物料清单。"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_unbuild_move_line
@@ -4588,7 +4590,7 @@ msgid ""
 "operations that should be followed within your work centers in order to "
 "produce a product. They are attached to bills of materials that will define "
 "the required components."
-msgstr ""
+msgstr "工单操作允许您创建和管理在生产中心应遵循的制造操作。 它们附在定义所需组件的物料清单上。"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__workorder_id
@@ -4737,7 +4739,7 @@ msgid ""
 "components with the operation type \"Manufacturing\". To change this, go on "
 "the operation type and tick the box \"Create New Lots/Serial Numbers for "
 "Components\"."
-msgstr ""
+msgstr "不允许使用操作类型“制造”为组件创建或编辑批号或序列号。 要更改此设置，请在操作类型中，勾选“为组件创建新的批号/序列号”框。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__type
@@ -4778,7 +4780,7 @@ msgstr "只能处理1.0%s具有唯一序列号的产品。"
 msgid ""
 "You cannot change the workcenter of a work order that is in progress or "
 "done."
-msgstr ""
+msgstr "您无法更改用正在执行或已完成工单的工作中心。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_abstract_workorder.py:0
@@ -4792,7 +4794,7 @@ msgstr "相同的序列号不可重复使用。 请更正编码的序列号。"
 #: code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "You cannot create a new Bill of Material from here."
-msgstr ""
+msgstr "您不能从此处创建新的物料清单。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:0
@@ -4810,13 +4812,13 @@ msgstr "您不能将%s作为成品和副产品"
 #: code:addons/mrp/models/mrp_workorder.py:0
 #, python-format
 msgid "You cannot link this work order to another manufacturing order."
-msgstr ""
+msgstr "您不能将此工单链接到另一个制造订单。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "You cannot move a manufacturing order once it is cancelled or done."
-msgstr ""
+msgstr "制造订单一旦取消或完成，就无法移动。"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:0
@@ -4914,7 +4916,7 @@ msgstr "需为成品提供批号。"
 #, python-format
 msgid ""
 "You should provide either a product or a product template to search a BoM"
-msgstr ""
+msgstr "您应该提供产品或产品模板来搜索物料清单"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.action_mrp_routing_time
