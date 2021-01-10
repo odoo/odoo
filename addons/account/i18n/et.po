@@ -18,8 +18,8 @@
 # Indrek Linnas <indrek@estpos.ee>, 2019
 # Algo Kärp <algokarp@gmail.com>, 2020
 # Eneli Õigus <enelioigus@gmail.com>, 2020
-# atriine <triine@avalah.ee>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
+# Piia Paurson <piia@avalah.ee>, 2021
+# atriine <triine@avalah.ee>, 2021
 # Andre Roomet <andreroomet@gmail.com>, 2021
 # 
 msgid ""
@@ -2635,7 +2635,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "Cash Box Out"
-msgstr ""
+msgstr "Kassa välja"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:212
@@ -2873,7 +2873,7 @@ msgstr "Vali raamatupidamise mall"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_onboarding_sale_tax_form
 #: model_terms:ir.ui.view,arch_db:account.onboarding_sale_tax_step
 msgid "Choose a default sales tax for your products."
-msgstr ""
+msgstr "Vali oma toodete jaoks müügimaksu vaikeväärtus."
 
 #. module: account
 #. openerp-web
@@ -3007,7 +3007,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Common Journal Report"
-msgstr ""
+msgstr "Üldandmiku raport"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_common_menu
@@ -3090,12 +3090,12 @@ msgstr "Täida maksude komplekt"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composer_id
 msgid "Composer"
-msgstr ""
+msgstr "Koostaja"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__composition_mode
 msgid "Composition mode"
-msgstr ""
+msgstr "Koostamise režiim"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3339,7 +3339,7 @@ msgstr "Looge uus kontogrupp"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_view_bank_statement_tree
 msgid "Create a new cash log"
-msgstr ""
+msgstr "Loo uus rahavoog"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_account_fiscal_position_form
@@ -3350,7 +3350,7 @@ msgstr "Looge uus finantspositsioon"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_incoterms_tree
 msgid "Create a new incoterm"
-msgstr ""
+msgstr "Loo uus incoterm'i termin"
 
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.product_product_action_purchasable
@@ -3559,7 +3559,7 @@ msgstr "Kassapõhine kreedit"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_refund__filter_refund
 msgid "Credit Method"
-msgstr ""
+msgstr "Kreediti meetod"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__credit_move_id
@@ -3857,7 +3857,7 @@ msgstr "Kuupäevad"
 #: model:ir.model.fields,field_description:account.field_account_payment_term_line__day_of_the_month
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_tree
 msgid "Day of the month"
-msgstr ""
+msgstr "Päev"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_term_line__day_of_the_month
@@ -3867,6 +3867,9 @@ msgid ""
 "greater than the last day of a month, this number will instead select the "
 "last day of this month."
 msgstr ""
+"Kuupäev kalendrikuus mis on arve tähtajaks. Kui on 0 või negatiivne, siis "
+"antud väärtust ignoreeritakse ja kindlat kuupäeva ei seata. Kui suurem kuu "
+"viimasest päevast, siis valitakse selle asemel käesoleva kuu viimane päev."
 
 #. module: account
 #: code:addons/account/models/company.py:51
@@ -3974,7 +3977,7 @@ msgstr "Vaikimisi seadistatud maksud"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__incoterm_id
 msgid "Default incoterm"
-msgstr ""
+msgstr "Vaikimisi incoterm"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -3990,13 +3993,13 @@ msgstr "Kohalikele tehingutele vaikimisi seadistatud maksud "
 #: model:ir.model.fields,help:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,help:account.field_product_template__supplier_taxes_id
 msgid "Default taxes used when buying the product."
-msgstr ""
+msgstr "Vaikimisi maksud mis rakenduvad ostudele."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_product_product__taxes_id
 #: model:ir.model.fields,help:account.field_product_template__taxes_id
 msgid "Default taxes used when selling the product."
-msgstr ""
+msgstr "Vaikimisi maksud mis rakenduvad kauba müümisele."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -4108,6 +4111,9 @@ msgid ""
 "used by itself, however it can still be used in a group. 'adjustment' is "
 "used to perform tax adjustment."
 msgstr ""
+"Määrab kus maks on valikuline. Märge: 'mitte ühtegi' tähendab et maks pole "
+"rakendatav üksinda, kuid on kasutatav maksugrupis. 'vastavusse viimine' "
+"kasutatakse maksu kohandamiseks."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__difference
@@ -4253,6 +4259,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Ära hoia alles e-maili koopiat dokumendi suhtluse ajaloos (massimeilide "
+"puhul)"
 
 #. module: account
 #: selection:res.company,account_dashboard_onboarding_state:0
@@ -4345,7 +4353,7 @@ msgstr "Tähtaeg"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "Due the"
-msgstr ""
+msgstr "Tähtajaga"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -4407,11 +4415,13 @@ msgid ""
 "Email address of the sender. This field is set when no matching partner is "
 "found and replaces the author_id field in the chatter."
 msgstr ""
+"Saatja e-maili aadress. Antud välja rakendatakse kui vastavat partnerit ei "
+"leita ja asendatakse autor_id väli jutu sees."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__invoice_is_email
 msgid "Email by default"
-msgstr ""
+msgstr "Vaikimisi e-mail"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8402,7 +8412,7 @@ msgstr "Sobita pangaväljavõtteid"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.action_vendor_bill_template
 msgid "Record a new vendor bill"
-msgstr ""
+msgstr "Loo uus ostuarve"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
