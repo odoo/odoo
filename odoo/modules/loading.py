@@ -454,12 +454,6 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
                     ['to install'], force, status, report,
                     loaded_modules, update_module, models_to_check)
 
-        # check that new module dependencies have been properly installed after a migration/upgrade
-        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
-        module_list = [name for (name,) in cr.fetchall()]
-        if module_list:
-            _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
-
         # check that all installed modules have been loaded by the registry after a migration/upgrade
         cr.execute("SELECT name from ir_module_module WHERE state = 'installed' and name != 'studio_customization'")
         module_list = [name for (name,) in cr.fetchall() if name not in graph]
@@ -473,6 +467,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         migrations = odoo.modules.migration.MigrationManager(cr, graph)
         for package in graph:
             migrations.migrate_module(package, 'end')
+
+        # check that new module dependencies have been properly installed after a migration/upgrade
+        cr.execute("SELECT name from ir_module_module WHERE state IN ('to install', 'to upgrade')")
+        module_list = [name for (name,) in cr.fetchall()]
+        if module_list:
+            _logger.error("Some modules have inconsistent states, some dependencies may be missing: %s", sorted(module_list))
 
         # STEP 3.6: apply remaining constraints in case of an upgrade
         registry.finalize_constraints()

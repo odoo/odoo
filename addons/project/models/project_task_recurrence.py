@@ -182,6 +182,9 @@ class ProjectTaskRecurrence(models.Model):
                     count = delta.years * 12 + delta.months
                 for i in range(count):
                     start = start.replace(day=min(repeat_day, monthrange(start.year, start.month)[1]))
+                    if i == 0 and start < date_start:
+                        # Ensure the next recurrence is in the future
+                        start += relativedelta(months=repeat_interval)
                     dates.append(start)
                     start += relativedelta(months=repeat_interval)
                 return dates
@@ -226,10 +229,19 @@ class ProjectTaskRecurrence(models.Model):
     def _set_next_recurrence_date(self):
         today = fields.Date.today()
         tomorrow = today + relativedelta(days=1)
-        for recurrence in self.filtered(lambda r: r.repeat_type == 'after' and r.recurrence_left > 0 or r.repeat_type == 'until' and r.repeat_until >= today or r.repeat_type == 'forever'):
-            next_date = self._get_next_recurring_dates(tomorrow, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month, count=1)
-            recurrence.next_recurrence_date = next_date[0] if next_date else False
+        for recurrence in self.filtered(
+            lambda r:
+            r.repeat_type == 'after' and r.recurrence_left >= 0
+            or r.repeat_type == 'until' and r.repeat_until >= today
+            or r.repeat_type == 'forever'
+        ):
+            if recurrence.repeat_type == 'after' and recurrence.recurrence_left == 0:
+                recurrence.next_recurrence_date = False
+            else:
+                next_date = self._get_next_recurring_dates(tomorrow, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month, count=1)
+                recurrence.next_recurrence_date = next_date[0] if next_date else False
 
+    @api.model
     def _cron_create_recurring_tasks(self):
         if not self.env.user.has_group('project.group_project_recurring_tasks'):
             return

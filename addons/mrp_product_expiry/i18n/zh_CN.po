@@ -4,10 +4,11 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# Jeffery CHEN <jeffery9@gmail.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:29+0000\n"
 "PO-Revision-Date: 2020-09-07 08:15+0000\n"
-"Last-Translator: Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020\n"
+"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,7 +32,7 @@ msgstr "确认"
 #. module: mrp_product_expiry
 #: model:ir.model,name:mrp_product_expiry.model_expiry_picking_confirmation
 msgid "Confirm Expiry"
-msgstr ""
+msgstr "确认到期"
 
 #. module: mrp_product_expiry
 #: code:addons/mrp_product_expiry/models/mrp_production.py:0
@@ -75,7 +76,7 @@ msgstr "生产订单"
 #. module: mrp_product_expiry
 #: model:ir.model.fields,field_description:mrp_product_expiry.field_expiry_picking_confirmation__workorder_id
 msgid "Workorder"
-msgstr ""
+msgstr "工单"
 
 #. module: mrp_product_expiry
 #: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
@@ -84,6 +85,8 @@ msgid ""
 "You are going to use some expired components.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"您将使用一些过期的组件。\n"
+"您确定要继续吗？"
 
 #. module: mrp_product_expiry
 #: code:addons/mrp_product_expiry/wizard/confirm_expiry.py:0
@@ -92,3 +95,5 @@ msgid ""
 "You are going to use the component %(product_name)s, %(lot_name)s which is expired.\n"
 "Do you confirm you want to proceed ?"
 msgstr ""
+"您将使用已过期的组件%(product_name)s，%(lot_name)s。\n"
+"您确定要继续吗？"

@@ -4,16 +4,21 @@
 # 
 # Translators:
 # Martin Trigaux, 2020
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2020
+# Miku Laitinen <miku.laitinen@gmail.com>, 2020
+# Teija Hölttä <teija.holtta@gmail.com>, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Veikko Väätäjä <veikko.vaataja@gmail.com>, 2020
+# Mikko Salmela <salmemik@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:08+0000\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:21+0000\n"
-"Last-Translator: Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020\n"
+"Last-Translator: Mikko Salmela <salmemik@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,10 +41,15 @@ msgid "'%s' is not a correct datetime"
 msgstr "'%s' on virheellinen päivämäärä"
 
 #. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid ", .s_website_form"
+msgstr ""
+
+#. module: website_form
 #: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
-msgstr ""
+msgstr "<p>Liitetiedostot: </p>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -52,7 +62,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Email To</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Sähköposti</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -60,11 +70,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Email</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Sähköposti</span>\n"
+"                                                <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Puhelinnumero</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -72,11 +84,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Subject</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Aihe</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Yritys</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
@@ -84,11 +98,13 @@ msgid ""
 "<span class=\"s_website_form_label_content\">Your Name</span>\n"
 "                                            <span class=\"s_website_form_mark\"> *</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Nimi</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Viesti</span>"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -130,12 +146,12 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Center"
-msgstr ""
+msgstr "Keskellä"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Checkbox"
-msgstr ""
+msgstr "Valintaruutu"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -145,7 +161,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Date"
-msgstr ""
+msgstr "Päivämäärä"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -160,14 +176,14 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Display"
-msgstr ""
+msgstr "Näytä"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__display_name
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__display_name
 #: model:ir.model.fields,field_description:website_form.field_website__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Näyttönimi"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -177,7 +193,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Email"
-msgstr ""
+msgstr "Sähköposti"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
@@ -190,7 +206,7 @@ msgstr ""
 #: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Error"
-msgstr ""
+msgstr "Virhe"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_default_field_id
@@ -200,12 +216,12 @@ msgstr ""
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model_fields
 msgid "Fields"
-msgstr ""
+msgstr "Kentät"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "File Upload"
-msgstr ""
+msgstr "Tiedoston lähetys"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_label
@@ -217,12 +233,12 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Height"
-msgstr ""
+msgstr "Korkeus"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Hidden"
-msgstr ""
+msgstr "Piilotettu"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -239,7 +255,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields__id
 #: model:ir.model.fields,field_description:website_form.field_website__id
 msgid "ID"
-msgstr ""
+msgstr "Tunniste (ID)"
 
 #. module: website_form
 #. openerp-web
@@ -288,12 +304,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_form.field_ir_model_fields____last_update
 #: model:ir.model.fields,field_description:website_form.field_website____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Viimeksi muokattu"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Left"
-msgstr ""
+msgstr "Vasen"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -319,7 +335,7 @@ msgstr ""
 #. module: website_form
 #: model:ir.model,name:website_form.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Mallit"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -337,7 +353,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "None"
-msgstr ""
+msgstr "Ei mitään"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -347,7 +363,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Number"
-msgstr ""
+msgstr "Numero"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
@@ -418,22 +434,22 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Redirect"
-msgstr ""
+msgstr "Uudelleenohjaus"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Required"
-msgstr ""
+msgstr "Vaadittu"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Right"
-msgstr ""
+msgstr "Oikea"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Selection"
-msgstr ""
+msgstr "Valinta"
 
 #. module: website_form
 #. openerp-web
@@ -462,7 +478,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form
 msgid "Submit"
-msgstr ""
+msgstr "Tallenna"
 
 #. module: website_form
 #. openerp-web
@@ -470,7 +486,7 @@ msgstr ""
 #: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Success"
-msgstr ""
+msgstr "Onnistuminen"
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -486,7 +502,7 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Text"
-msgstr ""
+msgstr "Teksti"
 
 #. module: website_form
 #. openerp-web
@@ -499,14 +515,14 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid "Thank You!"
-msgstr ""
+msgstr "Kiitos!"
 
 #. module: website_form
 #. openerp-web
 #: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
-msgstr ""
+msgstr "Lomake lähetettiin onnistuneesti."
 
 #. module: website_form
 #: code:addons/website_form/controllers/main.py:0
@@ -523,22 +539,22 @@ msgstr ""
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Top"
-msgstr ""
+msgstr "Ylin"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "URL"
-msgstr ""
+msgstr "URL"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Url"
-msgstr ""
+msgstr "Verkko-osoite"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
@@ -554,12 +570,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid "We will get back to you shortly."
-msgstr ""
+msgstr "Otamme sinuun yhteyttä mahdollisimman nopeasti."
 
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
-msgstr ""
+msgstr "Verkkosivu"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
@@ -609,4 +625,4 @@ msgstr ""
 #: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "website"
-msgstr ""
+msgstr "verkkosivusto"

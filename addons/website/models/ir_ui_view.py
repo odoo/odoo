@@ -326,6 +326,8 @@ class View(models.Model):
 
     @api.model
     def read_template(self, xml_id):
+        """ This method is deprecated
+        """
         view = self._view_obj(self.get_view_id(xml_id))
         if view.visibility and view._handle_visibility(do_raise=False):
             self = self.sudo()
