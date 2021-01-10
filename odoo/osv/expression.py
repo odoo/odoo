@@ -913,7 +913,7 @@ class expression(object):
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
-            elif not field.store:
+            elif not field.store and 'data_xml_xpath' not in dir(field):
                 # Non-stored field should provide an implementation of search.
                 if not field.search:
                     # field does not support search!
@@ -1258,6 +1258,11 @@ class expression(object):
             query = "to_tsvector('spanish', %s.%s) @@ to_tsquery('spanish', %%s)" % (table_alias, _quote(left))
             params = [pycompat.to_text(right)]
 
+        elif left in model and 'data_xml_xpath' in dir(model._fields[left]):
+            sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
+            query = "xpath(%%s, %s.data_xml)::text[] %s %%s::text[]" % (table_alias, sql_operator)
+            params = [model._fields[left].data_xml_xpath+'/text()', '{'+pycompat.to_text(right)+'}']
+ 
         else:
             need_wildcard = operator in ('like', 'ilike', 'not like', 'not ilike')
             sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
