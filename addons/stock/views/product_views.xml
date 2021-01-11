@@ -115,7 +115,7 @@
                                  attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                  class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
                         </div>
-                        <field name="route_from_categ_ids" widget="many2many_tags" readonly="1" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
+                        <field name="route_from_categ_ids" widget="many2many_tags" attrs="{'invisible': [('route_from_categ_ids', '=', [])]}"/>
                     </group>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
