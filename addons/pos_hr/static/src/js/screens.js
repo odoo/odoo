@@ -90,8 +90,10 @@ var LoginScreenWidget = ScreenWidget.extend({
      */
     barcode_cashier_action: function(code) {
         var self = this;
-        return this._super(code).then(function () {
-            self.unlock_screen();
+        return this._super(code).then(function (unlock) {
+            if (unlock) {
+                self.unlock_screen();
+            }
         });
     },
 
