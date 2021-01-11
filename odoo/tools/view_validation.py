@@ -146,6 +146,77 @@ def valid_view(arch, **kwargs):
     return True
 
 
+def check_esc_message(arch, location, interactive=False):
+    """Detects likely wrong uses of t-esc to create messages"""
+    # TODO t-raw and <field> could also be wrongly used in similar ways
+    # TODO replace white list by detection of "non-xml"
+    LOCATION_WHITE_LIST = [
+        'im_livechat.loader',
+        'label_barcode_product_product_view',
+        'label_barcode_product_template_view',
+        'label_lot_template_view_expiry',
+        'label_package_template_view',
+        'label_picking_type_view',
+        'label_product_packaging_view',
+        'label_product_product_view',
+        'label_product_template_view',
+        'label_production_view',
+        'label_transfer_template_view_zpl',
+        'styles_company_report',
+        'website.robots',
+    ]
+    INLINE_TAGS = ['t', 'span', 'small', 'strong', 'i', 'img', 'a']
+
+    if location in LOCATION_WHITE_LIST or location.split('.')[-1] in LOCATION_WHITE_LIST:
+        return
+
+    def get_text(node, is_forward):
+        result = []
+        while node is not None and (node.tag is None or node.tag in INLINE_TAGS):
+            if not is_forward and node.tail:
+                result.append(node.tail)
+            text = "".join(node.itertext())
+            if text:
+                result.append(text)
+            if is_forward and node.tail:
+                result.append(node.tail)
+            node = node.getnext() if is_forward else node.getprevious()
+        if not is_forward:
+            result.reverse()
+        return " ".join(result)
+
+    def is_text(text):
+        return re.findall('[A-Za-z]+', text) if text else False
+
+    def publish_error(node, message):
+        if interactive:
+            hint = "Consider setting a message pattern in a variable as a text node before using it in an expression"
+            raise ValueError('On line %s: %s\n%s' % (node.sourceline, message, hint))
+        else:
+            _logger.warning('In %s line %s: %s' % (location, node.sourceline, message))
+
+    for node in arch.iterfind(".//*[@t-esc]"):
+        if node.tag in INLINE_TAGS:
+            esc = node.get('t-esc')
+            esc_filtered = re.sub("%s|%i|%.\d+f", "", esc)
+            # do not consider %s, %i, %.2f as a letter
+            esc_filtered = re.sub("\['.*'\]|\[\".*\"\]|\('.*'\)|\(\".*\"\)", "", esc_filtered)
+            # do not consider ['...'], ["..."], ('...') and ("...") as literals
+            if re.match(".*'.*[A-Za-z]+.*'.*%|\".*[A-Za-z]+.*\".*%", esc_filtered):
+                # does it contain a text literal use for formatting ?
+                publish_error(node, "Non translated literal in t-esc: %s" % esc)
+            else:
+                before = get_text(node.getprevious(), False)
+                if re.match(".*:\s*$", before):
+                    before = ""
+                tail = node.tail if node.tail else ""
+                after = get_text(node.getnext(), True)
+                if is_text(before) or is_text(tail) or is_text(after):
+                    # is it surrounded by text literals ?
+                    publish_error(node, re.sub("\s+", " ", "Text besides a t-esc: %s <t-esc:%s> %s %s" %
+                                         (before, esc, tail, after)).strip())
+
+
 def validate(*view_types):
     """ Registers a view-validation function for the specific view types
     """

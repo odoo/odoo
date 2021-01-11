@@ -29,7 +29,7 @@ from odoo.tools import config, ConstantMapping, get_diff, pycompat, apply_inheri
 from odoo.tools.convert import _fix_multiple_roots
 from odoo.tools.json import scriptsafe as json_scriptsafe
 from odoo.tools import safe_eval
-from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts
+from odoo.tools.view_validation import valid_view, get_variable_names, get_domain_identifiers, get_dict_asts, check_esc_message
 from odoo.tools.translate import xml_translate, TRANSLATED_ATTRS
 from odoo.tools.image import image_data_uri
 from odoo.models import check_method_name
@@ -386,6 +386,8 @@ actual arch.
                 view._valid_inheritance(view_arch)
                 view_def = view.read_combined(['arch'])
                 view_arch_utf8 = view_def['arch']
+                check_esc_message(view_arch, view.xml_id if view.xml_id else view.name, not self.env.su)
+                # TODO find a correct condition to detect interactive mode
                 if view.type == 'qweb':
                     continue
                 view_doc = etree.fromstring(view_arch_utf8)
