@@ -2110,9 +2110,10 @@ class MailThread(models.AbstractModel):
         if not rdata:
             return False
 
-        message_values = {}
-        if rdata['channels']:
-            message_values['channel_ids'] = [Command.set([r['id'] for r in rdata['channels']])]
+        cids = msg_vals.get('channel_ids', []) if msg_vals else message.channel_ids.ids
+        channel_ids = [r['id'] for r in rdata['channels'] if r['id'] not in cids]
+        if channel_ids:
+            message.write({'channel_ids': [Command.set(channel_ids)]})
 
         self._notify_record_by_inbox(message, rdata, msg_vals=msg_vals, **kwargs)
         if notify_by_email:
@@ -2131,8 +2132,6 @@ class MailThread(models.AbstractModel):
         and correctly override notify_recipients
         """
         channel_ids = [r['id'] for r in recipients_data['channels']]
-        if channel_ids:
-            message.write({'channel_ids': [Command.set(channel_ids)]})
 
         inbox_pids = [r['id'] for r in recipients_data['partners'] if r['notif'] == 'inbox']
         if inbox_pids:
