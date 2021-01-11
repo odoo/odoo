@@ -8,7 +8,7 @@ const {
 } = require('mail/static/src/utils/test_utils.js');
 
 const { Component, QWeb, Store } = owl;
-const { useGetters } = owl.hooks;
+const { onPatched, useGetters } = owl.hooks;
 const { xml } = owl.tags;
 
 QUnit.module('mail', {}, function () {
@@ -54,10 +54,9 @@ QUnit.test("compare keys, no depth, primitives", async function (assert) {
                 return {
                     res: obj.use1 ? obj.subObj1 : obj.subObj2,
                 };
-            }, {
-                onUpdate: () => {
-                    count++;
-                },
+            });
+            onPatched(() => {
+                count++;
             });
         }
     }
@@ -135,9 +134,9 @@ QUnit.test("compare keys, depth 1, proxy", async function (assert) {
                 compareDepth: {
                     array: 1,
                 },
-                onUpdate: () => {
-                    count++;
-                },
+            });
+            onPatched(() => {
+                count++;
             });
         }
     }
