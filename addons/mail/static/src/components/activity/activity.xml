@@ -48,8 +48,14 @@
                             </div>
                         </t>
                         <a class="o_Activity_detailsButton btn btn-link" t-on-click="_onClickDetailsButton" role="button">
-                            <i class="fa fa-info-circle" role="img" title="Info"/>
+                            <t t-if="activity.assigneeCanAccess ">
+                                <i class="fa fa-info-circle" role="img" title="Info"/>
+                            </t>
+                            <t t-else="">
+                                <i class="fa fa-info-circle" style="color:red" role="img" title="Info"/>
+                            </t>
                         </a>
+
                     </div>
 
                     <t t-if="state.areDetailsVisible">
@@ -76,6 +82,11 @@
                                     <dd class="o_Activity_detailsAssignation">
                                         <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-title="activity.assignee.nameOrDisplayName" t-att-alt="activity.assignee.nameOrDisplayName"/>
                                         <t t-esc="activity.assignee.nameOrDisplayName"/>
+                                        <t t-if="assigneeCanAccess == False">
+                                            <div class="text-danger">
+                                                Warning: This user does not have access to this document
+                                            </div>
+                                        </t>
                                     </dd>
                                 </t>
                                 <dt>Due on</dt>

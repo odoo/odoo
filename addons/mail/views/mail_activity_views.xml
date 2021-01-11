@@ -112,7 +112,11 @@
         <field name="arch" type="xml">
             <form string="Log an Activity" create="false">
                 <sheet string="Activity">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible' :[('assignee_can_access','=',True)]}">
+                        The assigned user does not have access to this document.
+                    </div>
                     <group invisible="1">
+                        <field name="assignee_can_access" invisible="1" />
                         <field name="activity_category" invisible="1" />
                         <field name="res_model" invisible="1"/>
                         <field name="res_model_id" invisible="1"/>

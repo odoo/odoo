@@ -37,6 +37,9 @@ function factory(dependencies) {
          */
         static convertData(data) {
             const data2 = {};
+            if ('assignee_can_access' in data) {
+                data2.assigneeCanAccess = data.assignee_can_access
+            }
             if ('activity_category' in data) {
                 data2.category = data.activity_category;
             }
@@ -283,6 +286,7 @@ function factory(dependencies) {
         creator: many2one('mail.user'),
         dateCreate: attr(),
         dateDeadline: attr(),
+        assigneeCanAccess: attr(),
         force_next: attr({
             default: false,
         }),

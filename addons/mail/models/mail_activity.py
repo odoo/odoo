@@ -183,6 +183,8 @@ class MailActivity(models.Model):
     # access
     can_write = fields.Boolean(compute='_compute_can_write', help='Technical field to hide buttons if the current user has no access.')
 
+    assignee_can_access = fields.Boolean(compute='_compute_assignee_can_access')
+
     @api.onchange('previous_activity_type_id')
     def _compute_has_recommended_activities(self):
         for record in self:
@@ -315,19 +317,20 @@ class MailActivity(models.Model):
 
         return valid
 
-    def _check_access_assignation(self):
+
+    @api.depends('user_id', 'res_model', 'res_id', 'create_uid')
+    def _compute_assignee_can_access(self):
         """ Check assigned user (user_id field) has access to the document. Purpose
-        is to allow assigned user to handle their activities. For that purpose
+        is to check if assigned user is able to handle their activities. For that purpose
         assigned user should be able to at least read the document. We therefore
-        raise an UserError if the assigned user has no access to the document. """
+        assign assignee_can_access to False. """
         for activity in self:
             model = self.env[activity.res_model].with_user(activity.user_id).with_context(allowed_company_ids=activity.user_id.company_ids.ids)
             try:
                 model.check_access_rights('read')
+                activity.assignee_can_access = True
             except exceptions.AccessError:
-                raise exceptions.UserError(
-                    _('Assigned user %s has no access to the document and is not able to handle this activity.') %
-                    activity.user_id.display_name)
+                activity.assignee_can_access = False
             else:
                 try:
                     target_user = activity.user_id
@@ -337,10 +340,9 @@ class MailActivity(models.Model):
                             len(target_user.sudo().company_ids) > 1)):
                         return  # in that case we skip the check, assuming it would fail because of the company
                     model.browse(activity.res_id).check_access_rule('read')
+                    activity.assignee_can_access = True
                 except exceptions.AccessError:
-                    raise exceptions.UserError(
-                        _('Assigned user %s has no access to the document and is not able to handle this activity.') %
-                        activity.user_id.display_name)
+                    activity.assignee_can_access = False
 
     # ------------------------------------------------------
     # ORM overrides
@@ -357,12 +359,7 @@ class MailActivity(models.Model):
                 need_sudo = True
                 partner_id = activity.user_id.sudo().partner_id.id
 
-            # send a notification to assigned user; in case of manually done activity also check
-            # target has rights on document otherwise we prevent its creation. Automated activities
-            # are checked since they are integrated into business flows that should not crash.
             if activity.user_id != self.env.user:
-                if not activity.automated:
-                    activity._check_access_assignation()
                 if not self.env.context.get('mail_activity_quick_update', False):
                     if need_sudo:
                         activity.sudo().action_notify()
@@ -384,8 +381,6 @@ class MailActivity(models.Model):
 
         if values.get('user_id'):
             if values['user_id'] != self.env.uid:
-                to_check = user_changes.filtered(lambda act: not act.automated)
-                to_check._check_access_assignation()
                 if not self.env.context.get('mail_activity_quick_update', False):
                     user_changes.action_notify()
             for activity in user_changes:
