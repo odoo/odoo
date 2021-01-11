@@ -69,11 +69,11 @@ class SalonBookingWeb(http.Controller):
                 order_details[orders.chair_id.id]['orders'].append(data)
         return order_details
 
-    @http.route('/page/salon_management.salon_booking_thank_you', type='http', auth="public", website=True)
+    @http.route('/page/sport_management.sport_booking_thank_you', type='http', auth="public", website=True)
     def thank_you(self, **post):
         return request.render('salon_management.salon_booking_thank_you', {})
 
-    @http.route('/page/salon_management/salon_booking_form', type='http', auth="public", website=True)
+    @http.route('/page/sport_management/sport_booking_form', type='http', auth="public", website=True)
     def chair_info(self, **post):
         salon_working_hours_obj = request.env['salon.working.hours'].search([])
         salon_holiday_obj = request.env['salon.holiday'].search([('holiday', '=', True)])
