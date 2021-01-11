@@ -84,8 +84,8 @@ class EventQuestion(models.Model):
         event_id = vals.get('event_id', False)
         if event_id:
             event = self.env['event.event'].browse([event_id])
-            if event.event_type_id.use_questions and event.event_type_id.question_ids:
-                vals['answer_ids'] = vals.get('answer_ids', []) + [(0, 0, {
+            if event.event_type_id.use_questions and event.event_type_id.question_ids and not vals.get('answer_ids'):
+                vals['answer_ids'] = [(0, 0, {
                     'name': answer.name,
                     'sequence': answer.sequence,
                 }) for answer in event.event_type_id.question_ids.filtered(lambda question: question.title == vals.get('title')).mapped('answer_ids')]
