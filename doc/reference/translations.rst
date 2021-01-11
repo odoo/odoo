@@ -55,6 +55,9 @@ Odoo automatically exports translatable strings from "data"-type content:
 * in non-QWeb views, all text nodes are exported as well as the content of
   the ``string``, ``help``, ``sum``, ``confirm`` and ``placeholder``
   attributes
+
+.. _implicitly_translated_attributes:
+
 * QWeb templates (both server-side and client-side), all text nodes are
   exported except inside ``t-translation="off"`` blocks, the content of the
   ``title``, ``alt``, ``label`` and ``placeholder`` attributes are also
@@ -208,6 +211,45 @@ or **do** evaluate dynamically the translatable content::
         missing_error: _lt('Missing Record'),
     };
 
+
+QWeb
+^^^^
+QWeb does not allow for the use of the "_(...)" or "_t(...)" mechanism in
+expressions.
+
+**Don't** put parameters in a text node beside its value.
+
+The following is wrong because some language might need to be
+grammatically organized differently around the value::
+
+    <span><t t-esc="var"/> Some text</span>
+
+The following is wrong because the context is lost for the translator::
+
+    <span>Prefix <t t-esc="var"/> Suffix</span>
+
+The following is wrong because the attribute is not one of the
+`implicitly translated attributes <#implicitly-translated-attributes>`_::
+
+    <span><t t-esc="'Prefix %s Suffix' % var"/></span>
+
+
+**Do** put the translatable pattern in a text node then combine it::
+
+    <t t-set="trans_text">You have %s pending messages</t>
+    <t t-esc="trans_text % var"/>
+
+or for messages with named parameters (do not forget to escape % as %%)::
+
+    <t t-set="trans_text">You have %%(current)s items but only %%(maximum)s are allowed.</t>
+    <t t-esc="trans_text % {'current': current, 'maximum': maximum}"/>
+
+This way the text to translate is:
+
+* inside a text node and thus correctly identified as translatable text
+* the full context is made available to the translator
+* the technical formatting of the variable(s) does not pollute the
+  translation messages
 
 .. _PO File: https://en.wikipedia.org/wiki/Gettext#Translating
 .. _msginit: https://www.gnu.org/software/gettext/manual/gettext.html#Creating
