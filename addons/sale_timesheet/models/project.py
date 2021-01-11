@@ -47,18 +47,6 @@ class Project(models.Model):
         default=_default_timesheet_product_id)
     warning_employee_rate = fields.Boolean(compute='_compute_warning_employee_rate')
 
-    _sql_constraints = [
-        ('timesheet_product_required_if_billable_and_timesheets', """
-            CHECK(
-                (allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL)
-                OR (allow_billable IS NOT TRUE)
-                OR (allow_timesheets IS NOT TRUE)
-                OR (allow_billable IS NULL)
-                OR (allow_timesheets IS NULL)
-            )""", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
-
-    ]
-
     @api.depends('allow_billable', 'sale_order_id', 'partner_id', 'pricing_type')
     def _compute_display_create_order(self):
         for project in self:
