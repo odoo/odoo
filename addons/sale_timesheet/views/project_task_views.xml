@@ -23,7 +23,7 @@
                         <group>
                             <field name="display_create_order" invisible="1"/>
                             <field name="pricing_type" attrs="{'invisible': [('allow_billable', '=', False)], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" widget="radio"/>
-                            <field name="timesheet_product_id" string="Service" attrs="{'invisible': ['|', '|', ('allow_timesheets', '=', False), ('sale_order_id', '!=', False), ('pricing_type', '!=', 'task_rate')], 'required': ['&amp;', ('allow_billable', '=', True), ('allow_timesheets', '=', True)]}" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
+                            <field name="timesheet_product_id" string="Service" invisible="1" context="{'default_type': 'service', 'default_service_policy': 'delivered_timesheet', 'default_service_type': 'timesheet'}"/>
                             <field name="sale_order_id" attrs="{'invisible': [('pricing_type', '=', 'task_rate')], 'readonly': [('sale_order_id', '!=', False)]}" force_save="1" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                             <field name="sale_line_id" string="Default Sales Order Item" attrs="{'invisible': [('pricing_type', '=', 'task_rate')]}" options="{'no_create': True, 'no_edit': True, 'delete': False, 'no_open': True}"/>
                         </group>
@@ -33,7 +33,6 @@
                             <field name="company_id" invisible="1"/>
                             <field name="project_id" invisible="1"/>
                             <field name="employee_id" options="{'no_create': True}"/>
-                            <field name="timesheet_product_id" attrs="{'column_invisible': [('parent.sale_order_id', '!=', False)]}" invisible="1"/>
                             <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}" domain="[('order_id','=',parent.sale_order_id), ('is_service', '=', True)]"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
                             <field name="currency_id" invisible="1"/>
