@@ -65,6 +65,7 @@ class AccountInvoiceSend(models.TransientModel):
                 })
             else:
                 self.composer_id.template_id = self.template_id.id
+                self._compute_composition_mode()
             self.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
