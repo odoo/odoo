@@ -337,6 +337,10 @@ class AccountPayment(models.Model):
         ''' Compute the 'payment_method_id' field.
         This field is not computed in '_compute_payment_method_fields' because it's a stored editable one.
         '''
+        if self._context.get('default_payment_method_id'):
+            self.write({'payment_method_id': self._context['default_payment_method_id']})
+            return
+
         for pay in self:
             if pay.payment_type == 'inbound':
                 available_payment_methods = pay.journal_id.inbound_payment_method_ids
