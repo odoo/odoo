@@ -25,7 +25,7 @@ class ResUsers(models.Model):
 
     @api.model
     def _auth_oauth_rpc(self, endpoint, access_token):
-        return requests.get(endpoint, params={'access_token': access_token}).json()
+        return requests.get(endpoint, headers={'Authorization': 'Bearer %s' % access_token}).json()
 
     @api.model
     def _auth_oauth_validate(self, provider, access_token):
