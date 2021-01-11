@@ -291,7 +291,7 @@ class ProductTemplate(models.Model):
     @api.model
     def _get_length_uom_id_from_ir_config_parameter(self):
         """ Get the unit of measure to interpret the `length`, 'width', 'height' field.
-        By default, we considerer that length are expressed in meters. Users can configure
+        By default, we considerer that length are expressed in millimeters. Users can configure
         to express them in feet by adding an ir.config_parameter record with "product.volume_in_cubic_feet"
         as key and "1" as value.
         """
@@ -299,7 +299,7 @@ class ProductTemplate(models.Model):
         if product_length_in_feet_param == '1':
             return self.env.ref('uom.product_uom_foot')
         else:
-            return self.env.ref('uom.product_uom_meter')
+            return self.env.ref('uom.product_uom_millimeter')
 
     @api.model
     def _get_volume_uom_id_from_ir_config_parameter(self):
