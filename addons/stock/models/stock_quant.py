@@ -34,7 +34,7 @@ class StockQuant(models.Model):
         'stock.location', 'Location',
         auto_join=True, ondelete='restrict', readonly=True, required=True, index=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number',
+        'stock.production.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', readonly=True)
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
