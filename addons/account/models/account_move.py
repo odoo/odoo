@@ -943,7 +943,8 @@ class AccountMove(models.Model):
             # Recompute amls: update existing line or create new one for each payment term.
             new_terms_lines = self.env['account.move.line']
             for date_maturity, balance, amount_currency in to_compute:
-                if self.journal_id.company_id.currency_id.is_zero(balance) and len(to_compute) > 1:
+                currency = self.journal_id.company_id.currency_id
+                if currency and currency.is_zero(balance) and len(to_compute) > 1:
                     continue
 
                 if existing_terms_lines_index < len(existing_terms_lines):
