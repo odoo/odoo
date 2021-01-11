@@ -67,8 +67,20 @@
     </t>
 
     <t t-name="website_form.field_description">
-        <t t-if="['email_cc', 'email_to'].includes(field.name) and !field.description" t-set="field.description" t-value="'Separate email addresses with a comma.'"/>
-        <small t-if="field.description" t-esc="field.description" class="s_website_form_field_description form-text text-muted"/>
+        <!-- The actual value for this case is handled in JS as it can be -->
+        <!-- edited with formatting by the user -->
+        <t t-set="default_description">
+            <t t-if="field.description">
+                Describe your field here.
+            </t>
+            <t t-elif="['email_cc', 'email_to'].includes(field.name)">
+                Separate email addresses with a comma.
+            </t>
+        </t>
+        <t t-set="default_description" t-value="default_description and default_description.trim()"/>
+        <div t-if="default_description" class="s_website_form_field_description small form-text text-muted" contenteditable="true">
+            <t t-esc="default_description"/>
+        </div>
     </t>
 
     <!-- Hidden Field -->

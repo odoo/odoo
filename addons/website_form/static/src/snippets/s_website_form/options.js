@@ -125,6 +125,9 @@ const FormEditor = options.Class.extend({
         field.id = Math.random().toString(36).substring(2, 15); // Big unique ID
         const template = document.createElement('template');
         template.innerHTML = qweb.render("website_form.field_" + field.type, {field: field}).trim();
+        if (field.description && field.description !== true) {
+            $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
+        }
         return template.content.firstElementChild;
     },
 });
@@ -268,7 +271,7 @@ const FieldEditor = FormEditor.extend({
         }
         // property value is needed for date/datetime (formated date).
         field.propertyValue = input && input.value;
-        field.description = description && description.textContent;
+        field.description = description && description.outerHTML;
         field.rows = textarea && textarea.rows;
         field.required = classList.contains('s_website_form_required');
         field.modelRequired = classList.contains('s_website_form_model_required');
@@ -328,8 +331,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         const proms = [this._super(...arguments)];
         // Disable text edition
         this.$target.attr('contentEditable', false);
-        // Make button and recaptcha editable
-        this.$target.find('.s_website_form_send, .s_website_form_recaptcha').attr('contentEditable', true);
+        // Make button, description, and recaptcha editable
+        this.$target.find('.s_website_form_send, .s_website_form_field_description, .s_website_form_recaptcha').attr('contentEditable', true);
         // Get potential message
         this.$message = this.$target.parent().find('.s_website_form_end_message');
         this.showEndMessage = false;
@@ -793,17 +796,12 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     //----------------------------------------------------------------------
 
     /**
-     * Add a description to the field input
+     * Add/remove a description to the field input
      */
-    appendDescription: async function (previewMode, value, params) {
-        const description = this.$target[0].querySelector('.s_website_form_field_description');
-        if (description && value) {
-            description.textContent = value;
-        } else {
-            const field = this._getActiveField();
-            field.description = value;
-            await this._replaceField(field);
-        }
+    toggleDescription: async function (previewMode, value, params) {
+        const field = this._getActiveField();
+        field.description = !!value; // Will be changed to default description in qweb
+        await this._replaceField(field);
     },
     /**
      * Replace the current field with the custom field selected.
@@ -917,9 +915,9 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetState: function (methodName, params) {
         switch (methodName) {
-            case 'appendDescription': {
+            case 'toggleDescription': {
                 const description = this.$target[0].querySelector('.s_website_form_field_description');
-                return description ? description.textContent : '';
+                return !!description;
             }
             case 'customField':
                 return this._isFieldCustom() ? this._getFieldType() : '';
