@@ -22,6 +22,7 @@ import json
 from lxml import etree
 from contextlib import closing
 from distutils.version import LooseVersion
+from pikepdf import Pdf
 from reportlab.graphics.barcode import createBarcodeDrawing
 from PyPDF2 import PdfFileWriter, PdfFileReader, utils
 from collections import OrderedDict
@@ -678,23 +679,20 @@ class IrActionsReport(models.Model):
         if len(streams) == 1:
             result = streams[0].getvalue()
         else:
-            try:
-                result = self._merge_pdfs(streams)
-            except utils.PdfReadError:
-                raise UserError(_("One of the documents, you try to merge is encrypted"))
+            result = self._merge_pdfs(streams)
 
         # We have to close the streams after PdfFileWriter's call to write()
         close_streams(streams)
         return result
 
     def _merge_pdfs(self, streams):
-        writer = PdfFileWriter()
+        merged_pdf = Pdf.new()
         for stream in streams:
-            reader = PdfFileReader(stream)
-            writer.appendPagesFromReader(reader)
+            src_pdf = Pdf.open(stream)
+            merged_pdf.pages.extend(src_pdf.pages)
         result_stream = io.BytesIO()
+        merged_pdf.save(result_stream)
         streams.append(result_stream)
-        writer.write(result_stream)
         return result_stream.getvalue()
 
     def _render_qweb_pdf(self, res_ids=None, data=None):
