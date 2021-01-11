@@ -60,7 +60,6 @@ class CouponProgram(models.Model):
                 message = {'error': _('At least one of the required conditions is not met to get the reward!')}
         return message
 
-    @api.model
     def _filter_on_mimimum_amount(self, order):
         no_effect_lines = order._get_no_effect_on_threshold_lines()
         order_amount = {
@@ -86,7 +85,6 @@ class CouponProgram(models.Model):
 
         return self.browse(program_ids)
 
-    @api.model
     def _filter_on_validity_dates(self, order):
         return self.filtered(lambda program:
             (not program.rule_date_from or program.rule_date_from <= order.date_order)
@@ -94,7 +92,6 @@ class CouponProgram(models.Model):
             (not program.rule_date_to or program.rule_date_to >= order.date_order)
         )
 
-    @api.model
     def _filter_promo_programs_with_code(self, order):
         '''Filter Promo program with code with a different promo_code if a promo_code is already ordered'''
         return self.filtered(lambda program: program.promo_code_usage == 'code_needed' and program.promo_code != order.promo_code)
@@ -149,7 +146,6 @@ class CouponProgram(models.Model):
             programs |= program
         return programs
 
-    @api.model
     def _filter_programs_from_common_rules(self, order, next_order=False):
         """ Return the programs if every conditions is met
             :param bool next_order: is the reward given from a previous order
