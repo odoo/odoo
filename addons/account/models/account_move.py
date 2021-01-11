@@ -617,19 +617,22 @@ class AccountMove(models.Model):
                     'tax_base_amount': 0.0,
                     'grouping_dict': False,
                 }
-        self.line_ids -= to_remove
+        if not recompute_tax_base_amount:
+            self.line_ids -= to_remove
 
         # ==== Mount base lines ====
         for line in self.line_ids.filtered(lambda line: not line.tax_repartition_line_id):
             # Don't call compute_all if there is no tax.
             if not line.tax_ids:
-                line.tax_tag_ids = [(5, 0, 0)]
+                if not recompute_tax_base_amount:
+                    line.tax_tag_ids = [(5, 0, 0)]
                 continue
 
             compute_all_vals = _compute_base_line_taxes(line)
 
             # Assign tags on base line
-            line.tax_tag_ids = compute_all_vals['base_tags'] or [(5, 0, 0)]
+            if not recompute_tax_base_amount:
+                line.tax_tag_ids = compute_all_vals['base_tags'] or [(5, 0, 0)]
 
             tax_exigible = True
             for tax_vals in compute_all_vals['taxes']:
@@ -651,20 +654,22 @@ class AccountMove(models.Model):
                 taxes_map_entry['amount'] += tax_vals['amount']
                 taxes_map_entry['tax_base_amount'] += self._get_base_amount_to_display(tax_vals['base'], tax_repartition_line, tax_vals['group'])
                 taxes_map_entry['grouping_dict'] = grouping_dict
-            line.tax_exigible = tax_exigible
+            if not recompute_tax_base_amount:
+                line.tax_exigible = tax_exigible
 
         # ==== Process taxes_map ====
         for taxes_map_entry in taxes_map.values():
             # The tax line is no longer used in any base lines, drop it.
             if taxes_map_entry['tax_line'] and not taxes_map_entry['grouping_dict']:
-                self.line_ids -= taxes_map_entry['tax_line']
+                if not recompute_tax_base_amount:
+                    self.line_ids -= taxes_map_entry['tax_line']
                 continue
 
             currency = self.env['res.currency'].browse(taxes_map_entry['grouping_dict']['currency_id'])
 
             # Don't create tax lines with zero balance.
             if currency.is_zero(taxes_map_entry['amount']):
-                if taxes_map_entry['tax_line']:
+                if taxes_map_entry['tax_line'] and not recompute_tax_base_amount:
                     self.line_ids -= taxes_map_entry['tax_line']
                 continue
 
@@ -672,8 +677,9 @@ class AccountMove(models.Model):
             tax_base_amount = currency._convert(taxes_map_entry['tax_base_amount'], self.company_currency_id, self.company_id, self.date or fields.Date.context_today(self))
 
             # Recompute only the tax_base_amount.
-            if taxes_map_entry['tax_line'] and recompute_tax_base_amount:
-                taxes_map_entry['tax_line'].tax_base_amount = tax_base_amount
+            if recompute_tax_base_amount:
+                if taxes_map_entry['tax_line']:
+                    taxes_map_entry['tax_line'].tax_base_amount = tax_base_amount
                 continue
 
             balance = currency._convert(
