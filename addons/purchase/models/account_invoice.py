@@ -15,7 +15,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
-    
+
     def _get_invoice_reference(self):
         self.ensure_one()
         vendor_refs = [ref for ref in set(self.line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
