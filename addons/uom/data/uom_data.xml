@@ -55,6 +55,12 @@
         <field name="factor" eval="1.0"/>
         <field name="uom_type">reference</field>
     </record>
+    <record id="product_uom_millimeter" model="uom.uom">
+        <field name="category_id" ref="uom_categ_length"/>
+        <field name="name">mm</field>
+        <field name="factor" eval="1000"/>
+        <field name="uom_type">smaller</field>
+    </record>
     <record id="product_uom_km" model="uom.uom">
         <field name="category_id" ref="uom_categ_length"/>
         <field name="name">km</field>
