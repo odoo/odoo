@@ -50,40 +50,11 @@
                             </div>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    SERVICES*
+                                    PHONE *
                                 </div>
                                 <div class="col-lg-10 s_title pt16 pb16">
-                                    <div class="selection_service">
-                                        <div style="padding-left: 15px;padding-top: 15px;">
-                                            <t t-foreach="salon_services" t-as="service">
-                                                <div>
-                                                    <input type="checkbox" t-att-service-id="service.id"
-                                                           class="check_box_salon"/>
-                                                    <label for="service.id" t-esc="service.name"/>
-                                                </div>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row s_nb_column_fixed">
-                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    TIME *
-                                </div>
-                                <div class="col-lg-10 s_title pt16 pb16 row">
-                                    <div class="col-lg-4 s_title pt16 pb16">
-                                        <input type="text" id="date" placeholder="dd/mm/yyyy"
-                                               onkeyup="var v = this.value;if (v.match(/^\d{2}$/) !== null) {this.value = v + '/';} else if (v.match(/^\d{2}\/\d{2}$/) !== null) {this.value = v + '/';}"
-                                               maxlength="10"/>
-                                    </div>
-                                    <div class="col-lg-3 s_title pt16 pb16">
-                                        <input type="text" id="time" placeholder="HH:MM"
-                                               onkeyup="var v = this.value;if (v.match(/^\d{2}$/) !== null) {this.value = v + ':';}"
-                                               maxlength="5"/>
-                                    </div>
-                                    <div class="col-lg-5 s_title pt16 pb16" style="font-size: 12px;">
-                                        (Select date &amp; time based on availability of court)
-                                    </div>
+                                    <input type="text" id="phone" required="True"
+                                           placeholder="Enter your Phone number(eg:999**12345)"/>
                                 </div>
                             </div>
                             <div class="row s_nb_column_fixed">
@@ -105,20 +76,22 @@
                             </div>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    PHONE *
+                                    TIME *
                                 </div>
-                                <div class="col-lg-10 s_title pt16 pb16">
-                                    <input type="text" id="phone" required="True"
-                                           placeholder="Enter your Phone number(eg:999**12345)"/>
-                                </div>
-                            </div>
-                            <div class="row s_nb_column_fixed">
-                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    E-MAIL *
-                                </div>
-                                <div class="col-lg-10 s_title pt16 pb16">
-                                    <input type="email" id="email" required="True"
-                                           placeholder="Enter your E-Mail Address(eg:avinashnk94@gmail.com)"/>
+                                <div class="col-lg-10 s_title pt16 pb16 row">
+                                    <div class="col-lg-4 s_title pt16 pb16">
+                                        <input type="text" id="date" placeholder="dd/mm/yyyy"
+                                               onkeyup="var v = this.value;if (v.match(/^\d{2}$/) !== null) {this.value = v + '/';} else if (v.match(/^\d{2}\/\d{2}$/) !== null) {this.value = v + '/';}"
+                                               maxlength="10"/>
+                                    </div>
+                                    <div class="col-lg-3 s_title pt16 pb16">
+                                        <input type="text" id="time" placeholder="HH:MM"
+                                               onkeyup="var v = this.value;if (v.match(/^\d{2}$/) !== null) {this.value = v + ':';}"
+                                               maxlength="5"/>
+                                    </div>
+                                    <div class="col-lg-5 s_title pt16 pb16" style="font-size: 12px;">
+                                        (Select date &amp; time based on availability of court)
+                                    </div>
                                 </div>
                             </div>
                             <div class="row s_nb_column_fixed">
@@ -230,7 +203,14 @@
         <t t-call="website.layout">
             <form>
                 <div style="text-align: center;padding: 125px;">
-                    <h1>Thank you</h1>
+                    <div class="alert alert-success" role="alert">
+                        <h2> You successfully created your booking.</h2>
+                        <br></br>
+                        <p>
+                            Thank you so much my beloved customer. 
+                            We will contact you shortly via phone number.
+                        </p>
+                    </div>
                 </div>
             </form>
         </t>

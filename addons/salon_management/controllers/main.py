@@ -31,20 +31,12 @@ class SalonBookingWeb(http.Controller):
 
     @http.route('/page/salon_details', csrf=False, type="http", methods=['POST', 'GET'], auth="public", website=True)
     def salon_details(self, **kwargs):
-
         name = kwargs['name']
         dates = kwargs['date']
         time = kwargs['time']
         phone = kwargs['phone']
-        email = kwargs['email']
         chair = kwargs['chair']
         j = 0
-        service_list = []
-        while j < (int(kwargs['number'])):
-            item = "list_service["+str(j)+"][i]"
-            service_list.append(int(kwargs[item]))
-            j += 1
-        salon_service_obj = request.env['salon.service'].search([('id', 'in', service_list)])
         dates_time = dates+" "+time+":00"
         date_and_time = datetime.strptime(dates_time, '%m/%d/%Y %H:%M:%S')
 
@@ -53,9 +45,7 @@ class SalonBookingWeb(http.Controller):
             'name': name,
             'phone': phone,
             'time': date_and_time,
-            'email': email,
             'chair_id': chair,
-            'services': [(6, 0, [x.id for x in salon_service_obj])],
         }
         salon_booking.create(booking_data)
         return json.dumps({'result': True})
@@ -85,7 +75,6 @@ class SalonBookingWeb(http.Controller):
 
     @http.route('/page/salon_management/salon_booking_form', type='http', auth="public", website=True)
     def chair_info(self, **post):
-        salon_service_obj = request.env['salon.service'].search([])
         salon_working_hours_obj = request.env['salon.working.hours'].search([])
         salon_holiday_obj = request.env['salon.holiday'].search([('holiday', '=', True)])
         date_check = date.today()
@@ -95,7 +84,7 @@ class SalonBookingWeb(http.Controller):
         order_obj = order_obj.search([('start_date_only', '=', date_check)])
         return request.render('salon_management.salon_booking_form',
                               {'chair_details': chair_obj, 'order_details': order_obj,
-                               'salon_services': salon_service_obj, 'date_search': date_check,
+                                'date_search': date_check,
                                'holiday': salon_holiday_obj,
                                'working_time': salon_working_hours_obj
                                })

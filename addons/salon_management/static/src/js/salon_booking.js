@@ -6,17 +6,10 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
         var date = $("#date").val();
         var time = $("#time").val();
         var phone = $("#phone").val();
-        var email = $("#email").val();
-        var service = $('.check_box_salon:checkbox:checked');
         var chair = $("#chair").val();
         console.log(date, time)
-        var list_service = [];
-        var number = service.length;
-        for (var i = 0; i < (service.length); i++) {
-            var k = { i: service[i].attributes['service-id'].value };
-            list_service.push(k);
-        };
-        if (name == "" || date == "" || time == "" || phone == "" || email == "" || list_service.length == 0) {
+
+        if (name == "" || date == "" || time == "" || phone == "") {
             alert("All fields are mandatory");
         } else {
             var time_left_char = time.substring(0, 2);
@@ -29,7 +22,7 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
                 var time_right = parseInt(time_right_char);
                 console.log(time_left, time_right)
                 if ((time_left < 24) && (time_right < 60) && (time_left >= 0) && (time_right >= 0)) {
-                    var booking_record = { 'name': name, 'date': date, 'time': time, 'phone': phone, 'email': email, 'list_service': list_service, 'chair': chair, 'number': number };
+                    var booking_record = { 'name': name, 'date': date, 'time': time, 'phone': phone, 'chair': chair };
                     $.ajax({
                         url: "/page/salon_details",
                         type: "POST",
@@ -92,5 +85,4 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
             alert("Fill the Field");
         }
     });
-
 });
