@@ -63,7 +63,12 @@ renderer.createPalette = function ($container, options) {
 
                 const r = range.create();
                 const targetNode = r.sc;
-                const targetElement = targetNode.nodeType === Node.ELEMENT_NODE ? targetNode : targetNode.parentNode;
+                let targetElement;
+                if (targetNode.nodeType === Node.ELEMENT_NODE) {
+                    targetElement = targetNode.childNodes[r.so] || targetNode;
+                } else {
+                    targetElement = targetNode.parentNode;
+                }
                 colorpicker = new ColorPaletteWidget(parent, {
                     excluded: ['transparent_grayscale'],
                     $editable: rte.Class.prototype.editable(), // Our parent is the root widget, we can't retrieve the editable section from it...
