@@ -61,7 +61,7 @@ Featuring
         'data/slide_user_demo.xml',
     ],
     'qweb': [
-        'static/src/xml/activity.xml',
+        'static/src/components/activity/activity.xml',
     ],
     'installable': True,
     'application': True,
