@@ -35,6 +35,32 @@
                                 </t>
                             </tbody>
                         </table>
+                        <hr/>
+                        <h3>
+                            Sport Service
+                        </h3>
+                        <table border="1">
+                            <th>Service Name</th>
+                            <th>Price</th>
+                            <th>Duration</th>
+                            <tbody>
+                                <t t-foreach="salon_service" t-as="salon_service_obj">
+                                    <tr>
+                                        <td>
+                                            <span t-field="salon_service_obj.name"/>.
+                                        </td>
+                                        <td>
+                                            <span>$</span>
+                                            <span t-field="salon_service_obj.price"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="salon_service_obj.time_taken"/>
+                                            <span>h</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
                     </div>
 
                     <div class="col-lg-6 s_title pt16 pb16">

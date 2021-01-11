@@ -81,10 +81,13 @@ class SalonBookingWeb(http.Controller):
         chair_obj = request.env['salon.chair'].search([('active_booking_chairs', '=', True)])
         order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
                                                        ('stage_id', 'in', [1, 2, 3])])
+        salon_service_obj = request.env['salon.service'].search([])
         order_obj = order_obj.search([('start_date_only', '=', date_check)])
+        
         return request.render('salon_management.salon_booking_form',
                               {'chair_details': chair_obj, 'order_details': order_obj,
                                 'date_search': date_check,
                                'holiday': salon_holiday_obj,
-                               'working_time': salon_working_hours_obj
+                               'working_time': salon_working_hours_obj,
+                               'salon_service' : salon_service_obj 
                                })
