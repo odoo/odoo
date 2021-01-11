@@ -168,7 +168,11 @@ class Channel(models.Model):
     def _check_moderator_is_member(self):
         for channel in self:
             if not (channel.mapped('moderator_ids.partner_id') <= channel.sudo().channel_partner_ids):
-                raise ValidationError(_("Moderators should be members of the channel they moderate."))
+                missing = channel.mapped('moderator_ids.partner_id') - channel.sudo().channel_partner_ids
+                raise ValidationError(
+                    _("Moderators should be members of the channel they moderate (missing %(user_names)s).",
+                      user_names = ', '.join(missing.mapped('name')))
+                )
 
     @api.constrains('moderation', 'email_send')
     def _check_moderation_parameters(self):
@@ -279,9 +283,12 @@ class Channel(models.Model):
 
     def write(self, vals):
         # First checks if user tries to modify moderation fields and has not the right to do it.
-        if any(key for key in MODERATION_FIELDS if vals.get(key)) and any(self.env.user not in channel.moderator_ids for channel in self if channel.moderation):
-            if not self.env.user.has_group('base.group_system'):
-                raise UserError(_("You do not have the rights to modify fields related to moderation on one of the channels you are modifying."))
+        if any(key for key in MODERATION_FIELDS if vals.get(key)) and not self.env.user.has_group('base.group_system'):
+            not_moderator = self.filtered(lambda channel: channel.moderation and self.env.user not in channel.moderator_ids)
+            if not_moderator:
+                raise UserError(_("You do not have rights to modify moderation configuration on %(channel_names)s",
+                                   channel_names=', '.join(not_moderator.mapped('name'))
+                               ))
 
         result = super(Channel, self).write(vals)
 

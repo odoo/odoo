@@ -218,10 +218,12 @@ class MockEmail(common.BaseCase):
         mail = self._find_mail(author, recipients, mail_message)
         self.assertEqual(mail.state, 'exception')
 
-    def assertMailMail(self, recipients, status, check_mail_mail=True, mail_message=None, author=None, email_values=None):
+    def assertMailMail(self, recipients, status, check_mail_mail=True, mail_message=None, author=None, email_values=None, fields_values=None):
         if check_mail_mail:
             mail = self._find_mail_mail_wpartners(recipients, status, mail_message=mail_message, author=author)
             self.assertTrue(bool(mail))
+            for fname, fvalue in (fields_values or {}).items():
+                self.assertEqual(mail[fname], fvalue)
         if status == 'sent':
             for recipient in recipients:
                 self.assertSentEmail(author, [recipient], **email_values)
@@ -242,7 +244,7 @@ class MockEmail(common.BaseCase):
             for fname, fvalue in (fields_values or {}).items():
                 self.assertEqual(sent_mail[fname], fvalue)
 
-    def assertNoMail(self, author, recipients, mail_message):
+    def assertNoMail(self, author, recipients, mail_message=None):
         try:
             self._find_mail_mail_wpartners(recipients, False, mail_message=mail_message, author=author)
         except AssertionError:
@@ -679,6 +681,9 @@ class MailCommon(common.TransactionCase, MailCase):
         cls.partner_admin = cls.env.ref('base.partner_admin')
         cls.company_admin = cls.user_admin.company_id
         cls.company_admin.write({'email': 'company@example.com'})
+        # have root available at hand, just in case
+        cls.user_root = cls.env.ref('base.user_root')
+        cls.partner_root = cls.user_root.partner_id
 
         # test standard employee
         cls.user_employee = mail_new_test_user(
