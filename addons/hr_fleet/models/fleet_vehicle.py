@@ -9,7 +9,7 @@ class FleetVehicle(models.Model):
 
     mobility_card = fields.Char(compute='_compute_mobility_card', store=True)
 
-    @api.depends('driver_id')
+    @api.depends('driver_id', 'driver_id.user_ids.employee_id.mobility_card')
     def _compute_mobility_card(self):
         for vehicle in self:
             vehicle.mobility_card = vehicle.driver_id.user_ids[:1].employee_id.mobility_card
