@@ -122,7 +122,7 @@ class PurchaseOrder(models.Model):
     payment_term_id = fields.Many2one('account.payment.term', 'Payment Terms', domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     incoterm_id = fields.Many2one('account.incoterms', 'Incoterm', states={'done': [('readonly', True)]}, help="International Commercial Terms are a series of predefined commercial terms used in international transactions.")
 
-    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product', readonly=False)
+    product_id = fields.Many2one('product.product', related='order_line.product_id', string='Product')
     user_id = fields.Many2one(
         'res.users', string='Purchase Representative', index=True, tracking=True,
         default=lambda self: self.env.user, check_company=True)
@@ -821,7 +821,7 @@ class PurchaseOrderLine(models.Model):
     account_analytic_id = fields.Many2one('account.analytic.account', store=True, string='Analytic Account', compute='_compute_analytic_id_and_tag_ids', readonly=False)
     analytic_tag_ids = fields.Many2many('account.analytic.tag', store=True, string='Analytic Tags', compute='_compute_analytic_id_and_tag_ids', readonly=False)
     company_id = fields.Many2one('res.company', related='order_id.company_id', string='Company', store=True, readonly=True)
-    state = fields.Selection(related='order_id.state', store=True, readonly=False)
+    state = fields.Selection(related='order_id.state', store=True)
 
     invoice_lines = fields.One2many('account.move.line', 'purchase_line_id', string="Bill Lines", readonly=True, copy=False)
 
