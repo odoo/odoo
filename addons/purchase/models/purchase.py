@@ -198,6 +198,13 @@ class PurchaseOrder(models.Model):
         if self.date_planned:
             self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
+    def write(self, vals):
+        vals, partner_vals = self._write_partner_values(vals)
+        res = super().write(vals)
+        if partner_vals:
+            self.partner_id.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
+        return res
+
     @api.model
     def create(self, vals):
         company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
@@ -208,7 +215,11 @@ class PurchaseOrder(models.Model):
             if 'date_order' in vals:
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
             vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
-        return super(PurchaseOrder, self_comp).create(vals)
+        vals, partner_vals = self._write_partner_values(vals)
+        res = super(PurchaseOrder, self_comp).create(vals)
+        if partner_vals:
+            res.sudo().write(partner_vals)  # Because the purchase user doesn't have write on `res.partner`
+        return res
 
     def unlink(self):
         for order in self:
@@ -764,6 +775,14 @@ class PurchaseOrder(models.Model):
     def _update_update_date_activity(self, updated_dates, activity):
         for line, date in updated_dates:
             activity.note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned.date(), date.date())
+
+    def _write_partner_values(self, vals):
+        partner_values = {}
+        if 'receipt_reminder_email' in vals:
+            partner_values['receipt_reminder_email'] = vals.pop('receipt_reminder_email')
+        if 'reminder_date_before_receipt' in vals:
+            partner_values['reminder_date_before_receipt'] = vals.pop('reminder_date_before_receipt')
+        return vals, partner_values
 
 
 class PurchaseOrderLine(models.Model):
