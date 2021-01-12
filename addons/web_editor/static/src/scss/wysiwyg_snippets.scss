@@ -236,6 +236,14 @@ body.editor_enable.editor_has_snippets {
             &.o_we_hover_#{$name}:hover {
                 color: $color;
             }
+
+            &.o_we_bg_#{$name} {
+                color: white;
+                background-color: $color;
+                &:hover {
+                    background-color: darken($color, 7.5%);
+                }
+            }
         }
     }
 }

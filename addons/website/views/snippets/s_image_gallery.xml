@@ -6,7 +6,38 @@
              data-vcss="001"
              data-columns="3" style="height: 500px; overflow: hidden;">
         <div class="container">
-            <div class="alert alert-info css_non_editable_mode_hidden text-center" role="status"><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
+            <div id="slideshow_sample" class="carousel slide" data-ride="carousel" data-interval="0" style="margin: 0 12px;">
+                <div class="carousel-inner" style="padding: 0;">
+                    <div class="carousel-item active">
+                        <img class="img img-fluid d-block" src="/web/image/website.library_image_08" data-name="Image" data-index="0"/>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img img-fluid d-block" src="/web/image/website.library_image_03" data-name="Image" data-index="1"/>
+                    </div>
+                    <div class="carousel-item">
+                        <img class="img img-fluid d-block" src="/web/image/website.library_image_02" data-name="Image" data-index="2"/>
+                    </div>
+                </div>
+                <ul class="carousel-indicators">
+                    <li class="o_indicators_left text-center d-none" aria-label="Previous" title="Previous">
+                        <i class="fa fa-chevron-left"/>
+                    </li>
+                    <li data-target="#slideshow_sample" data-slide-to="0" style="background-image: url(/web/image/website.library_image_08)"/>
+                    <li data-target="#slideshow_sample" data-slide-to="1" style="background-image: url(/web/image/website.library_image_03)"/>
+                    <li data-target="#slideshow_sample" data-slide-to="2" style="background-image: url(/web/image/website.library_image_02)"/>
+                    <li class="o_indicators_right text-center d-none" aria-label="Next" title="Next">
+                        <i class="fa fa-chevron-right"/>
+                    </li>
+                </ul>
+                <a class="carousel-control-prev o_we_no_overlay" href="#slideshow_sample" data-slide="prev" aria-label="Previous" title="Previous">
+                    <span class="fa fa-chevron-left fa-2x text-white"/>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next o_we_no_overlay" href="#slideshow_sample" data-slide="next" aria-label="Next" title="Next">
+                    <span class="fa fa-chevron-right fa-2x text-white"/>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
         </div>
     </section>
 </template>
@@ -14,14 +45,35 @@
 <template id="s_images_wall" name="Images Wall">
     <section class="s_image_gallery o_spc-small o_masonry pt24 pb24"
              data-vcss="001"
-             data-columns="3" style="height: 500px; overflow: hidden;">
+             data-columns="3" style="overflow: hidden;">
         <div class="container">
-            <div class="alert alert-info css_non_editable_mode_hidden text-center" role="status"><span class="o_add_images" style="cursor: pointer;"><i class="fa fa-plus-circle"/> Add Images</span></div>
+            <div class="row s_nb_column_fixed">
+                <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
+                    <img class="img img-fluid d-block" src="/web/image/website.library_image_03" data-index="0" data-name="Image"/>
+                    <img class="img img-fluid d-block" src="/web/image/website.library_image_10" data-index="3" data-name="Image"/>
+                </div>
+                <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
+                    <img class="img img-fluid d-block" src="/web/image/website.library_image_13" data-index="1" data-name="Image"/>
+                    <img class="img img-fluid d-block" src="/web/image/website.library_image_05" data-index="4" data-name="Image"/>
+                </div>
+                <div class="o_masonry_col o_snippet_not_selectable col-lg-4">
+                    <img class="img img-fluid d-block" src="/web/image/website.library_image_14" data-index="2" data-name="Image"/>
+                    <img class="img img-fluid d-block" src="/web/image/website.library_image_16" data-index="5" data-name="Image"/>
+                </div>
+            </div>
         </div>
     </section>
 </template>
 
 <template id="s_image_gallery_options" inherit_id="website.snippet_options">
+    <xpath expr="//t[@t-call='web_editor.snippet_options_background_options']" position="before">
+        <div data-js="gallery" data-selector=".s_image_gallery">
+            <we-row string="Images">
+                <we-button class="o_we_bg_success" data-add-images="true" data-no-preview="true">Add</we-button>
+                <we-button class="o_we_bg_danger" data-remove-all-images="true" data-no-preview="true">Remove all</we-button>
+            </we-row>
+        </div>
+    </xpath>
     <xpath expr="." position="inside">
         <div data-js="gallery" data-selector=".s_image_gallery">
             <we-select string="Mode" data-dependencies="!slideshow_mode_opt">
@@ -73,10 +125,6 @@
                 <t t-set="apply_to" t-valuef="img"/>
                 <t t-set="so_rounded_no_dependencies" t-value="true"/>
             </t>
-            <we-row string="Images">
-                <we-button data-add-images="true" data-no-preview="true">Add</we-button>
-                <we-button data-remove-all-images="true" data-no-preview="true">Remove all</we-button>
-            </we-row>
         </div>
         <div data-js="gallery_img" data-selector=".s_image_gallery img">
             <we-row string="Re-order" data-no-preview="true">
