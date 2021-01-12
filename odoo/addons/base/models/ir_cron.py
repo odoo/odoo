@@ -199,6 +199,17 @@ class ir_cron(models.Model):
         # (ii) is implemented via the `WHERE` statement, when a job has
         # been processed, its nextcall is updated to a date in the
         # future and the optionnal trigger is removed.
+        #
+        # An `UPDATE` lock type is the strongest row lock, it conflicts
+        # with ALL other lock types. Among them the `KEY SHARE` row lock
+        # which is implicitely aquired by foreign keys to prevent the
+        # referenced record from being removed while in use. Because we
+        # never delete acquired cron jobs, foreign keys are safe to
+        # concurrently reference cron jobs. Hence, the `NO KEY UPDATE`
+        # row lock is used, it is a weaker lock that does conflict with
+        # everything BUT `KEY SHARE`.
+        #
+        # Learn more: https://www.postgresql.org/docs/current/explicit-locking.html#LOCKING-ROWS
 
         cr.execute("""
             SELECT *
@@ -214,7 +225,7 @@ class ir_cron(models.Model):
                 )
               )
               AND id in %s
-            LIMIT 1 FOR UPDATE SKIP LOCKED
+            LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED
         """, [job_ids])
         return cr.dictfetchone()
 
@@ -330,13 +341,23 @@ class ir_cron(models.Model):
         Simply logs the exception and rollback the transaction. """
         self._cr.rollback()
 
-    def _try_lock(self):
+    def _try_lock(self, lockfk=False):
         """Try to grab a dummy exclusive write-lock to the rows with the given ids,
            to make sure a following write() or unlink() will not block due
-           to a process currently executing those cron tasks"""
+           to a process currently executing those cron tasks.
+
+           :param lockfk: acquire a strong row lock which conflicts with
+                          the lock aquired by foreign keys when they
+                          reference this row.
+        """
+        row_level_lock = "UPDATE" if lockfk else "NO KEY UPDATE"
         try:
-            self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                             [tuple(self.ids)], log_exceptions=False)
+            self._cr.execute(f"""
+                SELECT id
+                FROM "{self._table}"
+                WHERE id IN %s
+                FOR {row_level_lock} NOWAIT
+            """, [tuple(self.ids)], log_exceptions=False)
         except psycopg2.OperationalError:
             self._cr.rollback()  # early rollback to allow translations to work for the user feedback
             raise UserError(_("Record cannot be modified right now: "
@@ -348,14 +369,18 @@ class ir_cron(models.Model):
         return super(ir_cron, self).write(vals)
 
     def unlink(self):
-        self._try_lock()
+        self._try_lock(lockfk=True)
         return super(ir_cron, self).unlink()
 
     def try_write(self, values):
         try:
             with self._cr.savepoint():
-                self._cr.execute("""SELECT id FROM "%s" WHERE id IN %%s FOR UPDATE NOWAIT""" % self._table,
-                                 [tuple(self.ids)], log_exceptions=False)
+                self._cr.execute(f"""
+                    SELECT id
+                    FROM "{self._table}"
+                    WHERE id IN %s
+                    FOR NO KEY UPDATE NOWAIT
+                """, [tuple(self.ids)], log_exceptions=False)
         except psycopg2.OperationalError:
             pass
         else:
