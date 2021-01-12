@@ -824,3 +824,35 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         ])
 
         self.assertEqual(self.invoice_line_1.amount_residual, 0.0, "The invoice should have been fully reconciled")
+
+    def test_avoid_amount_matching_bypass(self):
+        """ By the default, if the label of statement lines exactly matches a payment reference, it bypasses any kind of amount verification.
+        This is annoying in some setups, so a config parameter was introduced to handle that.
+        """
+        self.env['ir.config_parameter'].set_param('account.disable_rec_models_bypass', '1')
+        self.rule_1.match_total_amount_param = 90
+        second_inv_matching_rule = self.env['account.reconcile.model'].create({
+            'name': 'Invoices Matching Rule',
+            'sequence': 2,
+            'rule_type': 'invoice_matching',
+            'auto_reconcile': False,
+            'match_nature': 'both',
+            'match_same_currency': False,
+            'match_total_amount': False,
+            'match_partner': True,
+            'company_id': self.company.id,
+        })
+
+        self.bank_line_1.write({
+            'payment_ref': self.invoice_line_1.move_id.payment_reference,
+            'amount': 99,
+        })
+        self.bank_line_2.write({
+            'payment_ref': self.invoice_line_2.move_id.payment_reference,
+            'amount': 1,
+        })
+
+        self._check_statement_matching(self.rule_1 + second_inv_matching_rule, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'write_off', 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_2.id], 'model': second_inv_matching_rule, 'partner': self.bank_line_2.partner_id}
+        }, statements=self.bank_st)
