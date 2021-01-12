@@ -192,8 +192,14 @@ class HolidaysRequest(models.Model):
     can_reset = fields.Boolean('Can reset', compute='_compute_can_reset')
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
 
+    attachment_ids = fields.One2many('ir.attachment', 'res_id', string="Attachments")
+    # To display in form view
+    supported_attachment_ids = fields.Many2many(
+        'ir.attachment', string="Attach File", compute='_compute_supported_attachment_ids',
+        inverse='_inverse_supported_attachment_ids')
     # UX fields
     leave_type_request_unit = fields.Selection(related='holiday_status_id.request_unit', readonly=True)
+    leave_type_support_document = fields.Boolean(related="holiday_status_id.support_document")
     # Interface fields used when not using hour-based computation
     request_date_from = fields.Date('Request Start Date')
     request_date_to = fields.Date('Request End Date')
@@ -555,6 +561,15 @@ class HolidaysRequest(models.Model):
     def _compute_is_hatched(self):
         for holiday in self:
             holiday.is_hatched = holiday.state not in ['refuse', 'validate']
+
+    @api.depends('leave_type_support_document', 'attachment_ids')
+    def _compute_supported_attachment_ids(self):
+        for holiday in self:
+            holiday.supported_attachment_ids = holiday.attachment_ids
+
+    def _inverse_supported_attachment_ids(self):
+        for holiday in self:
+            holiday.attachment_ids = holiday.supported_attachment_ids
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):

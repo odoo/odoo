@@ -105,6 +105,7 @@ class HolidaysType(models.Model):
     unpaid = fields.Boolean('Is Unpaid', default=False)
     leave_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Time Off Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave', raise_if_not_found=False))
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
+    support_document = fields.Boolean(string='Supporting Document')
 
     @api.constrains('validity_start', 'validity_stop')
     def _check_validity_dates(self):

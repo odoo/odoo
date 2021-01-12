@@ -329,6 +329,11 @@
                         </div>
                         <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" widget="text"/>
                         <field name="user_id" invisible="1"/>
+                        <field name="leave_type_support_document" invisible="1"/>
+                        <label for="supported_attachment_ids" string="Supporting Documents"
+                            attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
+                        <field name="supported_attachment_ids" widget="many2many_binary" nolabel="1"
+                            attrs="{'invisible': ['|', ('leave_type_support_document', '=', False), ('state', 'not in', ('draft', 'confirm', 'validate1'))]}"/>
                     </group>
                     <group name="col_right">
                         <field name="department_id" groups="hr_holidays.group_hr_holidays_user" invisible="1"/>
@@ -338,7 +343,7 @@
             <div class="oe_chatter">
                 <field name="message_follower_ids"/>
                 <field name="activity_ids"/>
-                <field name="message_ids"/>
+                <field name="message_ids" options="{'post_refresh': 'always'}"/>
             </div>
             </form>
         </field>
