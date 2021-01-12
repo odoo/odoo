@@ -803,7 +803,8 @@ class AccountReconcileModel(models.Model):
         # We check the amount criteria of the reconciliation model, and select the
         # candidates if they pass the verification. Candidates from the first priority
         # level (even already selected) bypass this check, and are selected anyway.
-        if priorities & {1,2} or self._check_rule_propositions(st_line, candidates):
+        disable_bypass = self.env['ir.config_parameter'].sudo().get_param('account.disable_rec_models_bypass')
+        if (not disable_bypass and priorities & {1,2}) or self._check_rule_propositions(st_line, candidates):
             rslt = {
                 'model': self,
                 'aml_ids': [candidate['aml_id'] for candidate in candidates],
