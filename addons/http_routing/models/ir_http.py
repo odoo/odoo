@@ -196,7 +196,6 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
         new_url = request.env['ir.http'].url_rewrite(path)
         new_url = new_url if not qs else new_url + '?%s' % qs
 
-
     return url_lang(new_url or url_from, lang_code=lang_code)
 
 
@@ -223,23 +222,17 @@ def is_multilang_url(local_url, lang_url_codes=None):
         return False
 
     query_string = url[1] if len(url) > 1 else None
-    router = request.httprequest.app.get_db_router(request.db).bind('')
-
-    def is_multilang_func(func):
-        return (func and func.routing.get('website', False) and
-                func.routing.get('multilang', func.routing['type'] == 'http'))
-
 
     # Try to match an endpoint in werkzeug's routing table
     try:
-        func = router.match(path, method='POST', query_args=query_string)[0]
-        return is_multilang_func(func)
-    except werkzeug.exceptions.MethodNotAllowed:
-        func = router.match(path, method='GET', query_args=query_string)[0]
-        return is_multilang_func(func)
-    except werkzeug.exceptions.NotFound:
-        return True
-    except Exception:
+        func = request.env['ir.http']._get_endpoint_qargs(path, query_args=query_string)
+        # /page/xxx has no endpoint/func but is multilang
+        return (not func or (
+            func.routing.get('website', False)
+            and func.routing.get('multilang', func.routing['type'] == 'http')
+        ))
+    except Exception as exception:
+        _logger.warning(exception)
         return False
 
 
@@ -582,7 +575,7 @@ class IrHttp(models.AbstractModel):
             code = exception.code
 
         values.update(
-            status_message=werkzeug.http.HTTP_STATUS_CODES.get(code,''),
+            status_message=werkzeug.http.HTTP_STATUS_CODES.get(code, ''),
             status_code=code,
         )
 
@@ -664,13 +657,32 @@ class IrHttp(models.AbstractModel):
         router = req.app.get_db_router(request.db).bind('')
         try:
             _ = router.match(path, method='POST')
-        except werkzeug.exceptions.MethodNotAllowed as e:
+        except werkzeug.exceptions.MethodNotAllowed:
             _ = router.match(path, method='GET')
         except werkzeug.routing.RequestRedirect as e:
             new_url = e.new_url[7:]  # remove scheme
-        except werkzeug.exceptions.NotFound as e:
+        except werkzeug.exceptions.NotFound:
             new_url = path
         except Exception as e:
             raise e
 
         return new_url or path
+
+    # merge with def url_rewrite in master/14.1
+    @api.model
+    @tools.cache('path', 'query_args')
+    def _get_endpoint_qargs(self, path, query_args=None):
+        router = request.httprequest.app.get_db_router(request.db).bind('')
+        endpoint = False
+        try:
+            endpoint = router.match(path, method='POST', query_args=query_args)
+        except werkzeug.exceptions.MethodNotAllowed:
+            endpoint = router.match(path, method='GET', query_args=query_args)
+        except werkzeug.routing.RequestRedirect as e:
+            new_url = e.new_url[7:]  # remove scheme
+            assert new_url != path
+            endpoint = self._get_endpoint_qargs(new_url, query_args)
+            endpoint = endpoint and [endpoint]
+        except werkzeug.exceptions.NotFound:
+            pass # endpoint = False
+        return endpoint and endpoint[0]
