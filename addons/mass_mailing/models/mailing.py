@@ -755,19 +755,9 @@ class MassMailing(models.Model):
     # ------------------------------------------------------
 
     def _get_default_mailing_domain(self):
-        default_mailing_domain = self.default_get(['mailing_domain']).get('mailing_domain')
+        mailing_domain = []
         if self.mailing_model_name == 'mailing.list' and self.contact_list_ids:
             mailing_domain = [('list_ids', 'in', self.contact_list_ids.ids)]
-        elif default_mailing_domain:
-            default_mailing_domain = literal_eval(default_mailing_domain) if isinstance(default_mailing_domain, str) else default_mailing_domain
-            try:
-                self.env[self.mailing_model_real].search(default_mailing_domain, limit=1)
-            except:
-                mailing_domain = []
-            else:
-                mailing_domain = default_mailing_domain
-        else:
-            mailing_domain = []
 
         if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
