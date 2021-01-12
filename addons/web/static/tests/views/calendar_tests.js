@@ -3332,6 +3332,36 @@ QUnit.module('Views', {
         calendar.destroy();
     });
 
+    QUnit.test('initial_date given in the context', async function (assert) {
+        assert.expect(1);
+
+        var archs = {
+            'event,1,calendar': '<calendar date_start="start" date_stop="stop" mode="day"/>',
+            'event,false,search': '<search></search>',
+        };
+
+        var actions = [{
+            id: 1,
+            name: 'context initial date',
+            res_model: 'event',
+            type: 'ir.actions.act_window',
+            views: [[1, 'calendar']],
+            context: {initial_date: initialDate}
+        }];
+
+        var actionManager = await createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+        });
+
+        await actionManager.doAction(1);
+        await testUtils.nextTick();
+        assert.strictEqual($('.o_control_panel .breadcrumb-item').text(),
+            'context initial date (December 12, 2016)', "should display day passed in the context");
+        actionManager.destroy();
+    });
+
     QUnit.test('default week start (US) month mode', async function (assert) {
         // if not given any option, default week start is on Sunday
         assert.expect(8);
