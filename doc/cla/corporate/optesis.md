@@ -13,5 +13,4 @@ Ibrahima GUEYE 44674493+optesis-ibg@users.noreply.github.com https://github.com/
 List of contributors:
 
 Ibrahima GUEYE 44674493+optesis-ibg@users.noreply.github.com https://github.com/optesis-ibg
-Abdel Rahaman TOUKOUROU 44700268+optesis-art@users.noreply.github.com https://github.com/optesis-art
 Khalifa KANE 44680721+optesis-khk@users.noreply.github.com https://github.com/optesis-khk
