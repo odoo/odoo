@@ -71,7 +71,7 @@ class WebsiteSnippetFilter(models.Model):
             is_sample=is_sample,
             to_generic=self._to_generic,
         )).decode('utf-8')
-        return [ET.tostring(el) for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
+        return [ET.tostring(el, encoding='utf-8') for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
 
     def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""
