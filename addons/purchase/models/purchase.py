@@ -196,7 +196,7 @@ class PurchaseOrder(models.Model):
     @api.onchange('date_planned')
     def onchange_date_planned(self):
         if self.date_planned:
-            self.order_line.date_planned = self.date_planned
+            self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     @api.model
     def create(self, vals):
