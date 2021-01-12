@@ -198,8 +198,8 @@ class Partner(models.Model):
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
-    partner_latitude = fields.Float(string='Geo Latitude', digits=(16, 5))
-    partner_longitude = fields.Float(string='Geo Longitude', digits=(16, 5))
+    partner_latitude = fields.Float(string='Geo Latitude', digits=(10, 7))
+    partner_longitude = fields.Float(string='Geo Longitude', digits=(10, 7))
     email = fields.Char()
     email_formatted = fields.Char(
         'Formatted Email', compute='_compute_email_formatted',
