@@ -682,6 +682,18 @@ registry.backgroundVideo = publicWidget.Widget.extend({
 
         $(window).on('resize.' + this.iframeID, throttledUpdate);
 
+        const $modal = this.$target.closest('.modal');
+        if ($modal.length) {
+            $modal.on('show.bs.modal', () => {
+                const videoContainerEl = this.$target[0].querySelector('.o_bg_video_container');
+                videoContainerEl.classList.add('d-none');
+            });
+            $modal.on('shown.bs.modal', () => {
+                this._adjustIframe();
+                const videoContainerEl = this.$target[0].querySelector('.o_bg_video_container');
+                videoContainerEl.classList.remove('d-none');
+            });
+        }
         return Promise.all(proms).then(() => this._appendBgVideo());
     },
     /**
