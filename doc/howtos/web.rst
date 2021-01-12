@@ -1,7 +1,7 @@
 :banner: banners/build_interface_ext.jpg
 
 =============================
-Customizing the web client
+ Customizing the Web Client
 =============================
 
 Note: this section is really really out of date. It will be updated someday,
