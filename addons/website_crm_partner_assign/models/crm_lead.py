@@ -12,8 +12,8 @@ from odoo.tools import html_escape
 class CrmLead(models.Model):
     _inherit = "crm.lead"
 
-    partner_latitude = fields.Float('Geo Latitude', digits=(16, 5))
-    partner_longitude = fields.Float('Geo Longitude', digits=(16, 5))
+    partner_latitude = fields.Float('Geo Latitude', digits=(10, 7))
+    partner_longitude = fields.Float('Geo Longitude', digits=(10, 7))
     partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Partner this case has been forwarded/assigned to.", index=True)
     partner_declined_ids = fields.Many2many(
         'res.partner',
