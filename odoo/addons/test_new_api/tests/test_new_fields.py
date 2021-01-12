@@ -500,7 +500,6 @@ class TestFields(common.TransactionCase):
         self.assertEqual(foo1.name, 'Bar')
         self.assertEqual(foo2.name, 'Bar')
 
-
         # create/write on 'foo' should only invoke the compute method
         log = []
         model = self.env['test_new_api.compute.inverse'].with_context(log=log)
@@ -576,16 +575,6 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(AccessError):
             foo.with_user(user).display_name = 'Forbidden'
 
-    def test_13_inverse_access(self):
-        """ test access rights on inverse fields """
-        foo = self.env['test_new_api.category'].create({'name': 'Foo'})
-        user = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
-        self.assertFalse(user.has_group('base.group_system'))
-        # add group on non-stored inverse field
-        self.patch(type(foo).display_name, 'groups', 'base.group_system')
-        with self.assertRaises(AccessError):
-            foo.with_user(user).display_name = 'Forbidden'
-
     def test_14_search(self):
         """ test search on computed fields """
         discussion = self.env.ref('test_new_api.discussion_0')
@@ -628,6 +617,38 @@ class TestFields(common.TransactionCase):
         with self.assertRaises(ValidationError):
             discussion.name = "X"
             discussion.flush()
+
+    def test_15_constraint_inverse(self):
+        """ test constraint method on normal field and field with inverse """
+        log = []
+        model = self.env['test_new_api.compute.inverse'].with_context(log=log, log_constraint=True)
+
+        # create/write with normal field only
+        log.clear()
+        record = model.create({'baz': 'Hi'})
+        self.assertCountEqual(log, ['constraint'])
+
+        log.clear()
+        record.write({'baz': 'Ho'})
+        self.assertCountEqual(log, ['constraint'])
+
+        # create/write with inverse field only
+        log.clear()
+        record = model.create({'bar': 'Hi'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
+
+        log.clear()
+        record.write({'bar': 'Ho'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
+
+        # create/write with both fields only
+        log.clear()
+        record = model.create({'bar': 'Hi', 'baz': 'Hi'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
+
+        log.clear()
+        record.write({'bar': 'Ho', 'baz': 'Ho'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
 
     def test_20_float(self):
         """ test rounding of float fields """
