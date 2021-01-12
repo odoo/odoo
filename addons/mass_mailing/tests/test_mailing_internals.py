@@ -117,7 +117,7 @@ class TestMassMailValues(MassMailCommon):
         ))
         self.assertEqual(
             literal_eval(mailing_form.mailing_domain),
-            ['&', ('is_blacklisted', '=', False), ('email', 'ilike', 'test.example.com')]
+            [('email', 'ilike', 'test.example.com')],
         )
         self.assertEqual(mailing_form.mailing_model_real, 'res.partner')
 
