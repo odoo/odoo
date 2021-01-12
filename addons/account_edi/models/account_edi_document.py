@@ -77,11 +77,11 @@ class AccountEdiDocument(models.Model):
             to_process[key] |= edi_doc
 
         # Order payments/invoice and create batches.
-        result = []
+        invoices = []
         payments = []
         for key, documents in to_process.items():
             edi_format, state, doc_type, company_id, custom_key = key
-            target = result if doc_type == 'invoice' else payments
+            target = invoices if doc_type == 'invoice' else payments
             batch = self.env['account.edi.document']
             for doc in documents:
                 if edi_format._support_batching(move=doc.move_id, state=state, company=company_id):
@@ -90,8 +90,7 @@ class AccountEdiDocument(models.Model):
                     target.append((doc, doc_type))
             if batch:
                 target.append((batch, doc_type))
-        result.extend(payments)
-        return result
+        return invoices + payments
 
     @api.model
     def _convert_to_old_jobs_format(self, jobs):
@@ -184,7 +183,7 @@ class AccountEdiDocument(models.Model):
                 elif not move_result.get('success'):
                     document.write({
                         'error': move_result.get('error', False),
-                        'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if document.error else False,
+                        'blocking_level': move_result.get('blocking_level', DEFAULT_BLOCKING_LEVEL) if move_result.get('error') else False,
                     })
 
             if invoice_ids_to_cancel:
@@ -224,6 +223,10 @@ class AccountEdiDocument(models.Model):
     def _process_documents_no_web_services(self):
         """ Post and cancel all the documents that don't need a web service.
         """
+        if 'blocking_level' in self.env['account.edi.document']._fields:
+            self = self.filtered(lambda d: d.blocking_level != 'error')
+        else:
+            self = self.filtered(lambda d: not d.error)
         jobs = self.filtered(lambda d: not d.edi_format_id._needs_web_services())._prepare_jobs()
         self._process_jobs(self._convert_to_old_jobs_format(jobs))
 
@@ -232,6 +235,10 @@ class AccountEdiDocument(models.Model):
 
         :param job_count: Limit to the number of jobs to process among the ones that are available for treatment.
         """
+        if 'blocking_level' in self.env['account.edi.document']._fields:
+            self = self.filtered(lambda d: d.blocking_level != 'error')
+        else:
+            self = self.filtered(lambda d: not d.error)
         jobs = self.filtered(lambda d: d.edi_format_id._needs_web_services())._prepare_jobs()
         jobs = jobs[0:job_count or len(jobs)]
         for documents, doc_type in jobs:
