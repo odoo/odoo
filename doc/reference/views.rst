@@ -393,7 +393,14 @@ Calendar
 --------
 
 Calendar views display records as events in a daily, weekly, monthly or yearly
-calendar. Their root element is ``<calendar>``. Available attributes on the
+calendar. 
+
+.. note:: By default the calendar view will be centered around the current date
+   (today). You can pass a specific initial date to the context of the action in
+   order to set the initial focus of the calendar on the period (see `mode`) around
+   this date (the context key to use being `initial_date`)
+
+Their root element is ``<calendar>``. Available attributes on the
 calendar view are:
 
 ``date_start`` (required)
