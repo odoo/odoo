@@ -30,7 +30,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
     /**
      * @override
      */
-    onBuilt: function () {
+    onBuilt(){
         this._super();
         const mailingListID = this._getMailingListID();
         if (mailingListID) {
@@ -57,47 +57,15 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      * @private
      * @override
      */
-    _renderCustomXML(uiFragment) {
-        return this._getMailingListButtons().then((mailingLists) => {
-            this.mailingLists = mailingLists;
-            const selectEl = uiFragment.querySelector('we-select[data-name="mailing_list"]');
-            if (this.mailingLists.length && selectEl) {
-                this.mailingLists.forEach(option => selectEl.append(option.cloneNode(true)));
-            }
-        });
-    },
-    /**
-     * Create the buttons for the mailing list we-select
-     *
-     * @private
-     */
-    _getMailingListButtons() {
-        return rpc.query({
-            model: 'mailing.list',
-            method: 'name_search',
-            args: ['', [['is_public', '=', true]]],
-            context: this.options.recordInfo.context,
-        }).then((data) => {
-            return Object.keys(data).map(key => {
-                const record = data[key];
-                const button = document.createElement('we-button');
-                button.dataset.selectMailingList = record[0];
-                button.textContent = record[1];
-                return button;
-            });
-        });
-    },
-    /**
-     * active mailing list id or set default one for use
-     *
-     * @private
-     */
-    _getMailingListID() {
-        let listID = parseInt(this.$target.attr('data-list-id'));
-        if (!listID && this.mailingLists.length) {
-            listID = this.mailingLists[0].dataset.selectMailingList;
+    async _renderCustomXML(uiFragment) {
+        this.mailingLists = await this._renderMailingListButtons();
+        const selectEl = uiFragment.querySelector('we-select[data-name="mailing_list"]');
+        for (const mailingList of this.mailingLists) {
+            const button = document.createElement('we-button');
+            button.dataset.selectMailingList = mailingList[0];
+            button.textContent = mailingList[1];
+            selectEl.appendChild(button);
         }
-        return listID;
     },
     /**
      * @private
@@ -109,6 +77,31 @@ options.registry.mailing_list_subscribe = options.Class.extend({
                 return this._getMailingListID();
         }
         return this._super(...arguments);
+    },
+    /**
+     * Create the buttons for the mailing list we-select
+     *
+     * @private
+     */
+    async _renderMailingListButtons() {
+        return this._rpc({
+            model: 'mailing.list',
+            method: 'name_search',
+            args: ['', [['is_public', '=', true]]],
+            context: this.options.recordInfo.context,
+        });
+    },
+    /**
+     * active mailing list id or set default one for use
+     *
+     * @private
+     */
+    _getMailingListID() {
+        let listID = parseInt(this.$target.attr('data-list-id'));
+        if (!listID && this.mailingLists.length) {
+            listID = this.mailingLists[0][0];
+        }
+        return listID;
     },
 });
 
