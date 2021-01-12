@@ -60,7 +60,7 @@ class WebsiteSnippetFilter(models.Model):
         records = self._prepare_values(limit, search_domain)
         View = self.env['ir.ui.view'].sudo().with_context(inherit_branding=False)
         content = View._render_template(template_key, dict(records=records)).decode('utf-8')
-        return [ET.tostring(el) for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
+        return [ET.tostring(el, encoding='utf-8') for el in ET.fromstring('<root>%s</root>' % content).getchildren()]
 
     def _prepare_values(self, limit=None, search_domain=None):
         """Gets the data and returns it the right format for render."""
