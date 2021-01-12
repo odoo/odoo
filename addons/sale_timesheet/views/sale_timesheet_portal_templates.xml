@@ -44,4 +44,17 @@
         </xpath>
     </template>
 
+    <template id="portal_invoice_page_inherit" inherit_id="account.portal_invoice_page">
+        <xpath expr="//t[@t-set='entries']/ul/li[.//a[@id='print_invoice_report']]" position="after">
+            <li class="list-group-item flex-grow-1">
+                <div class="btn-toolbar flex-sm-nowrap justify-content-center">
+                    <div class="btn-group mb-1">
+                        <a t-if="invoice.move_type == 'out_invoice' and invoice.state in ('draft', 'posted') and invoice.timesheet_count > 0"
+                        target="_blank" t-att-href="'/my/timesheets?search_in=invoice&amp;search=%s' % invoice.name">View Timesheets</a>
+                    </div>
+                </div>
+            </li>
+        </xpath>
+    </template>
+
 </odoo>
