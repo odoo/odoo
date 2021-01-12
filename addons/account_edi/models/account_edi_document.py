@@ -9,6 +9,67 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+class DocumentGraphElement(object):
+
+    def __init__(self, doc):
+        self.doc = doc
+        self.parents = set()
+        self.children = set()
+
+
+class DocumentGraph(object):
+
+    def __init__(self, documents, env):
+        self.MOVE_CHILDREN_FIELDS = []
+        for name, field in env['account.move']._fields.items():
+            if field.type == 'many2one' and field.comodel_name == 'account.move':
+                self.MOVE_CHILDREN_FIELDS.append(field.name)
+
+        self.MOVE_MAPPING = {doc.move_id: doc for doc in documents}
+
+        # Create the graph
+        self.elem_mapping = {}  # {doc: DocumentGraphElement}
+        for doc in documents:
+            if doc not in self.elem_mapping:
+                self._init_elem(doc)
+
+    def _init_elem(self, doc):
+        def get_children(move):
+            children = []
+            for field in self.MOVE_CHILDREN_FIELDS:
+                if move[field]:
+                    children.append(move[field])
+            return children
+
+        elem = DocumentGraphElement(doc)
+        self.elem_mapping[doc] = elem
+
+        for child_move in get_children(doc.move_id):
+            child_doc = self.MOVE_MAPPING.get(child_move, False)
+            if not child_doc:
+                continue
+
+            if child_doc not in self.elem_mapping:
+                self._init_elem(child_doc)
+            child_elem = self.elem_mapping[child_doc]
+            child_elem.parents += elem
+            elem.children += child_elem
+
+    def sort_documents(self):
+        # This function assumes that an element can be the child of multiple elements,
+        # but that there are NO cycle
+        queue = [e for e in self.elem_mapping.values() if not e.parents]  # roots
+        res = []
+        while queue:
+            e = queue.pop(0)
+            res.append(e.doc)
+            for child in e.children:
+                if child.doc in res:  # in case a move is the child of multiple moves
+                    res.remove(child.doc)
+                queue.append(child)
+        return res
+
+
 class AccountEdiDocument(models.Model):
     _name = 'account.edi.document'
     _description = 'Electronic Document for an account.move'
@@ -43,6 +104,9 @@ class AccountEdiDocument(models.Model):
     def _check_move_configuration(self):
         # TO OVERRIDE in account_edi_extended. We don't want to block an edi here, so blocking_level is required.
         pass
+
+    def sort_documents(self, documents):
+        return DocumentGraph(documents, self.env).sort_documents()
 
     def _prepare_jobs(self):
         """Creates a list of jobs to be performed by '_process_job' for the documents in self.
@@ -83,13 +147,18 @@ class AccountEdiDocument(models.Model):
             edi_format, state, doc_type, company_id, custom_key = key
             target = invoices if doc_type == 'invoice' else payments
             batch = self.env['account.edi.document']
+            singles = []
             for doc in documents:
                 if edi_format._support_batching(move=doc.move_id, state=state, company=company_id):
                     batch |= doc
                 else:
-                    target.append((doc, doc_type))
+                    singles.append(doc)
             if batch:
                 target.append((batch, doc_type))
+            if singles:
+                if doc_type == 'invoice':
+                    singles = self.sort_documents(singles)
+                target.extend([(d, doc_type) for d in singles])
         return invoices + payments
 
     @api.model
