@@ -42,7 +42,9 @@ class PosSession(models.Model):
     _inherit = 'pos.session'
     fiskaly_cash_point_closing_uuid = fields.Char(readonly=True)
 
-    def _finalize_validation(self, orders):
+    def _finalize_orders(self, orders):
+        super(PosSession, self)._finalize_orders(orders)
+
         if self.config_id.is_company_country_germany:
             if len(orders) > 0:
                 orders = orders.sorted('fiskaly_time_end')
@@ -54,8 +56,6 @@ class PosSession(models.Model):
                     raise ValidationError(_("Connection error between Odoo and Fiskaly."))
                 except ConnectTimeout:
                     raise ValidationError(_("There are some connection issues between us and Fiskaly, try again later."))
-
-        return super(PosSession, self)._finalize_validation(orders)
 
     def _create_cash_point_closing_json(self, orders, headers):
         vat_definitions = self.fiskaly_get_vat_definitions(headers)

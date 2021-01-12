@@ -317,10 +317,8 @@ class PosSession(models.Model):
             else:
                 self.with_company(self.company_id)._create_account_move()
             if self.move_id.line_ids:
-                # Set the uninvoiced orders' state to 'done'
                 orders = self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')])
-                orders.write({'state': 'done'})
-                self._finalize_validation(orders)
+                self._finalize_orders(orders)
             else:
                 self.move_id.unlink()
         self.write({'state': 'closed'})
@@ -1137,8 +1135,10 @@ class PosSession(models.Model):
             )
         return True
 
-    def _finalize_validation(self, orders):
-        pass
+    def _finalize_orders(self, orders):
+        # Set the uninvoiced orders' state to 'done'
+        orders.write({'state': 'done'})
+
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
