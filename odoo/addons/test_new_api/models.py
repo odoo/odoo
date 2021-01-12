@@ -392,12 +392,14 @@ class ComputeProtected(models.Model):
         for record in self:
             record.bar = record.foo
 
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
     _description = 'Test New API Compute Inversse'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
+    baz = fields.Char()
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -409,6 +411,11 @@ class ComputeInverse(models.Model):
         self._context.get('log', []).append('inverse')
         for record in self:
             record.foo = record.bar
+
+    @api.constrains('bar', 'baz')
+    def _check_constraint(self):
+        if self._context.get('log_constraint'):
+            self._context.get('log', []).append('constraint')
 
 
 class MultiComputeInverse(models.Model):
