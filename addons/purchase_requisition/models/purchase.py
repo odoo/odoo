@@ -84,7 +84,9 @@ class PurchaseOrder(models.Model):
             if po.requisition_id.type_id.exclusive == 'exclusive':
                 others_po = po.requisition_id.mapped('purchase_ids').filtered(lambda r: r.id != po.id)
                 others_po.button_cancel()
-                po.requisition_id.action_done()
+                super(PurchaseOrder, po).button_confirm()
+                if po.state == 'purchase':
+                    po.requisition_id.action_done()
         return res
 
     @api.model
