@@ -556,7 +556,6 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(foo1.name, 'Bar')
         self.assertEqual(foo2.name, 'Bar')
 
-
         # create/write on 'foo' should only invoke the compute method
         log = []
         model = self.env['test_new_api.compute.inverse'].with_context(log=log)
@@ -675,6 +674,38 @@ class TestFields(TransactionCaseWithUserDemo):
         with self.assertRaises(ValidationError):
             discussion.name = "X"
             discussion.flush()
+
+    def test_15_constraint_inverse(self):
+        """ test constraint method on normal field and field with inverse """
+        log = []
+        model = self.env['test_new_api.compute.inverse'].with_context(log=log, log_constraint=True)
+
+        # create/write with normal field only
+        log.clear()
+        record = model.create({'baz': 'Hi'})
+        self.assertCountEqual(log, ['constraint'])
+
+        log.clear()
+        record.write({'baz': 'Ho'})
+        self.assertCountEqual(log, ['constraint'])
+
+        # create/write with inverse field only
+        log.clear()
+        record = model.create({'bar': 'Hi'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
+
+        log.clear()
+        record.write({'bar': 'Ho'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
+
+        # create/write with both fields only
+        log.clear()
+        record = model.create({'bar': 'Hi', 'baz': 'Hi'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
+
+        log.clear()
+        record.write({'bar': 'Ho', 'baz': 'Ho'})
+        self.assertCountEqual(log, ['inverse', 'constraint'])
 
     def test_16_compute_unassigned(self):
         model = self.env['test_new_api.compute.unassigned']
