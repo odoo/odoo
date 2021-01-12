@@ -14,7 +14,7 @@ var _t = core._t;
 
 
 options.registry.mailing_list_subscribe = options.Class.extend({
-    
+
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      */
     onBuilt(){
         this._super();
-        const mailingListID = this._getMailingListID();
+        const mailingListID = parseInt(this.$target.attr('data-list-id')) || this.defaultMailingID;
         if (mailingListID) {
             this.$target.attr("data-list-id", mailingListID);
         } else {
@@ -58,13 +58,14 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        this.mailingLists = await this._renderMailingListButtons();
+        const mailingLists = await this._renderMailingListButtons();
         const selectEl = uiFragment.querySelector('we-select[data-name="mailing_list"]');
-        for (const mailingList of this.mailingLists) {
+        for (const mailingList of mailingLists) {
             const button = document.createElement('we-button');
             button.dataset.selectMailingList = mailingList[0];
             button.textContent = mailingList[1];
             selectEl.appendChild(button);
+            this.defaultMailingID = mailingList[0];
         }
     },
     /**
@@ -74,7 +75,7 @@ options.registry.mailing_list_subscribe = options.Class.extend({
     _computeWidgetState(methodName, params) {
         switch (methodName) {
             case 'selectMailingList':
-                return this._getMailingListID();
+                return parseInt(this.$target.attr('data-list-id')) || this.defaultMailingID;
         }
         return this._super(...arguments);
     },
@@ -90,18 +91,6 @@ options.registry.mailing_list_subscribe = options.Class.extend({
             args: ['', [['is_public', '=', true]]],
             context: this.options.recordInfo.context,
         });
-    },
-    /**
-     * active mailing list id or set default one for use
-     *
-     * @private
-     */
-    _getMailingListID() {
-        let listID = parseInt(this.$target.attr('data-list-id'));
-        if (!listID && this.mailingLists.length) {
-            listID = this.mailingLists[0][0];
-        }
-        return listID;
     },
 });
 
