@@ -1,103 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="index" name="Members">
+<!-- Layout -->
+<template id="layout" name="Members Layout">
     <t t-call="website.layout">
         <t t-set="additional_title">Members</t>
         <div id="wrap">
-            <div class="oe_structure">
-                <section>
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <h1 class="text-center">Our Members Directory</h1>
-                                <h3 class="text-muted text-center">Find a business partner</h3>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            <div class="container">
+            <!-- Topbar -->
+            <t t-call="website_membership.topbar"/>
+            <!-- Snippet area -->
+            <div class="oe_structure"/>
+            <!-- Content -->
+            <div class="container-fluid">
                 <div class="row">
-
-            <div class="col-lg-3 mb32" id="left_column">
-                <ul class="nav nav-pills flex-column mt16">
-                    <li class="nav-header nav-item"><h3>Associations</h3></li>
-                    <li class="nav-item"><a href="/members" class="nav-link#{'' if membership_id else ' active'}">All</a></li>
-                    <t t-foreach="memberships_data" t-as="membership_data">
-                        <li class="nav-item">
-                            <a t-attf-href="/members/association/#{ membership_data['id'] }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"
-                                t-attf-class="nav-link#{membership_id and membership_data['id'] == membership_id and ' active' or ''}"><t t-esc="membership_data['name']"/></a>
-                        </li>
-                    </t>
-                </ul>
-            </div>
-            <div class="col-lg-8" id="ref_content">
-                <div class='d-flex m-2'>
-                    <t t-call="website.pager">
-                       <t t-set="classname" t-valuef="float-left"/>
-                    </t>
-                    <form action="" method="get" class="navbar-search ml-auto pagination form-inline">
-                        <t t-call="website.website_search_box">
-                            <t t-set="search" t-value="post.get('search', '')"/>
-                        </t>
-                    </form>
-                </div>
-                <div>
-                    <t t-if="not memberships_partner_ids">
-                        <p>No result found.</p>
-                    </t>
-                    <t t-foreach="memberships_data" t-as="membership_data">
-                        <t t-if="memberships_partner_ids.get(membership_data['id'])">
-                            <h3 class="text-center"><span t-esc="membership_data['name']"/></h3>
-                            <t t-foreach="memberships_partner_ids[membership_data['id']]" t-as="partner_id">
-                                <t t-set="partner" t-value="partners[partner_id]"/>
-                                <div class="media mt-3">
-                                    <a t-attf-href="/members/#{slug(partner)}"
-                                       t-field="partner.image_128"
-                                       t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_64_cover mr-3"}'
-                                    ></a>
-                                    <div class="media-body" style="min-height: 64px;">
-                                        <a t-attf-href="/members/#{slug(partner)}">
-                                            <span t-field="partner.display_name"/>
-                                        </a>
-                                        <div t-field="partner.website_short_description"/>
-                                    </div>
-                                </div>
-                            </t>
-                        </t>
-                    </t>
+                    <t t-raw="ref_content" />
                 </div>
             </div>
-
-                </div>
-            </div>
-            <div class="oe_structure" id="oe_structure_website_membership_index_1"/>
+            <!-- Snippet area -->
+            <div class="oe_structure"/>
         </div>
     </t>
 </template>
 
-<template id="opt_index_country" name="Location"
-        customize_show="True" inherit_id="website_membership.index">
-    <xpath expr="//div[@id='left_column']/ul[1]" position="after">
-        <ul class="nav nav-pills flex-column mt16">
-            <li class="nav-header nav-item"><h3>Location</h3></li>
-            <t t-foreach="countries" t-as="country">
-                <li t-if="country['country_id']" class="nav-item">
-                    <a t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"
-                        t-attf-class="nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}"><t t-esc="country['country_id'][1]"/>
-                        <span class="badge badge-pill float-right"><t t-esc="country['country_id_count'] or '0'"/></span>
-                    </a>
-                </li>
+<!-- Topbar -->
+<template id="topbar" name="Topbar">
+    <nav class="navbar navbar-light border-top shadow-sm d-print-none">
+        <div class="container">
+            <div class="d-flex flex-column flex-md-row justify-content-between w-100">
+                <!-- Title -->
+                <span class="navbar-brand h4 my-0 mr-auto">
+                    <t t-raw="o_members_topbar_title"/>
+                </span>
+                <!-- Filters -->
+                <t t-if="o_members_topbar_title == 'Members'">
+                    <ul class="o_members_topbar_filters flex-md-nowrap nav pl-md-3"/>
+                </t>
+                <!-- Search bar -->
+                <div class="d-flex align-items-center flex-wrap pl-md-3 pr-0">
+                    <t t-call="website_membership.search_box">
+                        <t t-set="_searches" t-value="searches"/>
+                        <t t-set="_placeholder">Search a member...</t>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </nav>
+</template>
+
+<!-- Search Box -->
+<template id="search_box" inherit_id="website.website_search_box" primary="True">
+    <xpath expr="//div[@role='search']" position="replace">
+        <form t-attf-class="o_members_searchbar_form o_wait_lazy_js w-100 my-1 my-lg-0 #{_classes}"
+              t-att-action="action if action else '/members'" method="get">
+            <t t-set="search" t-value="search or _searches and _searches['search']"/>
+            <t t-set="placeholder" t-value="placeholder or _placeholder"/>
+            <t>$0</t>
+            <t t-foreach="_searches" t-as="search">
+                <input t-if="search != 'search' and search_value != 'all'" type="hidden"
+                    t-att-name="search" t-att-value="search_value"/>
             </t>
-        </ul>
+            <t t-raw="0"/>
+        </form>
     </xpath>
 </template>
 
-<!-- Option: index: Left Google Map -->
-<template id="opt_index_google_map" name="Left World Map"
-        customize_show="True" inherit_id="website_membership.index">
-    <xpath expr="//div[@id='left_column']/ul[last()]" position="after">
+<!-- Maps Topbar Button -->
+<template id="membership_topbar_map" inherit_id="website_membership.topbar" priority="10">
+    <xpath expr="//ul[hasclass('o_members_topbar_filters')]" position="inside">
+        <t t-if="google_maps_api_key and is_view_active('website_membership.opt_google_map')">
+            <li class="nav-item mr-2 my-1">
+                <a href="#o_members_map" role="button" class="btn btn-outline-primary">Map</a>
+            </li>
+        </t>
+    </xpath>
+</template>
+
+<!-- Filter - Association -->
+<template id="membership_association" inherit_id="website_membership.topbar" customize_show="True" name="Filter by Association" priority="20">
+    <xpath expr="//ul[hasclass('o_members_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-tags"/>
+                <t t-if="current_membership_id" t-esc="current_membership_id[0]"/>
+                <t t-else="">All Associations</t>
+            </a>
+
+            <div class="dropdown-menu">
+                <a  t-attf-href="/members/#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{' active' or ''}">
+                    All Associations
+                    <span class="badge badge-pill badge-primary ml-2" t-esc="memberships or '0'"/>
+                </a>
+                <t t-foreach="memberships_data" t-as="membership_data">
+                    <t t-if="membership_data['id']">
+                        <a  t-attf-href="/members/association/#{ membership_data['id'] }#{current_country and '/country/%s' % slug(current_country) or ''}#{ search }"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{membership_id and membership_data['id'] == membership_id and ' active' or ''}">
+                            <t t-esc="membership_data['name']"/>
+                            <span class="badge badge-pill badge-primary ml-2" t-esc="membersips or '0'"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Filter - Location -->
+<template id="membership_location" inherit_id="website_membership.topbar" customize_show="True" name="Filter by Country" priority="30">
+    <xpath expr="//ul[hasclass('o_members_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-map-marker"/>
+                <t t-if="current_country" t-esc="current_country[1]"/>
+                <t t-else="">All Countries</t>
+            </a>
+            <div class="dropdown-menu">
+                <t t-foreach="countries" t-as="country">
+                    <t t-if="country['country_id']">
+                        <a  t-attf-href="/members#{ membership_id and '/association/%s' % membership_id or '' }#{ country['country_id'][0] and '/country/%s' % slug(country['country_id']) or '' }#{ search }"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between nav-link#{country['country_id'] and country['country_id'][0] == current_country_id and ' active' or ''}">
+                            <t t-esc="country['country_id'][1]"/>
+                            <span class="badge badge-pill badge-primary ml-2" t-esc="country['country_id_count'] or '0'"/>
+                        </a>
+                    </t>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Content -->
+<template id="index" name="Layout">
+    <!-- Sets -->
+    <t t-set="opt_members_grid" t-value="is_view_active('website_membership.opt_members_grid')"/>
+    <t t-set="opt_members_full_width" t-value="is_view_active('website_membership.opt_members_full_width')"/>
+    <t t-set="opt_members_cards" t-value="is_view_active('website_membership.opt_members_cards')"/>
+    <t t-if="opt_members_grid" t-set="opt_members_size" t-value="'col-md-6 col-lg-4'"/>
+    <t t-else="" t-set="opt_members_size" t-value="'col-xl-10'"/>
+    <!-- Topbar -->
+    <t t-set="o_members_topbar_title">Members</t>
+    <t t-call="website_membership.layout">
+        <t t-set="ref_content">
+            <!-- Banner -->
+            <div class="o_members_banner col-lg-12 pt64 pb64 text-light">
+                <h1 class="text-center font-weight-bold">Our Members Directory</h1>
+                <h2 class="text-center">Find a business partner</h2>
+            </div>
+            <div t-attf-class="#{opt_members_cards and 'bg-200'} row w-100 m-0 justify-content-center">
+                <!-- Container -->
+                <div t-attf-class="#{opt_members_full_width and 'container-fluid'} #{(not opt_members_full_width) and 'container'}">
+                    <div t-attf-class="col-lg-12 #{opt_members_grid and 'px-5'} pb64" id="ref_content">
+                        <div t-attf-class="row #{not (opt_members_grid) and 'justify-content-center'} text-md-left">
+                            <!-- Not found -->
+                            <h3 t-if="not memberships_partner_ids" class="mt112 alert alert-info">No result found</h3>
+                            <!-- Members -->
+                            <t t-foreach="memberships_data" t-as="membership_data">
+                                <t t-if="memberships_partner_ids.get(membership_data['id'])">
+                                    <div class="col-12">
+                                        <h3 class="text-center mt-5"><span t-esc="membership_data['name']"/></h3>
+                                    </div>
+                                    <t t-foreach="memberships_partner_ids[membership_data['id']]" t-as="partner_id">
+                                        <t t-set="partner" t-value="partners[partner_id]"/>
+                                        <!-- Cards -->
+                                        <div t-attf-class="#{opt_members_size} mt-4">
+                                            <div t-attf-class="#{(opt_members_grid) and 'h-100 justify-content-between'} #{(not opt_members_grid) and 'h-md-100 flex-md-row p-4'} #{(opt_members_cards) and 'card border-0 shadow-sm'} #{(not opt_members_cards) and 'd-flex'} #{(opt_members_grid and (not opt_members_cards)) and 'd-flex flex-column'} ">
+                                                <!-- Grid Layout -->
+                                                <t t-if="opt_members_grid">
+                                                    <div class="h-100 row">
+                                                        <div class="col-12 d-flex justify-content-center py-3">
+                                                            <t t-call="website_membership.member_img"/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="h-100 row">
+                                                        <div class="col-12 text-center media-body o_partner_body py-3 px-5 flex-column" style="min-height: 64px;">
+                                                            <t t-call="website_membership.member_description"/>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                                <!-- List Layout -->
+                                                <t t-else="">
+                                                    <div class="col-sm-12 col-md-3 border-right d-flex justify-content-center pr-lg-0 pr-md-5">
+                                                        <t t-call="website_membership.member_img"/>
+                                                    </div>
+                                                    <div class="col-md-9 text-center text-md-left pl-lg-5 pl-md-4 media-body o_partner_body pt24" style="min-height: 64px;">
+                                                        <t t-call="website_membership.member_description"/>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </t>
+                                </t>
+                            </t>
+                        </div>
+                        <!-- Pager -->
+                            <div class='navbar m-5 o_pager'>
+                                <t t-call="website.pager">
+                                    <t t-set="classname" t-value="'mx-auto'"/>
+                                </t>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </t>
+</template>
+
+<!-- Member Image -->
+<template id="member_img" name="Member Image">
+    <a  t-attf-href="/members/#{slug(partner)}"
+        t-field="partner.image_128"
+        class="o_width_128 align-self-center"
+        t-options='{"widget": "image", "qweb_img_responsive": False, "class": "img o_image_128_max mx-auto"}'
+    ></a>
+</template>
+
+<!-- Member Description -->
+<template id="member_description" name="Member Description">
+    <a t-attf-href="/members/#{slug(partner)}">
+        <span t-field="partner.display_name"/>
+    </a>
+    <div t-field="partner.website_short_description"/>
+</template>
+
+<!-- Templates - Grid -->
+<template id="opt_members_grid" inherit_id="website_membership.index" active="False" customize_show="True" name="Grid Layout"/>
+
+<!-- Templates - Full Width -->
+<template id="opt_members_full_width" inherit_id="website_membership.index" active="False" customize_show="True" name="Full Width Layout"/>
+
+<!-- Templates - Cards -->
+<template id="opt_members_cards" inherit_id="website_membership.index" active="True" customize_show="True" name="Cards Design"/>
+
+<!-- Map Template -->
+<template id="opt_google_map" inherit_id="website_membership.index" customize_show="True" name="World Map">
+    <xpath expr="//div[hasclass('o_pager')]" position="after">
         <t t-if="google_maps_api_key">
             <!-- modal for large map -->
             <div role="dialog" class="modal fade partner_map_modal" tabindex="-1">
@@ -108,32 +244,52 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
                     </header>
                     <iframe t-attf-src="/google_map/?width=898&amp;height=485&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
-                    style="width:898px; height:485px; border:0; padding:0; margin:0;"></iframe>
+                    style="width:100%; height:485px; border:0; padding:0; margin:0;"></iframe>
                 </div>
               </div>
             </div>
             <!-- modal end -->
-            <h3>World Map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-external-link" role="img" aria-label="External link" title="External link"/></button></h3>
-            <ul class="nav">
-                <iframe t-attf-src="/google_map/?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
-                    style="width:260px; height:240px; border:0; padding:0; margin:0;"></iframe>
-            </ul>
+            <div id="o_members_map" class="row">
+                <div t-attf-class="#{opt_members_grid and 'col-12'} #{(not opt_members_grid) and 'col-xl-10 offset-xl-1'}">
+                    <h3 class="text-center mb-3">Expand map<button class="btn btn-link" data-toggle="modal" data-target=".partner_map_modal"><span class="fa fa-expand" role="img" aria-label="External link" title="External link"/></button></h3>
+                    <iframe t-attf-src="/google_map?width=260&amp;height=240&amp;partner_ids=#{ google_map_partner_ids }&amp;partner_url=/members/"
+                            style="width:100%; height:240px; border:0; padding:0; margin:0;" scrolling="no"></iframe>
+                </div>
+            </div>
         </t>
     </xpath>
 </template>
 
-<template id="partner" name="Members">
-    <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure" id="oe_structure_website_membership_partner_1"/>
+<!-- Membership - Details -->
+<template id="details" name="Member Details">
+    <t t-call="website_membership.layout">
+        <t t-set="ref_content">
             <div class="container">
+            <!-- Topbar -->
+            <t t-set="o_members_topbar_title">
+                <a t-attf-href="/members">
+                    <i class="fa fa-long-arrow-left text-primary mr-2"/>Our Members
+                </a>
+            </t>
                 <div class="row">
-                    <t t-call="website_partner.partner_detail"/>
+                    <!-- Partner Detail -->
+                    <t t-call="website_partner.partner_detail">
+                        <!-- Right Column -->
+                        <t t-set="right_column">
+                            <div id="right_column" class="mb64"/>
+                        </t>
+                    </t>
                 </div>
             </div>
-            <div class="oe_structure" id="oe_structure_website_membership_partner_2"/>
-        </div>
+        </t>
     </t>
+</template>
+
+<!-- Stylesheets -->
+<template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey assets">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_membership/static/src/scss/website_membership_templates.scss"/>
+    </xpath>
 </template>
 
 </odoo>

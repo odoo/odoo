@@ -135,6 +135,7 @@ class WebsiteCustomer(http.Controller):
             'search_path': "?%s" % werkzeug.urls.url_encode(post),
             'tag': tag,
             'tags': tags,
+            'current_tag': tag or False,
             'google_maps_api_key': google_maps_api_key,
         }
         return request.render("website_customer.index", values)

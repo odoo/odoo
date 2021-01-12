@@ -1,0 +1,84 @@
+.o_partners_topbar_filters {
+    .dropdown-toggle {
+        border: $border-width solid gray('400');
+        @include o-bg-color(gray('white'), $with-extras: false);
+        @include border-radius($dropdown-border-radius);
+        @include hover-focus {
+            border-color: theme-color('primary');
+            color: theme-color('primary');
+            text-decoration: none;
+        }
+        &:after {
+            margin-left: 1.2em;
+        }
+        .fa {
+            margin-right: .4em;
+            color: theme-color('primary');
+        }
+    }
+    .dropdown-menu {
+        margin-top: $navbar-padding-y;
+        min-width: 12rem;
+    }
+    .dropdown-item {
+        &.active .badge { // Invert badge display when the item is active
+            background-color: color-yiq(theme-color('primary'));
+            color: theme-color('primary');
+        }
+    }
+}
+
+.o_partners_index_banner {
+    background: linear-gradient(150deg, #875a7b 20%, #62495b 80%) !important;
+}
+
+#ref_content {
+    @include media-breakpoint-down(sm) {
+        .border-right {
+            border: none !important;
+        }
+    }
+}
+
+.o_partner_detail {
+    div[class^="d-flex align-items-baseline"] ~ div:last-of-type {
+        display: inline-flex !important;
+        align-items: baseline !important;
+    }
+    span[class^="w-100 o_force_ltr d-block"] {
+        padding-left: .5rem;
+    }
+    .fa {
+        padding-right: .5rem;
+    }
+    .fa-fw {
+        text-align: left !important;
+        width: unset !important;
+    }
+    @include media-breakpoint-down(md) {
+        &.border-right {
+            border: none !important;
+        }
+        span[class^="w-100 o_force_ltr d-block"] {
+            padding-left: unset;
+        }
+        div[class^="d-flex align-items-baseline"] {
+            justify-content: center !important;
+            .fa-fw,
+            .w-100 {
+                width: auto !important;
+            }
+        }
+    }
+}
+
+.o_partner_body {
+    &.pt24 {
+        padding-top: 0 !important;
+    }
+    @include media-breakpoint-down(sm) {
+        &.pt24 {
+            padding-top: 24px !important;
+        }
+    }
+}

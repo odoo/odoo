@@ -155,7 +155,7 @@ class WebsiteMembership(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search': "?%s" % werkzeug.urls.url_encode(post),
+            'search_path': "?%s" % werkzeug.urls.url_encode(post),
             'search_count': count_members,
             'google_maps_api_key': google_maps_api_key,
         }
@@ -170,5 +170,5 @@ class WebsiteMembership(http.Controller):
             if partner.exists() and partner.website_published:  # TODO should be done with access rules
                 values = {}
                 values['main_object'] = values['partner'] = partner
-                return request.render("website_membership.partner", values)
+                return request.render("website_membership.details", values)
         return self.members(**post)
