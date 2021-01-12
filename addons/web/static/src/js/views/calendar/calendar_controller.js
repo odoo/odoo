@@ -225,9 +225,10 @@ var CalendarController = AbstractController.extend({
         if (modelData.target_date.format('YYYY-MM-DD') === event.data.date.format('YYYY-MM-DD')) {
             // When clicking on same date, toggle between the two views
             switch (modelData.scale) {
+                case 'year': this.model.setScale('month'); break;
                 case 'month': this.model.setScale('week'); break;
                 case 'week': this.model.setScale('day'); break;
-                case 'day': this.model.setScale('month'); break;
+                case 'day': this.model.setScale('year'); break;
             }
         } else if (modelData.target_date.week() === event.data.date.week()) {
             // When clicking on a date in the same week, switch to day view

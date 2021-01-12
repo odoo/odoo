@@ -1616,7 +1616,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('use mini calendar', async function (assert) {
-        assert.expect(12);
+        assert.expect(14);
 
         var calendar = await createCalendarView({
             View: CalendarView,
@@ -1650,7 +1650,15 @@ QUnit.module('Views', {
         await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(18)'));
         assert.containsOnce(calendar, '.fc-timeGridDay-view', "should be in day mode");
         assert.containsN(calendar, '.fc-event', 2, "should display 2 events on the day");
-        // Clicking on the same day should toggle between day, month and week views
+        // Clicking on the same day should toggle between day, week, month and year views
+        await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(18)'));
+        const events = [...calendar.el.querySelectorAll("[data-event-id]")].map(elem => {
+            return elem.getAttribute('data-event-id');
+        });
+        const yearEventsLength = Array.from(new Set(events)).length;
+        assert.containsOnce(calendar, '.fc-dayGridYear-view', "should be in year mode");
+        assert.strictEqual(yearEventsLength, 7, "should display 8 events on the year");
+
         await testUtils.dom.click(calendar.$('.o_calendar_mini a:contains(18)'));
         assert.containsOnce(calendar, '.fc-dayGridMonth-view', "should be in month mode");
         assert.containsN(calendar, '.fc-event', 7, "should display 7 events on the month (event 5 is on multiple weeks and generates to .fc-event)");
