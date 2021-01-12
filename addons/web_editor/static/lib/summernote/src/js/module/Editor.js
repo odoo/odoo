@@ -317,9 +317,19 @@ define([
       this[commands[idx]] = (function (sCmd) {
         return function ($editable, value) {
           beforeCommand($editable);
+          var parentEl = window.getSelection().baseNode.parentElement;
+          var centeredButton = (sCmd === 'justifyCenter' && parentEl.classList.contains('btn'));
+          if (centeredButton) {
+            // This hack remove the class .btn from button during --> document.execCommand('justifyCenter')
+            // because the Chrome browser doesnt want apply 'text-align: center' on nodes with centered children.
+            parentEl.classList.remove('btn')
+          }
 
           document.execCommand(sCmd, false, value);
 
+          if (centeredButton) {
+            parentEl.classList.add('btn')
+          }
           afterCommand($editable, true);
         };
       })(commands[idx]);
