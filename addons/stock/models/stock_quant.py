@@ -389,13 +389,12 @@ class StockQuant(models.Model):
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
 
         incoming_dates = [d for d in quants.mapped('in_date') if d]
-        incoming_dates = [fields.Datetime.from_string(incoming_date) for incoming_date in incoming_dates]
         if in_date:
             incoming_dates += [in_date]
         # If multiple incoming dates are available for a given lot_id/package_id/owner_id, we
         # consider only the oldest one as being relevant.
         if incoming_dates:
-            in_date = fields.Datetime.to_string(min(incoming_dates))
+            in_date = min(incoming_dates)
         else:
             in_date = fields.Datetime.now()
 
@@ -426,7 +425,7 @@ class StockQuant(models.Model):
                 'owner_id': owner_id and owner_id.id,
                 'in_date': in_date,
             })
-        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), fields.Datetime.from_string(in_date)
+        return self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=False, allow_negative=True), in_date
 
     @api.model
     def _update_reserved_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
