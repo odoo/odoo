@@ -45,7 +45,7 @@ const PopupWidget = publicWidget.Widget.extend({
         let delay = $main.data('showAfter');
 
         if (config.device.isMobile) {
-            if (display === 'onExit') {
+            if (display === 'mouseExit') {
                 display = 'afterDelay';
                 delay = 5000;
             }
