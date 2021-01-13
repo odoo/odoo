@@ -234,6 +234,7 @@ class StockMoveLine(models.Model):
         for key, model in triggers:
             if key in vals:
                 updates[key] = self.env[model].browse(vals[key])
+        untracked_move_lines = set()
 
         # When we try to write on a reserved move line any fields from `triggers` or directly
         # `product_uom_qty` (the actual reserved quantity), we need to make sure the associated
@@ -278,6 +279,7 @@ class StockMoveLine(models.Model):
                                 q = Quant._update_reserved_quantity(ml.product_id, updates.get('location_id', ml.location_id), new_product_uom_qty, lot_id=False,
                                                                      package_id=updates.get('package_id', ml.package_id), owner_id=updates.get('owner_id', ml.owner_id), strict=True)
                                 reserved_qty = sum([x[1] for x in q])
+                                untracked_move_lines.add(ml.id)
                             except UserError:
                                 pass
                     if reserved_qty != new_product_uom_qty:
@@ -331,6 +333,12 @@ class StockMoveLine(models.Model):
                     ml._log_message(ml.picking_id, ml, 'stock.track_move_template', vals)
 
         res = super(StockMoveLine, self).write(vals)
+
+        # When updating lot_id, the write above will do it even if it was not able to reserve
+        # quants from that lot and untracked quants were reserved instead.
+        # lot_id has to be set to False if untracked quants were reserved.
+        for ml in self.filtered(lambda ml: ml.id in untracked_move_lines):
+            super(StockMoveLine, ml).write({'lot_id': False})
 
         # Update scrap object linked to move_lines to the new quantity.
         if 'qty_done' in vals:
