@@ -433,6 +433,14 @@ class MrpWorkorder(models.Model):
         if float_compare(self.qty_producing, 0, precision_rounding=self.product_uom_id.rounding) <= 0:
             raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
 
+        # Ensure serial numbers are used once
+        if self.product_id.tracking == 'serial' and self.finished_lot_id:
+            line = self.finished_workorder_line_ids.filtered(
+                lambda line: line.lot_id.id == self.finished_lot_id.id
+            )
+            if line:
+                raise UserError(_('You cannot produce the same serial number twice.'))
+
         # If last work order, then post lots used
         if not self.next_work_order_id:
             self._update_finished_move()
