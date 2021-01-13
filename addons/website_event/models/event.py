@@ -43,7 +43,8 @@ class Event(models.Model):
         if self.env.user != self.env['website'].get_current_website().user_id:
             email = self.env.user.partner_id.email
             for event in self:
-                domain = ['&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id), ('event_id', '=', event.id)]
+                domain = ['&','&', '|', ('email', '=', email), ('partner_id', '=', self.env.user.partner_id.id),
+                          ('event_id', '=', event.id), ('state', '!=', 'cancel')]
                 event.is_participating = self.env['event.registration'].search_count(domain)
         else:
             self.is_participating = False
