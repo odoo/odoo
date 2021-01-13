@@ -20,8 +20,8 @@ class SaleOrder(models.Model):
                 # The quantity should be computed based on the warehouse of the website, not the
                 # warehouse of the SO.
                 website = self.env['website'].get_current_website()
-                if cart_qty > line.product_id.with_context(warehouse=website.warehouse_id.id).virtual_available and (line_id == line.id):
-                    qty = line.product_id.with_context(warehouse=website.warehouse_id.id).virtual_available - cart_qty
+                if cart_qty > line.product_id.with_context(warehouse=website._website_warehouse().id).virtual_available and (line_id == line.id):
+                    qty = line.product_id.with_context(warehouse=website._website_warehouse().id).virtual_available - cart_qty
                     new_val = super(SaleOrder, self)._cart_update(line.product_id.id, line.id, qty, 0, **kwargs)
                     values.update(new_val)
 

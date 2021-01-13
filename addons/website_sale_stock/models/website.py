@@ -20,3 +20,11 @@ class Website(models.Model):
             if warehouse_id:
                 values['warehouse_id'] = warehouse_id
         return values
+
+    def _website_warehouse(self):
+        self.ensure_one()
+        warehouse = self.warehouse_id
+        if not warehouse:
+            warehouses = self.env['stock.warehouse'].sudo().search([('company_id', '=', self.company_id.id)])
+            warehouse = warehouses if len(warehouses) == 1 else warehouse
+        return warehouse
