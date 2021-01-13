@@ -3,16 +3,16 @@
 # 	* sale_timesheet
 # 
 # Translators:
-# Triine Aavik <triine@avalah.ee>, 2020
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
 # Egon Raamat <egon@avalah.ee>, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
 # Martin Trigaux, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Algo Kärp <algokarp@gmail.com>, 2020
 # Piia Paurson <piia@avalah.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
+# atriine <triine@avalah.ee>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Piia Paurson <piia@avalah.ee>, 2020\n"
+"Last-Translator: atriine <triine@avalah.ee>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -74,6 +74,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
@@ -93,6 +95,9 @@ msgid ""
 "                                                                Non Billable Tasks\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Includes the time logged into a task which is not linked to any Sales Order.\">\n"
+"                                                                MItte arveldatavad ülesanded\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -101,11 +106,14 @@ msgid ""
 "                                                                Non Billable Timesheets\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\">\n"
+"                                                                Mitte-arveldatavad ajaarvestuslehed\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Time Billing</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Ajaarveldus</span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_kanban_inherit_sale_timesheet
@@ -115,7 +123,7 @@ msgstr "<span class=\"o_label\">Ülevaade</span>"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "<span class=\"o_stat_text\">Recorded</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kirja pandud</span>"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -235,14 +243,14 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Before"
-msgstr ""
+msgstr "Enne"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__allow_billable
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__allow_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billable"
-msgstr ""
+msgstr "Arveldatav"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_type
@@ -253,20 +261,20 @@ msgstr "Arvelduse tüüp"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed at a Fixed Price"
-msgstr ""
+msgstr "FIkseeritud hinnaga arveldus"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "FIkseeritud hinnaga arveldus"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "Arveldatakse ajaarvestuslehelt"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -289,14 +297,14 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.ui.menu,name:sale_timesheet.menu_timesheet_billing_analysis
 msgid "By Billing Type"
-msgstr ""
+msgstr "Arveldustüübi järgi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_invoice_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_create_sale_order_view_form
 msgid "Cancel"
-msgstr "Loobu"
+msgstr "Tühista"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -324,7 +332,7 @@ msgstr "Ettevõte"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Configure your services"
-msgstr ""
+msgstr "Konfigureerige oma teenused"
 
 #. module: sale_timesheet
 #: model:ir.filters,name:sale_timesheet.ir_filter_project_profitability_report_costs_and_revenues
@@ -444,8 +452,8 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
-msgid "Customer Type"
-msgstr ""
+msgid "Invoice Tasks to"
+msgstr "Arvelda ülesandeid"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -484,7 +492,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Service"
-msgstr ""
+msgstr "Vaikimisi teenus"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_invoice_page_inherit_timesheet
@@ -570,7 +578,7 @@ msgstr "Fikseeritud hinnaga teenused"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
-msgid "Fixed rate"
+msgid "Project rate"
 msgstr ""
 
 #. module: sale_timesheet
@@ -603,7 +611,7 @@ msgstr "Kulutatud tunnid"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Hours recorded"
-msgstr ""
+msgstr "Kirja pandud tunnid"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__id
@@ -676,8 +684,8 @@ msgstr "Arve"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
-msgid "Invoice all tasks to a single customer"
-msgstr ""
+msgid "A unique customer"
+msgstr "Kindel klient"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -686,19 +694,19 @@ msgstr "Arve on loodud ajaarvestuse põhjal"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
-msgid "Invoice tasks separately to different customers"
-msgstr ""
+msgid "Different customers"
+msgstr "Erinevad kliendid"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__allow_billable
 msgid "Invoice your time and material from tasks."
-msgstr ""
+msgstr "Arveldage ülesannete pealt edasi kulunud aega ja materjali."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "Arveldage klientidele edasi kulunud aega ja materjale."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -797,7 +805,7 @@ msgstr "Üle tähtaja"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_task_view_form_inherit_sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_task_form2_inherit_sale_timesheet
 msgid "Leave empty if non-billable"
-msgstr ""
+msgstr "Jätke tühjaks, kui pole arveldatav"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__line_ids
@@ -868,7 +876,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "No Sales Order"
-msgstr ""
+msgstr "Müügitellimus puudub"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -876,7 +884,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "No Sales Order Line"
-msgstr ""
+msgstr "Müügitellimuse rida puudub"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable_project
@@ -893,28 +901,28 @@ msgstr "Ei ole arveldatav"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non Billable Tasks"
-msgstr ""
+msgstr "MItte arveldatavad ülesanded"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable_timesheet
 msgid "Non Billable Timesheet"
-msgstr ""
+msgstr "Mitte-arveldatavad ajaarvestuslehed"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
-msgstr ""
+msgstr "MItte arveldatavad ülesanded"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable timesheets"
-msgstr ""
+msgstr "Ei ole arveldatavad ajaarvestuslehed"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__non_allow_billable
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__non_allow_billable
 msgid "Non-Billable"
-msgstr ""
+msgstr "Pole arveldatav"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_bank_statement_line__timesheet_count
@@ -936,24 +944,24 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
-msgid "Ordered quantities"
-msgstr "Tellitud kogused"
+msgid "Prepaid"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
 msgid "Other Costs"
-msgstr ""
+msgstr "Muud kulud"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__other_revenues
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other Revenues"
-msgstr ""
+msgstr "Muud tulud"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Other costs"
-msgstr ""
+msgstr "Muud kulud"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_timesheet_action_client_timesheet_plan
@@ -1028,18 +1036,18 @@ msgstr "Projektid"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__company_id
 msgid "Project Company"
-msgstr ""
+msgstr "Projekti ettevõte"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_profitability_report_action
 #: model:ir.ui.menu,name:sale_timesheet.menu_project_profitability_analysis
 msgid "Project Costs and Revenues"
-msgstr ""
+msgstr "Projektikulud ja -tulud"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
 msgid "Project Currency"
-msgstr ""
+msgstr "Projekti valuuta"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
@@ -1051,7 +1059,7 @@ msgstr "Projektijuht"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
 msgid "Project Overview"
-msgstr ""
+msgstr "Projekti ülevaade"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_profitability_report
@@ -1113,13 +1121,13 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Recorded Hours and Profitability"
-msgstr ""
+msgstr "Kirja pandud tunnid ja kasumlikkus"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "Remaining"
-msgstr "Remaining"
+msgstr "Allesjäänud"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1227,7 +1235,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
-msgstr ""
+msgstr "Valige mitte arveldatav projekt, millesse luuakse ülesanne."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -1254,13 +1262,13 @@ msgstr "Teenus"
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_policy
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_policy
 msgid "Service Invoicing Policy"
-msgstr ""
+msgstr "Teenuse arvelduse meetod"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.time_product
 #: model:product.template,name:sale_timesheet.time_product_product_template
 msgid "Service on Timesheet"
-msgstr ""
+msgstr "Teenus ajaarvestuslehel"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1385,6 +1393,8 @@ msgid ""
 "The timesheet product is required when the task can be billed and timesheets"
 " are allowed."
 msgstr ""
+"Ajaarvestuslehe toode on nõutud siis, kui ülesanne on arveldatav ja "
+"ajaarvestuslehed on lubatud."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1405,6 +1415,9 @@ msgid ""
 "compare the amount to invoice, the ones already invoiced and the project "
 "cost (via timesheet cost of your employees)."
 msgstr ""
+"See raport võimaldab teil analüüsida oma projektide kasumlikkust: võrrelge "
+"arveldatavaid koguseid, juba arveldatud koguseid ja projektikulusid (teie "
+"töötajate tunnipalga kulude kaudu)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
@@ -1449,12 +1462,12 @@ msgstr "Tunnihind (kulu)"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_hr_timesheet_line_pivot_billing_rate
 msgid "Timesheet Costs"
-msgstr ""
+msgstr "Tunnihind (kulu)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Duration"
-msgstr ""
+msgstr "Ajaarvestuslehe kestus"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
@@ -1464,12 +1477,12 @@ msgstr "Ajaarvestuse kodeerimise üksus"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__timesheet_product_id
 msgid "Timesheet Product"
-msgstr ""
+msgstr "Ajaarvestuslehe toode"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr ""
+msgstr "Ajaarvestuslehe kogukestus"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
@@ -1484,7 +1497,7 @@ msgstr "Müügiga seotud ajaarvestuse tegevused"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Timesheet costs"
-msgstr ""
+msgstr "Tunnihind (kulu)"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account_move.py:0
@@ -1503,7 +1516,7 @@ msgstr "Tööaja ajaarvestusleht"
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
 msgid "Timesheets By Billing Type"
-msgstr ""
+msgstr "Ajaarvestus arveldustüüpide järgi"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -1695,4 +1708,4 @@ msgstr "tundi"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #, python-format
 msgid "in Overtime"
-msgstr ""
+msgstr "Ületunnitööd"

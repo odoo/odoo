@@ -251,15 +251,7 @@ var FileWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        if (this.$media.is('img')) {
-            return;
-        }
-        var allImgClasses = /(^|\s+)((img(\s|$)|img-(?!circle|rounded|thumbnail))[^\s]*)/g;
-        var allImgClassModifiers = /(^|\s+)(rounded-circle|shadow|rounded|img-thumbnail|mx-auto)([^\s]*)/g;
-        this.media.className = this.media.className && this.media.className
-            .replace('o_we_custom_image', '')
-            .replace(allImgClasses, ' ')
-            .replace(allImgClassModifiers, ' ');
+        this.media.className = this.media.className && this.media.className.replace(/(^|\s+)(o_image)(?=\s|$)/g, ' ');
     },
     /**
      * Returns the domain for attachments used in media dialog.
@@ -412,7 +404,7 @@ var FileWidget = SearchableMediaWidget.extend({
         }
 
         const img = selected[0];
-        if (!img || !img.id) {
+        if (!img || !img.id || this.$media.attr('src') === img.image_src) {
             return this.media;
         }
 
@@ -955,6 +947,14 @@ var ImageWidget = FileWidget.extend({
         this.libraryMedia = [];
         this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    _clear: function (type) {
+        // Not calling _super: we don't want to call the document widget's _clear method on images
+        var allImgClasses = /(^|\s+)(img|img-\S*|o_we_custom_image|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
+        this.media.className = this.media.className && this.media.className.replace(allImgClasses, ' ');
+    },
 });
 
 
@@ -1034,9 +1034,11 @@ var IconWidget = SearchableMediaWidget.extend({
             var cls = classes[i];
             if (_.contains(this.alias, cls)) {
                 this.selectedIcon = cls;
+                this.initialIcon = cls;
                 this._highlightSelectedIcon();
             }
         }
+        // Kept for compat in stable, no longer in use: remove in master
         this.nonIconClasses = _.without(classes, 'media_iframe_video', this.selectedIcon);
 
         return this._super.apply(this, arguments);
@@ -1052,7 +1054,6 @@ var IconWidget = SearchableMediaWidget.extend({
     save: function () {
         var style = this.$media.attr('style') || '';
         var iconFont = this._getFont(this.selectedIcon) || {base: 'fa', font: ''};
-        var finalClasses = _.uniq(this.nonIconClasses.concat([iconFont.base, iconFont.font]));
         if (!this.$media.is('span, i')) {
             var $span = $('<span/>');
             $span.data(this.$media.data());
@@ -1060,10 +1061,8 @@ var IconWidget = SearchableMediaWidget.extend({
             this.media = this.$media[0];
             style = style.replace(/\s*width:[^;]+/, '');
         }
-        this.$media.attr({
-            class: _.compact(finalClasses).join(' '),
-            style: style || null,
-        });
+        this.$media.removeClass(this.initialIcon).addClass([iconFont.base, iconFont.font]);
+        this.$media.attr('style', style || null);
         return Promise.resolve(this.media);
     },
     /**
@@ -1101,7 +1100,7 @@ var IconWidget = SearchableMediaWidget.extend({
      * @override
      */
     _clear: function () {
-        var allFaClasses = /(^|\s)(fa(\s|$)|fa-[^\s]*)/g;
+        var allFaClasses = /(^|\s)(fa|(text-|bg-|fa-)\S*|rounded-circle|rounded|thumbnail|shadow)(?=\s|$)/g;
         this.media.className = this.media.className && this.media.className.replace(allFaClasses, ' ');
     },
     /**

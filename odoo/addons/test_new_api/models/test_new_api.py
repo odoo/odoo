@@ -400,6 +400,7 @@ class ComputeInverse(models.Model):
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
+    baz = fields.Char()
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -411,6 +412,11 @@ class ComputeInverse(models.Model):
         self._context.get('log', []).append('inverse')
         for record in self:
             record.foo = record.bar
+
+    @api.constrains('bar', 'baz')
+    def _check_constraint(self):
+        if self._context.get('log_constraint'):
+            self._context.get('log', []).append('constraint')
 
 
 class MultiComputeInverse(models.Model):
@@ -513,6 +519,22 @@ class ComputeRecursive(models.Model):
                 rec.display_name = rec.name
 
 
+class ComputeRecursiveTree(models.Model):
+    _name = 'test_new_api.recursive.tree'
+    _description = 'Test New API Recursive with one2many field'
+
+    name = fields.Char(required=True)
+    parent_id = fields.Many2one('test_new_api.recursive.tree', ondelete='cascade')
+    children_ids = fields.One2many('test_new_api.recursive.tree', 'parent_id')
+    display_name = fields.Char(compute='_compute_display_name', store=True)
+
+    @api.depends('name', 'children_ids.display_name')
+    def _compute_display_name(self):
+        for rec in self:
+            children_names = rec.mapped('children_ids.display_name')
+            rec.display_name = '%s(%s)' % (rec.name, ', '.join(children_names))
+
+
 class ComputeCascade(models.Model):
     _name = 'test_new_api.cascade'
     _description = 'Test New API Cascade'
@@ -553,6 +575,7 @@ class ComputeOnchange(models.Model):
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', store=True)
     baz = fields.Char(compute='_compute_baz', store=True, readonly=False)
+    count = fields.Integer(default=0)
     line_ids = fields.One2many(
         'test_new_api.compute.onchange.line', 'record_id',
         compute='_compute_line_ids', store=True, readonly=False
@@ -561,6 +584,10 @@ class ComputeOnchange(models.Model):
         'test_new_api.multi.tag',
         compute='_compute_tag_ids', store=True, readonly=False,
     )
+
+    @api.onchange('foo')
+    def _onchange_foo(self):
+        self.count += 1
 
     @api.depends('foo')
     def _compute_bar(self):
@@ -642,19 +669,27 @@ class ComputeUnassigned(models.Model):
 
     @api.depends('foo')
     def _compute_bar(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bar = record.foo
 
     @api.depends('foo')
     def _compute_bare(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bare = record.foo
 
     @api.depends('foo')
     def _compute_bars(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bars = record.foo
 
     @api.depends('foo')
     def _compute_bares(self):
-        pass
+        for record in self:
+            if record.foo == "assign":
+                record.bares = record.foo
 
 
 class ModelBinary(models.Model):

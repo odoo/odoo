@@ -15,8 +15,8 @@
 # Martin Trigaux, 2020
 # Norimichi Sugimoto <norimichi.sugimoto@tls-ltd.co.jp>, 2020
 # Noma Yuki, 2020
-# Yoshi Tashiro <tashiro@roomsfor.hk>, 2020
 # Shigekazu N. <shigekazu.noka@gmail.com>, 2020
+# Yoshi Tashiro <tashiro@roomsfor.hk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Shigekazu N. <shigekazu.noka@gmail.com>, 2020\n"
+"Last-Translator: Yoshi Tashiro <tashiro@roomsfor.hk>, 2021\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22248,6 +22248,12 @@ msgid ""
 msgstr "あなたがアクセスしようとしている文書のいずれかが削除されているようです。再読み込みし、再試行してください。"
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -26176,7 +26182,7 @@ msgstr "ドキュメントアプリに従業員の休暇ドキュメントを保
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__store
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
 msgid "Stored"
-msgstr "保管済"
+msgstr "保管対象"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__store_fname

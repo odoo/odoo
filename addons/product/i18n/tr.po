@@ -20,18 +20,18 @@
 # Umur Akın <umura@projetgrup.com>, 2020
 # Buket Şeker <buket_skr@hotmail.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
 # Ugur Yilmaz <ugurlu2001@hotmail.com>, 2020
 # Tugay Hatıl <tugayh@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Martin Trigaux, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
 "Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
@@ -280,7 +280,7 @@ msgstr "Aktivite Tipi Simgesi"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Add a quantity"
-msgstr ""
+msgstr "Miktar ekleyin"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__group_sale_pricelist
@@ -612,8 +612,8 @@ msgstr "İçerdiği Miktar"
 #. module: product
 #: model:product.product,name:product.product_product_13
 #: model:product.template,name:product.product_product_13_product_template
-msgid "Corner Desk Black"
-msgstr "Siyah Köşe Çalışma Masası"
+msgid "Corner Desk Left Sit"
+msgstr ""
 
 #. module: product
 #: model:product.product,name:product.product_product_5
@@ -779,12 +779,12 @@ msgstr "Tedarikçi fiyat listelerini tanımlayın."
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your volume unit of measure"
-msgstr ""
+msgstr "Hacim ölçü biriminizi tanımlayın"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Define your weight unit of measure"
-msgstr ""
+msgstr "Ağırlık ölçü biriminizi tanımlayın"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__delay
@@ -862,6 +862,7 @@ msgstr "İndirimler"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:product.field_res_country_group__display_name
 #: model:ir.model.fields,field_description:product.field_res_partner__display_name
+#: model:ir.model.fields,field_description:product.field_uom_uom__display_name
 msgid "Display Name"
 msgstr "Görünüm Adı"
 
@@ -1019,7 +1020,7 @@ msgstr "Genel Bilgi"
 #: model:ir.actions.server,name:product.action_product_price_list_report
 #: model:ir.actions.server,name:product.action_product_template_price_list_report
 msgid "Generate Pricelist"
-msgstr ""
+msgstr "Fiyat Listesi Oluştur"
 
 #. module: product
 #: model:ir.model.fields,help:product.field_product_product__packaging_ids
@@ -1089,6 +1090,7 @@ msgstr "Saat"
 #: model:ir.model.fields,field_description:product.field_res_config_settings__id
 #: model:ir.model.fields,field_description:product.field_res_country_group__id
 #: model:ir.model.fields,field_description:product.field_res_partner__id
+#: model:ir.model.fields,field_description:product.field_uom_uom__id
 msgid "ID"
 msgstr "ID"
 
@@ -1310,6 +1312,7 @@ msgstr "Büyük Toplantı Masası"
 #: model:ir.model.fields,field_description:product.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:product.field_res_country_group____last_update
 #: model:ir.model.fields,field_description:product.field_res_partner____last_update
+#: model:ir.model.fields,field_description:product.field_uom_uom____last_update
 msgid "Last Modified on"
 msgstr "Son Düzenleme"
 
@@ -1496,7 +1499,7 @@ msgstr "Sonraki Aktivite Türü"
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_supplierinfo_type_action
 msgid "No vendor pricelist found"
-msgstr ""
+msgstr "Tedarikçi fiyat listesi bulunamadı"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__message_needaction_counter
@@ -1938,6 +1941,11 @@ msgid "Product Type"
 msgstr "Ürün Türü"
 
 #. module: product
+#: model:ir.model,name:product.model_uom_uom
+msgid "Product Unit of Measure"
+msgstr "Ürün Ölçü Birimi"
+
+#. module: product
 #: model:ir.model.fields,field_description:product.field_product_pricelist_item__product_id
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__product_id
 #: model:ir.model.fields.selection,name:product.selection__product_pricelist_item__applied_on__0_product_variant
@@ -2037,7 +2045,7 @@ msgstr "Satınalma Ölçü Birimi"
 #: code:addons/product/static/src/xml/pricelist_report.xml:0
 #, python-format
 msgid "Quantities:"
-msgstr ""
+msgstr "Miktarlar:"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_supplierinfo__min_qty
@@ -2453,6 +2461,15 @@ msgstr ""
 "kullanılacaktır."
 
 #. module: product
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid ""
+"This rounding precision is higher than the Decimal Accuracy (%s digits).\n"
+"This may cause inconsistencies in computations.\n"
+"Please set a precision between %s and 1."
+msgstr ""
+
+#. module: product
 #: model:ir.model.fields,help:product.field_product_supplierinfo__product_code
 msgid ""
 "This vendor's product code will be used when printing a request for "
@@ -2764,7 +2781,7 @@ msgstr "Hacim"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Volume UoM"
-msgstr ""
+msgstr "Hacim Ölçü Birimi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_volume_volume_in_cubic_feet
@@ -2776,6 +2793,13 @@ msgstr "Hacim ölçü birimi"
 #: model:ir.model.fields,field_description:product.field_product_template__volume_uom_name
 msgid "Volume unit of measure label"
 msgstr "Hacim ölçü birimi etiketi"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#: code:addons/product/models/uom_uom.py:0
+#, python-format
+msgid "Warning!"
+msgstr "Uyarı!"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_search_view
@@ -2791,7 +2815,7 @@ msgstr "Ağırlık"
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.res_config_settings_view_form
 msgid "Weight UoM"
-msgstr ""
+msgstr "Ağırlık Ölçü Birimi"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_res_config_settings__product_weight_in_lbs
@@ -2809,6 +2833,16 @@ msgstr "Ağırlık ölçü birimi etiketi"
 #: model:product.template.attribute.value,name:product.product_4_attribute_2_value_1
 msgid "White"
 msgstr "Beyaz"
+
+#. module: product
+#: code:addons/product/models/decimal_precision.py:0
+#, python-format
+msgid ""
+"You are setting a Decimal Accuracy less precise than the UOMs:\n"
+"%s\n"
+"This may cause inconsistencies in computations.\n"
+"Please increase the rounding of those units of measure, or the digits of this Decimal Accuracy."
+msgstr ""
 
 #. module: product
 #: model_terms:ir.actions.act_window,help:product.product_pricelist_action2

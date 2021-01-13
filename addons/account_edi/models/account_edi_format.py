@@ -296,8 +296,11 @@ class AccountEdiFormat(models.Model):
             return to_process
 
         # Process embedded files.
-        for xml_name, content in pdf_reader.getAttachments():
-            to_process.extend(self._decode_xml(xml_name, content))
+        try:
+            for xml_name, content in pdf_reader.getAttachments():
+                to_process.extend(self._decode_xml(xml_name, content))
+        except NotImplementedError as e:
+            _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
 
         # Process the pdf itself.
         to_process.append({
