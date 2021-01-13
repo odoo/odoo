@@ -5,81 +5,76 @@
         <field name="model">project.update</field>
         <field name="arch" type="xml">
             <form string="Project Update" create="0">
-                <header>
-                    <button name="action_open_update_status" type="object" string="Update Status" class="oe_highlight"
-                            context="{'default_project_id': project_id}" states="posted"/>
-                    <button name="action_post" type="object" string="Post" class="oe_highlight" states="draft"/>
-                    <button name="action_draft" type="object" string="Reset to Draft" states="posted"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,posted"/>
-                </header>
                 <sheet>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <div class="oe_title">
-                                <h1>
-                                    <field name="name" class="o_text_overflow" placeholder="Project Update Title" attrs="{'readonly': [('state', '=', 'posted')]}"/>
-                                </h1>
-                            </div>
-                            <group>
-                                <field name="project_id" invisible="1"/>
-                                <field name="status_id" widget="status_with_color" domain="[('project_ids','=', project_id)]"
-                                        context="{'default_project_id': project_id}"
-                                        attrs="{'readonly': [('state', '=', 'posted')]}"/>
-                                <field name="progress" widget="basic_progressbar" attrs="{'readonly': [('state', '=', 'posted')]}"/>
-                            </group>
-                            <separator class="form-divider-h"/>
-                            <field name="description" attrs="{'readonly': [('state', '=', 'posted')]}"/>
-                        </div>
-                        <div class="col-md-4 form-divider-v">
-                            <h2>About this project</h2>
-                            <div class="o_project_info">
-                                <div class="logo">
-                                    <i class="fa fa-user o_project_circle" title="Project Manager"></i>
-                                </div>
-                                <div class="content">
-                                    <div class="label"><label for="project_user_id"/></div>
-                                    <div class="data"><field name="project_user_id" widget="many2one_avatar_user"/></div>
-                                </div>
-                            </div>
-                            <div class="o_project_info" attrs="{'invisible': [('project_date_deadline', '=', False)]}">
-                                <div class="logo">
-                                    <i class="fa fa-calendar-o o_project_circle" title="Deadline"></i>
-                                </div>
-                                <div class="content">
-                                    <div class="label"><label for="project_date_deadline" string="Deadline"/></div>
-                                    <div class="data"><field name="project_date_deadline" widget="remaining_days"/></div>
-                                </div>
-                            </div>
-                            <div class="o_project_info" attrs="{'invisible': [('project_description', '=', False)]}">
-                                <div class="logo">
-                                    <i class="fa fa-info o_project_circle" title="Description"></i>
-                                </div>
-                                <div class="content">
-                                    <div class="data"><field name="project_description" widget="project_html_see_more" options="{'nbr_char': '100'}"/></div>
-                                </div>
-                            </div>
-
-                            <separator class="form-divider-h"/>
-                            <h2>Milestones</h2>
-                            <!-- TODO Add milestones -->
-
-                            <separator class="form-divider-h"/>
-                            <div class="o_group_project_update">
-                                <h2>Previous Status Updates</h2>
-                                
-                                <field name="previous_status_update_ids" widget="one2many_project_update">
-                                    <tree>
-                                        <field name="name"/>
-                                        <field name="date"/>
-                                        <field name="status_id"/>
-                                        <field name="color"/>
-                                    </tree>
-                                </field>
-                            </div>
-                        </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" class="o_text_overflow" placeholder="Title of the Update"/>
+                        </h1>
                     </div>
+                    <group>
+                        <group>
+                            <field name="project_id" invisible="1"/>
+                            <field name="color" invisible="1"/>
+                            <field name="status_id" widget="status_with_color" domain="[('project_ids','=', project_id)]"
+                                    context="{'default_project_id': project_id}" options="{'no_open': 1, 'no_create': 1, 'color_field': 'color'}"
+                                    />
+                            <field name="progress" widget="basic_progressbar"/>
+                            <field name="user_id" readonly="1"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                    <separator class="form-divider-h"/>
+                    <field name="description"/>
                 </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" options="{'post_refresh':True}" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
             </form>
+        </field>
+    </record>
+
+    <record id="project_update_view_kanban" model="ir.ui.view">
+        <field name="name">project.update.view.kanban</field>
+        <field name="model">project.update</field>
+        <field name="arch" type="xml">
+            <kanban class="o_pupdate_kanban" sample="1" js_class="project_update_kanban">
+                <field name="color"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_global_click o_pupdate_kanban_card">
+                            <!-- Project Update Kanban View is always ungrouped - see js_class -->
+                            <div class="o_kanban_detail_ungrouped row mx-0">
+                                <div class="col-lg-2 o_wvisitor_name mr-2">
+                                    <h4><field name="name"/></h4>
+                                </div>
+                                <div class="col-lg-2 mx-2">
+                                    <field name="color" invisible="1"/>
+                                    <field name="status_id" widget="status_with_color" options="{'no_open': 1, 'color_field': 'color'}"/>
+                                </div>
+                                <div class="col-lg-2 mx-2">
+                                    <field name="progress" widget="basic_progressbar"/>
+                                    <div>Progress</div>
+                                </div>
+                                <div class="col-lg-2 mx-2">
+                                    <b><field name="date"/></b>
+                                    <div>Date</div>
+                                </div>
+                                <div class="col-lg-2 mx-2">
+                                    <b><field name="user_id" widget="many2one_avatar_user"/></b>
+                                    <b><t t-esc="record.user_id.value"/></b>
+                                    <div>Author</div>
+                                </div>
+                                <separator class="form-divider-h"/>
+                                <div class="col-lg-4 mr-2"> 
+                                    <field name="description" widget="project_html_see_more"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
@@ -119,10 +114,16 @@
         <field name="view_mode">form</field>
     </record>
 
-    <record id="project_update_posted_list" model="ir.actions.act_window">
-        <field name="name">Project Update</field>
+    <record id="project_update_posted_kanban" model="ir.actions.act_window">
+        <field name="name">Project Updates</field>
+        <field name="type">ir.actions.act_window</field>
         <field name="res_model">project.update</field>
-        <field name="domain">[('project_id', '=', active_id), ('state', '=', 'posted')]</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">kanban,form</field>
+        <field name="domain">[('project_id', '=', active_id)]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Wait for visitors to come to your website to see their history.
+          </p>
+        </field>
     </record>
 </odoo>

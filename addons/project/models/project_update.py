@@ -25,9 +25,7 @@ class ProjectUpdate(models.Model):
     _name = 'project.update'
     _description = 'Project Update'
     _order = 'create_date desc'
-
-    def _get_default_name(self):
-        return _("Status Update - %(date)s", date=fields.Date.to_string(fields.Date.today()))
+    _inherit = ['mail.thread.cc', 'mail.activity.mixin']
 
     def _get_default_status(self):
         project_id = self.env.context.get('default_project_id')
@@ -36,19 +34,12 @@ class ProjectUpdate(models.Model):
         return self.env['project.update.status'].search([('project_ids', '=', project_id)], limit=1)
 
     def _get_default_description(self):
-        return self.env['project.project'].browse(self.env.context.get('default_project_id')).update_description_template or \
-            self.env.company.project_update_description_template
+        return self.env['project.project'].browse(self.env.context.get('default_project_id')).status_updates_template or \
+            self.env.company.project_status_updates_template
 
-    name = fields.Char("Title", default=_get_default_name, required=True)
+    name = fields.Char("Title", required=True)
     status_id = fields.Many2one("project.update.status", copy=False, default=_get_default_status, required=True)
     color = fields.Integer(related="status_id.color")
-    state = fields.Selection(
-        selection=[
-            ('new', 'New'),
-            ('draft', 'Draft'),
-            ('posted', 'Posted')
-        ],
-        default="new", copy=False, required=True)
     progress = fields.Integer()
     user_id = fields.Many2one('res.users', string="Author", required=True, default=lambda self: self.env.user)
     description = fields.Html(default=_get_default_description)
@@ -63,22 +54,14 @@ class ProjectUpdate(models.Model):
     @api.model
     def create(self, vals):
         update = super(ProjectUpdate, self).create(vals)
-        update.state = 'draft'
         return update
 
     def action_open_update_status(self):
         last_draft = self.search_read([
             ('project_id', '=', self.project_id.id),
-            ('user_id', '=', self.env.uid),
-            ('state', '=', 'draft')
+            ('user_id', '=', self.env.uid)
         ], ['id'], limit=1)
         action = self.env["ir.actions.actions"]._for_xml_id("project.open_project_update_form")
         if last_draft:
             action['res_id'] = last_draft[0]['id']
         return action
-
-    def action_post(self):
-        self.write({'date': fields.Date.today(), 'state': 'posted'})
-
-    def action_draft(self):
-        self.write({'state': 'draft'})

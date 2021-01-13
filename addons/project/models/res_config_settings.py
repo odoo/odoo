@@ -12,7 +12,7 @@ class ResConfigSettings(models.TransientModel):
     group_subtask_project = fields.Boolean("Sub-tasks", implied_group="project.group_subtask_project")
     group_project_rating = fields.Boolean("Customer Ratings", implied_group='project.group_project_rating')
     group_project_recurring_tasks = fields.Boolean("Recurring Tasks", implied_group="project.group_project_recurring_tasks")
-    project_update_description_template = fields.Html(related='company_id.project_update_description_template', readonly=False)
+    project_status_updates_template = fields.Html(related='company_id.project_status_updates_template', readonly=False)
 
     def set_values(self):
 

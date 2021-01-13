@@ -122,7 +122,8 @@ odoo.define('project.project_update_widget', function (require) {
         _renderReadonly() {
             this._super.apply(this, arguments);
             if (this.value) {
-                this.$el.html(qweb.render(this._template, {
+                this.$el.empty();
+                this.$el.append(qweb.render(this._template, {
                     data: this.data,
                 }));
             }
@@ -130,8 +131,6 @@ odoo.define('project.project_update_widget', function (require) {
     });
 
     var ProjectUpdateDescriptionField = FieldHtml.extend({
-        _template: 'project.desc_see_more',
-        _template: 'project.desc_see_less',
         less: true,
         events: _.extend({}, FieldHtml.prototype.events, {
             'click .o_desc_see_more': '_onClickSeeMore',
@@ -143,14 +142,30 @@ odoo.define('project.project_update_widget', function (require) {
             this.nbrChar = this.nodeOptions.nbr_char || 100;
         },
 
+        /**
+         * @override
+         */
+        start: function() {
+            var self = this;
+            return this._super.apply(this, arguments).then(function () {
+                if(self.value){
+                    self.$el.addClass('o_project_html_see_more');
+                }
+            });
+        },
+
         _onClickSeeMore(ev) {
             ev.preventDefault();
+            ev.stopPropagation();
+            this.$el.slideUp();
             this.less = false;
             this._render();
         },
 
         _onClickSeeLess(ev) {
             ev.preventDefault();
+            ev.stopPropagation();
+            this.$el.slideUp();
             this.less = true;
             this._render();
         },
@@ -168,19 +183,20 @@ odoo.define('project.project_update_widget', function (require) {
             }
             if(this.less) {
                 this.old_value = this.value;
-                this.value = this.value.substring(0, this._computeEndOfSubstring()) + "<p>...</p>";
+                this.value = this.value.substring(0, this._computeEndOfSubstring());
             }
             this._super.apply(this, arguments);
             // render button
             if(this.less) {
                 var span = $('<span>').addClass('o_desc_see_more');
-                span.append($('<a>').text(_lt("See more...")));
+                span.text(_lt("See more..."));
                 this.$el.append(span);
             } else {
                 var span = $('<span>').addClass('o_desc_see_less');
-                span.append($('<a>').text(_lt("See less")));
+                span.text(_lt("See less"));
                 this.$el.append(span);
             }
+            this.$el.slideDown();
         },
 
         /**

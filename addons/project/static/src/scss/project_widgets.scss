@@ -15,15 +15,16 @@
 }
 
 .o_status_project_form {
-    @include float-right;
+    float: right;
     font-size: 1.5rem;
+    padding-right: 25px;
 }
 
 .o_form_sheet {
     $o-bubble-padding: 0.5rem;
     $o-bubble-size: 1.5rem;
 
-    // Resumé design
+    // Project update list design
     // =========================================
     .o_group_project_update {
         .o_data_row td {
@@ -82,15 +83,60 @@
     }
 }
 
-.o_desc_see_more, .o_desc_see_less {
-    @include float-right;
-
-    a {
+.o_project_html_see_more {
+    .o_desc_see_more, .o_desc_see_less {
         cursor: pointer;
         font-style: italic;
+        color: $o-brand-primary;
 
         &:hover, &:focus {
             text-decoration: underline;
         }
+    }
+}
+
+.o_pupdate_kanban {
+    &.o_kanban_ungrouped {
+        padding:0px;
+        .o_pupdate_kanban_card {
+            width: 100%;
+            margin: 0px;
+            border-top: 0px !important;
+            &:first-child {
+                border-bottom: 1px solid #dee2e6 !important;
+            }
+            .o_kanban_detail_ungrouped {
+                .o_pupdate_kanban_image {
+                    width: 56px;
+                    height: 56px;
+                    top: 0px;
+                    position: absolute;
+                }
+                .o_pupdate_name {
+                    padding-left: 72px;
+                }
+                .o_pupdate_kanban_actions_ungrouped {
+                    button {
+                        float: right;
+                        margin: 4px;
+                    }
+                }
+                .o_country_flag {
+                    margin-right: 8px;
+                }
+            }
+            .oe_kanban_details {
+                display:none !important;
+            }
+        }
+    }
+    &.o_kanban_grouped {
+        .o_kanban_detail_ungrouped {
+            display:none !important;
+        }
+    }
+
+    .o_project_html_see_more {
+        background-color: #f5f5f5;
     }
 }

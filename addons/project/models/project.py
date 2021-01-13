@@ -121,7 +121,7 @@ class Project(models.Model):
             project.task_count = result.get(project.id, 0)
 
     def _compute_update_count(self):
-        update_data = self.env['project.update'].read_group([('project_id', 'in', self.ids), ('state', '=', 'posted')], ['project_id'], ['project_id'])
+        update_data = self.env['project.update'].read_group([('project_id', 'in', self.ids)], ['project_id'], ['project_id'])
         result = dict((data['project_id'][0], data['project_id_count']) for data in update_data)
         for project in self:
             project.update_count = result.get(project.id, 0)
@@ -249,13 +249,13 @@ class Project(models.Model):
         ('quarterly', 'Quarterly'),
         ('yearly', 'Yearly')], 'Rating Frequency', required=True, default='monthly')
 
-    date_deadline = fields.Date(string='Deadline', index=True, copy=False, tracking=True)
+    date_deadline = fields.Date(string='Deadline', copy=False)
     update_status_ids = fields.Many2many('project.update.status', 'project_update_status_rel', 'project_id', 'update_status_id', string='Allowed Project States',
                                          default=_get_default_update_states)
-    update_ids = fields.One2many('project.update', 'project_id', domain=[('state', '!=', 'draft')])
+    update_ids = fields.One2many('project.update', 'project_id')
     last_update_id = fields.Many2one('project.update', string='Last Update', compute='_compute_last_update')
-    update_description_template = fields.Html(
-        compute='_compute_update_description_feedback', store=True, readonly=False)
+    status_updates_template = fields.Html(
+        compute='_compute_status_updates_template', store=True, readonly=False)
     update_count = fields.Integer(compute='_compute_update_count', string="Update Count")
 
     _sql_constraints = [
@@ -328,14 +328,13 @@ class Project(models.Model):
         # Intuitively, I'd have done it by using raw sql (SELECT ... WHERE NOT EXISTS (posted update depending on same project with greater create date))
         for project in self:
             project.last_update_id = self.env['project.update'].search([
-                ("project_id", "=", project.id),
-                ('state', '!=', 'draft')
+                ("project_id", "=", project.id)
             ], limit=1)
 
     @api.depends('company_id')
-    def _compute_update_description_feedback(self):
+    def _compute_status_updates_template(self):
         for project in self:
-            project.update_description_template = project.company_id.project_update_description_template or self.env.company.project_update_description_template
+            project.status_updates_template = project.company_id.project_status_updates_template or self.env.company.project_status_updates_template
 
     @api.model
     def _map_tasks_default_valeus(self, task, project):

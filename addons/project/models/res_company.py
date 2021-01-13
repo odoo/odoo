@@ -6,7 +6,7 @@ from odoo import fields, models
 class Company(models.Model):
     _inherit = 'res.company'
 
-    def _get_default_update_description_template(self):
+    def _get_default_status_updates_template(self):
         return """
 <p>
     <b>How is this project going?</b><br/><br/>
@@ -15,4 +15,4 @@ class Company(models.Model):
     <b>What are the next steps?</b><br/><br/>
 </p>"""
 
-    project_update_description_template = fields.Html(default=_get_default_update_description_template)
+    project_status_updates_template = fields.Html(default=_get_default_status_updates_template)

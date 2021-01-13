@@ -5,32 +5,16 @@ odoo.define('project.status_with_color', function (require) {
     const { FieldMany2One } = require('web.relational_fields');
     const { _lt, qweb } = require('web.core');
     
+    /**
+     * options :
+     * `color_field` : The field that must be use to color the bubble. It must be in the view. (from 0 to 11). Default : grey.
+     */
     var StatusWithColor = FieldMany2One.extend({
         _template: 'project.statusWithColor',
 
-        willStart: function(){
-            const promises = [];
-            promises.push(this._super.apply(this, arguments));
-            if(this.mode !== 'edit'){
-                promises.push(this._loadWidgetDataReadonly());
-            }
-            return Promise.all(promises);
-        },
-
-        
-        //--------------------------------------------------------------------------
-        // Private
-        //--------------------------------------------------------------------------
-        _loadWidgetDataReadonly: function(){
-            var self = this;
-            return this._rpc({
-                model: this.value.model,
-                method: 'search_read',
-                fields: ['id', 'color'],
-                domain: [['id', '=', this.value.res_id]],
-            }).then(data => {
-                self.color = data[0].color;
-            });
+        init: function () {
+            this._super.apply(this, arguments);
+            this.color = this.recordData[this.nodeOptions.color_field];
         },
         
         /**
