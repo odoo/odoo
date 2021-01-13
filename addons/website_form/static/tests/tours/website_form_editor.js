@@ -226,6 +226,39 @@ odoo.define('website_form_editor.tour', function (require) {
 
         ...addExistingField('attachment_ids', 'file', 'Invoice Scan'),
 
+        // Edit the submit button using linkDialog.
+        {
+            content: "Double click submit button to edit it",
+            trigger: '.s_website_form_send',
+            run: 'dblclick',
+        }, {
+            content: "Check that no URL field is suggested",
+            trigger: 'form:has(#o_link_dialog_label_input:hidden)',
+            run: () => null,
+        }, {
+            content: "Check that preview element has the same style",
+            trigger: '.o_link_dialog_preview:has(.s_website_form_send.btn.btn-lg.btn-primary)',
+            run: () => null,
+        }, {
+            content: "Change button's style",
+            trigger: 'label:has(input[name="link_style_color"][value="secondary"])',
+            run: () => {
+                $('input[name="link_style_color"][value="secondary"]').click();
+                $('select[name="link_style_shape"]').val('rounded-circle').change();
+                $('select[name="link_style_size"]').val('sm').change();
+            },
+        }, {
+            content: "Check that preview is updated too",
+            trigger: '.o_link_dialog_preview:has(.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle)',
+            run: () => null,
+        }, {
+            content: "Save changes from linkDialog",
+            trigger: '.modal-footer .btn-primary',
+        }, {
+            content: "Check the resulting button",
+            trigger: '.s_website_form_send.btn.btn-sm.btn-secondary.rounded-circle',
+            run: () => null,
+        },
         // Save the page
         {
             trigger: 'body',
