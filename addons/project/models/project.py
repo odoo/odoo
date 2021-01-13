@@ -746,7 +746,7 @@ class Task(models.Model):
             task.repeat_show_dow = task.recurring_task and task.repeat_unit == 'week'
             task.repeat_show_month = task.recurring_task and task.repeat_unit == 'year'
 
-    @api.depends('recurring_task', 'repeat_unit')
+    @api.depends('recurring_task')
     def _compute_repeat(self):
         rec_fields = self._get_recurrence_fields()
         defaults = self.default_get(rec_fields)
