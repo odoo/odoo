@@ -42,6 +42,33 @@ class PhoneMixin(models.AbstractModel):
         string='Blacklisted Phone Is Mobile', compute="_compute_blacklisted", compute_sudo=True, store=False, groups="base.group_user",
         help="Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted \
             when there is both a mobile and phone field in a model.")
+    phone_mobile_search = fields.Char("Phone/Mobile", store=False, search='_search_phone_mobile_search')
+
+    def _search_phone_mobile_search(self, operator, value):
+
+        if len(value) <= 2:
+            raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
+
+        query = f"""
+                SELECT model.id
+                FROM {self._table} model
+                WHERE REGEXP_REPLACE(model.phone, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
+                  OR REGEXP_REPLACE(model.mobile, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
+            """
+
+    # searching on +32485112233 should also finds 00485112233 (00 / + prefix are both valid)
+    # we therefore remove it from input value and search for both of them in db
+        if value.startswith('+') or value.startswith('00'):
+            value = value.replace('+', '').replace('00', '', 1)
+            starts_with = '00|\+'
+        else:
+            starts_with = '%'
+
+        self._cr.execute(query, (starts_with, value, starts_with, value))
+        res = self._cr.fetchall()
+        if not res:
+            return [(0, '=', 1)]
+        return [('id', 'in', [r[0] for r in res])]
 
     @api.depends(lambda self: self._phone_get_number_fields())
     def _compute_phone_sanitized(self):
