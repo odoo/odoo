@@ -31,8 +31,7 @@
                 </xpath>
                 <xpath expr="//field[@name='journal_id']" position="after">
                     <field name="edi_document_ids" invisible="1" />
-                    <field name="edi_state" invisible="1" />
-                    <field name="edi_state" attrs="{'invisible': ['|', ('edi_document_ids', '=', []), ('state', '=', 'draft')]}"/>
+                    <field name="edi_state" attrs="{'invisible': ['|', ('edi_state', '=', False), ('state', '=', 'draft')]}"/>
                 </xpath>
                 <xpath expr="//group[@name='group3']" position="after">
                     <group groups="base.group_no_one">
