@@ -3519,7 +3519,8 @@
         complete() {
             let component = this.component;
             this.isCompleted = true;
-            if (!this.target && !component.__owl__.isMounted) {
+            const { isMounted, isDestroyed } = component.__owl__;
+            if (isDestroyed) {
                 return;
             }
             // build patchQueue
@@ -3531,14 +3532,16 @@
             this._walk(doWork);
             const patchLen = patchQueue.length;
             // call willPatch hook on each fiber of patchQueue
-            for (let i = 0; i < patchLen; i++) {
-                const fiber = patchQueue[i];
-                if (fiber.shouldPatch) {
-                    component = fiber.component;
-                    if (component.__owl__.willPatchCB) {
-                        component.__owl__.willPatchCB();
+            if (isMounted) {
+                for (let i = 0; i < patchLen; i++) {
+                    const fiber = patchQueue[i];
+                    if (fiber.shouldPatch) {
+                        component = fiber.component;
+                        if (component.__owl__.willPatchCB) {
+                            component.__owl__.willPatchCB();
+                        }
+                        component.willPatch();
                     }
-                    component.willPatch();
                 }
             }
             // call __patch on each fiber of (reversed) patchQueue
@@ -3598,17 +3601,19 @@
                 this.component.env.qweb.trigger("dom-appended");
             }
             // call patched/mounted hook on each fiber of (reversed) patchQueue
-            for (let i = patchLen - 1; i >= 0; i--) {
-                const fiber = patchQueue[i];
-                component = fiber.component;
-                if (fiber.shouldPatch && !this.target) {
-                    component.patched();
-                    if (component.__owl__.patchedCB) {
-                        component.__owl__.patchedCB();
+            if (isMounted || inDOM) {
+                for (let i = patchLen - 1; i >= 0; i--) {
+                    const fiber = patchQueue[i];
+                    component = fiber.component;
+                    if (fiber.shouldPatch && !this.target) {
+                        component.patched();
+                        if (component.__owl__.patchedCB) {
+                            component.__owl__.patchedCB();
+                        }
                     }
-                }
-                else if (this.target ? inDOM : true) {
-                    component.__callMounted();
+                    else {
+                        component.__callMounted();
+                    }
                 }
             }
         }
@@ -4035,7 +4040,15 @@
             }
             if (__owl__.currentFiber) {
                 const currentFiber = __owl__.currentFiber;
-                if (currentFiber.target === target && currentFiber.position === position) {
+                if (!currentFiber.target && !currentFiber.position) {
+                    // this means we have a pending rendering, but it was a render operation,
+                    // not a mount operation. We can simply update the fiber with the target
+                    // and the position
+                    currentFiber.target = target;
+                    currentFiber.position = position;
+                    return scheduler.addFiber(currentFiber);
+                }
+                else if (currentFiber.target === target && currentFiber.position === position) {
                     return scheduler.addFiber(currentFiber);
                 }
                 else {
@@ -4079,10 +4092,7 @@
         async render(force = false) {
             const __owl__ = this.__owl__;
             const currentFiber = __owl__.currentFiber;
-            if (!__owl__.isMounted && !currentFiber) {
-                // if we get here, this means that the component was either never mounted,
-                // or was unmounted and some state change  triggered a render. Either way,
-                // we do not want to actually render anything in this case.
+            if (!__owl__.vnode && !currentFiber) {
                 return;
             }
             if (currentFiber && !currentFiber.isRendered && !currentFiber.isCompleted) {
@@ -4098,8 +4108,6 @@
                     if (fiber.isCompleted) {
                         return;
                     }
-                    // we are mounted (__owl__.isMounted), or if we are currently being
-                    // mounted (!isMounted), so we call __render
                     this.__render(fiber);
                 }
                 else {
@@ -5364,9 +5372,9 @@
     exports.utils = utils;
 
 
-    __info__.version = '1.2.1';
-    __info__.date = '2021-01-08T14:30:24.560Z';
-    __info__.hash = '25738a1';
+    __info__.version = '1.2.3';
+    __info__.date = '2021-01-19T14:42:29.241Z';
+    __info__.hash = '490cf18';
     __info__.url = 'https://github.com/odoo/owl';
 
 
