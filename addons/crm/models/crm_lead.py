@@ -179,7 +179,6 @@ class Lead(models.Model):
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)
     mobile = fields.Char('Mobile', compute='_compute_partner_id_values', readonly=False, store=True)
-    phone_mobile_search = fields.Char('Phone/Mobile', store=False, search='_search_phone_mobile_search')
     phone_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Phone Quality', compute="_compute_phone_state", store=True)
@@ -472,31 +471,6 @@ class Lead(models.Model):
                 lead.ribbon_message = _('By saving this change, the customer phone number will also be updated.')
             else:
                 lead.ribbon_message = False
-
-    def _search_phone_mobile_search(self, operator, value):
-        if len(value) <= 2:
-            raise UserError(_('Please enter at least 3 digits when searching on phone / mobile.'))
-
-        query = f"""
-                SELECT model.id
-                FROM {self._table} model
-                WHERE REGEXP_REPLACE(model.phone, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
-                  OR REGEXP_REPLACE(model.mobile, '[^\d+]+', '', 'g') SIMILAR TO CONCAT(%s, REGEXP_REPLACE(%s, '\D+', '', 'g'), '%%')
-            """
-
-        # searching on +32485112233 should also finds 00485112233 (00 / + prefix are both valid)
-        # we therefore remove it from input value and search for both of them in db
-        if value.startswith('+') or value.startswith('00'):
-            value = value.replace('+', '').replace('00', '', 1)
-            starts_with = '00|\+'
-        else:
-            starts_with = '%'
-
-        self._cr.execute(query, (starts_with, value, starts_with, value))
-        res = self._cr.fetchall()
-        if not res:
-            return [(0, '=', 1)]
-        return [('id', 'in', [r[0] for r in res])]
 
     @api.onchange('phone', 'country_id', 'company_id')
     def _onchange_phone_validation(self):
