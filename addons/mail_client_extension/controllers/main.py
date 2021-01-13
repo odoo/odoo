@@ -12,6 +12,7 @@ import werkzeug
 import odoo.addons.iap.tools.iap_tools
 from odoo import http, tools
 from odoo.http import request
+from odoo.osv import expression
 from odoo.tools.misc import formatLang
 
 _logger = logging.getLogger(__name__)
@@ -130,11 +131,16 @@ class MailClientExtensionController(http.Controller):
     def modules_get(self,  **kwargs):
         return {'modules': ['contacts', 'crm']}
 
-    # Find an existing company based on the email.
-    def _find_existing_company(self, domain):
-        if domain in _DOMAIN_BLACKLIST:
-            return
-        return request.env['res.partner'].search([('is_company', '=', True), ('email', '=ilike', '%' + domain)], limit=1)
+    def _find_existing_company(self, domains):
+        """ Find an existing company based on the domains. """
+        if not isinstance(domains, list) or not isinstance(domains, tuple):
+            domains = tuple(domains)
+        domains = expression.OR(
+            [('email', '=ilike', '%' + domain)]
+            for domain in domains
+            if domain not in _DOMAIN_BLACKLIST
+        )
+        return request.env['res.partner'].search(expression.AND([[('is_company', '=', True)], domains]), limit=1)
 
     def _get_company_dict(self, company):
         if not company:
@@ -160,6 +166,10 @@ class MailClientExtensionController(http.Controller):
         iap_data = self._iap_enrich(domain)
         if 'enrichment_info' in iap_data:
             return None, iap_data['enrichment_info']
+
+        company = self._find_existing_company(iap_data.get("domains"))
+        if company:
+            return company, None
 
         phone_numbers = iap_data.get('phone_numbers')
         emails = iap_data.get('email')
