@@ -87,7 +87,7 @@ class Holidays(models.Model):
     def _timesheet_prepare_line_values(self, index, work_hours_data, day_date, work_hours_count):
         self.ensure_one()
         return {
-            'name': "%s (%s/%s)" % (self.holiday_status_id.name or '', index + 1, len(work_hours_data)),
+            'name': _("Time Off (%s/%s)", index + 1, len(work_hours_data)),
             'project_id': self.holiday_status_id.timesheet_project_id.id,
             'task_id': self.holiday_status_id.timesheet_task_id.id,
             'account_id': self.holiday_status_id.timesheet_project_id.analytic_account_id.id,

@@ -9,6 +9,7 @@ class AccountAnalyticLine(models.Model):
     _inherit = 'account.analytic.line'
 
     holiday_id = fields.Many2one("hr.leave", string='Leave Request')
+    global_leave_id = fields.Many2one("resource.calendar.leaves", string="Global Time Off", ondelete='cascade')
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_linked_leave(self):
