@@ -54,34 +54,32 @@
         float: right!important;
     }
 
-    @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
-        .o_row {
-            &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
-                display: flex;
-                width: auto!important;
-            }
+    .o_row {
+        &, &.o_field_widget { // Some field may want to use o_row as root and these rules must prevalue
+            display: flex;
+            width: auto!important;
+        }
 
-            align-items: baseline;
-            min-width: 50px;
-            margin: 0 (-$o-form-spacing-unit/2);
+        align-items: baseline;
+        min-width: 50px;
+        margin: 0 (-$o-form-spacing-unit/2);
 
-            > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
-                flex: 0 0 auto;
-                width: auto!important;
-                margin-right: $o-form-spacing-unit/2;
-                margin-left: $o-form-spacing-unit/2;
-            }
+        > div, > span, > button, > label, > a, > input, > select { // > * did not add a level of priority to the rule
+            flex: 0 0 auto;
+            width: auto!important;
+            margin-right: $o-form-spacing-unit/2;
+            margin-left: $o-form-spacing-unit/2;
+        }
 
-            > .o_row {
-                margin: 0;
-            }
-            > .btn {
-                padding-top: 0;
-                padding-bottom: 0;
-            }
-            > .o_field_boolean {
-                align-self: center;
-            }
+        > .o_row {
+            margin: 0;
+        }
+        > .btn {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        > .o_field_boolean {
+            align-self: center;
         }
     }
 
@@ -136,16 +134,14 @@
             padding: 0.3rem;
         }
 
-        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
-            .o_row {
-                > .o_field_widget, > div {
-                    flex: 1 1 auto;
-                    width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
+        .o_row {
+            > .o_field_widget, > div {
+                flex: 1 1 auto;
+                width: 0!important; // 3rd flex argument does not work with input (must be auto and real width 0)
 
-                    &.o_field_boolean, &.o_priority {
-                        flex: 0 0 auto;
-                        width: auto!important;
-                    }
+                &.o_field_boolean, &.o_priority {
+                    flex: 0 0 auto;
+                    width: auto!important;
                 }
             }
         }
