@@ -3,11 +3,9 @@ odoo.define('website_mass_mailing.editor', function (require) {
 
 var core = require('web.core');
 const Dialog = require('web.Dialog');
-var rpc = require('web.rpc');
 var WysiwygMultizone = require('web_editor.wysiwyg.multizone');
 var WysiwygTranslate = require('web_editor.wysiwyg.multizone.translate');
 var options = require('web_editor.snippets.options');
-var wUtils = require('website.utils');
 
 const qweb = core.qweb;
 var _t = core._t;
@@ -58,14 +56,22 @@ options.registry.mailing_list_subscribe = options.Class.extend({
      * @override
      */
     async _renderCustomXML(uiFragment) {
-        const mailingLists = await this._renderMailingListButtons();
-        const selectEl = uiFragment.querySelector('we-select[data-name="mailing_list"]');
-        for (const mailingList of mailingLists) {
-            const button = document.createElement('we-button');
-            button.dataset.selectMailingList = mailingList[0];
-            button.textContent = mailingList[1];
-            selectEl.appendChild(button);
-            this.defaultMailingID = mailingList[0];
+        const mailingLists = await this._rpc({
+            model: 'mailing.list',
+            method: 'name_search',
+            args: ['', [['is_public', '=', true]]],
+            context: this.options.recordInfo.context,
+        });
+        if (mailingLists && mailingLists.length) {
+            const selectEl = uiFragment.querySelector('we-select[data-name="mailing_list"]');
+            // set default mailing list for we-select
+            this.defaultMailingID = mailingLists[0][0];
+            for (const mailingList of mailingLists) {
+                const button = document.createElement('we-button');
+                button.dataset.selectMailingList = mailingList[0];
+                button.textContent = mailingList[1];
+                selectEl.appendChild(button);
+            }
         }
     },
     /**
@@ -78,19 +84,6 @@ options.registry.mailing_list_subscribe = options.Class.extend({
                 return parseInt(this.$target.attr('data-list-id')) || this.defaultMailingID;
         }
         return this._super(...arguments);
-    },
-    /**
-     * Create the buttons for the mailing list we-select
-     *
-     * @private
-     */
-    async _renderMailingListButtons() {
-        return this._rpc({
-            model: 'mailing.list',
-            method: 'name_search',
-            args: ['', [['is_public', '=', true]]],
-            context: this.options.recordInfo.context,
-        });
     },
 });
 
