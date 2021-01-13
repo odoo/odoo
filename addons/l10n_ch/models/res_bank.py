@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import base64
 import re
 
 from odoo import api, fields, models, _
@@ -241,9 +242,11 @@ class ResPartnerBank(models.Model):
             reference = structured_communication
 
         qr_code_vals = self._prepare_swiss_code_url_vals(amount, currency_name, debtor_partner, reference_type, reference, comment)
+        qr_code_vals = '\n'.join(qr_code_vals)
 
         # use quiet to remove blank around the QR and make it easier to place it
-        return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
+        qrcode = self.env['ir.actions.report'].barcode("QR", qr_code_vals, width=256, height=256, humanreadable=0, quiet=1)
+        return "data:png;base64,%s" % base64.b64encode(qrcode).decode('ascii')
 
     def _get_partner_address_lines(self, partner):
         """ Returns a tuple of two elements containing the address lines to use
