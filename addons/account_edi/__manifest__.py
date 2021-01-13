@@ -15,7 +15,6 @@ governements, etc.)
     'depends' : ['account'],
     'data': [
         'security/ir.model.access.csv',
-        'wizard/account_invoice_send_views.xml',
         'views/account_edi_document_views.xml',
         'views/account_move_views.xml',
         'views/account_payment_views.xml',
