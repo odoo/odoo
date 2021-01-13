@@ -387,6 +387,101 @@ class TestChannelModeration(MailCommon):
         self.assertEqual(channel.channel_last_seen_partner_ids.partner_id, self.partner_employee | self.partner_root)
         self.assertEqual(channel.moderator_ids, self.user_employee)
 
+    @mute_logger('odoo.models.unlink')
+    def test_message_moderate_ok(self):
+        msg_c1_admin1 = self._add_messages(self.channel, 'Body11', author=self.partner_admin, moderation_status='pending_moderation')
+        msg_c1_admin2 = self._add_messages(self.channel, 'Body12', author=self.partner_admin, moderation_status='pending_moderation')
+        msg_c1_emplo2 = self._add_messages(self.channel, 'Body21', author=self.partner_employee_2, moderation_status='pending_moderation')
+
+        self._reset_bus()
+        self.assertFalse(msg_c1_admin1.channel_ids | msg_c1_admin2.channel_ids | msg_c1_emplo2.channel_ids)
+
+        # accept
+        msg_c1_admin1.with_user(self.user_employee)._moderate('accept')
+        self.assertEqual(msg_c1_admin1.channel_ids, self.channel)
+        self.assertEqual(msg_c1_admin1.moderation_status, 'accepted')
+        self.assertEqual(msg_c1_admin2.moderation_status, 'pending_moderation')
+        self.assertBusNotifications([(self.cr.dbname, 'mail.channel', self.channel.id)])
+
+        # allow
+        self._reset_bus()
+        (msg_c1_admin1 | msg_c1_emplo2).with_user(self.user_employee)._moderate('allow')
+        self.assertEqual(msg_c1_admin1.channel_ids, self.channel)
+        self.assertEqual(msg_c1_admin2.channel_ids, self.channel)
+        self.assertEqual(msg_c1_emplo2.channel_ids, self.channel)
+        self.assertEqual(msg_c1_admin1.moderation_status, 'accepted')
+        self.assertEqual(msg_c1_admin2.moderation_status, 'accepted')
+        self.assertEqual(msg_c1_emplo2.moderation_status, 'accepted')
+        self.assertBusNotifications([
+            (self.cr.dbname, 'mail.channel', self.channel.id),
+            (self.cr.dbname, 'mail.channel', self.channel.id)])
+
+    @mute_logger('odoo.models.unlink')
+    def test_message_moderate_reject(self):
+        msg_c1_admin1 = self._add_messages(self.channel, '<p>Body11</p>', author=self.partner_admin, moderation_status='pending_moderation')
+        msg_c1_admin2 = self._add_messages(self.channel, '<p>Body12</p>', author=self.partner_admin, moderation_status='pending_moderation')
+        msg_c1_emplo2 = self._add_messages(self.channel, '<p>Body21</p>', author=self.partner_employee_2, moderation_status='pending_moderation')
+        msg_c1_portal = self._add_messages(self.channel, '<p>Body12</p>', author=self.partner_portal, moderation_status='pending_moderation')
+        id2, id4 = msg_c1_admin2.id, msg_c1_portal.id  # save ids because unlink will discard them
+
+        self.assertFalse(msg_c1_admin1.channel_ids | msg_c1_admin2.channel_ids | msg_c1_emplo2.channel_ids | msg_c1_portal.channel_ids)
+
+        # test reject: should also send a rejection email
+        with self.mock_mail_gateway():
+            (msg_c1_admin1 | msg_c1_emplo2).with_user(self.user_employee)._moderate('reject', title='RejectTitle', comment='RejectComment')
+            self.assertEqual(len(self._new_mails), 2)
+
+        self.assertMailMailWEmails([self.partner_admin.email_formatted, self.partner_employee_2.email_formatted], 'outgoing', 'RejectComment',
+                                   fields_values={'subject': 'RejectTitle', 'author_id': self.partner_employee})
+        self.assertTrue(all('RejectComment' in body for body in self._new_mails.mapped('body_html')))
+        self.assertTrue(all('Body' in body for body in self._new_mails.mapped('body_html')))
+
+        # test discard: silently remove
+        self._reset_bus()
+        (msg_c1_admin2 + msg_c1_portal).with_user(self.user_employee)._moderate_discard()
+
+        # check all generated bus notifications
+        self.assertBusNotifications(
+            [(self.cr.dbname, 'res.partner', self.partner_admin.id),
+             (self.cr.dbname, 'res.partner', self.partner_employee.id),
+             (self.cr.dbname, 'res.partner', self.partner_portal.id)],
+            [{'type': 'deletion', 'message_ids': [id2]},  # author of 1 message
+             {'type': 'deletion', 'message_ids': [id2, id4]},  # moderator
+             {'type': 'deletion', 'message_ids': [id4]}]  # author of 1 message
+        )
+
+    @mute_logger('odoo.models.unlink')
+    def test_message_notify_moderators(self):
+        # create pending messages in another channel to have two notification to push
+        msg_c1_admin1 = self._add_messages(self.channel, '<p>Body11</p>', author=self.partner_admin, moderation_status='pending_moderation')
+        msg_c1_admin2 = self._add_messages(self.channel, '<p>Body12</p>', author=self.partner_admin, moderation_status='pending_moderation')
+        msg_c1_portal = self._add_messages(self.channel, '<p>Body21</p>', author=self.partner_employee_2, moderation_status='pending_moderation')
+
+        channel_2 = self.env['mail.channel'].create({
+            'name': 'Moderation_1',
+            'email_send': True,
+            'moderation': True,
+            'channel_partner_ids': [(4, self.partner_admin.id)],
+            'moderator_ids': [(4, self.user_admin.id)],
+        })
+        msg_c2_portal = self._add_messages(channel_2, 'Body31', author=self.partner_employee_2, moderation_status='pending_moderation')
+
+        # one notification for each moderator: employee (channel1), admin (channel2)
+        with self.assertPostNotifications([{
+            'content': 'Hello %s' % self.partner_employee.name,
+            'message_type': 'user_notification', 'subtype': 'mail.mt_note',
+            'notif': [{
+                'partner': self.partner_employee,
+                'type': 'inbox'}]
+        }, {
+            'content': 'Hello %s' % self.partner_admin.name,
+            'message_type': 'user_notification', 'subtype': 'mail.mt_note',
+            'notif': [{
+                'partner': self.partner_admin,
+                'type': 'inbox'}]
+        }]):
+            self.env['mail.message']._notify_moderators()
+
     @users('employee')
     def test_moderation_fields(self):
         channel = self.env['mail.channel'].browse(self.channel.ids)
