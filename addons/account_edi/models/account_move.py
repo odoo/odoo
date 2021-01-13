@@ -16,7 +16,7 @@ class AccountMove(models.Model):
         string="Electronic invoicing",
         store=True,
         compute='_compute_edi_state',
-        help='The aggregated state of all the EDIs of this move')
+        help='The aggregated state of all the EDIs with web-service of this move')
     edi_error_count = fields.Integer(
         compute='_compute_edi_error_count',
         help='How many EDIs are in error for this move ?')
@@ -29,7 +29,7 @@ class AccountMove(models.Model):
     @api.depends('edi_document_ids.state')
     def _compute_edi_state(self):
         for move in self:
-            all_states = set(move.edi_document_ids.mapped('state'))
+            all_states = set(move.edi_document_ids.filtered(lambda d: d.edi_format_id._needs_web_services()).mapped('state'))
             if all_states == {'sent'}:
                 move.edi_state = 'sent'
             elif all_states == {'cancelled'}:
