@@ -3587,7 +3587,7 @@ var FieldReference = FieldMany2One.extend({
     _applyModelField: function (initRecord) {
         let resourceRef = this.record.specialData[this.name];
         if (resourceRef) {
-            if (initRecord && resourceRef.hasChanged) {
+            if (initRecord && resourceRef.hasChanged && resourceRef.modelName !== this.modelName) {
                 this.reinitialize(false);
             }
             this.modelName = resourceRef.modelName;
@@ -3646,7 +3646,8 @@ var FieldReference = FieldMany2One.extend({
         }
         if (this.nodeOptions.model_field) {
             this._applyModelField(initRecord);
-        } else if (this.value && this.value.model) {
+        }
+        if (this.value && this.value.model) {
             this.modelName = this.value.model;
         }
         if (this.modelName) {
