@@ -25,7 +25,7 @@ import json
 from datetime import datetime, date
 from odoo import http
 from odoo.http import request
-
+from .booking_email import send_receive_booking_email
 
 class SalonBookingWeb(http.Controller):
 
@@ -47,7 +47,24 @@ class SalonBookingWeb(http.Controller):
             'time': date_and_time,
             'chair_id': chair,
         }
+
+        res_company_email = request.env['res.company'].search([('id','=',1)]).email
+        chair_name = request.env['salon.chair'].search([('id','=',chair)]).name
+        
+        email_booking_data ={
+            'res_company_email':res_company_email,
+            'chair_name':chair_name,
+            'time':date_and_time,
+            'name':name,
+            'phone':phone,
+        }
+        
+        if res_company_email:
+            result = send_receive_booking_email(email_booking_data)
+            print ("############ ",result,type(result))
+        
         salon_booking.create(booking_data)
+        
         return json.dumps({'result': True})
 
     @http.route('/page/salon_check_date', type='json', auth="public", website=True)
