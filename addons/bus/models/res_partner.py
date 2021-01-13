@@ -14,16 +14,18 @@ class ResPartner(models.Model):
         self.env.cr.execute("""
             SELECT
                 U.partner_id as id,
-                CASE WHEN max(B.last_poll) IS NULL THEN 'offline'
+                CASE WHEN RUL.id IS NULL THEN 'never_logged'
+                    WHEN max(B.last_poll) IS NULL THEN 'offline'
                     WHEN age(now() AT TIME ZONE 'UTC', max(B.last_poll)) > interval %s THEN 'offline'
                     WHEN age(now() AT TIME ZONE 'UTC', max(B.last_presence)) > interval %s THEN 'away'
                     ELSE 'online'
                 END as status
             FROM bus_presence B
             RIGHT JOIN res_users U ON B.user_id = U.id
+            LEFT JOIN res_users_log RUL ON RUL.create_uid = U.id
             WHERE U.partner_id IN %s AND U.active = 't'
-         GROUP BY U.partner_id
+         GROUP BY U.partner_id, RUL.id
         """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, tuple(self.ids)))
         res = dict(((status['id'], status['status']) for status in self.env.cr.dictfetchall()))
         for partner in self:
-            partner.im_status = res.get(partner.id, 'im_partner')  # if not found, it is a partner, useful to avoid to refresh status in js
+            partner.im_status = res.get(partner.id, 'nutella')  # if not found, it is a partner, useful to avoid to refresh status in js

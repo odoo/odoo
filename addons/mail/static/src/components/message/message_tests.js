@@ -1212,6 +1212,78 @@ QUnit.test('rendering of tracked field with change of value from empty to string
     );
 });
 
+QUnit.test('do not show im status if authored by a partner with an inactive user', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    this.env.models['mail.partner'].create({
+        id: 11,
+        display_name: "Demo User",
+        im_status: 'nutella',
+    });
+    const thread = this.env.models['mail.thread'].create({
+        id: 11,
+        model: 'res.partner',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    const message = this.env.models['mail.message'].create({
+        id: 21,
+        model: 'res.partner',
+        res_id: 11,
+    });
+    await this.createMessageComponent(message, { threadViewLocalId: threadViewer.threadView.localId });
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a message component"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_PartnerImStatusIcon',
+        "should not display partner im status icon"
+    );
+});
+
+QUnit.test('do not show im status if authored by a partner with a user that never logged', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    this.env.models['mail.partner'].create({
+        id: 11,
+        display_name: "Demo User",
+        im_status: 'never_logged',
+    });
+    const thread = this.env.models['mail.thread'].create({
+        id: 11,
+        model: 'res.partner',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    const message = this.env.models['mail.message'].create({
+        id: 21,
+        model: 'res.partner',
+        res_id: 11,
+    });
+    await this.createMessageComponent(message, { threadViewLocalId: threadViewer.threadView.localId });
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a message component"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_PartnerImStatusIcon',
+        "should not display partner im status icon"
+    );
+});
+
 });
 });
 });

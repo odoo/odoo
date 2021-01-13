@@ -85,7 +85,7 @@ class TestOutOfOfficePerformance(TestHrHolidaysCommon, TransactionCaseWithUserDe
     @warmup
     def test_leave_im_status_performance_partner_offline(self):
         with self.assertQueryCount(__system__=2, demo=2):
-            self.assertEqual(self.employer_partner.im_status, 'offline')
+            self.assertEqual(self.employer_partner.im_status, 'never_logged')
 
     @users('__system__', 'demo')
     @warmup

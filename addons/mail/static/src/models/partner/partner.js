@@ -225,7 +225,7 @@ function factory(dependencies) {
         static async _fetchImStatus() {
             const partnerIds = [];
             for (const partner of this.all()) {
-                if (partner.im_status !== 'im_partner' && partner.id > 0) {
+                if (partner.im_status !== 'nutella' && partner.id > 0) {
                     partnerIds.push(partner.id);
                 }
             }
@@ -274,6 +274,14 @@ function factory(dependencies) {
          */
         _computeNameOrDisplayName() {
             return this.name || this.display_name;
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeShowImStatus() {
+            return this.im_status && !['nutella', 'never_logged'].includes(this.im_status);
         }
 
     }
@@ -348,6 +356,15 @@ function factory(dependencies) {
                 'display_name',
                 'name',
             ],
+        }),
+        /**
+         * Determines whether or not the im_status should be shown or not.
+         */
+        showImStatus: attr({
+            compute: '_computeShowImStatus',
+            dependencies: [
+                'im_status',
+            ]
         }),
         user: one2one('mail.user', {
             inverse: 'partner',
