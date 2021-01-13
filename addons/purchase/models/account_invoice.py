@@ -15,7 +15,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         string='Purchase Order',
         help="Auto-complete from a past purchase order.")
-    
+
     def _get_invoice_reference(self):
         self.ensure_one()
         vendor_refs = [ref for ref in set(self.line_ids.mapped('purchase_line_id.order_id.partner_ref')) if ref]
@@ -48,6 +48,7 @@ class AccountMove(models.Model):
         self.fiscal_position_id = self.purchase_id.fiscal_position_id
         self.invoice_payment_term_id = self.purchase_id.payment_term_id
         self.currency_id = self.purchase_id.currency_id
+        self.company_id = self.purchase_id.company_id
 
         # Copy purchase lines.
         po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
