@@ -1955,7 +1955,6 @@ class AccountMove(models.Model):
         values = {
             'move': self,
             'to_process_lines': self.env['account.move.line'],
-            'payment_term_lines': self.env['account.move.line'],
             'total_balance': 0.0,
             'total_residual': 0.0,
             'total_amount_currency': 0.0,
@@ -1990,17 +1989,9 @@ class AccountMove(models.Model):
             # Don't support the case where there is multiple involved currencies.
             return None
 
-        if len(values['payment_term_lines'].account_id) > 1:
-            # Don't support the case where there is multiple involved receivable/payable accounts.
-            # It could lead to some weird situation regarding the cash basis exchange difference
-            # journal items.
-            return None
-
         # Determine is the move is now fully paid.
-        if values['currency'] == self.company_id.currency_id:
-            values['is_fully_paid'] = values['currency'].is_zero(values['total_residual'])
-        else:
-            values['is_fully_paid'] = values['currency'].is_zero(values['total_residual_currency'])
+        values['is_fully_paid'] = self.company_id.currency_id.is_zero(values['total_residual']) \
+                                  or values['currency'].is_zero(values['total_residual_currency'])
 
         return values
 
@@ -4312,7 +4303,7 @@ class AccountMoveLine(models.Model):
             :param exchange_diff_move_vals: The current vals of the exchange difference journal entry.
             '''
             for move in lines.move_id:
-                transfer_account_vals_to_fix = {}
+                account_vals_to_fix = {}
 
                 move_values = move._collect_tax_cash_basis_values()
 
@@ -4321,40 +4312,42 @@ class AccountMoveLine(models.Model):
                 if not move_values or not move_values['is_fully_paid']:
                     continue
 
-                # The percentage of the tax cash basis entries are expressed using the company's currency and then,
-                # there is no exchange difference to make for such journal entry.
-                if move_values['currency'] == move.company_id.currency_id:
-                    continue
-
                 # ==========================================================================
                 # Add the balance of all tax lines of the current move in order in order
                 # to compute the residual amount for each of them.
                 # ==========================================================================
 
-                is_exchange_diff_needed = False
                 for line in move_values['to_process_lines']:
 
-                    if not line.tax_repartition_line_id:
-                        continue
+                    vals = {
+                        'currency_id': line.currency_id.id,
+                        'partner_id': line.partner_id.id,
+                        'tax_ids': [(6, 0, line.tax_ids.ids)],
+                        'tax_tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tax_tag_ids).ids)],
+                        'debit': line.debit,
+                        'credit': line.credit,
+                    }
 
-                    if not line.account_id.reconcile:
-                        is_exchange_diff_needed = True
+                    if line.tax_repartition_line_id:
+                        # Tax line.
                         grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(line)
-                        transfer_account_vals_to_fix[grouping_key] = {
+                        account_vals_to_fix[grouping_key] = {
+                            **vals,
                             'account_id': line.account_id.id,
-                            'currency_id': line.currency_id.id,
-                            'partner_id': line.partner_id.id,
                             'tax_base_amount': line.tax_base_amount,
                             'tax_repartition_line_id': line.tax_repartition_line_id.id,
-                            'tax_ids': [(6, 0, line.tax_ids.ids)],
-                            'tax_tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tax_tag_ids).ids)],
-                            'debit': line.debit,
-                            'credit': line.credit,
                         }
+                    elif line.tax_ids:
+                        # Base line.
+                        account_to_fix = line.company_id.account_cash_basis_base_account_id
+                        if not account_to_fix:
+                            continue
 
-                # No tax line on the current move.
-                if not is_exchange_diff_needed:
-                    continue
+                        grouping_key = self.env['account.partial.reconcile']._get_cash_basis_base_line_grouping_key_from_record(line, account=account_to_fix)
+                        account_vals_to_fix[grouping_key] = {
+                            **vals,
+                            'account_id': account_to_fix.id,
+                        }
 
                 # ==========================================================================
                 # Subtract the balance of all previously generated cash basis journal entries
@@ -4363,61 +4356,86 @@ class AccountMoveLine(models.Model):
 
                 cash_basis_moves = self.env['account.move'].search([('tax_cash_basis_move_id', '=', move.id)])
                 for line in cash_basis_moves.line_ids:
-                    if not line.tax_repartition_line_id:
+                    grouping_key = None
+                    if line.tax_repartition_line_id:
+                        # Tax line.
+                        grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(
+                            line,
+                            account=line.tax_line_id.cash_basis_transition_account_id,
+                        )
+                    elif line.tax_ids:
+                        # Base line.
+                        grouping_key = self.env['account.partial.reconcile']._get_cash_basis_base_line_grouping_key_from_record(
+                            line,
+                            account=line.company_id.account_cash_basis_base_account_id,
+                        )
+
+                    if grouping_key not in account_vals_to_fix:
                         continue
 
-                    grouping_key = self.env['account.partial.reconcile']._get_cash_basis_tax_line_grouping_key_from_record(
-                        line,
-                        account=line.tax_line_id.cash_basis_transition_account_id,
-                    )
-
-                    if grouping_key not in transfer_account_vals_to_fix:
-                        continue
-
-                    transfer_account_vals_to_fix[grouping_key]['debit'] -= line.debit
-                    transfer_account_vals_to_fix[grouping_key]['credit'] -= line.credit
+                    account_vals_to_fix[grouping_key]['debit'] -= line.debit
+                    account_vals_to_fix[grouping_key]['credit'] -= line.credit
 
                 # ==========================================================================
-                # Generate the exchange difference journal items to reset the balance of
-                # all transfer account to zero.
+                # Generate the exchange difference journal items:
+                # - to reset the balance of all transfer account to zero.
+                # - fix rounding issues on the tax account/base tax account.
                 # ==========================================================================
 
-                for values in transfer_account_vals_to_fix.values():
+                for values in account_vals_to_fix.values():
                     balance = values['debit'] - values['credit']
-                    values.update({
-                        'debit': balance if balance > 0.0 else 0.0,
-                        'credit': -balance if balance < 0.0 else 0.0,
-                    })
 
-                    account = self.env['account.account'].browse(values['account_id'])
-                    if account.company_id.currency_id.is_zero(balance):
+                    if move.company_currency_id.is_zero(balance):
                         continue
 
-                    journal = account.company_id.currency_exchange_journal_id
+                    if values.get('tax_repartition_line_id'):
+                        # Tax line.
+                        tax_repartition_line = self.env['account.tax.repartition.line'].browse(values['tax_repartition_line_id'])
+                        account = tax_repartition_line.account_id or self.env['account.account'].browse(values['account_id'])
 
-                    if balance > 0.0:
-                        exchange_line_account = journal.company_id.expense_currency_exchange_account_id
+                        sequence = len(exchange_diff_move_vals['line_ids'])
+                        exchange_diff_move_vals['line_ids'] += [
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': balance if balance > 0.0 else 0.0,
+                                'credit': -balance if balance < 0.0 else 0.0,
+                                'account_id': account.id,
+                                'sequence': sequence,
+                            }),
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': -balance if balance < 0.0 else 0.0,
+                                'credit': balance if balance > 0.0 else 0.0,
+                                'account_id': values['account_id'],
+                                'tax_ids': [],
+                                'tax_tag_ids': [],
+                                'tax_repartition_line_id': False,
+                                'sequence': sequence + 1,
+                            }),
+                        ]
                     else:
-                        exchange_line_account = journal.company_id.income_currency_exchange_account_id
-
-                    sequence = len(exchange_diff_move_vals['line_ids'])
-                    exchange_diff_move_vals['line_ids'] += [
-                        (0, 0, {
-                            **values,
-                            'name': _('Currency exchange rate difference (cash basis)'),
-                            'debit': values['credit'],
-                            'credit': values['debit'],
-                            'amount_currency': 0.0,
-                            'sequence': sequence,
-                        }),
-                        (0, 0, {
-                            **values,
-                            'name': _('Currency exchange rate difference (cash basis)'),
-                            'amount_currency': 0.0,
-                            'account_id': exchange_line_account.id,
-                            'sequence': sequence + 1,
-                        }),
-                    ]
+                        # Base line.
+                        sequence = len(exchange_diff_move_vals['line_ids'])
+                        exchange_diff_move_vals['line_ids'] += [
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': balance if balance > 0.0 else 0.0,
+                                'credit': -balance if balance < 0.0 else 0.0,
+                                'sequence': sequence,
+                            }),
+                            (0, 0, {
+                                **values,
+                                'name': _('Currency exchange rate difference (cash basis)'),
+                                'debit': -balance if balance < 0.0 else 0.0,
+                                'credit': balance if balance > 0.0 else 0.0,
+                                'tax_ids': [],
+                                'tax_tag_ids': [],
+                                'sequence': sequence + 1,
+                            }),
+                        ]
 
         if not self:
             return self.env['account.move']
