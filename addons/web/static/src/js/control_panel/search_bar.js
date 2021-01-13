@@ -421,6 +421,7 @@ odoo.define('web.SearchBar', function (require) {
                     /* falls through */
                 case 'Tab':
                     if (this.state.inputValue.length) {
+                        ev.preventDefault(); // keep the focus inside the search bar
                         this._selectSource(currentItem);
                     }
                     break;
