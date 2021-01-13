@@ -275,7 +275,7 @@ class configmanager(object):
         group.add_option('--shell-interface', dest='shell_interface', type="string",
                          help="Specify a preferred REPL to use in shell mode. Supported REPLs are: "
                               "[ipython|ptpython|bpython|python]")
-        group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
+        group.add_option('-S', "--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
         group.add_option("--osv-memory-count-limit", dest="osv_memory_count_limit", my_default=False,
                          help="Force a limit on the maximum number of records kept in the virtual "
