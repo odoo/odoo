@@ -1,7 +1,6 @@
 /** @odoo-module  **/
 const { Component, tags } = owl;
 
-import "wowl.legacySetup";
 import { ComponentAdapter } from "web.OwlCompatibility";
 import * as legacySystrayMenu from "web.SystrayMenu";
 import { systrayRegistry } from "../webclient/systray_registry";

@@ -1,5 +1,4 @@
 /** @odoo-module **/
-import QUnit from "qunit";
 import { Dropdown } from "../../src/components/dropdown/dropdown";
 import { DropdownItem } from "../../src/components/dropdown/dropdown_item";
 import { click, makeTestEnv, mount, nextTick } from "../helpers/utility";
