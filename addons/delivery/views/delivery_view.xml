@@ -204,7 +204,7 @@
             <field name="arch" type="xml">
               <data>
                 <xpath expr="//page[@name='extra']" position="inside">
-                <separator string="Delivery Information"/>
+                <separator name='delivery_information' string="Delivery Information"/>
                 <group>
                     <group name='carrier_data'>
                         <field name="carrier_id" attrs="{'readonly': [('state', 'in', ('done', 'cancel'))]}" options="{'no_create': True, 'no_open': True}"/>
