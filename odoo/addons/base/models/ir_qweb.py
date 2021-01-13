@@ -304,7 +304,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         return self._generate_asset_nodes(xmlid, options, css, js, debug, async_load, defer_load, lazy_load, values)
 
     def _generate_asset_nodes(self, xmlid, options, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, values=None):
-        files, remains = self._get_asset_content(xmlid, options)
+        files, remains = self._get_asset_content(xmlid, options, values)
         asset = self.get_asset_bundle(xmlid, files, env=self.env, css=css, js=js)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] != 'link')]
         return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
@@ -314,7 +314,7 @@ class IrQWeb(models.AbstractModel, QWeb):
         return [node[1]['href'] for node in asset_nodes if node[0] == 'link']
 
     @tools.ormcache_context('xmlid', 'options.get("lang", "en_US")', keys=("website_id",))
-    def _get_asset_content(self, xmlid, options):
+    def _get_asset_content(self, xmlid, options, values=None):
         options = dict(options,
             inherit_branding=False, inherit_branding_auto=False,
             edit_translations=False, translatable=False,
@@ -334,7 +334,9 @@ class IrQWeb(models.AbstractModel, QWeb):
                 from odoo.addons.web.controllers.main import module_boot
                 return json.dumps(module_boot())
             return '[]'
-        template = IrQweb._render(xmlid, {"get_modules_order": get_modules_order})
+        qcontext = values.copy() if values else {}
+        qcontext["get_modules_order"] = get_modules_order
+        template = IrQweb._render(xmlid, qcontext)
 
         files = []
         remains = []

@@ -1,0 +1,59 @@
+.o_dropdown {
+  display: block;
+  position: relative;
+}
+
+// Menu
+ul.o_dropdown_menu {
+  background-color: $white;
+  border: 1px solid $gray-300;
+  border-radius: 3px;
+  box-shadow: 0 6px 12px -4px rgba($black, 0.25);
+  color: $o-main-text-color;
+  list-style: none;
+  margin: 0;
+  max-height: 90vh;
+  overflow: auto;
+  padding: 0.5rem 0;
+  position: absolute;
+  min-width: 100%;
+  z-index: 1000;
+
+  &.o_dropdown_menu_right {
+    right: 0;
+    left: auto;
+  }
+}
+
+// Toggler and items
+button.o_dropdown_toggler,
+li.o_dropdown_item {
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0 1.6rem;
+  position: relative;
+  user-select: none;
+  white-space: nowrap;
+
+  * {
+    color: inherit;
+  }
+
+  > span {
+    min-width: max-content;
+  }
+
+  &:focus,
+  &:active,
+  &:focus:active,
+  &.o_dropdown_active {
+    outline: none;
+  }
+
+  &:hover,
+  &.o_dropdown_active {
+    background-color: rgba($black, 0.08);
+  }
+}

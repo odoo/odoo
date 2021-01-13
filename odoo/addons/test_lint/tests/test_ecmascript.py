@@ -29,7 +29,7 @@ class TestECMAScriptVersion(lint_case.LintCase):
     def test_ecmascript_version(self):
         """ Test that there is no unsupported ecmascript in javascript files """
 
-        black_re = re.compile(r'summernote.+(intro\.js|outro.js)$')
+        black_re = re.compile(r'summernote.+(intro\.js|outro.js)$|rollup.config.js')
 
         files_to_check = [
             p for p in self.iter_module_files('*.js')
