@@ -186,16 +186,6 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    @api.model
-    def default_get(self, fields):
-        result = super(ProjectTask, self).default_get(fields)
-
-        if not result.get('timesheet_product_id', False) and 'project_id' in result:
-            project = self.env['project.project'].browse(result['project_id'])
-            if project.pricing_type != 'employee_rate':
-                result['timesheet_product_id'] = project.timesheet_product_id.id
-        return result
-
     # override sale_order_id and make it computed stored field instead of regular field.
     sale_order_id = fields.Many2one(compute='_compute_sale_order_id', store=True, readonly=False,
     domain="['|', '|', ('partner_id', '=', partner_id), ('partner_id', 'child_of', commercial_partner_id), ('partner_id', 'parent_of', partner_id)]")
@@ -204,14 +194,7 @@ class ProjectTask(models.Model):
     is_project_map_empty = fields.Boolean("Is Project map empty", compute='_compute_is_project_map_empty')
     has_multi_sol = fields.Boolean(compute='_compute_has_multi_sol', compute_sudo=True)
     allow_billable = fields.Boolean(related="project_id.allow_billable")
-    timesheet_product_id = fields.Many2one(
-        'product.product', string='Service',
-        domain="""[
-            ('type', '=', 'service'),
-            ('invoice_policy', '=', 'delivery'),
-            ('service_type', '=', 'timesheet'),
-            '|', ('company_id', '=', False), ('company_id', '=', company_id)]""",
-        help='Select a Service product with which you would like to bill your time spent on this task.')
+    timesheet_product_id = fields.Many2one(related="project_id.timesheet_product_id")
     remaining_hours_so = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours_so')
     remaining_hours_available = fields.Boolean(related="sale_line_id.remaining_hours_available")
 
@@ -297,21 +280,6 @@ class ProjectTask(models.Model):
         if self.project_id.pricing_type != 'task_rate' and self.project_sale_order_id:
             domain.append(('order_id', '=?', self.project_sale_order_id.id))
         return self.env['sale.order.line'].search(domain, limit=1)
-
-    def action_make_billable(self):
-        return {
-            "name": _("Create Sales Order"),
-            "type": 'ir.actions.act_window',
-            "res_model": 'project.task.create.sale.order',
-            "views": [[False, "form"]],
-            "target": 'new',
-            "context": {
-                'active_id': self.id,
-                'active_model': 'project.task',
-                'form_view_initial_mode': 'edit',
-                'default_product_id': self.timesheet_product_id.id or self.project_id.timesheet_product_id.id,
-            },
-        }
 
     def _get_timesheet(self):
         # return not invoiced timesheet and timesheet without so_line or so_line linked to task
