@@ -6,11 +6,11 @@
             <field name="name">Calendar: Event Reminder</field>
             <field name="model_id" ref="model_calendar_alarm_manager"/>
             <field name="state">code</field>
-            <field name="code">model.get_next_mail()</field>
+            <field name="code">model._send_reminder_email()</field>
             <field eval="True" name="active" />
             <field name="user_id" ref="base.user_root" />
-            <field name="interval_number">30</field>
-            <field name="interval_type">minutes</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
             <field name="numbercall">-1</field>
             <field eval="False" name="doall" />
         </record>
