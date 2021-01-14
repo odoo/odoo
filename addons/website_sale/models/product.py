@@ -291,7 +291,9 @@ class ProductTemplate(models.Model):
             product = self.env['product.product'].browse(combination_info['product_id']) or self
 
             tax_display = self.env.user.has_group('account.group_show_line_subtotals_tax_excluded') and 'total_excluded' or 'total_included'
-            taxes = partner.property_account_position_id.map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
+            Fpos_sudo = self.env['account.fiscal.position'].sudo()
+            fpos_id = Fpos_sudo.with_context(force_company=company_id.id).get_fiscal_position(partner.id)
+            taxes = Fpos_sudo.browse(fpos_id).map_tax(product.sudo().taxes_id.filtered(lambda x: x.company_id == company_id), product, partner)
 
             # The list_price is always the price of one.
             quantity_1 = 1
