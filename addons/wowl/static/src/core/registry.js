@@ -1,6 +1,8 @@
 /** @odoo-module **/
+
 const { core } = owl;
 const { EventBus } = core;
+
 /**
  * Registry
  *
@@ -18,12 +20,18 @@ export class Registry extends EventBus {
     super(...arguments);
     this.content = {};
   }
+
   /**
    * Add an entry (key, value) to the registry if key is not already used. If
    * the parameter force is set to true, an entry with same key (if any) is replaced.
    *
    * Note that this also returns the registry, so another add method call can
    * be chained
+   *
+   * @param {string} key
+   * @param {any} value
+   * @param {boolean} [force]
+   * @returns {Registry}
    */
   add(key, value, force = false) {
     if (!force && key in this.content) {
@@ -34,8 +42,12 @@ export class Registry extends EventBus {
     this.trigger("UPDATE", payload);
     return this;
   }
+
   /**
    * Get an item from the registry
+   *
+   * @param {string} key
+   * @returns {any}
    */
   get(key) {
     if (!(key in this.content)) {
@@ -43,23 +55,37 @@ export class Registry extends EventBus {
     }
     return this.content[key];
   }
+
   /**
    * Check the presence of a key in the registry
+   *
+   * @param {string} key
+   * @returns {boolean}
    */
   contains(key) {
     return key in this.content;
   }
+
   /**
    * Get a list of all elements in the registry
+   *
+   * @returns {any[]}
    */
   getAll() {
     return Object.values(this.content);
   }
+
+  /**
+   * @returns {[string, any][]}
+   */
   getEntries() {
     return Object.entries(this.content);
   }
+
   /**
    * Remove an item from the registry
+   *
+   * @param {string} key
    */
   remove(key) {
     const value = this.content[key];

@@ -1,8 +1,16 @@
 /** @odoo-module **/
 const { Component, hooks } = owl;
+
 // -----------------------------------------------------------------------------
 // Hook function
 // -----------------------------------------------------------------------------
+
+/**
+ * Import a service into a component
+ *
+ * @param {string} serviceName
+ * @returns {any}
+ */
 export function useService(serviceName) {
   const component = Component.current;
   const env = component.env;
@@ -12,10 +20,12 @@ export function useService(serviceName) {
   }
   return typeof service === "function" ? service.bind(component) : service;
 }
+
 /**
  * Focus a given selector as soon as it appears in the DOM and if it was not
  * displayed before. If the selected target is an input|textarea, set the selection
  * at the end.
+ *
  * @param {Object} [params]
  * @param {string} [params.selector='autofocus'] default: select the first element
  *                 with an `autofocus` attribute.
