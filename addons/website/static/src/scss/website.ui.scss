@@ -126,6 +126,13 @@ body.o_connected_user {
     }
 }
 
+// BLOCKING LOADER
+#o_website_page_loader {
+    @include o-position-absolute(0, 0, 0, 0);
+    z-index: $zindex-modal - 1;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
 // MODALS
 body .modal {
     &.o_technical_modal {

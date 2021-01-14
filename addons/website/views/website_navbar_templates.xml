@@ -20,6 +20,7 @@
             <t t-set="body_classname" t-value="(body_classname if body_classname else '') + (' o_connected_user' if env['ir.ui.view'].user_has_groups('base.group_user') else '')"/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']" position="before">
+            <div t-if="'enable_new_content' in request.params" id="o_website_page_loader"/>
             <nav groups="base.group_user" t-if="website" id="oe_main_menu_navbar" class="o_main_navbar">
                 <ul id="oe_applications">
                     <li class="dropdown active">
