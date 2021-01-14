@@ -43,11 +43,12 @@ class AccountAnalyticLine(models.Model):
 
     @api.depends('task_id.sale_line_id', 'project_id.sale_line_id', 'employee_id', 'project_id.allow_billable')
     def _compute_so_line(self):
-        for timesheet in self.filtered(lambda t: not t.is_so_line_edited)._get_not_billed():  # Get only the timesheets are not yet invoiced
+        for timesheet in self.filtered(lambda t: not t.is_so_line_edited and t._is_not_billed()):  # Get only the timesheets are not yet invoiced
             timesheet.so_line = timesheet.project_id.allow_billable and timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id)
 
-    def _get_not_billed(self):
-        return self.filtered(lambda t: not t.timesheet_invoice_id or t.timesheet_invoice_id.state == 'cancel')
+    def _is_not_billed(self):
+        self.ensure_one()
+        return not self.timesheet_invoice_id or self.timesheet_invoice_id.state == 'cancel'
 
     def _check_timesheet_can_be_billed(self):
         return self.so_line in self.project_id.mapped('sale_line_employee_ids.sale_line_id') | self.task_id.sale_line_id | self.project_id.sale_line_id
