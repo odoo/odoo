@@ -90,6 +90,18 @@ class Warehouse(models.Model):
         ('warehouse_code_uniq', 'unique(code, company_id)', 'The code of the warehouse must be unique per company!'),
     ]
 
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        group_user = self.env.ref('base.group_user')
+        group_stock_multi_warehouses = self.env.ref('stock.group_stock_multi_warehouses')
+        if group_stock_multi_warehouses not in group_user.implied_ids:
+            return {
+                'warning': {
+                    'title': _('Warning'),
+                    'message': _('Creating a new warehouse will automatically activate the Storage Locations setting')
+                }
+            }
+
     @api.depends('name')
     def _compute_warehouse_count(self):
         for warehouse in self:
