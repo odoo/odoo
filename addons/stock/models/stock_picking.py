@@ -6,6 +6,7 @@ from datetime import date
 from itertools import groupby
 from operator import itemgetter
 import time
+import logging
 
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.osv import expression
@@ -13,6 +14,9 @@ from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 from odoo.exceptions import UserError
 from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
+
+
+_logger = logging.getLogger(__name__)
 
 
 class PickingType(models.Model):
@@ -1190,6 +1194,8 @@ class Picking(models.Model):
 
     def _put_in_pack(self, move_line_ids):
         package = False
+        _logger.info('putting in pack move lines %s' % move_lines_ids.ids)
+        print('putting in pack move lines %s' % move_lines_ids.ids)
         for pick in self:
             move_lines_to_pack = self.env['stock.move.line']
             package = self.env['stock.quant.package'].create({})
@@ -1220,6 +1226,22 @@ class Picking(models.Model):
                     ml.write(vals)
                     new_move_line.write({'product_uom_qty': done_to_keep})
                     move_lines_to_pack |= new_move_line
+            _logger.info('creating package level %s' % (str({
+                'package_id': package.id,
+                'picking_id': pick.id,
+                'location_id': False,
+                'location_dest_id': move_line_ids.mapped('location_dest_id').id,
+                'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
+                'company_id': pick.company_id.id,
+            })))
+            print('creating package level %s' % (str({
+                'package_id': package.id,
+                'picking_id': pick.id,
+                'location_id': False,
+                'location_dest_id': move_line_ids.mapped('location_dest_id').id,
+                'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
+                'company_id': pick.company_id.id,
+            })))
             package_level = self.env['stock.package_level'].create({
                 'package_id': package.id,
                 'picking_id': pick.id,

@@ -5,7 +5,9 @@ from odoo import api, fields, models, _
 from itertools import groupby
 from operator import itemgetter
 from collections import defaultdict
+import logging
 
+_logger = logging.getLogger(__name__)
 
 class StockPackageLevel(models.Model):
     _name = 'stock.package_level'
@@ -142,7 +144,16 @@ class StockPackageLevel(models.Model):
 
     @api.model
     def create(self, vals):
-        result = super(StockPackageLevel, self).create(vals)
+        _logger.info('now in package level create  %s' % vals)
+        print('now in package level create  %s' % vals)
+        try:
+            result = super(StockPackageLevel, self).create(vals)
+        except Exception:
+            _logger.info('failed create' % vals)
+        if result:
+            _logger.info(' package level create WAS SUCCESSFUL')
+            print(' package level create WAS SUCCESSFUL  ')
+
         if vals.get('location_dest_id'):
             result.mapped('move_line_ids').write({'location_dest_id': vals['location_dest_id']})
             result.mapped('move_ids').write({'location_dest_id': vals['location_dest_id']})

@@ -457,18 +457,69 @@ class StockQuant(models.Model):
         """
         self = self.sudo()
         rounding = product_id.uom_id.rounding
+
+        _logger.info('GATHERING QUANTS for QUANTITY: %s  for product %s, location  %s, package %s '
+                     ' lot %s , owner %s, ' % (quantity, product_id.id, location_id.id
+                                              package_id.id, lot_id.id,
+                                               owner_id.id))
+
+        print('GATHERING QUANTS for QUANTITY: %s  for product %s, location  %s, package %s '
+                     ' lot %s , owner %s, ' % (quantity, product_id.id, location_id.id
+                                              package_id.id, lot_id.id,
+                                               owner_id.id))
         quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+
+        _logger.info('QUANTS FOUND %s ' % quants)
+        print('QUANTS FOUND %s ' % quants)
         reserved_quants = []
 
+
+        _logger.info('RESERVE OR UNRESERVE?  QUANTITY %s  product %s  ' % (
+            quantity, product_id.id))
+        print('RESERVE OR UNRESERVE?  QUANTITY %s  product %s  ' % (
+            quantity, product_id.id))
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
             # if we want to reserve
+
+            _logger.info('QUANTITY IS > 0 WE RESERVE %s ' % (
+                quantity))
+            print('QUANTITY IS > 0 WE NEED TO  RESERVE %s ' % (
+                quantity))
             available_quantity = self._get_available_quantity(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
+
+            _logger.info('AVAILABLE QUANTITY FOR PRODUCT %s IS  %s  ' % (
+                product_id.id, available_quantity))
+            print('AVAILABLE QUANTITY FOR PRODUCT %s IS  %s  ' % (
+                product_id.id, available_quantity))
             if float_compare(quantity, available_quantity, precision_rounding=rounding) > 0:
+                _logger.info('THE QUANTITY %s WE WANT TO RESERVE FOR PRD %s IS MORE
+                      THAN AVAILABLE QTY %s ' % (quantity,
+                    product_id.id, available_quantity))
+                print('THE QUANTITY %s WE WANT TO RESERVE FOR PRD %s IS MORE
+                      THAN AVAILABLE QTY %s ' % (quantity,
+                    product_id.id, available_quantity))
                 raise UserError(_('It is not possible to reserve more products of %s than you have in stock.') % product_id.display_name)
         elif float_compare(quantity, 0, precision_rounding=rounding) < 0:
             # if we want to unreserve
+            _logger.info('QUANTITY IS < 0 WE UNRESERVE %s ' % (
+                quantity))
+            print('QUANTITY IS < 0 WE NEED TO  UNRESERVE %s ' % (
+                quantity))
+
+            _logger.info('WE CALCULATE AVAILABLE QTY NOT THROUGH FUNCTION '
+                        'BUT WITH MAPPED SUM OF RESERVED QUANTITY OF QUANTS')
+            print('WE CALCULATE AVAILABLE QTY NOT THROUGH FUNCTION '
+                        'BUT WITH MAPPED SUM OF RESERVED QUANTITY OF QUANTS')
             available_quantity = sum(quants.mapped('reserved_quantity'))
             if float_compare(abs(quantity), available_quantity, precision_rounding=rounding) > 0:
+
+                _logger.info('THE QUANTITY %s WE WANT TO UNRESERVE FOR PRD %s IS MORE
+                      THAN AVAILABLE QTY %s ' % (quantity,
+                    product_id.id, available_quantity))
+                print('  THE QUANTITY %s WE WANT TO UNRESERVE FOR PRD %s IS MORE
+                      THAN AVAILABLE QTY %s ' % (quantity,
+                    product_id.id, available_quantity))
+
                 raise UserError(_('It is not possible to unreserve more products of %s than you have in stock.') % product_id.display_name)
         else:
             return reserved_quants
