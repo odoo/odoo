@@ -3604,9 +3604,9 @@ class AccountMoveLine(models.Model):
     @api.depends('move_id.move_type', 'tax_ids', 'tax_repartition_line_id')
     def _compute_tax_tag_invert(self):
         for record in self:
-            if not record.tax_repartition_line_id and not record.tax_ids:
-                # We only want to set this field to True on lines using taxes
-                record.tax_tag_invert = False
+            if not record.tax_repartition_line_id and not record.tax_ids :
+                # Invoices imported from other softwares might only have kept the tags, not the taxes.
+                record.tax_tag_invert = record.tax_tag_ids and record.moved_id.is_inbound()
 
             elif record.move_id.move_type == 'entry':
                 # For misc operations, cash basis entries and write-offs from the bank reconciliation widget
@@ -3621,7 +3621,7 @@ class AccountMoveLine(models.Model):
                 record.tax_tag_invert = (tax_type == 'purchase' and is_refund) or (tax_type == 'sale' and not is_refund)
 
             else:
-                # For invoices
+                # For invoices with taxes
                 record.tax_tag_invert = record.move_id.is_inbound()
 
     @api.depends('tax_tag_ids', 'debit', 'credit', 'journal_id', 'tax_tag_invert')
