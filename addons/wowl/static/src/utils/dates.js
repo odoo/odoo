@@ -1,11 +1,21 @@
 /** @odoo-module **/
+
 const { DateTime } = luxon;
+
 /**
  * Change the method toJSON to return the formated value to send server side.
  */
 DateTime.prototype.toJSON = function () {
   return this.setLocale("en").toFormat("yyyy-MM-dd HH:mm:ss");
 };
+
+/**
+ * Format a DateTime object
+ *
+ * @param {DateTime | false} value
+ * @param {{format?: string, timezone?: boolean}} options
+ * @returns {string}
+ */
 export function formatDateTime(value, options = {}) {
   if (value === false) {
     return "";
@@ -15,26 +25,42 @@ export function formatDateTime(value, options = {}) {
   }
   return options.format ? value.toFormat(options.format) : value.toJSON();
 }
+
 const stripAlphaDupesRegex = /([a-zA-Z])(?<=\1[^\1])/g;
+
+/**
+ * @param {string} str
+ * @returns {string}
+ */
 function stripAlphaDupes(str) {
   // Removes any duplicated alphabetic characters in a given string.
   // Example: "aa-bb-CCcc-ddD xxxx-Yy-ZZ" -> "a-b-Cc-dD x-Yy-Z"
   return str.replace(stripAlphaDupesRegex, "");
 }
+
+/**
+ * @param {DateTime | false} date
+ * @returns {boolean}
+ */
 function check(d) {
   // FYI, luxon authorizes years until 275760 included...
   return d.isValid && d.year < 10000 && d;
 }
+
 const nonAlphaRegex = /\W/g;
 const nonDigitsRegex = /\D/g;
+
 /**
- * Utilitary method to create a Luxon DateTime object.
- * The value can also take the form of a smart date: e.g. "+3w" for three weeks from now.
- * If value can not be parsed with the localized format, the fallback is ISO8601 format.
+ * Utility method to create a Luxon DateTime object.
+ * The value can also take the form of a smart date: e.g. "+3w" for three weeks
+ * from now. If value can not be parsed with the localized format, the fallback
+ * is ISO8601 format.
  *
  * @param {string} value
- * @param {string} [options.format=ISO8601]
- * @param {boolean} [options.timezone=false] parse the date then apply the timezone offset
+ * @param {{format?: string, timezone?: boolean}} options
+ * @param {string} [options.format] default value is ISO8601
+ * @param {boolean} [options.timezone] parse the date then apply the timezone
+ *    offset. Default=false
  * @returns {DateTime|false} Luxon DateTime object
  */
 export function parseDateTime(value, options = {}) {
@@ -70,13 +96,16 @@ export function parseDateTime(value, options = {}) {
     ? result.minus({ minutes: result.toJSDate().getTimezoneOffset() })
     : result;
 }
+
 const dateUnits = {
   d: "days",
   m: "months",
   w: "weeks",
   y: "years",
 };
+
 const smartDateRegex = new RegExp(`^([+-])(\\d+)([${Object.keys(dateUnits).join("")}]?)$`);
+
 /**
  * Smart date inputs are shortcuts to write dates quicker.
  * These shortcuts should respect the format ^[+-]\d+[dmwy]?$
@@ -105,7 +134,8 @@ export function parseSmartDateInput(value) {
   }
   return false;
 }
-const normalize_format_table = {
+
+const normalizeFormatTable = {
   // Python strftime to luxon.js conversion table
   // See openerp/addons/base/views/res_lang_views.xml
   // for details about supported directives
@@ -129,12 +159,14 @@ const normalize_format_table = {
   x: "LL/dd/yy",
   X: "HH:mm:ss",
 };
+
 const _normalize_format_cache = {};
+
 /**
  * Convert Python strftime to escaped luxon.js format.
  *
- * @param {String} value original format
- * @returns {String} valid Luxon format
+ * @param {string} value original format
+ * @returns {string} valid Luxon format
  */
 export function strftimeToLuxonFormat(value) {
   if (_normalize_format_cache[value] === undefined) {
@@ -148,8 +180,8 @@ export function strftimeToLuxonFormat(value) {
         continue;
       }
       if (isletter.test(character)) {
-        if (inToken && normalize_format_table[character] !== undefined) {
-          character = normalize_format_table[character];
+        if (inToken && normalizeFormatTable[character] !== undefined) {
+          character = normalizeFormatTable[character];
         } else {
           character = "[" + character + "]"; // moment.js escape
         }

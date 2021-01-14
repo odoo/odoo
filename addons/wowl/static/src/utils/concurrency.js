@@ -1,8 +1,18 @@
 /** @odoo-module **/
+
+/**
+ * KeepLast is a concurrency primitive that manages a list of tasks, and only
+ * keep the last task active.
+ */
 export class KeepLast {
-  constructor() {
-    this.id = 0;
-  }
+  id = 0;
+
+  /**
+   * Register a new task
+   *
+   * @param {Promise<any>} promise
+   * @returns {Promise<any>}
+   */
   add(promise) {
     this.id++;
     const currentId = this.id;

@@ -1,7 +1,11 @@
 /** @odoo-module **/
-/*
- * Helper function returning an extraction handler to use on array elements to
- * return a certain attribute or mutated form of the element.
+
+/**
+ * Private helper function returning an extraction handler to use on array
+ * elements to return a certain attribute or mutated form of the element.
+ *
+ * @param {string | function} [criterion]
+ * @returns {(obj: any) => string }
  */
 function _getExtractorFrom(criterion) {
   switch (typeof criterion) {
@@ -15,6 +19,7 @@ function _getExtractorFrom(criterion) {
       );
   }
 }
+
 /**
  * Returns an object holding different groups defined by a given criterion
  * or a default one. Each group is a subset of the original given list.
