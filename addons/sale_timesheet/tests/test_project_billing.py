@@ -119,7 +119,8 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         Task = self.env['project.task']
         # set a customer on the project
         self.project_non_billable.write({
-            'partner_id': self.partner_2.id
+            'partner_id': self.partner_2.id,
+            'timesheet_product_id': self.product_delivery_timesheet3,
         })
         # create a task and 2 timesheets
         task = Task.with_context(default_project_id=self.project_non_billable.id).create({
@@ -147,7 +148,6 @@ class TestProjectBilling(TestCommonSaleTimesheet):
             'allow_billable': True,
             'pricing_type': 'fixed_rate',
         })
-        task.timesheet_product_id = self.product_delivery_timesheet3
 
         # create wizard
         wizard = self.env['project.create.sale.order'].with_context(active_id=self.project_non_billable.id, active_model='project.project').create({})

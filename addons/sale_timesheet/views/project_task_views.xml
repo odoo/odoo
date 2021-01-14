@@ -202,17 +202,6 @@
             </field>
         </record>
 
-        <record id="quick_create_task_form_sale_timesheet" model="ir.ui.view">
-            <field name="name">project.task.form.inherit.timesheet</field>
-            <field name="model">project.task</field>
-            <field name="inherit_id" ref="project.quick_create_task_form"/>
-            <field name="arch" type="xml">
-                <field name="project_id" position="after">
-                    <field name="timesheet_product_id" invisible="1"/>
-                </field>
-            </field>
-        </record>
-
         <record id="project_timesheet_action_client_timesheet_plan" model="ir.actions.act_window">
             <field name="name">Overview</field>
             <field name="res_model">project.project</field>
