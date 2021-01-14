@@ -195,11 +195,12 @@ class AccountPaymentRegister(models.TransientModel):
         ''' Load initial values from the account.moves passed through the context. '''
         for wizard in self:
             batches = wizard._get_batches()
+            batch_result = batches[0]
+            wizard_values_from_batch = wizard._get_wizard_values_from_batch(batch_result)
 
             if len(batches) == 1:
                 # == Single batch to be mounted on the view ==
-                batch_result = batches[0]
-                wizard.update(wizard._get_wizard_values_from_batch(batch_result))
+                wizard.update(wizard_values_from_batch)
 
                 wizard.can_edit_wizard = True
                 wizard.can_group_payments = len(batch_result['lines']) != 1
@@ -209,7 +210,7 @@ class AccountPaymentRegister(models.TransientModel):
                     'company_id': batches[0]['lines'][0].company_id.id,
                     'partner_id': False,
                     'partner_type': False,
-                    'payment_type': False,
+                    'payment_type': wizard_values_from_batch['payment_type'],
                     'source_currency_id': False,
                     'source_amount': False,
                     'source_amount_currency': False,
