@@ -328,7 +328,7 @@ class Meeting(models.Model):
 
     @api.depends('stop', 'start')
     def _compute_duration(self):
-        for event in self.with_context(dont_notify=True):
+        for event in self:
             event.duration = self._get_duration(event.start, event.stop)
 
     @api.depends('start', 'duration')
@@ -675,11 +675,7 @@ class Meeting(models.Model):
         (detached_events & self).active = False
         (detached_events - self).with_context(archive_on_error=True).unlink()
 
-        # Notify attendees if there is an alarm on the modified event, or if there was an alarm
-        # that has just been removed, as it might have changed their next event notification
-        if not self._context.get('dont_notify'):
-            if self.alarm_ids or values.get('alarm_ids'):
-                self.env['calendar.alarm_manager']._notify_next_alarm(self.partner_ids.ids)
+        self._setup_alarms()
 
         current_attendees = self.filtered('active').attendee_ids
         if 'partner_ids' in values:
@@ -691,6 +687,15 @@ class Meeting(models.Model):
                 (current_attendees & previous_attendees)._send_mail_to_attendees('calendar.calendar_template_meeting_changedate', ignore_recurrence=not update_recurrence)
 
         return True
+
+    def _setup_alarms(self):
+        """ Trigger the cron in the future for every email reminder """
+        cron = self.env.ref('calendar.ir_cron_scheduler_alarm')
+        for event in self:
+            for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type == 'email'):
+                cron._trigger(at=event.start-timedelta(minutes=alarm.duration_minutes))
+            if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
+                self.env['calendar.alarm_manager']._notify_next_alarm(event.partner_ids.ids)
 
     @api.model_create_multi
     def create(self, vals_list):
@@ -741,12 +746,8 @@ class Meeting(models.Model):
         events.filtered(lambda event: event.start > fields.Datetime.now()).attendee_ids._send_mail_to_attendees('calendar.calendar_template_meeting_invitation')
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys() })
 
-        # Notify attendees if there is an alarm on the created event, as it might have changed their
-        # next event notification
-        if not self._context.get('dont_notify'):
-            for event in events:
-                if len(event.alarm_ids) > 0:
-                    self.env['calendar.alarm_manager']._notify_next_alarm(event.partner_ids.ids)
+        events._setup_alarms()
+
         return events
 
     def read(self, fields=None, load='_classic_read'):
