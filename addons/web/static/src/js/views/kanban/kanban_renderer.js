@@ -503,7 +503,7 @@ var KanbanRenderer = BasicRenderer.extend({
         var draggable = true;
         var grouped_by_date = false;
         if (groupByFieldAttrs) {
-            if (groupByFieldAttrs.type === "date" || groupByFieldAttrs.type === "datetime") {
+            if (groupByFieldAttrs.type === "datetime") {
                 draggable = false;
                 grouped_by_date = true;
             } else if (groupByFieldAttrs.readonly !== undefined) {

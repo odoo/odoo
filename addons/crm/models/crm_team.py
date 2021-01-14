@@ -524,6 +524,25 @@ class Team(models.Model):
     @api.model
     def action_your_pipeline(self):
         action = self.env["ir.actions.actions"]._for_xml_id("crm.crm_lead_action_pipeline")
+        return self._your_pipeline(action)
+
+    @api.model
+    def action_opportunity_forecast(self):
+        action = self.env.ref('crm.crm_lead_action_forecast')
+        action.context = {
+            'default_type': 'opportunity',
+            'search_default_assigned_to_me': 1,
+            'fill_temporal': 1,
+            'forecast_field': 'date_deadline'
+        }
+        action.domain = [
+            '&', ('user_id', '=', self.env.user.id),  # TODO ABD: team_id ? Redundant with context ?
+            ('type', '=', 'opportunity')
+        ]
+        action = self.env['ir.actions.actions']._for_xml_id('crm.crm_lead_action_forecast')
+        return self._your_pipeline(action)
+
+    def _your_pipeline(self, action):
         user_team_id = self.env.user.sale_team_id.id
         if user_team_id:
             # To ensure that the team is readable in multi company

@@ -50,6 +50,7 @@
         'views/crm_stage_views.xml',
         'views/crm_lead_views.xml',
         'views/crm_team_member_views.xml',
+        'views/crm_forecast_views.xml',
         'views/digest_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
@@ -74,6 +75,8 @@
         'web.assets_backend': [
             'crm/static/src/js/crm_form.js',
             'crm/static/src/js/crm_kanban.js',
+            'crm/static/src/js/crm_forecast_kanban.js',
+            'crm/static/src/js/kanban_column_quick_add.js',
             'crm/static/src/js/systray_activity_menu.js',
             'crm/static/src/js/tours/crm.js',
             'crm/static/src/scss/crm.scss',
@@ -85,6 +88,9 @@
         'web.qunit_suite_tests': [
             'crm/static/tests/mock_server.js',
             'crm/static/tests/crm_rainbowman_tests.js',
+        ],
+        'web.assets_qweb': [
+            'crm/static/src/xml/*.xml',
         ],
     }
 }

@@ -4057,7 +4057,7 @@ var BasicModel = AbstractModel.extend({
      */
     _makeDataPoint: function (params) {
         var type = params.type || ('domain' in params && 'list') || 'record';
-        var res_id, value;
+        var res_id, value, valueRange;
         var res_ids = params.res_ids || [];
         var data = params.data || (type === 'record' ? {} : []);
         var context = params.context;
@@ -4073,8 +4073,14 @@ var BasicModel = AbstractModel.extend({
             context = _.omit(context, ['orderedBy', 'group_by']);
         } else {
             var isValueArray = params.value instanceof Array;
-            res_id = isValueArray ? params.value[0] : undefined;
-            value = isValueArray ? params.value[1] : params.value;
+            if (isValueArray) {
+                res_id = params.value[0];
+                value = params.value[1];
+            } else {
+                res_id = undefined;
+                value = params.value && params.value.display ? params.value.display : params.value;
+                valueRange = params.value ? params.value.range : undefined;
+            }
         }
 
         var fields = _.extend({
@@ -4117,7 +4123,8 @@ var BasicModel = AbstractModel.extend({
             _specialDataCache: {},
             static: params.static || false,
             type: type,  // 'record' | 'list'
-            value: value,
+            value: value ? value : undefined, // should not be necessary, check why it becomes "false" for the empty group (no date)
+            valueRange: valueRange,
             viewType: params.viewType,
         };
 

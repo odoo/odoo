@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="crm_case_kanban_view_leads_forecast" model="ir.ui.view">
+        <field name="name">crm.lead.kanban.forecast</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+        <field name="priority" eval="2"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="default_group_by">date_deadline</attribute>
+                <attribute name="js_class">crm_forecast_kanban</attribute>
+            </xpath>
+            <xpath expr="//field[@name='expected_revenue']" position="replace">
+                <field name="prorated_revenue"/>
+            </xpath>
+            <xpath expr="//progressbar" position="attributes">
+                <attribute name="sum_field">prorated_revenue</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('o_kanban_record_subtitle')]" position="replace">
+                <div class="o_kanban_record_subtitle">
+                    <t t-if="record.prorated_revenue.raw_value">
+                        <field name="prorated_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                        <span t-if="record.recurring_revenue and record.recurring_revenue.raw_value"> + </span>
+                    </t>
+                    <t t-if="record.recurring_revenue and record.recurring_revenue.raw_value">
+                        <field name="recurring_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                        <field name="recurring_plan"/>
+                    </t>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_opportunity_forecast" model="ir.actions.server">
+        <field name="name">Crm: Forecast</field>
+        <field name="model_id" ref="crm.model_crm_team"/>
+        <field name="state">code</field>
+        <field name="groups_id"  eval="[(4, ref('base.group_user'))]"/>
+        <field name="code">action = model.action_opportunity_forecast()</field>
+    </record>
+
+    <record model="ir.actions.act_window" id="crm_lead_action_forecast">
+        <field name="name">Forecast</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">kanban,tree,pivot,graph,form</field>
+        <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+    </record>
+
+    <record id="crm_lead_action_forecast_view_kanban" model="ir.actions.act_window.view">
+        <field name="sequence" eval="0"/>
+        <field name="view_mode">kanban</field>
+        <field name="view_id" ref="crm_case_kanban_view_leads_forecast"/>
+        <field name="act_window_id" ref="crm_lead_action_forecast"/>
+    </record>
+
+    <record id="crm_lead_action_forecast_view_tree" model="ir.actions.act_window.view">
+        <field name="sequence" eval="1"/>
+        <field name="view_mode">tree</field>
+        <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
+        <field name="act_window_id" ref="crm_lead_action_forecast"/>
+    </record>
+
+    <record id="crm_lead_action_forecast_view_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="3"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="crm.crm_lead_view_pivot"/>
+        <field name="act_window_id" ref="crm_lead_action_forecast"/>
+    </record>
+
+    <record id="crm_lead_action_forecast_view_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="crm.crm_lead_view_graph"/>
+        <field name="act_window_id" ref="crm_lead_action_forecast"/>
+    </record>
+
+    <record id="crm_forecast_menu" model="ir.ui.menu">
+        <field name="action" ref="crm.action_opportunity_forecast"/>
+    </record>
+
+</odoo>

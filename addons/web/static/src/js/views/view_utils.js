@@ -13,7 +13,7 @@ var viewUtils = {
      * @param {string} groupByField the name of the groupBy field
      * @returns {string | integer | false}
      */
-    getGroupValue: function (group, groupByField) {
+    getGroupValue: function (group, groupByField) {        
         var groupedByField = group.fields[groupByField];
         switch (groupedByField.type) {
             case 'many2one':
@@ -26,6 +26,8 @@ var viewUtils = {
             case 'char':
             case 'boolean':
                 return group.value;
+            case 'date':
+                return group.valueRange ? moment(group.valueRange.split('/')[1]).subtract(1, 'day').format("YYYY-MM-DD") : false;
             default:
                 return false; // other field types are not handled
         }
@@ -42,7 +44,7 @@ var viewUtils = {
         if (!groupByField) {
             return false;
         }
-        var availableTypes = ['char', 'boolean', 'many2one', 'selection'];
+        var availableTypes = ['char', 'boolean', 'many2one', 'selection', 'date'];
         if (!_.contains(availableTypes, list.fields[groupByField].type)) {
             return false;
         }

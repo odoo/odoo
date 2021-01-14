@@ -234,7 +234,7 @@ var KanbanModel = BasicModel.extend({
         var parent = this.localData[parentID];
         var new_group = this.localData[groupID];
         var changes = {};
-        var groupedFieldName = parent.groupedBy[0];
+        var groupedFieldName = parent.groupedBy[0].split(':')[0];
         var groupedField = parent.fields[groupedFieldName];
         if (groupedField.type === 'many2one') {
             changes[groupedFieldName] = {
@@ -244,6 +244,8 @@ var KanbanModel = BasicModel.extend({
         } else if (groupedField.type === 'selection') {
             var value = _.findWhere(groupedField.selection, {1: new_group.value});
             changes[groupedFieldName] = value && value[0] || false;
+        } else if (groupedField.type === 'date') {
+            changes[groupedFieldName] = new_group.valueRange ? moment(new_group.valueRange.split('/')[1]).subtract(1, 'day').format("YYYY-MM-DD") : false;
         } else {
             changes[groupedFieldName] = new_group.value;
         }
