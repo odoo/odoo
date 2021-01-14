@@ -83,7 +83,7 @@
                 <strong>
                     <span t-att-style="'color: %s;' % o.company_id.secondary_color">Date:</span>
                 </strong>
-                <span t-esc="report_date" t-options='{"widget": "date"}'/>
+                <span t-esc="o.invoice_date" t-options='{"widget": "date"}'/>
                 <br/>
 
                 <strong>Customer:</strong>
