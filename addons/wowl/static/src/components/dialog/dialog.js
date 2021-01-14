@@ -1,7 +1,9 @@
 /** @odoo-module **/
+
 const { Component, hooks, misc } = owl;
 const { useRef, useExternalListener, useSubEnv } = hooks;
 const { Portal } = misc;
+
 export class Dialog extends Component {
   constructor(parent, props) {
     super(...arguments);
@@ -9,6 +11,7 @@ export class Dialog extends Component {
     useExternalListener(window, "keydown", this._onKeydown);
     useSubEnv({ inDialog: true });
   }
+
   mounted() {
     const dialogContainer = document.querySelector(".o_dialog_container");
     const modals = dialogContainer.querySelectorAll(".o_dialog .modal");
@@ -19,6 +22,7 @@ export class Dialog extends Component {
     }
     dialogContainer.classList.add("modal-open");
   }
+
   willUnmount() {
     const dialogContainer = document.querySelector(".o_dialog_container");
     const modals = dialogContainer.querySelectorAll(".o_dialog .modal");
@@ -31,6 +35,7 @@ export class Dialog extends Component {
       dialogContainer.classList.remove("modal-open");
     }
   }
+
   /**
    * Send an event signaling that the dialog should be closed.
    * @private
@@ -38,6 +43,7 @@ export class Dialog extends Component {
   _close() {
     this.trigger("dialog-closed");
   }
+
   _onKeydown(ev) {
     var _a;
     if (
@@ -50,6 +56,7 @@ export class Dialog extends Component {
     }
   }
 }
+
 Dialog.components = { Portal };
 Dialog.props = {
   contentClass: { type: String, optional: 1 },

@@ -1,5 +1,29 @@
 /** @odoo-module **/
 import { deployServices } from "./services/deploy_services";
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+/**
+ * @typedef {Object} OdooEnv
+ * @property {Object} services
+ * @property {EventBus} bus
+ * @property {string} debug
+ * @property {(str: string) => string} _t
+ * @property {boolean} [isSmall]
+ */
+
+// -----------------------------------------------------------------------------
+// makeEnv
+// -----------------------------------------------------------------------------
+
+/**
+ * Return a value Odoo Env object
+ *
+ * @param {string} debug
+ * @returns {OdooEnv}
+ */
 export async function makeEnv(debug) {
   const env = {
     browser: owl.browser,
@@ -36,6 +60,15 @@ export async function makeEnv(debug) {
   await deployServices(env);
   return env;
 }
+
+// -----------------------------------------------------------------------------
+// makeRAMLocalStorage
+// why is it here?
+// -----------------------------------------------------------------------------
+
+/**
+ * @returns {typeof window["localStorage"]}
+ */
 export function makeRAMLocalStorage() {
   let store = {};
   return {
