@@ -387,10 +387,11 @@
                             </div>
                         </page>
                     </notebook>
+
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" options="{'post_refresh':True}" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
+                    </div>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" options="{'post_refresh':True}" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
-                </div>
                 </form>
             </field>
         </record>
