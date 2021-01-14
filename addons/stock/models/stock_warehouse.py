@@ -225,9 +225,9 @@ class Warehouse(models.Model):
                                     (', '.join(picking_type_using_locations.mapped('name')), warehouse.name))
                 warehouse.view_location_id.write({'active': vals['active']})
 
-                rule_ids = self.env['stock.rule'].with_context(active_test=False).search([('warehouse_id', '=', self.id)])
+                rule_ids = self.env['stock.rule'].with_context(active_test=False).search([('warehouse_id', '=', warehouse.id)])
                 # Only modify route that apply on this warehouse.
-                route_ids = warehouse.route_ids.filtered(lambda r: len(r.warehouse_ids) == 1).write({'active': vals['active']})
+                warehouse.route_ids.filtered(lambda r: len(r.warehouse_ids) == 1).write({'active': vals['active']})
                 rule_ids.write({'active': vals['active']})
 
                 if warehouse.active:
