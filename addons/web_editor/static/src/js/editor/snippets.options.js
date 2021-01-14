@@ -4171,7 +4171,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      */
     shape(previewMode, widgetValue, params) {
         this._handlePreviewState(previewMode, () => {
-            return {shape: widgetValue, colors: this._getDefaultColors(), flip: []};
+            return {shape: widgetValue, colors: this._getImplicitColors(widgetValue, this._getShapeData().colors), flip: []};
         });
     },
     /**
@@ -4390,7 +4390,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         const defaultColors = this._getDefaultColors();
         const shapeData = Object.assign(this._getShapeData(), newData);
         const areColorsDefault = Object.entries(shapeData.colors).every(([colorName, colorValue]) => {
-            return colorValue.toLowerCase() === defaultColors[colorName].toLowerCase();
+            return defaultColors[colorName] && colorValue.toLowerCase() === defaultColors[colorName].toLowerCase();
         });
         if (areColorsDefault) {
             delete shapeData.colors;
@@ -4441,7 +4441,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
     _getShapeData(target = this.$target[0]) {
         const defaultData = {
             shape: '',
-            colors: this._getDefaultColors(),
+            colors: this._getDefaultColors($(target)),
             flip: [],
         };
         const json = target.dataset.oeShapeData;
@@ -4451,9 +4451,11 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * Returns the default colors for the currently selected shape.
      *
      * @private
+     * @param {jQueryElement} [$target=this.$target] the target on which to read
+     *   the shape data.
      */
-    _getDefaultColors() {
-        const $shapeContainer = this.$target.find('> .o_we_shape')
+    _getDefaultColors($target = this.$target) {
+        const $shapeContainer = $target.find('> .o_we_shape')
             .clone()
             .addClass('d-none')
             // Needs to be in document for bg-image class to take effect
@@ -4467,6 +4469,44 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         }
         const url = new URL(shapeSrc, window.location.origin);
         return Object.fromEntries(url.searchParams.entries());
+    },
+    /**
+     * Returns the default colors for the a shape in the selector.
+     *
+     * @private
+     * @param {String} shapeId identifier of the shape
+     */
+    _getShapeDefaultColors(shapeId) {
+        const $shapeContainer = this.$el.find(".o_we_shape_menu we-button[data-shape='" + shapeId + "'] div.o_we_shape");
+        const shapeContainer = $shapeContainer[0];
+        const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
+        const url = new URL(shapeSrc, window.location.origin);
+        return Object.fromEntries(url.searchParams.entries());
+    },
+    /**
+     * Returns the implicit colors for the currently selected shape.
+     *
+     * The implicit colors are use upon shape selection. They are computed as:
+     * - the default colors
+     * - patched with each set of colors of previous siblings shape
+     * - patched with the colors of the previously selected shape
+     * - filtered to only keep the colors involved in the current shape
+     *
+     * @private
+     * @param {String} shape identifier of the selected shape
+     * @param {Object} previousColors colors of the shape before its replacement
+     */
+    _getImplicitColors(shape, previousColors) {
+        const defaultColors = this._getShapeDefaultColors(shape);
+        let colors = previousColors || {};
+        let sibling = this.$target[0].previousElementSibling;
+        while (sibling) {
+            colors = Object.assign(this._getShapeData(sibling).colors || {}, colors);
+            sibling = sibling.previousElementSibling;
+        }
+        const defaultKeys = Object.keys(defaultColors);
+        colors = Object.assign(defaultColors, colors);
+        return _.pick(colors, defaultKeys);
     },
     /**
      * Toggles whether there is a shape or not, to be called from bg toggler.
@@ -4494,7 +4534,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 // options for shape will only be available after _toggleShape() returned
                 this._requestUserValueWidgets('bg_shape_opt')[0].enable();
             }});
-            return this._handlePreviewState(false, () => ({shape: shapeToSelect}));
+            return this._handlePreviewState(false, () => ({shape: shapeToSelect, colors: this._getImplicitColors(shapeToSelect)}));
         }
     },
 });
