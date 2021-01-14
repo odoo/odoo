@@ -1192,6 +1192,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         if (!fieldChanged && !actionsChanged) {
             var newEval = this._evalColumnInvisibleFields();
             if (_.isEqual(this.currentColInvisibleFields, newEval)) {
+                this._reset(record, ev); // update the internal state, but do not re-render
                 return Promise.resolve();
             }
         } else if (ev && ev.target === this && ev.data.changes && this.view.arch.tag === 'tree') {
