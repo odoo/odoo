@@ -74,6 +74,7 @@ class AlarmManager(models.AbstractModel):
             first_alarm_max_value = "(now() at time zone 'utc' + interval '%s' second )"
             tuple_params += (seconds,)
 
+        self.flush()
         self._cr.execute("""
             WITH calcul_delta AS (%s)
             SELECT *
