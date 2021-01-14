@@ -1,5 +1,24 @@
 /** @odoo-module **/
 import { bp } from "./parser";
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+/**
+ * @typedef { import("./parser").AST } AST
+ */
+
+// -----------------------------------------------------------------------------
+// Utils
+// -----------------------------------------------------------------------------
+
+/**
+ * Represent any value as a primitive AST
+ *
+ * @param {any} value
+ * @returns {AST}
+ */
 export function toPyValue(value) {
   switch (typeof value) {
     case "string":
@@ -22,6 +41,12 @@ export function toPyValue(value) {
       throw new Error("Invalid type");
   }
 }
+
+/**
+ * @param {AST} ast
+ * @param {number} [lbp] left binding power
+ * @returns {string}
+ */
 export function formatAST(ast, lbp = 0) {
   switch (ast.type) {
     case 3 /* None */:
@@ -81,7 +106,13 @@ export function formatAST(ast, lbp = 0) {
   }
   throw new Error("invalid expression: " + ast);
 }
+
 export const PY_DICT = Object.create(null);
+
+/**
+ * @param {Object} obj
+ * @returns {AST} a python dictionary
+ */
 export function toPyDict(obj) {
   const result = Object.create(PY_DICT);
   return Object.assign(result, obj);

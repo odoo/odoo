@@ -1,140 +1,30 @@
 /** @odoo-module **/
+
 // -----------------------------------------------------------------------------
-// Tokenizer
+// Types
 // -----------------------------------------------------------------------------
-const constants = new Set(["None", "False", "True"]);
-export const comparators = [
-  "in",
-  "not",
-  "not in",
-  "is",
-  "is not",
-  "<",
-  "<=",
-  ">",
-  ">=",
-  "<>",
-  "!=",
-  "==",
-];
-export const binaryOperators = [
-  "or",
-  "and",
-  "|",
-  "^",
-  "&",
-  "<<",
-  ">>",
-  "+",
-  "-",
-  "*",
-  "/",
-  "//",
-  "%",
-  "~",
-  "**",
-  ".",
-];
-export const unaryOperators = ["-"];
-const symbols = new Set([
-  ...["(", ")", "[", "]", "{", "}", ":", ","],
-  ...["if", "else", "lambda", "="],
-  ...comparators,
-  ...binaryOperators,
-  ...unaryOperators,
-]);
-// Regexps
-function group(...args) {
-  return "(" + args.join("|") + ")";
-}
-const Name = "[a-zA-Z_]\\w*";
-const Whitespace = "[ \\f\\t]*";
-const DecNumber = "\\d+(L|l)?";
-const IntNumber = DecNumber;
-const PointFloat = group("\\d+\\.\\d*", "\\.\\d+");
-const FloatNumber = PointFloat;
-const Number = group(FloatNumber, IntNumber);
-const Operator = group("\\*\\*=?", ">>=?", "<<=?", "<>", "!=", "//=?", "[+\\-*/%&|^=<>]=?", "~");
-const Bracket = "[\\[\\]\\(\\)\\{\\}]";
-const Special = "[:;.,`@]";
-const Funny = group(Operator, Bracket, Special);
-const ContStr = group(
-  "([uU])?'([^\n'\\\\]*(?:\\\\.[^\n'\\\\]*)*)'",
-  '([uU])?"([^\n"\\\\]*(?:\\\\.[^\n"\\\\]*)*)"'
-);
-const PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
-const NumberPattern = new RegExp("^" + Number + "$");
-const StringPattern = new RegExp("^" + ContStr + "$");
-const NamePattern = new RegExp("^" + Name + "$");
-const strip = new RegExp("^" + Whitespace);
-export function tokenize(str) {
-  const tokens = [];
-  let max = str.length;
-  let start = 0;
-  let end = 0;
-  // /g flag makes repeated exec() have memory
-  const pseudoprog = new RegExp(PseudoToken, "g");
-  while (pseudoprog.lastIndex < max) {
-    const pseudomatch = pseudoprog.exec(str);
-    if (!pseudomatch) {
-      // if match failed on trailing whitespace, end tokenizing
-      if (/^\s+$/.test(str.slice(end))) {
-        break;
-      }
-      throw new Error(
-        "Failed to tokenize <<" + str + ">> at index " + (end || 0) + "; parsed so far: " + tokens
-      );
-    }
-    if (pseudomatch.index > end) {
-      if (str.slice(end, pseudomatch.index).trim()) {
-        throw new Error("Tokenizer error: Invalid expression");
-      }
-    }
-    start = pseudomatch.index;
-    end = pseudoprog.lastIndex;
-    let token = str.slice(start, end).replace(strip, "");
-    if (NumberPattern.test(token)) {
-      tokens.push({
-        type: 0 /* Number */,
-        value: parseFloat(token),
-      });
-    } else if (StringPattern.test(token)) {
-      var m = StringPattern.exec(token);
-      tokens.push({
-        type: 1 /* String */,
-        value: decodeStringLiteral(m[3] !== undefined ? m[3] : m[5], !!(m[2] || m[4])),
-      });
-    } else if (symbols.has(token)) {
-      // transform 'not in' and 'is not' in a single token
-      if (token === "in" && tokens.length > 0 && tokens[tokens.length - 1].value === "not") {
-        token = "not in";
-        tokens.pop();
-      } else if (token === "not" && tokens.length > 0 && tokens[tokens.length - 1].value === "is") {
-        token = "is not";
-        tokens.pop();
-      }
-      tokens.push({
-        type: 2 /* Symbol */,
-        value: token,
-      });
-    } else if (constants.has(token)) {
-      tokens.push({
-        type: 4 /* Constant */,
-        value: token,
-      });
-    } else if (NamePattern.test(token)) {
-      tokens.push({
-        type: 3 /* Name */,
-        value: token,
-      });
-    } else {
-      throw new Error("aaaaa");
-    }
-  }
-  return tokens;
-}
-// Directly maps a single escape code to an output
-// character
+
+/**
+ * @typedef {{type: 0, value: number}} TokenNumber
+ *
+ * @typedef {{type: 1, value: string}} TokenString
+ *
+ * @typedef {{type: 2, value: string}} TokenSymbol
+ *
+ * @typedef {{type: 3, value: string}} TokenName
+ *
+ * @typedef {{type: 4, value: string}} TokenConstant
+ *
+ * @typedef {TokenNumber | TokenString | TokenSymbol | TokenName | TokenConstant} Token
+ */
+
+// -----------------------------------------------------------------------------
+// Helpers and Constants
+// -----------------------------------------------------------------------------
+
+/**
+ * Directly maps a single escape code to an output character
+ */
 const directMap = {
   "\\": "\\",
   '"': '"',
@@ -147,6 +37,7 @@ const directMap = {
   t: "\t",
   v: "\v",
 };
+
 /**
  * Implements the decoding of Python string literals (embedded in
  * JS strings) into actual JS strings. This includes the decoding
@@ -161,10 +52,14 @@ const directMap = {
  *
  * Eventurally, ``str`` could eventually use typed arrays, that'd
  * be interesting...
+ *
+ * @param {string} str
+ * @param {boolean} unicode
+ * @returns {string}
  */
 function decodeStringLiteral(str, unicode) {
-  var out = [],
-    code;
+  let out = [];
+  let code;
   for (var i = 0; i < str.length; ++i) {
     if (str[i] !== "\\") {
       out.push(str[i]);
@@ -256,4 +151,153 @@ function decodeStringLiteral(str, unicode) {
     out.push("\\");
   }
   return out.join("");
+}
+
+const constants = new Set(["None", "False", "True"]);
+
+export const comparators = [
+  "in",
+  "not",
+  "not in",
+  "is",
+  "is not",
+  "<",
+  "<=",
+  ">",
+  ">=",
+  "<>",
+  "!=",
+  "==",
+];
+
+export const binaryOperators = [
+  "or",
+  "and",
+  "|",
+  "^",
+  "&",
+  "<<",
+  ">>",
+  "+",
+  "-",
+  "*",
+  "/",
+  "//",
+  "%",
+  "~",
+  "**",
+  ".",
+];
+
+export const unaryOperators = ["-"];
+
+const symbols = new Set([
+  ...["(", ")", "[", "]", "{", "}", ":", ","],
+  ...["if", "else", "lambda", "="],
+  ...comparators,
+  ...binaryOperators,
+  ...unaryOperators,
+]);
+
+// Regexps
+function group(...args) {
+  return "(" + args.join("|") + ")";
+}
+
+const Name = "[a-zA-Z_]\\w*";
+const Whitespace = "[ \\f\\t]*";
+const DecNumber = "\\d+(L|l)?";
+const IntNumber = DecNumber;
+const PointFloat = group("\\d+\\.\\d*", "\\.\\d+");
+const FloatNumber = PointFloat;
+const Number = group(FloatNumber, IntNumber);
+const Operator = group("\\*\\*=?", ">>=?", "<<=?", "<>", "!=", "//=?", "[+\\-*/%&|^=<>]=?", "~");
+const Bracket = "[\\[\\]\\(\\)\\{\\}]";
+const Special = "[:;.,`@]";
+const Funny = group(Operator, Bracket, Special);
+const ContStr = group(
+  "([uU])?'([^\n'\\\\]*(?:\\\\.[^\n'\\\\]*)*)'",
+  '([uU])?"([^\n"\\\\]*(?:\\\\.[^\n"\\\\]*)*)"'
+);
+const PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
+const NumberPattern = new RegExp("^" + Number + "$");
+const StringPattern = new RegExp("^" + ContStr + "$");
+const NamePattern = new RegExp("^" + Name + "$");
+const strip = new RegExp("^" + Whitespace);
+
+// -----------------------------------------------------------------------------
+// Tokenize function
+// -----------------------------------------------------------------------------
+
+/**
+ * Transform a string into a list of tokens
+ *
+ * @param {string} str
+ * @returns {Token[]}
+ */
+export function tokenize(str) {
+  const tokens = [];
+  let max = str.length;
+  let start = 0;
+  let end = 0;
+  // /g flag makes repeated exec() have memory
+  const pseudoprog = new RegExp(PseudoToken, "g");
+  while (pseudoprog.lastIndex < max) {
+    const pseudomatch = pseudoprog.exec(str);
+    if (!pseudomatch) {
+      // if match failed on trailing whitespace, end tokenizing
+      if (/^\s+$/.test(str.slice(end))) {
+        break;
+      }
+      throw new Error(
+        "Failed to tokenize <<" + str + ">> at index " + (end || 0) + "; parsed so far: " + tokens
+      );
+    }
+    if (pseudomatch.index > end) {
+      if (str.slice(end, pseudomatch.index).trim()) {
+        throw new Error("Tokenizer error: Invalid expression");
+      }
+    }
+    start = pseudomatch.index;
+    end = pseudoprog.lastIndex;
+    let token = str.slice(start, end).replace(strip, "");
+    if (NumberPattern.test(token)) {
+      tokens.push({
+        type: 0 /* Number */,
+        value: parseFloat(token),
+      });
+    } else if (StringPattern.test(token)) {
+      var m = StringPattern.exec(token);
+      tokens.push({
+        type: 1 /* String */,
+        value: decodeStringLiteral(m[3] !== undefined ? m[3] : m[5], !!(m[2] || m[4])),
+      });
+    } else if (symbols.has(token)) {
+      // transform 'not in' and 'is not' in a single token
+      if (token === "in" && tokens.length > 0 && tokens[tokens.length - 1].value === "not") {
+        token = "not in";
+        tokens.pop();
+      } else if (token === "not" && tokens.length > 0 && tokens[tokens.length - 1].value === "is") {
+        token = "is not";
+        tokens.pop();
+      }
+      tokens.push({
+        type: 2 /* Symbol */,
+        value: token,
+      });
+    } else if (constants.has(token)) {
+      tokens.push({
+        type: 4 /* Constant */,
+        value: token,
+      });
+    } else if (NamePattern.test(token)) {
+      tokens.push({
+        type: 3 /* Name */,
+        value: token,
+      });
+    } else {
+      throw new Error("aaaaa");
+    }
+  }
+  return tokens;
 }

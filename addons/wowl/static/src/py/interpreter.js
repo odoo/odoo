@@ -1,7 +1,26 @@
 /** @odoo-module **/
 import { BUILTINS, PyDate, parseArgs, PyDateTime, PyTime, PyRelativeDelta } from "./builtins";
 import { PY_DICT } from "./utils";
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+/**
+ * @typedef { import("./parser").AST } AST
+ */
+
+// -----------------------------------------------------------------------------
+// Constants and helpers
+// -----------------------------------------------------------------------------
+
 const isTrue = BUILTINS.bool;
+
+/**
+ * @param {AST} ast
+ * @param {Object} context
+ * @returns {any}
+ */
 function applyUnaryOp(ast, context) {
   const expr = evaluate(ast.right, context);
   switch (ast.op) {
@@ -14,7 +33,15 @@ function applyUnaryOp(ast, context) {
   }
   throw new Error("error");
 }
-// None < number (boolean) < dict < string < list < dict
+
+/**
+ * We want to maintain this order:
+ *   None < number (boolean) < dict < string < list < dict
+ * So, each type is mapped to a number to represent that order
+ *
+ * @param {any} val
+ * @returns {number} index type
+ */
 function pytypeIndex(val) {
   switch (typeof val) {
     case "object":
@@ -27,6 +54,14 @@ function pytypeIndex(val) {
   }
   throw new Error("hmmm");
 }
+
+/**
+ * Compare two values
+ *
+ * @param {any} left
+ * @param {any} right
+ * @returns {boolean}
+ */
 function isLess(left, right) {
   if (typeof left === "number" && typeof right === "number") {
     return left < right;
@@ -44,6 +79,12 @@ function isLess(left, right) {
   }
   return leftIndex < rightIndex;
 }
+
+/**
+ * @param {any} left
+ * @param {any} right
+ * @returns {boolean}
+ */
 function isEqual(left, right) {
   if (typeof left !== typeof right) {
     if (typeof left === "boolean" && typeof right === "number") {
@@ -56,6 +97,12 @@ function isEqual(left, right) {
   }
   return left === right;
 }
+
+/**
+ * @param {any} left
+ * @param {any} right
+ * @returns {boolean}
+ */
 function isIn(left, right) {
   if (Array.isArray(right)) {
     return right.includes(left);
@@ -65,6 +112,12 @@ function isIn(left, right) {
   }
   return false;
 }
+
+/**
+ * @param {AST} ast
+ * @param {object} context
+ * @returns {any}
+ */
 function applyBinaryOp(ast, context) {
   const left = evaluate(ast.left, context);
   const right = evaluate(ast.right, context);
@@ -110,9 +163,7 @@ function applyBinaryOp(ast, context) {
   }
   throw new Error("error");
 }
-// interface Dict {
-//   get(key: string, defValue?: any): any;
-// }
+
 const DICT = {
   get(dict) {
     return (...args) => {
@@ -126,8 +177,22 @@ const DICT = {
     };
   },
 };
+
+// -----------------------------------------------------------------------------
+// Evaluate function
+// -----------------------------------------------------------------------------
+
+/**
+ * @param {AST} ast
+ * @param {Object} context
+ * @returns {any}
+ */
 export function evaluate(ast, context = {}) {
   const dicts = new Set();
+
+  /**
+   * @param {AST} ast
+   */
   function _evaluate(ast) {
     switch (ast.type) {
       case 0 /* Number */:

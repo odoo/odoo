@@ -1,7 +1,48 @@
 /** @odoo-module **/
 import { binaryOperators, comparators } from "./tokenizer";
+
+// -----------------------------------------------------------------------------
+// Types
+// -----------------------------------------------------------------------------
+
+/**
+ * @typedef { import("./tokenizer").Token } Token
+ */
+
+/**
+ * @typedef {{type: 0, value: number}} ASTNumber
+ * @typedef {{type: 1, value: string}} ASTString
+ * @typedef {{type: 2, value: boolean}} ASTBoolean
+ * @typedef {{type: 3}} ASTNone
+ * @typedef {{type: 4, value: AST[]}} ASTList
+ * @typedef {{type: 5, value: string}} ASTName
+ * @typedef {{type: 6, op: string, right: AST}} ASTUnaryOperator
+ * @typedef {{type: 7, op: string, left: AST, right: AST}} ASTBinaryOperator
+ * @typedef {{type: 8, fn: AST, args: AST[], kwargs: {[key: string]: AST}}} ASTFunctionCall
+ * @typedef {{type: 9, name: ASTName, value: AST}} ASTAssignment
+ * @typedef {{type: 10, value: AST[]}} ASTTuple
+ * @typedef {{type: 11, value: { [key: string]: AST}}} ASTDictionary
+ * @typedef {{type: 12, target: AST, key: AST}} ASTLookup
+ * @typedef {{type: 13, condition: AST, ifTrue: AST, ifFalse: AST}} ASTIf
+ * @typedef {{type: 14, op: string, left: AST, right: AST}} ASTBooleanOperator
+ * @typedef {{type: 15, obj: AST, key: string}} ASTObjLookup
+ *
+ * @typedef { ASTNumber | ASTString | ASTBoolean | ASTList | ASTName | ASTUnaryOperator | ASTBinaryOperator | ASTFunctionCall | ASTAssignment | ASTTuple | ASTDictionary |ASTLookup | ASTIf | ASTBooleanOperator | ASTObjLookup} AST
+ */
+
+// -----------------------------------------------------------------------------
+// Constants and helpers
+// -----------------------------------------------------------------------------
+
 const chainedOperators = new Set(comparators);
 const infixOperators = new Set(binaryOperators.concat(comparators));
+
+/**
+ * Compute the "binding power" of a symbol
+ *
+ * @param {string} symbol
+ * @returns {number}
+ */
 export function bp(symbol) {
   switch (symbol) {
     case "=":
@@ -52,12 +93,33 @@ export function bp(symbol) {
   }
   return 0;
 }
+
+/**
+ * Compute binding power of a symbol
+ *
+ * @param {Token} token
+ * @returns {number}
+ */
 function bindingPower(token) {
   return token.type === 2 /* Symbol */ ? bp(token.value) : 0;
 }
+
+/**
+ * Check if a token is a symbol of a given value
+ *
+ * @param {Token} token
+ * @param {string} value
+ * @returns {boolean}
+ */
 function isSymbol(token, value) {
   return token.type === 2 /* Symbol */ && token.value === value;
 }
+
+/**
+ * @param {Token} current
+ * @param {Token[]} tokens
+ * @returns {AST}
+ */
 function parsePrefix(current, tokens) {
   switch (current.type) {
     case 0 /* Number */:
@@ -147,6 +209,13 @@ function parsePrefix(current, tokens) {
   }
   throw new Error("boom");
 }
+
+/**
+ * @param {AST} ast
+ * @param {Token} current
+ * @param {Token[]} tokens
+ * @returns {AST}
+ */
 function parseInfix(left, current, tokens) {
   switch (current.type) {
     case 2 /* Symbol */:
@@ -258,6 +327,12 @@ function parseInfix(left, current, tokens) {
   }
   throw new Error("asfdasdfsdf");
 }
+
+/**
+ * @param {Token[]} tokens
+ * @param {number} [bp]
+ * @returns {AST}
+ */
 function _parse(tokens, bp = 0) {
   const token = tokens.shift();
   let expr = parsePrefix(token, tokens);
@@ -266,6 +341,17 @@ function _parse(tokens, bp = 0) {
   }
   return expr;
 }
+
+// -----------------------------------------------------------------------------
+// Parse function
+// -----------------------------------------------------------------------------
+
+/**
+ * Parse a list of tokens
+ *
+ * @param {Token[]} tokens
+ * @returns {AST}
+ */
 export function parse(tokens) {
   return _parse(tokens, 0);
 }
