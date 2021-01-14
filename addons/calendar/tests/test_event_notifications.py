@@ -142,6 +142,9 @@ class TestEventNotifications(TransactionCase, MailCase):
             self.assertEqual(notif, bus_message)
 
     def test_email_alarm(self):
+        cron_id = self.env.ref('calendar.ir_cron_scheduler_alarm').id
+        triggers_before = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+
         alarm = self.env['calendar.alarm'].create({
             'name': 'Alarm',
             'alarm_type': 'email',
@@ -152,12 +155,18 @@ class TestEventNotifications(TransactionCase, MailCase):
         self.event.write({
             'start': now + relativedelta(minutes=15),
             'stop': now + relativedelta(minutes=18),
-            'partner_ids': [(4, self.partner.id)],
-            'alarm_ids': [(4, alarm.id)],
+            'partner_ids': [fields.Command.link(self.partner.id)],
+            'alarm_ids': [fields.Command.link(alarm.id)],
         })
+
+        triggers_after = self.env['ir.cron.trigger'].search([('cron_id', '=', cron_id)])
+        new_triggers = triggers_after - triggers_before
+        new_triggers.ensure_one()
+        self.assertEqual(new_triggers.call_at, now - relativedelta(minutes=5))
+
         with patch.object(fields.Datetime, 'now', lambda: now):
             with self.assertSinglePostNotifications([{'partner': self.partner, 'type': 'inbox'}], {
                 'message_type': 'user_notification',
                 'subtype': 'mail.mt_note',
             }):
-                self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._get_partner_next_mail(self.partner)
+                self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._send_reminder_email(self.partner)
