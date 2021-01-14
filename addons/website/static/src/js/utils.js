@@ -263,6 +263,16 @@ function sendRequest(route, params) {
     form.submit();
 }
 
+/**
+ * Removes the navigation-blocking fullscreen loader from the DOM
+ */
+function removeLoader() {
+    const $loader = $('#o_website_page_loader');
+    if ($loader) {
+        $loader.remove();
+    }
+}
+
 return {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -270,5 +280,6 @@ return {
     prompt: prompt,
     sendRequest: sendRequest,
     websiteDomain: websiteDomain,
+    removeLoader: removeLoader,
 };
 });
