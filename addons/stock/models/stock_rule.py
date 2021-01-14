@@ -501,18 +501,17 @@ class ProcurementGroup(models.Model):
         # recomputed
         orderpoints.sudo()._compute_qty_to_order()
         orderpoints.sudo()._procure_orderpoint_confirm(use_new_cursor=use_new_cursor, company_id=company_id, raise_user_error=False)
+        if use_new_cursor:
+            self._cr.commit()
 
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain(company_id)
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
             order='priority desc, date asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
-            self.env['stock.move'].browse(moves_chunk)._action_assign()
+            self.env['stock.move'].browse(moves_chunk).sudo()._action_assign()
             if use_new_cursor:
                 self._cr.commit()
-
-        if use_new_cursor:
-            self._cr.commit()
 
         # Merge duplicated quants
         self.env['stock.quant']._quant_tasks()

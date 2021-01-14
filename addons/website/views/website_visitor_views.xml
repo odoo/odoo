@@ -230,8 +230,7 @@
         <field name="model">website.visitor</field>
         <field name="arch" type="xml">
             <tree string="Web Visitors" decoration-success="is_connected" decoration-danger="not is_connected" sample="1">
-                <!--TODO DBE : Handle no_label in treeview-->
-                <field name="country_flag" widget="image_url" options='{"size": [20, 20]}' string=" "/>
+                <field name="country_flag" widget="image_url" options='{"size": [20, 20]}' nolabel="1"/>
                 <field name="display_name"/>
                 <field name="create_date"/>
                 <field name="last_connection_datetime"/>

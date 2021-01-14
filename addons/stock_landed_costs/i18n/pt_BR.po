@@ -5,7 +5,6 @@
 # Translators:
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
 # danimaribeiro <danimaribeiro@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Adriel Kotviski <kotviski@gmail.com>, 2020
@@ -14,19 +13,19 @@
 # André Augusto Firmino Cordeiro <a.cordeito@gmail.com>, 2020
 # Silmar <pinheirosilmar@gmail.com>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
-# Keli Brugalli <kbr@odoo.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
 # Maurício Liell <mauricio@liell.com.br>, 2020
 # André Carvalho <and2carvalho@gmail.com>, 2020
 # PopSolutions Cooperativa Digital <popsolutions.co@gmail.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
+# Martin Trigaux, 2020
 # Éder Brito <britoederr@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
@@ -109,7 +108,7 @@ msgstr "Custo Adicional"
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__allowed_picking_ids
 msgid "Allowed Picking"
-msgstr ""
+msgstr "Separação Permitida"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__target_model
@@ -178,7 +177,7 @@ msgstr "Calcular"
 #. module: stock_landed_costs
 #: model:ir.model,name:stock_landed_costs.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configurações"
+msgstr "Definições de Configuração"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__price_unit
@@ -271,6 +270,7 @@ msgstr "Descrição"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__display_name
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__display_name
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__display_name
@@ -347,6 +347,7 @@ msgstr "Agrupar Por"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template__id
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings__id
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__id
@@ -465,6 +466,7 @@ msgstr "Custo adicional validado"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_product_template____last_update
+#: model:ir.model.fields,field_description:stock_landed_costs.field_purchase_order_line____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_company____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_res_config_settings____last_update
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost____last_update
@@ -603,7 +605,7 @@ msgstr ""
 #. module: stock_landed_costs
 #: model:ir.model.fields.selection,name:stock_landed_costs.selection__stock_landed_cost__state__done
 msgid "Posted"
-msgstr "Postado"
+msgstr "Lançado"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost_lines__product_id
@@ -620,6 +622,11 @@ msgstr "Modelo de Produto"
 #: model:ir.model.fields,field_description:stock_landed_costs.field_account_move_line__product_type
 msgid "Product Type"
 msgstr "Tipo de Produto"
+
+#. module: stock_landed_costs
+#: model:ir.model,name:stock_landed_costs.model_purchase_order_line
+msgid "Purchase Order Line"
+msgstr "Linha de Pedido de Compra"
 
 #. module: stock_landed_costs
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_valuation_adjustment_lines__quantity
@@ -689,7 +696,7 @@ msgstr "Movimento de Estoque"
 #: model:ir.model,name:stock_landed_costs.model_stock_valuation_layer
 #: model:ir.model.fields,field_description:stock_landed_costs.field_stock_landed_cost__stock_valuation_layer_ids
 msgid "Stock Valuation Layer"
-msgstr ""
+msgstr "Camada de Valoração de Estoque"
 
 #. module: stock_landed_costs
 #: model_terms:ir.ui.view,arch_db:stock_landed_costs.view_stock_landed_cost_search

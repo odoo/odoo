@@ -212,7 +212,8 @@ class AuthorizeAPI():
                         }
                     },
                     'order': {
-                        'invoiceNumber': reference[:20]
+                        'invoiceNumber': reference[:20],
+                        'description': reference[:255],
                     }
                 }
 
@@ -265,7 +266,8 @@ class AuthorizeAPI():
                         }
                     },
                     'order': {
-                        'invoiceNumber': reference[:20]
+                        'invoiceNumber': reference[:20],
+                        'description': reference[:255],
                     }
                 }
 

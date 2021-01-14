@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
@@ -52,6 +52,8 @@ msgstr ""
 #, python-format
 msgid "An error occurred when sending a letter with Snailmail."
 msgstr ""
+"Si è verificato un errore durante l'invio di una lettera con posta "
+"ordinaria."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -64,13 +66,13 @@ msgstr "Si è verificato un errore sconosciuto. Contattare il supporto."
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "An unknown error occurred. Please contact our"
-msgstr ""
+msgstr "Si è verificato un errore sconosciuto. Contattare il nostro"
 
 #. module: snailmail
 #: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s snailmail delivery failures. You won't "
+"Are you sure you want to discard %s snailmail delivery failures? You won't "
 "be able to re-send these letters later!"
 msgstr ""
 
@@ -231,7 +233,7 @@ msgstr "Elimina errori di consegna"
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_cancel_action
 msgid "Discard snailmail delivery failures"
-msgstr ""
+msgstr "Elimina errori di consegna posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_cancel
@@ -290,7 +292,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__failure_type
 msgid "Failure type"
-msgstr "Tipo di fallimento"
+msgstr "Tipo di errore"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
@@ -300,7 +302,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_format_error
 msgid "Format Error Sending a Snailmail Letter"
-msgstr ""
+msgstr "Errore formato nell'invio di una lettera di posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_cancel__help_message
@@ -387,7 +389,7 @@ msgstr "Lettera"
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Letter sent by post with Snailmail"
-msgstr ""
+msgstr "Lettera inviata per posta ordinaria"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
@@ -494,7 +496,7 @@ msgstr "Campo QWeb contatto"
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "Re-send letter"
-msgstr "Re-invia lettera"
+msgstr "Reinvia lettera"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -535,56 +537,56 @@ msgstr "Inviata da"
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__notification_type__snail
 #, python-format
 msgid "Snailmail"
-msgstr "Snailmail"
+msgstr "Posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_confirm
 msgid "Snailmail Confirm"
-msgstr ""
+msgstr "Conferma posta ordinaria"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_confirm_view
 msgid "Snailmail Confirmation"
-msgstr ""
+msgstr "Conferma per posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_credit
 msgid "Snailmail Credit Error"
-msgstr ""
+msgstr "Errore crediti posta ordinaria"
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/models/notification_group/notification_group.js:0
 #, python-format
 msgid "Snailmail Failures"
-msgstr ""
+msgstr "Errori posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_format
 msgid "Snailmail Format Error"
-msgstr ""
+msgstr "Errore formato posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 #: model:ir.model.fields,field_description:snailmail.field_mail_notification__letter_id
 msgid "Snailmail Letter"
-msgstr "Lettera Snailmail"
+msgstr "Lettera posta ordinaria"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 msgid "Snailmail Letters"
-msgstr "Lettere Snailmail"
+msgstr "Lettere posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_fields
 msgid "Snailmail Missing Required Fields"
-msgstr ""
+msgstr "Mancano campi obbligatori per la posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_price
 msgid "Snailmail No Price Available"
-msgstr ""
+msgstr "Nessun prezzo disponibile per posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
@@ -594,25 +596,25 @@ msgstr "Messaggio di stato Snailmail"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_trial
 msgid "Snailmail Trial Error"
-msgstr ""
+msgstr "Errore nella prova di posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_notification__failure_type__sn_error
 msgid "Snailmail Unknown Error"
-msgstr ""
+msgstr "Errore sconosciuto posta ordinaria"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
 msgid "Snailmail message in error"
-msgstr ""
+msgstr "Messaggio di errore posta ordinaria"
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
 #: model:ir.cron,cron_name:snailmail.snailmail_print
 #: model:ir.cron,name:snailmail.snailmail_print
 msgid "Snailmail: process letters queue"
-msgstr "Snailmail: elaborazione coda delle lettere"
+msgstr "Posta ordinaria: elaborazione coda delle lettere"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__state_id
@@ -673,7 +675,7 @@ msgstr ""
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The country of the partner is not covered by Snailmail."
-msgstr "La nazione del partner non è coperta da Snailmail."
+msgstr "La nazione del partner non è coperta dalla posta ordinaria."
 
 #. module: snailmail
 #. openerp-web
@@ -683,6 +685,8 @@ msgid ""
 "The country to which you want to send the letter is not supported by our "
 "service."
 msgstr ""
+"La nazione verso la quale si vuole inviare la lettera non è supportata dal "
+"nostro servizio."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -705,12 +709,14 @@ msgid ""
 "The letter could not be sent due to insufficient credits on your IAP "
 "account."
 msgstr ""
+"Impossibile inviare la lettera, crediti insufficienti nell'account IAP "
+"(acquisti integrati)"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__message_type
 msgid "Type"
-msgstr "Tipo"
+msgstr "Tipologia"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__unknown_error
@@ -767,6 +773,8 @@ msgstr ""
 #, python-format
 msgid "You need credits on your IAP account to send a letter."
 msgstr ""
+"Per inviare una lettera sono necessari crediti nell'account IAP (acquisti "
+"integrati)."
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -789,11 +797,11 @@ msgstr ""
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "for further assistance."
-msgstr ""
+msgstr "per ulteriore assistenza."
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml:0
 #, python-format
 msgid "support"
-msgstr ""
+msgstr "supporto"

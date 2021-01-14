@@ -62,6 +62,7 @@ from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_F
 from .tools.translate import _
 from .tools import date_utils
 from .tools import populate
+from .tools import unique
 from .tools.lru import LRU
 
 _logger = logging.getLogger(__name__)
@@ -1243,10 +1244,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 
-    def _validate_fields(self, field_names):
+    def _validate_fields(self, field_names, excluded_names=()):
+        """ Invoke the constraint methods for which at least one field name is
+        in ``field_names`` and none is in ``excluded_names``.
+        """
         field_names = set(field_names)
+        excluded_names = set(excluded_names)
         for check in self._constraint_methods:
-            if not field_names.isdisjoint(check._constrains):
+            if (not field_names.isdisjoint(check._constrains)
+                    and excluded_names.isdisjoint(check._constrains)):
                 check(self)
 
     @api.model
@@ -3679,7 +3685,7 @@ Fields:
 
             # validate non-inversed fields first
             inverse_fields = [f.name for fs in determine_inverses.values() for f in fs]
-            real_recs._validate_fields(set(vals) - set(inverse_fields))
+            real_recs._validate_fields(vals, inverse_fields)
 
             for fields in determine_inverses.values():
                 # inverse records that are not being computed
@@ -3894,7 +3900,7 @@ Fields:
 
         # check Python constraints for non-stored inversed fields
         for data in data_list:
-            data['record']._validate_fields(set(data['inversed']) - set(data['stored']))
+            data['record']._validate_fields(data['inversed'], data['stored'])
 
         if self._check_company_auto:
             records._check_company()
@@ -5778,36 +5784,35 @@ Fields:
                 tocompute = list(tocompute)
 
             # process what to compute
-            for field, records in tocompute:
+            for field, records, create in tocompute:
                 records -= self.env.protected(field)
                 if not records:
                     continue
-                # Dont force the recomputation of compute fields which are
-                # not stored as this is not really necessary.
-                recursive = not create and field.recursive
                 if field.compute and field.store:
-                    if recursive:
-                        marked_records = self.env.not_to_compute(field, records)
+                    if field.recursive:
+                        recursively_marked = self.env.not_to_compute(field, records)
                     self.env.add_to_compute(field, records)
                 else:
-                    if recursive:
-                        marked_records = records & self.env.cache.get_records(records, field)
+                    # Dont force the recomputation of compute fields which are
+                    # not stored as this is not really necessary.
+                    if field.recursive:
+                        recursively_marked = records & self.env.cache.get_records(records, field)
                     self.env.cache.invalidate([(field, records._ids)])
                 # recursively trigger recomputation of field's dependents
-                if recursive:
-                    marked_records.modified([field.name])
+                if field.recursive:
+                    recursively_marked.modified([field.name], create)
 
     def _modified_triggers(self, tree, create=False):
         """ Return an iterator traversing a tree of field triggers on ``self``,
         traversing backwards field dependencies along the way, and yielding
-        pairs ``(field, records)`` to recompute.
+        tuple ``(field, records, created)`` to recompute.
         """
         if not self:
             return
 
         # first yield what to compute
         for field in tree.get(None, ()):
-            yield field, self
+            yield field, self, create
 
         # then traverse dependencies backwards, and proceed recursively
         for key, val in tree.items():
@@ -5869,10 +5874,10 @@ Fields:
                 # recomputed by accessing the field on the records
                 recs = recs.filtered('id')
                 try:
-                    recs.mapped(field.name)
+                    field.recompute(recs)
                 except MissingError:
                     existing = recs.exists()
-                    existing.mapped(field.name)
+                    field.recompute(existing)
                     # mark the field as computed on missing records, otherwise
                     # they remain forever in the todo list, and lead to an
                     # infinite loop...
@@ -6205,7 +6210,7 @@ Fields:
         # call, 'names' only contains fields with a default. If 'self' is a new
         # line in a one2many field, 'names' also contains the one2many's inverse
         # field, and that field may not be in nametree.
-        todo = list(names) + list(nametree) if first_call else list(names)
+        todo = list(unique(itertools.chain(names, nametree))) if first_call else list(names)
         done = set()
 
         # dummy assignment: trigger invalidations on the record

@@ -509,7 +509,7 @@ class Lead(models.Model):
 
         for lead, values in zip(leads, vals_list):
             if any(field in ['active', 'stage_id'] for field in values):
-                lead._handle_won_lost(vals)
+                lead._handle_won_lost(values)
 
         return leads
 
@@ -1336,24 +1336,29 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         return super(Lead, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notify_get_groups()
+        groups = super(Lead, self)._notify_get_groups(msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
 
         self.ensure_one()
         if self.type == 'lead':
-            convert_action = self._notify_get_action_link('controller', controller='/lead/convert')
+            convert_action = self._notify_get_action_link('controller', controller='/lead/convert', **msg_vals)
             salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won')
-            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost')
+            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won', **msg_vals)
+            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost', **msg_vals)
             salesman_actions = [
                 {'url': won_action, 'title': _('Won')},
                 {'url': lost_action, 'title': _('Lost')}]
 
         if self.team_id:
-            salesman_actions.append({'url': self._notify_get_action_link('view', res_id=self.team_id.id, model=self.team_id._name), 'title': _('Sales Team Settings')})
+            custom_params = dict(msg_vals, res_id=self.team_id.id, model=self.team_id._name)
+            salesman_actions.append({
+                'url': self._notify_get_action_link('view', **custom_params),
+                'title': _('Sales Team Settings')
+            })
 
         salesman_group_id = self.env.ref('sales_team.group_sale_salesman').id
         new_group = (
