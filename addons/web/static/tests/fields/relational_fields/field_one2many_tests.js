@@ -16,6 +16,7 @@ var fieldUtils = require('web.field_utils');
 
 const cpHelpers = testUtils.controlPanel;
 var createView = testUtils.createView;
+const { FieldOne2Many } = relationalFields;
 
 QUnit.module('fields', {}, function () {
 
@@ -9512,6 +9513,43 @@ QUnit.module('fields', {}, function () {
             form.destroy();
 
             assert.verifySteps(["willUnmount"]);
+        });
+
+        QUnit.test('one2many: internal state is updated after another field changes', async function (assert) {
+            // The FieldOne2Many is configured such that it is reset at any field change.
+            // The MatrixProductConfigurator feature relies on that, and requires that its
+            // internal state is correctly updated. This white-box test artificially checks that.
+            assert.expect(2);
+
+            let o2m;
+            testUtils.patch(FieldOne2Many, {
+                init() {
+                    this._super(...arguments);
+                    o2m = this;
+                },
+            });
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="display_name"/>
+                        <field name="p">
+                            <tree><field name="display_name"/></tree>
+                        </field>
+                    </form>`,
+            });
+
+            assert.strictEqual(o2m.recordData.display_name, false);
+
+            await testUtils.fields.editInput(form.$('.o_field_widget[name=display_name]'), 'val');
+
+            assert.strictEqual(o2m.recordData.display_name, "val");
+
+            form.destroy();
+            testUtils.unpatch(FieldOne2Many);
         });
     });
 });
