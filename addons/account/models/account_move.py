@@ -3867,56 +3867,58 @@ class AccountMoveLine(models.Model):
                             or (account_type != 'payable' and account_to_write.user_type_id.type == 'payable'):
                         raise UserError(_("You can only set an account having the payable type on payment terms lines for vendor bill."))
 
-        # Get all tracked fields (without related fields because these fields must be manage on their own model)
-        tracking_fields = []
-        for value in vals:
-            field = self._fields[value]
-            if hasattr(field, 'related') and field.related:
-                continue # We don't want to track related field.
-            if hasattr(field, 'tracking') and field.tracking:
-                tracking_fields.append(value)
-        ref_fields = self.env['account.move.line'].fields_get(tracking_fields)
+        # Tracking stuff can be skipped for perfs using tracking_disable context key
+        if not self.env.context.get('tracking_disable', False):
+            # Get all tracked fields (without related fields because these fields must be manage on their own model)
+            tracking_fields = []
+            for value in vals:
+                field = self._fields[value]
+                if hasattr(field, 'related') and field.related:
+                    continue # We don't want to track related field.
+                if hasattr(field, 'tracking') and field.tracking:
+                    tracking_fields.append(value)
+            ref_fields = self.env['account.move.line'].fields_get(tracking_fields)
 
-        # Get initial values for each line
-        move_initial_values = {}
-        for line in self.filtered(lambda l: l.move_id.posted_before): # Only lines with posted once move.
-            for field in tracking_fields:
-                # Group initial values by move_id
-                if line.move_id.id not in move_initial_values:
-                    move_initial_values[line.move_id.id] = {}
-                move_initial_values[line.move_id.id].update({field: line[field]})
+            # Get initial values for each line
+            move_initial_values = {}
+            for line in self.filtered(lambda l: l.move_id.posted_before): # Only lines with posted once move.
+                for field in tracking_fields:
+                    # Group initial values by move_id
+                    if line.move_id.id not in move_initial_values:
+                        move_initial_values[line.move_id.id] = {}
+                    move_initial_values[line.move_id.id].update({field: line[field]})
 
-        # Create the dict for the message post
-        tracking_values = {} # Tracking values to write in the message post
-        for move_id, modified_lines in move_initial_values.items():
-            tmp_move = {move_id: []}
-            for line in self.filtered(lambda l: l.move_id.id == move_id):
-                changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines) # Return a tuple like (changed field, ORM command)
-                tmp = {'line_id': line.id}
-                if tracking_value_ids:
-                    selected_field = tracking_value_ids[0][2] # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
-                    tmp.update({
-                        **{'field_name': selected_field.get('field_desc')},
-                        **self._get_formated_values(selected_field)
-                    })
-                elif changes:
-                    field_name = line._fields[changes.pop()].string # Get the field name
-                    tmp.update({
-                        'error': True,
-                        'field_error': field_name
-                    })
-                else:
-                    continue
-                tmp_move[move_id].append(tmp)
-            if len(tmp_move[move_id]) > 0:
-                tracking_values.update(tmp_move)
+            # Create the dict for the message post
+            tracking_values = {} # Tracking values to write in the message post
+            for move_id, modified_lines in move_initial_values.items():
+                tmp_move = {move_id: []}
+                for line in self.filtered(lambda l: l.move_id.id == move_id):
+                    changes, tracking_value_ids = line._mail_track(ref_fields, modified_lines) # Return a tuple like (changed field, ORM command)
+                    tmp = {'line_id': line.id}
+                    if tracking_value_ids:
+                        selected_field = tracking_value_ids[0][2] # Get the last element of the tuple in the list of ORM command. (changed, [(0, 0, THIS)])
+                        tmp.update({
+                            **{'field_name': selected_field.get('field_desc')},
+                            **self._get_formated_values(selected_field)
+                        })
+                    elif changes:
+                        field_name = line._fields[changes.pop()].string # Get the field name
+                        tmp.update({
+                            'error': True,
+                            'field_error': field_name
+                        })
+                    else:
+                        continue
+                    tmp_move[move_id].append(tmp)
+                if len(tmp_move[move_id]) > 0:
+                    tracking_values.update(tmp_move)
 
-        # Write in the chatter.
-        for move in self.mapped('move_id'):
-            fields = tracking_values.get(move.id, [])
-            if len(fields) > 0:
-                msg = self._get_tracking_field_string(tracking_values.get(move.id))
-                move.message_post(body=msg) # Write for each concerned move the message in the chatter
+            # Write in the chatter.
+            for move in self.mapped('move_id'):
+                fields = tracking_values.get(move.id, [])
+                if len(fields) > 0:
+                    msg = self._get_tracking_field_string(tracking_values.get(move.id))
+                    move.message_post(body=msg) # Write for each concerned move the message in the chatter
 
         result = True
         for line in self:
