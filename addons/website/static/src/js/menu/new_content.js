@@ -184,6 +184,8 @@ var NewContentMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             self.$newContentMenuChoices.removeClass('o_hidden');
             $('body').addClass('o_new_content_open');
             self.$('> a').focus();
+
+            wUtils.removeLoader();
         });
     },
 
