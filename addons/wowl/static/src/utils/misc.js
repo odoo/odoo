@@ -1,8 +1,21 @@
 /** @odoo-module **/
+
+/**
+ * This file contains various utility functions that do not have a well defined
+ * category.
+ */
+
+// -----------------------------------------------------------------------------
+
+/**
+ * @returns {boolean} true for the browser base on Chromium (Google Chrome, Opera, Edge)
+ */
 export function isBrowserChromium() {
-  // true for the browser base on Chromium (Google Chrome, Opera, Edge)
   return navigator.userAgent.includes("Chrome");
 }
+
+// -----------------------------------------------------------------------------
+
 /**
  * Returns a function, that, as long as it continues to be invoked, will not
  * be triggered. The function will be called after it stops being called for
@@ -10,6 +23,10 @@ export function isBrowserChromium() {
  * leading edge, instead of the trailing.
  *
  * Inspired by https://davidwalsh.name/javascript-debounce-function
+ * @param {Function} func
+ * @param {number} wait
+ * @param {boolean} immediate
+ * @returns {Function}
  */
 export function debounce(func, wait, immediate) {
   let timeout;
@@ -29,14 +46,22 @@ export function debounce(func, wait, immediate) {
     }
   };
 }
+
+// -----------------------------------------------------------------------------
+
 /**
  * For debugging purpose, this function will convert a json node back to xml
+ *
+ * @param {Object} node
+ * @param {boolean} [humanReadable]
+ * @param {number} [indent]
+ * @returns {string} the XML representation of the JSON node
  */
-export function json_node_to_xml(node, human_readable, indent) {
+export function json_node_to_xml(node, humanReadable, indent) {
   indent = indent || 0;
-  const sindent = human_readable ? new Array(indent + 1).join("\t") : "";
+  const sindent = humanReadable ? new Array(indent + 1).join("\t") : "";
   let r = sindent + "<" + node.tag;
-  const cr = human_readable ? "\n" : "";
+  const cr = humanReadable ? "\n" : "";
   if (typeof node === "string") {
     return (
       sindent +
@@ -64,7 +89,7 @@ export function json_node_to_xml(node, human_readable, indent) {
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
-    if (human_readable) {
+    if (humanReadable) {
       vattr = vattr.replace(/&quot;/g, "'");
     }
     r += " " + attr + '="' + vattr + '"';
@@ -73,7 +98,7 @@ export function json_node_to_xml(node, human_readable, indent) {
     r += ">" + cr;
     const childs = [];
     for (let i = 0, ii = node.children.length; i < ii; i++) {
-      childs.push(json_node_to_xml(node.children[i], human_readable, indent + 1));
+      childs.push(json_node_to_xml(node.children[i], humanReadable, indent + 1));
     }
     r += childs.join(cr);
     r += cr + sindent + "</" + node.tag + ">";

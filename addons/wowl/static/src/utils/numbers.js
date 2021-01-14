@@ -1,12 +1,15 @@
 /** @odoo-module **/
+
 import { intersperse } from "./strings";
+
 /**
  * Formats a number into a string representing a float.
+ *
  * @param {number|false} value
- * @param {Object} options - additional options
- * @param {number} [options.precision=2] - number of digits to keep after decimal point
- * @param {string} [options.decimalPoint="."] - decimal separating character
- * @param {string} [options.thousandsSep=""] - thousands separator to insert
+ * @param {Object} options additional options
+ * @param {number} [options.precision=2] number of digits to keep after decimal point
+ * @param {string} [options.decimalPoint="."] decimal separating character
+ * @param {string} [options.thousandsSep=""] thousands separator to insert
  * @param {number[]} [options.grouping]
  *   array of relative offsets at which to insert `thousandsSep`.
  *   See `numbers.insertThousandsSep` method.
@@ -22,8 +25,9 @@ export function formatFloat(value, options = {}) {
   }
   return formatted.join(options.decimalPoint || ".");
 }
+
 /**
- * Insert "thousands" separators in the provided number.
+ * Inserts "thousands" separators in the provided number.
  *
  * @param {integer} [num] integer number
  * @param {string} [thousandsSep=","] the separator to insert
@@ -37,13 +41,15 @@ export function insertThousandsSep(num, thousandsSep = ",", grouping = [3, 0]) {
   numStr = negative ? numStr.slice(1) : numStr;
   return (negative ? "-" : "") + intersperse(numStr, grouping, thousandsSep);
 }
+
 /**
  * Parses a string into a number.
- * @param {String} value
+ *
+ * @param {string} value
  * @param {Object} options - additional options
- * @param {String|RegExp} options.thousandsSepSelector - the thousands separator used in the value
- * @param {String|RegExp} options.decimalPointSelector - the decimal point used in the value
- * @returns Number
+ * @param {string|RegExp} options.thousandsSepSelector - the thousands separator used in the value
+ * @param {string|RegExp} options.decimalPointSelector - the decimal point used in the value
+ * @returns number
  */
 export function parseNumber(value, options = {}) {
   value = value.replace(options.thousandsSepSelector || ",", "");

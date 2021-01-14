@@ -1,4 +1,5 @@
 /** @odoo-module **/
+
 /**
  * Returns a string representing an many2one.  If the value is false, then we
  * return an empty string.  Note that it accepts two types of input parameters:
@@ -9,7 +10,7 @@
  * @param {Array|Object|false} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
- * @param {Object} [options] additional options
+ * @param {{escape?: boolean}} [options] additional options
  * @param {boolean} [options.escape=false] if true, escapes the formatted value
  * @returns {string}
  */

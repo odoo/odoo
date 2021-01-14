@@ -1,13 +1,16 @@
 /** @odoo-module **/
+
 /**
  * Escapes a string to use as a RegExp.
  * @url https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions#Escaping
- * @param {String} str
- * @returns {String} escaped string to use as a RegExp
+ *
+ * @param {string} str
+ * @returns {string} escaped string to use as a RegExp
  */
 export function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
+
 /**
  * Intersperses ``separator`` in ``str`` at the positions indicated by
  * ``indices``.
@@ -24,10 +27,10 @@ export function escapeRegExp(str) {
  *   indicates that the previous section pattern should be repeated (until all
  *   of ``str`` is consumed)
  *
- * @param {String} str
- * @param {Array<Number>} indices
- * @param {String} separator
- * @returns {String}
+ * @param {string} str
+ * @param {number[]} indices
+ * @param {string} separator
+ * @returns {string}
  */
 export function intersperse(str, indices, separator = "") {
   separator = separator || "";
@@ -55,11 +58,16 @@ export function intersperse(str, indices, separator = "") {
   }
   return result.reverse().join(separator);
 }
+
 /**
  * Returns a string formatted using given values.
  * If the value is an object, its keys will replace `%(key)s` expressions.
  * If the values are a set of strings, they will replace `%s` expressions.
  * If no value is given, the string will not be formatted.
+ *
+ * @param {string} s
+ * @param {...string} ...values
+ * @returns {string}
  */
 export function sprintf(s, ...values) {
   if (values.length === 1 && typeof values[0] === "object") {

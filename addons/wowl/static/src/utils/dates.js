@@ -9,6 +9,8 @@ DateTime.prototype.toJSON = function () {
   return this.setLocale("en").toFormat("yyyy-MM-dd HH:mm:ss");
 };
 
+// -----------------------------------------------------------------------------
+
 /**
  * Format a DateTime object
  *
@@ -25,6 +27,8 @@ export function formatDateTime(value, options = {}) {
   }
   return options.format ? value.toFormat(options.format) : value.toJSON();
 }
+
+// -----------------------------------------------------------------------------
 
 const stripAlphaDupesRegex = /([a-zA-Z])(?<=\1[^\1])/g;
 
@@ -96,6 +100,8 @@ export function parseDateTime(value, options = {}) {
     ? result.minus({ minutes: result.toJSDate().getTimezoneOffset() })
     : result;
 }
+
+// -----------------------------------------------------------------------------
 
 const dateUnits = {
   d: "days",
