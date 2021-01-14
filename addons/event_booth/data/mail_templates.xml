@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <template id="event_booth_booked_template">
+        <p>
+            <span>
+                Booth
+                <a href="#" t-att-data-oe-model="booth._name" t-att-data-oe-id="booth.id" t-esc="booth.name"/>
+                booked by
+                <a href="#" t-att-data-oe-model="booth.partner_id._name" t-att-data-oe-id="booth.partner_id.id" t-esc="booth.partner_id.name"/>
+            </span>
+        </p>
+        <ul name="renter_details">
+            <t t-set="renter_email" t-value="booth.partner_id.email"/>
+            <li t-if="renter_email">
+                <b>Email</b>: <span t-esc="renter_email"/>
+            </li>
+            <t t-set="renter_phone" t-value="booth.partner_id.phone"/>
+            <li t-if="renter_phone">
+                <b>Phone</b>: <span t-esc="renter_phone"/>
+            </li>
+        </ul>
+    </template>
+
+</data></odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_type_view_form" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.event.booth</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <div name="event_type_attendees_tickets" position="after">
+                <div class="col-12 o_setting_box" name="event_type_booths">
+                    <div class="o_setting_left_pane">
+                        <field name="use_booth"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_booth"/>
+                        <div class="row mt16" attrs="{'invisible': [('use_booth', '=', False)]}">
+                            <div class="col">
+                                <field name="event_type_booth_ids"
+                                    class="w-100"
+                                    context="{
+                                        'tree_view_ref': 'event_booth.event_type_booth_view_tree_from_type',
+                                        'form_view_ref': 'event_booth.event_type_booth_view_form_from_type'
+                                    }"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</data></odoo>
