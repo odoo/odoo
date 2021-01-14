@@ -4,7 +4,7 @@
         <field name="name">pos.session.form.view</field>
         <field name="model">pos.session</field>
         <field name="arch" type="xml">
-            <form string="Point of Sale Session" create="0">
+            <form string="Point of Sale Session" create="0" edit="0">
                 <header>
                     <button name="open_cashbox_pos" type="object" string="Open Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'new_session')]}" class="oe_highlight"
@@ -63,7 +63,7 @@
                         <field name="cash_control" invisible="1" />
                         <field name="user_id"/>
                         <field name="currency_id" invisible="1"/>
-                        <field name="config_id"/>
+                        <field name="config_id" readonly="1"/>
                         <field name="move_id" readonly="1" groups="account.group_account_readonly" />
                         <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                         <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>

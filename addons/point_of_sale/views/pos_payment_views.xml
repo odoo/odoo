@@ -4,17 +4,17 @@
         <field name="name">pos.payment.form</field>
         <field name="model">pos.payment</field>
         <field name="arch" type="xml">
-            <form string="Payments" create="0" delete="0">
+            <form string="Payments" create="0" edit="0" delete="0">
                 <sheet>
                     <group>
                         <field name="currency_id" invisible="1" />
                         <field name="name" />
                         <field name="amount" />
-                        <field name="pos_order_id" />
-                        <field name="payment_method_id" />
-                        <field name="card_type" attrs="{'invisible': [('card_type', '=', False)]}"/>
-                        <field name="cardholder_name" attrs="{'invisible': [('cardholder_name', '=', False)]}"/>
-                        <field name="transaction_id" attrs="{'invisible': [('transaction_id', '=', False)]}"/>
+                        <field name="pos_order_id" readonly="1"/>
+                        <field name="payment_method_id" readonly="1"/>
+                        <field name="card_type" readonly="1" attrs="{'invisible': [('card_type', '=', False)]}"/>
+                        <field name="cardholder_name" readonly="1" attrs="{'invisible': [('cardholder_name', '=', False)]}"/>
+                        <field name="transaction_id" readonly="1" attrs="{'invisible': [('transaction_id', '=', False)]}"/>
                         <field name="session_id" />
                     </group>
                 </sheet>
