@@ -305,6 +305,7 @@ class FSWatcherInotify(FSWatcherBase):
 class CommonServer(object):
     def __init__(self, app):
         self.app = app
+        self._on_stop_funcs = []
         # config
         self.interface = config['http_interface'] or '0.0.0.0'
         self.port = config['http_port']
@@ -331,6 +332,19 @@ class CommonServer(object):
             if e.errno != errno.ENOTCONN or platform.system() not in ['Darwin', 'Windows']:
                 raise
         sock.close()
+
+    def on_stop(self, func):
+        """ Register a cleanup function to be executed when the server stops """
+        self._on_stop_funcs.append(func)
+
+    def stop(self):
+        for func in self._on_stop_funcs:
+            try:
+                _logger.debug("on_close call %s", func)
+                func()
+            except Exception:
+                _logger.warning("Exception in %s", func.__name__, exc_info=True)
+
 
 class ThreadedServer(CommonServer):
     def __init__(self, app):
@@ -501,6 +515,8 @@ class ThreadedServer(CommonServer):
         if self.httpd:
             self.httpd.shutdown()
 
+        super().stop()
+
         # Manually join() all threads before calling sys.exit() to allow a second signal
         # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
         # threading.Thread.join() should not mask signals (at least in python 2.5).
@@ -657,6 +673,7 @@ class GeventServer(CommonServer):
     def stop(self):
         import gevent
         self.httpd.stop()
+        super().stop()
         gevent.shutdown()
 
     def run(self, preload, stop):
@@ -670,9 +687,8 @@ class PreforkServer(CommonServer):
     dispatcher to will parse the first HTTP request line.
     """
     def __init__(self, app):
+        super().__init__(app)
         # config
-        self.address = config['http_enable'] and \
-            (config['http_interface'] or '0.0.0.0', config['http_port'])
         self.population = config['workers']
         self.timeout = config['limit_time_real']
         self.limit_request = config['limit_request']
@@ -681,8 +697,6 @@ class PreforkServer(CommonServer):
             self.cron_timeout = self.timeout
         # working vars
         self.beat = 4
-        self.app = app
-        self.pid = os.getpid()
         self.socket = None
         self.workers_http = {}
         self.workers_cron = {}
@@ -845,13 +859,13 @@ class PreforkServer(CommonServer):
         signal.signal(signal.SIGQUIT, dumpstacks)
         signal.signal(signal.SIGUSR1, log_ormcache_stats)
 
-        if self.address:
+        if config['http_enable']:
             # listen to socket
-            _logger.info('HTTP service (werkzeug) running on %s:%s', *self.address)
+            _logger.info('HTTP service (werkzeug) running on %s:%s', self.interface, self.port)
             self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.socket.setblocking(0)
-            self.socket.bind(self.address)
+            self.socket.bind((self.interface, self.port))
             self.socket.listen(8 * self.population)
 
     def stop(self, graceful=True):
@@ -861,6 +875,7 @@ class PreforkServer(CommonServer):
             self.long_polling_pid = None
         if graceful:
             _logger.info("Stopping gracefully")
+            super().stop()
             limit = time.time() + self.timeout
             for pid in self.workers:
                 self.worker_kill(pid, signal.SIGINT)
