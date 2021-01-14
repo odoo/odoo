@@ -117,8 +117,12 @@ var StatementAction = AbstractAction.extend({
                                           'active_model': self.params.context.active_model};
                 }
                 var journal_id = self.params.context.journal_id;
-                if (self.model.context.active_id && self.model.context.active_model === 'account.journal') {
-                    journal_id = journal_id || self.model.context.active_id;
+                if (!journal_id && self.model.context.active_model === 'account.journal') {
+                    if (self.model.context.active_ids && self.model.context.active_ids.length){
+                        journal_id = self.model.context.active_ids[0];
+                    } else if (self.model.context.active_id) {
+                        journal_id = self.model.context.active_id;
+                    }
                 }
                 if (journal_id) {
                     var promise = self._rpc({
