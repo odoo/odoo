@@ -596,3 +596,92 @@ class TestMultiCompany(SavepointCase):
         self.assertEqual(lot_a.name, 'lot a')
         self.assertEqual(lot_b.company_id, self.company_b)
         self.assertEqual(lot_b.name, 'lot b')
+
+    def test_routes(self):
+        # Global routes: no company_id on the route
+        # product & wh in multiple companies
+        company_a = self.env.company
+        company_b = self.env["res.company"].search([('id', '!=', company_a.id)], limit=1)
+
+        new_env = self.env.company.with_context(allowed_company_ids=[company_a.id, company_b.id])
+        product_a = new_env.env["product.template"].create({
+            "name": "Product in Company %s" % company_a.name,
+            "company_id": company_a.id,
+            "type": "product",
+        })
+        product_b = new_env.env["product.template"].create({
+            "name": "Product in Company %s" % company_b.name,
+            "company_id": company_b.id,
+            "type": "product",
+        })
+        global_product = new_env.env["product.template"].create({
+            "name": "Public Product",
+            "company_id": False,
+            "type": "product",
+        })
+        wh_company_a = new_env.env["stock.warehouse"].search([('company_id', '=', company_a.id)], limit=1)
+        wh_company_b = new_env.env["stock.warehouse"].search([('company_id', '=', company_b.id)], limit=1)
+
+        global_route = new_env.env['stock.location.route'].create({
+            "name": "Global route",
+            "company_id": False,
+            "warehouse_ids": [(6, 0, [wh_company_a.id, wh_company_b.id])],
+            "product_ids": [(6, 0, [product_a.id, product_b.id, global_product.id])],
+        })
+
+        route_a = new_env.env['stock.location.route'].create({
+            "name": "Route for Company %s" % company_a.name,
+            "company_id": company_a.id,
+            "warehouse_ids": [(6, 0, [wh_company_a.id])],
+            "product_ids": [(6, 0, [product_a.id, global_product.id])],
+        })
+        route_b = new_env.env['stock.location.route'].create({
+            "name": "Route for Company %s" % company_b.name,
+            "company_id": company_b.id,
+            "warehouse_ids": [(6, 0, [wh_company_b.id])],
+            "product_ids": [(6, 0, [product_b.id, global_product.id])],
+        })
+
+        # no change, shouldn't raise when going through check_company call
+        # bc a global route can be linked to records from different companies.
+        global_route.write({'company_id': False})
+
+        # Forbidden cases:
+        # 1) restricting a global route
+        with self.assertRaises(UserError):
+            global_route.write({'company_id': company_a.id})
+
+        # VFE NOTE: this dummy assertFalse is necessary
+        # to avoid a strange behavior where the global_route
+        # has a company_id even if it raised an Error while
+        # setting it...
+        self.assertFalse(global_route.company_id.id)
+        with self.assertRaises(UserError):
+            global_route.write({'company_id': company_b.id})
+
+        # self.assertFalse(global_route.company_id.id, False)
+        # 2) Using route of a company for products from other companies
+        with self.assertRaises(UserError):
+            route_a.product_ids += product_b
+
+        with self.assertRaises(UserError):
+            route_b.product_ids += product_a
+
+        # 3) Using route of a company for warehouses from other companies
+        with self.assertRaises(UserError):
+            route_a.warehouse_ids += wh_company_b
+
+        with self.assertRaises(UserError):
+            route_b.warehouse_ids += wh_company_a
+
+        # Side-test from the product
+        # where only an onchange is protecting against multi-company
+        # We could use a constraint to also protect against non-UI modification
+        # but this doesn't seem necessary atm.
+        with Form(global_product) as product_form:
+            # Verify _onchange_company_id works fine on product templates,
+            # filtering routes not belonging to the product company (or global)
+            product_form.company_id = company_a
+            product_form.save()
+
+        self.assertEqual(global_product.route_ids, global_route + route_a)

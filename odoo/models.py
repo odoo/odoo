@@ -3261,6 +3261,9 @@ Fields:
         User with main company A, having access to company A and B, could be
         assigned or linked to records in company B.
         """
+        if not self:
+            return
+
         if fnames is None:
             fnames = self._fields
 

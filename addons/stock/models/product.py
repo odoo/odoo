@@ -636,9 +636,13 @@ class ProductTemplate(models.Model):
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids', readonly=False, related_sudo=False)
 
-    @api.depends('type')
+    @api.depends('company_id')
     def _compute_has_available_route_ids(self):
-        self.has_available_route_ids = self.env['stock.location.route'].search_count([('product_selectable', '=', True)])
+        for template in self:
+            template.has_available_route_ids = self.env['stock.location.route'].search_count([
+                ('product_selectable', '=', True),
+                ('company_id', 'in', [False, template.company_id.id])
+            ])
 
     @api.depends(
         'product_variant_ids',
@@ -751,6 +755,15 @@ class ProductTemplate(models.Model):
                 )
             }
         return res
+
+    @api.onchange('company_id')
+    def _onchange_company_id(self):
+        if self.company_id:
+            # If the product is restricted to a given company,
+            # it can only use global routes or routes of the given company.
+            self.route_ids = self.route_ids.filtered(
+                lambda route: not route.company_id or route.company_id == self.company_id
+            )
 
     def write(self, vals):
         if 'uom_id' in vals:

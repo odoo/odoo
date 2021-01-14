@@ -190,7 +190,8 @@ class Route(models.Model):
     warehouse_domain_ids = fields.One2many('stock.warehouse', compute='_compute_warehouses')
     warehouse_ids = fields.Many2many(
         'stock.warehouse', 'stock_route_warehouse', 'route_id', 'warehouse_id',
-        'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]")
+        'Warehouses', copy=False, domain="[('id', 'in', warehouse_domain_ids)]",
+        check_company=True)
 
     @api.depends('company_id')
     def _compute_warehouses(self):
@@ -212,3 +213,7 @@ class Route(models.Model):
         for route in self:
             route.with_context(active_test=False).rule_ids.filtered(lambda ru: ru.active == route.active).toggle_active()
         super(Route, self).toggle_active()
+
+    def _check_company(self, fnames=None):
+        # Global routes can be linked to any product / warehouse.
+        super(Route, self.filtered('company_id'))._check_company(fnames)
