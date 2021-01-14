@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_registration_view_form" model="ir.ui.view">
+        <field name="name">event.booth.registration.view.form</field>
+        <field name="model">event.booth.registration</field>
+        <field name="arch" type="xml">
+            <form string="Registration">
+                <header attrs="{'invisible': [('id', '=', False)]}">
+                    <button name="action_confirm" type="object" class="btn-primary" states="draft"
+                            string="Confirm" groups="event.group_event_manager"/>
+                    <button name="action_cancel" type="object" states="confirm" groups="event.group_event_manager"
+                            string="Cancel" confirm="Are you sure you want to cancel this registration?"/>
+                    <button name="action_set_draft" type="object" states="cancel"
+                            groups="event.group_event_manager" string="Set Draft"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group name="name_info">
+                        <field name="name"/>
+                    </group>
+                    <group name="registration_info">
+                        <group name="renter_info" string="Renter Information">
+                            <field name="partner_id"/>
+                            <field name="contact_name"/>
+                            <field name="contact_email"/>
+                            <field name="contact_phone"/>
+                            <field name="contact_mobile"/>
+                        </group>
+                        <group name="confirmation_info" string="Confirmation Information" states="confirm">
+                            <field name="confirmation_user_id"/>
+                            <field name="confirmation_date"/>
+                        </group>
+                    </group>
+                    <group string="Reserved Slots">
+                        <field name="booth_slot_ids" nolabel="1"
+                               options="{'no_create': True, 'no_create_edit': True, 'no_open': True}"
+                               domain="[
+                                   ('event_booth_id', '=', context.get('search_default_event_booth_id')),
+                                   ('state', '=', 'available')
+                               ]"
+                               context="{
+                                   'tree_view_ref': 'event_booth.event_booth_slot_view_tree_from_registration'
+                               }">
+                            <tree>
+                                <field name="partner_id" decoration-bf="1"/>
+                                <field name="topic"/>
+                                <field name="booking_from"/>
+                                <field name="booking_to"/>
+                                <field name="state" decoration-success="state == 'available'" decoration-warning="state == 'reserved'"
+                                       decoration-danger="state == 'unavailable'" widget="badge" optional="show"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_registration_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.registration.view.tree</field>
+        <field name="model">event.booth.registration</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id" decoration-bf="1"/>
+                <field name="contact_name"/>
+                <field name="contact_email"/>
+                <field name="contact_phone"/>
+                <field name="contact_mobile"/>
+                <field name="state" decoration-success="state == 'confirm'" decoration-warning="state == 'draft'"
+                       decoration-danger="state == 'cancel'" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_booth_registration_action" model="ir.actions.act_window">
+        <field name="name">Registration</field>
+        <field name="res_model">event.booth.registration</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('booth_slot_ids', '=', active_id)]</field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <!--EVENT BOOTH TYPE-->
+
+    <record id="event_type_booths" model="event.type">
+        <field name="name">Physical Booths</field>
+        <field name="use_booth" eval="True"/>
+    </record>
+
+    <record id="event_type_booth_category_standard" model="event.type.booth.category">
+        <field name="name">Standard Booth</field>
+        <field name="event_type_id" ref="event_type_booths"/>
+        <field name="image_1920" type="base64" file="event_booth/static/src/img/standard-booth.jpeg"/>
+        <field name="is_multi_slots" eval="True"/>
+        <field name="description" type="html">
+            <div class="card text-center shadow-sm mx-4 mt32">
+                <div class="card-header p-4 bg-600">
+                    <h4 class="text-white m-0">Standard</h4>
+                </div>
+                <div class="card-body">
+                    <h3>100 €</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-600">
+                        <span class="text-white">4m²</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>1 Branded Booth</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Standard Location</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>46" display screen</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>1 desk</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Logo &amp; link on website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Feature in agenda</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Promotional banners</span><br/>
+                        <span>(for you emails &amp; website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Invitation brochure</span>
+                    </li>
+                </ul>
+            </div>
+        </field>
+    </record>
+
+    <record id="event_type_booth_category_premium" model="event.type.booth.category">
+        <field name="name">Premium Booth</field>
+        <field name="event_type_id" ref="event_type_booths"/>
+        <field name="image_1920" type="base64" file="event_booth/static/src/img/premium-booth.jpeg"/>
+        <field name="is_multi_slots" eval="True"/>
+        <field name="description" type="html">
+            <div class="card text-center shadow-sm mx-4 mt32">
+                <div class="card-header p-4 bg-secondary">
+                    <h4 class="text-white m-0">Premium</h4>
+                </div>
+                <div class="card-body">
+                    <h3>500 €</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-secondary">
+                        <span class="text-white">4m²</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>1 Branded Booth</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Premium Location</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>46" display screen</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>1 desk</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Logo &amp; link on website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>50 words description on website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Feature in agenda</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Social media promotion</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>10 + 1 passes</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Promotional banners</span><br/>
+                        <span>(for you emails &amp; website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Invitation brochure</span>
+                    </li>
+                </ul>
+            </div>
+        </field>
+    </record>
+
+    <record id="event_type_booth_category_vip" model="event.type.booth.category">
+        <field name="name">VIP Booth</field>
+        <field name="event_type_id" ref="event_type_booths"/>
+        <field name="image_1920" type="base64" file="event_booth/static/src/img/vip-booth.jpeg"/>
+        <field name="is_multi_slots" eval="False"/>
+        <field name="description" type="html">
+            <div class="card text-center shadow-sm mx-4 mt32">
+                <div class="card-header p-4 bg-primary">
+                    <h4 class="text-white m-0">VIP</h4>
+                </div>
+                <div class="card-body">
+                    <h3>1000 €</h3>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item bg-primary">
+                        <span class="text-white">8m²</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>2 Branded Booth</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Premium Location</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>2 x 46" display screens</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>2 desks</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Logo &amp; link on website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>100 words description on website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Feature in agenda</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Social media promotion</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>10 + 1 passes</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Promotional banners</span><br/>
+                        <span>(for you emails &amp; website</span>
+                    </li>
+                    <li class="list-group-item">
+                        <span>Invitation brochure</span>
+                    </li>
+                </ul>
+            </div>
+        </field>
+    </record>
+
+    <!--EVENT BOOTH FOR "Design Fair Los Angeles" EVENT-->
+
+    <record id="event_0_booth_category_standard" model="event.booth.category">
+        <field name="name" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').name"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="image_1920" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').image_1920"/>
+        <field name="is_multi_slots" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').is_multi_slots"/>
+        <field name="description" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').description"/>
+    </record>
+
+    <record id="event_0_booth_category_premium" model="event.booth.category">
+        <field name="name" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').name"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="image_1920" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').image_1920"/>
+        <field name="is_multi_slots" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').is_multi_slots"/>
+        <field name="description" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').description"/>
+    </record>
+
+    <record id="event_0_booth_category_vip" model="event.booth.category">
+        <field name="name" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').name"/>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="image_1920" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').image_1920"/>
+        <field name="is_multi_slots" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').is_multi_slots"/>
+        <field name="description" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').description"/>
+    </record>
+
+    <record id="event_booth_0_event_0" model="event.booth">
+        <field name="name">A1</field>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="booth_category_id" ref="event_0_booth_category_standard"/>
+    </record>
+
+    <record id="event_booth_0_event_0_slot_0" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_0"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + relativedelta(hour=18)"/>
+    </record>
+
+    <record id="event_booth_0_event_0_slot_1" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_0"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + timedelta(days=1)"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + relativedelta(days=1, hour=18)"/>
+    </record>
+
+    <record id="event_booth_0_event_0_slot_2" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_0"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + timedelta(days=2)"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + relativedelta(days=2, hour=18)"/>
+    </record>
+
+    <record id="event_booth_0_event_0_slot_3" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_0"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + timedelta(days=3)"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + relativedelta(days=3, hour=18)"/>
+    </record>
+
+    <record id="event_booth_0_event_0_slot_4" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_0"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + timedelta(days=4)"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event.event_0').date_begin + relativedelta(days=4, hour=18)"/>
+    </record>
+
+    <record id="event_booth_1_event_0" model="event.booth">
+        <field name="name">A2</field>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="booth_category_id" ref="event_0_booth_category_standard"/>
+    </record>
+
+    <record id="event_booth_2_event_0" model="event.booth">
+        <field name="name">A3</field>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="booth_category_id" ref="event_0_booth_category_standard"/>
+    </record>
+
+    <record id="event_booth_3_event_0" model="event.booth">
+        <field name="name">A4</field>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="booth_category_id" ref="event_0_booth_category_premium"/>
+    </record>
+
+    <record id="event_booth_4_event_0" model="event.booth">
+        <field name="name">A5</field>
+        <field name="event_id" ref="event.event_0"/>
+        <field name="booth_category_id" ref="event_0_booth_category_vip"/>
+    </record>
+
+    <!--EVENT BOOTH FOR "Conference for Architects" EVENT-->
+
+    <record id="event_2_booth_category_standard" model="event.booth.category">
+        <field name="name" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').name"/>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="image_1920" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').image_1920"/>
+        <field name="is_multi_slots" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').is_multi_slots"/>
+        <field name="description" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_standard').description"/>
+    </record>
+
+    <record id="event_2_booth_category_premium" model="event.booth.category">
+        <field name="name" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').name"/>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="image_1920" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').image_1920"/>
+        <field name="is_multi_slots" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').is_multi_slots"/>
+        <field name="description" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_premium').description"/>
+    </record>
+
+    <record id="event_2_booth_category_vip" model="event.booth.category">
+        <field name="name" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').name"/>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="image_1920" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').image_1920"/>
+        <field name="is_multi_slots" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').is_multi_slots"/>
+        <field name="description" model="event.type.booth.category" eval="obj().env.ref('event_booth.event_type_booth_category_vip').description"/>
+    </record>
+
+    <record id="event_booth_0_event_2" model="event.booth">
+        <field name="name">B1</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="booth_category_id" ref="event_2_booth_category_standard"/>
+    </record>
+
+    <record id="event_booth_0_event_2_slot_0" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event.event_2').date_begin"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event.event_2').date_begin + timedelta(hours=1)"/>
+    </record>
+
+    <record id="event_booth_0_event_2_slot_1" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_0').booking_to"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_0').booking_to + timedelta(hours=1)"/>
+    </record>
+
+    <record id="event_booth_0_event_2_slot_2" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_1').booking_to"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_1').booking_to + timedelta(hours=1)"/>
+    </record>
+
+    <record id="event_booth_0_event_2_slot_3" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_2').booking_to"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_2').booking_to + timedelta(hours=1)"/>
+    </record>
+
+    <record id="event_booth_0_event_2_slot_4" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_3').booking_to"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_3').booking_to + timedelta(hours=1)"/>
+    </record>
+
+    <record id="event_booth_0_event_2_slot_5" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_4').booking_to"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_4').booking_to + timedelta(hours=1)"/>
+    </record>
+
+    <record id="event_booth_0_event_2_slot_6" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_0_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_5').booking_to"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_0_event_2_slot_5').booking_to + timedelta(hours=1)"/>
+    </record>
+
+    <record id="event_booth_1_event_2" model="event.booth">
+        <field name="name">B2</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="booth_category_id" ref="event_2_booth_category_standard"/>
+    </record>
+
+    <record id="event_booth_2_event_2" model="event.booth">
+        <field name="name">B3</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="booth_category_id" ref="event_2_booth_category_standard"/>
+    </record>
+
+    <record id="event_booth_3_event_2" model="event.booth">
+        <field name="name">B4</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="booth_category_id" ref="event_2_booth_category_premium"/>
+    </record>
+
+    <record id="event_booth_3_event_2_slot_0" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_3_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event.event_2').date_begin"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event.event_2').date_begin + timedelta(hours=4)"/>
+    </record>
+
+    <record id="event_booth_3_event_2_slot_1" model="event.booth.slot">
+        <field name="event_booth_id" ref="event_booth_3_event_2"/>
+        <field name="booking_from" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_3_event_2_slot_0').booking_to"/>
+        <field name="booking_to" model="event.booth.slot"
+               eval="obj().env.ref('event_booth.event_booth_3_event_2_slot_0').booking_to + timedelta(hours=4)"/>
+    </record>
+
+    <record id="event_booth_4_event_2" model="event.booth">
+        <field name="name">B5</field>
+        <field name="event_id" ref="event.event_2"/>
+        <field name="booth_category_id" ref="event_2_booth_category_premium"/>
+    </record>
+
+</data></odoo>

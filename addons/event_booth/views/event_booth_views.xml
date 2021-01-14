@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <!--EVENT BOOTH CATEGORY-->
+
+    <record id="event_type_booth_category_view_form" model="ir.ui.view">
+        <field name="name">event.type.booth.category.view.form</field>
+        <field name="model">event.type.booth.category</field>
+        <field name="arch" type="xml">
+            <form string="Booth Type">
+                <sheet>
+                     <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name" placeholder="e.g. Premium Booth"/></h1>
+                    </div>
+                    <group>
+                        <group name="details">
+                            <field name="is_multi_slots"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Description" name="description">
+                            <field name="description"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_type_booth_category_view_tree" model="ir.ui.view">
+        <field name="name">event.type.booth.category.view.tree</field>
+        <field name="model">event.type.booth.category</field>
+        <field name="priority" eval="20"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="image_1920" invisible="1"/>
+                <field name="description" invisible="1"/>
+                <field name="is_multi_slots"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_booth_category_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.category.view.tree</field>
+        <field name="model">event.booth.category</field>
+        <field name="inherit_id" ref="event_type_booth_category_view_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <xpath expr="field[last()]" position="after">
+                <field name="event_booth_count" sum="Total" readonly="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!--EVENT BOOTH-->
+
+    <record id="event_booth_view_form" model="ir.ui.view">
+        <field name="name">event.booth.view.form</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <form string="Booths">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(event_booth_slot_action)d" type="action" class="oe_stat_button"
+                                icon="fa-users" attrs="{'invisible': [('booth_slot_count', '=', 0)]}">
+                            <field name="booth_slot_count" widget="statinfo" string="Slots"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Name"/>
+                        <h1><field name="name" placeholder="e.g. First Booth Alley 1"/></h1>
+                    </div>
+                    <group>
+                        <field name="is_multi_slots" invisible="1"/>
+                        <field name="event_id" readonly="1"/>
+                        <field name="booth_category_id" options="{'no_create': True}" context="{'default_event_id': event_id}"/>
+                        <field name="booth_slot_ids" attrs="{'invisible': [('is_multi_slots', '=', False), ('id', '=', False)]}">
+                            <tree string="Slots" editable="bottom">
+                                <field name="event_booth_id" invisible="1"/>
+                                <field name="event_date_begin" invisible="1"/>
+                                <field name="event_date_end" invisible="1"/>
+                                <!-- Using startDate option from web/static/lib/daterangepicker/daterangepicker.js lib -->
+                                <field name="booking_from" widget="daterange" options="{
+                                    'related_end_date': 'booking_to',
+                                    'picker_options': {
+                                        'default_start': 'event_date_begin',
+                                        'default_end': 'event_date_end',
+                                    }}" string="Start"/>
+                                <field name="booking_to" widget="daterange" options="{
+                                    'related_start_date': 'booking_from',
+                                    'picker_options': {
+                                        'default_start': 'event_date_begin',
+                                        'default_end': 'event_date_end',
+                                    }}" string="End"/>
+                                <field name="registration_count" class="oe_read_only"/>
+                                <!--TODO: widget="badge" fucks up the daterange widget... it doesn't close-->
+                                <field name="state" class="oe_read_only" widget="badge" decoration-success="state == 'available'"
+                                       decoration-danger="state == 'unavailable'" decoration-warning="state == 'reserved'"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.view.tree</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <tree string="Booths" sample="1" expand="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="booth_category_id"/>
+                <field name="state" decoration-info="state == 'available'" decoration-warning="state == 'reserved'"
+                       decoration-success="state == 'unavailable'" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_booth_view_kanban" model="ir.ui.view">
+        <field name="name">event.booth.view.kanban</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" sample="1">
+                <field name="name"/>
+                <field name="booth_slot_count"/>
+                <field name="booth_slot_count_available"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="o_kanban_content oe_kanban_global_click">
+                            <div class="o_kanban_record_title">
+                                <field name="name"/>
+                            </div>
+                            <div>
+                                <field name="booth_category_id"/>
+                            </div>
+                            <div>
+                                <a name="%(event_booth_slot_action)d" type="action" domain="[('state', '=', 'available')]">
+                                    <span>
+                                        <t t-esc="record.booth_slot_count_available.raw_value"/> /
+                                        <t t-esc="record.booth_slot_count.raw_value"/>
+                                        Available Slots
+                                    </span>
+                                </a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="event_booth_view_search" model="ir.ui.view">
+        <field name="name">event.booth.view.search</field>
+        <field name="model">event.booth</field>
+        <field name="arch" type="xml">
+            <search string="Event Booth">
+                <field name="name" string="Name" filter_domain="[('name', 'ilike', self)]"/>
+                <filter string="Available" name="booth_available" domain="[('state', '=', 'available')]"/>
+                <filter string="Reserved" name="booth_reserved" domain="[('state', '=', 'reserved')]"/>
+                <filter string="Unavailable" name="booth_unavailable" domain="[('state', '=', 'unavailable')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Booth Type" name="booth_category" context="{'group_by': 'booth_category_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_booth_action" model="ir.actions.act_window">
+        <field name="name">Booths</field>
+        <field name="res_model">event.booth</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('event_id', '=', active_id)]</field>
+        <field name="context">{'default_event_id': active_id}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a Booth
+            </p><p>
+                Booths are the physical stands that you rent during your event.
+            </p>
+        </field>
+    </record>
+
+</data></odoo>

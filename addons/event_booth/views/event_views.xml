@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="view_event_type_form" model="ir.ui.view">
+        <field name="name">event.event.type.view.form.inherit.event.booth</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <div name="event_type_attendees_tickets" position="after">
+                <div class="col-12 o_setting_box" name="event_type_booths">
+                    <div class="o_setting_left_pane">
+                        <field name="use_booth"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="use_booth"/>
+                        <div class="row mt16" attrs="{'invisible': [('use_booth', '=', False)]}">
+                            <div class="col">
+                                <field name="event_type_booth_category_ids"
+                                       class="w-100"
+                                       context="{
+                                            'tree_view_ref': 'event_booth.event_type_booth_category_view_tree',
+                                       }"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <record id="view_event_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.event.booth</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="priority" eval="4"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" name="%(event_booth_action)d"
+                        type="action" icon="fa-university">
+                    <div class="o_field_widget o_stat_info">
+                        <div>
+                            <span class="o_stat_value">
+                                <field name="event_booth_count_available"/> / <field name="event_booth_count"/>
+                            </span>
+                            Booths
+                        </div>
+                        <div>
+                            <span class="o_stat_value">
+                                <field name="event_booth_slot_count_available"/> / <field name="event_booth_slot_count"/>
+                            </span>
+                            Slots
+                        </div>
+                    </div>
+                </button>
+            </div>
+            <page name="tickets" position="after">
+                <page string="Booths Category" name="booths">
+                    <field name="event_booth_category_ids"
+                           context="{
+                                'form_view_ref': 'event_booth.event_type_booth_category_view_form'
+                           }"/>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</data></odoo>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_slot_view_form" model="ir.ui.view">
+        <field name="name">event.booth.slot.view.form</field>
+        <field name="model">event.booth.slot</field>
+        <field name="arch" type="xml">
+            <form string="Slot">
+                <header>
+                    <button name="action_create_new_registration" type="object" class="btn-primary"
+                            string="New Registration" states="available" groups="event.group_event_manager"/>
+                    <button name="action_reserve" type="object" class="btn-secondary" string="Reserve"
+                            states="available" groups="event.group_event_manager"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div name="button_box" class="oe_button_box">
+                        <button name="%(event_booth_registration_action)d" type="action" class="oe_stat_button" icon="fa-users"
+                                attrs="{'invisible': [('registration_count', '=', 0)]}">
+                            <field name="registration_count" widget="statinfo" string="Registrations"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group name="event_info" string="Event Information">
+                            <field name="event_id"/>
+                            <field name="event_booth_id"/>
+                            <label for="booking_from" string="Date"/>
+                            <div class="o_row">
+                                <field name="booking_from" widget="daterange" options="{'related_end_date': 'booking_to'}"/>
+                                <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                                <field name="booking_to" widget="daterange" options="{'related_start_date': 'booking_from'}"/>
+                            </div>
+                        </group>
+                        <group name="renter_info" string="Renter Information"
+                               attrs="{'invisible': [('partner_id', '=', False)]}">
+                            <field name="topic"/>
+                            <field name="partner_id"/>
+                            <field name="name"/>
+                            <field name="email"/>
+                            <field name="phone" class="o_force_ltr"/>
+                            <field name="mobile" class="o_force_ltr"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_slot_view_tree" model="ir.ui.view">
+        <field name="name">event.booth.slot.view.tree</field>
+        <field name="model">event.booth.slot</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="partner_id" decoration-bf="1"/>
+                <field name="topic"/>
+                <field name="booking_from"/>
+                <field name="booking_to"/>
+                <field name="state" decoration-success="state == 'available'" decoration-warning="state == 'reserved'"
+                       decoration-danger="state == 'unavailable'" widget="badge" optional="show"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_booth_slot_view_tree_from_registration" model="ir.ui.view">
+        <field name="name">event.booth.slot.view.tree.from.registration</field>
+        <field name="model">event.booth.slot</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="event_id"/>
+                <field name="event_booth_id"/>
+                <field name="booking_from"/>
+                <field name="booking_to"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="event_booth_slot_view_search" model="ir.ui.view">
+        <field name="name">event.booth.slot.view.search</field>
+        <field name="model">event.booth.slot</field>
+        <field name="arch" type="xml">
+            <search string="Event Booth Slot">
+                <field name="partner_id"/>
+                <field name="event_booth_id"/>
+                <filter string="Available" name="available" domain="[('state', '=', 'available')]"/>
+                <filter string="Reserved" name="reserved" domain="[('state', '=', 'reserved')]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="event_booth_slot_action" model="ir.actions.act_window">
+        <field name="name">Slots</field>
+        <field name="res_model">event.booth.slot</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('event_booth_id', '=', active_id)]</field>
+        <field name="context">{'default_event_booth_id': active_id}</field>
+    </record>
+
+    <record id="event_booth_slot_action_create_registration" model="ir.actions.server">
+        <field name="name">Create Registration</field>
+        <field name="model_id" ref="event_booth.model_event_booth_slot"/>
+        <field name="binding_model_id" ref="event_booth.model_event_booth_slot"/>
+        <field name="binding_view_types">list</field>
+        <field name="groups_id" eval="[(4,ref('event.group_event_manager'))]"/>
+        <field name="state">code</field>
+        <field name="code">action = records.action_create_new_registration()</field>
+    </record>
+
+</data></odoo>
