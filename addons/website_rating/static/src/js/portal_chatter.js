@@ -125,7 +125,9 @@ PortalChatter.include({
                     });
                 }
             });
-            self.set('rating_card_values', ratingData);
+            self.set('rating_card_values', Object.assign({}, ratingData, {
+                total: result['rating_stats']['total']
+            }));
         });
     },
     /**

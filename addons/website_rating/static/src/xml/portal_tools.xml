@@ -4,7 +4,18 @@
         <t t-set="val_integer" t-value="Math.floor(val)"/>
         <t t-set="val_decimal" t-value="val - val_integer"/>
         <t t-set="empty_star" t-value="5 - (val_integer+Math.ceil(val_decimal))"/>
-        <div class="o_website_rating_static" t-att-style="inline_mode ? 'display:inline' : ''" t-attf-aria-label="#{val} stars on 5" t-attf-title="#{val} stars on 5">
+        <div t-att="val and {
+            'itemprop': _itemprop or 'aggregateRating',
+            'itemscope': 'itemscope',
+            'itemtype': _itemtype or 'https://schema.org/AggregateRating'
+        }"
+        class="o_website_rating_static" t-att-style="inline_mode ? 'display:inline' : ''"
+        t-attf-aria-label="#{val} stars on 5" t-attf-title="#{val} stars on 5">
+            <t t-if="val">
+                <meta itemprop="ratingValue" t-att-content="val"/>
+                <meta itemprop="bestRating" content="5"/>
+                <meta t-if="total" itemprop="ratingCount" t-att-content="total"/>
+            </t>
             <t t-foreach="_.range(0, val_integer)" t-as="num">
                 <i class="fa fa-star" role="img"></i>
             </t>
@@ -25,6 +36,7 @@
                     <h1><t t-esc="widget.get('rating_card_values')['avg']"/></h1>
                     <t t-call="website_rating.rating_stars_static">
                         <t t-set="val" t-value="widget.get('rating_card_values')['avg'] || 0"/>
+                        <t t-set="total" t-value="widget.get('rating_card_values')['total']"/>
                     </t>
                     <t t-call="portal.chatter_message_count"/>
                 </div>
