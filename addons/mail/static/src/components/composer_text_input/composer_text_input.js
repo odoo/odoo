@@ -153,14 +153,16 @@ class ComposerTextInput extends Component {
         if (!this.composer) {
             return;
         }
-        this._textareaRef.el.value = this.composer.textInputContent;
-        this._mirroredTextareaRef.el.value = this.composer.textInputContent;
-        if (this.composer.hasFocus) {
-            this._textareaRef.el.setSelectionRange(
-                this.composer.textInputCursorStart,
-                this.composer.textInputCursorEnd,
-                this.composer.textInputSelectionDirection,
-            );
+        if (this.composer.isLastStateChangeProgrammatic) {
+            this._textareaRef.el.value = this.composer.textInputContent;
+            if (this.composer.hasFocus) {
+                this._textareaRef.el.setSelectionRange(
+                    this.composer.textInputCursorStart,
+                    this.composer.textInputCursorEnd,
+                    this.composer.textInputSelectionDirection,
+                );
+            }
+            this.composer.update({ isLastStateChangeProgrammatic: false });
         }
         this._updateHeight();
     }
@@ -171,6 +173,7 @@ class ComposerTextInput extends Component {
      * @private
      */
     _updateHeight() {
+        this._mirroredTextareaRef.el.value = this.composer.textInputContent;
         this._textareaRef.el.style.height = (this._mirroredTextareaRef.el.scrollHeight) + "px";
     }
 
