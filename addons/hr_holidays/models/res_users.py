@@ -46,6 +46,8 @@ class User(models.Model):
             if user.id in on_leave_user_ids:
                 if user.im_status == 'online':
                     user.im_status = 'leave_online'
+                elif user.im_status == 'away':
+                    user.im_status = 'leave_away'
                 else:
                     user.im_status = 'leave_offline'
 
