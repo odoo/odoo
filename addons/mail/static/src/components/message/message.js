@@ -295,6 +295,13 @@ class Message extends Component {
                     value.new_value =
                         moment(value.new_value).local().format('LL');
                 }
+            } else if (value.field_type === 'boolean') {
+                if (value.old_value !== undefined){
+                    value.old_value = value.old_value ? this.env._t("True") : this.env._t("False");
+                }
+                if (value.new_value !== undefined){
+                    value.new_value = value.new_value ? this.env._t("True") : this.env._t("False");
+                }
             }
             return value;
         });
