@@ -53,7 +53,7 @@ class AccountMove(models.Model):
         new_lines = self.env['account.move.line']
         for line in po_lines.filtered(lambda l: not l.display_type):
             new_line = new_lines.new(line._prepare_account_move_line(self))
-            new_line.account_id = new_line._get_computed_account()
+            new_line.account_id = new_line._get_default_product_account()
             new_line._onchange_price_subtotal()
             new_lines += new_line
         new_lines._onchange_mark_recompute_taxes()

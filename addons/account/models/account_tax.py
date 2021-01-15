@@ -575,7 +575,7 @@ class AccountTax(models.Model):
                     'amount': sign * line_amount,
                     'base': round(sign * tax_base_amount, precision_rounding=prec),
                     'sequence': tax.sequence,
-                    'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
+                    'account_id': repartition_line._get_business_account().id,
                     'analytic': tax.analytic,
                     'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,
@@ -683,3 +683,12 @@ class AccountTaxRepartitionLine(models.Model):
     def _onchange_repartition_type(self):
         if self.repartition_type == 'base':
             self.account_id = None
+
+    @api.model
+    def _get_business_account(self):
+        ''' Helper to get the default tax account to be set on tax line. '''
+        self.ensure_one()
+        if self.tax_id.tax_exigibility == 'on_payment':
+            return self.tax_id.cash_basis_transition_account_id
+        else:
+            return self.account_id

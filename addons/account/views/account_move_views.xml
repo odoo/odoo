@@ -838,6 +838,23 @@
 
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
+                                        <field name="tax_detail_ids" invisible="1" force_save="1">
+                                            <tree>
+                                                <!-- Invisible fields -->
+                                                <field name="currency_id"/>
+                                                <field name="company_currency_id"/>
+
+                                                <field name="account_id"/>
+                                                <field name="tax_amount"/>
+                                                <field name="tax_amount_currency"/>
+                                                <field name="tax_base_amount"/>
+                                                <field name="tax_base_amount_currency"/>
+                                                <field name="tax_ids"/>
+                                                <field name="tag_ids"/>
+                                                <field name="tax_repartition_line_id"/>
+                                                <field name="tax_id"/>
+                                            </tree>
+                                        </field>
                                         <field name="tax_tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
                                         <field name="tax_exigible" invisible="1"/>
@@ -914,6 +931,23 @@
 
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1"/>
+                                        <field name="tax_detail_ids" invisible="1" force_save="1">
+                                            <tree>
+                                                <!-- Invisible fields -->
+                                                <field name="currency_id"/>
+                                                <field name="company_currency_id"/>
+
+                                                <field name="account_id"/>
+                                                <field name="tax_amount"/>
+                                                <field name="tax_amount_currency"/>
+                                                <field name="tax_base_amount"/>
+                                                <field name="tax_base_amount_currency"/>
+                                                <field name="tax_ids"/>
+                                                <field name="tag_ids"/>
+                                                <field name="tax_repartition_line_id"/>
+                                                <field name="tax_id"/>
+                                            </tree>
+                                        </field>
                                         <field name="tax_tag_ids" invisible="1"/>
                                         <field name="tax_base_amount" invisible="1"/>
                                         <field name="tax_exigible" invisible="1"/>
@@ -1066,6 +1100,23 @@
                                         <field name="tax_line_id" invisible="1"/>
                                         <field name="tax_group_id" invisible="1"/>
                                         <field name="tax_repartition_line_id" invisible="1" force_save="1"/>
+                                        <field name="tax_detail_ids" invisible="1" force_save="1">
+                                            <tree>
+                                                <!-- Invisible fields -->
+                                                <field name="currency_id"/>
+                                                <field name="company_currency_id"/>
+
+                                                <field name="account_id"/>
+                                                <field name="tax_amount"/>
+                                                <field name="tax_amount_currency"/>
+                                                <field name="tax_base_amount"/>
+                                                <field name="tax_base_amount_currency"/>
+                                                <field name="tax_ids"/>
+                                                <field name="tag_ids"/>
+                                                <field name="tax_repartition_line_id"/>
+                                                <field name="tax_id"/>
+                                            </tree>
+                                        </field>
                                         <field name="tax_base_amount" invisible="1" force_save="1"/>
                                         <field name="tax_exigible" invisible="1" force_save="1"/>
                                         <field name="company_id" invisible="1"/>
@@ -1095,6 +1146,23 @@
                                         <field name="tax_ids" string="Taxes Applied" widget="many2many_tags" options="{'no_create': True}"/>
                                         <field name="date_maturity" required="0" invisible="context.get('view_no_maturity', False)"/>
                                         <field name="recompute_tax_line" invisible="1" readonly="1"/>
+                                        <field name="tax_detail_ids" invisible="1" force_save="1">
+                                            <tree>
+                                                <!-- Invisible fields -->
+                                                <field name="currency_id"/>
+                                                <field name="company_currency_id"/>
+
+                                                <field name="account_id"/>
+                                                <field name="tax_amount"/>
+                                                <field name="tax_amount_currency"/>
+                                                <field name="tax_base_amount"/>
+                                                <field name="tax_base_amount_currency"/>
+                                                <field name="tax_ids"/>
+                                                <field name="tag_ids"/>
+                                                <field name="tax_repartition_line_id"/>
+                                                <field name="tax_id"/>
+                                            </tree>
+                                        </field>
                                       </group>
                                     </form>
                                 </field>

@@ -17,6 +17,7 @@ from . import test_account_move_partner_count
 from . import test_account_move_rounding
 from . import test_account_invoice_report
 from . import test_account_journal_dashboard
+from . import test_account_tax_detail
 from . import test_fiscal_position
 from . import test_reconciliation
 from . import test_settings
