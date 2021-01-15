@@ -1545,6 +1545,9 @@ function factory(dependencies) {
                 // avoid crash during destroy
                 return;
             }
+            if (this.env.messaging.device.isMobile) {
+                return;
+            }
             if (this.serverFoldState === 'closed') {
                 this.env.messaging.chatWindowManager.closeThread(this, {
                     notifyServer: false,
