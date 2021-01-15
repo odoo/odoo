@@ -122,8 +122,7 @@ class SaleOrder(models.Model):
             post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
 
-    @api.depends('order_line.is_delivery', 'order_line.is_downpayment',
-                 'order_line.product_id.invoice_policy')
+    @api.depends('order_line.is_delivery', 'order_line.is_downpayment')
     def _get_invoice_status(self):
         super()._get_invoice_status()
         for order in self:
