@@ -100,7 +100,9 @@ models.Orderline = models.Orderline.extend({
                             }
                         });
 
-                        if (qty_decrease > current_total_quantity_remaining) {
+                        if(selected_orderline.isLastLine() && current_total_quantity_remaining === 0 && current_total_quantity_remaining < qty_decrease) {
+                            orderline_super.set_quantity.apply(selected_orderline, [-qty_decrease, true]);
+                        } else if (qty_decrease > current_total_quantity_remaining) {
                           this.pos.gui.show_popup("error", {
                               'title': _t("Order error"),
                               'body':  _t("Not allowed to take back more than was ordered."),
