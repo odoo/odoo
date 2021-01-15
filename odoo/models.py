@@ -3401,12 +3401,9 @@ class BaseModel(metaclass=MetaModel):
                 if f.prefetch == field.prefetch
                 # discard fields with groups that the user may not access
                 if not (f.groups and not self.user_has_groups(f.groups))
-                # discard fields that must be recomputed
-                if not (f.compute and self.env.records_to_compute(f))
             ]
             if field.name not in fnames:
                 fnames.append(field.name)
-                self = self - self.env.records_to_compute(field)
         else:
             fnames = [field.name]
         self._read(fnames)
@@ -3420,10 +3417,6 @@ class BaseModel(metaclass=MetaModel):
         if not self:
             return
         self.check_access_rights('read')
-
-        # if a read() follows a write(), we must flush updates, as read() will
-        # fetch from database and overwrites the cache (`test_update_with_id`)
-        self.flush_recordset(field_names)
 
         # determine columns fields and those with their own read() method
         column_fields = []
@@ -3444,6 +3437,12 @@ class BaseModel(metaclass=MetaModel):
 
         if column_fields:
             cr, context = self.env.cr, self.env.context
+
+            # If a read() follows a write(), we must flush the updates that have
+            # an impact on checking security rules, as they are injected into
+            # the query.  However, we don't need to flush the fields to fetch,
+            # as explained below when putting values in cache.
+            self._flush_search([], order='id')
 
             # make a query object for selecting ids, and apply security rules to it
             query = Query(cr, self._table, self._table_query)
@@ -3481,6 +3480,9 @@ class BaseModel(metaclass=MetaModel):
             ids = next(column_values)
             fetched = self.browse(ids)
 
+            # If we assume that the value of a pending update is in cache, we
+            # can avoid flushing pending updates if the fetched values do not
+            # overwrite values in cache.
             for field in column_fields:
                 values = next(column_values)
                 # post-process translations
@@ -3488,8 +3490,8 @@ class BaseModel(metaclass=MetaModel):
                     if any(values):
                         translate = field.get_trans_func(fetched)
                         values = [translate(id_, value) for id_, value in zip(ids, values)]
-                # store values in cache
-                self.env.cache.update(fetched, field, values)
+                # store values in cache, but without overwriting
+                self.env.cache.insert_missing(fetched, field, values)
 
             # process non-column fields
             for field in other_fields:
