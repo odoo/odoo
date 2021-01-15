@@ -72,6 +72,7 @@
     'application': True,
     'assets': {
         'web.assets_qweb': [
+            'crm/static/src/xml/crm_kanban.xml',
             'crm/static/src/xml/forecast_kanban.xml',
         ],
         'web.assets_backend': [
@@ -87,6 +88,7 @@
             'crm/static/tests/tours/**/*',
         ],
         'web.qunit_suite_tests': [
+            'crm/static/tests/crm_kanban_progress_bar_mrr_sum_field_tests.js',
             'crm/static/tests/mock_server.js',
             'crm/static/tests/forecast_kanban_tests.js',
             'crm/static/tests/forecast_view_tests.js',

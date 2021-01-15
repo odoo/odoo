@@ -154,7 +154,7 @@ var KanbanColumn = Widget.extend({
         });
         if (this.barOptions) {
             this.$el.addClass('o_kanban_has_progressbar');
-            this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
+            this.progressBar = this._getKanbanColumnProgressBar();
             defs.push(this.progressBar.appendTo(this.$header));
         }
 
@@ -286,6 +286,15 @@ var KanbanColumn = Widget.extend({
             ids.push($(r).data('record').id);
         });
         return ids;
+    },
+    /**
+     * This method can be over-ridden when custom ColumnProgressbar is to be used
+     *
+     * @private
+     * @returns {Widget} the instance of 'KanbanColumnProgressBar'
+     */
+    _getKanbanColumnProgressBar: function () {
+        return new KanbanColumnProgressBar(this, this.barOptions, this.data);
     },
 
     //--------------------------------------------------------------------------
