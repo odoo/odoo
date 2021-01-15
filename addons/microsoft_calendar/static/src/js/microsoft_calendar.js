@@ -189,7 +189,7 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
 
     _initMicrosoftPillButton: function() {
         this.$microsoftStopButton.css({"cursor":"pointer", "font-size":"0.9em"});
-        var switchBadgeClass = (elem) => {elem.toggleClass('badge-success'); elem.toggleClass('badge-danger');};
+        var switchBadgeClass = (elem) => {elem.toggleClass('badge-primary'); elem.toggleClass('badge-danger');};
         this.$('.o_stop_microsoft_sync_button').hover(() => {
             switchBadgeClass(this.$microsoftStopButton);
             this.$microsoftStopButton.html("<i class='fa mr-2 fa-times'/>".concat(_t("Stop the Synchronization")));
@@ -210,7 +210,7 @@ const MicrosoftCalendarRenderer = CalendarRenderer.include({
     _getMicrosoftStopButton: function () {
         return  $('<span/>', {
             html: _t("Synched with Outlook"),
-            class: 'w-100 badge badge-pill badge-success border-0 o_stop_microsoft_sync_button'
+            class: 'w-100 badge badge-pill badge-primary border-0 o_stop_microsoft_sync_button'
         })
         .prepend($('<i/>', {class: "fa mr-2 fa-check"}));
     },
