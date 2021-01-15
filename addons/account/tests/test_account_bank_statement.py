@@ -1498,3 +1498,54 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
                 'amount_residual_currency': 0.0,
             },
         ])
+
+    def test_conversion_rate_rounding_issue(self):
+        ''' Ensure the reconciliation is well handling the rounding issue due to multiple currency conversion rates.
+
+        In this test, the resulting journal entry after reconciliation is:
+        {'amount_currency': 7541.66,    'debit': 6446.97,   'credit': 0.0}
+        {'amount_currency': 226.04,     'debit': 193.22,    'credit': 0.0}
+        {'amount_currency': -7767.70,   'debit': 0.0,       'credit': 6640.19}
+        ... but 226.04 / 1.1698 = 193.23. In this situation, 0.01 has been removed from this write-off line in order to
+        avoid an unecessary open-balance line being an exchange difference issue.
+        '''
+        self.bank_journal_2.currency_id = self.currency_2
+        self.currency_data['rates'][-1].rate = 1.1698
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'amount': 7541.66,
+                }),
+            ],
+        })
+        statement.button_post()
+        statement_line = statement.line_ids
+
+        payment = self.env['account.payment'].create({
+            'amount': 7767.70,
+            'date': '2019-01-01',
+            'currency_id': self.currency_2.id,
+            'payment_type': 'inbound',
+            'partner_type': 'customer',
+        })
+        payment.action_post()
+        liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
+        self.assertRecordValues(liquidity_lines, [{'amount_currency': 7767.70}])
+
+        statement_line.reconcile([
+            {'id': liquidity_lines.id},
+            {'balance': 226.04, 'account_id': self.company_data['default_account_revenue'].id, 'name': "write-off"},
+        ])
+
+        self.assertRecordValues(statement_line.line_ids, [
+            {'amount_currency': 7541.66,    'debit': 6446.97,   'credit': 0.0},
+            {'amount_currency': 226.04,     'debit': 193.22,    'credit': 0.0},
+            {'amount_currency': -7767.70,   'debit': 0.0,       'credit': 6640.19},
+        ])
