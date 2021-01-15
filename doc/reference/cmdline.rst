@@ -8,6 +8,14 @@ Command-line interface: odoo-bin
 
 .. _reference/cmdline/server:
 
+.. note:: You can enable auto-completion in your shell by running
+
+  .. code-block:: bash
+
+    echo "complete -W '`./odoo-bin --help | \
+      sed -e 's/[^a-z_-]\(-\+[a-z0-9_-]\+\)/\n\1\n/' | \
+      grep -- '^-' | sort | uniq | tr '\n' ' '`' odoo-bin" >> ~/.bash_completion
+
 Running the server
 ==================
 
@@ -742,4 +750,3 @@ If an extra module contains such files, they should be fixed to allow the module
 load. If the module works despite the presence of those files, they are probably
 not loaded and should therefore be removed from the module, or at least excluded
 in the manifest via ``cloc_exclude``.
-
