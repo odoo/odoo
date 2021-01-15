@@ -12,6 +12,7 @@ class StockQuantPackage(models.Model):
     _inherit = "stock.quant.package"
 
     @api.depends('quant_ids')
+    @api.depends_context('picking_id')
     def _compute_weight(self):
         for package in self:
             weight = 0.0
