@@ -5,6 +5,9 @@
             <script type="text/javascript" src="/google_calendar/static/src/js/google_calendar_popover.js"></script>
             <script type="text/javascript" src="/google_calendar/static/src/js/google_calendar.js"></script>
         </xpath>
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/google_calendar/static/src/scss/google_calendar.scss"/>
+        </xpath>
     </template>
 
     <template id="qunit_suite" name="google_calendar_tests" inherit_id="web.qunit_suite_tests">
