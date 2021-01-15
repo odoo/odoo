@@ -6414,6 +6414,10 @@ class Model(AbstractModel):
     _abstract = False           # not abstract
     _transient = False          # not transient
 
+    def __deepcopy__(self, memodict={}):
+        return self.browse(self.ids)
+
+
 class TransientModel(Model):
     """ Model super-class for transient records, meant to be temporarily
     persistent, and regularly vacuum-cleaned.
