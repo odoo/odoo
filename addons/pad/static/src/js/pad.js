@@ -163,6 +163,11 @@ var FieldPad = AbstractField.extend({
                     .removeClass('oe_pad_loading')
                     .html('<div class="oe_pad_readonly"><div>');
                 self.$('.oe_pad_readonly').html(data);
+                _.each(self.$('a'), (link) => {
+                    if (link.hostname !== window.location.hostname && link.target === "") {
+                        link.target = "_blank";
+                    }
+                });
             }).guardedCatch(function () {
                 self.$('.oe_pad_content').text(_t('Unable to load pad'));
             });
