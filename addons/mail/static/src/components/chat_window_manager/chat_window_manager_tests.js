@@ -665,6 +665,121 @@ QUnit.test('chat window: open / close', async function (assert) {
     );
 });
 
+QUnit.test('Mobile: opening a chat window should not update channel state on the server', async function (assert) {
+    assert.expect(2);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        state: 'closed',
+    });
+    await this.start({
+        env: {
+            device: {
+                isMobile: true,
+            },
+        },
+    });
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() => document.querySelector(`.o_NotificationList_preview`).click());
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have a chat window after clicking on thread preview"
+    );
+    const channels = await this.env.services.rpc({
+        model: 'mail.channel',
+        method: 'read',
+        args: [20],
+    }, { shadow: true });
+    assert.strictEqual(
+        channels[0].state,
+        'closed',
+        'opening a chat window in mobile should not update channel state on the server',
+    );
+});
+
+QUnit.test('Mobile: closing a chat window should not update channel state on the server', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        state: 'open',
+    });
+    await this.start({
+        env: {
+            device: {
+                isMobile: true,
+            },
+        },
+    });
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() => document.querySelector(`.o_NotificationList_preview`).click());
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "should have a chat window after clicking on thread preview"
+    );
+    // Close chat window
+    await afterNextRender(() => document.querySelector(`.o_ChatWindowHeader_commandClose`).click());
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "should not have a chat window after closing it"
+    );
+    const channels = await this.env.services.rpc({
+        model: 'mail.channel',
+        method: 'read',
+        args: [20],
+    }, { shadow: true });
+    assert.strictEqual(
+        channels[0].state,
+        'open',
+        'closing the chat window should not update channel state on the server',
+    );
+});
+
+QUnit.test("Mobile: chat window shouldn't open automatically after receiving a new message", async function (assert) {
+    assert.expect(1);
+
+    this.data['res.partner'].records.push({ id: 10, name: "Demo" });
+    this.data['res.users'].records.push({
+        id: 42,
+        partner_id: 10,
+    });
+    this.data['mail.channel'].records = [
+        {
+            channel_type: "chat",
+            id: 10,
+            members: [this.data.currentPartnerId, 10],
+            uuid: 'channel-10-uuid',
+        },
+    ];
+    await this.start({
+        env: {
+            device: {
+                isMobile: true,
+            },
+        },
+    });
+
+    // simulate receiving a message
+    await afterNextRender(() => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            message_content: "hu",
+            uuid: 'channel-10-uuid',
+        },
+    }));
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "On mobile, the chat window shouldn't open automatically after receiving a new message"
+    );
+});
+
 QUnit.test('chat window: close on ESCAPE', async function (assert) {
     assert.expect(10);
 
