@@ -43,6 +43,9 @@
         <field name="model">product.template</field>
         <field name="inherit_id" ref="website_sale.product_template_view_tree"/>
         <field name="arch" type="xml">
+            <xpath expr="/tree" position="attributes">
+              <attribute name="default_order">website_sequence</attribute>
+            </xpath>
             <field name="sequence" position="replace">
                 <field name="website_sequence" widget="handle"/>
             </field>
