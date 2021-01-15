@@ -1141,7 +1141,7 @@ QUnit.test('rendering of tracked field with change of value from true to false',
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Is Ready:truefalse",
+        "Is Ready:TrueFalse",
         "should display the correct content of tracked field with change of value from true to false (Is Ready: true -> false)"
     );
 });
@@ -1163,7 +1163,7 @@ QUnit.test('rendering of tracked field with change of value from false to true',
     await this.createMessageComponent(message);
     assert.strictEqual(
         document.querySelector('.o_Message_trackingValue').textContent,
-        "Is Ready:falsetrue",
+        "Is Ready:FalseTrue",
         "should display the correct content of tracked field with change of value from false to true (Is Ready: false -> true)"
     );
 });
