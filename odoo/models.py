@@ -3411,15 +3411,11 @@ class BaseModel(metaclass=MetaModel):
             fnames = [field.name]
         self._read(fnames)
 
-    def _read(self, fields):
+    def _read(self, field_names):
         """ Read the given fields of the records in ``self`` from the database,
-            and store them in cache. Access errors are also stored in cache.
-            Skip fields that are not stored.
+            and store them in cache. Skip fields that are not stored.
 
-            :param field_names: list of column names of model ``self``; all those
-                fields are guaranteed to be read
-            :param inherited_field_names: list of column names from parent
-                models; some of those fields may not be read
+            :param field_names: list of field names to read
         """
         if not self:
             return
@@ -3427,51 +3423,46 @@ class BaseModel(metaclass=MetaModel):
 
         # if a read() follows a write(), we must flush updates, as read() will
         # fetch from database and overwrites the cache (`test_update_with_id`)
-        self.flush_recordset(fields)
+        self.flush_recordset(field_names)
 
-        field_names = []
-        inherited_field_names = []
-        for name in fields:
+        # determine columns fields and those with their own read() method
+        column_fields = []
+        other_fields = []
+        for name in field_names:
+            if name == 'id':
+                continue
             field = self._fields.get(name)
-            if field:
-                if field.store:
-                    field_names.append(name)
-                elif field.base_field.store:
-                    inherited_field_names.append(name)
-            else:
-                _logger.warning("%s.read() with unknown field '%s'", self._name, name)
+            if not field:
+                _logger.warning("%s._read() with unknown field %r", self._name, name)
+                continue
+            if field.base_field.store and field.base_field.column_type:
+                if not (field.inherited and callable(field.base_field.translate)):
+                    column_fields.append(field)
+            elif field.store and not field.column_type:
+                # non-column fields: for the sake of simplicity, we ignore inherited fields
+                other_fields.append(field)
 
-        # determine the fields that are stored as columns in tables; ignore 'id'
-        fields_pre = [
-            field
-            for field in (self._fields[name] for name in field_names + inherited_field_names)
-            if field.name != 'id'
-            if field.base_field.store and field.base_field.column_type
-            if not (field.inherited and callable(field.base_field.translate))
-        ]
-
-        if fields_pre:
-            env = self.env
-            cr, user, context, su = env.args
+        if column_fields:
+            cr, context = self.env.cr, self.env.context
 
             # make a query object for selecting ids, and apply security rules to it
-            query = Query(self.env.cr, self._table, self._table_query)
+            query = Query(cr, self._table, self._table_query)
             self._apply_ir_rules(query, 'read')
 
             # the query may involve several tables: we need fully-qualified names
             def qualify(field):
-                col = field.name
-                res = self._inherits_join_calc(self._table, field.name, query)
-                if field.type == 'binary' and (context.get('bin_size') or context.get('bin_size_' + col)):
+                qname = self._inherits_join_calc(self._table, field.name, query)
+                if field.type == 'binary' and (
+                        context.get('bin_size') or context.get('bin_size_' + field.name)):
                     # PG 9.2 introduces conflicting pg_size_pretty(numeric) -> need ::cast
-                    res = 'pg_size_pretty(length(%s)::bigint)' % res
-                return '%s as "%s"' % (res, col)
+                    qname = f'pg_size_pretty(length({qname})::bigint)'
+                return f'{qname} AS "{field.name}"'
 
-            # selected fields are: 'id' followed by fields_pre
-            qual_names = [qualify(name) for name in [self._fields['id']] + fields_pre]
+            # selected fields are: 'id' followed by column_fields
+            qual_names = [qualify(field) for field in [self._fields['id']] + column_fields]
 
             # determine the actual query to execute (last parameter is added below)
-            query.add_where('"%s".id IN %%s' % self._table)
+            query.add_where(f'"{self._table}".id IN %s')
             query_str, params = query.select(*qual_names)
 
             result = []
@@ -3484,12 +3475,15 @@ class BaseModel(metaclass=MetaModel):
 
         fetched = self.browse()
         if result:
-            cols = zip(*result)
-            ids = next(cols)
+            # result = [(id1, a1, b1), (id2, a2, b2), ...]
+            # column_values = [(id1, id2, ...), (a1, a2, ...), (b1, b2, ...)]
+            column_values = zip(*result)
+            ids = next(column_values)
             fetched = self.browse(ids)
 
-            for field in fields_pre:
-                values = next(cols)
+            for field in column_fields:
+                values = next(column_values)
+                # post-process translations
                 if context.get('lang') and not field.inherited and callable(field.translate):
                     if any(values):
                         translate = field.get_trans_func(fetched)
@@ -3497,12 +3491,9 @@ class BaseModel(metaclass=MetaModel):
                 # store values in cache
                 self.env.cache.update(fetched, field, values)
 
-            # determine the fields that must be processed now;
-            # for the sake of simplicity, we ignore inherited fields
-            for name in field_names:
-                field = self._fields[name]
-                if not field.column_type:
-                    field.read(fetched)
+            # process non-column fields
+            for field in other_fields:
+                field.read(fetched)
 
         # possibly raise exception for the records that could not be read
         missing = self - fetched
