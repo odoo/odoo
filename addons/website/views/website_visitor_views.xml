@@ -86,8 +86,7 @@
                 <field name="email"/>
                 <field name="is_connected"/>
                 <field name="display_name"/>
-                <field name="last_visited_page_id"/>
-                <field name="page_ids"/>
+                <field name="last_visited_track_id"/>
                 <field name="partner_id"/>
                 <field name="partner_image"/>
                 <templates>
@@ -126,7 +125,7 @@
                                     <div>Visits</div>
                                 </div>
                                 <div class="col mx-2">
-                                    <b><field name="last_visited_page_id"/></b>
+                                    <b><field name="last_visited_track_id"/></b>
                                     <div>Last Page</div>
                                 </div>
                                 <div id="wvisitor_visited_page" class="col mx-2">
@@ -153,7 +152,7 @@
                                     <field name="display_name"/>
                                 </strong>
                                 <div class="mb-2">Active <field name="time_since_last_action"/></div>
-                                <div>Last Page<span class="float-right font-weight-bold"><field name="last_visited_page_id"/></span></div>
+                                <div>Last Page<span class="float-right font-weight-bold"><field name="last_visited_track_id"/></span></div>
                                 <div>Visits<span class="float-right font-weight-bold"><field name="visit_count"/></span></div>
                                 <div id="o_page_count">Visited Pages<span class="float-right font-weight-bold"><field name="page_count"/></span></div>
                                 <div class="w_visitor_kanban_actions">
@@ -218,7 +217,7 @@
                             <field name="website_id" groups="website.group_multi_website"/>
                             <field name="create_date"/>
                             <field name="last_connection_datetime"/>
-                            <field name="page_ids" string="Pages" widget="many2many_tags"/>
+                            <field name="visited_track_ids" string="Pages" widget="many2many_tags"/>
                         </group>
                     </group>
                 </sheet>
@@ -239,8 +238,8 @@
                 <field name="lang_id"/>
                 <field name="country_id" optional="hide"/>
                 <field name="visit_count"/>
-                <field name="page_ids" widget="many2many_tags" string="Pages"/>
-                <field name="last_visited_page_id" string="Last Page" optional="hide"/>
+                <field name="visited_track_ids" widget="many2many_tags" string="Pages"/>
+                <field name="last_visited_track_id" string="Last Page" optional="hide"/>
                 <field name="is_connected" invisible="1"/>
                 <field name="email" invisible="1"/>
                 <button string="Email" name="action_send_mail" type="object"
@@ -258,7 +257,6 @@
                 <field name="lang_id"/>
                 <field name="country_id"/>
                 <field name="visit_count"/>
-                <field name="page_ids"/>
                 <filter string="Last 7 Days" name="filter_last_7_days" domain="[('last_connection_datetime', '&gt;', datetime.datetime.now() - datetime.timedelta(days=7))]"/>
                 <separator/>
                 <filter string="Unregistered" name="filter_type_visitor" domain="[('partner_id', '=', False)]"/>

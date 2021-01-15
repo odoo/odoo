@@ -10,7 +10,7 @@ class Lead(models.Model):
     visitor_ids = fields.Many2many('website.visitor', string="Web Visitors")
     visitor_page_count = fields.Integer('# Page Views', compute="_compute_visitor_page_count")
 
-    @api.depends('visitor_ids.page_ids')
+    @api.depends('visitor_ids.visited_track_ids')
     def _compute_visitor_page_count(self):
         mapped_data = {}
         if self.ids:

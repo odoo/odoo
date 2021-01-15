@@ -19,6 +19,7 @@ class WebsiteTrack(models.Model):
     _order = 'visit_datetime DESC'
     _log_access = False
 
+    name = fields.Char(related='page_id.name')
     visitor_id = fields.Many2one('website.visitor', ondelete="cascade", index=True, required=True, readonly=True)
     page_id = fields.Many2one('website.page', index=True, ondelete='cascade', readonly=True)
     url = fields.Text('Url', index=True)
@@ -49,9 +50,9 @@ class WebsiteVisitor(models.Model):
     visit_count = fields.Integer('# Visits', default=1, readonly=True, help="A new visit is considered if last connection was more than 8 hours ago.")
     website_track_ids = fields.One2many('website.track', 'visitor_id', string='Visited Pages History', readonly=True)
     visitor_page_count = fields.Integer('Page Views', compute="_compute_page_statistics", help="Total number of visits on tracked pages")
-    page_ids = fields.Many2many('website.page', string="Visited Pages", compute="_compute_page_statistics")
     page_count = fields.Integer('# Visited Pages', compute="_compute_page_statistics", help="Total number of tracked page visited")
-    last_visited_page_id = fields.Many2one('website.page', string="Last Visited Page", compute="_compute_last_visited_page_id")
+    visited_track_ids = fields.One2many('website.track', 'visitor_id', string="Visited Pages", compute="_compute_visited_page_ids")
+    last_visited_track_id = fields.Many2one('website.track', string="Last Visited Page", compute="_compute_visited_page_ids")
 
     # Time fields
     create_date = fields.Datetime('First Connection', readonly=True)
@@ -91,30 +92,37 @@ class WebsiteVisitor(models.Model):
     @api.depends('website_track_ids')
     def _compute_page_statistics(self):
         results = self.env['website.track'].read_group(
-            [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id', 'url'], ['visitor_id', 'page_id', 'url'], lazy=False)
+            [('visitor_id', 'in', self.ids), ('url', '!=', False)], ['visitor_id', 'page_id', 'url'], ['visitor_id', 'url'], lazy=False)
         mapped_data = {}
         for result in results:
-            visitor_info = mapped_data.get(result['visitor_id'][0], {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
+            visitor_info = mapped_data.get(result['visitor_id'][0], {'page_count': 0, 'visitor_page_count': 0})
             visitor_info['visitor_page_count'] += result['__count']
             visitor_info['page_count'] += 1
-            if result['page_id']:
-                visitor_info['page_ids'].add(result['page_id'][0])
             mapped_data[result['visitor_id'][0]] = visitor_info
 
         for visitor in self:
-            visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0, 'page_ids': set()})
-            visitor.page_ids = [(6, 0, visitor_info['page_ids'])]
+            visitor_info = mapped_data.get(visitor.id, {'page_count': 0, 'visitor_page_count': 0})
             visitor.visitor_page_count = visitor_info['visitor_page_count']
             visitor.page_count = visitor_info['page_count']
 
     @api.depends('website_track_ids.page_id')
-    def _compute_last_visited_page_id(self):
-        results = self.env['website.track'].read_group([('visitor_id', 'in', self.ids)],
-                                                       ['visitor_id', 'page_id', 'visit_datetime:max'],
-                                                       ['visitor_id', 'page_id'], lazy=False)
-        mapped_data = {result['visitor_id'][0]: result['page_id'][0] for result in results if result['page_id']}
+    def _compute_visited_page_ids(self):
+        Track = self.env['website.track']
+        tracks = Track.search_read([('visitor_id', 'in', self.ids)], fields=['id', 'visitor_id', 'page_id', 'visit_datetime'])
+
+        from collections import defaultdict
+        pages_by_visitors = defaultdict(dict)  # keep one occurence of page_id per visitor
+        last_visit_by_visitor = {}  # The first record per visitor is the last visit
+        for track in tracks:
+            visitor = track['visitor_id'][0]
+            page = track['page_id'][0]
+            pages_by_visitors[visitor][page] = track['id']
+            if not last_visit_by_visitor.get(visitor):
+                last_visit_by_visitor[visitor] = track['id']
+
         for visitor in self:
-            visitor.last_visited_page_id = mapped_data.get(visitor.id, False)
+            visitor.last_visited_track_id = Track.browse(last_visit_by_visitor[visitor.id])
+            visitor.visited_track_ids = Track.browse(pages_by_visitors[visitor.id].keys())
 
     @api.depends('last_connection_datetime')
     def _compute_time_statistics(self):
