@@ -14,6 +14,8 @@ class ResPartner(models.Model):
             if partner.id in absent_now:
                 if partner.im_status == 'online':
                     partner.im_status = 'leave_online'
+                elif partner.im_status == 'away':
+                    partner.im_status = 'leave_away'
                 else:
                     partner.im_status = 'leave_offline'
 
