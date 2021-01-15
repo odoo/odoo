@@ -366,4 +366,61 @@ QUnit.module('pad widget', {
         form.destroy();
         delete FieldPad.prototype.isPadConfigured;
     });
+
+    QUnit.test('pad: external links on readonly pads have a blank target', async function (assert) {
+        assert.expect(5);
+
+        const contentDef = testUtils.makeTestPromise();
+        this.data.task.pad_get_content = function () {
+            return '<a id="external" href="https://www.external.com">External website</a></br>' +
+                   '<a id="local" href="' + window.location.href + '/test">This website</a>';
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'task',
+            data: this.data,
+            arch: '<form>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="description" widget="pad"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function (route, args) {
+                if (_.str.startsWith(route, 'http')) {
+                    return Promise.resolve(true);
+                }
+                const result = this._super.apply(this, arguments);
+                if (args.method === 'pad_get_content') {
+                    return contentDef.then(_.constant(result));
+                }
+                if (args.method === 'write') {
+                    assert.ok('description' in args.args[1],
+                        "should always send the description value");
+                }
+                return result;
+            },
+            session: {
+                name: "batman",
+            },
+        });
+        assert.strictEqual(form.$('.oe_pad_content').text(), "Loading",
+            "should display loading message");
+        contentDef.resolve();
+        await testUtils.nextTick();
+        assert.strictEqual(form.$('.oe_pad_content').text(), "External websiteThis website",
+            "should display proper value");
+        assert.strictEqual(form.$('#external').attr("target"), "_blank",
+            "should open a tab in a new window");
+        assert.strictEqual(form.$('#local').attr("target"), undefined,
+            "should open this link in the current tab");
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.form.clickSave(form);
+        form.destroy();
+        delete FieldPad.prototype.isPadConfigured;
+    });
+
 });
