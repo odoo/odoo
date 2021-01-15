@@ -236,6 +236,17 @@ var KanbanColumnProgressBar = Widget.extend({
         }
     },
     /**
+     * @private
+     */
+    _getNotifyStateValues: function() {
+        return {
+            groupCount: this.groupCount,
+            subgroupCounts: this.subgroupCounts,
+            totalCounterValue: this.totalCounterValue,
+            activeFilter: this.activeFilter,
+        };
+    },
+    /**
      * Notifies the new progressBar state so that if a full rerender occurs, the
      * new progressBar that would replace this one will be initialized with
      * current state, so that animations are correct.
@@ -245,12 +256,7 @@ var KanbanColumnProgressBar = Widget.extend({
     _notifyState: function () {
         this.trigger_up('set_progress_bar_state', {
             columnID: this.columnID,
-            values: {
-                groupCount: this.groupCount,
-                subgroupCounts: this.subgroupCounts,
-                totalCounterValue: this.totalCounterValue,
-                activeFilter: this.activeFilter,
-            },
+            values: this._getNotifyStateValues(),
         });
     },
     /**
