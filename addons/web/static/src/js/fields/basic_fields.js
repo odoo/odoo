@@ -749,13 +749,15 @@ var FieldDateRange = InputField.extend({
         var self = this;
         var startDate;
         var endDate;
+        var default_start = this.recordData[this.dateRangePickerOptions.default_start] || false;
+        var default_end = this.recordData[this.dateRangePickerOptions.default_end] || false;
         if (this.relatedEndDate) {
-            startDate = this._formatValue(this.value);
-            endDate = this._formatValue(this.recordData[this.relatedEndDate]);
+            startDate = this._formatValue(this.value || default_start);
+            endDate = this._formatValue(this.recordData[this.relatedEndDate] || default_end);
         }
         if (this.relatedStartDate) {
-            startDate = this._formatValue(this.recordData[this.relatedStartDate]);
-            endDate = this._formatValue(this.value);
+            startDate = this._formatValue(this.recordData[this.relatedStartDate] || default_start);
+            endDate = this._formatValue(this.value || default_end);
         }
         this.dateRangePickerOptions.startDate = startDate || moment();
         this.dateRangePickerOptions.endDate = endDate || moment();
