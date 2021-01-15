@@ -287,6 +287,8 @@ class IrMailServer(models.Model):
         body = body or u''
 
         msg = EmailMessage(policy=email.policy.SMTP)
+        msg.set_charset('utf-8')
+
         if not message_id:
             if object_id:
                 message_id = tools.generate_tracking_message_id(object_id)
