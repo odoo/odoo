@@ -1,3 +1,5 @@
+$o-td-label-padding-right: 8px;
+
 .o_form_view {
     $sheet-min-width: 650px;
     $sheet-padding: 16px;
@@ -60,12 +62,16 @@
 
     // Groups
     .o_group {
-        .o_td_label {
+        .o_td_label, .o_checkbox_optional_field > .o_form_label {
             border-right: 1px solid #ddd;
         }
         .o_td_label + td {
-            padding: 0px 36px 0px 8px;
+            padding: 0px 36px 0px $o-td-label-padding-right;
         }
+        .o_checkbox_optional_field > .o_form_label {
+            margin-right: $o-td-label-padding-right;
+        }
+
         .o_field_widget.o_text_overflow {
             width: 1px!important; // hack to make the table layout believe it is a small element (so that the table does not grow too much) ...
             min-width: 100%;      // ... but in fact it takes the whole table space
