@@ -39,9 +39,12 @@ function factory(dependencies) {
          * Close this chat window.
          *
          * @param {Object} [param0={}]
-         * @param {boolean} [param0.notifyServer=true]
+         * @param {boolean} [param0.notifyServer]
          */
-        close({ notifyServer = true } = {}) {
+        close({ notifyServer } = {}) {
+            if (notifyServer === undefined) {
+                notifyServer = !this.env.messaging.device.isMobile;
+            }
             const thread = this.thread;
             this.delete();
             // Flux specific: 'closed' fold state should only be saved on the
@@ -89,9 +92,12 @@ function factory(dependencies) {
 
         /**
          * @param {Object} [param0={}]
-         * @param {boolean} [param0.notifyServer=true]
+         * @param {boolean} [param0.notifyServer]
          */
-        fold({ notifyServer = true } = {}) {
+        fold({ notifyServer } = {}) {
+            if (notifyServer === undefined) {
+                notifyServer = !this.env.messaging.device.isMobile;
+            }
             this.update({ isFolded: true });
             // Flux specific: manually folding the chat window should save the
             // new state on the server.
@@ -140,9 +146,12 @@ function factory(dependencies) {
 
         /**
          * @param {Object} [param0={}]
-         * @param {boolean} [param0.notifyServer=true]
+         * @param {boolean} [param0.notifyServer]
          */
-        unfold({ notifyServer = true } = {}) {
+        unfold({ notifyServer } = {}) {
+            if (notifyServer === undefined) {
+                notifyServer = !this.env.messaging.device.isMobile;
+            }
             this.update({ isFolded: false });
             // Flux specific: manually opening the chat window should save the
             // new state on the server.
