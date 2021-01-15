@@ -125,14 +125,8 @@ def ensure_db(redirect='/web/database/selector'):
         # may depend on data injected by the database route dispatcher.
         # Thus, we redirect the user to the same page but with the session cookie set.
         # This will force using the database route dispatcher...
-        r = request.httprequest
-        url_redirect = werkzeug.urls.url_parse(r.base_url)
-        if r.query_string:
-            # in P3, request.query_string is bytes, the rest is text, can't mix them
-            query_string = iri_to_uri(r.query_string)
-            url_redirect = url_redirect.replace(query=query_string)
         request.session.db = db
-        abort_and_redirect(url_redirect)
+        abort_and_redirect(request.httprequest.url)
 
     # if db not provided, use the session one
     if not db and request.session.db and http.db_filter([request.session.db]):
