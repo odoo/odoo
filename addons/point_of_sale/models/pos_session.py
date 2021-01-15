@@ -245,7 +245,7 @@ class PosSession(models.Model):
             values = {}
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
-            if session.config_id.cash_control:
+            if session.config_id.cash_control and not session.rescue:
                 last_sessions = self.env['pos.session'].search([('config_id', '=', self.config_id.id)]).ids
                 # last session includes the new one already.
                 if len(last_sessions) > 1:
