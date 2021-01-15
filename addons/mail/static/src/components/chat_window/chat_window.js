@@ -10,6 +10,8 @@ const useStore = require('mail/static/src/component_hooks/use_store/use_store.js
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 const { isEventHandled } = require('mail/static/src/utils/utils.js');
 
+const patchMixin = require('web.patchMixin');
+
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -49,19 +51,27 @@ class ChatWindow extends Component {
          * it has one!
          */
         this._threadRef = useRef('thread');
+        this._onWillHideHomeMenu = this._onWillHideHomeMenu.bind(this);
+        this._onWillShowHomeMenu = this._onWillShowHomeMenu.bind(this);
         // the following are passed as props to children
         this._onAutocompleteSelect = this._onAutocompleteSelect.bind(this);
         this._onAutocompleteSource = this._onAutocompleteSource.bind(this);
+        this._constructor(...args);
     }
 
+    /**
+     * Allows patching constructor.
+     */
+    _constructor() {}
+
     mounted() {
-        this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
-        this.env.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
+        this.env.messagingBus.on('will_hide_home_menu', this, this._onWillHideHomeMenu);
+        this.env.messagingBus.on('will_show_home_menu', this, this._onWillShowHomeMenu);
     }
 
     willUnmount() {
-        this.env.messagingBus.off('will_hide_home_menu', this, this._onWillHideHomeMenu.bind(this));
-        this.env.messagingBus.off('will_show_home_menu', this, this._onWillShowHomeMenu.bind(this));
+        this.env.messagingBus.off('will_hide_home_menu', this, this._onWillHideHomeMenu);
+        this.env.messagingBus.off('will_show_home_menu', this, this._onWillShowHomeMenu);
     }
 
     //--------------------------------------------------------------------------
@@ -343,6 +353,6 @@ Object.assign(ChatWindow, {
     template: 'mail.ChatWindow',
 });
 
-return ChatWindow;
+return patchMixin(ChatWindow);
 
 });

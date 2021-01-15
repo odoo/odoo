@@ -3,6 +3,8 @@ odoo.define('mail/static/src/components/dialog/dialog.js', function (require) {
 
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
+const patchMixin = require('web.patchMixin');
+
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
@@ -25,7 +27,13 @@ class Dialog extends Component {
                 dialog: dialog ? dialog.__state : undefined,
             };
         });
+        this._constructor();
     }
+
+    /**
+     * Allows patching constructor.
+     */
+    _constructor() {}
 
     mounted() {
         document.addEventListener('click', this._onClickGlobal, true);
@@ -104,6 +112,6 @@ Object.assign(Dialog, {
     template: 'mail.Dialog',
 });
 
-return Dialog;
+return patchMixin(Dialog);
 
 });

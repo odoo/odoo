@@ -8,8 +8,9 @@ const components = {
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
+const patchMixin = require('web.patchMixin');
+
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 class MessagingMenu extends Component {
 
@@ -36,9 +37,14 @@ class MessagingMenu extends Component {
         // bind since passed as props
         this._onMobileNewMessageInputSelect = this._onMobileNewMessageInputSelect.bind(this);
         this._onMobileNewMessageInputSource = this._onMobileNewMessageInputSource.bind(this);
-
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
+        this._constructor(...args);
     }
+
+    /**
+     * Allows patching constructor.
+     */
+    _constructor() {}
 
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
@@ -221,6 +227,6 @@ Object.assign(MessagingMenu, {
     template: 'mail.MessagingMenu',
 });
 
-return MessagingMenu;
+return patchMixin(MessagingMenu);
 
 });
