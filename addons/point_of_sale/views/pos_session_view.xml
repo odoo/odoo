@@ -9,7 +9,8 @@
                     <button name="open_cashbox_pos" type="object" string="Open Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False), ('state', '!=', 'new_session')]}" class="oe_highlight"
                          context="{'balance': 'start'}"/>
-                    <button name="open_frontend_cb" type="object" string="Continue Selling" states="opening_control,opened"/>
+                    <button name="open_frontend_cb" type="object" string="Continue Selling"
+                        attrs="{'invisible' : ['|', ('rescue', '=', True), ('state', 'not in', ['opening_control', 'opened'])]}"/>
                     <button id="end_session_opened" name="action_pos_session_closing_control" type="object" string="End of Session"
                         attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}"
                         class="oe_highlight"/>
@@ -24,6 +25,7 @@
                 <sheet>
                     <field name="cash_register_id" invisible="1"/>
                     <field name="failed_pickings" invisible="1"/>
+                    <field name="rescue" invisible="1"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="action_view_order"
                             class="oe_stat_button"
