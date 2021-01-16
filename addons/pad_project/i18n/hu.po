@@ -1,19 +1,22 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pad_project
+# 	* pad_project
 # 
 # Translators:
-# Tamás Dombos, 2018
-# krnkris, 2018
-# Ákos Nagy <akos.nagy@oregional.hu>, 2018
+# Tamás Dombos, 2021
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,6 +25,63 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__pad_availability
+#: model:ir.model.fields,field_description:pad_project.field_project_task__pad_availability
+msgid "Availability of collaborative pads"
+msgstr ""
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Available to:"
+msgstr ""
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Collaborative Pads"
+msgstr "Segélynyújtó szerkesztők"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__display_name
+#: model:ir.model.fields,field_description:pad_project.field_project_task__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Edit"
+msgstr "Szerkesztés"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid ""
+"Edit tasks' description collaboratively in real time.<br/>\n"
+"                            See each author's text in a distinct color."
+msgstr ""
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__id
+#: model:ir.model.fields,field_description:pad_project.field_project_task__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__internal
+msgid "Internal Users"
+msgstr "Belső felhasználók"
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__portal
+msgid "Internal Users & Portal Users"
+msgstr ""
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project____last_update
+#: model:ir.model.fields,field_description:pad_project.field_project_task____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__description_pad
 #: model:ir.model.fields,field_description:pad_project.field_project_task__description_pad
 msgid "Pad URL"
 msgstr "Pad/szerkesztő URL elérési útja"
@@ -30,6 +90,11 @@ msgstr "Pad/szerkesztő URL elérési útja"
 #: model:ir.model,name:pad_project.model_project_project
 msgid "Project"
 msgstr "Projekt"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Save"
+msgstr "Mentés"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task

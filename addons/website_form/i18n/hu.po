@@ -3,19 +3,20 @@
 # 	* website_form
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Istvan <leki69@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
+"PO-Revision-Date: 2020-09-07 08:21+0000\n"
+"Last-Translator: Istvan <leki69@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,53 +25,87 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_form.contactus_thanks
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:12
-#, python-format
-msgid "&times;"
-msgstr "&times;"
-
-#. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:238
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "'%s' is not a correct date"
 msgstr "'%s' nem érvényes dátum"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form.js:233
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "'%s' is not a correct datetime"
 msgstr "'%s' em érvényes dátum időpont"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:232
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid ", .s_website_form"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "<p>Attached files : </p>"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
+#: model_terms:website.page,arch_db:website_form.contactus_thanks
 msgid ""
-"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
-"specific.\" groups=\"website.group_multi_website\"/>"
+"<span class=\"fa fa-check-circle\"/>\n"
+"                                            <span>Your message has been sent <b>successfully</b></span>"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
-msgid "Add a custom field"
-msgstr "Egy egyéni mező hozzáadása"
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Email To</span>"
+msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
-msgid "Add an existing field"
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Email</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Phone Number</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Subject</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Your Company</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid ""
+"<span class=\"s_website_form_label_content\">Your Name</span>\n"
+"                                            <span class=\"s_website_form_mark\"> *</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+msgid "<span class=\"s_website_form_label_content\">Your Question</span>"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Add a new field after this one"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Add a new field at the end"
 msgstr ""
 
 #. module: website_form
@@ -80,7 +115,7 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "An error has occured, the form has not been sent."
 msgstr ""
@@ -96,54 +131,61 @@ msgid "Blacklisted in web forms"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
-msgid "Change Form Parameters"
-msgstr "Úrlap paraméterek megváltoztatása"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Button Position"
+msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Center"
+msgstr "Közép"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Checkbox"
 msgstr "Jelölő négyzet"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:21
-#, python-format
-msgid "Close"
-msgstr "Bezárás"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Custom field"
+msgstr ""
 
 #. module: website_form
-#: model:ir.model,name:website_form.model_res_config_settings
-msgid "Config Settings"
-msgstr "Konfigurációs beállítások"
-
-#. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Date"
 msgstr "Dátum"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Date &amp; Time"
 msgstr "Dátum &amp; Idő"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Decimal Number"
 msgstr "Decimális szám"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:44
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#, python-format
-msgid "Email"
-msgstr "E-mail"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Display"
+msgstr "Megjelenítés"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-msgid "Email To"
+#: model:ir.model.fields,field_description:website_form.field_ir_model__display_name
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__display_name
+#: model:ir.model.fields,field_description:website_form.field_website__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Edit Message"
 msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Email"
+msgstr "E-mail"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_access
@@ -152,8 +194,8 @@ msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
-#: code:addons/website_form/static/src/xml/website_form.xml:21
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Error"
 msgstr "Hiba"
@@ -169,7 +211,7 @@ msgid "Fields"
 msgstr "Mezők"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "File Upload"
 msgstr "Fájl feltöltése"
 
@@ -181,9 +223,63 @@ msgid ""
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Height"
+msgstr "Magasság"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Hidden"
 msgstr "Rejtett"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Hide"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Horizontal"
+msgstr "Vízszintes"
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model__id
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields__id
+#: model:ir.model.fields,field_description:website_form.field_website__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "In the meantime we invite you to visit our"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Input Aligned"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Input Placeholder"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Input Type"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Label Name"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Label Position"
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_label
@@ -191,12 +287,39 @@ msgid "Label for form action"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Labels Width"
+msgstr ""
+
+#. module: website_form
+#: model:ir.model.fields,field_description:website_form.field_ir_model____last_update
+#: model:ir.model.fields,field_description:website_form.field_ir_model_fields____last_update
+#: model:ir.model.fields,field_description:website_form.field_website____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Left"
+msgstr "Bal"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Long Text"
 msgstr "Hosszú szöveg"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:54
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Mark Text"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Marked Fields"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Metadata"
 msgstr ""
@@ -207,77 +330,135 @@ msgid "Models"
 msgstr "Modellek"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Multiple Checkboxes"
 msgstr "Többszörös jelölődoboz"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:216
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
 msgid "No matching record !"
 msgstr "Nem egyező rekord!"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "None"
+msgstr "Nincs"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Nothing"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Number"
 msgstr "Szám"
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:180
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "On Success"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 1"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 2"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "Option 3"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Optional"
+msgstr "Választható"
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "Other Information:"
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:36
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
 #, python-format
-msgid "Phone Number"
-msgstr "Telefonszám"
+msgid "Our team will message you back as soon as possible."
+msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:14
+#: code:addons/website_form/static/src/snippets/s_website_form/000.js:0
 #, python-format
 msgid "Please fill in the form correctly."
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Radio Buttons"
 msgstr "Rádió gombok"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/js/website_form_editor_registry.js:25
+#: code:addons/website_form/static/src/js/website_form_editor_registry.js:0
 #, python-format
 msgid "Recipient Email"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Redirect"
+msgstr "Átirányít"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Required"
 msgstr "Kötelező"
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form_editor.xml:22
-#, python-format
-msgid "Save"
-msgstr "Mentés"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Right"
+msgstr "Jobb"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Selection"
 msgstr "Kiválasztás"
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
-msgid "Send"
-msgstr "Küldés"
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Separate email addresses with a comma."
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Show Message"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Show reCaptcha Policy"
+msgstr ""
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_default_field_id
@@ -286,59 +467,96 @@ msgid ""
 msgstr ""
 
 #. module: website_form
-#. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:60
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_form
-#, python-format
-msgid "Subject"
-msgstr "Tárgy"
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form
+msgid "Submit"
+msgstr "Beküldés"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "Success"
 msgstr "Siker"
 
 #. module: website_form
-#: model:ir.model.fields,field_description:website_form.field_res_config_settings__website_form_enable_metadata
-#: model:ir.model.fields,field_description:website_form.field_website__website_form_enable_metadata
-msgid "Technical data on contact form"
+#: code:addons/website_form/controllers/main.py:0
+#, python-format
+msgid "Suspicious activity detected by Google reCaptcha."
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.snippet_options
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Telephone"
+msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
 msgid "Text"
 msgstr "Szöveg"
 
 #. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "Thank You For Your Feedback"
+msgstr ""
+
+#. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
 #: model_terms:website.page,arch_db:website_form.contactus_thanks
-msgid "Thanks!"
+msgid "Thank You!"
 msgstr "Köszönöm!"
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:7
+#: code:addons/website_form/static/src/xml/website_form.xml:0
 #, python-format
 msgid "The form has been sent successfully."
 msgstr ""
 
 #. module: website_form
-#: code:addons/website_form/controllers/main.py:182
+#: code:addons/website_form/controllers/main.py:0
+#, python-format
+msgid "The form's specified model does not exist"
+msgstr ""
+
+#. module: website_form
+#: code:addons/website_form/controllers/main.py:0
 #, python-format
 msgid "This message has been posted on your website!"
 msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.res_config_settings_view_form
-msgid "Track metadata (IP, User Agent, ...) on your Website Forms"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Top"
+msgstr "Felső"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Type"
+msgstr "Típus"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "URL"
+msgstr "Webcím"
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Url"
+msgstr "Webcím"
 
 #. module: website_form
 #: model:ir.model.fields,help:website_form.field_ir_model__website_form_key
 msgid "Used in FormBuilder Registry"
 msgstr ""
+
+#. module: website_form
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "Vertical"
+msgstr "Függőleges"
 
 #. module: website_form
 #: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
@@ -349,7 +567,7 @@ msgstr "Námsokára felvesszük Önnel a kapcsolatot."
 #. module: website_form
 #: model:ir.model,name:website_form.model_website
 msgid "Website"
-msgstr "Weboldal"
+msgstr "Honlap"
 
 #. module: website_form
 #: model:ir.model.fields,field_description:website_form.field_ir_model__website_form_key
@@ -362,37 +580,41 @@ msgid "Website Forms"
 msgstr ""
 
 #. module: website_form
-#: model:ir.model.fields,help:website_form.field_res_config_settings__website_form_enable_metadata
-#: model:ir.model.fields,help:website_form.field_website__website_form_enable_metadata
-msgid "You can choose to log technical data like IP, User Agent ,..."
+#. openerp-web
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
+#, python-format
+msgid "You can't duplicate a model field."
 msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:52
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
-msgid "Your Company"
-msgstr "Cége elnevezése"
+msgid "You can't duplicate the submit button of the form."
+msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:28
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
-msgid "Your Name"
-msgstr "Az Ön neve"
+msgid "You can't remove a field that is required by the model itself."
+msgstr ""
 
 #. module: website_form
 #. openerp-web
-#: code:addons/website_form/static/src/xml/website_form.xml:68
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_form
+#: code:addons/website_form/static/src/snippets/s_website_form/options.js:0
 #, python-format
-msgid "Your Question"
-msgstr "Kérdése"
+msgid "You can't remove the submit button of the form"
+msgstr ""
 
 #. module: website_form
-#: model_terms:ir.ui.view,arch_db:website_form.contactus_thanks_ir_ui_view
-#: model_terms:website.page,arch_db:website_form.contactus_thanks
-msgid "Your message has been sent successfully."
-msgstr "Az üzenete sikeresen elküldve."
+#: model_terms:ir.ui.view,arch_db:website_form.s_website_form_options
+msgid "rows"
+msgstr ""
+
+#. module: website_form
+#. openerp-web
+#: code:addons/website_form/static/src/xml/website_form_editor.xml:0
+#, python-format
+msgid "website"
+msgstr "weboldal"

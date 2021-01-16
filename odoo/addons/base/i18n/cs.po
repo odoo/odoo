@@ -8,10 +8,10 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Martin Trigaux, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# trendspotter, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1317,17 +1317,11 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
-"\n"
-"Nastavit nevratné datum zámku:\n"
-"\n"
-"* Nemůžete definovat přísnější podmínky pro poradce než pro uživatele. Poté musí být datum uzamčení pro poradce nastaveno před datem uzamčení pro uživatele.\n"
-"* Nemůžete zamknout období, které ještě není dokončeno. Poté musí být datum uzamčení pro poradce nastaveno před posledním dnem předchozího měsíce.\n"
-"* Nové datum uzamčení pro poradce musí být nastaveno po předchozím datu uzamčení."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -7006,6 +7000,11 @@ msgid ""
 "take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Tento modul umožňuje snadno přidat další náklady na výrobní zakázku\n"
+"a rozhodnout o rozdělení těchto nákladů mezi jejich pohyby akcií, aby\n"
+"vezměte je v úvahu při oceňování akcií.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -7955,7 +7954,7 @@ msgstr "%(action_name)s není platná akce na%(model_name)s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "%(attribute)r value must be an integer (%(value)s)"
-msgstr "Hodnota% (atribut) r musí být celé číslo (%(value)s)"
+msgstr "Hodnota %(atribute) musí být celé číslo (%(value)s)"
 
 #. module: base
 #: code:addons/base/models/ir_ui_view.py:0
@@ -10696,7 +10695,7 @@ msgstr "Čárový kód"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
 msgid "Barcode Quality bridge module"
-msgstr "Modul mostu kvality čárových kódů"
+msgstr "Modul propojení kvality čárových kódů"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_picking_batch
@@ -11094,7 +11093,7 @@ msgstr "Most mezi IAP a poštou"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
 msgid "Bridge between Sale and Accounting"
-msgstr "Most mezi prodejem a účetnictvím"
+msgstr "Propojení mezi prodejem a účetnictvím"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_accountant
@@ -11119,7 +11118,7 @@ msgstr "Mostový modul mezi časovým rozvrhem prodeje a nákupem"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_bot_hr
 msgid "Bridge module between hr and mailbot."
-msgstr "Bridge modul mezi hr a mailbot."
+msgstr "Bridge modul mezi HR a mailbot."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_helpdesk
@@ -11140,7 +11139,7 @@ msgstr "Bridge modul pro konfiguraci twitter zdi na vaší události"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_social
 msgid "Bridge module to push notifications to event attendees"
-msgstr "Bridge modul pro zasílání oznámení účastníkům událostí"
+msgstr "Bridge modul pro zasílání oznámení účastníkům eventú"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_event_track_live_quiz
@@ -12158,7 +12157,7 @@ msgstr "Kongo"
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_restaurant_iot
 msgid "Connect kitchen printers to your PoS"
-msgstr "Připojte kuchyňské tiskárny k vašemu PoS"
+msgstr "Připojte kuchyňské tiskárny k vašemu POS"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hw_drivers
@@ -12309,7 +12308,7 @@ msgstr "Kontakty a adresy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_contacts_enterprise
 msgid "Contacts Enterprise"
-msgstr "Kontakty podnik"
+msgstr "Kontakty"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_partner_check_name
@@ -13062,7 +13061,7 @@ msgstr "Pomlčka"
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet_dashboard
 msgid "Dashboard for fleet"
-msgstr "Palubní deska pro vozový park"
+msgstr "Ovládací panel pro vozový park"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_board
@@ -13508,7 +13507,7 @@ msgstr "Klíče API vývojáře"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_digest_enterprise
 msgid "Digest Enterprise"
-msgstr "Digestujte podnik"
+msgstr "Digestujte "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_digital
@@ -23220,7 +23219,7 @@ msgstr "Nákupní smlouvy"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_intrastat
 msgid "Purchase Intrastat"
-msgstr "Nákup intrastatu"
+msgstr "Nákup Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_purchase_product_matrix
@@ -23787,7 +23786,7 @@ msgstr "Správa skladových zásob"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_renting_sign
 msgid "Rental/Sign Bridge"
-msgstr "Půjčovna / značka mostu"
+msgstr "Propojení Půjčovna / Obchodní značka"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_repair
@@ -24256,7 +24255,7 @@ msgstr "Doručení prodejního kuponu"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
 msgid "Sale Intrastat"
-msgstr "Prodej intrastat"
+msgstr "Prodej Intrastat"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_product_matrix
@@ -24291,7 +24290,7 @@ msgstr "Prodej na základě outsourcingu služeb."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_enterprise
 msgid "Sale enterprise"
-msgstr "Prodej podniku"
+msgstr "Prodej "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_sale
@@ -24679,7 +24678,7 @@ msgstr "Prodávejte lístky na akce online"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_slides
 msgid "Sell your courses online"
-msgstr "Prodejte své kurzy online"
+msgstr "Prodávejte své kurzy online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_slides
@@ -25125,12 +25124,12 @@ msgstr "Sociální demo modul"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_facebook
 msgid "Social Facebook"
-msgstr "Sociální facebook"
+msgstr "Facebook"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_linkedin
 msgid "Social LinkedIn"
-msgstr "Sociální propojení"
+msgstr "LinkedIn"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing_social_marketing
@@ -25151,7 +25150,7 @@ msgstr "Oznámení push na sociální síti"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_twitter
 msgid "Social Twitter"
-msgstr "Sociální twitter"
+msgstr "Twitter"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_social_media
@@ -26715,8 +26714,8 @@ msgid ""
 "This module adds the OdooBot state and notifications in the user form "
 "modified by hr."
 msgstr ""
-"Tento modul přidává stav OdooBot a oznámení v uživatelské podobě upravené o "
-"hr."
+"Tento modul přidává stav OdooBot a oznámení v uživatelské podobě upravené "
+"HR."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -29478,7 +29477,7 @@ msgstr "pos_sale"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_expense_predict_product
 msgid "predict the product from the expense description based on old ones"
-msgstr "předpovědět produkt z popisu výdajů na základě starých"
+msgstr "předpovědět produkt z popisu výdajů na základě starších"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__reference

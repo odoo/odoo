@@ -3,19 +3,20 @@
 # 	* auth_ldap
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Zsolt Godó <zsolttokio@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Zsolt Godó <zsolttokio@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,7 +30,7 @@ msgid ""
 "Automatically create local user accounts for new users authenticating via "
 "LDAP"
 msgstr ""
-"Automatikusan létrehozott helyi felhasználói fiók az LDAP által azonosított "
+"Helyi felhasználói fiók automatikus létrehozása az LDAP-on keresztül belépő "
 "új felhasználókhoz"
 
 #. module: auth_ldap
@@ -45,17 +46,17 @@ msgstr "Vállalat"
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_company_ldap
 msgid "Company LDAP configuration"
-msgstr ""
+msgstr "Vállalati LDAP konfiguráció"
 
 #. module: auth_ldap
 #: model:ir.model,name:auth_ldap.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurációs beállítások"
+msgstr "Beállítások módosítása"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_user
 msgid "Create User"
-msgstr "Felhasználó létrehozás"
+msgstr "Új felhasználó"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__create_uid
@@ -70,7 +71,7 @@ msgstr "Létrehozva"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__id
@@ -97,12 +98,12 @@ msgstr "LDAP szerver"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server
 msgid "LDAP Server address"
-msgstr "LDAP szervercím"
+msgstr "LDAP szerver címe"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_server_port
 msgid "LDAP Server port"
-msgstr "LDAP szerverport"
+msgstr "LDAP szerver portja"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_base
@@ -127,7 +128,7 @@ msgstr "LDAP jelszó"
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Legutóbb módosítva"
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__write_uid
@@ -149,6 +150,8 @@ msgstr "Bejelentkezési információk"
 #, python-format
 msgid "No local user found for LDAP login and not configured to create one"
 msgstr ""
+"Nincs helyi felhasználói fiók az LDAP bejelentkezéshez és nincs beállítva, "
+"hogy hozzon létre egyet"
 
 #. module: auth_ldap
 #: model_terms:ir.ui.view,arch_db:auth_ldap.view_ldap_installer_form
@@ -163,8 +166,8 @@ msgid ""
 " attempts will fail."
 msgstr ""
 "Biztonságos TLS/SSL kódolás igénylése az LDAP szerverhez való "
-"kapcsolódáshoz. Ez a lehetőség megkívánja szerveren a STARTTLS "
-"bekapcsolását, egyéb esetben az összes hitelesítés sikertelen lesz."
+"kapcsolódáshoz. Ez az opció megköveteli a szerveren a STARTTLS "
+"bekapcsolását, különben az összes hitelesítés sikertelen lesz."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__sequence
@@ -192,7 +195,7 @@ msgid ""
 "The password of the user account on the LDAP server that is used to query "
 "the directory."
 msgstr ""
-"Az LDAP szerveren lévő felhasználói fiók jelszava mellyel eléri a "
+"Az LDAP szerveren lévő felhasználói fiók jelszava, mellyel eléri a "
 "könyvtárát."
 
 #. module: auth_ldap
@@ -201,8 +204,8 @@ msgid ""
 "The user account on the LDAP server that is used to query the directory. "
 "Leave empty to connect anonymously."
 msgstr ""
-"Az LDAP szerveren lévő felhasználói fiók mellyel eléri a könyvtárát. Hagyja "
-"üresen névtelken bejelentkezéshez."
+"Az LDAP szerveren lévő felhasználói fiók, mellyel eléri a könyvtárát. Hagyja"
+" üresen névtelen bejelentkezéshez."
 
 #. module: auth_ldap
 #: model:ir.model.fields,field_description:auth_ldap.field_res_company_ldap__ldap_tls
