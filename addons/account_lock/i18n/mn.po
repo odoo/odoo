@@ -22,6 +22,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_lock
+#: code:addons/account_lock/models/res_company.py:0
+#, python-format
+msgid ""
+"Any new All Users Lock Date must be posterior (or equal) to the previous "
+"one."
+msgstr ""
+
+#. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
 msgid "Companies"
 msgstr "Компаниуд"
@@ -52,15 +60,6 @@ msgstr ""
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
-msgid ""
-"The new lock date for advisors must be set after the previous lock date."
-msgstr ""
-"Санхүүгийн удирдлагын хэмжээнд түгжих огноо нь өмнө түгжсэн огнооноос хойшхи"
-" огноо байх ёстой."
-
-#. module: account_lock
-#: code:addons/account_lock/models/res_company.py:0
-#, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr "Түгжих огноо нь өмнө түгжсэн огнооноос сүүлд байх ёстой."
 
@@ -74,29 +73,23 @@ msgstr "Түгжсэн огноог буцаах болон арилгах бо�
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot define stricter conditions on advisors than on users. Please make"
-" sure that the lock date on advisor is set before the lock date for users."
+"You cannot lock a period that has not yet ended. Therefore, the All Users "
+"Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Та санхүүгийн удирдлах эрхэнд санхүүгийн хэрэглэгч эрхээс илүү хатуу эрх "
-"тохируулж болохгүй. Удирдлын хэмжээнд түгжих огноо нь хэрэглэгчийн хэмжээнд "
-"түгжих огноогоос өмнөх  огноо байх ёстойг анхаарна уу."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" lock date for advisors is not set after the last day of the previous month."
+"You cannot lock a period that has not yet ended. Therefore, the tax lock "
+"date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
-"Та сарын өдөр өнгөрч дуусаагүй байхад мөчлөг түгжих боломжгүй. Сүүлийн сарын"
-" хамгийн сүүлийн өдрөөс хойшхи огноогоор түгжиж болохгүйг анхаарна уу."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid ""
-"You cannot lock a period that is not finished yet. Please make sure that the"
-" tax lock date is not set after the last day of the previous month."
+"You cannot set stricter restrictions on advisors than on users. Therefore, "
+"the All Users Lock Date must be anterior (or equal) to the Invoice/Bills "
+"Lock Date."
 msgstr ""
-"Хаагаагүй мөчлөгийг түгжих боломжгүй. Түгжих огноо нь өмнөх мөчлөгийн "
-"сүүлийн өдрөөс хойш байгаа эсэхийг шалгана уу."

@@ -3,19 +3,20 @@
 # 	* website_twitter
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Zsolt Godó <zsolttokio@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:23+0000\n"
+"Last-Translator: Zsolt Godó <zsolttokio@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -77,7 +78,7 @@ msgid ""
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:16
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Authentication credentials were missing or incorrect. Maybe screen name "
@@ -89,7 +90,7 @@ msgstr ""
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurációs beállítások"
+msgstr "Beállítások módosítása"
 
 #. module: website_twitter
 #: model_terms:ir.ui.view,arch_db:website_twitter.res_config_settings_view_form
@@ -114,9 +115,11 @@ msgid "Created on"
 msgstr "Létrehozva"
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_twitter.field_website__display_name
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__twitter_screen_name
@@ -130,7 +133,7 @@ msgid "Get favorites from this screen name"
 msgstr "Ehhez a képernyő képhez kapcsolódó kedvenceket kapja"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:48
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "HTTP Error: Something is misconfigured"
 msgstr "HTTP hiba: Valami tévesen konfigurált"
@@ -141,20 +144,24 @@ msgid "How to configure the Twitter API access"
 msgstr "Hogyan állítsa be a Twitter API hozzáférést?"
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_twitter.field_website__id
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__id
 msgid "ID"
 msgstr "Azonosító"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:59
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
-msgid "Internet connection refused"
-msgstr "Internet kapcsolat visszautasított"
+msgid "Internet connection refused: We failed to reach a twitter server."
+msgstr ""
 
 #. module: website_twitter
+#: model:ir.model.fields,field_description:website_twitter.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_twitter.field_website____last_update
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Legutóbb módosítva"
 
 #. module: website_twitter
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__write_uid
@@ -167,14 +174,7 @@ msgid "Last Updated on"
 msgstr "Frissítve "
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:61
-#: code:addons/website_twitter/models/res_config_settings.py:62
-#, python-format
-msgid "Please double-check your Twitter API Key and Secret!"
-msgstr "Kérem kétszer-ellenőrizni a Twitter API kulcsot és titkosítást!"
-
-#. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:27
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Please set a Twitter screen name to load favorites from, in the Website "
@@ -184,7 +184,7 @@ msgstr ""
 " a Weboldal beállításoknál (nem kell a sajátjának lennie)"
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:23
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid "Please set the Twitter API Key and Secret in the Website Settings."
 msgstr ""
@@ -193,13 +193,13 @@ msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:21
+#: code:addons/website_twitter/static/src/js/website.twitter.editor.js:0
 #, python-format
 msgid "Reload"
 msgstr "Újratöltés"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:18
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Request cannot be served due to the applications rate limit having been "
@@ -229,14 +229,14 @@ msgid "Switch to the API Keys tab: <br/>"
 msgstr "Váltson az API kulcsok fülre: <br/>"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:21
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The Twitter servers are up, but overloaded with requests. Try again later."
 msgstr "A Twitter szerverek működnek, de túlterheltek. Próbálja később."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:22
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The Twitter servers are up, but the request could not be serviced due to "
@@ -246,7 +246,7 @@ msgstr ""
 "felhalmozódott hiba miatt. Próbálja később."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:17
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The request is understood, but it has been refused or access is not allowed."
@@ -256,7 +256,7 @@ msgstr ""
 "engedélyezett. Kérem ellenőrizze a Twitter API kulcsot és titkosítást."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:15
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "The request was invalid or cannot be otherwise served. Requests without "
@@ -266,7 +266,7 @@ msgstr ""
 "Hitelesítás nélküli igény kérés érvénytelen és ehhez a válaszhoz vezet."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:14
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "There was no new data to return."
 msgstr "Nem volt vissza nyerhető új adat."
@@ -318,25 +318,27 @@ msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:40
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter Configuration"
 msgstr "Twitter beállítás"
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:62
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
-msgid "Twitter authorization error!"
-msgstr "Twitter azonosítási hiba!"
+msgid ""
+"Twitter authorization error! Please double-check your Twitter API Key and "
+"Secret!"
+msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:20
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid "Twitter is down or being upgraded."
 msgstr "Twitter ne működik vagy frissítés alatt ál."
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:19
+#: code:addons/website_twitter/models/res_config_settings.py:0
 #, python-format
 msgid ""
 "Twitter seems broken. Please retry later. You may consider posting an issue "
@@ -356,7 +358,7 @@ msgid "Twitter tutorial"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/controllers/main.py:37
+#: code:addons/website_twitter/controllers/main.py:0
 #, python-format
 msgid ""
 "Twitter user @%(username)s has less than 12 favorite tweets. Please add more"
@@ -367,7 +369,7 @@ msgstr ""
 
 #. module: website_twitter
 #. openerp-web
-#: code:addons/website_twitter/static/src/xml/website.twitter.xml:6
+#: code:addons/website_twitter/static/src/xml/website.twitter.xml:0
 #, python-format
 msgid "Twitter's user"
 msgstr ""
@@ -380,17 +382,10 @@ msgid "Twitter: Fetch new favorites"
 msgstr ""
 
 #. module: website_twitter
-#: code:addons/website_twitter/models/res_config_settings.py:58
-#: code:addons/website_twitter/models/res_config_settings.py:59
-#, python-format
-msgid "We failed to reach a twitter server."
-msgstr "Nem értünk el twitter szervert."
-
-#. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website
 #: model:ir.model.fields,field_description:website_twitter.field_website_twitter_tweet__website_id
 msgid "Website"
-msgstr "Weboldal"
+msgstr "Honlap"
 
 #. module: website_twitter
 #: model:ir.model,name:website_twitter.model_website_twitter_tweet

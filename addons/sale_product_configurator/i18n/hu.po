@@ -3,19 +3,20 @@
 # 	* sale_product_configurator
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# Kovács Tibor <kovika@gmail.com>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Kovács Tibor <kovika@gmail.com>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-09-09 12:18+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: gezza <geza.nagy@oregional.hu>, 2019\n"
+"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +27,7 @@ msgstr ""
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Add to cart"
-msgstr ""
+msgstr "<i class=\"fa fa-shopping-cart add-optionnal-item\"/> Kosárba tesz"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
@@ -43,7 +44,7 @@ msgstr "Hozzáadás"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Add one"
-msgstr ""
+msgstr "Hozzáadás"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__product_template_attribute_value_ids
@@ -54,7 +55,7 @@ msgstr "Tulajdonság értékek"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 msgid "Available Options:"
-msgstr ""
+msgstr "Elérhető opciók:"
 
 #. module: sale_product_configurator
 #. openerp-web
@@ -66,19 +67,24 @@ msgstr "Vissza"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
 msgid "Cancel"
-msgstr "Mégse"
+msgstr "Visszavonás"
+
+#. module: sale_product_configurator
+#: model:product.template,name:sale_product_configurator.product_product_1_product_template
+msgid "Chair floor protection"
+msgstr "Padlóvédő szék alá"
 
 #. module: sale_product_configurator
 #. openerp-web
 #: code:addons/sale_product_configurator/static/src/js/product_configurator_controller.js:0
 #, python-format
 msgid "Configure"
-msgstr "Beállít"
+msgstr "Konfigurálás"
 
 #. module: sale_product_configurator
 #: model:ir.actions.act_window,name:sale_product_configurator.sale_product_configurator_action
 msgid "Configure a product"
-msgstr ""
+msgstr "Termék konfigurálása"
 
 #. module: sale_product_configurator
 #. openerp-web
@@ -100,19 +106,23 @@ msgstr "Létrehozva"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_custom_attribute_value_ids
 msgid "Custom Values"
-msgstr ""
+msgstr "Egyedi értékek"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__display_name
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__product_no_variant_attribute_value_ids
 msgid "Extra Values"
-msgstr ""
+msgstr "Extra értékek"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__id
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__id
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__id
 msgid "ID"
 msgstr "Azonosító"
@@ -120,12 +130,14 @@ msgstr "Azonosító"
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line__is_configurable_product
 msgid "Is the product configurable?"
-msgstr ""
+msgstr "A termék konfigurálható?"
 
 #. module: sale_product_configurator
+#: model:ir.model.fields,field_description:sale_product_configurator.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_product_configurator.field_sale_order_line____last_update
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Legutóbb módosítva"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__write_uid
@@ -138,15 +150,20 @@ msgid "Last Updated on"
 msgstr "Frissítve "
 
 #. module: sale_product_configurator
+#: model:product.template,description_sale:sale_product_configurator.product_product_1_product_template
+msgid "Office chairs can harm your floor: protect it."
+msgstr "Az irodai székek árthatnak a padlónak: védje meg."
+
+#. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Option not available"
-msgstr ""
+msgstr "Az opció nem elérhető"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_product__optional_product_ids
 #: model:ir.model.fields,field_description:sale_product_configurator.field_product_template__optional_product_ids
 msgid "Optional Products"
-msgstr "Kiegészítő termékek"
+msgstr "Választható termékek"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,help:sale_product_configurator.field_product_product__optional_product_ids
@@ -155,9 +172,9 @@ msgid ""
 "Optional Products are suggested whenever the customer hits *Add to Cart* "
 "(cross-sell strategy, e.g. for computers: warranty, software, etc.)."
 msgstr ""
-"Választható termékek javasoltak mindig amikor a vásárló leüti a *Kosárhoz "
-"adás* (kereszt-értékesítés stratégia, pl. számítógépekhez: garancia, "
-"szoftver, stb.)."
+"A választható termékek felkínálásra kerülnek amikor a vásárló leüti a "
+"*Kosárhoz adás* gombot (kereszt-értékesítés stratégia, pl. számítógépekhez: "
+"garancia, szoftver, stb.)."
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.product_template_view_form
@@ -185,12 +202,17 @@ msgstr "Termék"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Product Image"
-msgstr "Termék kép"
+msgstr "Termék képe"
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_product_template
 msgid "Product Template"
 msgstr "Terméksablon"
+
+#. module: sale_product_configurator
+#: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_order_view_form
+msgid "Product Variant"
+msgstr "Termékváltozat"
 
 #. module: sale_product_configurator
 #: model:ir.model.fields,field_description:sale_product_configurator.field_sale_product_configurator__quantity
@@ -203,17 +225,17 @@ msgstr "Mennyiség"
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure_optional_products
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.optional_product_items
 msgid "Remove one"
-msgstr ""
+msgstr "Eltávolítás"
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_product_configurator
 msgid "Sale Product Configurator"
-msgstr ""
+msgstr "Értékesítési termék konfigurátor"
 
 #. module: sale_product_configurator
 #: model:ir.model,name:sale_product_configurator.model_sale_order_line
 msgid "Sales Order Line"
-msgstr "Értékesítési megrendelés sor"
+msgstr "Értékesítési rendelés sor"
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.sale_product_configurator_view_form
@@ -223,9 +245,14 @@ msgstr "Mentés"
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This combination does not exist."
-msgstr ""
+msgstr "Ez a kombináció nem létezik."
 
 #. module: sale_product_configurator
 #: model_terms:ir.ui.view,arch_db:sale_product_configurator.configure
 msgid "This product has no valid combination."
-msgstr ""
+msgstr "Ezen terméknek nincs érvényes kombinációja."
+
+#. module: sale_product_configurator
+#: model:product.template,uom_name:sale_product_configurator.product_product_1_product_template
+msgid "Units"
+msgstr "egység"
