@@ -107,7 +107,7 @@ try:
     # werkzeug >= 0.15
     from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
     # 0.15 also supports port and prefix, but 0.14 only forwarded for, proto
-    # and host so replicate that
+    # and host
     ProxyFix = lambda app: ProxyFix_(app, x_for=1, x_proto=1, x_host=1, x_port=1)
 except ImportError:
     # werkzeug < 0.15
