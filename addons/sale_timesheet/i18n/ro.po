@@ -6,8 +6,8 @@
 # Cozmin Candea <office@terrabit.ro>, 2019
 # Martin Trigaux, 2019
 # Dorin Hongu <dhongu@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Hongu Cosmin <cosmin513@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,6 +62,9 @@ msgid ""
 "                                                                Non Billable Tasks\n"
 "                                                            </span>"
 msgstr ""
+"<span class=\"btn-link\" style=\"font-weight:normal;\" title=\"Includes the time logged into a task which is not linked to any Sales Order.\">\n"
+"                                                                Sarcini nefacturabile\n"
+"                                                            </span>"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -85,6 +88,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item having a Service "
 "product."
 msgstr ""
+"Un proiect facturabil ar trebui să fie legat de un articol de comandă de "
+"vânzare care are un produs de service."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -93,6 +98,8 @@ msgid ""
 "A billable project should be linked to a Sales Order Item that does not come"
 " from an expense or a vendor bill."
 msgstr ""
+"Un proiect facturabil ar trebui să fie legat de un articol de comandă de "
+"vânzare care nu provine dintr-o cheltuială sau dintr-o factură de vânzător."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -121,6 +128,8 @@ msgid ""
 "An employee cannot be selected more than once in the mapping. Please remove "
 "duplicate(s) and try again."
 msgstr ""
+"Un angajat nu poate fi selectat de mai multe ori în mapare. Eliminați "
+"duplicatul(ele)  și încercați din nou."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__analytic_account_id
@@ -192,14 +201,14 @@ msgstr "Facturat la un preț fix"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_fixed
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Billed at a Fixed price"
-msgstr ""
+msgstr "Facturat la un preț fix"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__billable_time
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Billed on Timesheets"
-msgstr ""
+msgstr "Facturat pe fișe de pontaj"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
@@ -296,7 +305,7 @@ msgstr "Creați o comandă de vânzare din proiect"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_create_sale_order_view_form
 #, python-format
 msgid "Create a Sales Order"
-msgstr ""
+msgstr "Creați o comandă de vânzare"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_tracking__project_only
@@ -347,7 +356,7 @@ msgstr "Client"
 #: model:product.product,name:sale_timesheet.product_service_order_timesheet
 #: model:product.template,name:sale_timesheet.product_service_order_timesheet_product_template
 msgid "Customer Care (Prepaid Hours)"
-msgstr ""
+msgstr "Asistență clienți (ore preplătite)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -390,7 +399,7 @@ msgstr "Angajat"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
 msgid "Employee that has timesheets on the project."
-msgstr ""
+msgstr "Angajat care are fișe de pontaj pentru proiect."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -398,6 +407,8 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+"Cartografiere articol angajat / comandă de vânzare:\n"
+" Definește la ce articol de comandă de vânzări va fi legată intrarea de fișa de pontaj a unui angajat. Prin extensie, definește rata la care se facturează timpul unui angajat în proiect."
 
 #. module: sale_timesheet
 #: model:project.task.type,name:sale_timesheet.project_stage_fixed
@@ -469,6 +480,8 @@ msgid ""
 "Includes the time logged from the Timesheet module that is linked to a "
 "project, but not to a task."
 msgstr ""
+"Include timpul înregistrat din modulul fișei de pontaj care este legat de un"
+" proiect, dar nu de o sarcină."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -494,6 +507,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on "
 "timesheets on tasks."
 msgstr ""
+"Include timpul conectat la sarcini pentru care facturați pe baza fișelor de "
+"pontaj pentru sarcini."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -503,7 +518,7 @@ msgstr "Factură"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr ""
+msgstr "Factură creată din fișa de pontaj"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -524,7 +539,7 @@ msgstr "Facturare"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
 msgid "Is Project map empty"
-msgstr ""
+msgstr "Harta proiectului este goală"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__is_service
@@ -545,13 +560,13 @@ msgstr "Notă contabilă"
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_2
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_2_product_template
 msgid "Junior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Arhitect junior (factură pe fisă de pontaj)"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Kitchen Assembly (Milestones)"
-msgstr ""
+msgstr "Ansamblu bucătărie (Repere)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_invoice____last_update
@@ -624,7 +639,7 @@ msgstr "Nume"
 #. module: sale_timesheet
 #: model:project.task.type,legend_blocked:sale_timesheet.project_stage_fixed
 msgid "Need functional or technical help"
-msgstr ""
+msgstr "Aveți nevoie de ajutor funcțional sau tehnic"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_1
@@ -669,12 +684,12 @@ msgstr "Fără sarcină"
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__account_analytic_line__timesheet_invoice_type__non_billable
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_search
 msgid "Non Billable Tasks"
-msgstr ""
+msgstr "Sarcini fără facturare"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Non billable tasks"
-msgstr ""
+msgstr "Sarcini fără facturare"
 
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_2
@@ -696,7 +711,7 @@ msgstr "Nevalidat(ă)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
 msgid "Number of timesheets"
-msgstr ""
+msgstr "Număr fișe pontaj"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_tracking
@@ -749,6 +764,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
+"Produsul articolului comenzii de vânzare. Trebuie să fie un serviciu "
+"facturat pe baza fișelor de pontaj pentru sarcini."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -785,7 +802,7 @@ msgstr "Proiect"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__company_id
 msgid "Project Company"
-msgstr ""
+msgstr "Companie Proiect"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.project_profitability_report_action
@@ -796,7 +813,7 @@ msgstr "Costuri și venituri"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__currency_id
 msgid "Project Currency"
-msgstr ""
+msgstr "Monedă Proiect"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__user_id
@@ -817,7 +834,7 @@ msgstr "Raportul rentabilității proiectului"
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_project_sale_line_employee_map
 msgid "Project Sales line, employee mapping"
-msgstr ""
+msgstr "Linia de vânzări a proiectului, maparea angajaților"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__project_template_id
@@ -855,7 +872,7 @@ msgstr "Proiecte utilizate în această comandă de vânzare."
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Re-invoiced costs"
-msgstr ""
+msgstr "Costuri refacturate"
 
 #. module: sale_timesheet
 #: model:project.task,legend_done:sale_timesheet.project_task_internal
@@ -994,13 +1011,13 @@ msgstr ""
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.res_config_settings_view_form
 msgid "Sell services and invoice time spent"
-msgstr ""
+msgstr "Vindeți servicii și facturați timpul petrecut"
 
 #. module: sale_timesheet
 #: model:product.product,name:sale_timesheet.product_service_deliver_timesheet_1
 #: model:product.template,name:sale_timesheet.product_service_deliver_timesheet_1_product_template
 msgid "Senior Architect (Invoice on Timesheets)"
-msgstr ""
+msgstr "Arhitect Senior (factură pe fisă de pontaj)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__product_id
@@ -1077,6 +1094,8 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
+"Comanda de vânzări nu poate fi creată deoarece nu ați introdus unii angajați care au introdus fișe de pontaj în acest proiect. Vă rugăm să listați toți angajații relevanți înainte de a crea Comanda de vânzare.\n"
+"Angajat(i) lipsă: %s"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/product.py:0
@@ -1127,6 +1146,8 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
+"Comanda de vânzare nu poate fi creată deoarece unele fișe de pontaj ale "
+"acestui proiect sunt deja legate de o altă comandă de vânzare."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
@@ -1137,7 +1158,7 @@ msgstr "Comanda de vânzări selectată ar trebui să conțină ceva de facturat
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "There are no timesheets for now."
-msgstr ""
+msgstr "Deocamdată nu există fișe de pontaj."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1145,6 +1166,8 @@ msgid ""
 "This cost is based on the \"Timesheet cost\" set in the HR Settings of your "
 "employees."
 msgstr ""
+"Acest cost se bazează pe \"Timesheet cost\" setat în Setările HR ale "
+"angajaților dvs."
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
@@ -1179,6 +1202,8 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
+"Aceasta va seta unitatea de măsură utilizată pentru codificarea foii de timp. Acest lucru va oferi pur și simplu instrumente\n"
+"        și widget-uri pentru a ajuta la codificare. Toate raportările vor fi exprimate în ore (valoare implicită)."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1206,12 +1231,12 @@ msgstr "Cost pontaj"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr ""
+msgstr "Unitate de codificare a fișei de timp"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr ""
+msgstr "Durată Totală Fișă de pontaj"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
@@ -1226,7 +1251,7 @@ msgstr "Activități fisă de pontaj"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "Activități de fișă de pontaj asociate acestei vânzări"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1255,7 +1280,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
-msgstr ""
+msgstr "Fișă de pontaj a %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
@@ -1265,7 +1290,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_timesheet
 msgid "Timesheets on tasks"
-msgstr ""
+msgstr "Fișe de pontaj cu privire la sarcini"
 
 #. module: sale_timesheet
 #: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_to_do
@@ -1289,6 +1314,8 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
+"Suma totală de facturat pentru comanda de vânzare, inclusiv toate articolele"
+" (servicii, depozite, cheltuieli, ...)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1347,6 +1374,8 @@ msgid ""
 "What is still to deliver based on sold hours and hours already done. Equals "
 "to sold hours - done hours."
 msgstr ""
+"Ce este încă de livrat pe baza orelor vândute și a orelor deja realizate. "
+"Este egal cu orele vândute - ore făcute."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__wizard_id
@@ -1367,6 +1396,8 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
+"Nu puteți modifica fișele de pontaj deja facturate (legate de articolele "
+"unei comenzi de vânzări facturate pe timp și material)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
