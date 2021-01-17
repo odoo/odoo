@@ -181,7 +181,7 @@ anywhere because that *template* is not associated with any part of
 the **Odoo default structure**.  In order to do that you can use
 **xpath**, **qWeb** or a combination of both.
 
-Keep reading the tutorial to learn to how properly extend it with your own code.
+Keep reading the tutorial to learn how to properly extend it with your own code.
 
 Update your theme
 -----------------
