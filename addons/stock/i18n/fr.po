@@ -49,6 +49,7 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -56,7 +57,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Pauline Thiry <pth@odoo.com>, 2020\n"
+"Last-Translator: Anthony Chaussin <chaussin.anthony@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -939,7 +940,7 @@ msgstr "Articles disponibles"
 #: code:addons/stock/models/product.py:581
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "La quantité disponible doit être mise à zéro avant de changer de type"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -4385,7 +4386,7 @@ msgstr "Ajoutez quelques objets à déplacer."
 #: code:addons/stock/models/stock_quant.py:92
 #, python-format
 msgid "Please check the following serial number (name, id): "
-msgstr ""
+msgstr "Veuillez vérifier le numéro de série suivant (nom, identifiant) : "
 
 #. module: stock
 #: code:addons/stock/wizard/stock_picking_return.py:0
@@ -6574,6 +6575,10 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Cet article a été utilisé dans au moins un mouvement de stock. Il n'est pas "
+"conseillé de changer le Type d'Article car cela peut entraîner des "
+"incohérences. Une meilleure solution pourrait consister à archiver l'article"
+" et à en créer un nouveau à la place."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7234,6 +7239,9 @@ msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
 msgstr ""
+"Lorsqu'un entrepôt est sélectionné pour cet itinéraire, celui-ci doit être "
+"considéré comme l'itinéraire par défaut lorsque les articles passent par cet"
+" entrepôt."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7246,11 +7254,15 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
 msgstr ""
+"Lorsqu'il est coché, l'itinéraire sera sélectionnable dans l'onglet "
+"Inventaire du formulaire Article."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
+"Une fois vérifié, l'itinéraire sera sélectionnable dans la Catégorie de "
+"Article."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
