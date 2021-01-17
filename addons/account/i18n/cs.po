@@ -14,17 +14,18 @@
 # Martin Trigaux, 2020
 # milda dvorak <milda.dvorak@optimal4.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
+# Jiří Podhorecký, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: Damian Brencic <brencicdamian12313@gmail.com>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -323,24 +324,6 @@ msgstr "<i class=\"fa fa-print\"/> Tisk"
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
-msgid "<li>%(link)s cancelling {percent:f}%% of {amount}</li>"
-msgstr ""
-
-#. module: account
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "<li>%(link)s postponing it to {new_date}</li>"
-msgstr ""
-
-#. module: account
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "<li>%(link)s</li>"
-msgstr ""
-
-#. module: account
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
 msgid ""
 "<li>{amount} ({debit_credit}) from <strong>%s</strong> were transferred to "
 "<strong>{account_target_name}</strong> by {link}</li>"
@@ -575,11 +558,6 @@ msgstr ""
 "groups=\"base.group_multi_currency\"> v </span>"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-msgid "<span class=\"oe_inline o_form_label mx-3\"> to </span>"
-msgstr ""
-
-#. module: account
 #: model_terms:ir.ui.view,arch_db:account.setup_bank_account_wizard
 msgid ""
 "<span class=\"text-muted\">Leave empty to create a new journal for this bank"
@@ -661,11 +639,6 @@ msgstr "<span>Částka vyplacená</span>"
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Balance</span>"
 msgstr "<span>Zůstatek</span>"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-msgid "<span>Create one journal entry per month automatically</span>"
-msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1707,12 +1680,21 @@ msgstr ""
 "finančních zprávách"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
+msgid "Adjusting Amount"
+msgstr "Úprava částky"
+
+#. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
-msgid "Adjusting Entries created:<ul>"
+msgid ""
+"Adjusting Entries have been created for this invoice:<ul><li>%(link1)s "
+"cancelling {percent:f}%% of {amount}</li><li>%(link0)s postponing it to "
+"{new_date}</li></ul>"
 msgstr ""
 
 #. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
@@ -1722,19 +1704,22 @@ msgstr "Úprava záznamu"
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
-msgid "Adjusting Entry generated for these journal entries:<ul>"
-msgstr ""
-
-#. module: account
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "Adjusting Entry made on {date} ({percent:f}%)"
+msgid ""
+"Adjusting Entry for {link}: {percent:f}% of {amount} recognized on "
+"{new_date}"
 msgstr ""
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
 #, python-format
 msgid "Adjusting Entry of {date} ({percent:f}% recognized on {new_date})"
+msgstr ""
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid ""
+"Adjusting Entry {link}: {percent:f}% of {amount} recognized from {date}"
 msgstr ""
 
 #. module: account
@@ -1843,12 +1828,6 @@ msgid ""
 msgstr "Pro ověření výpisu musí být zpracovány všechny řádky záznamů účtu."
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__chg_period_time_division
-msgid ""
-"Allocate the balance to different periods considering their number of days."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__reconcile
 msgid "Allow Invoices & payments Matching"
 msgstr "Povolit spárování faktur a plateb"
@@ -1930,7 +1909,6 @@ msgstr ""
 "cizí měna."
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__balance
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount
 #: model:ir.model.fields,field_description:account.field_account_partial_reconcile__amount
 #: model:ir.model.fields,field_description:account.field_account_payment__amount
@@ -2413,11 +2391,6 @@ msgstr "Automatické vstupy"
 #: model:ir.model.fields,field_description:account.field_res_company__automatic_entry_default_journal_id
 msgid "Automatic Entry Default Journal"
 msgstr "Automatický záznam výchozí deník"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-msgid "Automatic re-allocation"
-msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_sequence_mixin
@@ -3223,12 +3196,6 @@ msgid "Check if difference is zero."
 msgstr "Zkontrolujte, zda je rozdíl nulový."
 
 #. module: account
-#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
-#, python-format
-msgid "Check the dates. The period cannot start later than its own end."
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_account__reconcile
 msgid ""
 "Check this box if this account allows invoices & payments matching of "
@@ -3732,11 +3699,6 @@ msgid "Create Automatic Entries"
 msgstr "Vytvářejte automatické záznamy"
 
 #. module: account
-#: model:ir.model,name:account.model_account_automatic_entry_wizard_line
-msgid "Create Automatic Entries Line"
-msgstr ""
-
-#. module: account
 #: model:ir.actions.act_window,name:account.account_automatic_entry_wizard_action
 msgid "Create Automatic Entries for selected Journal Items"
 msgstr "Vytvořte automatické položky pro vybrané položky deníku"
@@ -3898,7 +3860,6 @@ msgstr "Vytvořte svou první fakturu."
 #: model:ir.model.fields,field_description:account.field_account_account_type__create_uid
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__create_uid
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__create_uid
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__create_uid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__create_uid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__create_uid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance__create_uid
@@ -3962,7 +3923,6 @@ msgstr "Vytvořeno od"
 #: model:ir.model.fields,field_description:account.field_account_account_type__create_date
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__create_date
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__create_date
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__create_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__create_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__create_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance__create_date
@@ -4101,7 +4061,6 @@ msgstr "Měny"
 #. module: account
 #: model:ir.model,name:account.model_res_currency
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__company_currency_id
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__company_currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__currency_id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__currency_id
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__currency_id
@@ -4289,6 +4248,11 @@ msgid "Customize your layout."
 msgstr "Přizpůsobte si rozložení."
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_move_form
+msgid "Cut-Off"
+msgstr "Odříznout"
+
+#. module: account
 #: model:account.incoterms,name:account.incoterm_DAP
 msgid "DELIVERED AT PLACE"
 msgstr "dodáno na místo"
@@ -4327,7 +4291,7 @@ msgstr "Kontrola konzistence dat"
 #. openerp-web
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/xml/account_resequence.xml:0
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__date
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__date
 #: model:ir.model.fields,field_description:account.field_account_move__date
@@ -4365,21 +4329,6 @@ msgid "Date Mode"
 msgstr "Režim data"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__chg_period_date_to
-msgid "Date at which the smoothing of the balance will end."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__chg_period_date_from
-msgid "Date at which the smoothing of the balance will start."
-msgstr ""
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__chg_period_date_from
-msgid "Date from"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,help:account.field_account_financial_year_op__opening_date
 msgid ""
 "Date from which the accounting is managed in Odoo. It is the date of the "
@@ -4387,11 +4336,6 @@ msgid ""
 msgstr ""
 "Datum, od kterého je účetnictví vedeno v Odoo. Je to datum počátečního "
 "zápisu."
-
-#. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__chg_period_date_to
-msgid "Date to"
-msgstr ""
 
 #. module: account
 #. openerp-web
@@ -4759,7 +4703,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__display_name
 #: model:ir.model.fields,field_description:account.field_account_analytic_tag__display_name
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__display_name
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__display_name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__display_name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__display_name
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance__display_name
@@ -5623,7 +5566,6 @@ msgstr "Volný"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__email_from
 #: model:ir.model.fields,field_description:account.field_account_tour_upload_bill__email_from
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.view_account_group_form
 msgid "From"
 msgstr "Od"
@@ -5881,7 +5823,6 @@ msgstr "Jak se vypočítává celková částka daně v objednávkách a faktur�
 #: model:ir.model.fields,field_description:account.field_account_analytic_line__id
 #: model:ir.model.fields,field_description:account.field_account_analytic_tag__id
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__id
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__id
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance__id
@@ -6437,7 +6378,9 @@ msgid "Internal Notes"
 msgstr "Interní poznámky"
 
 #. module: account
+#: code:addons/account/models/account_payment.py:0
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
+#, python-format
 msgid "Internal Transfer"
 msgstr "Interní převod"
 
@@ -6551,7 +6494,7 @@ msgstr "Faktura má odpovídající částku napětí"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
-msgstr ""
+msgstr "Faktura má nevyřízené"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
@@ -7186,7 +7129,6 @@ msgstr "Poslední hash"
 #: model:ir.model.fields,field_description:account.field_account_analytic_line____last_update
 #: model:ir.model.fields,field_description:account.field_account_analytic_tag____last_update
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard____last_update
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line____last_update
 #: model:ir.model.fields,field_description:account.field_account_bank_statement____last_update
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox____last_update
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance____last_update
@@ -7269,7 +7211,6 @@ msgstr "Naposled změněno"
 #: model:ir.model.fields,field_description:account.field_account_account_type__write_uid
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__write_uid
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__write_uid
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__write_uid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__write_uid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__write_uid
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance__write_uid
@@ -7333,7 +7274,6 @@ msgstr "Naposledy upraveno od"
 #: model:ir.model.fields,field_description:account.field_account_account_type__write_date
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__write_date
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__write_date
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__write_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__write_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__write_date
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_closebalance__write_date
@@ -7493,11 +7433,6 @@ msgid "Line subtotals tax display"
 msgstr "Zobrazení daně mezisoučty řádků"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__chg_period_line_ids
-msgid "Lines"
-msgstr "Řádky"
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Lines from \"Off-Balance Sheet\" accounts cannot be reconciled"
@@ -7617,11 +7552,6 @@ msgstr "Management"
 #: model:account.payment.method,name:account.account_payment_method_manual_out
 msgid "Manual"
 msgstr "Ruční"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-msgid "Manual re-allocation"
-msgstr ""
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__inbound_payment_method_ids
@@ -9133,10 +9063,21 @@ msgid "Percent"
 msgstr "Procenta"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__chg_period_percentage
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__percentage
+#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__percentage
 msgid "Percentage"
 msgstr "Procenta"
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "Percentage can only be set for Change Period method"
+msgstr "Procento lze nastavit pouze pro metodu změny období"
+
+#. module: account
+#: code:addons/account/wizard/account_automatic_entry_wizard.py:0
+#, python-format
+msgid "Percentage must be between 0 and 100"
+msgstr "Procento musí být mezi 0 a 100"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__percent
@@ -9157,7 +9098,7 @@ msgid "Percentage of balance"
 msgstr "Procento rovnováhy"
 
 #. module: account
-#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard_line__percentage
+#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__percentage
 msgid "Percentage of each line to execute the action on."
 msgstr "Procento každého řádku, na kterém se má akce provést."
 
@@ -9370,7 +9311,6 @@ msgstr ""
 "Přednastaveno vytváření záznamů v denících při přiřazování faktur a plateb"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "Preview"
 msgstr "Náhled"
@@ -9622,16 +9562,6 @@ msgid "Re-Sequence"
 msgstr "Opakovaná sekvence"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_move_form
-msgid "Re-allocate"
-msgstr ""
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-msgid "Re-allocation percentage"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__reason
 #: model:ir.model.fields,field_description:account.field_cash_box_out__name
 msgid "Reason"
@@ -9695,6 +9625,11 @@ msgstr "Příjemce bankovního účtu"
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Recipients"
 msgstr "Příjemci"
+
+#. module: account
+#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
+msgid "Recognition Date"
+msgstr "Datum uznání"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__recompute_tax_line
@@ -12099,14 +12034,6 @@ msgstr ""
 "může změnit."
 
 #. module: account
-#: code:addons/account/models/account_journal.py:0
-#, python-format
-msgid ""
-"The account %(account_name)s can't be shared between multiple journals: "
-"%(journals)s"
-msgstr ""
-
-#. module: account
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "The account %s (%s) is deprecated."
@@ -12669,7 +12596,6 @@ msgstr "Platba, která vytvořila tento záznam"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__currency_id
-#: model:ir.model.fields,help:account.field_account_payment__destination_account_id
 #: model:ir.model.fields,help:account.field_account_payment_register__currency_id
 #: model:ir.model.fields,help:account.field_account_payment_register__source_currency_id
 msgid "The payment's currency."
@@ -13261,11 +13187,6 @@ msgstr ""
 "kliknete na „Odeslat a vytisknout“"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__chg_period_time_division
-msgid "Time Division"
-msgstr ""
-
-#. module: account
 #: model:digest.tip,name:account.digest_tip_account_0
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
@@ -13318,7 +13239,6 @@ msgid "Total Amount"
 msgstr "Celková částka"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Total Balance"
 msgstr "Celková rovnováha"
@@ -13355,11 +13275,6 @@ msgid "Total Payable"
 msgstr "Celkem závazků"
 
 #. module: account
-#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
-msgid "Total Percentage"
-msgstr ""
-
-#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__credit
 #: model:ir.model.fields,field_description:account.field_res_users__credit
 msgid "Total Receivable"
@@ -13374,7 +13289,6 @@ msgstr "Celkem podepsáno"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_automatic_entry_wizard__total_amount
-#: model:ir.model.fields,help:account.field_account_automatic_entry_wizard_line__balance
 msgid "Total amount impacted by the automatic entry."
 msgstr "Celková částka ovlivněná automatickým zadáním."
 
@@ -13430,7 +13344,7 @@ msgid "Transfer"
 msgstr "Převod"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__date
+#: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid "Transfer Date"
 msgstr "Datum převodu"
 
@@ -13957,7 +13871,6 @@ msgid "View accounts detail"
 msgstr "Zobrazit detail účtu"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__chg_period_warning_message
 #: model:ir.model.fields.selection,name:account.selection__res_partner__invoice_warn__warning
 msgid "Warning"
 msgstr "Varování"
@@ -14072,16 +13985,13 @@ msgid "With tax"
 msgstr "S daní"
 
 #. module: account
-#: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard_line__wizard_id
-msgid "Wizard"
-msgstr "Průvodce"
-
-#. module: account
 #. openerp-web
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Write a company name to <b>create one</b> or <b>see suggestions</b>."
 msgstr ""
+"Napište název společnosti <b>vytvořte si ji</b> nebo <b>si přečtěte "
+"návrhy.</b>."
 
 #. module: account
 #. openerp-web
@@ -14862,7 +14772,7 @@ msgstr "zaplaceno"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_group_id
 msgid "technical field for widget tax-group-custom-field"
-msgstr ""
+msgstr "technické pole pro widget daňová-skupina-vlastní-pole"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__previous_statement_id

@@ -9,20 +9,20 @@
 # Wynand Tastenhoye <wta@odoo.com>, 2018
 # Thomas Pot <thomas@open2bizz.nl>, 2019
 # Martin Trigaux, 2020
-# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Eric Geens <ericgeens@yahoo.com>, 2020
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Odoo Experts Consultants <consultants@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1133,6 +1133,12 @@ msgid "Can Write"
 msgstr "Kan schrijven"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "Kan het bericht of de ontvanger van een melding niet bijwerken."
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.xml:0
@@ -1654,12 +1660,6 @@ msgstr "Aangepaste kanaal naam"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Klant is verplicht voor inbox / e-mail notificatie"
-
-#. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr "Kan het bericht of de ontvanger van een melding niet bijwerken."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2595,6 +2595,14 @@ msgid "Following"
 msgstr "Volgend"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+"De volgende uitnodigingen zijn ongeldig omdat gebruikersgroepen niet "
+"overeenkomen: %s"
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
@@ -3083,13 +3091,6 @@ msgstr ""
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr "Foutief primair e-mailadres op model %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "Uitnodiging"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -4144,13 +4145,6 @@ msgstr "Nieuwe berichten"
 #, python-format
 msgid "New messages appear here."
 msgstr "Nieuwe berichten verschijnen hier."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr "Nieuwe persoon"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6180,6 +6174,12 @@ msgid "This record has an exception activity."
 msgstr "Dit record heeft een activiteit met uitzondering."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Conversatie"
@@ -6477,13 +6477,6 @@ msgstr "Alle sterren verwijderen"
 #, python-format
 msgid "Unstar all messages"
 msgstr "Alle berichten met sterren verwijderen"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "Uitgeschreven"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -6849,6 +6842,12 @@ msgid ""
 msgstr ""
 "U kunt elk bericht markeren met een 'ster' en deze wordt weergegeven in deze"
 " mailbox."
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
 
 #. module: mail
 #. openerp-web

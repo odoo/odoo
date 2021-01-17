@@ -10,6 +10,7 @@
 # Gary Wei <Gary.wei@elico-corp.com>, 2016
 # mrshelly <mrshelly@hotmail.com>, 2016
 # Eddie Lim <bhweelim@yahoo.com>, 2016
+# waveyeung <waveyeung@qq.com>, 2016
 # Michael Chong <michaelchong2005@gmail.com>, 2016
 # 木头 <mynameisshiy@gmail.com>, 2016
 # liulixia <liu.lixia@elico-corp.com>, 2017
@@ -20,21 +21,19 @@
 # keecome <7017511@qq.com>, 2019
 # Fisher <fisher@kdomi.com>, 2019
 # snow wang <147156565@qq.com>, 2019
+# liAnGjiA <liangjia@qq.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
 # Martin Trigaux, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
-# waveyeung <waveyeung@qq.com>, 2020
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2021-01-12 07:32+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -48,13 +47,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
 msgid "# of Opportunity"
 msgstr "#商机"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "&amp;times;"
-msgstr "&amp;次数;"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -194,6 +186,11 @@ msgid ""
 msgstr ""
 "<span class=\"text-danger error_partner_assign_interested\" "
 "style=\"display:none;\"/>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+msgid "<span> at </span>"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -494,11 +491,6 @@ msgid "Automatically sanitized HTML contents"
 msgstr "自动整理HTML内容"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
-msgid "Bronze"
-msgstr "青铜"
-
-#. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_partner_report_assign
 msgid "CRM Partnership Analysis"
 msgstr "CRM合作关系分析"
@@ -752,11 +744,6 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignment.)"
 msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_gold
-msgid "Gold"
-msgstr "黄金"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
@@ -1135,11 +1122,6 @@ msgid "Planned Revenue"
 msgstr "计划收入"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
-msgid "Platinum"
-msgstr "铂金级"
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Priority:"
 msgstr "优先级："
@@ -1257,11 +1239,6 @@ msgstr "给合作伙伴%s设置电邮地址"
 #, python-format
 msgid "Set an email address for the partner(s): %s"
 msgstr "给合作伙伴%s设置电邮地址"
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
-msgid "Silver"
-msgstr "银色"
 
 #. module: website_crm_partner_assign
 #: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
@@ -1408,7 +1385,6 @@ msgid "a single partner: manual selection of partner"
 msgstr "单一合作伙伴：手动选择合作伙伴"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "at"
 msgstr "在"

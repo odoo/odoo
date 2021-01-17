@@ -8,7 +8,7 @@
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # Martin Trigaux, 2020
-# trendspotter, 2020
+# Jiří Podhorecký, 2020
 # Damian Brencic <brencicdamian12313@gmail.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
@@ -38,7 +38,7 @@ msgstr ""
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr ""
+msgstr "%snení odkaz na zprávu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -62,7 +62,7 @@ msgstr "<i class=\"fa fa-chevron-right\" role=\"img\" aria-label=\"Next\" title=
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
 msgid "<i class=\"fa fa-pencil mx-1\"/>Edit Security Settings"
-msgstr ""
+msgstr "<i class=\"fa fa-pencil mx-1\"/>Upravit nastavení zabezpečení"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_layout
@@ -363,7 +363,7 @@ msgstr ""
 #: code:addons/portal/static/src/js/portal.js:0
 #, python-format
 msgid "Check failed"
-msgstr ""
+msgstr "Kontrola se nezdařila"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -424,7 +424,7 @@ msgstr "Kontakty"
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Could not save file <strong>%s</strong>"
-msgstr ""
+msgstr "Soubor se nepodařilo uložit <strong>%s</strong>"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -458,6 +458,8 @@ msgid ""
 "Currently available to everyone viewing this document, click to restrict to "
 "internal employees."
 msgstr ""
+"Aktuálně k dispozici všem, kteří si prohlížejí tento dokument, kliknutím "
+"omezte na interní zaměstnance."
 
 #. module: portal
 #. openerp-web
@@ -467,6 +469,8 @@ msgid ""
 "Currently restricted to internal employees, click to make it available to "
 "everyone viewing this document."
 msgstr ""
+"Aktuálně omezeno na interní zaměstnance. Kliknutím jej zpřístupníte všem, "
+"kteří si prohlížejí tento dokument."
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_portal_mixin__access_url
@@ -539,7 +543,7 @@ msgstr "E-mailové vlákno"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "Employees Only"
-msgstr ""
+msgstr "Pouze zaměstnanci"
 
 #. module: portal
 #. openerp-web
@@ -597,7 +601,7 @@ msgstr "Neplatný e-mail! Prosím zadejte platnou emailovou adresu."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Neplatný typ přehledu: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -665,6 +669,8 @@ msgid ""
 "Model %(model_name)s does not support token signature, as it does not have "
 "%(field_name)s field."
 msgstr ""
+"Modelka %(model_name)s nepodporuje podpis tokenu, protože nemá "
+"%(field_name)s pole."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -679,7 +685,7 @@ msgstr "Název"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "New Password:"
-msgstr ""
+msgstr "Nové heslo:"
 
 #. module: portal
 #. openerp-web
@@ -717,12 +723,12 @@ msgstr "Heslo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password Updated!"
-msgstr ""
+msgstr "Heslo aktualizováno!"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Password:"
-msgstr ""
+msgstr "Heslo:"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -734,7 +740,7 @@ msgstr "Telefon"
 #: code:addons/portal/static/src/xml/portal_security.xml:0
 #, python-format
 msgid "Please confirm your password to continue"
-msgstr ""
+msgstr "Chcete-li pokračovat, potvrďte heslo"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_mixin__access_url
@@ -915,27 +921,28 @@ msgstr "Přílohu %s nelze odstranit, protože je spojena se zprávou."
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
 msgstr ""
+"The attachment %s nelze odebrat, protože není ve stavu čekající na vyřízení."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Příloha %s neexistuje nebo nemáte oprávnění k přístupu."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Příloha neexistuje nebo nemáte přístupová práva."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Dokument neexistuje nebo nemáte oprávnění k přístupu."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
@@ -962,7 +969,7 @@ msgstr "Momentálně nejsou žádné komentáře."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "This document does not exist."
-msgstr ""
+msgstr "Tento dokument neexistuje."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -1021,7 +1028,7 @@ msgstr "DIČ"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "Verify New Password:"
-msgstr ""
+msgstr "Ověřte nové heslo:"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_ui_view
@@ -1202,7 +1209,7 @@ msgstr "odoo"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_security
 msgid "password"
-msgstr ""
+msgstr "Heslo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

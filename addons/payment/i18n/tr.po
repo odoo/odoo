@@ -21,6 +21,7 @@
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # ismail eski <ismaileski@gmail.com>, 2021
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -28,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 07:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: ismail eski <ismaileski@gmail.com>, 2021\n"
+"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,7 +40,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Alınan Veriler"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__invoice_ids_nbr
@@ -164,7 +165,7 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified for the acquirer %s."
-msgstr ""
+msgstr "Alıcı için bir yevmiye belirtilmelidir%s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
@@ -646,7 +647,7 @@ msgstr "Kredi Kartı (Ingenico tarafından desteklenmektedir)"
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_odoo_by_adyen
 msgid "Credit Card (powered by Odoo Payments)"
-msgstr ""
+msgstr "Kredi Kartı (Odoo Payments tarafından desteklenmektedir)"
 
 #. module: payment
 #: model:payment.acquirer,display_as:payment.payment_acquirer_payulatam
@@ -774,12 +775,14 @@ msgstr "E-Posta"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
 msgid "Enable QR Codes"
-msgstr ""
+msgstr "QR Kodlarını Etkinleştir"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__qr_code
 msgid "Enable the use of QR-codes for payments made on this provider."
 msgstr ""
+"Bu sağlayıcıda yapılan ödemeler için QR kodlarının kullanımını "
+"etkinleştirin."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__state__enabled
@@ -961,7 +964,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__inbound_payment_method_ids
 msgid "Inbound Payment Methods"
-msgstr ""
+msgstr "Gelen Ödeme Yöntemleri"
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_ingenico
@@ -1260,7 +1263,7 @@ msgstr "Odoo Enterprise Modül"
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_odoo_by_adyen
 msgid "Odoo Payments by Adyen"
-msgstr ""
+msgstr "Adyen'den Odoo Ödemeleri"
 
 #. module: payment
 #. openerp-web
@@ -1279,7 +1282,7 @@ msgstr "Bu verilere yalnızca yöneticiler erişebilir."
 #: code:addons/payment/models/payment_acquirer.py:0
 #, python-format
 msgid "Only transactions having the authorized status can be captured."
-msgstr ""
+msgstr "Yalnızca yetkili statüye sahip işlemler yakalanabilir."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0
@@ -1852,7 +1855,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:0
 #, python-format
 msgid "This card is currently linked to the following records:"
-msgstr ""
+msgstr "Bu kart şu anda aşağıdaki kayıtlarla bağlantılı:"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image

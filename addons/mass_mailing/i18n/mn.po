@@ -17,15 +17,15 @@
 # Minj P <pminj322@gmail.com>, 2020
 # baaska sh <sh.baaskash@gmail.com>, 2020
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
-# Martin Trigaux, 2020
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:06+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -641,6 +641,13 @@ msgstr ""
 
 #. module: mass_mailing
 #. openerp-web
+#: code:addons/mass_mailing/static/src/xml/mass_mailing.xml:0
+#, python-format
+msgid "Change Style"
+msgstr "Загварыг Солих"
+
+#. module: mass_mailing
+#. openerp-web
 #: code:addons/mass_mailing/static/src/js/tours/mass_mailing_tour.js:0
 #, python-format
 msgid "Check the email address and click send."
@@ -925,13 +932,6 @@ msgstr "Эмэйл эзэндээ хүрээгүй огноо."
 #: model:ir.model.fields,field_description:mass_mailing.field_res_config_settings__mass_mailing_outgoing_mail_server
 msgid "Dedicated Server"
 msgstr ""
-
-#. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/js/mass_mailing_widget.js:0
-#, python-format
-msgid "Default"
-msgstr "Үндсэн"
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__null_value
@@ -2326,11 +2326,9 @@ msgid "Scheduled on #{record.schedule_date.value}"
 msgstr ""
 
 #. module: mass_mailing
-#. openerp-web
-#: code:addons/mass_mailing/static/src/js/mass_mailing_widget.js:0
-#, python-format
-msgid "Select a theme"
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
+msgid "Select a template"
+msgstr "Үлгэр сонгоно уу"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_form

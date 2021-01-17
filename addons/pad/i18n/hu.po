@@ -3,18 +3,16 @@
 # 	* pad
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# krnkris, 2017
+# Martin Trigaux, 2017
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"POT-Creation-Date: 2021-01-12 07:32+0000\n"
+"PO-Revision-Date: 2016-08-05 13:06+0000\n"
 "Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
@@ -29,58 +27,39 @@ msgid "API Key"
 msgstr "API kulcs"
 
 #. module: pad
-#: model:ir.model,name:pad.model_res_company
-msgid "Companies"
-msgstr "Vállalatok"
-
-#. module: pad
 #: model:ir.model,name:pad.model_res_config_settings
 msgid "Config Settings"
 msgstr "Konfigurációs beállítások"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__display_name
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: pad
-#: model:ir.model.fields,help:pad.field_res_company__pad_key
-#: model:ir.model.fields,help:pad.field_res_config_settings__pad_key
-msgid "Etherpad lite api key."
-msgstr "Könnyített Etherpad api kulcs."
-
-#. module: pad
-#: model:ir.model.fields,help:pad.field_res_company__pad_server
-#: model:ir.model.fields,help:pad.field_res_config_settings__pad_server
-msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr "Könnyített Etherpad szerver. Példa: beta.primarypad.com"
-
-#. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__id
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__id
 msgid "ID"
-msgstr "Azonosító"
+msgstr "Azonosító ID"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common____last_update
+#: model:ir.model.fields,field_description:pad.field_res_config_settings____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Utoljára frissítve ekkor"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:149
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Loading"
 msgstr "Betöltés"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company__pad_key
-msgid "Pad Api Key"
-msgstr "Szerkesztő/Pad Api Kulcs"
-
-#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
-msgid "Pad Api Key *"
-msgstr "Pad Api kulcs *"
+msgid "Pad API Key"
+msgstr ""
 
 #. module: pad
 #: model:ir.model,name:pad.model_pad_common
@@ -88,17 +67,12 @@ msgid "Pad Common"
 msgstr ""
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company__pad_server
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
 msgid "Pad Server"
 msgstr "Szerkesztő / Pad szerver"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
-msgid "Pad Server *"
-msgstr "Pad Szerver *"
-
-#. module: pad
-#: code:addons/pad/models/pad.py:58
+#: code:addons/pad/models/pad.py:0
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
@@ -109,11 +83,9 @@ msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:6
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
-msgid ""
-"Please enter your Etherpad credentials through the menu 'Settings > General "
-"Settings'."
+msgid "Please, enter your Etherpad credentials through the Settings."
 msgstr ""
 
 #. module: pad
@@ -123,21 +95,22 @@ msgstr "Szerver"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:14
+#: code:addons/pad/static/src/xml/pad.xml:0
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
 msgid "Switch pad"
 msgstr ""
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:168
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "This pad will be initialized on first edit"
-msgstr "Ezen szerkesztő kezdőértéke az első szerkesztéskor kerül megadásra"
+msgstr "Ez a pad az első szerkesztéskor kerül inicializálásra"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:162
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Unable to load pad"
 msgstr "Pad nem töltődik be"

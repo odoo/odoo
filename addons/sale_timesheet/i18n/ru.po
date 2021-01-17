@@ -13,19 +13,19 @@
 # Gennady Marchenko <gennadym@gmail.com>, 2018
 # Evgeny <transingularity@gmail.com>, 2018
 # Oleg Kuryan <oleg@ventor.tech>, 2019
-# Martin Trigaux, 2020
 # Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # Константин Коровин <korovin74@gmail.com>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
 # sergeiruzkiicode <sergei.ruzki@icode.by>, 2020
+# Martin Trigaux, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:29+0000\n"
+"POT-Creation-Date: 2021-01-12 07:32+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: sergeiruzkiicode <sergei.ruzki@icode.by>, 2020\n"
+"Last-Translator: Martin Trigaux, 2021\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -76,6 +76,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "<b>Total</b>"
 msgstr "<b>всего</b>"
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid ""
+"<em class=\"font-weight-normal text-muted\">Timesheets for sales order "
+"item:</em>"
+msgstr ""
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_advance_payment_inv_timesheet_view_form
@@ -571,6 +578,8 @@ msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
+#: model:product.product,uom_name:sale_timesheet.time_product
+#: model:product.template,uom_name:sale_timesheet.time_product_product_template
 #, python-format
 msgid "Hours"
 msgstr "Часы"
@@ -879,6 +888,11 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Ordered,"
+msgstr ""
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
 msgid "Other Costs"
 msgstr ""
@@ -1065,6 +1079,29 @@ msgid "Remaining"
 msgstr "Оставшиеся"
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_task_form2_inherit_sale_timesheet
+msgid "Remaining Days on SO"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_available
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours_available
+msgid "Remaining Hours Available"
+msgstr ""
+
+#. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_task__remaining_hours_so
+#: model:ir.model.fields,field_description:sale_timesheet.field_sale_order_line__remaining_hours
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.view_task_form2_inherit_sale_timesheet
+msgid "Remaining Hours on SO"
+msgstr ""
+
+#. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Remaining)"
+msgstr ""
+
+#. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Revenues linked to Timesheets already invoiced."
 msgstr ""
@@ -1082,6 +1119,7 @@ msgstr "Заказ"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order_line__sale_line_id
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
 msgid "Sale Order Item"
 msgstr "Элемент заказ на продажу"
 
@@ -1117,7 +1155,10 @@ msgid "Sales Order Confirmation Date"
 msgstr "Дата подтверждения заказа на продажу"
 
 #. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/portal.py:0
+#: model:ir.model.fields,field_description:sale_timesheet.field_account_analytic_line__so_line
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task_create_sale_order__sale_line_id
+#, python-format
 msgid "Sales Order Item"
 msgstr "Элемент заказа на продажу"
 
@@ -1135,6 +1176,24 @@ msgstr "Заказы продаж"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in Invoice ID"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order Item"
+msgstr ""
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/controllers/portal.py:0
+#, python-format
+msgid "Search in Sales Order Item ID"
 msgstr ""
 
 #. module: sale_timesheet
@@ -1508,6 +1567,11 @@ msgid ""
 msgstr ""
 
 #. module: sale_timesheet
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.portal_my_timesheets_inherit
+msgid "Total:"
+msgstr "Итого:"
+
+#. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_product__service_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_product_template__service_type
 msgid "Track Service"
@@ -1527,10 +1591,10 @@ msgid "Unit price of the sales order item."
 msgstr "Цена за единицу элемента заказ на продажу."
 
 #. module: sale_timesheet
-#: model:product.product,uom_name:sale_timesheet.time_product
-#: model:product.template,uom_name:sale_timesheet.time_product_product_template
-msgid "Units"
-msgstr "единицы"
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.report_invoice_document
+#: model_terms:ir.ui.view,arch_db:sale_timesheet.sale_order_portal_content_inherit
+msgid "View Timesheets"
+msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0
@@ -1577,12 +1641,6 @@ msgstr ""
 "заказ на продажу, начисленные на время и материал)."
 
 #. module: sale_timesheet
-#: code:addons/sale_timesheet/models/account.py:0
-#, python-format
-msgid "You can not modify timesheets from different employees"
-msgstr ""
-
-#. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
@@ -1612,6 +1670,13 @@ msgid "Your timesheets linked to this task will not be billed."
 msgstr ""
 
 #. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:0
+#, python-format
+msgid "day"
+msgstr "día"
+
+#. module: sale_timesheet
+#: code:addons/sale_timesheet/models/sale_order.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
 #, python-format

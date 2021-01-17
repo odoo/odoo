@@ -7,12 +7,14 @@
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Xavier Symons <xsy@openerp.com>, 2016
 # f477e7ae9c75a2428d6113663a8354fe_bcd021c <0ff4ce060a36f446722508a48e99c22a_347081>, 2016
+# Richard Mathot <rim@odoo.com>, 2016
 # Nancy Bolognesi <nb@microcom.ca>, 2016
 # Frédéric LIETART <stuff@tifred.fr>, 2016
 # lucasdeliege <deliegelucas@gmail.com>, 2016
 # Loic <loic.richard2@gmail.com>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
 # Clo <clo@odoo.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Maxime Chambreuil <mchambreuil@ursainfosystems.com>, 2016
 # Agathe Mollé <molleagathe@gmail.com>, 2016
 # Melanie Bernard <mbe@odoo.com>, 2017
@@ -20,22 +22,20 @@
 # Adriana Ierfino <adriana.ierfino@savoirfairelinux.com>, 2017
 # f5f0a0dac17dde787a1d812a6989680e, 2018
 # Lucas Deliege <lud@odoo.com>, 2019
+# e2f <projects@e2f.com>, 2019
 # Sébastien BÜHL <buhlsebastien@gmail.com>, 2019
 # Eloïse Stilmant <est@odoo.com>, 2019
 # Martin Trigaux, 2019
 # Cécile Collart <cco@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
-# e2f <projects@e2f.com>, 2020
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2020
-# Richard Mathot <rim@odoo.com>, 2020
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2021-01-12 07:32+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
 "Last-Translator: guillaume bauer <guillaume.bauer@syentys.fr>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -49,13 +49,6 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__nbr_opportunities
 msgid "# of Opportunity"
 msgstr "Nb d'opportunités"
-
-#. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
-msgid "&amp;times;"
-msgstr "&times;"
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_lead
@@ -203,6 +196,11 @@ msgstr ""
 "<span class=\"text-danger error_partner_assign_interested\" "
 "style=\"display:none;\">Vous devez effectuer la prochaine action et "
 "contacter le client avant d'accepter le lead</span>"
+
+#. module: website_crm_partner_assign
+#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
+msgid "<span> at </span>"
+msgstr ""
 
 #. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
@@ -503,11 +501,6 @@ msgid "Automatically sanitized HTML contents"
 msgstr "Nettoyer automatiquement les contenus HTML"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_bronze
-msgid "Bronze"
-msgstr "Bronze"
-
-#. module: website_crm_partner_assign
 #: model:ir.model,name:website_crm_partner_assign.model_crm_partner_report_assign
 msgid "CRM Partnership Analysis"
 msgstr "Analyse de partenariat CRM"
@@ -761,11 +754,6 @@ msgid ""
 "Gives the probability to assign a lead to this partner. (0 means no "
 "assignment.)"
 msgstr ""
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_gold
-msgid "Gold"
-msgstr "Or"
 
 #. module: website_crm_partner_assign
 #: model:ir.model.fields,field_description:website_crm_partner_assign.field_crm_partner_report_assign__grade_id
@@ -1145,11 +1133,6 @@ msgid "Planned Revenue"
 msgstr "Chiffre d'affaires prévu"
 
 #. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_platinium
-msgid "Platinum"
-msgstr "Platine"
-
-#. module: website_crm_partner_assign
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "Priority:"
 msgstr "Priorité:"
@@ -1267,11 +1250,6 @@ msgstr "Définir une adresse courriel pour le partenaire %s"
 #, python-format
 msgid "Set an email address for the partner(s): %s"
 msgstr "Définir une adresse courriel pour le(s) partenaire(s) : %s"
-
-#. module: website_crm_partner_assign
-#: model:res.partner.grade,name:website_crm_partner_assign.res_partner_grade_silver
-msgid "Silver"
-msgstr "Argent"
 
 #. module: website_crm_partner_assign
 #: model:crm.tag,name:website_crm_partner_assign.tag_portal_lead_is_spam
@@ -1420,7 +1398,6 @@ msgid "a single partner: manual selection of partner"
 msgstr "un seul partenaire : sélection manuelle du partenaire"
 
 #. module: website_crm_partner_assign
-#: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunities
 #: model_terms:ir.ui.view,arch_db:website_crm_partner_assign.portal_my_opportunity
 msgid "at"
 msgstr "à"

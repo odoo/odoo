@@ -5,19 +5,20 @@
 # Translators:
 # Ladislav Tomm <tomm@helemik.cz>, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
+# Michal Veselý <michal@veselyberanek.net>, 2020
+# Martin Trigaux, 2020
 # Chris <krystof.reklamy13@gmail.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
-# Martin Trigaux, 2020
-# Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
+# Jiří Podhorecký, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:46+0000\n"
+"POT-Creation-Date: 2021-01-12 07:32+0000\n"
 "PO-Revision-Date: 2016-08-05 13:11+0000\n"
-"Last-Translator: trendspotter, 2020\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -87,7 +88,7 @@ msgstr "Fáze kampaně"
 #: model:ir.actions.act_window,name:utm.action_view_utm_tag
 #: model_terms:ir.ui.view,arch_db:utm.utm_tag_view_tree
 msgid "Campaign Tags"
-msgstr ""
+msgstr "Značky kampaně"
 
 #. module: utm
 #: model:ir.actions.act_window,name:utm.utm_campaign_action
@@ -102,11 +103,6 @@ msgid ""
 "Campaigns are used to centralize your marketing efforts and track their "
 "results."
 msgstr ""
-
-#. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_christmas_special
-msgid "Christmas Special"
-msgstr "Vánoční specialita"
 
 #. module: utm
 #. openerp-web
@@ -136,7 +132,7 @@ msgstr ""
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.utm_campaign_action
 msgid "Create a campaign"
-msgstr ""
+msgstr "Vytvořte kampaň"
 
 #. module: utm
 #: model_terms:ir.actions.act_window,help:utm.action_view_utm_stage
@@ -201,7 +197,6 @@ msgstr ""
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: model:utm.stage,name:utm.campaign_stage_2
 #, python-format
 msgid "Design"
 msgstr "Návrh"
@@ -235,16 +230,6 @@ msgstr "Rozbalovací nabídka"
 #: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
 msgid "Edit"
 msgstr "Upravit"
-
-#. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_products
-msgid "Email Campaign - Products"
-msgstr "E-mailová kampaň - Produktu"
-
-#. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_email_campaign_services
-msgid "Email Campaign - Services"
-msgstr "E-mailová kampaň - Služba"
 
 #. module: utm
 #. openerp-web
@@ -467,16 +452,6 @@ msgid "Running"
 msgstr "Spuštěno"
 
 #. module: utm
-#: model:utm.campaign,name:utm.utm_campaign_fall_drive
-msgid "Sale"
-msgstr "Prodej"
-
-#. module: utm
-#: model:utm.stage,name:utm.campaign_stage_1
-msgid "Schedule"
-msgstr "Naplánovat"
-
-#. module: utm
 #: model_terms:ir.ui.view,arch_db:utm.utm_medium_view_search
 msgid "Search UTM Medium"
 msgstr ""
@@ -498,7 +473,6 @@ msgstr "Odeslat"
 #. openerp-web
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
 #: code:addons/utm/static/src/js/utm_campaign_kanban_examples.js:0
-#: model:utm.stage,name:utm.campaign_stage_3
 #, python-format
 msgid "Sent"
 msgstr "Odesláno"
@@ -507,11 +481,6 @@ msgstr "Odesláno"
 #: model:ir.model.fields,field_description:utm.field_utm_stage__sequence
 msgid "Sequence"
 msgstr "Číselná řada"
-
-#. module: utm
-#: model_terms:ir.ui.view,arch_db:utm.utm_campaign_view_kanban
-msgid "Settings"
-msgstr "Nastavení"
 
 #. module: utm
 #. openerp-web

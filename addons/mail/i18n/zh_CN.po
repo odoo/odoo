@@ -30,7 +30,7 @@
 # niulin lnc. <admin@niulin.net>, 2020
 # mao luo <dooms21day@163.com>, 2020
 # Martin Trigaux, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # liAnGjiA <liangjia@qq.com>, 2020
 # fausthuang, 2020
 # 老窦 北京 <2662059195@qq.com>, 2020
@@ -48,7 +48,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
@@ -1112,6 +1112,12 @@ msgid "Can Write"
 msgstr "Can Write"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.xml:0
@@ -1625,12 +1631,6 @@ msgstr "自定义频道名称"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "客户需要收件箱/电子邮件通知"
-
-#. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2542,6 +2542,12 @@ msgid "Following"
 msgstr "正在关注中"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
@@ -2999,13 +3005,6 @@ msgstr "错误的表达式，必须是符合文法的python字典定义，例如
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr "初级邮件模型中无效的部分 %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "邀请"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -4034,13 +4033,6 @@ msgstr "新建消息"
 #, python-format
 msgid "New messages appear here."
 msgstr "新消息出现在这里"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr "新用户"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6007,6 +5999,12 @@ msgid "This record has an exception activity."
 msgstr "此记录有异常活动。"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "线程"
@@ -6298,13 +6296,6 @@ msgstr "取消所有星标"
 #, python-format
 msgid "Unstar all messages"
 msgstr "取消全部消息的星标"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "退订的"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -6655,6 +6646,12 @@ msgstr ""
 msgid ""
 "You can mark any message as 'starred', and it shows up in this mailbox."
 msgstr "您可以给任何消息加星号，然后它会出现在邮箱里。"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
 
 #. module: mail
 #. openerp-web

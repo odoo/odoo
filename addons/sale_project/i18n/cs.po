@@ -6,8 +6,9 @@
 # Michal Veselý <michal@veselyberanek.net>, 2020
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# trendspotter, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Jiří Podhorecký, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 07:29+0000\n"
 "PO-Revision-Date: 2020-02-13 10:47+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -141,7 +142,7 @@ msgstr "Projekt"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
 msgid "Project Overview"
-msgstr ""
+msgstr "Přehled projektu"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -213,6 +214,11 @@ msgid ""
 "sale order item defined, and if the employee is not in the 'Employee/Sales "
 "Order Item Mapping' of the project."
 msgstr ""
+"Položka prodejní objednávky, ke které je projekt propojen. Propojte položku "
+"časového rozvrhu s položkou prodejní objednávky definovanou v projektu. "
+"Platí pouze pro úkoly bez definované položky prodejní objednávky a pokud "
+"zaměstnanec není v projektu „Mapování položky zaměstnance / prodejní "
+"objednávky“."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -223,7 +229,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
 msgid "Sales order to which the task is linked."
-msgstr ""
+msgstr "Zakázka odběratele, ke které je úkol propojen."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_id
@@ -232,6 +238,8 @@ msgid ""
 "Select a billable project on which tasks can be created. This setting must "
 "be set for each company."
 msgstr ""
+"Vyberte zúčtovatelný projekt, na kterém lze vytvářet úkoly. Toto nastavení "
+"musí být nastaveno pro každou společnost."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
@@ -240,6 +248,8 @@ msgid ""
 "Select a billable project to be the skeleton of the new created project when"
 " selling the current product. Its stages and tasks will be duplicated."
 msgstr ""
+"Vyberte zúčtovatelný projekt, který bude kostrou nově vytvořeného projektu "
+"při prodeji aktuálního produktu. Jeho fáze a úkoly budou duplikovány."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
@@ -250,7 +260,7 @@ msgstr "Vybrat neúčtovatelný projekt, na kterém lze vytvářet úkoly."
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Service Tracking"
-msgstr ""
+msgstr "Sledování služeb"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__project_overview
@@ -273,7 +283,7 @@ msgstr ""
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
 msgid "Task Recurrence"
-msgstr ""
+msgstr "Opakování úkolu"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id

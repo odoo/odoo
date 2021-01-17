@@ -13,6 +13,7 @@
 # Clo <clo@odoo.com>, 2016
 # Daniel & Delphine <dd2013@leschoupinous.net>, 2016
 # Fabien Pinckaers <fp@openerp.com>, 2016
+# Olivier Lenoir <olivier.lenoir@free.fr>, 2016
 # Miguel Vidali <mvidali129@gmail.com>, 2016
 # Xavier Belmere <Info@cartmeleon.com>, 2017
 # Richard Mathot <rim@odoo.com>, 2017
@@ -31,15 +32,14 @@
 # Cécile Collart <cco@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
 # Laura Piraux <lap@odoo.com>, 2020
-# Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 14.0\n"
+"Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-29 13:45+0000\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Olivier Lenoir <olivier.lenoir@free.fr>, 2020\n"
+"Last-Translator: Laura Piraux <lap@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -711,13 +711,6 @@ msgstr ""
 " les frais de livraison."
 
 #. module: delivery
-#: model:delivery.carrier,name:delivery.normal_delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery_normal
-#: model:product.template,name:delivery.product_product_delivery_normal_product_template
-msgid "Normal Delivery Charges"
-msgstr "Frais de livraison normaux"
-
-#. module: delivery
 #: model_terms:ir.ui.view,arch_db:delivery.delivery_tracking_url_warning_form
 msgid "OK"
 msgstr "OK"
@@ -956,13 +949,6 @@ msgid "Stock Move"
 msgstr "Mouvement de stock"
 
 #. module: delivery
-#: model:delivery.carrier,name:delivery.delivery_carrier
-#: model:product.product,name:delivery.product_product_delivery_poste
-#: model:product.template,name:delivery.product_product_delivery_poste_product_template
-msgid "The Poste"
-msgstr "La Poste"
-
-#. module: delivery
 #: model:ir.model.fields,help:delivery.field_delivery_carrier__get_return_label_from_portal
 msgid ""
 "The return label can be downloaded by the customer from the customer portal."
@@ -1079,10 +1065,6 @@ msgstr "Transfert"
 
 #. module: delivery
 #: model:product.product,uom_name:delivery.product_product_delivery
-#: model:product.product,uom_name:delivery.product_product_delivery_normal
-#: model:product.product,uom_name:delivery.product_product_delivery_poste
-#: model:product.template,uom_name:delivery.product_product_delivery_normal_product_template
-#: model:product.template,uom_name:delivery.product_product_delivery_poste_product_template
 #: model:product.template,uom_name:delivery.product_product_delivery_product_template
 msgid "Units"
 msgstr "Unités"

@@ -9,15 +9,15 @@
 # Martin Trigaux, 2020
 # Bohdan Lisnenko, 2020
 # ТАрас <tratatuta@i.ua>, 2020
-# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020
+# Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2020\n"
+"Last-Translator: Alina Lisnenko <alinasemeniuk1@gmail.com>, 2021\n"
 "Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1124,6 +1124,12 @@ msgid "Can Write"
 msgstr "Може писати"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "Не можливо оновити повідомлення або отримувача сповіщення."
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.xml:0
@@ -1641,12 +1647,6 @@ msgstr "Назва власного каналу"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Для отримання вхідних/електронних повідомлень потрібен клієнт"
-
-#. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr "Не можливо оновити повідомлення або отримувача сповіщення."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2579,6 +2579,12 @@ msgid "Following"
 msgstr "Підписка"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
@@ -3056,13 +3062,6 @@ msgstr ""
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr "Недійсне основне поле електронної пошти на моделі %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "Запрошення"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -4111,13 +4110,6 @@ msgstr "Нові повідомлення"
 #, python-format
 msgid "New messages appear here."
 msgstr "Тут будуть з'являтися нові повідомлення."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr "Нові люди"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6131,6 +6123,12 @@ msgid "This record has an exception activity."
 msgstr "Цей запис має дію виключень."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Ланцюжок"
@@ -6430,13 +6428,6 @@ msgstr "Зняти зірочки зі всіх"
 #, python-format
 msgid "Unstar all messages"
 msgstr "Зняти зірочки зі всіх повідомлень"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "Відписано"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -6802,6 +6793,12 @@ msgid ""
 msgstr ""
 "Ви можете позначити будь-яке повідомлення \"зірочкою\", і воно "
 "відображатиметься у цій поштовій скриньці."
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr "Ви не можете писати на цьому полі"
 
 #. module: mail
 #. openerp-web

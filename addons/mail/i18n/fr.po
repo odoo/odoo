@@ -75,7 +75,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~14.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-11 07:28+0000\n"
+"POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
 "Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
@@ -1188,6 +1188,14 @@ msgid "Can Write"
 msgstr "Peut écrire"
 
 #. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
+"Impossible de mettre à jour le message ou le destinataire d'une "
+"notification."
+
+#. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/activity/activity.xml:0
 #: code:addons/mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.xml:0
@@ -1708,14 +1716,6 @@ msgid "Customer is required for inbox / email notification"
 msgstr ""
 "Le Client est requis pour la notification dans la boîte de réception / par "
 "email"
-
-#. module: mail
-#: code:addons/mail/models/mail_notification.py:0
-#, python-format
-msgid "Can not update the message or recipient of a notification."
-msgstr ""
-"Impossible de mettre à jour le message ou le destinataire d'une "
-"notification."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2653,6 +2653,12 @@ msgid "Following"
 msgstr "Abonné(e)"
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+
+#. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_type_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type__icon
@@ -3134,13 +3140,6 @@ msgstr ""
 #, python-format
 msgid "Invalid primary email field on model %s"
 msgstr "Champ email principal invalide sur le modèle %s"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Invitation"
-msgstr "Invitation"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -4198,13 +4197,6 @@ msgstr "Nouveaux messages"
 #, python-format
 msgid "New messages appear here."
 msgstr "Les nouveaux messages s'afficheront ici."
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/widgets/discuss_invite_partner_dialog/discuss_invite_partner_dialog.js:0
-#, python-format
-msgid "New people"
-msgstr "Nouvelles personnes"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
@@ -6226,6 +6218,12 @@ msgid "This record has an exception activity."
 msgstr "Cet enregistrement a une activité d'exception."
 
 #. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "This user can not be added in this channel"
+msgstr ""
+
+#. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_search
 msgid "Thread"
 msgstr "Discussion"
@@ -6525,13 +6523,6 @@ msgstr "Tout enlever des favoris"
 #, python-format
 msgid "Unstar all messages"
 msgstr "Enlever tous les messages des favoris"
-
-#. module: mail
-#. openerp-web
-#: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
-#, python-format
-msgid "Unsubscribed"
-msgstr "Désabonné"
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -6899,6 +6890,12 @@ msgid ""
 msgstr ""
 "Vous pouvez marquer n'importe quel message comme 'Favori', il apparaitra "
 "dans cet onglet."
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:0
+#, python-format
+msgid "You can not write on this field"
+msgstr ""
 
 #. module: mail
 #. openerp-web

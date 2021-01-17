@@ -34,6 +34,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # Umur Akın <umura@projetgrup.com>, 2020
 # Ediz Duman <neps1192@gmail.com>, 2020
+# Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -41,7 +42,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 07:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:09+0000\n"
-"Last-Translator: Ediz Duman <neps1192@gmail.com>, 2020\n"
+"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2021\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -52,7 +53,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard___data_fetched
 msgid " Data Fetched"
-msgstr ""
+msgstr "Alınan Veriler"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__nbr
@@ -430,6 +431,7 @@ msgstr "<i class=\"fa fa-times\"/> Reddet"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">This offer expires on</b></small>"
 msgstr ""
+"<small><b class=\"text-muted\">Bu teklif tarihinde sona eriyor</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -656,7 +658,7 @@ msgstr "Onaylanmış bir müşteri siparişi için bir onay tarihi gerekir."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A journal must be specified for the acquirer %s."
-msgstr ""
+msgstr "Alıcı için bir yevmiye belirtilmelidir%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -849,6 +851,9 @@ msgid ""
 "An order is to upsell when delivered quantities are above initially\n"
 "                ordered quantities, and the invoicing policy is based on ordered quantities."
 msgstr ""
+"Bir sipariş, teslim edilen miktarlar başlangıçta yukarıda olduğunda daha "
+"yüksek satış yapmaktır. Sipariş edilen miktarlar ve faturalama politikası "
+"sipariş edilen miktarlara dayanır."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__analytic_account_id
@@ -902,6 +907,8 @@ msgid ""
 "As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
 "                to sell extra hours when all ordered hours have been consumed."
 msgstr ""
+"As an example, if you sell pre-paid hours of services, Odoo recommends you\n"
+"                to sell extra hours when all ordered hours have been consumed."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -1330,7 +1337,7 @@ msgstr "Tekliflerinizi ve siparişlerinizi özelleştirin."
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_dhl
 msgid "DHL USA Connector"
-msgstr ""
+msgstr "DHL USA Connector"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
@@ -1551,7 +1558,7 @@ msgstr "Peşinat Miktarı"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__fixed_amount
 msgid "Down Payment Amount (Fixed)"
-msgstr ""
+msgstr "Peşinat Tutarı (Sabit)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__product_id
@@ -2820,7 +2827,7 @@ msgstr "Lütfen %s (%s) şirketi için bir muhasebe satış günlüğü tanımla
 #: code:addons/sale/static/src/js/sale.js:0
 #, python-format
 msgid "Please enter an integer value"
-msgstr ""
+msgstr "Please enter an integer value"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
@@ -2925,7 +2932,7 @@ msgstr "Ürün Şablonu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_readonly
 msgid "Product Uom Readonly"
-msgstr ""
+msgstr "Product Uom Readonly"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__product_id
@@ -3004,7 +3011,7 @@ msgstr "Adet"
 #: model:ir.model.fields,field_description:sale.field_product_product__visible_qty_configurator
 #: model:ir.model.fields,field_description:sale.field_product_template__visible_qty_configurator
 msgid "Quantity visible in configurator"
-msgstr ""
+msgstr "Quantity visible in configurator"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3777,6 +3784,8 @@ msgid ""
 "Technical Field, True if the pricelist was changed;\n"
 " this will then display a recomputation button"
 msgstr ""
+"Teknik Alan, Fiyat listesi değiştirilmişse Doğrudur;\n"
+"bu daha sonra bir yeniden hesaplama düğmesi görüntüler"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__display_type
@@ -3996,6 +4005,11 @@ msgid ""
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales tab\" and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\".\n"
 "        "
 msgstr ""
+"Faturalandırılacak bir şey yok!\n"
+"\n"
+"Bu davranışın nedenleri şunlar olabilir:\n"
+"- Ürünlerinizi faturalandırmadan önce teslim etmelisiniz: \"Kamyon\" simgesine (ekranınızın sağ üst köşesinde) tıklayın ve talimatları izleyin.\n"
+"- Ürününüzün faturalama politikasını değiştirmelisiniz: Ürünü açın, \"Satış sekmesine\" gidin ve faturalama politikasını \"teslim edilen miktarlardan\" \"sipariş edilen miktarlara\" değiştirin."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4474,6 +4488,8 @@ msgid ""
 "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n"
 " Please change the company of your quotation or remove the products from other companies (%(bad_products)s)."
 msgstr ""
+"Teklifiniz %(product_company)s şirketindeki ürünleri içerirken, teklifiniz%(quote_company)s. \n"
+"şirketine aittir.Lütfen teklifinizin şirketini değiştirin veya ürünleri diğer şirketlerden kaldırın (%(bad_products)s)."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_bpost
