@@ -9,8 +9,11 @@
                 <t t-set="description" t-value="noContentHelperData.description"/>
             </t>
             <t t-else="">
-                <t t-if="props.isSample and !props.isEmbedded and props.noContentHelp" t-call="web.ActionHelper">
-                    <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                <t t-if="props.isSample and !props.isEmbedded">
+                    <t t-if="props.noContentHelp" t-call="web.ActionHelper">
+                        <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+                    </t>
+                    <t t-else="" t-call="web.NoContentHelper"/>
                 </t>
                 <div class="o_graph_canvas_container" t-ref="container">
                     <canvas t-ref="canvas"/>
