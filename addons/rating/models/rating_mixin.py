@@ -248,7 +248,7 @@ class RatingMixin(models.AbstractModel):
         for key in data:
             if key >= RATING_LIMIT_SATISFIED:
                 res['great'] += data[key]
-            elif key > RATING_LIMIT_OK:
+            elif key >= RATING_LIMIT_OK:
                 res['okay'] += data[key]
             else:
                 res['bad'] += data[key]
