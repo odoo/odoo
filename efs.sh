@@ -1,7 +1,7 @@
 #!/bin/bash
 
-#  && git clone https://github.com/aws/efs-utils efs/ \
-  cd efs/ \
+  git clone https://github.com/aws/efs-utils efs/ \
+  && cd efs/ \
   && ./build-deb.sh \
   && apt-get -y install ./build/amazon-efs-utils*deb \
   && mkdir /mnt/filestore \

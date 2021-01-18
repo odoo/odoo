@@ -9,6 +9,8 @@ services:
         - filestore:/var/lib/odoo
     ports:
         - "8069:8069"
+        - "8071:8071"
+        - "8072:8072"        
 volumes:
     filestore:
     odooconfig:
