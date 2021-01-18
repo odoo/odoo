@@ -547,14 +547,10 @@ function factory(dependencies) {
          * @returns {mail.thread_cache}
          */
         cache(stringifiedDomain = '[]') {
-            let cache = this.caches.find(cache => cache.stringifiedDomain === stringifiedDomain);
-            if (!cache) {
-                cache = this.env.models['mail.thread_cache'].create({
-                    stringifiedDomain,
-                    thread: [['link', this]],
-                });
-            }
-            return cache;
+            return this.env.models['mail.thread_cache'].insert({
+                stringifiedDomain,
+                thread: [['link', this]],
+            });
         }
 
         /**
