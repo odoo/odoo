@@ -45,9 +45,10 @@ QUnit.test('sidebar: pinned channel 1: init with one pinned channel', async func
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarItem[data-thread-local-id="${
-            this.env.models['mail.thread'].find(thread =>
-                thread.id === 20 && thread.model === 'mail.channel'
-            ).localId
+            this.env.models['mail.thread'].findFromIdentifyingData({
+                id: 20,
+                model: 'mail.channel',
+            }).localId
         }"]`,
         "should have the only channel of which user is member in discuss sidebar"
     );
@@ -61,9 +62,10 @@ QUnit.test('sidebar: pinned channel 2: open pinned channel', async function (ass
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
 
-    const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
-    );
+    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
             threadGeneral.localId
@@ -104,9 +106,10 @@ QUnit.test('sidebar: pinned channel 3: open pinned channel and unpin it', async 
         },
     });
 
-    const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
-    );
+    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await afterNextRender(() =>
         document.querySelector(`.o_DiscussSidebarItem[data-thread-local-id="${
             threadGeneral.localId
@@ -142,9 +145,10 @@ QUnit.test('sidebar: unpin channel from bus', async function (assert) {
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
-    );
+    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
 
     assert.containsOnce(
         document.body,
@@ -211,9 +215,10 @@ QUnit.test('[technical] sidebar: channel group_based_subscription: mandatorily p
         is_pinned: false, // expected value for this test
     });
     await this.start();
-    const threadGeneral = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 && thread.model === 'mail.channel'
-    );
+    const threadGeneral = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     assert.containsOnce(
         document.body,
         `.o_DiscussSidebarItem[data-thread-local-id="${threadGeneral.localId}"]`,
