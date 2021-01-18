@@ -36,10 +36,10 @@
         <field name="model">event.event.ticket</field>
         <field name="inherit_id" ref="event.event_event_ticket_view_tree_from_event"/>
         <field name="arch" type="xml">
-            <field name="start_sale_date" position="attributes">
+            <field name="start_sale_datetime" position="attributes">
                 <attribute name="string">Sales Start</attribute>
             </field>
-            <field name="end_sale_date" position="attributes">
+            <field name="end_sale_datetime" position="attributes">
                 <attribute name="string">Sales End</attribute>
             </field>
             <field name="name" position="after">
@@ -88,7 +88,7 @@
         <field name="model">event.event.ticket</field>
         <field name="inherit_id" ref="event.event_event_ticket_form_view"/>
         <field name="arch" type="xml">
-            <field name="end_sale_date" position="after">
+            <field name="end_sale_datetime" position="after">
                 <field name="price"/>
                 <field name="price_reduce" groups="base.group_no_one"/>
             </field>

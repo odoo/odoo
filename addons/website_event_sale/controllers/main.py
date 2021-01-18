@@ -61,7 +61,7 @@ class WebsiteEventSaleController(WebsiteEventController):
             context = dict(context or {}, default_event_ticket_ids=[[0, 0, {
                 'name': _('Registration'),
                 'product_id': product.id,
-                'end_sale_date': False,
+                'end_sale_datetime': False,
                 'seats_max': 1000,
                 'price': 0,
             }]])

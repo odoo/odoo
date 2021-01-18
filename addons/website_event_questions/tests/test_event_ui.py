@@ -19,10 +19,10 @@ class TestUi(tests.HttpCase):
             'date_end': fields.Datetime.now() + relativedelta(days=15),
             'event_ticket_ids': [(0, 0, {
                 'name': 'Free',
-                'start_sale_date': fields.Datetime.now() - relativedelta(days=15)
+                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
             }), (0, 0, {
                 'name': 'Other',
-                'start_sale_date': fields.Datetime.now() - relativedelta(days=15)
+                'start_sale_datetime': fields.Datetime.now() - relativedelta(days=15)
             })],
             'website_published': True,
             'question_ids': [(0, 0, {
