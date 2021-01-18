@@ -61,8 +61,8 @@ class EventTicket(models.Model):
         ondelete='cascade', required=True)
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     # sale
-    start_sale_date = fields.Date(string="Registration Start")
-    end_sale_date = fields.Date(string="Registration End")
+    start_sale_datetime = fields.Datetime(string="Registration Start")
+    end_sale_datetime = fields.Datetime(string="Registration End")
     is_expired = fields.Boolean(string='Is Expired', compute='_compute_is_expired')
     sale_available = fields.Boolean(string='Is Available', compute='_compute_sale_available', compute_sudo=True)
     registration_ids = fields.One2many('event.registration', 'event_ticket_id', string='Registrations')
@@ -72,17 +72,18 @@ class EventTicket(models.Model):
     seats_unconfirmed = fields.Integer(string='Unconfirmed Seats', compute='_compute_seats', store=True)
     seats_used = fields.Integer(string='Used Seats', compute='_compute_seats', store=True)
 
-    @api.depends('end_sale_date', 'event_id.date_tz')
+    @api.depends('end_sale_datetime', 'event_id.date_tz')
     def _compute_is_expired(self):
         for ticket in self:
             ticket = ticket._set_tz_context()
-            current_date = fields.Date.context_today(ticket)
-            if ticket.end_sale_date:
-                ticket.is_expired = ticket.end_sale_date < current_date
+            current_datetime = fields.Datetime.context_timestamp(ticket, fields.Datetime.now())
+            if ticket.end_sale_datetime:
+                end_sale_datetime = fields.Datetime.context_timestamp(ticket, ticket.end_sale_datetime)
+                ticket.is_expired = end_sale_datetime < current_datetime
             else:
                 ticket.is_expired = False
 
-    @api.depends('is_expired', 'start_sale_date', 'event_id.date_tz', 'seats_available', 'seats_max')
+    @api.depends('is_expired', 'start_sale_datetime', 'event_id.date_tz', 'seats_available', 'seats_max')
     def _compute_sale_available(self):
         for ticket in self:
             if not ticket.is_launched() or ticket.is_expired or (ticket.seats_max and ticket.seats_available <= 0):
@@ -118,10 +119,10 @@ class EventTicket(models.Model):
             if ticket.seats_max > 0:
                 ticket.seats_available = ticket.seats_max - (ticket.seats_reserved + ticket.seats_used)
 
-    @api.constrains('start_sale_date', 'end_sale_date')
+    @api.constrains('start_sale_datetime', 'end_sale_datetime')
     def _constrains_dates_coherency(self):
         for ticket in self:
-            if ticket.start_sale_date and ticket.end_sale_date and ticket.start_sale_date > ticket.end_sale_date:
+            if ticket.start_sale_datetime and ticket.end_sale_datetime and ticket.start_sale_datetime > ticket.end_sale_datetime:
                 raise UserError(_('The stop date cannot be earlier than the start date.'))
 
     @api.constrains('seats_available', 'seats_max')
@@ -142,10 +143,11 @@ class EventTicket(models.Model):
     def is_launched(self):
         # TDE FIXME: in master, make a computed field, easier to use
         self.ensure_one()
-        if self.start_sale_date:
+        if self.start_sale_datetime:
             ticket = self._set_tz_context()
-            current_date = fields.Date.context_today(ticket)
-            return ticket.start_sale_date <= current_date
+            current_datetime = fields.Datetime.context_timestamp(ticket, fields.Datetime.now())
+            start_sale_datetime = fields.Datetime.context_timestamp(ticket, ticket.start_sale_datetime)
+            return start_sale_datetime <= current_datetime
         else:
             return True
 

@@ -168,6 +168,10 @@ class EventEvent(models.Model):
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
         compute='_compute_event_ticket_ids', readonly=False, store=True)
+    event_registrations_started = fields.Boolean(
+        'Registrations started', compute='_compute_event_registrations_started',
+        help="registrations have started if the current datetime is after the earliest starting date of tickets."
+    )
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
         help="Registrations are open if:\n"
@@ -177,9 +181,10 @@ class EventEvent(models.Model):
     event_registrations_sold_out = fields.Boolean(
         'Sold Out', compute='_compute_event_registrations_sold_out', compute_sudo=True,
         help='The event is sold out if no more seats are available on event. If ticketing is used and all tickets are sold out, the event will be sold out.')
-    start_sale_date = fields.Date(
+    start_sale_datetime = fields.Datetime(
         'Start sale date', compute='_compute_start_sale_date',
         help='If ticketing is used, contains the earliest starting sale date of tickets.')
+
     # Date fields
     date_tz = fields.Selection(
         _tz_get, string='Timezone', required=True,
@@ -250,12 +255,23 @@ class EventEvent(models.Model):
         for event in self:
             event.seats_expected = event.seats_unconfirmed + event.seats_reserved + event.seats_used
 
-    @api.depends('date_tz', 'start_sale_date', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
+    @api.depends('date_tz', 'start_sale_datetime')
+    def _compute_event_registrations_started(self):
+        for event in self:
+            event = event._set_tz_context()
+            if event.start_sale_datetime:
+                current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
+                start_sale_datetime = fields.Datetime.context_timestamp(event, event.start_sale_datetime)
+                event.event_registrations_started = (current_datetime >= start_sale_datetime)
+            else:
+                event.event_registrations_started = True
+
+    @api.depends('date_tz', 'event_registrations_started', 'date_end', 'seats_available', 'seats_limited', 'event_ticket_ids.sale_available')
     def _compute_event_registrations_open(self):
         """ Compute whether people may take registrations for this event
 
           * event.date_end -> if event is done, registrations are not open anymore;
-          * event.start_sale_date -> lowest start date of tickets (if any; start_sale_date
+          * event.start_sale_datetime -> lowest start date of tickets (if any; start_sale_datetime
             is False if no ticket are defined, see _compute_start_sale_date);
           * any ticket is available for sale (seats available) if any;
           * seats are unlimited or seats are available;
@@ -264,18 +280,18 @@ class EventEvent(models.Model):
             event = event._set_tz_context()
             current_datetime = fields.Datetime.context_timestamp(event, fields.Datetime.now())
             date_end_tz = event.date_end.astimezone(pytz.timezone(event.date_tz or 'UTC')) if event.date_end else False
-            event.event_registrations_open = (event.start_sale_date <= current_datetime.date() if event.start_sale_date else True) and \
+            event.event_registrations_open = event.event_registrations_started and \
                 (date_end_tz >= current_datetime if date_end_tz else True) and \
                 (not event.seats_limited or event.seats_available) and \
                 (not event.event_ticket_ids or any(ticket.sale_available for ticket in event.event_ticket_ids))
 
-    @api.depends('event_ticket_ids.start_sale_date')
+    @api.depends('event_ticket_ids.start_sale_datetime')
     def _compute_start_sale_date(self):
         """ Compute the start sale date of an event. Currently lowest starting sale
         date of tickets if they are used, of False. """
         for event in self:
-            start_dates = [ticket.start_sale_date for ticket in event.event_ticket_ids if not ticket.is_expired]
-            event.start_sale_date = min(start_dates) if start_dates and all(start_dates) else False
+            start_dates = [ticket.start_sale_datetime for ticket in event.event_ticket_ids if not ticket.is_expired]
+            event.start_sale_datetime = min(start_dates) if start_dates and all(start_dates) else False
 
     @api.depends('event_ticket_ids.sale_available')
     def _compute_event_registrations_sold_out(self):
@@ -434,7 +450,7 @@ class EventEvent(models.Model):
           * type lines are added;
 
         Note that updating event_ticket_ids triggers _compute_start_sale_date
-        (start_sale_date computation) so ensure result to avoid cache miss.
+        (start_sale_datetime computation) so ensure result to avoid cache miss.
         """
         for event in self:
             if not event.event_type_id and not event.event_ticket_ids:
