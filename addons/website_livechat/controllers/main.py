@@ -36,7 +36,8 @@ class WebsiteLivechat(LivechatController):
         ratings_per_partner = {partner_id: dict(great=0, okay=0, bad=0)
                                for partner_id in ratings.mapped('rated_partner_id.id')}
         total_ratings_per_partner = dict.fromkeys(ratings.mapped('rated_partner_id.id'), 0)
-        rating_texts = {10: 'great', 5: 'okay', 1: 'bad'}
+        # keep 10 for backward compatibility
+        rating_texts = {10: 'great', 5: 'great', 3: 'okay', 1: 'bad'}
 
         for rating in ratings:
             partner_id = rating.rated_partner_id.id
