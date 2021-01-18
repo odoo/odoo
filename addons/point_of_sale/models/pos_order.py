@@ -950,7 +950,10 @@ class PosOrder(models.Model):
                 qty_done = 0
                 pack_lots = []
                 pos_pack_lots = PosPackOperationLot.search([('order_id', '=', order.id), ('product_id', '=', move.product_id.id)])
-
+                if order.location_id == move.location_id:
+                    pos_pack_lots = pos_pack_lots.filtered(lambda x: x.pos_order_line_id.qty >= 0)
+                else:
+                    pos_pack_lots = pos_pack_lots.filtered(lambda x: x.pos_order_line_id.qty < 0)
                 if pos_pack_lots and lots_necessary:
                     for pos_pack_lot in pos_pack_lots:
                         stock_production_lot = StockProductionLot.search([('name', '=', pos_pack_lot.lot_name), ('product_id', '=', move.product_id.id)])
