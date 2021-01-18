@@ -399,7 +399,7 @@ class AccountFrFec(models.TransientModel):
         @return the value of the file
         """
         fecfile = io.BytesIO()
-        writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
+        writer = pycompat.csv_writer(fecfile, delimiter=';', lineterminator='')
 
         rows_length = len(rows)
         for i, row in enumerate(rows):
