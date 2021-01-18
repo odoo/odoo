@@ -4,9 +4,12 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
 def send_receive_booking_email(email_booking_data):
-    sender_email = email_booking_data['res_company_email']
-    receiver_email = email_booking_data['res_company_email']
-    password = "yinmazatin00@374037"
+    sender_email = email_booking_data['sender_email']
+    password = email_booking_data['sender_pass']
+    receiver_email = email_booking_data['receiver_email']
+    smtp_host = email_booking_data['smtp_host']
+    smtp_port = email_booking_data['smtp_port']
+
     message = MIMEMultipart("alternative")
     message["Subject"] = "NEW BOOKING !"
     message["From"] = sender_email
@@ -38,7 +41,7 @@ def send_receive_booking_email(email_booking_data):
 
     # Create secure connection with server and send email
     context = ssl.create_default_context()
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+    with smtplib.SMTP_SSL(smtp_host, smtp_port, context=context) as server:
         server.login(sender_email, password)
         server.sendmail(
             sender_email, receiver_email, message.as_string()

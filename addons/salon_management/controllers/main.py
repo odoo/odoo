@@ -48,12 +48,16 @@ class SalonBookingWeb(http.Controller):
             'chair_id': chair,
         }
         
-        # IF THERE IS EMAIL IN THE RES.COMPANY, WE SEND THE COMPANY THAT THERE IS BOOKING 
-        res_company_email = request.env['res.company'].search([('id','=',1)]).email
-        if res_company_email:
+        # IF THERE IS EMAIL IN THE RES.COMPANY, WE SEND THE COMPANY NOTIFICATION EMAIL THAT THERE IS BOOKING  
+        email_notify_obj = request.env['salon.booking.email'].search([('id','=',1)])
+        if email_notify_obj.booking_email_sender and email_notify_obj.booking_email_pass and email_notify_obj.booking_email_receiver and email_notify_obj.booking_smtp_host and email_notify_obj.booking_smtp_port:
             chair_name = request.env['salon.chair'].search([('id','=',chair)]).name
             email_booking_data ={
-                'res_company_email':res_company_email,
+                'sender_email': email_notify_obj.booking_email_sender,
+                'sender_pass': email_notify_obj.booking_email_pass,
+                'receiver_email':email_notify_obj.booking_email_receiver,
+                'smtp_host':email_notify_obj.booking_smtp_host,
+                'smtp_port':email_notify_obj.booking_smtp_port,
                 'chair_name':chair_name,
                 'time':date_and_time,
                 'name':name,
