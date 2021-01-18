@@ -3033,6 +3033,7 @@ var FieldProgressBar = AbstractField.extend({
  * - max_num: A numeric max_value for the widget if the max_field is not found or set (default: 100)
  * - title: title of the bar, displayed on top of the bar options
  * - step: Round the clicked value on the progressbar to the nearest multiple of step (default: 5, min: 1)
+ * - percentage: boolean option : If set, the value should be presented as a percentage.
  */
 var FieldBasicProgressBar = AbstractField.extend({
     description: _lt("Basic Progress Bar"),
@@ -3042,19 +3043,24 @@ var FieldBasicProgressBar = AbstractField.extend({
         'keydown .o_progress_keydown': '_onKeydown',
         'mousedown .o_progress': '_onMousedown',
         'mousemove .o_progress': '_onMousemove',
-        'mouseout .o_progress': '_onMouseout',
+        'mouseleave .o_progress': '_onMouseleave',
     },
     supportedFieldTypes: ['integer', 'float'],
     init: function () {
         this._super.apply(this, arguments);
         this.canWrite = !this.nodeOptions.readonly && this.mode === 'edit';
         this.max_value = this.recordData[this.nodeOptions.max_field] || this.nodeOptions.max_num || 100;
+        this.percentage = this.nodeOptions.percentage || false;
         this.step = this.nodeOptions.step !== undefined ? this.nodeOptions.step : 5;
         this.title = _t(this.attrs.title || this.nodeOptions.title) || '';
         this.moused_down = false;
     },
     _render: function () {
         this._render_value();
+        if(!this.canWrite) {
+            this.$('.o_progressbar_thumb').addClass("o_progressbar_thumb_readonly");
+            this.$('.o_progressbar_complete').addClass("o_progressbar_complete_readonly");
+        }
         return this._super();
     },
     /**
@@ -3108,10 +3114,10 @@ var FieldBasicProgressBar = AbstractField.extend({
             .attr('aria-valuenow', value);
         this.$('.o_progressbar_complete').css('width', widthComplete + '%');
 
-        if (max_value !== 100) {
-            this.$('.o_progressbar_value').text(utils.human_number(value) + " / " + utils.human_number(max_value));
-        } else {
+        if (this.percentage) {
             this.$('.o_progressbar_value').text(utils.human_number(value) + "%");
+        } else {
+            this.$('.o_progressbar_value').text(utils.human_number(value) + " / " + utils.human_number(max_value));
         }
     },
     _onClick: function (event) {
@@ -3142,7 +3148,7 @@ var FieldBasicProgressBar = AbstractField.extend({
             this._render_value(this.get_progress_value(event));
         }
     },
-    _onMouseout:function(event) {
+    _onMouseleave:function(event) {
         if (this.moused_down) {
             // Update the value of the field before going out of the progress bar.
             this.on_update(this.get_progress_value(event));

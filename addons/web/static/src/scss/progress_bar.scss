@@ -25,9 +25,14 @@
         .o_progressbar_complete {
             background-color: $o-brand-primary;
             height: 100%;
+
+            &.o_progressbar_complete_readonly {
+                background-color: lighten($o-brand-secondary, 35%) !important;
+            }
         }
 
         .o_progressbar_thumb {
+            cursor: pointer;
             float: right;
             border-radius: 50%;
             background-color: lighten($o-brand-primary, 5%);
@@ -41,6 +46,11 @@
 
             &:active {
                 cursor: grabbing;
+            }
+
+            &.o_progressbar_thumb_readonly {
+                cursor: default !important;
+                background-color: lighten($o-brand-secondary, 25%) !important;
             }
         }
     }
