@@ -62,7 +62,7 @@ QUnit.test('basic rendering', async function (assert) {
     const messageEl = document.querySelector('.o_Message');
     assert.strictEqual(
         messageEl.dataset.messageLocalId,
-        this.env.models['mail.message'].find(message => message.id === 100).localId,
+        this.env.models['mail.message'].findFromIdentifyingData({ id: 100 }).localId,
         "message component should be linked to message store model"
     );
     assert.strictEqual(
