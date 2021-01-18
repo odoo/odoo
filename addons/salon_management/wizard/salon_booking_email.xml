@@ -7,9 +7,9 @@
                 <field name="arch" type="xml">
                     <form>
                         <group>
-                            <field name="booking_email_sender" string="Sender Email"/>
-                            <field name="booking_email_pass" string="Sender Password" password="True"/>
-                            <field name="booking_email_receiver" string="Receiver Email"/>
+                            <field name="booking_email_sender" string="Sender Email" placeholder="Email for sending the notification mail"/>
+                            <field name="booking_email_pass" string="Sender Password" password="True" placeholder="Sender email password"/>
+                            <field name="booking_email_receiver" string="Receiver Email" placeholder="Email for receiving the notification mail"/>
                             <field name="booking_smtp_host" string="SMTP Host"/>
                             <field name="booking_smtp_port" string="SMTP Port"/>
                         </group>
@@ -17,16 +17,17 @@
                 </field>
             </record>
 
+            
             <data noupdate="1">
                 <record model="salon.booking.email" id="salon_booking_01">
-                    <field name="booking_email_sender">sender@default.email.com</field>
+                    <field name="booking_email_sender"></field>
                     <field name="booking_email_pass"></field>
                     <field name="booking_email_receiver"></field>
                     <field name="booking_smtp_host">smtp.gmail.com</field>
                     <field name="booking_smtp_port">465</field>
                 </record>
             </data>
-            
+                     
             <record id="salon_booking_email_wizard_action" model="ir.actions.act_window">
                 <field name="name">SMTP Email Host Configuration</field>
                 <field name="type">ir.actions.act_window</field>
@@ -36,7 +37,7 @@
                 <field name="res_id" ref="salon_booking_01"/>
                 <field name="target">new</field>
             </record>
-            
+  
             <menuitem id="salon_booking_email_menu" parent="salon_config_settings_menu"
                 name="SMTP Email Configuration" action="salon_booking_email_wizard_action"/>
         </data>
