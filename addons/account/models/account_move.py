@@ -3606,7 +3606,7 @@ class AccountMoveLine(models.Model):
         for record in self:
             if not record.tax_repartition_line_id and not record.tax_ids :
                 # Invoices imported from other softwares might only have kept the tags, not the taxes.
-                record.tax_tag_invert = record.tax_tag_ids and record.moved_id.is_inbound()
+                record.tax_tag_invert = record.tax_tag_ids and record.move_id.is_inbound()
 
             elif record.move_id.move_type == 'entry':
                 # For misc operations, cash basis entries and write-offs from the bank reconciliation widget
