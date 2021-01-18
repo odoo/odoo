@@ -1,0 +1,14 @@
+version: '3'
+services:
+  odoo:
+    container_name: odoo-aurqa
+    image: odoo-13
+    volumes:
+        - ./addons-extra:/mnt/extra-addons
+        - odooconfig:/etc/odoo
+        - filestore:/var/lib/odoo
+    ports:
+        - "8069:8069"
+volumes:
+    filestore:
+    odooconfig:
