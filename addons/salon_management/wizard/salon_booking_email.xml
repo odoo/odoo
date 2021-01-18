@@ -6,7 +6,13 @@
                 <field name="model">salon.booking.email</field>
                 <field name="arch" type="xml">
                     <form>
-                        <h1>hello</h1>
+                        <group>
+                            <field name="booking_email_sender" string="Sender Email"/>
+                            <field name="booking_email_pass" string="Sender Password" password="True"/>
+                            <field name="booking_email_receiver" string="Receiver Email"/>
+                            <field name="booking_smtp_host" string="SMTP Host"/>
+                            <field name="booking_smtp_port" string="SMTP Port"/>
+                        </group>
                     </form>
                 </field>
             </record>
