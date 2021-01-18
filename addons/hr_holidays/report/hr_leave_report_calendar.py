@@ -18,6 +18,7 @@ class LeaveReportCalendar(models.Model):
     tz = fields.Selection(_tz_get, string="Timezone", readonly=True)
     duration = fields.Float(string='Duration', readonly=True)
     employee_id = fields.Many2one('hr.employee', readonly=True)
+    department_id = fields.Many2one('hr.department', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True)
     state = fields.Selection([
         ('draft', 'To Submit'),
@@ -40,6 +41,7 @@ class LeaveReportCalendar(models.Model):
             hl.date_to AS stop_datetime,
             hl.employee_id AS employee_id,
             hl.state AS state,
+            hl.department_id AS department_id,
             em.company_id AS company_id,
             CASE
                 WHEN hl.holiday_type = 'employee' THEN rr.tz

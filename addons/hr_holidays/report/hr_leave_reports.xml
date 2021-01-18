@@ -15,6 +15,8 @@
                 <filter string="My Department Time Off" name="department" domain="[('department_id.manager_id.user_id', '=', uid)]" help="My Department Time Off"/>
                 <filter name="my_team_leaves" string="My Department Time Off" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_holidays.group_hr_holidays_manager" help="Time Off of Your Team Member"/>
                 <separator/>
+                <filter string="Active Employee" name="active_employee" domain="[('active_employee','=',True)]"/>
+                <separator/>
                 <filter name="year" string="Current Year"
                     domain="[('holiday_status_id.active', '=', True)]" help="Active Time Off"/>
                 <separator/>
@@ -38,13 +40,14 @@
         <field name="model">hr.leave.report</field>
         <field name="arch" type="xml">
             <tree create="0" edit="0" delete="0">
-                <field name="employee_id"/>
+                <field name="employee_id" decoration-muted="not active_employee"/>
                 <field name="number_of_days" string="Number of Days" sum="Remaining Days"/>
                 <field name="leave_type"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
                 <field name="state"/>
                 <field name="name"/>
+                <field name="active_employee" invisible="1"/>
             </tree>
         </field>
     </record>
