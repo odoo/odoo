@@ -190,7 +190,13 @@
                                     <t t-if="record.comment.raw_value">
                                         <p class="o_kanban_record_subtitle"><em><field name="comment"/></em></p>
                                     </t>
-                                    <p>Granted by <a type="open"><field name="create_uid" /></a> the <t t-esc="moment(record.create_date.raw_value).format('L')" /></p>
+                                    <p>
+                                        <t t-set="trans_text">Granted by %%(user)s the %%(date)s</t>
+                                        <t t-set="trans_msg_parts" t-value="trans_text.replace('%%(date)s', moment(record.create_date.raw_value).format('L')).split('%%(user)s')"/>
+                                        <t t-esc="trans_msg_parts[0]"/>
+                                        <a type="open"><field name="create_uid" /></a>
+                                        <t t-esc="trans_msg_parts[1]"/>
+                                    </p>
                                 </div>
                             </div>
                         </div>
