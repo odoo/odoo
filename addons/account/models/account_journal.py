@@ -672,13 +672,14 @@ class AccountJournal(models.Model):
         a logic based on accounts.
 
         :param domain:  An additional domain to be applied on the account.move.line model.
-        :return:        The balance expressed in the journal's currency.
+        :return:        Tuple having balance expressed in journal's currency
+                        along with the total number of move lines having the same account as of the journal's default account.
         '''
         self.ensure_one()
         self.env['account.move.line'].check_access_rights('read')
 
         if not self.default_account_id:
-            return 0.0
+            return 0.0, 0
 
         domain = (domain or []) + [
             ('account_id', 'in', tuple(self.default_account_id.ids)),
