@@ -19,24 +19,24 @@
         <field name="name">Free</field>
         <field name="description">Free entrance, no food !</field>
         <field name="event_id" ref="event.event_0"/>
-        <field name="start_sale_date" eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d')"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+        <field name="start_sale_datetime" eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d 00:00:00')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">0</field>
     </record>
     <record id="event_0_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="description">For only 10, you gain access to catering. Yum yum.</field>
         <field name="event_id" ref="event.event_0"/>
-        <field name="start_sale_date" eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d')"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+        <field name="start_sale_datetime" eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d 00:00:00')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">50</field>
     </record>
     <record id="event_0_ticket_2" model="event.event.ticket">
         <field name="name">VIP</field>
         <field name="description">You are truly among the best.</field>
         <field name="event_id" ref="event.event_0"/>
-        <field name="start_sale_date" eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d')"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+        <field name="start_sale_datetime" eval="(DateTime.today() + timedelta(days=5)).strftime('%Y-%m-%d 00:00:00')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(days=10)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">10</field>
     </record>
 
@@ -108,13 +108,13 @@
     <record id="event_2_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_2"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">50</field>
     </record>
     <record id="event_2_ticket_2" model="event.event.ticket">
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_2"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(60)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">5</field>
     </record>
     <record id="activity_event_2_0" model="mail.activity">
@@ -144,13 +144,13 @@
     <record id="event_3_ticket_0" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_3"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(days=20)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">1200</field>
     </record>
     <record id="event_3_ticket_1" model="event.event.ticket">
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_3"/>
-        <field name="end_sale_date" eval="(DateTime.today() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(days=20)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">50</field>
     </record>
     <record id="activity_event_3_0" model="mail.activity">
@@ -185,7 +185,7 @@
     <record id="event_4_ticket_0" model="event.event.ticket">
         <field name="name">General Admission</field>
         <field name="event_id" ref="event.event_4"/>
-        <field name="end_sale_date" eval="(DateTime.today() - timedelta(30)).strftime('%Y-%m-%d')"/>
+        <field name="end_sale_datetime" eval="(DateTime.today() - timedelta(30)).strftime('%Y-%m-%d 23:00:00')"/>
         <field name="seats_max">4</field>
     </record>
     <record id="activity_event_4_0" model="mail.activity">
@@ -244,12 +244,12 @@
     <record id="event_7_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
         <field name="event_id" ref="event.event_7"/>
-        <field name="end_sale_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="end_sale_datetime" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
     </record>
     <record id="event_7_ticket_2" model="event.event.ticket">
         <field name="name">VIP</field>
         <field name="event_id" ref="event.event_7"/>
-        <field name="end_sale_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="end_sale_datetime" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
         <field name="seats_max">10</field>
     </record>
 

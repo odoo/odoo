@@ -344,7 +344,7 @@ class TestEventData(TestEventCommon):
         self.assertTrue(event.event_registrations_open)
 
         # but tickets are expired
-        ticket.write({'end_sale_date': datetime(2020, 1, 30, 15, 0, 0)})
+        ticket.write({'end_sale_datetime': datetime(2020, 1, 30, 15, 0, 0)})
         self.assertTrue(ticket.is_expired)
         self.assertFalse(event.event_registrations_open)
 
@@ -523,10 +523,14 @@ class TestEventTicketData(TestEventCommon):
         self.ticket_date_patcher = patch('odoo.addons.event.models.event_ticket.fields.Date', wraps=FieldsDate)
         self.ticket_date_patcher_mock = self.ticket_date_patcher.start()
         self.ticket_date_patcher_mock.context_today.return_value = date(2020, 1, 31)
+        self.ticket_datetime_patcher = patch('odoo.addons.event.models.event_ticket.fields.Datetime', wraps=FieldsDatetime)
+        self.ticket_datetime_patcher_mock = self.ticket_datetime_patcher.start()
+        self.ticket_datetime_patcher_mock.now.return_value = datetime(2020, 1, 31, 10, 0, 0)
 
     def tearDown(self):
         super(TestEventTicketData, self).tearDown()
         self.ticket_date_patcher.stop()
+        self.ticket_datetime_patcher.stop()
 
     @users('user_eventmanager')
     def test_event_ticket_fields(self):
@@ -540,8 +544,8 @@ class TestEventTicketData(TestEventCommon):
                     'seats_max': 30,
                 }), (0, 0, {  # limited in time, available (01/10 (start) < 01/31 (today) < 02/10 (end))
                     'name': 'Second Ticket',
-                    'start_sale_date': date(2020, 1, 10),
-                    'end_sale_date': date(2020, 2, 10),
+                    'start_sale_datetime': datetime(2020, 1, 10, 0, 0, 0),
+                    'end_sale_datetime': datetime(2020, 2, 10, 23, 59, 59),
                 })
             ],
         })
@@ -556,27 +560,48 @@ class TestEventTicketData(TestEventCommon):
         self.assertTrue(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
         # sale is ended
-        second_ticket.write({'end_sale_date': date(2020, 1, 20)})
+        second_ticket.write({'end_sale_datetime': datetime(2020, 1, 20, 23, 59, 59)})
         self.assertFalse(second_ticket.sale_available)
         self.assertTrue(second_ticket.is_expired)
         # sale has not started
         second_ticket.write({
-            'start_sale_date': date(2020, 2, 10),
-            'end_sale_date': date(2020, 2, 20),
+            'start_sale_datetime': datetime(2020, 2, 10, 0, 0, 0),
+            'end_sale_datetime': datetime(2020, 2, 20, 23, 59, 59),
         })
         self.assertFalse(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
         # sale started today
         second_ticket.write({
-            'start_sale_date': date(2020, 1, 31),
-            'end_sale_date': date(2020, 2, 20),
+            'start_sale_datetime': datetime(2020, 1, 31, 0, 0, 0),
+            'end_sale_datetime': datetime(2020, 2, 20, 23, 59, 59),
         })
         self.assertTrue(second_ticket.sale_available)
         self.assertTrue(second_ticket.is_launched())
         self.assertFalse(second_ticket.is_expired)
         # incoherent dates are invalid
         with self.assertRaises(exceptions.UserError):
-            second_ticket.write({'end_sale_date': date(2020, 1, 20)})
+            second_ticket.write({'end_sale_datetime': datetime(2020, 1, 20, 23, 59, 59)})
+
+        #test if event start/end dates are taking datetime fields (hours, minutes, seconds) into account
+        second_ticket.write({'start_sale_datetime': datetime(2020, 1, 31, 11, 0, 0)})
+        self.assertFalse(second_ticket.sale_available)
+        self.assertFalse(second_ticket.is_launched())
+
+        second_ticket.write({
+            'start_sale_datetime': datetime(2020, 1, 31, 7, 0, 0),
+            'end_sale_datetime': datetime(2020, 2, 27, 13, 0, 0)
+        })
+
+        self.assertTrue(second_ticket.sale_available)
+        self.assertTrue(second_ticket.is_launched())
+        self.assertFalse(second_ticket.is_expired)
+
+        second_ticket.write({
+            'end_sale_datetime': datetime(2020, 1, 31, 9, 0, 0)
+        })
+
+        self.assertFalse(second_ticket.sale_available)
+        self.assertTrue(second_ticket.is_expired)
 
 
 class TestEventTypeData(TestEventCommon):

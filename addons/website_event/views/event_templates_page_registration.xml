@@ -124,8 +124,12 @@
     <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
     <div t-if="not event.event_registrations_open" class="bg-white mb-5">
         <div class="alert alert-info mb-0 d-flex justify-content-between align-items-center" role="status">
-            <t t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today()">
-                <em class="col-md-8">Ticket Sales starting on <t t-esc="event.start_sale_date"/></em>
+            <t t-if="not event.event_registrations_started">
+                <em class="col-md-8">Ticket Sales starting on
+                    <span class="" t-esc="event.start_sale_datetime"
+                            t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                    <span t-esc="event.date_tz"/>
+                    </em>
                 <button class="btn btn-danger mr-1 ml-3 col-md-4"  disabled="1">Registrations not yet open</button>
             </t>
             <t t-else="">
@@ -173,8 +177,18 @@
                                 <small t-field="ticket.description" class="text-muted py-2"/>
                                 <br/>
                             </t>
-                            <small t-if="ticket.end_sale_date and ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="ticket.end_sale_date"/></small>
-                            <small t-if="ticket.start_sale_date and not ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales start on <span itemprop="priceValidUntil" t-field="ticket.start_sale_date"/></small>
+                            <small t-if="ticket.end_sale_datetime and ticket.sale_available and not ticket.is_expired"
+                                   class="text-muted mr-3" itemprop="availabilityEnds">Sales end on
+                                <span itemprop="priceValidUntil" t-esc="ticket.end_sale_datetime"
+                                t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                <span t-esc="ticket.event_id.date_tz"/>
+                            </small>
+                            <small t-if="ticket.start_sale_datetime and not ticket.sale_available and not ticket.is_expired"
+                                   class="text-muted mr-3" itemprop="availabilityEnds">
+                                Sales start on <span itemprop="priceValidUntil" t-esc="ticket.start_sale_datetime"
+                                t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                <span t-esc="ticket.event_id.date_tz"/>
+                            </small>
                         </div>
                         <div class="col-md-4 col-xs-12 p-0 d-flex align-items-center justify-content-between">
                             <div class="o_wevent_registration_multi_select"/>
@@ -215,7 +229,11 @@
                             <span t-if="tickets" t-field="tickets.name"/>
                             <span t-else="">Registration</span>
                         </h6>
-                        <small t-if="tickets.end_sale_date and tickets.sale_available and not tickets.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="tickets.end_sale_date"/></small>
+                        <small t-if="tickets.end_sale_datetime and tickets.sale_available and not tickets.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on
+                            <span itemprop="priceValidUntil" t-esc="tickets.end_sale_datetime"
+                                t-options="{'widget': 'datetime', 'tz_name': event.date_tz, 'format': 'short'}"/>
+                                <span t-esc="tickets.event_id.date_tz"/>
+                        </small>
                         <div class="ml-auto o_wevent_nowrap">
                             <t t-if="event.event_registrations_open">
                                 <span class="text-dark font-weight-bold align-middle pr-2">Qty</span>
