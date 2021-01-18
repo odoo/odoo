@@ -56,7 +56,7 @@ class ResPartner(models.Model):
         resp = requests.post(url, data=body)
 
         if resp.status_code != 200: 
-            raise ApiError('POST /taxation_customs/dds2/eos/validation/services/validation?wsdl {}'.format(resp.status_code))
+            raise ValidationError('POST /taxation_customs/dds2/eos/validation/services/validation?wsdl {}'.format(resp.status_code))
 
         tree = etree.fromstring((resp.text).replace("<?xml version='1.0' encoding='UTF-8'?>", ""))
         if tree.findtext('.//statusDescr') == 'Valid':
@@ -73,7 +73,7 @@ class ResPartner(models.Model):
 
         resp = requests.post(url, json=task)
         if resp.status_code != 200: 
-            raise ApiError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
+            raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
 
         answer = json.loads(resp.text)
 
