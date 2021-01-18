@@ -1518,7 +1518,7 @@ var FieldText = InputField.extend(TranslatableFieldMixin, {
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
-    
+
     /**
      * @private
      * @override
@@ -3202,31 +3202,49 @@ var JournalDashboardGraph = AbstractField.extend({
      * @override
      * @private
      */
-    _render: function () {
+    _render: async function () {
         if (this._isInDOM) {
-            return this._renderInDOM();
+            return await this._renderInDOM();
         }
-        return Promise.resolve();
+        return;
     },
     /**
      * Render the widget. This function assumes that it is attached to the DOM.
      *
      * @private
      */
-    _renderInDOM: function () {
-        this.$el.empty();
+    _renderInDOM: async function () {
         var config, cssClass;
+        var self = this;
         if (this.graph_type === 'line') {
-            config = this._getLineChartConfig();
             cssClass = 'o_graph_linechart';
         } else if (this.graph_type === 'bar') {
-            config = this._getBarChartConfig();
             cssClass = 'o_graph_barchart';
         }
         this.$canvas = $('<canvas/>');
         this.$el.addClass(cssClass);
         this.$el.empty();
         this.$el.append(this.$canvas);
+
+        if (!this.data) {
+            this.data = [await this._rpc({
+                model: this.record.model,
+                method: 'read',
+                args: [[this.record.data.id], [self.attrs.name]],
+                context: {async_compute: true},
+            }, {
+                shadow: true,
+            }).then(function(result) {
+                return JSON.parse(result[0][self.attrs.name])[0];
+            })];
+        }
+
+        if (this.graph_type === 'line') {
+            config = this._getLineChartConfig();
+        } else if (this.graph_type === 'bar') {
+            config = this._getBarChartConfig();
+        }
+
         var context = this.$canvas[0].getContext('2d');
         this.chart = new Chart(context, config);
     },

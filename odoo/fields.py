@@ -237,6 +237,7 @@ class Field(MetaField('DummyField', (object,), {})):
     recursive = False                   # whether self depends on itself
     compute = None                      # compute(recs) computes field on recs
     compute_sudo = False                # whether field should be recomputed as superuser
+    async_compute = False               # compute the data lazily if the widget supports it
     inverse = None                      # inverse(recs) inverses field on recs
     search = None                       # search(recs, operator, value) searches on self
     related = None                      # sequence of field names, for related fields
@@ -375,6 +376,7 @@ class Field(MetaField('DummyField', (object,), {})):
             # readonly), and readonly (unless inversible)
             attrs['store'] = store = attrs.get('store', False)
             attrs['compute_sudo'] = attrs.get('compute_sudo', store)
+            attrs['async_compute'] = attrs.get('async_compute', False)
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))

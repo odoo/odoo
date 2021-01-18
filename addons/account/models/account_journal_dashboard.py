@@ -21,6 +21,10 @@ class account_journal(models.Model):
 
     def _kanban_dashboard_graph(self):
         for journal in self:
+            # import time, random
+            # t = random.randrange(3, 10)
+            # print(self, self.name, f"sleeping {t}s")
+            # time.sleep(t)
             if (journal.type in ['sale', 'purchase']):
                 journal.kanban_dashboard_graph = json.dumps(journal.get_bar_graph_datas())
             elif (journal.type in ['cash', 'bank']):
@@ -67,7 +71,7 @@ class account_journal(models.Model):
             journal.json_activity_data = json.dumps({'activities': activities})
 
     kanban_dashboard = fields.Text(compute='_kanban_dashboard')
-    kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph')
+    kanban_dashboard_graph = fields.Text(compute='_kanban_dashboard_graph', async_compute=True)
     json_activity_data = fields.Text(compute='_get_json_activity_data')
     show_on_dashboard = fields.Boolean(string='Show journal on dashboard', help="Whether this journal should be displayed on the dashboard or not", default=True)
     color = fields.Integer("Color Index", default=0)
@@ -293,8 +297,6 @@ class account_journal(models.Model):
                 number_to_check = read[0]['__count']
                 to_check_balance = read[0]['amount_total']
 
-        is_sample_data = self.kanban_dashboard_graph and any(data.get('is_sample_data', False) for data in json.loads(self.kanban_dashboard_graph))
-
         return {
             'number_to_check': number_to_check,
             'to_check_balance': formatLang(self.env, to_check_balance, currency_obj=currency),
@@ -314,7 +316,6 @@ class account_journal(models.Model):
             'currency_id': currency.id,
             'bank_statements_source': self.bank_statements_source,
             'title': title,
-            'is_sample_data': is_sample_data,
             'company_count': len(self.env.companies)
         }
 

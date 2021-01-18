@@ -4136,9 +4136,11 @@ Fields:
         return records
 
     def _compute_field_value(self, field):
+        if field.async_compute and not self.env.context.get('async_compute'):
+            self[field.name] = False
         # This is for base automation, to have something to override to catch
         # the changes of values for stored compute fields.
-        if isinstance(field.compute, str):
+        elif isinstance(field.compute, str):
             getattr(self, field.compute)()
         else:
             field.compute(self)
