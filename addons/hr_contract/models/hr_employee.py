@@ -21,7 +21,7 @@ class Employee(models.Model):
         self.ensure_one()
         return self.sudo().contract_ids.filtered(lambda c: c.state != 'cancel')
 
-    @api.depends('contract_ids.state')
+    @api.depends('contract_ids.state', 'contract_ids.date_start')
     def _compute_first_contract_date(self):
         for employee in self:
             contracts = employee._get_first_contracts()
