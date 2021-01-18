@@ -1,0 +1,1 @@
+from . import salon_booking_email
