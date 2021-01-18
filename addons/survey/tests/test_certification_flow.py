@@ -138,6 +138,10 @@ class TestCertificationFlow(common.SurveyCase, HttpCase):
         self.assertEqual(user_inputs.quizz_score, 87.5)
         self.assertTrue(user_inputs.quizz_passed)
 
+        # Check that the certification is still successfull even if passing_score of certification is modified
+        certification.write({'passing_score': 90})
+        self.assertTrue(user_inputs.quizz_passed)
+
         # Check answer correction is taken into account
         self.assertNotIn("I think they're great!", user_inputs.mapped('user_input_line_ids.value_free_text'))
         self.assertIn("Just kidding, I don't like it...", user_inputs.mapped('user_input_line_ids.value_free_text'))
