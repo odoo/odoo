@@ -164,6 +164,8 @@ var loadCSS = (function () {
             urlDefs[url] = new Promise(function (resolve, reject) {
                 $link.on('load', function () {
                     resolve();
+                }).on('error', function () {
+                    reject(new Error("Couldn't load css dependency: " + $link[0].href));
                 });
             });
             $('head').append($link);
