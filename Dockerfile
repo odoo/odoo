@@ -74,7 +74,7 @@ COPY ./efs.sh /
 # Set permissions and Mount /var/lib/odoo to allow restoring filestore and /mnt/extra-addons for users addons
 RUN mkdir -p /mnt/extra-addons \
   && chown -R odoo /mnt/extra-addons
-  # && chown odoo /etc/odoo.conf \
+  && chown odoo /etc/odoo.conf \
 
 #/var/lib/odoo : filestore  
 VOLUME ["/var/lib/odoo", "/mnt/extra-addons", "/etc/odoo"]
@@ -90,7 +90,7 @@ ENV ODOO_RC /etc/odoo.conf
 COPY wait-for-psql.py /usr/local/bin/wait-for-psql.py
 
 #custom addons
-COPY ./custom-addons /opt/addons
+# COPY ./custom-addons /opt/addons
 
 # Set default user when running the container
 USER odoo
