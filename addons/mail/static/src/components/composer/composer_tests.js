@@ -206,10 +206,10 @@ QUnit.test('mailing channel composer: basic rendering', async function (assert) 
     // value and a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20, mass_mailing: true });
     await this.start();
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer);
     assert.containsOnce(
         document.body,
@@ -1325,10 +1325,10 @@ QUnit.test('send message when enter is pressed while holding ctrl key (this shor
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, {
         textInputSendShortcuts: ['ctrl-enter'],
     });
@@ -1380,10 +1380,10 @@ QUnit.test('send message when enter is pressed while holding meta key (this shor
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, {
         textInputSendShortcuts: ['meta-enter'],
     });
@@ -1434,10 +1434,10 @@ QUnit.test('composer text input cleared on message post', async function (assert
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer);
     // Type message
     await afterNextRender(() => {
@@ -1494,10 +1494,10 @@ QUnit.test('composer inputs cleared on message post in composer of a mailing cha
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer);
     // Type message
     await afterNextRender(() => {
@@ -1544,10 +1544,10 @@ QUnit.test('composer with thread typing notification status', async function (as
     // with a random unique id that will be referenced in the test
     this.data['mail.channel'].records.push({ id: 20 });
     await this.start();
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     assert.containsOnce(
@@ -1576,10 +1576,10 @@ QUnit.test('current partner notify is typing to other thread members', async fun
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -1608,10 +1608,10 @@ QUnit.test('current partner is typing should not translate on textual typing sta
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -1647,10 +1647,10 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -1685,10 +1685,10 @@ QUnit.test('current partner notify is typing again to other members every 50s of
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, { hasThreadTyping: true });
 
     document.querySelector(`.o_ComposerTextInput_textarea`).focus();
@@ -2042,10 +2042,10 @@ QUnit.test('send message only once when button send is clicked twice quickly', a
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer);
     // Type message
     await afterNextRender(() => {
@@ -2075,10 +2075,10 @@ QUnit.test('send message only once when enter is pressed twice quickly', async f
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].find(thread =>
-        thread.id === 20 &&
-        thread.model === 'mail.channel'
-    );
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel',
+    });
     await this.createComposerComponent(thread.composer, {
         textInputSendShortcuts: ['enter'],
     });
