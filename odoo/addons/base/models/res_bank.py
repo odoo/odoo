@@ -84,7 +84,7 @@ class ResPartnerBank(models.Model):
     bank_id = fields.Many2one('res.bank', string='Bank')
     bank_name = fields.Char(related='bank_id.name', readonly=False)
     bank_bic = fields.Char(related='bank_id.bic', readonly=False)
-    sequence = fields.Integer(default=10)
+    sequence = fields.Integer(compute='_compute_sequence', readonly=False, store=True)
     currency_id = fields.Many2one('res.currency', string='Currency')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company, ondelete='cascade', readonly=True)
 
@@ -101,6 +101,13 @@ class ResPartnerBank(models.Model):
     def _compute_acc_type(self):
         for bank in self:
             bank.acc_type = self.retrieve_acc_type(bank.acc_number)
+
+    @api.depends('partner_id')
+    def _compute_sequence(self):
+        for bank in self:
+            # Make sure that a new bank account doesn't bypass the partner's other bank accounts.
+            last = self.search([('sequence', '!=', False), ('partner_id', '=', bank.partner_id.id)], order='sequence desc', limit=1)
+            bank.sequence = last.sequence + 1 if last else 1
 
     @api.model
     def retrieve_acc_type(self, acc_number):
