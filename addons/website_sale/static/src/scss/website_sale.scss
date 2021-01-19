@@ -362,14 +362,26 @@
             }
 
             &.oe_list {
-                height: 200px;
-
-                .oe_subdescription {
-                    max-height: 40px;
-                }
+                position: inherit;
 
                 section {
                     background: rgba(100, 100, 100, 0.2);
+                }
+
+                #website_published_button {
+                    position: absolute;
+                    top: 4px;
+                    right: 4px;
+                }
+
+                section, .oe_product_image, .img {
+                    position: inherit;
+                }
+
+                .oe_subdescription {
+                    -webkit-box-orient: vertical;
+                    -webkit-line-clamp: 3;
+                    display: -webkit-box;
                 }
             }
 
