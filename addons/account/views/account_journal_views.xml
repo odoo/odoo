@@ -60,11 +60,11 @@
                                         <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <!-- Sales -->
                                         <field name="default_account_id" string="Default Income Account"
-                                               attrs="{'required': [('id', '!=', False), ('type', '=', 'sale')], 'invisible': [('type', '!=', 'sale')]}"
+                                               attrs="{'required': [('type', '=', 'sale')], 'invisible': [('type', '!=', 'sale')]}"
                                                groups="account.group_account_readonly"/>
                                         <!-- Purchase -->
                                         <field name="default_account_id" string="Default Expense Account"
-                                               attrs="{'required': [('id', '!=', False), ('type', '=', 'purchase')], 'invisible': [('type', '!=', 'purchase')]}"
+                                               attrs="{'required': [('type', '=', 'purchase')], 'invisible': [('type', '!=', 'purchase')]}"
                                                groups="account.group_account_readonly"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
                                         <field name="code"/>
