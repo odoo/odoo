@@ -6,6 +6,7 @@ var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
+const weWidgets = require('wysiwyg.widgets');
 var summernote = require('web_editor.summernote');
 var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
@@ -676,6 +677,10 @@ var RTEWidget = Widget.extend({
         if (this && this.$last && this.$last.length && this.$last[0] !== $target[0]) {
             $('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
         }
+        // Keep popover open if clicked inside it, but not on a button
+        if (!($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length)) {
+            $('.o_edit_menu_popover').popover('hide');
+        }
         if (!$editable.length || (!isLink && $.summernote.core.dom.isContentEditableFalse($target))) {
             return;
         }
@@ -689,6 +694,11 @@ var RTEWidget = Widget.extend({
         });
 
         if (isLink) {
+            if (!$target.data('popover-widget-initialized')) {
+                weWidgets.LinkPopoverWidget.createFor(this, ev.target);
+                $target.data('popover-widget-initialized', true);
+            }
+
             /**
              * Remove content editable everywhere and add it on the link only so that characters can be added
              * and removed at the start and at the end of it.
@@ -702,7 +712,17 @@ var RTEWidget = Widget.extend({
 
             // Once clicked outside, remove contenteditable on link and reactive all
             $(document).on('mousedown.reactivate_contenteditable', function (e) {
-                if ($target.is(e.target)) return;
+                // Keep popover open if clicked inside it, but not on a button
+                const $currTarget = $(e.target);
+                if (!($currTarget.parents('.o_edit_menu_popover').length && !$currTarget.parent('a').addBack('a').length)) {
+                    $('.o_edit_menu_popover').popover('hide');
+                } else {
+                    return;
+                }
+
+                if ($target.is(e.target)) {
+                    return;
+                }
                 if (!hasContentEditable) {
                     $target.removeAttr('contenteditable');
                 }

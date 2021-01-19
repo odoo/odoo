@@ -883,14 +883,6 @@ eventHandler.attach = function (oLayoutInfo, options) {
         eventHandler.modules.imageDialog.show(oLayoutInfo);
     });
 
-    /**
-     * Open Link Dialog on double click on a link/button.
-     * Shows a tooltip on click to say to the user he can double click.
-     */
-    create_dblclick_feature("a[href], a.btn, button.btn", function () {
-        eventHandler.modules.linkDialog.show(oLayoutInfo);
-    });
-
     oLayoutInfo.editable().on('mousedown', function (e) {
         if (dom.isImg(e.target) && dom.isContentEditable(e.target)) {
             range.createFromNode(e.target).select();

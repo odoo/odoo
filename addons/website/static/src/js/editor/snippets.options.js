@@ -8,6 +8,7 @@ var Dialog = require('web.Dialog');
 const dom = require('web.dom');
 const weUtils = require('web_editor.utils');
 var options = require('web_editor.snippets.options');
+const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Symbol.for("default")];
 const wUtils = require('website.utils');
 require('website.s_popup_options');
 
@@ -1184,45 +1185,27 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
 
 options.registry.menu_data = options.Class.extend({
     /**
-     * When the users selects a menu, a dialog is opened to ask him if he wants
-     * to follow the link (and leave editor), edit the menu or do nothing.
+     * When the users selects a menu, a popover is shown with 4 possible
+     * actions: follow the link in a new tab, copy the menu link, edit the menu,
+     * or edit the menu tree.
+     * The popover shows a preview of the menu link. Remote URL only show the
+     * favicon.
      *
      * @override
      */
-    onFocus: function () {
-        var self = this;
-        (new Dialog(this, {
-            title: _t("Confirmation"),
-            $content: $(core.qweb.render('website.leaving_current_page_edition')),
-            buttons: [
-                {text: _t("Go to Link"), classes: 'btn-primary', click: function () {
-                    self.trigger_up('request_save', {
-                        reload: false,
-                        onSuccess: function () {
-                            window.location.href = self.$target.attr('href');
-                        },
-                    });
-                }},
-                {text: _t("Edit the menu"), classes: 'btn-primary', close: true, click: function () {
-                    this.trigger_up('action_demand', {
-                        actionName: 'edit_menu',
-                        params: [
-                            function () {
-                                var prom = new Promise(function (resolve, reject) {
-                                    self.trigger_up('request_save', {
-                                        onSuccess: resolve,
-                                        onFailure: reject,
-                                    });
-                                });
-                                return prom;
-                            },
-                        ],
-                    });
-                }},
-                {text: _t("Stay on this page"), close: true}
-            ]
-        })).open();
+    start: function () {
+        wLinkPopoverWidget.createFor(this, this.$target[0]);
+        return this._super(...arguments);
     },
+    /**
+      * When the users selects another element on the page, makes sure the
+      * popover is closed.
+      *
+      * @override
+      */
+     onBlur: function () {
+         this.$target.popover('hide');
+     },
 });
 
 options.registry.company_data = options.Class.extend({

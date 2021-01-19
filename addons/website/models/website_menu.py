@@ -166,7 +166,7 @@ class Menu(models.Model):
                     menu['id'] = new_id
                 if menu['parent_id'] == old_id:
                     menu['parent_id'] = new_id
-        to_delete = data['to_delete']
+        to_delete = data.get('to_delete')
         if to_delete:
             self.browse(to_delete).unlink()
         for menu in data['data']:
