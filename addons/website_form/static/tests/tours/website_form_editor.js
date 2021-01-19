@@ -228,9 +228,11 @@ odoo.define('website_form_editor.tour', function (require) {
 
         // Edit the submit button using linkDialog.
         {
-            content: "Double click submit button to edit it",
+            content: "Click submit button to show edit popover",
             trigger: '.s_website_form_send',
-            run: 'dblclick',
+        }, {
+            content: "Click on Edit Link in Popover",
+            trigger: '.o_edit_menu_popover .o_we_edit_link',
         }, {
             content: "Check that no URL field is suggested",
             trigger: 'form:has(#o_link_dialog_label_input:hidden)',

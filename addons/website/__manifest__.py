@@ -180,6 +180,7 @@
             'website/static/src/js/editor/wysiwyg_multizone_translate.js',
             'website/static/src/js/editor/widget_link.js',
             'website/static/src/js/widgets/media.js',
+            'website/static/src/js/widgets/link_popover_widget.js',
         ],
         'website.assets_editor': [
             ('include', 'web._assets_helpers'),

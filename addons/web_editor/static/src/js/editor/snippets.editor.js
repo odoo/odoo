@@ -1076,12 +1076,16 @@ var SnippetsMenu = Widget.extend({
             if (!srcElement || lastElement === srcElement) {
                 return;
             }
+            var $target = $(srcElement);
+            // Keep popover open if clicked inside it, but not on a button
+            if ($target.parents('.o_edit_menu_popover').length && !$target.parent('a').addBack('a').length) {
+                return;
+            }
             lastElement = srcElement;
             _.defer(function () {
                 lastElement = false;
             });
 
-            var $target = $(srcElement);
             if (!$target.closest('we-button, we-toggler, .o_we_color_preview').length) {
                 this._closeWidgets();
             }

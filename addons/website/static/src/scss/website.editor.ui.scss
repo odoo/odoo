@@ -111,3 +111,30 @@ $o-we-switch-inactive-color: #F7F7F7 !default;
         width: 100%;
     }
 }
+
+.o_edit_menu_popover {
+    max-width: $popover-max-width * 1.2;
+    // Prevent UI glitch after fetching page preview (size might change)
+    width: $popover-max-width * 1.2;
+
+    .o_we_url_link {
+        word-break: break-all;
+    }
+
+    .o_we_full_url {
+        word-break: break-all;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        // clamp (`-webkit-box` display toggle in js)
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+
+        &.o_we_webkit_box {
+            display: -webkit-box;
+        }
+
+        &:hover {
+            -webkit-line-clamp: unset;
+        }
+    }
+}

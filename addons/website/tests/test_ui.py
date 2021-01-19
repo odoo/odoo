@@ -199,3 +199,6 @@ class TestUi(odoo.tests.HttpCase):
 
     def test_08_website_style_custo(self):
         self.start_tour("/", "website_style_edition", login="admin")
+
+    def test_09_website_edit_link_popover(self):
+        self.start_tour("/", "edit_link_popover", login="admin")
