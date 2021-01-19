@@ -6,7 +6,7 @@ from odoo import fields, models
 class Company(models.Model):
     _inherit = 'res.company'
 
-    po_lead = fields.Float(string='Purchase Lead Time', required=True,
+    po_lead = fields.Float(string='Purchase Lead Time',
         help="Margin of error for vendor lead times. When the system "
              "generates Purchase Orders for procuring products, "
              "they will be scheduled that many days earlier "
