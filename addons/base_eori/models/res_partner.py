@@ -35,6 +35,7 @@ class ResPartner(models.Model):
 
                 if not self._validate_eori(eori_country, eori_number):
                     raise ValidationError(_('Please verify EORI Number.'))
+
     @api.model
     def _validate_eori(self, country_code, eori_number):
         try:

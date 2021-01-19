@@ -9,7 +9,7 @@
     'description': 'Adds field eori_number partners and EORI validation service.',
     'author': 'XCLUDE AB',
     'website': 'https://www.xclude.se',
-    'depends': ['account'],    
+    'depends': ['base', 'account'],    
     'data': [
         'views/res_company_views.xml',
         'views/res_partner_views.xml',
