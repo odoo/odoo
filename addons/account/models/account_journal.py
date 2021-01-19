@@ -77,7 +77,7 @@ class AccountJournal(models.Model):
              "receivable account.", string='Outstanding Receipts Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             '|', ('user_type_id', '=', %s), ('id', '=', default_account_id)]" % self.env.ref('account.data_account_type_current_assets').id)
+                             '|', '|', ('user_type_id', '=', %s), ('id', '=', default_account_id), ('user_type_id', 'in', type_control_ids)]" % self.env.ref('account.data_account_type_current_assets').id)
     payment_credit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         help="Outgoing payments entries triggered by bills/credit notes will be posted on the Outstanding Payments Account "
@@ -86,7 +86,7 @@ class AccountJournal(models.Model):
              "payable account.", string='Outstanding Payments Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             '|', ('user_type_id', '=', %s), ('id', '=', default_account_id)]" % self.env.ref('account.data_account_type_current_assets').id)
+                             '|', '|', ('user_type_id', '=', %s), ('id', '=', default_account_id), ('user_type_id', 'in', type_control_ids)]" % self.env.ref('account.data_account_type_current_assets').id)
     suspense_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
@@ -94,7 +94,7 @@ class AccountJournal(models.Model):
              "allowing finding the right account.", string='Suspense Account',
         domain=lambda self: "[('deprecated', '=', False), ('company_id', '=', company_id), \
                              ('user_type_id.type', 'not in', ('receivable', 'payable')), \
-                             ('user_type_id', '=', %s)]" % self.env.ref('account.data_account_type_current_liabilities').id)
+                             '|', ('user_type_id', 'in', type_control_ids), ('user_type_id', '=', %s), ]" % self.env.ref('account.data_account_type_current_liabilities').id)
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
         help="If ticked, the accounting entry or invoice receives a hash as soon as it is posted and cannot be modified anymore.")
     sequence = fields.Integer(help='Used to order Journals in the dashboard view', default=10)
