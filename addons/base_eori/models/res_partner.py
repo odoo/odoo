@@ -76,7 +76,8 @@ class ResPartner(models.Model):
             raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
 
         answer = json.loads(resp.text)
-        if anser[0]['valid'] == True:
+        
+        if answer[0]['valid'] == True:
             return True
 
         return False
