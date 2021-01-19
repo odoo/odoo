@@ -472,7 +472,7 @@ class StockMove(models.Model):
             )
             lots_by_move_id_list.append({by_move['move_id'][0]: by_move['lot_ids'] for by_move in lots_by_move_id})
         for move in self:
-            move.lot_ids = lots_by_move_id_list[0 if move.picking_type_id.show_reserved else 1].get(move.id, [])
+            move.lot_ids = lots_by_move_id_list[0 if move.picking_type_id.show_reserved else 1].get(move._origin.id, [])
 
     def _set_lot_ids(self):
         for move in self:
