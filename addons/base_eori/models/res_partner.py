@@ -69,12 +69,14 @@ class ResPartner(models.Model):
     def _validate_eori_gb(self, eori):
         # GB Validation
         url = 'https://api.service.hmrc.gov.uk/customs/eori/lookup/check-multiple-eori'        
-        task = {'eoris': [eori]}
+        task = "{{'eoris': [{}]}}".format(eori)
 
         resp = requests.post(url, json=task)
         if resp.status_code != 200: 
             raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
 
         answer = json.loads(resp.text)
+        if anser[0]['valid'] == True:
+            return True
 
-        return answer[0]['valid']
+        return False
