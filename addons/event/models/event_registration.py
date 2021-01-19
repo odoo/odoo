@@ -3,7 +3,7 @@
 
 from dateutil.relativedelta import relativedelta
 
-from odoo import _, api, fields, models
+from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.tools import format_datetime
 from odoo.exceptions import AccessError, ValidationError
 
@@ -268,7 +268,7 @@ class EventRegistration(models.Model):
         # we could simply call _create_missing_mail_registrations and let cron do their job
         # but it currently leads to several delays. We therefore call execute until
         # cron triggers are correctly used
-        onsubscribe_schedulers.execute()
+        onsubscribe_schedulers.with_user(SUPERUSER_ID).execute()
 
     # ------------------------------------------------------------
     # MAILING / GATEWAY
