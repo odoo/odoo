@@ -49,8 +49,6 @@ class AutomaticEntryWizard(models.TransientModel):
         for record in self:
             if not (0.0 < record.percentage <= 100.0) and record.action == 'change_period':
                 raise UserError(_("Percentage must be between 0 and 100"))
-            if record.percentage != 100 and record.action != 'change_period':
-                raise UserError(_("Percentage can only be set for Change Period method"))
 
     @api.depends('percentage', 'move_line_ids')
     def _compute_total_amount(self):
