@@ -176,6 +176,7 @@ class ReturnPicking(models.TransientModel):
         # Override the context to disable all the potential filters that could have been set previously
         ctx = dict(self.env.context)
         ctx.update({
+            'default_partner_id': self.picking_id.partner_id.id,
             'search_default_picking_type_id': pick_type_id,
             'search_default_draft': False,
             'search_default_assigned': False,
