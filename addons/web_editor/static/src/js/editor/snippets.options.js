@@ -934,6 +934,14 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
         }
     },
+    /**
+     * @override
+     */
+    enable() {
+        if (!this.menuTogglerEl.classList.contains('active')) {
+            this.menuTogglerEl.click();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -4482,6 +4490,10 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
             } else {
                 shapeToSelect = possibleShapes[1];
             }
+            this.trigger_up('snippet_edition_request', {exec: () => {
+                // options for shape will only be available after _toggleShape() returned
+                this._requestUserValueWidgets('bg_shape_opt')[0].enable();
+            }});
             return this._handlePreviewState(false, () => ({shape: shapeToSelect}));
         }
     },
