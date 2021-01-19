@@ -64,7 +64,7 @@ class AccountMove(models.Model):
         * If move use document and is in draft state and has not been posted before we restart name to '/' (this is
            when we change the document type) """
         without_doc_type = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and not x.l10n_latam_document_type_id)
-        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number)
+        manual_documents = self.filtered(lambda x: x.journal_id.l10n_latam_use_documents and x.l10n_latam_manual_document_number and not x.env.context.get("compute_manual_name", False)))
         (without_doc_type + manual_documents.filtered(lambda x: not x.name or x.name and x.state == 'draft' and not x.posted_before)).name = '/'
         # if we change document or journal and we are in draft and not posted, we clean number so that is recomputed in super
         self.filtered(
