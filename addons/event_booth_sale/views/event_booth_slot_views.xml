@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_slot_view_form" model="ir.ui.view">
+        <field name="name">event.booth.slot.view.form.inherit.event.booth.sale</field>
+        <field name="model">event.booth.slot</field>
+        <field name="inherit_id" ref="event_booth.event_booth_slot_view_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_sale_order" type="object" class="oe_stat_button" icon="fa-usd"
+                        attrs="{'invisible': [('sale_order_id', '=', False)]}" string="Sale Order"/>
+            </div>
+            <group name="renter_info" position="after">
+                <group string="Transaction" groups="base.group_no_one">
+                    <field name="sale_order_id"/>
+                    <field name="sale_order_line_id"/>
+                </group>
+            </group>
+        </field>
+    </record>
+
+</data></odoo>

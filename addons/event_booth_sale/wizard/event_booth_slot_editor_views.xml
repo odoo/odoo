@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo><data>
+
+    <record id="event_booth_slot_edit_view_form" model="ir.ui.view">
+        <field name="name">event.booth.slot.edit.view.form</field>
+        <field name="model">event.slot.editor</field>
+        <field name="arch" type="xml">
+            <form>
+                <p>Before confirming <field name="sale_order_id" readonly="1" class="oe_inline"/>
+                    please give details about the booth</p>
+                <field name="event_slot_ids">
+                    <tree string="Booths" editable="top" create="false" delete="false">
+                        <field name="sale_order_line_id" invisible="1"/>
+                        <field name="slot_registration_id" invisible="1"/>
+                        <field name="event_id" invisible="1"/>
+                        <field name="event_booth_slot_ids" invisible="1"/>
+                        <field name="description" readonly="1"/>
+                        <field name="topic"/>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="mobile" class="o_force_ltr"/>
+                        <field name="phone" class="o_force_ltr"/>
+                    </tree>
+                </field>
+                <footer>
+                    <button string="Confirm" name="action_confirm_registration" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="event_booth_slot_edit_action" model="ir.actions.act_window">
+        <field name="name">Booth Slot Registrations</field>
+        <field name="res_model">event.slot.editor</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</data></odoo>
