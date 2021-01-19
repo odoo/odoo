@@ -189,3 +189,6 @@ class TestUi(odoo.tests.HttpCase):
             """,
         }])
         self.start_tour("/", 'snippet_version', login='admin')
+
+    def test_08_website_style_custo(self):
+        self.start_tour("/", "website_style_edition", login="admin")
