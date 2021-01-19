@@ -79,13 +79,30 @@
                                     PHONE *
                                 </div>
                                 <div class="col-lg-10 s_title pt16 pb16">
-                                    <input type="text" id="phone" required="True"
-                                           placeholder="Enter your Phone number(eg:999**12345)"/>
+                                    <input  style="width:100%" type="tel" id="phone" required="True" pattern="[7-9]{1}[0-9]{9}" 
+                                           placeholder="Enter your Phone number(eg:012 345 678)"/>
                                 </div>
                             </div>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
                                     COURT *
+                                </div>
+                                <div class="col-lg-10 s_title pt16 pb16 row">
+                                    <div class="col-lg-5 s_title pt16 pb16">
+                                        <select id="chair" required="True">
+                                            <t t-foreach="chair_details" t-as="chair">
+                                                <option t-att-value="chair.id" t-esc="chair.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-7 s_title pt16 pb16" style="font-size: 12px;">
+                                        (Select the court that free in the preferred time)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row s_nb_column_fixed">
+                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
+                                    DURATION *
                                 </div>
                                 <div class="col-lg-10 s_title pt16 pb16 row">
                                     <div class="col-lg-5 s_title pt16 pb16">
