@@ -671,6 +671,20 @@ class ChromeBrowserException(Exception):
     pass
 
 
+DEVTOOLS_PORT = None
+
+
+def get_devtools_port():
+    global DEVTOOLS_PORT
+    if not DEVTOOLS_PORT:
+        with socket.socket() as s:
+            s.bind(('localhost', 0))
+            if hasattr(socket, 'SO_REUSEADDR'):
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            _, DEVTOOLS_PORT = s.getsockname()
+    return DEVTOOLS_PORT
+
+
 class ChromeBrowser():
     """ Helper object to control a Chrome headless process. """
 
@@ -680,7 +694,7 @@ class ChromeBrowser():
         if websocket is None:
             self._logger.warning("websocket-client module is not installed")
             raise unittest.SkipTest("websocket-client module is not installed")
-        self.devtools_port = None
+        self.devtools_port = get_devtools_port()
         self.ws_url = ''  # WebSocketUrl
         self.ws = None  # websocket
         self.request_id = 0
@@ -775,11 +789,6 @@ class ChromeBrowser():
     def _chrome_start(self):
         if self.chrome_pid is not None:
             return
-        with socket.socket() as s:
-            s.bind(('localhost', 0))
-            if hasattr(socket, 'SO_REUSEADDR'):
-                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            _, self.devtools_port = s.getsockname()
 
         switches = {
             '--headless': '',
