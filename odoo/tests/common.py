@@ -1734,7 +1734,7 @@ def users(*logins):
                     func(*args, **kwargs)
                 # Invalidate the cache between subtests, in order to not reuse
                 # the former user's cache (`test_read_mail`, `test_write_mail`)
-                self.env.cache.invalidate()
+                self.env.invalidate_all()
         finally:
             self.uid = old_uid
 

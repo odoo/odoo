@@ -15,6 +15,10 @@ class AlarmManager(models.AbstractModel):
     _description = 'Event Alarm Manager'
 
     def _get_next_potential_limit_alarm(self, alarm_type, seconds=None, partners=None):
+        # flush models before making queries
+        for model_name in ('calendar.alarm', 'calendar.event', 'calendar.recurrence'):
+            self.env[model_name].flush_model()
+
         result = {}
         delta_request = """
             SELECT

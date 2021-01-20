@@ -935,9 +935,8 @@ class Attachment(models.Model):
             return
         comodel = self.env[self.res_model]
         if 'res_id' in fnames and 'attachment_ids' in comodel:
-            field = comodel._fields['attachment_ids']
             record = comodel.browse(self.res_id)
-            self.env.cache.invalidate([(field, record._ids)])
+            record.invalidate_recordset(['attachment_ids'])
             record.modified(['attachment_ids'])
         return super(Attachment, self).modified(fnames, *args, **kwargs)
 

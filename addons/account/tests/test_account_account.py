@@ -61,7 +61,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
 
         # Set the account as reconcile and fully reconcile something.
         account.reconcile = True
-        self.env['account.move.line'].invalidate_model()
+        self.env.invalidate_all()
 
         self.assertRecordValues(move.line_ids, [
             {'reconciled': False, 'amount_residual': 100.0, 'amount_residual_currency': 200.0},
@@ -77,7 +77,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         # Set back to a not reconcile account and check the journal items.
         move.line_ids.remove_move_reconcile()
         account.reconcile = False
-        self.env['account.move.line'].invalidate_model()
+        self.env.invalidate_all()
 
         self.assertRecordValues(move.line_ids, [
             {'reconciled': False, 'amount_residual': 0.0, 'amount_residual_currency': 0.0},
@@ -119,7 +119,7 @@ class TestAccountAccount(AccountTestInvoicingCommon):
 
         # Set the account as reconcile and partially reconcile something.
         account.reconcile = True
-        self.env['account.move.line'].invalidate_model()
+        self.env.invalidate_all()
 
         move.line_ids.filtered(lambda line: line.account_id == account).reconcile()
 

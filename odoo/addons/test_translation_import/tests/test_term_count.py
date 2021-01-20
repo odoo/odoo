@@ -66,7 +66,7 @@ class TestTermCount(common.TransactionCase):
         odoo.tools.trans_load(self.cr, 'test_translation_import/i18n/fr.po', 'fr_FR', verbose=False, overwrite=True)
 
         # trans_load invalidates ormcache but not record cache
-        menu.env.cache.invalidate()
+        self.env.invalidate_all()
         self.assertEqual(menu.name, "New Name")
         self.assertEqual(menu.with_context(lang='fr_FR').name, "Nouveau nom")
 
