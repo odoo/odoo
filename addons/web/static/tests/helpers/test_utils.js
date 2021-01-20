@@ -197,6 +197,7 @@ odoo.define('web.test_utils', async function (require) {
             triggerKeypressEvent: testUtilsDom.triggerKeypressEvent,
             triggerMouseEvent: testUtilsDom.triggerMouseEvent,
             triggerPositionalMouseEvent: testUtilsDom.triggerPositionalMouseEvent,
+            triggerPositionalTapEvents: testUtilsDom.triggerPositionalTapEvents,
             dragAndDrop: testUtilsDom.dragAndDrop,
             find: testUtilsDom.findItem,
             getNode: testUtilsDom.getNode,
