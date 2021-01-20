@@ -868,6 +868,8 @@ class MrpProduction(models.Model):
     def _get_moves_raw_values(self):
         moves = []
         for production in self:
+            if not production.bom_id:
+                continue
             factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id) / production.bom_id.product_qty
             boms, lines = production.bom_id.explode(production.product_id, factor, picking_type=production.bom_id.picking_type_id)
             for bom_line, line_data in lines:
