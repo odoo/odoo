@@ -677,6 +677,8 @@ $o-cw-filter-avatar-size: 20px;
     .o_cw_popover_fields_secondary {
         max-height: 170px; // Fallback for old browsers
         max-height: 25vh;
+        overflow-y: auto;
+        padding-bottom: 1px; // prevents the scrollbar to show when not needed
 
         &::-webkit-scrollbar {
             background: gray('200');
