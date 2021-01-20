@@ -23,6 +23,8 @@
 
 import json
 from datetime import datetime, date
+
+import pytz
 from odoo import http
 from odoo.http import request
 from .booking_email import send_receive_booking_email
@@ -39,12 +41,20 @@ class SalonBookingWeb(http.Controller):
         j = 0
         dates_time = dates+" "+time+":00"
         date_and_time = datetime.strptime(dates_time, '%m/%d/%Y %H:%M:%S')
+        
+        # This block of function might not included if timzone configuration is right when deployed 
+        local = pytz.timezone ("Asia/Phnom_Penh")
+        local_booking_dt = local.localize(date_and_time,is_dst=None)
+        utc_date_time = local_booking_dt.astimezone(pytz.utc)
+        utc_date_time = datetime.strftime(utc_date_time,"%Y-%m-%d %H:%M:%S")
+        utc_date_time_strp = datetime.strptime(utc_date_time,"%Y-%m-%d %H:%M:%S")
+        # This block of function might not included if timzone configuration is right when deployed 
 
         salon_booking = request.env['salon.booking']
         booking_data = {
             'name': name,
             'phone': phone,
-            'time': date_and_time,
+            'time': utc_date_time_strp,
             'chair_id': chair,
         }
         
