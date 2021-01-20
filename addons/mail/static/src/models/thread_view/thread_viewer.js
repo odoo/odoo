@@ -14,9 +14,11 @@ function factory(dependencies) {
 
         /**
          * @param {integer} scrollHeight
+         * @param {mail.thread_cache} threadCache
          */
-        saveThreadCacheScrollHeightAsInitial(scrollHeight) {
-            if (!this.threadCache) {
+        saveThreadCacheScrollHeightAsInitial(scrollHeight, threadCache) {
+            threadCache = threadCache || this.threadCache;
+            if (!threadCache) {
                 return;
             }
             if (this.chatter) {
@@ -27,16 +29,18 @@ function factory(dependencies) {
             }
             this.update({
                 threadCacheInitialScrollHeights: Object.assign({}, this.threadCacheInitialScrollHeights, {
-                    [this.threadCache.localId]: scrollHeight,
+                    [threadCache.localId]: scrollHeight,
                 }),
             });
         }
 
         /**
          * @param {integer} scrollTop
+         * @param {mail.thread_cache} threadCache
          */
-        saveThreadCacheScrollPositionsAsInitial(scrollTop) {
-            if (!this.threadCache) {
+        saveThreadCacheScrollPositionsAsInitial(scrollTop, threadCache) {
+            threadCache = threadCache || this.threadCache;
+            if (!threadCache) {
                 return;
             }
             if (this.chatter) {
@@ -47,7 +51,7 @@ function factory(dependencies) {
             }
             this.update({
                 threadCacheInitialScrollPositions: Object.assign({}, this.threadCacheInitialScrollPositions, {
-                    [this.threadCache.localId]: scrollTop,
+                    [threadCache.localId]: scrollTop,
                 }),
             });
         }
