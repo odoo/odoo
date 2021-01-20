@@ -25,7 +25,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             result['project_id'] = active_id
             if not result.get('partner_id', False):
                 result['partner_id'] = project.partner_id.id
-            if project.bill_type == 'customer_project' and not result.get('line_ids', False):
+            if project.pricing_type != 'task_rate' and not result.get('line_ids', False):
                 if project.pricing_type == 'employee_rate':
                     default_product = self.env.ref('sale_timesheet.time_product', False)
                     result['line_ids'] = [
@@ -66,9 +66,8 @@ class ProjectCreateSalesOrder(models.TransientModel):
     @api.depends('sale_order_id', 'link_selection')
     def _compute_info_invoice(self):
         for line in self:
-            tasks = line.project_id.tasks.filtered(lambda t: not t.non_allow_billable)
             domain = self.env['sale.order.line']._timesheet_compute_delivered_quantity_domain()
-            timesheet = self.env['account.analytic.line'].read_group(domain + [('task_id', 'in', tasks.ids), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], ['unit_amount'], ['task_id'])
+            timesheet = self.env['account.analytic.line'].read_group(domain + [('task_id', 'in', line.project_id.tasks.ids), ('so_line', '=', False), ('timesheet_invoice_id', '=', False)], ['unit_amount'], ['task_id'])
             unit_amount = round(sum(t.get('unit_amount', 0) for t in timesheet), 2) if timesheet else 0
             if not unit_amount:
                 line.info_invoice = False
@@ -111,11 +110,9 @@ class ProjectCreateSalesOrder(models.TransientModel):
                         'sale_line_id': wizard_line.sale_line_id.id
                     })
 
-            self.project_id.tasks.filtered(lambda task: task.non_allow_billable).sale_line_id = False
-            tasks = self.project_id.tasks.filtered(lambda t: not t.non_allow_billable)
             # assign SOL to timesheets
             for map_entry in self.project_id.sale_line_employee_ids:
-                self.env['account.analytic.line'].search([('task_id', 'in', tasks.ids), ('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False)]).write({
+                self.env['account.analytic.line'].search([('task_id', 'in', self.project_id.tasks.ids), ('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False)]).write({
                     'so_line': map_entry.sale_line_id.id
                 })
         else:
@@ -193,7 +190,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
     def _make_billable_at_project_rate(self, sale_order):
         self.ensure_one()
         task_left = self.project_id.tasks.filtered(lambda task: not task.sale_line_id)
-        ticket_timesheet_ids = self.env.context.get('ticket_timesheet_ids', [])
         for wizard_line in self.line_ids:
             task_ids = self.project_id.tasks.filtered(lambda task: not task.sale_line_id and task.timesheet_product_id == wizard_line.product_id)
             task_left -= task_ids
@@ -213,17 +209,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 'product_uom_qty': 0.0,
             })
 
-            if ticket_timesheet_ids and not self.project_id.sale_line_id and not task_ids:
-                # With pricing = "project rate" in project. When the user wants to create a sale order from a ticket in helpdesk
-                # The project cannot contain any tasks. Thus, we need to give the first sale_order_line created to link
-                # the timesheet to this first sale order line.
-                # link the project to the SO line
-                self.project_id.write({
-                    'sale_order_id': sale_order.id,
-                    'sale_line_id': sale_order_line.id,
-                    'partner_id': self.partner_id.id,
-                })
-
             # link the tasks to the SO line
             task_ids.write({
                 'sale_line_id': sale_order_line.id,
@@ -233,9 +218,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
 
             # assign SOL to timesheets
             search_domain = [('task_id', 'in', task_ids.ids), ('so_line', '=', False)]
-            if ticket_timesheet_ids:
-                search_domain = [('id', 'in', ticket_timesheet_ids), ('so_line', '=', False)]
-
             self.env['account.analytic.line'].search(search_domain).write({
                 'so_line': sale_order_line.id
             })
@@ -243,18 +225,11 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 'product_uom_qty': sale_order_line.qty_delivered
             })
 
-        if ticket_timesheet_ids and self.project_id.sale_line_id and not self.project_id.tasks and len(self.line_ids) > 1:
-            # Then, we need to give to the project the last sale order line created
-            self.project_id.write({
-                'sale_line_id': sale_order_line.id
-            })
-        else:  # Otherwise, we are in the normal behaviour
-            # link the project to the SO line
-            self.project_id.write({
-                'sale_order_id': sale_order.id,
-                'sale_line_id': sale_order_line.id,  # we take the last sale_order_line created
-                'partner_id': self.partner_id.id,
-            })
+        self.project_id.write({
+            'sale_order_id': sale_order.id,
+            'sale_line_id': sale_order_line.id,  # we take the last sale_order_line created
+            'partner_id': self.partner_id.id,
+        })
 
         if task_left:
             task_left.sale_line_id = False
@@ -268,7 +243,6 @@ class ProjectCreateSalesOrder(models.TransientModel):
         lines_already_present = dict([(l.employee_id.id, l) for l in self.project_id.sale_line_employee_ids])
 
         non_billable_tasks = self.project_id.tasks.filtered(lambda task: not task.sale_line_id)
-        non_allow_billable_tasks = self.project_id.tasks.filtered(lambda task: task.non_allow_billable)
 
         map_entries = self.env['project.sale.line.employee.map']
         EmployeeMap = self.env['project.sale.line.employee.map'].sudo()
@@ -314,17 +288,10 @@ class ProjectCreateSalesOrder(models.TransientModel):
             'partner_id': sale_order.partner_id.id,
             'email_from': sale_order.partner_id.email,
         })
-        non_allow_billable_tasks.sale_line_id = False
 
-        tasks = self.project_id.tasks.filtered(lambda t: not t.non_allow_billable)
         # assign SOL to timesheets
         for map_entry in map_entries:
-            search_domain = [('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False)]
-            ticket_timesheet_ids = self.env.context.get('ticket_timesheet_ids', [])
-            if ticket_timesheet_ids:
-                search_domain.append(('id', 'in', ticket_timesheet_ids))
-            else:
-                search_domain.append(('task_id', 'in', tasks.ids))
+            search_domain = [('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False), ('task_id', 'in', self.project_id.tasks.ids)]
             self.env['account.analytic.line'].search(search_domain).write({
                 'so_line': map_entry.sale_line_id.id
             })

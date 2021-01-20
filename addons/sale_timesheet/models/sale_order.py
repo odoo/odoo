@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import math
+
 from odoo import api, fields, models, _
 from odoo.osv import expression
-import math
 
 
 class SaleOrder(models.Model):
@@ -13,7 +14,7 @@ class SaleOrder(models.Model):
     timesheet_count = fields.Float(string='Timesheet activities', compute='_compute_timesheet_ids', groups="hr_timesheet.group_hr_timesheet_user")
 
     # override domain
-    project_id = fields.Many2one(domain="['|', ('bill_type', '=', 'customer_task'), ('pricing_type', '=', 'fixed_rate'), ('analytic_account_id', '!=', False), ('company_id', '=', company_id)]")
+    project_id = fields.Many2one(domain="[('pricing_type', 'in', ('fixed_rate', 'task_rate')), ('analytic_account_id', '!=', False), ('company_id', '=', company_id)]")
     timesheet_encode_uom_id = fields.Many2one('uom.uom', related='company_id.timesheet_encode_uom_id')
     timesheet_total_duration = fields.Integer("Timesheet Total Duration", compute='_compute_timesheet_total_duration', help="Total recorded duration, expressed in the encoding UoM, and rounded to the unit")
 
@@ -34,7 +35,7 @@ class SaleOrder(models.Model):
         for sale_order in self:
             timesheets = sale_order.timesheet_ids if self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') else sale_order.timesheet_ids.filtered(lambda t: t.user_id.id == self.env.uid)
             total_time = 0.0
-            for timesheet in timesheets.filtered(lambda t: not t.non_allow_billable):
+            for timesheet in timesheets:
                 # Timesheets may be stored in a different unit of measure, so first we convert all of them to the reference unit
                 total_time += timesheet.unit_amount * timesheet.product_uom_id.factor_inv
             # Now convert to the proper unit of measure
@@ -79,7 +80,7 @@ class SaleOrderLine(models.Model):
     qty_delivered_method = fields.Selection(selection_add=[('timesheet', 'Timesheets')])
     analytic_line_ids = fields.One2many(domain=[('project_id', '=', False)])  # only analytic lines, not timesheets (since this field determine if SO line came from expense)
     remaining_hours_available = fields.Boolean(compute='_compute_remaining_hours_available')
-    remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours')
+    remaining_hours = fields.Float('Remaining Hours on SO', compute='_compute_remaining_hours', store=True)
 
     def name_get(self):
         res = super(SaleOrderLine, self).name_get()
@@ -103,7 +104,7 @@ class SaleOrderLine(models.Model):
                             hours += 1
                         else:
                             minutes = minutes * 30
-                        remaining_time =' ({sign}{hours:02.0f}:{minutes:02.0f})'.format(
+                        remaining_time = ' ({sign}{hours:02.0f}:{minutes:02.0f})'.format(
                             sign='-' if line.remaining_hours < 0 else '',
                             hours=hours,
                             minutes=minutes)
@@ -147,7 +148,7 @@ class SaleOrderLine(models.Model):
             if not line.is_expense and line.product_id.type == 'service' and line.product_id.service_type == 'timesheet':
                 line.qty_delivered_method = 'timesheet'
 
-    @api.depends('analytic_line_ids.project_id', 'analytic_line_ids.non_allow_billable', 'project_id.pricing_type', 'project_id.bill_type')
+    @api.depends('analytic_line_ids.project_id', 'project_id.pricing_type')
     def _compute_qty_delivered(self):
         super(SaleOrderLine, self)._compute_qty_delivered()
 
@@ -159,7 +160,7 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_compute_delivered_quantity_domain(self):
         """ Hook for validated timesheet in addionnal module """
-        return [('project_id', '!=', False), ('non_allow_billable', '=', False)]
+        return [('project_id', '!=', False)]
 
     ###########################################
     # Service : Project and task generation
@@ -182,7 +183,6 @@ class SaleOrderLine(models.Model):
         """Generate project values"""
         values = super()._timesheet_create_project_prepare_values()
         values['allow_billable'] = True
-        values['bill_type'] = 'customer_project'
         values['pricing_type'] = 'fixed_rate'
         return values
 
