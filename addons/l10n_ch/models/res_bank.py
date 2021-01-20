@@ -62,7 +62,7 @@ class ResPartnerBank(models.Model):
     def _check_postal_num(self):
         """Validate postal number format"""
         for rec in self:
-            if rec.l10n_ch_postal and not _is_l10n_ch_postal(self.l10n_ch_postal):
+            if rec.l10n_ch_postal and not _is_l10n_ch_postal(rec.l10n_ch_postal):
                 # l10n_ch_postal is used for the purpose of Client Number on your own accounts, so don't do the check there
                 if rec.partner_id and not rec.partner_id.ref_company_ids:
                     raise ValidationError(
