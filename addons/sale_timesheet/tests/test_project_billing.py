@@ -93,6 +93,11 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         cls.project_task_rate = cls.env['project.project'].search([('sale_line_id', '=', cls.so2_line_deliver_project_task.id)], limit=1)
         cls.project_task_rate2 = cls.env['project.project'].search([('sale_line_id', '=', cls.so2_line_deliver_project_template.id)], limit=1)
 
+        cls.project_project_rate.write({
+            'sale_order_id': cls.sale_order_1.id,
+            'sale_line_id': cls.so1_line_order_no_task.id,
+        })
+
         cls.project_employee_rate = Project.create({
             'name': "Project billed at Employee Rate",
             'allow_timesheets': True,
@@ -409,3 +414,30 @@ class TestProjectBilling(TestCommonSaleTimesheet):
 
         self.assertFalse(subtask.sale_line_id, "Subask moved in a employee rate billable project have empty so line")
         self.assertEqual(subtask.partner_id, task.project_id.partner_id, "Subask created in a project billed on 'employee rate' should have the same customer as the one from the project")
+
+    def test_customer_change_in_project(self):
+        """ Test when the user change the customer in a project
+
+            Test Case:
+            =========
+            1) Take project with pricing_type="fixed_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+            2) Take project with pricing_type="employee_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+                2.1) Check if the SOL in mapping is also equal to False
+        """
+        # 1) Take project with pricing_type="fixed_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+        self.project_project_rate.write({
+            'partner_id': self.partner_2.id,
+        })
+        self.assertFalse(self.project_project_rate.sale_order_id, "The SO in the project should be False because the previous SO does not for the actual customer of the project.")
+        self.assertFalse(self.project_project_rate.sale_line_id, "The SOL in the project should be False because the SO is removed too.")
+
+        # 2) Take project with pricing_type="employee_rate", change the existing customer to another and check if the SO and SOL are equal to False.
+        self.project_employee_rate.write({
+            'partner_id': self.partner_2.id,
+        })
+        self.assertFalse(self.project_employee_rate.sale_order_id, "The SO in the project should be False because the previous SO does not for the actual customer of the project.")
+        self.assertFalse(self.project_employee_rate.sale_line_id, "The SOL in the project should be False because the SO is removed too.")
+
+        # 2.1) Check if the SOL in mapping is also equal to False
+        self.assertFalse(self.project_employee_rate_manager.sale_line_id, "The SOL in the mapping should be False because the actual customer in the project has not this SOL.")
+        self.assertFalse(self.project_employee_rate_user.sale_line_id, "The SOL in the mapping should be False because the actual customer in the project has not this SOL.")
