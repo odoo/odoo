@@ -18,6 +18,7 @@ class BaseMailPerformance(TransactionCaseWithUserDemo):
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
             'mail_notrack': True,
+            'mail_channel_nosubscribe': True,
         }
         self.user_employee = self.env['res.users'].with_context(self._quick_create_ctx).create({
             'name': 'Ernest Employee',

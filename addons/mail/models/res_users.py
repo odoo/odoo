@@ -80,8 +80,9 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
                 raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
         users = super(Users, self).create(vals_list)
-        # Auto-subscribe to channels
-        self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users()
+        # Auto-subscribe to channels unless skip explicitly requested
+        if not self.env.context.get('mail_channel_nosubscribe'):
+            self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users()
         return users
 
     def write(self, vals):
