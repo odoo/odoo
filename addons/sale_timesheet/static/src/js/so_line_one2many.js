@@ -1,4 +1,4 @@
-odoo.define('sale_timesheet_edit.so_line_many2one', function (require) {
+odoo.define('sale_timesheet.so_line_many2one', function (require) {
 "use strict";
 
 const fieldRegistry = require('web.field_registry');
@@ -24,5 +24,7 @@ const SoLineOne2Many = FieldOne2Many.extend({
 
 
 fieldRegistry.add('so_line_one2many', SoLineOne2Many);
+
+return SoLineOne2Many;
 
 });

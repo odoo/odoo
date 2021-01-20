@@ -127,7 +127,7 @@ class ProjectTaskCreateSalesOrder(models.TransientModel):
             'price_unit': self.price_unit,
             'project_id': self.task_id.project_id.id,  # prevent to re-create a project on confirmation
             'task_id': self.task_id.id,
-            'product_uom_qty': round(sum(self.task_id.timesheet_ids.filtered(lambda t: not t.non_allow_billable and not t.so_line).mapped('unit_amount')), 2),
+            'product_uom_qty': round(sum(self.task_id.timesheet_ids.filtered(lambda t: not t.so_line).mapped('unit_amount')), 2),
         })
 
         # link task to SOL
