@@ -47,8 +47,8 @@ class StockValuationLayer(models.Model):
         if am_vals:
             account_moves = self.env['account.move'].sudo().create(am_vals)
             account_moves._post()
-        if self.company_id.anglo_saxon_accounting:
+        for svl in self:
             # Eventually reconcile together the invoice and valuation accounting entries on the stock interim accounts
-            for svl in self:
+            if svl.company_id.anglo_saxon_accounting:
                 svl.stock_move_id._get_related_invoices()._stock_account_anglo_saxon_reconcile_valuation(product=svl.product_id)
 
