@@ -530,14 +530,15 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         Task = self.env['project.task']
         today = Date.context_today(self.env.user)
 
-        task = Task.with_context(default_project_id=self.project_global.id).create({
+        task = Task.with_context(default_project_id=self.project_template.id).create({
             'name': 'first task',
-            'partner_id': self.partner_a.id,
+            'partner_id': self.partner_b.id,
             'planned_hours': 10,
+            'sale_line_id': self.so.order_line[0].id
         })
 
         Timesheet.create({
-            'project_id': self.project_global.id,
+            'project_id': self.project_template.id,
             'task_id': task.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
@@ -545,51 +546,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
-        self.assertEqual(timesheet_count1, 1, "One timesheet in project_global")
-        self.assertEqual(timesheet_count2, 0, "No timesheet in project_template")
+        self.assertEqual(timesheet_count1, 0, "No timesheet in project_global")
+        self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
         self.assertEqual(len(task.timesheet_ids), 1, "The timesheet should be linked to task")
 
         # change project of task, as the timesheet is not yet invoiced, the timesheet will change his project
-        task.write({
-            'project_id': self.project_template.id
-        })
-
-        timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
-        timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
-        self.assertEqual(timesheet_count1, 0, "No timesheet in project_global")
-        self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
-        self.assertEqual(len(task.timesheet_ids), 1, "The timesheet still should be linked to task")
-
-        wizard = self.env['project.task.create.sale.order'].with_context(active_id=task.id, active_model='project.task').create({
-            'product_id': self.product_delivery_timesheet3.id
-        })
-
-        # We create the SO and the invoice
-        action = wizard.action_create_sale_order()
-        sale_order = self.env['sale.order'].browse(action['res_id'])
-        self.context = {
-            'active_model': 'sale.order',
-            'active_ids': [sale_order.id],
-            'active_id': sale_order.id,
-            'default_journal_id': self.company_data['default_journal_sale'].id
-        }
-        wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
-            'advance_payment_method': 'delivered',
-            'date_start_invoice_timesheet': today - timedelta(days=4),
-            'date_end_invoice_timesheet': today
-        })
-        wizard.create_invoices()
-
-        Timesheet.create({
-            'project_id': self.project_template.id,
-            'task_id': task.id,
-            'name': 'my second timesheet',
-            'unit_amount': 6,
-        })
-
-        self.assertEqual(Timesheet.search_count([('project_id', '=', self.project_template.id)]), 2, "2 timesheets in project_template")
-
-        # change project of task, the timesheet not yet invoiced will change its project. The timesheet already invoiced will not change his project.
         task.write({
             'project_id': self.project_global.id
         })
@@ -597,5 +558,39 @@ class TestSaleTimesheet(TestCommonSaleTimesheet):
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
         self.assertEqual(timesheet_count1, 1, "One timesheet in project_global")
-        self.assertEqual(timesheet_count2, 1, "Still one timesheet in project_template")
-        self.assertEqual(len(task.timesheet_ids), 2, "The 2 timesheet still should be linked to task")
+        self.assertEqual(timesheet_count2, 0, "No timesheet in project_template")
+        self.assertEqual(len(task.timesheet_ids), 1, "The timesheet still should be linked to task")
+
+        # Create an invoice
+        context = {
+            'active_model': 'sale.order',
+            'active_ids': [self.so.id],
+            'active_id': self.so.id,
+            'default_journal_id': self.company_data['default_journal_sale'].id
+        }
+        wizard = self.env['sale.advance.payment.inv'].with_context(context).create({
+            'advance_payment_method': 'delivered',
+            'date_start_invoice_timesheet': today - timedelta(days=4),
+            'date_end_invoice_timesheet': today,
+        })
+        wizard.create_invoices()
+
+        Timesheet.create({
+            'project_id': self.project_global.id,
+            'task_id': task.id,
+            'name': 'my second timesheet',
+            'unit_amount': 6,
+        })
+
+        self.assertEqual(Timesheet.search_count([('project_id', '=', self.project_global.id)]), 2, "2 timesheets in project_global")
+
+        # change project of task, the timesheet not yet invoiced will change its project. The timesheet already invoiced will not change his project.
+        task.write({
+            'project_id': self.project_template.id
+        })
+
+        timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_global.id)])
+        timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_template.id)])
+        self.assertEqual(timesheet_count1, 1, "Still one timesheet in project_global")
+        self.assertEqual(timesheet_count2, 1, "One timesheet in project_template")
+        self.assertEqual(len(task.timesheet_ids), 2, "The 2 timesheets still should be linked to task")
