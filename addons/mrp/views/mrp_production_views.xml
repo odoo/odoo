@@ -157,7 +157,7 @@
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline"/>
                                 <field name="product_uom_category_id" invisible="1"/>
-                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}" class="oe_inline"/>
+                                <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 <span class='text-bf'>To Produce</span>
                             </div>
                             <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
