@@ -774,7 +774,7 @@ class TestCowViewSaving(TestViewSavingCommon):
             'arch': '<div position="replace"><p>COMPARE</p></div>',
             'key': '_website_sale_comparison.product_add_to_compare',
         })])
-        Website.with_context(load_all_views=True).viewref('_website_sale_comparison.product_add_to_compare').invalidate_model()
+        View.invalidate_model()
 
         # Simulate end of installation/update
         View._create_all_specific_views(['_website_sale_comparison'])

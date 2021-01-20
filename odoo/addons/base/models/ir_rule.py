@@ -233,8 +233,7 @@ class IrRule(models.Model):
             failing_rules += "\n\n" + _('Note: this might be a multi-company issue.')
 
         # clean up the cache of records prefetched with display_name above
-        for record in records[:6]:
-            record._cache.clear()
+        records_sudo.invalidate_recordset()
 
         msg = f"{operation_error}\n\n{failing_records}\n{failing_user}\n\n{failing_rules}\n\n{resolution_info}"
         return AccessError(msg)

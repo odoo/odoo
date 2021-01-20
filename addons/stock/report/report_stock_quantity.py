@@ -9,6 +9,15 @@ class ReportStockQuantity(models.Model):
     _auto = False
     _description = 'Stock Quantity Report'
 
+    _depends = {
+        'product.product': ['product_tmpl_id'],
+        'product.template': ['type'],
+        'stock.location': ['parent_path'],
+        'stock.move': ['company_id', 'date', 'location_dest_id', 'location_id', 'product_id', 'product_qty', 'state'],
+        'stock.quant': ['company_id', 'location_id', 'product_id', 'quantity'],
+        'stock.warehouse': ['view_location_id'],
+    }
+
     date = fields.Date(string='Date', readonly=True)
     product_tmpl_id = fields.Many2one('product.template', readonly=True)
     product_id = fields.Many2one('product.product', string='Product', readonly=True)

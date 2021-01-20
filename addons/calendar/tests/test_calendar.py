@@ -161,6 +161,7 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'stop_date': "2018-10-18",
             'allday': True,
         })
+        self.env.invalidate_all()
         self.assertEqual(str(event.start), '2018-10-16 08:00:00')
         self.assertEqual(str(event.stop), '2018-10-18 18:00:00')
 
