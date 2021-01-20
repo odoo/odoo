@@ -4679,7 +4679,7 @@ Fields:
         """
         ids, new_ids = [], []
         for i in self._ids:
-            (ids if isinstance(i, int) else new_ids).append(i)
+            (new_ids if isinstance(i, NewId) else ids).append(i)
         if not ids:
             return self
         query = """SELECT id FROM "%s" WHERE id IN %%s""" % self._table
