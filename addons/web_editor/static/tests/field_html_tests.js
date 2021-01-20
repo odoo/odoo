@@ -8,6 +8,7 @@ var weTestUtils = require('web_editor.test_utils');
 var core = require('web.core');
 var Wysiwyg = require('web_editor.wysiwyg');
 var MediaDialog = require('wysiwyg.widgets.MediaDialog');
+var LinkDialog = require('wysiwyg.widgets.LinkDialog');
 
 var _t = core._t;
 
@@ -15,6 +16,10 @@ QUnit.module('web_editor', {}, function () {
 
     QUnit.module('field html', {
         beforeEach: function () {
+            this.linkDialogTestHtml = '<p><a href="https://www.external.com" target="_blank">External website</a></p>' +
+                                      '<p><a href="' + window.location.href + '/test">This website</a></p>' +
+                                      '<p>New external link</p><p>New internal link</p>';
+
             this.data = weTestUtils.wysiwygData({
                 'note.note': {
                     fields: {
@@ -37,6 +42,26 @@ QUnit.module('web_editor', {}, function () {
                         display_name: "first record",
                         header: "<p>  &nbsp;&nbsp;  <br>   </p>",
                         body: "<p>toto toto toto</p><p>tata</p>",
+                    }, {
+                        id: 2,
+                        display_name: "second record",
+                        header: "<p>Hello World</p>",
+                        body: '<p><a href="https://www.external.com" target="_blank">External website</a></p>',
+                    }, {
+                        id: 3,
+                        display_name: "third record",
+                        header: "<p>Hello World</p>",
+                        body: '<p><a href="' + window.location.href + '/test">This website</a></p>',
+                    }, {
+                        id: 4,
+                        display_name: "fourth record",
+                        header: "<p>Hello World</p>",
+                        body: '<p>New external link</p>',
+                    }, {
+                        id: 5,
+                        display_name: "fifth record",
+                        header: "<p>Hello World</p>",
+                        body: '<p>New internal link</p>',
                     }],
                 },
                 'mass.mailing': {
@@ -356,6 +381,220 @@ QUnit.module('web_editor', {}, function () {
 
             testUtils.mock.unpatch(MediaDialog);
 
+            form.destroy();
+        });
+
+        QUnit.test('link dialog - external link - no edit', async function (assert) {
+            assert.expect(2);
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 2,
+            });
+            let $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="https://www.external.com" target="_blank">External website</a></p>',
+                "should have rendered a div with correct content in readonly");
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            $field = form.$('.oe_form_field[name="body"]');
+            // the dialog load some xml assets
+            const defLinkDialog = testUtils.makeTestPromise();
+            testUtils.mock.patch(LinkDialog, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this.opened(defLinkDialog.resolve.bind(defLinkDialog));
+                }
+            });
+
+            let pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 1);
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-link)'));
+            // load static xml file (dialog, link dialog)
+            await defLinkDialog;
+            $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
+            await testUtils.dom.click($('.modal .modal-footer button:contains(Save)'));
+
+            await testUtils.form.clickSave(form);
+
+            $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="https://www.external.com" target="_blank">External website</a></p>',
+                "the link shouldn't change");
+
+            testUtils.mock.unpatch(LinkDialog);
+            form.destroy();
+        });
+
+        QUnit.test('link dialog - internal link - no edit', async function (assert) {
+            assert.expect(2);
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 3,
+            });
+            let $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="' + window.location.href.replace(/&/g, "&amp;") + '/test">This website</a></p>',
+                "should have rendered a div with correct content in readonly");
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            $field = form.$('.oe_form_field[name="body"]');
+            // the dialog load some xml assets
+            const defLinkDialog = testUtils.makeTestPromise();
+            testUtils.mock.patch(LinkDialog, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this.opened(defLinkDialog.resolve.bind(defLinkDialog));
+                }
+            });
+
+            let pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 1);
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-link)'));
+            // load static xml file (dialog, link dialog)
+            await defLinkDialog;
+            $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
+            await testUtils.dom.click($('.modal input#o_link_dialog_url_strip_domain'));
+            await testUtils.dom.click($('.modal .modal-footer button:contains(Save)'));
+
+            await testUtils.form.clickSave(form);
+
+            $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="' + window.location.href.replace(/&/g, "&amp;") + '/test">This website</a></p>',
+                "the link shouldn't change");
+
+            testUtils.mock.unpatch(LinkDialog);
+            form.destroy();
+        });
+
+        QUnit.test('link dialog - external link - new', async function (assert) {
+            assert.expect(2);
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 4,
+            });
+            let $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(), '<p>New external link</p>',
+                "should have rendered a div with correct content in readonly");
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            $field = form.$('.oe_form_field[name="body"]');
+            // the dialog load some xml assets
+            const defLinkDialog = testUtils.makeTestPromise();
+            testUtils.mock.patch(LinkDialog, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this.opened(defLinkDialog.resolve.bind(defLinkDialog));
+                }
+            });
+
+            let pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 0, pText, "New external link".length);
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-link)'));
+            // load static xml file (dialog, link dialog)
+            await defLinkDialog;
+            $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
+            $('input#o_link_dialog_url_input').val('www.test.com');
+            await testUtils.dom.click($('.modal .modal-footer button:contains(Save)'));
+
+            await testUtils.form.clickSave(form);
+
+            $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="http://www.test.com" target="_blank">New external link</a></p>',
+                "the link should be created with the right format");
+
+            testUtils.mock.unpatch(LinkDialog);
+            form.destroy();
+        });
+
+
+        QUnit.test('link dialog - internal link - new', async function (assert) {
+            assert.expect(3);
+
+            const form = await testUtils.createView({
+                View: FormView,
+                model: 'note.note',
+                data: this.data,
+                arch: '<form>' +
+                    '<field name="body" widget="html" style="height: 100px"/>' +
+                    '</form>',
+                res_id: 5,
+            });
+            let $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(), '<p>New internal link</p>',
+                "should have rendered a div with correct content in readonly");
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+            $field = form.$('.oe_form_field[name="body"]');
+            // the dialog load some xml assets
+            const defLinkDialog = testUtils.makeTestPromise();
+            testUtils.mock.patch(LinkDialog, {
+                init: function () {
+                    this._super.apply(this, arguments);
+                    this.opened(defLinkDialog.resolve.bind(defLinkDialog));
+                }
+            });
+
+            let pText = $field.find('.note-editable p').first().contents()[0];
+            Wysiwyg.setRange(pText, 0, pText, "New internal link".length);
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-link)'));
+            // load static xml file (dialog, link dialog)
+            await defLinkDialog;
+            $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
+            const $input = $('input#o_link_dialog_url_input');
+            await testUtils.fields.editAndTrigger($input, window.location.href + '/test', ["change"]);
+            $('.modal input#o_link_dialog_url_strip_domain').click();
+            await testUtils.dom.click($('.modal .modal-footer button:contains(Save)'));
+
+            await testUtils.form.clickSave(form);
+
+            $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="' + window.location.href.replace(/&/g, "&amp;") + '/test">New internal link</a></p>',
+                "the link should be created with the right format");
+
+            await testUtils.form.clickEdit(form);
+            await testUtils.nextTick();
+
+            $field = form.$('.oe_form_field[name="body"]');
+            pText = $field.find('.note-editable a').eq(0).contents()[0];
+            Wysiwyg.setRange(pText, 1);
+            await testUtils.dom.click($field.find('.note-toolbar .note-insert button:has(.fa-link)'));
+            // load static xml file (dialog, link dialog)
+            await defLinkDialog;
+            $('.modal .tab-content .tab-pane').removeClass('fade'); // to be sync in test
+            await testUtils.dom.click($('.modal .modal-footer button:contains(Save)'));
+            await testUtils.form.clickSave(form);
+
+            $field = form.$('.oe_form_field[name="body"]');
+            assert.strictEqual($field.children('.o_readonly').html(),
+                '<p><a href="' + window.location.href.slice(window.location.origin.length).replace(/&/g, "&amp;") + '/test">New internal link</a></p>',
+                "the link should be created with the right format");
+
+            testUtils.mock.unpatch(LinkDialog);
             form.destroy();
         });
 

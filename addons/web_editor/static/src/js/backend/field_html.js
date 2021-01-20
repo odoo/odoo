@@ -514,6 +514,8 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             top: '+5px',
         });
         this.$el.append($button);
+        $.summernote.eventHandler.modules.linkDialog.options = _.extend({},
+            $.summernote.eventHandler.modules.linkDialog.options, {forceNewWindow: true});
     },
     /**
      * @private

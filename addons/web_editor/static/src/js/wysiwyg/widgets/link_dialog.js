@@ -270,7 +270,8 @@ var LinkDialog = Dialog.extend({
             (type ? (` btn btn-${style}${type}`) : '') +
             (shapeClasses ? (` ${shapeClasses}`) : '') +
             (size ? (' btn-' + size) : '');
-        var isNewWindow = this.$('input[name="is_new_window"]').prop('checked');
+        var isNewWindow = this.options.forceNewWindow ?
+            this._isFromAnotherHostName(url) : this.$('input[name="is_new_window"]').prop('checked');
         if (url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i)) {
             url = ('mailto:' + url);
         } else if (url.indexOf(location.origin) === 0 && this.$('#o_link_dialog_url_strip_domain').prop("checked")) {
@@ -291,6 +292,21 @@ var LinkDialog = Dialog.extend({
     _updateOptionsUI: function () {
         const el = this.el.querySelector('[name="link_style_color"]:checked');
         $(this.buttonOptsCollapseEl).collapse(el && el.value ? 'show' : 'hide');
+    },
+    /**
+     * @private
+     */
+    _isFromAnotherHostName: function (url) {
+        if (url.includes(window.location.hostname)) {
+            return false;
+        }
+        try {
+            const Url = URL || window.URL || window.webkitURL;
+            const urlObj = url.startsWith('/') ? new Url(url, window.location.origin) : new Url(url);
+            return (urlObj.origin !== window.location.origin);
+        } catch (ignored) {
+            return true;
+        }
     },
 
     //--------------------------------------------------------------------------

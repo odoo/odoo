@@ -450,6 +450,7 @@ eventHandler.modules.linkDialog.showLinkDialog = function ($editable, $dialog, l
 
     var def = new $.Deferred();
     topBus.trigger('link_dialog_demand', {
+        options: eventHandler.modules.linkDialog.options,
         $editable: $editable,
         linkInfo: linkInfo,
         onSave: function (linkInfo) {
