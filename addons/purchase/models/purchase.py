@@ -638,6 +638,7 @@ class PurchaseOrder(models.Model):
             # Invoice_ids may be filtered depending on the user. To ensure we get all
             # invoices related to the purchase order, we read them in sudo to fill the
             # cache.
+            self.invalidate_model(['invoice_ids'])
             self.sudo()._read(['invoice_ids'])
             invoices = self.invoice_ids
 

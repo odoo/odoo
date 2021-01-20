@@ -93,6 +93,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(del_qties, del_qties_truth, 'Sale Stock: delivered quantities are wrong after complete delivery')
         # Without timesheet, we manually set the delivered qty for the product serv_del
         self.so.order_line.sorted()[1]['qty_delivered'] = 2.0
+
         # There is a bug with `new` and `_origin`
         # If you create a first new from a record, then change a value on the origin record, than create another new,
         # this other new wont have the updated value of the origin record, but the one from the previous new
@@ -101,10 +102,8 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         # Here, we update `qty_delivered` on the origin record, but the `new` records which are in cache with this order line
         # as origin are not updated, nor the fields that depends on it.
         self.env.flush_all()
-        for field in self.env['sale.order.line']._fields.values():
-            for res_id in list(self.env.cache._data[field]):
-                if not res_id:
-                    self.env.cache._data[field].pop(res_id)
+        self.env.invalidate_all()
+
         inv_id = self.so._create_invoices()
         self.assertEqual(self.so.invoice_status, 'invoiced',
                          'Sale Stock: so invoice_status should be "fully invoiced" after complete delivery and invoicing')

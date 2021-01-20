@@ -89,13 +89,18 @@ class TestEGEdiCommon(AccountEdiTestCommon):
 
     @classmethod
     def create_invoice(cls, **kwargs):
-        return (cls.env['account.move']
-                .with_context(edi_test_mode=True)
-                .create({
-                    'move_type': 'out_invoice',
-                    'partner_id': cls.partner_a.id,
-                    'invoice_date': '2022-03-15',
-                    'date': '2022-03-15',
-                    **kwargs,
-                    'invoice_line_ids': [Command.create({**line_vals, }) for line_vals in kwargs.get('invoice_line_ids', [])]
-                }))
+        invoice = (
+            cls.env['account.move']
+            .with_context(edi_test_mode=True)
+            .create({
+                'move_type': 'out_invoice',
+                'partner_id': cls.partner_a.id,
+                'invoice_date': '2022-03-15',
+                'date': '2022-03-15',
+                **kwargs,
+                'invoice_line_ids': [Command.create({**line_vals, }) for line_vals in kwargs.get('invoice_line_ids', [])]
+            })
+        )
+        # this fixes rounding issues in cache
+        cls.env.invalidate_all()
+        return invoice

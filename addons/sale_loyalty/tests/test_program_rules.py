@@ -269,8 +269,6 @@ class TestProgramRules(TestSaleCouponCommon):
             })
         ]})
         # Invalidate total_order_count
-        field_order_count = self.env['loyalty.program']._fields['order_count']
-        field_total_order_count = self.env['loyalty.program']._fields['total_order_count']
-        self.env.cache.invalidate([(field_order_count, self.immediate_promotion_program.ids), (field_total_order_count, self.immediate_promotion_program.ids)])
+        self.immediate_promotion_program.invalidate_recordset(['order_count', 'total_order_count'])
         self._auto_rewards(order, self.immediate_promotion_program)
         self.assertEqual(len(order.order_line.ids), 2, "The promo offer shouldn't have been applied as the number of uses is exceeded")

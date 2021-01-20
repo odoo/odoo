@@ -244,6 +244,7 @@ class TestFields(TransactionCaseWithUserDemo):
                 (0, 0, {'name': 'x_stuff_id', 'ttype': 'many2one', 'relation': 'ir.model'}),
             ],
         })
+        self.env.invalidate_all()
         # set 'x_stuff_id' refer to a model not loaded yet
         self.cr.execute("""
             UPDATE ir_model_fields
@@ -791,7 +792,6 @@ class TestFields(TransactionCaseWithUserDemo):
 
         # switch to environment with user demo
         records = records.with_user(self.user_demo)
-        records.env.cache.invalidate()
 
         # check that records are not accessible
         with self.assertRaises(AccessError):
@@ -1611,7 +1611,7 @@ class TestFields(TransactionCaseWithUserDemo):
         """ test field access on new records vs real records. """
         Model = self.env['test_new_api.category']
         real_record = Model.create({'name': 'Foo'})
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
         new_origin = Model.new({'name': 'Bar'}, origin=real_record)
         new_record = Model.new({'name': 'Baz'})
 
@@ -2080,6 +2080,7 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(demo_discussion.messages, discussion.messages)
 
         # See YTI FIXME
+        self.env.flush_all()
         self.env.invalidate_all()
 
         # add a message as user demo
@@ -2744,12 +2745,12 @@ class TestX2many(common.TransactionCase):
         self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
 
         # check read()
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
         self.assertEqual(parent.children_ids, act_children)
         self.assertEqual(parent.all_children_ids, all_children)
         self.assertEqual(parent.active_children_ids, act_children)
 
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
         self.assertEqual(parent.with_context(active_test=False).children_ids, all_children)
         self.assertEqual(parent.with_context(active_test=False).all_children_ids, all_children)
         self.assertEqual(parent.with_context(active_test=False).active_children_ids, act_children)
