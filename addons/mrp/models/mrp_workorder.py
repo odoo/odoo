@@ -59,6 +59,7 @@ class MrpWorkorder(models.Model):
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
     state = fields.Selection([
+        ('waiting', 'Waiting for components'),
         ('pending', 'Waiting for another WO'),
         ('ready', 'Ready'),
         ('progress', 'In Progress'),
@@ -451,8 +452,10 @@ class MrpWorkorder(models.Model):
                     })
 
             for workorders in workorders_by_bom.values():
-                if workorders[0].state == 'pending':
+                if self.production_id.components_availability_state == 'available':
                     workorders[0].state = 'ready'
+                else:
+                    workorders[0].state = 'waiting'
                 for workorder in workorders:
                     workorder._start_nextworkorder()
 
