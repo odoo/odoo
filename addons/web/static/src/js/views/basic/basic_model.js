@@ -253,6 +253,7 @@ var BasicModel = AbstractModel.extend({
      */
     applyDefaultValues: function (recordID, values, options) {
         options = options || {};
+        var defs = [];
         var record = this.localData[recordID];
         var viewType = options.viewType || record.viewType;
         var fieldNames = options.fieldNames || Object.keys(record.fieldsInfo[viewType]);
@@ -279,10 +280,16 @@ var BasicModel = AbstractModel.extend({
                     values[fieldName] = null;
                 }
             }
+            else if (!(fieldName in values)) {
+                field = record.fields[fieldName];
+                if (field.type === 'one2many' || field.type === 'many2many') {
+                    var commands = this._generateX2ManyCommands(record, {fieldNames: [fieldName]})[fieldName];
+                    defs.push(this._processX2ManyCommands(record, fieldName, commands, options));
+                }
+            }
         }
 
         // parse each value and create dataPoints for relational fields
-        var defs = [];
         for (fieldName in values) {
             field = record.fields[fieldName];
             record.data[fieldName] = null;
