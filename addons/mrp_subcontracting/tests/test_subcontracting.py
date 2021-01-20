@@ -357,7 +357,7 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
             'parent_id': main_partner_2.id,
             'company_id': self.env.ref('base.main_company').id,
         })
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
 
         # We create a different BoM for the same product
         comp3 = self.env['product.product'].create({

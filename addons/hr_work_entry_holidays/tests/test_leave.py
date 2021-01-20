@@ -158,17 +158,16 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
                 'date_to': datetime(2022, 3, 25, 20),
                 'number_of_days': 4,
             })
-            can_cancel_field = leave._fields['can_cancel']
             leave.with_user(SUPERUSER_ID).action_validate()
             # No work entries exist yet
             self.assertTrue(leave.can_cancel, "The leave should still be cancellable")
             # can not create in the future
             self.richard_emp.contract_ids._generate_work_entries(datetime(2022, 3, 21, 6), datetime(2022, 3, 25, 20))
             work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id)])
-            self.env.cache.invalidate([(can_cancel_field, leave.ids)])
+            leave.invalidate_recordset(['can_cancel'])
             # Work entries exist but are not locked yet
             self.assertTrue(leave.can_cancel, "The leave should still be cancellable")
             work_entries.action_validate()
-            self.env.cache.invalidate([(can_cancel_field, leave.ids)])
+            leave.invalidate_recordset(['can_cancel'])
             # Work entries locked
             self.assertFalse(leave.can_cancel, "The leave should not be cancellable")

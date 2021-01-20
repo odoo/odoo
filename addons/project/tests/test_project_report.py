@@ -33,6 +33,9 @@ class TestProjectReport(TestProjectCommon):
         self.assertEqual(task_3.rating_avg, 0)
         self.assertEqual(task_3.rating_last_value, 0)
 
+        # fix cache consistency
+        self.env['project.task'].invalidate_model(['rating_avg', 'rating_last_value'])
+
         tasks = [self.task_1, self.task_2, task_3]
         for task in tasks:
             rating_values = task.read(['rating_avg', 'rating_last_value'])[0]

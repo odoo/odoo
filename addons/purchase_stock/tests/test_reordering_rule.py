@@ -602,7 +602,7 @@ class TestReorderingRule(TransactionCase):
                     "route_ids": [],
                 }
             )
-        self.env.cache.invalidate()
+        self.env.invalidate_all()
 
         self.env["procurement.group"].run([procurement])
 
@@ -707,10 +707,11 @@ class TestReorderingRule(TransactionCase):
             {'qty_forecast': -1, 'qty_to_order': 1},
         ])
 
-        delivery.scheduled_date += td(days=7)
+        # invalidate the fields that will eventually be inconsistent
         orderpoint.invalidate_model(fnames=['qty_forecast', 'qty_to_order'])
         orderpoint.product_id.invalidate_model(fnames=['virtual_available'])
 
+        delivery.scheduled_date += td(days=7)
         self.assertRecordValues(orderpoint, [
             {'qty_forecast': 0, 'qty_to_order': 0},
         ])
