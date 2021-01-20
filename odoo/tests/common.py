@@ -6,6 +6,7 @@ helpers and classes to write tests.
 """
 import base64
 import collections
+import difflib
 import functools
 import importlib
 import inspect
@@ -14,32 +15,35 @@ import json
 import logging
 import operator
 import os
+import pathlib
 import platform
+import pprint
 import re
-import requests
 import shutil
 import signal
-import socket
 import subprocess
 import sys
 import tempfile
 import threading
 import time
 import unittest
-import difflib
-import werkzeug.urls
+from collections import defaultdict
 from contextlib import contextmanager
 from datetime import datetime, date
-from unittest.mock import patch
-
-from collections import defaultdict
-from decorator import decorator
 from itertools import zip_longest as izip_longest
-from lxml import etree, html
+from unittest.mock import patch
 from xmlrpc import client as xmlrpclib
 
+import requests
+import werkzeug.urls
+from decorator import decorator
+from lxml import etree, html
+
+import odoo
+from odoo import api
 from odoo.models import BaseModel
 from odoo.osv.expression import normalize_domain, TRUE_LEAF, FALSE_LEAF
+from odoo.service import security
 from odoo.sql_db import Cursor
 from odoo.tools import float_compare, single_email_re
 from odoo.tools.misc import find_in_path
@@ -50,13 +54,6 @@ try:
 except ImportError:
     # chrome headless tests will be skipped
     websocket = None
-
-
-import odoo
-import pprint
-from odoo import api
-from odoo.service import security
-
 
 
 _logger = logging.getLogger(__name__)
@@ -756,8 +753,18 @@ class ChromeBrowser():
     def _spawn_chrome(self, cmd):
         if os.name != 'posix':
             return
+
         pid = os.fork()
         if pid != 0:
+            port_file = pathlib.Path(self.user_data_dir, 'DevToolsActivePort')
+            for _ in range(100):
+                time.sleep(0.1)
+                if port_file.is_file():
+                    with port_file.open('r', encoding='utf-8') as f:
+                        self.devtools_port = int(f.readline())
+                    break
+            else:
+                raise unittest.SkipTest('Failed to detect chrome devtools port after 2.5s.')
             return pid
         else:
             if platform.system() != 'Darwin':
@@ -775,11 +782,6 @@ class ChromeBrowser():
     def _chrome_start(self):
         if self.chrome_pid is not None:
             return
-        with socket.socket() as s:
-            s.bind(('localhost', 0))
-            if hasattr(socket, 'SO_REUSEADDR'):
-                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            _, self.devtools_port = s.getsockname()
 
         switches = {
             '--headless': '',
@@ -803,9 +805,8 @@ class ChromeBrowser():
             '--autoplay-policy': 'no-user-gesture-required',
             '--window-size': self.window_size,
             '--remote-debugging-address': HOST,
-            '--remote-debugging-port': str(self.devtools_port),
+            '--remote-debugging-port': '0',
             '--no-sandbox': '',
-            '--disable-crash-reporter': '',
             '--disable-gpu': '',
         }
         cmd = [self.executable]
