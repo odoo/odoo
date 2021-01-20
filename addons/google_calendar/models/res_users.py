@@ -25,6 +25,20 @@ class User(models.Model):
     google_calendar_cal_id = fields.Char('Calendar ID', copy=False, help='Last Calendar ID who has been synchronized. If it is changed, we remove all links between GoogleID and Odoo Google Internal ID')
     google_synchronization_stopped = fields.Boolean('Google Synchronization stopped', copy=False)
     
+    def __init__(self, pool, cr):
+        """ Override of __init__ to add access rights.
+            Access rights are disabled by default, but allowed
+            on some specific fields defined in self.SELF_{READ/WRITE}ABLE_FIELDS.
+        """
+        google_calendar_fields = [
+            'google_synchronization_stopped',
+        ]
+        init_res = super(User, self).__init__(pool, cr)
+        # duplicate list to avoid modifying the original reference
+        type(self).SELF_READABLE_FIELDS = type(self).SELF_READABLE_FIELDS + google_calendar_fields
+        type(self).SELF_WRITEABLE_FIELDS = type(self).SELF_WRITEABLE_FIELDS + google_calendar_fields
+        return init_res
+
     def _set_auth_tokens(self, access_token, refresh_token, ttl):
         self.write({
             'google_calendar_rtoken': refresh_token,
@@ -120,10 +134,10 @@ class User(models.Model):
 
     def stop_google_synchronization(self):
         self.ensure_one()
-        self.sudo().google_synchronization_stopped = True
+        self.google_synchronization_stopped = True
 
     def restart_google_synchronization(self):
         self.ensure_one()
-        self.sudo().google_synchronization_stopped = False
+        self.google_synchronization_stopped = False
         self.env['calendar.recurrence']._restart_google_sync()
         self.env['calendar.event']._restart_google_sync()
