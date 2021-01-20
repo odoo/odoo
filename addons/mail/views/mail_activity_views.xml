@@ -85,25 +85,12 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem
-      id="menu_mail_activity_type"
-      action="mail_activity_type_action"
-      parent="mail.mail_menu_technical"
-      sequence="10"
-    />
 
     <record id="mail_activity_action" model="ir.actions.act_window">
         <field name="name">Activities</field>
         <field name="res_model">mail.activity</field>
         <field name="view_mode">tree,form</field>
     </record>
-
-    <menuitem
-      id="menu_mail_activities"
-      action="mail_activity_action"
-      parent="mail.mail_menu_technical"
-      sequence="11"
-    />
 
     <record id="mail_activity_view_form_popup" model="ir.ui.view">
         <field name="name">mail.activity.view.form.popup</field>
