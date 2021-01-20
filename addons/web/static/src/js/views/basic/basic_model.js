@@ -1431,7 +1431,7 @@ var BasicModel = AbstractModel.extend({
             fieldsInfo: list.fieldsInfo,
             parentID: list.id,
             position: position,
-            viewType: list.viewType,
+            viewType: options.viewType || list.viewType,
             allowWarning: options && options.allowWarning
         };
 
@@ -2003,6 +2003,7 @@ var BasicModel = AbstractModel.extend({
                     context: command.context,
                     position: command.position
                 }, options || {});
+                createOptions.viewType = fieldInfo.mode;
 
                 def = this._addX2ManyDefaultRecord(list, createOptions).then(function (ids) {
                     _.each(ids, function(id){
@@ -4072,7 +4073,7 @@ var BasicModel = AbstractModel.extend({
         // Hence preventing their value to crash when getting back to the originating view
         var parentRecord = params.parentID && this.localData[params.parentID].type === 'list' ? this.localData[params.parentID] : null;
 
-        if (parentRecord) {
+        if (parentRecord && parentRecord.viewType in parentRecord.fieldsInfo) {
             var originView = parentRecord.viewType;
             fieldNames = _.union(fieldNames, Object.keys(parentRecord.fieldsInfo[originView]));
             fieldsInfo[targetView] = _.defaults({}, fieldsInfo[targetView], parentRecord.fieldsInfo[originView]);
