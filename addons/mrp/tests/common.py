@@ -41,9 +41,9 @@ class TestMrpCommon(common2.TestStockCommon):
                 (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
             ]})
         mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = product_to_build
         if picking_type_id:
             mo_form.picking_type_id = picking_type_id
-        mo_form.product_id = product_to_build
         mo_form.bom_id = bom_1
         mo_form.product_qty = qty_final
         mo = mo_form.save()
