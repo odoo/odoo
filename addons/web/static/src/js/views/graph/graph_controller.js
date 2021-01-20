@@ -165,7 +165,7 @@ var GraphController = AbstractController.extend({
             .toggleClass('active', !!state.orderBy);
 
         if (this.withButtons) {
-            this._attachDropdownComponents();
+            return this._attachDropdownComponents();
         }
     },
 
@@ -180,6 +180,9 @@ var GraphController = AbstractController.extend({
      */
     async _attachDropdownComponents() {
         await Promise.all(this.buttonDropdownPromises);
+        if (this.isDestroyed()) {
+            return;
+        }
         const actionsContainer = this.$buttons[0];
         // Attach "measures" button
         actionsContainer.appendChild(this.measureMenu.el);
