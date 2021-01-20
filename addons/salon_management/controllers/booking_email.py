@@ -1,5 +1,6 @@
 import smtplib, ssl
 from datetime import datetime
+import pytz
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -15,6 +16,14 @@ def send_receive_booking_email(email_booking_data):
     message["From"] = sender_email
     message["To"] = receiver_email
 
+    # Convert UTC Time Zone to Local Phnom Penh Time Zone
+    # This block of function might not included if timzone configuration is right when deployed 
+    utc_time = datetime.now()
+    tz = pytz.timezone('Asia/Phnom_Penh')
+    local_pp_time = pytz.utc.localize(utc_time, is_dst=None).astimezone(tz)
+    # This block of function might not included if timzone configuration is right when deployed 
+    # Convert UTC Time Zone to Local Phnom Penh Time Zone
+    
     # Create the plain-text and HTML version of your message
     html = """\
     <html>
@@ -28,7 +37,7 @@ def send_receive_booking_email(email_booking_data):
         </ul>
     </body>
     </html>
-    """.format(datetime.now(),email_booking_data['chair_name'],
+    """.format(local_pp_time,email_booking_data['chair_name'],
     email_booking_data['time'],email_booking_data['name'],
     email_booking_data['phone'])
 
