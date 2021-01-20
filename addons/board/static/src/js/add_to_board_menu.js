@@ -49,7 +49,9 @@ var AddToBoardMenu = Widget.extend({
      */
     closeMenu: function () {
         this.isOpen = false;
-        this._render();
+        if (this.action.id && this.action.type === 'ir.actions.act_window') {
+            this._render();
+        }
     },
 
     //--------------------------------------------------------------------------

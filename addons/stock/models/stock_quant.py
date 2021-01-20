@@ -627,6 +627,10 @@ class StockQuant(models.Model):
                 """
         }
 
+        target_action = self.env.ref('stock.dashboard_open_quants', False)
+        if target_action:
+            action['id'] = target_action.id
+
         if self._is_inventory_mode():
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id
             # fixme: erase the following condition when it'll be possible to create a new record
