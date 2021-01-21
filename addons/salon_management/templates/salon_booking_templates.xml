@@ -62,61 +62,9 @@
                             </tbody>
                         </table>
                     </div>
-
                     <div class="col-lg-6 s_title pt16 pb16">
                         <h3>Book Your Court</h3>
                         <form>
-                            <div class="row s_nb_column_fixed">
-                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    NAME *
-                                </div>
-                                <div class="col-lg-10 s_title pt16 pb16">
-                                    <input type="text" id="name" placeholder="Enter your Name"/>
-                                </div>
-                            </div>
-                            <div class="row s_nb_column_fixed">
-                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    PHONE *
-                                </div>
-                                <div class="col-lg-10 s_title pt16 pb16">
-                                    <input  style="width:100%" type="tel" id="phone" required="True" pattern="[7-9]{1}[0-9]{9}" 
-                                           placeholder="Enter your Phone number(eg:012 345 678)"/>
-                                </div>
-                            </div>
-                            <div class="row s_nb_column_fixed">
-                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    COURT *
-                                </div>
-                                <div class="col-lg-10 s_title pt16 pb16 row">
-                                    <div class="col-lg-5 s_title pt16 pb16">
-                                        <select id="chair" required="True">
-                                            <t t-foreach="chair_details" t-as="chair">
-                                                <option t-att-value="chair.id" t-esc="chair.name"/>
-                                            </t>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-7 s_title pt16 pb16" style="font-size: 12px;">
-                                        (Select the court that free in the preferred time)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row s_nb_column_fixed">
-                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
-                                    DURATION *
-                                </div>
-                                <div class="col-lg-10 s_title pt16 pb16 row">
-                                    <div class="col-lg-5 s_title pt16 pb16">
-                                        <select id="chair" required="True">
-                                            <t t-foreach="chair_details" t-as="chair">
-                                                <option t-att-value="chair.id" t-esc="chair.name"/>
-                                            </t>
-                                        </select>
-                                    </div>
-                                    <div class="col-lg-7 s_title pt16 pb16" style="font-size: 12px;">
-                                        (Select the court that free in the preferred time)
-                                    </div>
-                                </div>
-                            </div>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
                                     TIME *
@@ -132,9 +80,41 @@
                                                onkeyup="var v = this.value;if (v.match(/^\d{2}$/) !== null) {this.value = v + ':';}"
                                                maxlength="5"/>
                                     </div>
-                                    <div class="col-lg-5 s_title pt16 pb16" style="font-size: 12px;">
-                                        (Select date &amp; time based on availability of court)
+                                    <div class="col-lg-3 s_title pt16 pb16" style="display:none">
+                                        <label for="birthdaytime">Birthday (date and time):</label>
+                                        <input type="datetime-local" id="date_time" name="birthdaytime"/>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="row s_nb_column_fixed">
+                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
+                                    COURT*
+                                </div>
+                                <div class="col-lg-10 s_title pt16 pb16 row">
+                                    <div class="col-lg-5 s_title pt16 pb16">
+                                        <select id="chair" required="True">
+                                            <t t-foreach="chair_details" t-as="chair">
+                                                <option t-att-value="chair.id" t-esc="chair.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row s_nb_column_fixed">
+                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
+                                    NAME*
+                                </div>
+                                <div class="col-lg-10 s_title pt16 pb16">
+                                    <input type="text" id="name" placeholder="Enter your Name"/>
+                                </div>
+                            </div>
+                            <div class="row s_nb_column_fixed">
+                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
+                                    PHONE*
+                                </div>
+                                <div class="col-lg-10 s_title pt16 pb16">
+                                    <input  style="width:100%" type="tel" id="phone" required="True" pattern="[7-9]{1}[0-9]{9}" 
+                                           placeholder="Enter your Phone number(eg:012 345 678)"/>
                                 </div>
                             </div>
                             <div class="row s_nb_column_fixed">

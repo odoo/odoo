@@ -7,9 +7,8 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
         var time = $("#time").val();
         var phone = $("#phone").val();
         var chair = $("#chair").val();
-        console.log(date, time)
 
-        if (name == "" || date == "" || time == "" || phone == "") {
+        if (chair == "" || name == "" || time == "" || phone == "") {
             alert("All fields are mandatory");
         } else {
             var time_left_char = time.substring(0, 2);
