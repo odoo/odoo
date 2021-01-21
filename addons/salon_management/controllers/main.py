@@ -22,13 +22,13 @@
 ###################################################################################
 
 import json
-from datetime import datetime, date
+from datetime import datetime, date, time , timedelta
 
 import pytz
 from odoo import http
 from odoo.http import request
 from .booking_email import send_receive_booking_email
-
+import time
 class SalonBookingWeb(http.Controller):
 
     @http.route('/page/salon_details', csrf=False, type="http", methods=['POST', 'GET'], auth="public", website=True)
@@ -87,10 +87,14 @@ class SalonBookingWeb(http.Controller):
                                                        ('start_date_only', '=', datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d'))])
         order_details = {}
         for orders in order_obj:
+            # This block of function might not included if timzone configuration is right when deployed 
+            time_start_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            time_end_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            # This block of function might not included if timzone configuration is right when deployed 
             data = {
                 'number': orders.id,
-                'start_time_only': orders.start_time_only,
-                'end_time_only': orders.end_time_only
+                'start_time_only': time_start_local_pp,
+                'end_time_only': time_end_local_pp
             }
             if orders.chair_id.id not in order_details:
                 order_details[orders.chair_id.id] = {'name': orders.chair_id.name, 'orders': [data]}
