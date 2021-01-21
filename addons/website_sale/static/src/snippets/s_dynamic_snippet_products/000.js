@@ -14,18 +14,6 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Check product category exist.
-     * @private
-     * @returns {Promise}
-     */
-    _checkCategoryExist: async function (productCategoryId) {
-        return this._rpc({
-            model: 'product.public.category',
-            method: 'search_count',
-            args: [[['id', '=', productCategoryId]]],
-        }).then(nb => nb > 0);
-    },
-    /**
      * Method to be overridden in child components if additional configuration elements
      * are required in order to fetch data.
      * @override
@@ -40,15 +28,9 @@ const DynamicSnippetProducts = DynamicSnippetCarousel.extend({
      * @override
      * @private
      */
-    _getSearchDomain: async function () {
-        const searchDomain = await this._super.apply(this, arguments);
-        const productCategoryId = parseInt(this.$el.get(0).dataset.productCategoryId);
-        const categoryExist = await this._checkCategoryExist(productCategoryId);
-        if (categoryExist) {
-            searchDomain.push(['public_categ_ids', 'child_of', productCategoryId]);
-        } else {
-            searchDomain.push([0, '=', 1]);
-        }
+    _getSearchDomain: function () {
+        const searchDomain = this._super.apply(this, arguments);
+        searchDomain.push(['public_categ_ids', 'child_of', parseInt(this.$el.get(0).dataset.productCategoryId)]);
         return searchDomain;
     },
 
