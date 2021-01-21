@@ -23,6 +23,13 @@ class GoogleService(models.AbstractModel):
     _name = 'google.service'
     _description = 'Google Service'
 
+    def get_client_credentials(self, service):
+        get_param = self.env['ir.config_parameter'].sudo().get_param
+        return {
+            "client_id": get_param('google_%s_client_id' % service),
+            "client_secret": get_param('google_%s_client_secret' % service)
+        }
+
     @api.model
     def generate_refresh_token(self, service, authorization_code):
         """ Call Google API to refresh the token, with the given authorization code
@@ -31,9 +38,10 @@ class GoogleService(models.AbstractModel):
             :returns the new refresh token
         """
         Parameters = self.env['ir.config_parameter'].sudo()
-        client_id = Parameters.get_param('google_%s_client_id' % service)
-        client_secret = Parameters.get_param('google_%s_client_secret' % service)
         redirect_uri = Parameters.get_param('google_redirect_uri')
+        credentials = self.get_client_credentials(service)
+        client_id = credentials["client_id"]
+        client_secret = credentials["client_secret"]
 
         # Get the Refresh Token From Google And store it in ir.config_parameter
         headers = {"Content-type": "application/x-www-form-urlencoded"}
@@ -57,10 +65,11 @@ class GoogleService(models.AbstractModel):
     @api.model
     def _get_google_token_uri(self, service, scope):
         get_param = self.env['ir.config_parameter'].sudo().get_param
+        credentials = self.get_client_credentials(service)
         encoded_params = urls.url_encode({
             'scope': scope,
             'redirect_uri': get_param('google_redirect_uri'),
-            'client_id': get_param('google_%s_client_id' % service),
+            'client_id': credentials["client_id"],
             'response_type': 'code',
         })
         return '%s?%s' % (GOOGLE_AUTH_ENDPOINT, encoded_params)
@@ -77,12 +86,12 @@ class GoogleService(models.AbstractModel):
         }
 
         get_param = self.env['ir.config_parameter'].sudo().get_param
+        credentials = self.get_client_credentials(service)
         base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = get_param('google_%s_client_id' % (service,), default=False)
 
         encoded_params = urls.url_encode({
             'response_type': 'code',
-            'client_id': client_id,
+            'client_id': credentials["client_id"],
             'state': json.dumps(state),
             'scope': scope or '%s/auth/%s' % (GOOGLE_API_BASE_URL, service),  # If no scope is passed, we use service by default to get a default scope
             'redirect_uri': base_url + '/google_account/authentication',
@@ -98,14 +107,13 @@ class GoogleService(models.AbstractModel):
         """
         get_param = self.env['ir.config_parameter'].sudo().get_param
         base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        client_id = get_param('google_%s_client_id' % (service,), default=False)
-        client_secret = get_param('google_%s_client_secret' % (service,), default=False)
+        credentials = self.get_client_credentials(service)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {
             'code': authorize_code,
-            'client_id': client_id,
-            'client_secret': client_secret,
+            'client_id': credentials["client_id"],
+            'client_secret': credentials["client_secret"],
             'grant_type': 'authorization_code',
             'redirect_uri': base_url + '/google_account/authentication'
         }

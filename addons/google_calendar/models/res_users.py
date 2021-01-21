@@ -46,9 +46,9 @@ class User(models.Model):
     def _refresh_google_calendar_token(self):
         # LUL TODO similar code exists in google_drive. Should be factorized in google_account
         self.ensure_one()
-        get_param = self.env['ir.config_parameter'].sudo().get_param
-        client_id = get_param('google_calendar_client_id')
-        client_secret = get_param('google_calendar_client_secret')
+        credentials = self.env["google.service"].get_client_credentials("calendar")
+        client_id = credentials["client_id"]
+        client_secret = credentials["client_secret"]
 
         if not client_id or not client_secret:
             raise UserError(_("The account for the Google Calendar service is not configured."))
