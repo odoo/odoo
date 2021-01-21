@@ -2080,7 +2080,8 @@ $.summernote.pluginEvents.applyFont = function (event, editor, layoutInfo, color
       ancestor = dom.ancestor(endPoint.node, dom.isFont) || endPoint.node;
       dom.splitTree(ancestor, endPoint);
     }
-    if (startPoint.offset && startPoint.offset !== dom.nodeLength(startPoint.node)) {
+    if (startPoint.offset && startPoint.offset !== dom.nodeLength(startPoint.node) ||
+        (dom.isText(startPoint.node) && startPoint.node !== startPoint.node.parentNode.childNodes[0])) {
       ancestor = dom.ancestor(startPoint.node, dom.isFont) || startPoint.node;
       node = dom.splitTree(ancestor, startPoint);
       if (endPoint.node === startPoint.node) {
