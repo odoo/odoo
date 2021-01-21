@@ -9,6 +9,7 @@ var _t = core._t;
 tour.register('point_of_sale_tour', {
     url: "/web",
     rainbowMan: false,
+    sequence: 45,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="point_of_sale.menu_point_root"]',
     content: _t("Ready to launch your <b>point of sale</b>?"),
