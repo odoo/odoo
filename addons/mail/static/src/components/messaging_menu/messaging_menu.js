@@ -6,10 +6,10 @@ const components = {
     MobileMessagingNavbar: require('mail/static/src/components/mobile_messaging_navbar/mobile_messaging_navbar.js'),
     NotificationList: require('mail/static/src/components/notification_list/notification_list.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
-const { useRef } = owl.hooks;
 
 class MessagingMenu extends Component {
 
@@ -24,6 +24,7 @@ class MessagingMenu extends Component {
          * item is not considered as a click away from messaging menu in mobile.
          */
         this.id = _.uniqueId('o_messagingMenu_');
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             return {
                 isDeviceMobile: this.env.messaging && this.env.messaging.device.isMobile,

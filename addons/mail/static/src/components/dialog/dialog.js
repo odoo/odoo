@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/dialog/dialog.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -19,6 +20,7 @@ class Dialog extends Component {
         this._componentRef = useRef('component');
         this._onClickGlobal = this._onClickGlobal.bind(this);
         this._onKeydownDocument = this._onKeydownDocument.bind(this);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const dialog = this.env.models['mail.dialog'].get(props.dialogLocalId);
             return {

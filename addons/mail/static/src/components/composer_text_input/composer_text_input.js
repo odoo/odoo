@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/composer_text_input/composer_text_input.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
@@ -12,9 +13,6 @@ const { markEventHandled } = require('mail/static/src/utils/utils.js');
 const { Component } = owl;
 const { useRef } = owl.hooks;
 
-/**
- * ComposerInput relies on a minimal HTML editor in order to support mentions.
- */
 class ComposerTextInput extends Component {
 
     /**
@@ -22,11 +20,24 @@ class ComposerTextInput extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                sendShortcuts: 1,
+            },
+        });
         useStore(props => {
             const composer = this.env.models['mail.composer'].get(props.composerLocalId);
+            const thread = composer && composer.thread;
             return {
-                composer: composer ? composer.__state : undefined,
+                composerHasFocus: composer && composer.hasFocus,
+                composerHasSuggestions: composer && composer.hasSuggestions,
+                composerIsLog: composer && composer.isLog,
+                composerTextInputContent: composer && composer.textInputContent,
+                composerTextInputCursorEnd: composer && composer.textInputCursorEnd,
+                composerTextInputCursorStart: composer && composer.textInputCursorStart,
+                composerTextInputSelectionDirection: composer && composer.textInputSelectionDirection,
                 isDeviceMobile: this.env.messaging.device.isMobile,
+                threadModel: thread && thread.model,
             };
         });
         /**
@@ -186,6 +197,7 @@ class ComposerTextInput extends Component {
      */
     _onFocusinTextarea() {
         this.composer.focus();
+        this.trigger('o-focusin-composer');
     }
 
     /**
