@@ -65,6 +65,7 @@ class User(models.Model):
     hr_presence_state = fields.Selection(related='employee_id.hr_presence_state')
     last_activity = fields.Date(related='employee_id.last_activity')
     last_activity_time = fields.Char(related='employee_id.last_activity_time')
+    employee_type = fields.Selection(related='employee_id.employee_type', readonly=False, related_sudo=False)
 
     can_edit = fields.Boolean(compute='_compute_can_edit')
 
@@ -143,6 +144,7 @@ class User(models.Model):
             'study_field',
             'study_school',
             'private_lang',
+            'employee_type',
         ]
 
         init_res = super(User, self).__init__(pool, cr)

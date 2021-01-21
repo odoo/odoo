@@ -53,6 +53,14 @@ class HrEmployeeBase(models.AbstractModel):
         ('presence_absent', 'Absent'),
         ('presence_to_define', 'To define'),
         ('presence_undetermined', 'Undetermined')], compute='_compute_presence_icon')
+    employee_type = fields.Selection([
+        ('employee', 'Employee'),
+        ('student', 'Student'),
+        ('trainee', 'Trainee'),
+        ('contractor', 'Contractor'),
+        ('freelance', 'Freelancer'),
+        ], string='Employee Type', default='employee', required=True,
+        help="The employee type. Although the primary purpose may seem to categorize employees, this field has also an impact in the Contract History. Only Employee type is supposed to be under contract and will have a Contract History.")
 
     @api.depends('user_id.im_status')
     def _compute_presence_state(self):

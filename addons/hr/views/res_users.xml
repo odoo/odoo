@@ -176,7 +176,9 @@
                     </page>
                      <page name="hr_settings" string="HR Settings">
                         <group>
-                            <group string='Status' name="active_group" invisible="1"></group>
+                            <group string='Status' name="active_group">
+                                <field name="employee_type" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+                            </group>
                             <group string="Attendance" name="identification_group">
                                 <field name="pin" attrs="{'readonly': [('can_edit', '=', False)]}"/>
                                 <field name="barcode" attrs="{'readonly': [('can_edit', '=', False)]}"/>
