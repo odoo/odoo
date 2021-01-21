@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
@@ -17,6 +18,11 @@ class ModerationRejectDialog extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                messageLocalIds: 1,
+            },
+        });
         this.state = useState({
             title: this.env._t("Message Rejected"),
             comment: this.env._t("Your message was rejected by moderator."),

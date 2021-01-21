@@ -5,6 +5,7 @@ const components = {
     MessageAuthorPrefix: require('mail/static/src/components/message_author_prefix/message_author_prefix.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const mailUtils = require('mail.utils');
 
@@ -18,6 +19,7 @@ class ThreadPreview extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
             let lastMessageAuthor;
