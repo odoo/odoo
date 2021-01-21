@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/components/drop_zone/drop_zone.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+
 const { Component, useState } = owl;
 
 class DropZone extends Component {
@@ -10,6 +12,7 @@ class DropZone extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         this.state = useState({
             /**
              * Determine whether the user is dragging files over the dropzone.
