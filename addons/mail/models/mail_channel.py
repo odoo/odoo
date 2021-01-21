@@ -621,7 +621,7 @@ class Channel(models.Model):
     # ------------------------------------------------------------
 
     @api.model
-    def partner_info(self, all_partners, direct_partners):
+    def _get_channel_partner_info(self, all_partners, direct_partners):
         """
         Return the information needed by channel to display channel members
             :param all_partners: list of res.parner():
@@ -654,7 +654,7 @@ class Channel(models.Model):
         all_partners = all_partner_channel.mapped('partner_id')
         direct_channel_partners = all_partner_channel.filtered(lambda pc: channel_dict[pc.channel_id.id].channel_type == 'chat')
         direct_partners = direct_channel_partners.mapped('partner_id')
-        partner_infos = self.partner_info(all_partners, direct_partners)
+        partner_infos = self._get_channel_partner_info(all_partners, direct_partners)
 
         # add last message preview (only used in mobile)
         addPreview = self._context.get('isMobile', False)
