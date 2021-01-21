@@ -30,7 +30,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='activities_overdue']" position="before">
                     <separator/>
-                    <filter name="checks_to_send" string="Checks to Print" domain="[('payment_method_id.code', '=', 'check_printing'), ('state', '=', 'posted')]"/>
+                    <filter name="checks_to_send" string="Checks to Print" domain="[('payment_method_id.code', '=', 'check_printing'), ('state', '=', 'posted'), ('is_move_sent', '=', False)]"/>
                     <separator/>
                 </xpath>
             </field>
