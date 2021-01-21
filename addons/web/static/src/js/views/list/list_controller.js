@@ -83,7 +83,7 @@ var ListController = BasicController.extend({
      */
     canBeRemoved: async function () {
         const _super = this._super.bind(this);
-        await this.renderer.unselectRow();
+        await this.renderer.unselectRow({ canDiscard: true });
         return _super(...arguments);
     },
     /*
@@ -415,7 +415,7 @@ var ListController = BasicController.extend({
             return null;
         }
         return Object.assign(this._super(...arguments), {
-            validate: () => this.renderer.unselectRow(),
+            validate: () => this.renderer.unselectRow({ canDiscard: true }),
         });
     },
     /**
