@@ -11,7 +11,7 @@
                         <field name="use_quotations"/><label for="use_quotations"/>
                     </div>
                 </xpath>
-                <xpath expr="//group[@name='right']" position="inside">
+                <xpath expr="//field[@name='company_id']" position="after">
                     <field name="invoiced_target" widget="monetary"/>
                 </xpath>
             </field>
@@ -46,10 +46,10 @@
         <field name="search_view_id" ref="sale_order_view_search_inherit_quotation"/>
     </record>
 
-    <record id="crm_team_salesteams_view_kanban" model="ir.ui.view">
-        <field name="name">crm.team.kanban</field>
+    <record id="crm_team_view_kanban_dashboard" model="ir.ui.view">
+        <field name="name">crm.team.view.kanban.dashboard.inherit.sale</field>
         <field name="model">crm.team</field>
-        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
+        <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard"/>
         <field name="arch" type="xml">
         <data>
             <xpath expr="//templates" position="before">

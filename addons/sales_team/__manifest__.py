@@ -3,7 +3,7 @@
 
 {
     'name': 'Sales Teams',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Sales/Sales',
     'summary': 'Sales Teams',
     'description': """
@@ -19,6 +19,7 @@ Using this application you can manage Sales Teams with CRM and/or Sales
         'views/assets.xml',
         'views/crm_tag_views.xml',
         'views/crm_team_views.xml',
+        'views/crm_team_member_views.xml',
         'views/mail_activity_views.xml',
         'views/res_partner_views.xml',
         ],
