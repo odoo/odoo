@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/components/file_uploader/file_uploader.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+
 const core = require('web.core');
 
 const { Component } = owl;
@@ -16,6 +18,12 @@ class FileUploader extends Component {
         this._fileInputRef = useRef('fileInput');
         this._fileUploadId = _.uniqueId('o_FileUploader_fileupload');
         this._onAttachmentUploaded = this._onAttachmentUploaded.bind(this);
+        useShouldUpdateBasedOnProps({
+            compareDepth: {
+                attachmentLocalIds: 1,
+                newAttachmentExtraData: 3,
+            },
+        });
     }
 
     mounted() {
