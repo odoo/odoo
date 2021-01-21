@@ -5110,7 +5110,7 @@ QUnit.module('Views', {
             model: 'foo',
             data: this.data,
             arch: '<tree string="Phonecalls" editable="top">' +
-                    '<field name="date"/>' +
+                    '<field name="foo"/>' +
                 '</tree>',
             mockRPC: function (route, args) {
                 if (args.method === 'create') {
@@ -5121,16 +5121,19 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.fields.editInput(list.$('tr.o_selected_row input[name="foo"]'), 'new value');
         await testUtils.dom.click(list.$('.o_list_view'));
 
         assert.strictEqual(createCount, 1, "should have created a record");
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.fields.editInput(list.$('tr.o_selected_row input[name="foo"]'), 'new value');
         await testUtils.dom.click(list.$('tfoot'));
 
         assert.strictEqual(createCount, 2, "should have created a record");
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.fields.editInput(list.$('tr.o_selected_row input[name="foo"]'), 'new value');
         await testUtils.dom.click(list.$('tbody tr').last());
 
         assert.strictEqual(createCount, 3, "should have created a record");
@@ -6343,6 +6346,7 @@ QUnit.module('Views', {
 
         // Press 'Tab' -> should go to next line
         await testUtils.fields.triggerKeydown(form.$('.o_field_widget[name=o2m] .o_selected_row input'), 'tab');
+        await testUtils.nextTick(); // wait for discard
         assert.hasClass(form.$('.o_field_widget[name=o2m] .o_data_row:nth(1)'),'o_selected_row',
             "second row should be in edition");
 
@@ -7249,7 +7253,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('list with handle widget, create, move and discard', async function (assert) {
+    QUnit.test('list with handle widget, create and move should keep empty lines at last', async function (assert) {
         // When there are less than 4 records in the table, empty lines are added
         // to have at least 4 rows. This test ensures that the empty line added
         // when a new record is discarded is correctly added on the bottom of
@@ -7583,6 +7587,100 @@ QUnit.module('Views', {
             "First row should remain unchanged");
         assert.strictEqual(list.$('.o_data_row:eq(1) .o_data_cell:first()').text(), "oui",
             "Second row should have been updated");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: non dirty record with required fields', async function (assert) {
+        assert.expect(10);
+
+        const list = await createView({
+            arch: `
+                <tree editable="top">
+                    <field name="foo" required="1"/>
+                    <field name="int_field"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        await testUtils.dom.click($('.o_list_button_add'));
+        assert.containsOnce(list, '.o_selected_row');
+
+        // do not change anything and then click outside should discard record
+        await testUtils.dom.click('body');
+        assert.containsNone(list, '.o_selected_row');
+
+        await testUtils.dom.click($('.o_list_button_add'));
+        assert.containsOnce(list, '.o_selected_row');
+        // do not change anything and then click save button should not allow to discard record
+        await testUtils.dom.click($('.o_list_button_save'));
+        assert.containsOnce(list, '.o_selected_row');
+
+        // selecting some other row should discard non dirty record
+        assert.strictEqual(list.$('.o_selected_row').data('id'), 'foo_7',
+            "foo_7 record should be currently selected");
+        await testUtils.dom.click(list.$('.o_data_row:eq(1) .o_data_cell:eq(0)'));
+        assert.strictEqual(list.$('.o_selected_row').data('id'), 'foo_2',
+            "foo_2 record should be currently selected");
+
+        // click somewhere else to discard currently selected row
+        await testUtils.dom.click('body');
+        await testUtils.dom.click($('.o_list_button_add'));
+        assert.containsOnce(list, '.o_selected_row');
+        // do not change anything and press Enter key should not allow to discard record
+        await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input.o_field_widget[name="foo"]'), 'enter');
+        assert.containsOnce(list, '.o_selected_row');
+
+        // discard row and create new record and keep required field empty and click anywhere
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
+        await testUtils.dom.click($('.o_list_button_add'));
+        assert.containsOnce(list, '.o_selected_row', "row should be selected");
+        await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=int_field]'), 123);
+        await testUtils.dom.click('body');
+        assert.containsOnce(list, '.o_selected_row', "row should still be selected");
+
+        list.destroy();
+    });
+
+    QUnit.test('editable list view: do not commit changes twice', async function (assert) {
+        assert.expect(5);
+
+        this.data.foo.onchanges = {
+            bar: function (obj) {
+                obj.foo = 'changed';
+            },
+        };
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                </tree>`,
+            mockRPC(route, { method, model }) {
+                if (model === 'foo' && method === 'onchange') {
+                    assert.step('onchange');
+                }
+                return this._super(...arguments);
+            },
+        });
+        testUtils.mock.intercept(list, "field_changed", function (ev) {
+            assert.deepEqual(ev.data.changes, { bar: false });
+        }, true);
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]')[0].textContent, 'yop');
+
+        await testUtils.dom.click(list.$('.o_field_cell[name="bar"]')[0]);
+        await testUtils.dom.click(list.$('.o_field_cell[name="bar"] label')[0]);
+
+        await testUtils.dom.click(list.$('.o_list_button_save')[0]);
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]')[0].textContent, 'changed');
+        assert.verifySteps([ 'onchange' ]);
 
         list.destroy();
     });
@@ -8543,6 +8641,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
         assert.containsOnce(form, '.o_data_row');
         assert.hasClass(form.$('.o_data_row'), 'o_selected_row');
+        await testUtils.fields.editInput(form.$('.o_field_x2many[name="o2m"] .o_selected_row input[name="display_name"]'), 'new value');
 
         // click outside to unselect the row
         await testUtils.dom.click(document.body);
@@ -10453,6 +10552,7 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(list.$('.o_group_header:first')); // open group
         await testUtils.dom.click(list.$('.o_group_field_row_add a')); // add a new row
+        await testUtils.fields.editInput(list.$('input[name="foo"]'), 'xyz'); // make record dirty
         await testUtils.dom.click($('body')); // unselect row
         assert.verifySteps(['1']);
         assert.strictEqual(list.$('.o_data_row .o_data_cell:eq(1)').text(), 'Low',
