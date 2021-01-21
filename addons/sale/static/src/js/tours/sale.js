@@ -112,11 +112,6 @@ tour.register("sale_quote_tour", {
     },
     ...tour.stepUtils.statusbarButtonsSteps("Send by Email", _t("<b>Send the quote</b> to yourself and check what the customer will receive."), ".o_statusbar_buttons button[name='action_quotation_send']"),
     {
-        trigger: ".modal-content div[name='partner_ids']",
-        content: _t("Write <b>your own email address</b> here in order to test the flow."),
-        run: "text agrolait@example.com"
-    },
-    {
         trigger: ".modal-footer button.btn-primary",
         auto: true,
     }, {
