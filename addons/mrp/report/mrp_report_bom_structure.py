@@ -69,7 +69,7 @@ class ReportBomStructure(models.AbstractModel):
     def _get_report_data(self, bom_id, searchQty=0, searchVariant=False):
         lines = {}
         bom = self.env['mrp.bom'].browse(bom_id)
-        bom_quantity = searchQty or bom.product_qty
+        bom_quantity = searchQty or bom.product_qty or 1
         bom_product_variants = {}
         bom_uom_name = ''
 
