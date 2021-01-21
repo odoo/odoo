@@ -82,7 +82,7 @@ tour.register('project_tour', {
     position: "bottom",
     run: "drag_and_drop .o_kanban_group:eq(1) ",
 }, {
-    trigger: ".o_kanban_group:eq(1) > .o_kanban_record",
+    trigger: ".o_kanban_record:first",
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("Let's start working on your task."),
     position: "bottom",
