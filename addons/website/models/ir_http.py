@@ -74,7 +74,7 @@ class Http(models.AbstractModel):
     def _slug_matching(cls, adapter, endpoint, **kw):
         for arg in kw:
             if isinstance(kw[arg], models.BaseModel):
-                kw[arg] = kw[arg].with_user(request.uid)
+                kw[arg] = kw[arg].with_context(slug_matching=True)
         qs = request.httprequest.query_string.decode('utf-8')
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
@@ -366,6 +366,11 @@ class Http(models.AbstractModel):
 
 
 class ModelConverter(ModelConverter):
+
+    def to_url(self, value):
+        if hasattr(value, 'env') and value.env.context.get('slug_matching'):
+            return value.env.context.get('_converter_value', str(value.id))
+        return super().to_url(value)
 
     def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].with_user(uid)

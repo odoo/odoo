@@ -264,7 +264,7 @@ class ModelConverter(ModelConverter):
             # limited support for negative IDs due to our slug pattern, assume abs() if not found
             if not env[self.model].browse(record_id).exists():
                 record_id = abs(record_id)
-        return env[self.model].browse(record_id)
+        return env[self.model].with_context(_converter_value=value).browse(record_id)
 
 
 class IrHttp(models.AbstractModel):
