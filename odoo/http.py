@@ -1437,7 +1437,10 @@ class Root(object):
                 except werkzeug.exceptions.HTTPException as e:
                     return request._handle_exception(e)
                 request.set_handler(func, arguments, "none")
-                result = request.dispatch()
+                try:
+                    result = request.dispatch()
+                except Exception as e:
+                    return request._handle_exception(e)
                 return result
 
             with request:
