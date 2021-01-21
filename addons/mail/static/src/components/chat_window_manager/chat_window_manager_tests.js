@@ -852,11 +852,12 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_NotificationList_preview').click(),
         message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
@@ -868,10 +869,11 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
             document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
         },
         message: "should wait until channel 20 scrolled to 142 after setting this value manually",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 142
             );
         },
@@ -887,10 +889,11 @@ QUnit.test('[technical] chat window: scroll conservation on toggle home menu', a
         eventName: 'o-component-message-list-scrolled',
         func: () => this.showHomeMenu(),
         message: "should wait until channel 20 restored its scroll to 142 after showing the home menu",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 142
             );
         },
@@ -1620,11 +1623,12 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_NotificationList_preview').click(),
         message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
@@ -1636,10 +1640,11 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
             document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142;
         },
         message: "should wait until channel 20 scrolled to 142 after setting this value manually",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 142
             );
         },
@@ -1663,10 +1668,11 @@ QUnit.test('chat window with a thread: keep scroll position in message list on f
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_ChatWindow_header').click(),
         message: "should wait until channel 20 restored its scroll position to 142",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 142
 
             );
@@ -1820,11 +1826,12 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_NotificationList_preview').click(),
         message: "should wait until channel 20 scrolled to its last message after opening it from the messaging menu",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
@@ -1834,10 +1841,11 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector(`.o_ThreadView_messageList`).scrollTop = 142,
         message: "should wait until channel 20 scrolled to 142 after setting this value manually",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 142
             );
         },
@@ -1850,10 +1858,11 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_ChatWindow_header').click(),
         message: "should wait until channel 20 restored its scroll to 142 after unfolding it",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 142
             );
         },
@@ -1873,10 +1882,11 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector('.o_ChatWindow_header').click(),
         message: "should wait until channel 20 restored its scroll position to the last saved value (142)",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 142
             );
         },

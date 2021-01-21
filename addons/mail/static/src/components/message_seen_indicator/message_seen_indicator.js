@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/message_seen_indicator/message_seen_indicator.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -12,6 +13,7 @@ class MessageSeenIndicator extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const message = this.env.models['mail.message'].get(props.messageLocalId);
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);

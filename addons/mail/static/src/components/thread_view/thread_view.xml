@@ -35,6 +35,7 @@
                         hasSendButton="props.hasComposerSendButton"
                         hasThreadTyping="props.hasComposerThreadTyping"
                         isCompact="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? false : undefined"
+                        isDoFocus="props.isDoFocus"
                         showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
                         showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
                         textInputSendShortcuts="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? ['ctrl-enter', 'meta-enter'] : ['enter']"
