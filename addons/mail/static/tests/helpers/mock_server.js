@@ -1028,7 +1028,7 @@ MockServer.include({
         this._widget.call('bus_service', 'trigger', 'notification', notifications);
     },
     /**
-     * Simulates `partner_info` on `mail.channel`.
+     * Simulates `_get_channel_partner_info` on `mail.channel`.
      *
      * @private
      * @param {integer[]} all_partners
