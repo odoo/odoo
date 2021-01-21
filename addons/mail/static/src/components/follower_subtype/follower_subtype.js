@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/follower_subtype/follower_subtype.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -12,6 +13,7 @@ class FollowerSubtype extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const followerSubtype = this.env.models['mail.follower_subtype'].get(props.followerSubtypeLocalId);
             return [followerSubtype ? followerSubtype.__state : undefined];
