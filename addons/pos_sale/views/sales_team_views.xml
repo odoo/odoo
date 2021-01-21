@@ -30,10 +30,10 @@
         </field>
     </record>
 
-    <record id="crm_team_salesteams_view_kanban_inherit_pos_sale" model="ir.ui.view"> 
-        <field name="name">crm.team.kanban</field>
+    <record id="crm_team_view_kanban_dashboard" model="ir.ui.view"> 
+        <field name="name">crm.team.view.kanban.dashboard.inherit.pos</field>
         <field name="model">crm.team</field>
-        <field name="inherit_id" ref="sales_team.crm_team_salesteams_view_kanban"/>
+        <field name="inherit_id" ref="sales_team.crm_team_view_kanban_dashboard"/>
         <field name="groups_id" eval="[(4, ref('point_of_sale.group_pos_user'))]"/>
         <field name="arch" type="xml">
         <data>

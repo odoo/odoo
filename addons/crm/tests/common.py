@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from ast import literal_eval
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
+from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
 from odoo import tools
@@ -51,6 +53,15 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'alias_name': 'sales.test',
             'use_leads': True,
             'use_opportunities': True,
+            'assignment_domain': False,
+        })
+        cls.sales_team_1_m1.write({
+            'assignment_max': 45,
+            'assignment_domain': False,
+        })
+        cls.sales_team_1_m2.write({
+            'assignment_max': 15,
+            'assignment_domain': False,
         })
 
         (cls.user_sales_manager | cls.user_sales_leads | cls.user_sales_salesman).write({
@@ -151,19 +162,38 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'zip': '97648',
         })
 
-    def _create_leads_batch(self, lead_type='lead', count=10, partner_ids=None, user_ids=None):
+    def _create_leads_batch(self, lead_type='lead', count=10, email_dup_count=0,
+                            partner_count=0, partner_ids=None, user_ids=None,
+                            country_ids=None):
         """ Helper tool method creating a batch of leads, useful when dealing
         with batch processes. Please update me.
 
         :param string type: 'lead', 'opportunity', 'mixed' (lead then opp),
           None (depends on configuration);
+        :param partner_count: if not partner_ids is given, generate partner count
+          customers; other leads will have no customer;
+        :param partner_ids: a set of partner ids to cycle when creating leads;
+        :param user_ids: a set of user ids to cycle when creating leads;
+
+        :return: create leads
         """
         types = ['lead', 'opportunity']
         leads_data = [{
-            'name': 'TestLead_%02d' % (x),
+            'name': 'TestLead_%04d' % (x),
             'type': lead_type if lead_type else types[x % 2],
             'priority': '%s' % (x % 3),
         } for x in range(count)]
+
+        # generate customer information
+        partners = []
+        if partner_count:
+            partners = self.env['res.partner'].create([{
+                'name': 'AutoPartner_%04d' % (x),
+                'email': tools.formataddr((
+                    'AutoPartner_%04d' % (x),
+                    'partner_email_%04d@example.com' % (x),
+                )),
+            } for x in range(partner_count)])
 
         # customer information
         if partner_ids:
@@ -171,17 +201,49 @@ class TestCrmCommon(TestSalesCommon, MailCase):
                 lead_data['partner_id'] = partner_ids[idx % len(partner_ids)]
         else:
             for idx, lead_data in enumerate(leads_data):
-                lead_data['email_from'] = tools.formataddr((
-                    'TestCustomer_%02d' % (idx),
-                    'customer_email_%02d@example.com' % (idx)
-                ))
+                if partner_count and idx < partner_count:
+                    lead_data['partner_id'] = partners[idx].id
+                else:
+                    lead_data['email_from'] = tools.formataddr((
+                        'TestCustomer_%02d' % (idx),
+                        'customer_email_%04d@example.com' % (idx)
+                    ))
+
+        # country + phone information
+        if country_ids:
+            cid_to_country = dict(
+                (country.id, country)
+                for country in self.env['res.country'].browse([cid for cid in country_ids if cid])
+            )
+            for idx, lead_data in enumerate(leads_data):
+                country_id = country_ids[idx % len(country_ids)]
+                country = cid_to_country.get(country_id, self.env['res.country'])
+                lead_data['country_id'] = country.id
+                if lead_data['country_id']:
+                    lead_data['phone'] = phone_validation.phone_format(
+                        '0456%04d99' % (idx),
+                        country.code, country.phone_code,
+                        force_format='E164')
+                else:
+                    lead_data['phone'] = '+32456%04d99' % (idx)
 
         # salesteam information
         if user_ids:
             for idx, lead_data in enumerate(leads_data):
                 lead_data['user_id'] = user_ids[idx % len(user_ids)]
 
-        return self.env['crm.lead'].create(leads_data)
+        # duplicates (currently only with email)
+        dups_data = []
+        if email_dup_count and not partner_ids:
+            for idx, lead_data in enumerate(leads_data):
+                if not lead_data.get('partner_id') and lead_data['email_from']:
+                    dup_data = dict(lead_data)
+                    dup_data['name'] = 'Duplicated-%s' % dup_data['name']
+                    dups_data.append(dup_data)
+                if len(dups_data) >= email_dup_count:
+                    break
+
+        return self.env['crm.lead'].create(leads_data + dups_data)
 
     def _create_duplicates(self, lead, create_opp=True):
         """ Helper tool method creating, based on a given lead
@@ -246,10 +308,10 @@ class TestLeadConvertCommon(TestCrmCommon):
         # Sales Team organization
         # Role: M (team member) R (team manager)
         # SALESMAN---------------sales_team_1-----sales_team_convert
-        # admin------------------M----------------/
+        # admin------------------M----------------/  (sales_team_1_m2)
         # user_sales_manager-----R----------------R
-        # user_sales_leads-------M----------------/
-        # user_sales_salesman----/----------------M
+        # user_sales_leads-------M----------------/  (sales_team_1_m1)
+        # user_sales_salesman----/----------------M  (sales_team_convert_m1)
 
         # Stages Team organization
         # Name-------------------ST-------------------Sequ
@@ -268,7 +330,13 @@ class TestLeadConvertCommon(TestCrmCommon):
             'use_opportunities': True,
             'company_id': False,
             'user_id': cls.user_sales_manager.id,
-            'member_ids': [(4, cls.user_sales_salesman.id)],
+            'assignment_domain': [('priority', 'in', ['1', '2', '3'])],
+        })
+        cls.sales_team_convert_m1 = cls.env['crm.team.member'].create({
+            'user_id': cls.user_sales_salesman.id,
+            'crm_team_id': cls.sales_team_convert.id,
+            'assignment_max': 30,
+            'assignment_domain': False,
         })
         cls.stage_team_convert_1 = cls.env['crm.stage'].create({
             'name': 'New',
@@ -286,6 +354,75 @@ class TestLeadConvertCommon(TestCrmCommon):
         cls.crm_lead_dt_patcher.stop()
         super(TestLeadConvertCommon, cls).tearDownClass()
 
+    @classmethod
+    def _switch_to_multi_membership(cls):
+        # Sales Team organization
+        # Role: M (team member) R (team manager)
+        # SALESMAN---------------sales_team_1-----sales_team_convert
+        # admin------------------M----------------/    (sales_team_1_m2)
+        # user_sales_manager-----R----------------R+M  <-- NEW (sales_team_convert_m2)
+        # user_sales_leads-------M----------------/    (sales_team_1_m1)
+        # user_sales_salesman----M----------------M    <-- NEW (sales_team_1_m3 / sales_team_convert_m1)
+
+        # SALESMAN--------------sales_team----------assign_max
+        # admin-----------------sales_team_1--------15 (tot: 0.5/day)
+        # user_sales_manager----sales_team_convert--60 (tot: 2/day)
+        # user_sales_leads------sales_team_1--------45 (tot: 1.5/day)
+        # user_sales_salesman---sales_team_1--------15 (tot: 1.5/day)
+        # user_sales_salesman---sales_team_convert--30
+
+        cls.sales_team_1_m1.write({
+            'assignment_max': 45,
+            'assignment_domain': False,
+        })
+        cls.sales_team_1_m2.write({
+            'assignment_max': 15,
+            'assignment_domain': [('probability', '>=', 10)],
+        })
+
+        cls.env['ir.config_parameter'].set_param('sales_team.membership_multi', True)
+        cls.sales_team_1_m3 = cls.env['crm.team.member'].create({
+            'user_id': cls.user_sales_salesman.id,
+            'crm_team_id': cls.sales_team_1.id,
+            'assignment_max': 15,
+            'assignment_domain': [('probability', '>=', 20)],
+        })
+        cls.sales_team_convert_m1.write({
+            'assignment_max': 30,
+            'assignment_domain': [('priority', 'in', ['2', '3'])]
+        })
+        cls.sales_team_convert_m2 = cls.env['crm.team.member'].create({
+            'user_id': cls.user_sales_manager.id,
+            'crm_team_id': cls.sales_team_convert.id,
+            'assignment_max': 60,
+            'assignment_domain': False,
+        })
+
+    @classmethod
+    def _switch_to_auto_assign(cls):
+        cls.env['ir.config_parameter'].set_param('crm.lead.auto.assignment', True)
+        cls.assign_cron = cls.env.ref('crm.ir_cron_crm_lead_assign')
+        cls.assign_cron.update({
+            'active': True,
+            'interval_type':  'days',
+            'interval_number': 1,
+        })
+
+    def assertMemberAssign(self, member, count):
+        """ Check assign result and that domains are effectively taken into account """
+        self.assertEqual(member.lead_month_count, count)
+        member_leads = self.env['crm.lead'].search(member._get_lead_month_domain())
+        self.assertEqual(len(member_leads), count)
+        if member.assignment_domain:
+            self.assertEqual(
+                member_leads.filtered_domain(literal_eval(member.assignment_domain)),
+                member_leads
+            )
+        if member.crm_team_id.assignment_domain:
+            self.assertEqual(
+                member_leads.filtered_domain(literal_eval(member.crm_team_id.assignment_domain)),
+                member_leads
+            )
 
 class TestLeadConvertMassCommon(TestLeadConvertCommon):
 
@@ -295,11 +432,11 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
         # Sales Team organization
         # Role: M (team member) R (team manager)
         # SALESMAN-------------------sales_team_1-----sales_team_convert
-        # admin----------------------M----------------/
-        # user_sales_manager---------R----------------R
+        # admin----------------------M----------------/  (sales_team_1_m2)
+        # user_sales_manager---------R----------------R  (sales_team_1_m1)
         # user_sales_leads-----------M----------------/
-        # user_sales_leads_convert---/----------------M  <-- NEW
-        # user_sales_salesman--------/----------------M
+        # user_sales_leads_convert---/----------------M  <-- NEW (sales_team_convert_m2)
+        # user_sales_salesman--------/----------------M  (sales_team_convert_m1)
 
         cls.user_sales_leads_convert = mail_new_test_user(
             cls.env, login='user_sales_leads_convert',
@@ -308,8 +445,9 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
             notification_type='inbox',
             groups='sales_team.group_sale_salesman_all_leads,base.group_partner_manager,crm.group_use_lead',
         )
-        cls.sales_team_convert.write({
-            'member_ids': [(4, cls.user_sales_leads_convert.id)]
+        cls.sales_team_convert_m2 = cls.env['crm.team.member'].create({
+            'user_id': cls.user_sales_leads_convert.id,
+            'crm_team_id': cls.sales_team_convert.id,
         })
 
         cls.lead_w_partner = cls.env['crm.lead'].create({
