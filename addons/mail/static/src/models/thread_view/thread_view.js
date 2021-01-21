@@ -45,17 +45,8 @@ function factory(dependencies) {
          * @param {Object} hint
          */
         markComponentHintProcessed(hint) {
-            let filterFun;
-            switch (hint.type) {
-                case 'message-received':
-                    filterFun = h => h.type !== hint.type && h.message !== hint.data.message;
-                    break;
-                default:
-                    filterFun = h => h.type !== hint.type;
-                    break;
-            }
             this.update({
-                componentHintList: this.componentHintList.filter(filterFun),
+                componentHintList: this.componentHintList.filter(h => h !== hint),
             });
             this.env.messagingBus.trigger('o-thread-view-hint-processed', {
                 hint,
@@ -143,6 +134,8 @@ function factory(dependencies) {
          * @private
          */
         _onThreadCacheChanged() {
+            // clear obsolete hints
+            this.update({ componentHintList: clear() });
             this.addComponentHint('change-of-thread-cache');
             if (this.threadCache) {
                 this.threadCache.update({ isCacheRefreshRequested: true });
@@ -236,7 +229,9 @@ function factory(dependencies) {
          * a new message. Detection of new message is done through the component
          * hint `message-received`.
          */
-        hasAutoScrollOnMessageReceived: attr(),
+        hasAutoScrollOnMessageReceived: attr({
+            default: true,
+        }),
         /**
          * Last message in the context of the currently displayed thread cache.
          */
