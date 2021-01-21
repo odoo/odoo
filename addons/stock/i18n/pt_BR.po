@@ -1223,13 +1223,13 @@ msgstr "Locais de Contrapartida"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "Create Backorder"
-msgstr "Criar Backorder"
+msgstr "Criar nova Movimentação"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:755
 #, python-format
 msgid "Create Backorder?"
-msgstr "Criar Backorder?"
+msgstr "Criar nova Movimentação?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_scrap_tree_view
@@ -1258,8 +1258,9 @@ msgid ""
 "                        products later. Do not create a backorder if you will not\n"
 "                        process the remaining products."
 msgstr ""
-"Crie um pedido em atraso se você espera processar os produtos restantes\n"
-"mais tarde. Não crie um pedido em atraso se não vai processar os restantes produtos."
+"Se deseja movimentar futuramente o restante dos Produtos, crie um novo movimento\n"
+"                        ou selecione Cancelar a Diferença de Saldo para Finalizar\n"
+"                        o Pedido."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -3518,7 +3519,7 @@ msgstr "Próximas transferências afetadas:"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "No Backorder"
-msgstr "Nenhuma Backorder"
+msgstr "Cancelar Diferença de Saldo"
 
 #. module: stock
 #: selection:res.partner,picking_warn:0
@@ -7213,7 +7214,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
 msgid "You have processed less products than the initial demand."
-msgstr "Você já processou menos produtos do que a demanda inicial."
+msgstr "Informado Quantidade menor de produtos do que a demanda inicial."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
