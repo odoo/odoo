@@ -2,6 +2,7 @@ odoo.define('mail/static/src/components/attachment_viewer/attachment_viewer.js',
 'use strict';
 
 const useRefs = require('mail/static/src/component_hooks/use_refs/use_refs.js');
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component, QWeb } = owl;
@@ -19,6 +20,7 @@ class AttachmentViewer extends Component {
     constructor(...args) {
         super(...args);
         this.MIN_SCALE = MIN_SCALE;
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
             return {

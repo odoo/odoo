@@ -1709,11 +1709,12 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
         waitUntilEvent: {
             eventName: 'o-component-message-list-scrolled',
             message: "should wait until channel 20 scrolled to its last message initially",
-            predicate: ({ scrollTop, threadViewer }) => {
+            predicate: ({ scrollTop, thread }) => {
                 const messageList = document.querySelector('.o_ThreadView_messageList');
                 return (
-                    threadViewer.thread.model === 'mail.channel' &&
-                    threadViewer.thread.id === 20 &&
+                    thread &&
+                    thread.model === 'mail.channel' &&
+                    thread.id === 20 &&
                     scrollTop === messageList.scrollHeight - messageList.clientHeight
                 );
             },
@@ -1756,11 +1757,12 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
         waitUntilEvent: {
             eventName: 'o-component-message-list-scrolled',
             message: "should wait until channel 20 scrolled to its last message initially",
-            predicate: ({ scrollTop, threadViewer }) => {
+            predicate: ({ scrollTop, thread }) => {
                 const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
                 return (
-                    threadViewer.thread.model === 'mail.channel' &&
-                    threadViewer.thread.id === 20 &&
+                    thread &&
+                    thread.model === 'mail.channel' &&
+                    thread.id === 20 &&
                     scrollTop === messageList.scrollHeight - messageList.clientHeight
                 );
             },
@@ -1844,11 +1846,12 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
         waitUntilEvent: {
             eventName: 'o-component-message-list-scrolled',
             message: "should wait until channel 20 scrolled to its last message initially",
-            predicate: ({ scrollTop, threadViewer }) => {
+            predicate: ({ scrollTop, thread }) => {
                 const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
                 return (
-                    threadViewer.thread.model === 'mail.channel' &&
-                    threadViewer.thread.id === 20 &&
+                    thread &&
+                    thread.model === 'mail.channel' &&
+                    thread.id === 20 &&
                     scrollTop === messageList.scrollHeight - messageList.clientHeight
                 );
             },
@@ -1872,10 +1875,11 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
             document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
         },
         message: "should wait until channel scrolled to top",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === 0
             );
         },
@@ -1912,11 +1916,12 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
             messageList.scrollTop = messageList.scrollHeight - messageList.clientHeight;
         },
         message: "should wait until channel scrolled to bottom",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
@@ -1973,8 +1978,8 @@ QUnit.test('restore thread scroll position', async function (assert) {
         waitUntilEvent: {
             eventName: 'o-component-message-list-scrolled',
             message: "should wait until channel 11 scrolled to its last message",
-            predicate: ({ threadViewer }) => {
-                return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+            predicate: ({ thread }) => {
+                return thread && thread.model === 'mail.channel' && thread.id === 11;
             },
         },
     });
@@ -1999,8 +2004,8 @@ QUnit.test('restore thread scroll position', async function (assert) {
         eventName: 'o-component-message-list-scrolled',
         func: () => document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0,
         message: "should wait until channel 11 changed its scroll position to top",
-        predicate: ({ threadViewer }) => {
-            return threadViewer.thread.model === 'mail.channel' && threadViewer.thread.id === 11;
+        predicate: ({ thread }) => {
+            return thread && thread.model === 'mail.channel' && thread.id === 11;
         },
     });
     assert.strictEqual(
@@ -2028,11 +2033,12 @@ QUnit.test('restore thread scroll position', async function (assert) {
             `).click();
         },
         message: "should wait until channel 12 scrolled to its last message",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 12 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 12 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
@@ -2060,10 +2066,11 @@ QUnit.test('restore thread scroll position', async function (assert) {
             `).click();
         },
         message: "should wait until channel 11 restored its scroll position",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 11 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 11 &&
                 scrollTop === 0
             );
         },
@@ -2089,11 +2096,12 @@ QUnit.test('restore thread scroll position', async function (assert) {
             `).click();
         },
         message: "should wait until channel 12 recovered its scroll position (to bottom)",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 12 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 12 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
@@ -3669,11 +3677,12 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
             `).click();
         },
         message: "should wait until channel scrolled to bottom after opening it from the discuss sidebar",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ scrollTop, thread }) => {
             const messageList = document.querySelector('.o_ThreadView_messageList');
             return (
-                threadViewer.thread.model === 'mail.channel' &&
-                threadViewer.thread.id === 20 &&
+                thread &&
+                thread.model === 'mail.channel' &&
+                thread.id === 20 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
@@ -3975,7 +3984,7 @@ QUnit.test('mark a single message as read should only move this message to "Hist
 });
 
 QUnit.test('all messages in "Inbox" in "History" after marked all as read', async function (assert) {
-    assert.expect(4);
+    assert.expect(2);
 
     const messageOffset = 200;
     for (let id = messageOffset; id < messageOffset + 40; id++) {
@@ -3998,22 +4007,18 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
         waitUntilEvent: {
             eventName: 'o-component-message-list-scrolled',
             message: "should wait until inbox scrolled to its last message initially",
-            predicate: ({ scrollTop, threadViewer }) => {
+            predicate: ({ orderedMessages, scrollTop, thread }) => {
                 const messageList = document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`);
                 return (
-                    threadViewer.thread.model === 'mail.box' &&
-                    threadViewer.thread.id === 'inbox' &&
+                    thread &&
+                    thread.model === 'mail.box' &&
+                    thread.id === 'inbox' &&
+                    orderedMessages.length === 30 &&
                     scrollTop === messageList.scrollHeight - messageList.clientHeight
                 );
             },
         },
     });
-    assert.containsN(
-        document.body,
-        '.o_Message',
-        30,
-        "there should be 30 messages that are loaded in Inbox"
-    );
 
     await afterNextRender(async () => {
         const markAllReadButton = document.querySelector('.o_widget_Discuss_controlPanelButtonMarkAllRead');
@@ -4035,21 +4040,17 @@ QUnit.test('all messages in "Inbox" in "History" after marked all as read', asyn
             `).click();
         },
         message: "should wait until history scrolled to its last message after opening it from the discuss sidebar",
-        predicate: ({ scrollTop, threadViewer }) => {
+        predicate: ({ orderedMessages, scrollTop, thread }) => {
             const messageList = document.querySelector('.o_MessageList');
             return (
-                threadViewer.thread.model === 'mail.box' &&
-                threadViewer.thread.id === 'history' &&
+                thread &&
+                thread.model === 'mail.box' &&
+                thread.id === 'history' &&
+                orderedMessages.length === 30 &&
                 scrollTop === messageList.scrollHeight - messageList.clientHeight
             );
         },
     });
-    assert.containsN(
-        document.body,
-        '.o_Message',
-        30,
-        "there should be 30 messages in History"
-    );
 
     // simulate a scroll to top to load more messages
     await this.afterEvent({

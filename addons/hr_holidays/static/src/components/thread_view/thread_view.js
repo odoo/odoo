@@ -17,11 +17,10 @@ patch(components.ThreadView, 'hr_holidays/static/src/components/thread_view/thre
      */
     _useStoreSelector(props) {
         const res = this._super(...arguments);
-        const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
-        const thread = threadView ? threadView.thread : undefined;
-        const correspondent = thread ? thread.correspondent : undefined;
+        const thread = res.thread;
+        const correspondent = thread && thread.correspondent;
         return Object.assign({}, res, {
-            correspondent: correspondent ? correspondent.__state : undefined,
+            correspondentOutOfOfficeText: correspondent && correspondent.outOfOfficeText,
         });
     },
 });

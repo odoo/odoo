@@ -4,7 +4,3 @@
  * versions of Odoo. Any module that is defined in this file should be isolated
  * in its own file in master.
  */
-odoo.define('mail/static/src/bugfix/bugfix.js', function (require) {
-'use strict';
-
-});

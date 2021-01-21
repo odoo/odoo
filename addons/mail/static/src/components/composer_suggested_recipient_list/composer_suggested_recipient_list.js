@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/composer_suggested_recipient_list/composer_suggested_recipient_list.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -17,15 +18,19 @@ class ComposerSuggestedRecipientList extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         this.state = useState({
             hasShowMoreButton: false,
         });
-
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
             return {
-                thread: thread ? thread.__state : undefined,
+                threadSuggestedRecipientInfoList: thread ? thread.suggestedRecipientInfoList : [],
             };
+        }, {
+            compareDepth: {
+                threadSuggestedRecipientInfoList: 1,
+            },
         });
     }
 

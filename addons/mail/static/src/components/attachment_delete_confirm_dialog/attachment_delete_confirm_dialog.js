@@ -1,6 +1,7 @@
 odoo.define('mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
@@ -17,6 +18,7 @@ class AttachmentDeleteConfirmDialog extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const attachment = this.env.models['mail.attachment'].get(props.attachmentLocalId);
             return {
