@@ -82,7 +82,7 @@ class AccountReconcileModel(models.Model):
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_ids = fields.Many2many('account.tax', string='Taxes', ondelete='restrict')
     analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null')
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', domain="[('company_id', '=', company_id)]",
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
                                         relation='account_reconcile_model_analytic_tag_rel')
     # Second part fields.
     has_second_line = fields.Boolean(string='Add a second line', default=False)
@@ -99,7 +99,7 @@ class AccountReconcileModel(models.Model):
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_ids = fields.Many2many('account.tax', relation='account_reconcile_model_account_tax_bis_rel', string='Second Taxes', ondelete='restrict')
     second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null')
-    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags', domain="[('company_id', '=', company_id)]",
+    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]",
                                                relation='account_reconcile_model_second_analytic_tag_rel')
 
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
