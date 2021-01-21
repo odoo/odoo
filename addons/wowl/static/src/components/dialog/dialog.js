@@ -44,6 +44,10 @@ export class Dialog extends Component {
     this.trigger("dialog-closed");
   }
 
+  /**
+   * 
+   * @param {KeyboardEvent} ev 
+   */
   _onKeydown(ev) {
     var _a;
     if (

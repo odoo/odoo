@@ -10,6 +10,7 @@ import {
 // Custom Dialogs for CrashManagerService
 // -----------------------------------------------------------------------------
 export const errorDialogRegistry = new Registry();
+
 errorDialogRegistry
   .add("odoo.exceptions.AccessDenied", WarningDialog)
   .add("odoo.exceptions.AccessError", WarningDialog)

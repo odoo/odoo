@@ -7,11 +7,13 @@ import {
   RPCErrorDialog,
 } from "./error_dialogs";
 import OdooError from "./odoo_error";
+
 export const crashManagerService = {
   name: "crash_manager",
   dependencies: ["dialog_manager", "notifications", "rpc"],
   deploy(env) {
     let connectionLostNotifId;
+
     function handleError(error, env) {
       switch (error.name) {
         case "UNKNOWN_CORS_ERROR":
@@ -107,6 +109,7 @@ export const crashManagerService = {
       }
       env.bus.trigger("ERROR_DISPATCHED", error);
     }
+
     window.addEventListener("error", (ev) => {
       const { colno, error: eventError, filename, lineno, message } = ev;
       let err;
@@ -137,6 +140,7 @@ export const crashManagerService = {
       }
       handleError(err, env);
     });
+    
     window.addEventListener("unhandledrejection", (ev) => {
       let unhandledError = ev.reason;
       if (!unhandledError) {

@@ -13,8 +13,8 @@ import { toPyValue } from "../py/utils";
  * Javascript representation of an Odoo domain
  */
 export class Domain {
+
   /**
-   *
    * @param {DomainRepr} [descr]
    */
   constructor(descr = []) {
@@ -130,6 +130,12 @@ function normalizeDomainAST(domain, op = "&") {
   }
   return { type: 4 /* List */, value: values };
 }
+
+/**
+ * 
+ * @param {*} record 
+ * @param {*} domain 
+ */
 function matchDomain(record, domain) {
   if (domain.length === 0) {
     return true;
