@@ -67,10 +67,12 @@ class ContractHistory(models.Model):
         self.env.cr.execute("""CREATE or REPLACE VIEW %s AS (
             WITH contract_information AS (
                 SELECT DISTINCT employee_id,
+                                company_id,
                                 FIRST_VALUE(id) OVER w_partition AS id,
                                 MAX(CASE WHEN state='open' THEN 1 ELSE 0 END) OVER w_partition AS is_under_contract
                 FROM   hr_contract AS contract
-                WHERE  contract.state <> 'cancel' AND contract.active = true
+                WHERE  contract.state <> 'cancel'
+                AND contract.active = true
                 WINDOW w_partition AS (
                     PARTITION BY contract.employee_id
                     ORDER BY     contract.date_start DESC
@@ -85,8 +87,10 @@ class ContractHistory(models.Model):
                        %s
             FROM       hr_contract AS contract
             INNER JOIN contract_information ON contract.id = contract_information.id
-            RIGHT JOIN hr_employee AS employee ON contract_information.employee_id = employee.id
-            WHERE      employee.active = true OR contract.state='draft'
+            RIGHT JOIN hr_employee AS employee
+                ON contract_information.employee_id = employee.id
+                AND contract.company_id = employee.company_id
+            WHERE      (employee.active = true OR contract.state='draft')
         )""" % (self._table, self._get_fields()))
 
     @api.depends('employee_id.contract_ids')
