@@ -141,10 +141,25 @@ class AccountEdiDocument(models.Model):
                 continue  # payments are processed after invoices
 
             for documents in batches:
+                move_to_cancel = documents.filtered(lambda doc: doc.edi_format_id._needs_web_services() \
+                                                    and doc.attachment_id \
+                                                    and doc.state == 'to_cancel' \
+                                                    and doc.move_id.is_invoice(include_receipts=True) \
+                                                    and doc.edi_format_id._is_required_for_invoice(doc.move_id)).move_id
+                attachments_potential_unlink = documents.attachment_id.filtered(lambda a: not a.res_model and not a.res_id)
+
                 try:
                     with self.env.cr.savepoint():
                         # Locks the documents in DB. Avoid sending an invoice twice (the documents can be processed by the CRON but also manually).
-                        self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(self.ids)])
+                        self._cr.execute('SELECT * FROM account_edi_document WHERE id IN %s FOR UPDATE NOWAIT', [tuple(documents.ids)])
+
+                        # Locks the move that will be cancelled.
+                        if move_to_cancel:
+                            self._cr.execute('SELECT * FROM account_move WHERE id IN %s FOR UPDATE NOWAIT', [tuple(move_to_cancel.ids)])
+
+                        # Locks the attachments that might be unlinked
+                        if attachments_potential_unlink:
+                            self._cr.execute('SELECT * FROM ir_attachment WHERE id IN %s FOR UPDATE NOWAIT', [tuple(attachments_potential_unlink.ids)])
 
                         if state == 'to_send':
                             edi_result = edi_format._post_invoice_edi(documents.move_id, test_mode=test_mode)
