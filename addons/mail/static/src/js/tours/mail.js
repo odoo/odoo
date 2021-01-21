@@ -8,6 +8,7 @@ var _t = core._t;
 
 tour.register('mail_tour', {
     url: "/web#action=mail.widgets.discuss",
+    sequence: 80,
 }, [{
     trigger: '.o_DiscussSidebar_groupChannel .o_DiscussSidebar_groupHeaderItemAdd',
     content: _t("<p>Channels make it easy to organize information across different topics and groups.</p> <p>Try to <b>create your first channel</b> (e.g. sales, marketing, product XYZ, after work party, etc).</p>"),

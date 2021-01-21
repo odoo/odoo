@@ -27,6 +27,7 @@ var EventAdditionalTourSteps = require('event.event_steps');
 tour.register('event_tour', {
     url: '/web',
     rainbowManMessage: _t("Great! Now all you have to do is wait for your attendees to show up!"),
+    sequence: 210,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="event.event_main_menu"]',
     content: _t("Ready to <b>organize events</b> in a few minutes? Let's get started!"),
