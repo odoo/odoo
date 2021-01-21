@@ -127,7 +127,10 @@ class WebsiteTest(Home):
         return 'Basic Controller Content'
 
     # Test Redirects
-
     @http.route(['/test_website/country/<model("res.country"):country>'], type='http', auth="public", website=True, sitemap=False)
     def test_model_converter_country(self, country, **kw):
         return request.render('test_website.test_redirect_view', {'country': country})
+
+    @http.route(['/test_website/200/<model("test.model"):rec>'], type='http', auth="public", website=True, sitemap=False)
+    def test_model_converter_seoname(self, rec, **kw):
+        return request.make_response('ok')
