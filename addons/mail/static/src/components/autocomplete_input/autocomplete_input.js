@@ -1,9 +1,16 @@
 odoo.define('mail/static/src/components/autocomplete_input/autocomplete_input.js', function (require) {
 'use strict';
 
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
+
 const { Component } = owl;
 
 class AutocompleteInput extends Component {
+
+    constructor(...args) {
+        super(...args);
+        useShouldUpdateBasedOnProps();
+    }
 
     mounted() {
         if (this.props.isFocusOnMount) {

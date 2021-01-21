@@ -6,6 +6,7 @@ const components = {
 };
 const useRefs = require('mail/static/src/component_hooks/use_refs/use_refs.js');
 const useRenderedValues = require('mail/static/src/component_hooks/use_rendered_values/use_rendered_values.js');
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
@@ -19,22 +20,30 @@ class MessageList extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
             const thread = threadView ? threadView.thread : undefined;
             const threadCache = threadView ? threadView.threadCache : undefined;
             return {
                 isDeviceMobile: this.env.messaging.device.isMobile,
-                messages: threadCache
-                    ? threadCache.orderedMessages.map(message => message.__state)
-                    : [],
-                thread: thread ? thread.__state : undefined,
-                threadCache: threadCache ? threadCache.__state : undefined,
-                threadView: threadView ? threadView.__state : undefined,
+                thread,
+                threadCache,
+                threadCacheIsAllHistoryLoaded: threadCache && threadCache.isAllHistoryLoaded,
+                threadCacheIsLoaded: threadCache && threadCache.isLoaded,
+                threadCacheIsLoadingMore: threadCache && threadCache.isLoadingMore,
+                threadCacheLastMessage: threadCache && threadCache.lastMessage,
+                threadCacheOrderedMessages: threadCache ? threadCache.orderedMessages : [],
+                threadIsTemporary: thread && thread.isTemporary,
+                threadMainCache: thread && thread.mainCache,
+                threadMessageAfterNewMessageSeparator: thread && thread.messageAfterNewMessageSeparator,
+                threadViewComponentHintList: threadView ? threadView.componentHintList : [],
+                threadViewNonEmptyMessagesLength: threadView && threadView.nonEmptyMessages.length,
             };
         }, {
             compareDepth: {
-                messages: 1,
+                threadCacheOrderedMessages: 1,
+                threadViewComponentHintList: 1,
             },
         });
         this._getRefs = useRefs();
@@ -63,13 +72,16 @@ class MessageList extends Component {
         this._lastRenderedValues = useRenderedValues(() => {
             const threadView = this.threadView;
             const thread = threadView && threadView.thread;
+            const threadCache = threadView && threadView.threadCache;
             return {
                 componentHintList: threadView ? [...threadView.componentHintList] : [],
                 hasAutoScrollOnMessageReceived: threadView && threadView.hasAutoScrollOnMessageReceived,
                 hasScrollAdjust: this.props.hasScrollAdjust,
                 mainCache: thread && thread.mainCache,
                 order: this.props.order,
-                threadCache: threadView && threadView.threadCache,
+                orderedMessages: threadCache ? [...threadCache.orderedMessages] : [],
+                thread,
+                threadCache,
                 threadCacheInitialScrollHeight: threadView && threadView.threadCacheInitialScrollHeight,
                 threadCacheInitialScrollPosition: threadView && threadView.threadCacheInitialScrollPosition,
                 threadView,
@@ -493,6 +505,8 @@ class MessageList extends Component {
     _onScrollThrottled(ev) {
         const {
             order,
+            orderedMessages,
+            thread,
             threadCache,
             threadView,
             threadViewer,
@@ -503,7 +517,9 @@ class MessageList extends Component {
         }
         const scrollTop = this.el.scrollTop;
         this.env.messagingBus.trigger('o-component-message-list-scrolled', {
+            orderedMessages,
             scrollTop,
+            thread,
             threadViewer,
         });
         if (!this._isLastScrollProgrammatic && threadView && threadView.exists()) {
