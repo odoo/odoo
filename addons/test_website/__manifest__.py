@@ -18,6 +18,7 @@ models which only purpose is to run tests.""",
     'data': [
         'views/templates.xml',
         'data/test_website_data.xml',
+        'security/ir.model.access.csv',
     ],
     'installable': True,
     'application': False,
