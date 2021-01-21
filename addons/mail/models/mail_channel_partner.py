@@ -12,9 +12,9 @@ class ChannelPartner(models.Model):
     _rec_name = 'partner_id'
 
     custom_channel_name = fields.Char('Custom channel name')
-    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade')
+    partner_id = fields.Many2one('res.partner', string='Recipient', ondelete='cascade', required=True)
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
-    channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade')
+    channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade', required=True)
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
     seen_message_id = fields.Many2one('mail.message', string='Last Seen')
     fold_state = fields.Selection([('open', 'Open'), ('folded', 'Folded'), ('closed', 'Closed')], string='Conversation Fold State', default='open')
