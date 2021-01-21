@@ -21,7 +21,8 @@
                         '|', ('attendance_state', '=', False),
                         '&amp;',
                             ('hr_presence_state', '=', 'present'),
-                            ('attendance_state', '=', 'checked_out')]}">
+                            ('attendance_state', '=', 'checked_out')]}"
+                    context="{'search_default_employee_id': id}">
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_green" attrs="{'invisible': [('attendance_state', '=', 'checked_out')]}" aria-label="Available" title="Available"/>
                     <div role="img" id="oe_hr_attendance_status" class="fa fa-fw fa-circle o_button_icon oe_hr_attendance_status_red" attrs="{'invisible': [('attendance_state', '=', 'checked_in')]}" aria-label="Not available" title="Not available"/>
                     <div class="o_stat_info" attrs="{'invisible': ['|', ('last_check_in', '=', False), ('last_check_out', '!=', False)]}">
@@ -40,7 +41,7 @@
                         class="oe_stat_button"
                         icon="fa-clock-o"
                         type="action"
-                        context="{'search_default_employee_id': active_id, 'search_default_check_in_filter': '1'}"
+                        context="{'search_default_employee_id': id, 'search_default_check_in_filter': '1'}"
                         groups="base.group_user"
                         help="Worked hours last month">
                     <div class="o_field_widget o_stat_info">
@@ -90,7 +91,7 @@
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="employee_ids" invisible="1"/>
-                <button name="%(hr_attendance_action)d"
+                <button name="%(hr_attendance_action_employee)d"
                         class="oe_stat_button"
                         icon="fa-calendar"
                         type="action"
