@@ -83,8 +83,8 @@ class AccountReconcileModel(models.Model):
         help='Force the tax to be managed as a price included tax.')
     amount = fields.Float(string='Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     tax_id = fields.Many2one('account.tax', string='Tax', ondelete='restrict', domain="[('company_id', '=', company_id)]")
-    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain="[('company_id', '=', company_id)]")
-    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', domain="[('company_id', '=', company_id)]")
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account', ondelete='set null', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]")
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]")
 
     # Second part fields.
     has_second_line = fields.Boolean(string='Add a second line', default=False)
@@ -103,8 +103,8 @@ class AccountReconcileModel(models.Model):
         help='Force the second tax to be managed as a price included tax.')
     second_amount = fields.Float(string='Second Write-off Amount', digits=0, required=True, default=100.0, help="Fixed amount will count as a debit if it is negative, as a credit if it is positive.")
     second_tax_id = fields.Many2one('account.tax', string='Second Tax', ondelete='restrict', domain="[('type_tax_use', '=', 'purchase'), ('company_id', '=', company_id)]")
-    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null', domain="[('company_id', '=', company_id)]")
-    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags', domain="[('company_id', '=', company_id)]")
+    second_analytic_account_id = fields.Many2one('account.analytic.account', string='Second Analytic Account', ondelete='set null', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]")
+    second_analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Second Analytic Tags', domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]")
 
     @api.onchange('name')
     def onchange_name(self):
