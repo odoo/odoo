@@ -601,7 +601,7 @@ class FileSystemLoader(object):
                 root = etree.Element('templates')
                 root.append(deepcopy(node))
                 arch = etree.tostring(root, encoding='unicode')
-                return arch
+                return (arch, None)
 
 
 class TestQWeb(TransactionCase):
