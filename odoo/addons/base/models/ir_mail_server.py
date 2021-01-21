@@ -236,8 +236,9 @@ class IrMailServer(models.Model):
         if smtp_user:
             # Attempt authentication - will raise if AUTH service not supported
             local, at, domain = smtp_user.rpartition('@')
-            domain = idna.encode(domain).decode('ascii')
-            connection.login(f"{local}{at}{domain}", smtp_password or '')
+            if at:
+                smtp_user = local + at + idna.encode(domain).decode('ascii')
+            connection.login(smtp_user, smtp_password or '')
 
         # Some methods of SMTP don't check whether EHLO/HELO was sent.
         # Anyway, as it may have been sent by login(), all subsequent usages should consider this command as sent.
