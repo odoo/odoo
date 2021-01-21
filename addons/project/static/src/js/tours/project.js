@@ -7,7 +7,7 @@ var tour = require('web_tour.tour');
 var _t = core._t;
 
 tour.register('project_tour', {
-    sequence: 30,
+    sequence: 110,
     url: "/web",
     rainbowManMessage: "Congratulations, you are now a master of project management.",
 }, [tour.stepUtils.showAppsMenuItem(), {

@@ -9,6 +9,7 @@ var _t = core._t;
 tour.register('hr_recruitment_tour',{
     url: "/web",
     rainbowManMessage: _t("<div>Great job! You hired a new colleague!</div><div>Try the Website app to publish job offers online.</div>"),
+    sequence: 230,
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="hr_recruitment.menu_hr_recruitment_root"]',
     content: _t("Let's have a look at how to <b>improve</b> your <b>hiring process</b>."),
