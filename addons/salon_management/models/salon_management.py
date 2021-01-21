@@ -373,6 +373,7 @@ class SalonServices(models.Model):
     _name = 'salon.service'
 
     name = fields.Char(string="Name")
+    service_salon_chair = fields.Many2one('salon.chair', string="Court", required=False, index=True, copy=False)
     price = fields.Float(string="Price")
     time_taken = fields.Float(string="Time Taken", help="Approximate time taken for this service in Hours")
 
