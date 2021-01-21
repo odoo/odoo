@@ -7521,6 +7521,29 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list view: mouseup somewhere else with required fields', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: `
+            <tree editable="top">
+                <field name="foo" required="1"/>
+            </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        await testUtils.dom.click($('.o_list_button_add'));
+        assert.containsOnce(list, '.o_selected_row');
+
+        // do not change anything and then click outside should discard record
+        await testUtils.dom.click('body');
+        assert.containsNone(list, '.o_selected_row');
+
+        list.destroy();
+    });
+
     QUnit.test('editable list view: multi edition', async function (assert) {
         assert.expect(26);
 

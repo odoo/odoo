@@ -909,6 +909,11 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onSaveLine: function (ev) {
+        if (!this.isDirty(ev.data.recordID)) {
+            this.updateButtons('readonly');
+            this._abandonRecord(ev.data.recordID);
+            return ev.data.onSuccess();
+        }
         this.saveRecord(ev.data.recordID)
             .then(ev.data.onSuccess)
             .guardedCatch(ev.data.onFailure);
