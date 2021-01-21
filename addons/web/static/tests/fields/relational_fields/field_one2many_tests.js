@@ -2669,9 +2669,10 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            // add a record, then click in form view to confirm it
+            // add a record, add value to turtle_foo then click in form view to confirm it
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'nora');
             await testUtils.dom.click(form.$el);
 
             assert.strictEqual(form.$('.o_field_widget[name=turtles] .o_pager').text().trim(), '1-4 / 5',
@@ -2871,11 +2872,12 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
             });
 
-            // edit mode, then click on Add an item 2 times
+            // edit mode, then click on Add an item, enter value in turtle_foo and Add an item again
             assert.containsOnce(form, 'tr.o_data_row',
                 "should have 1 data rows");
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'nora');
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             assert.containsN(form, 'tr.o_data_row', 3,
                 "should have 3 data rows");
@@ -3006,7 +3008,8 @@ QUnit.module('fields', {}, function () {
             // the record currently being added should not count in the pager
             assert.containsNone(form, '.o_field_widget[name=turtles] .o_pager');
 
-            // unselect the row
+            // enter value in turtle_foo field and click outside to unselect the row
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'nora');
             await testUtils.dom.click(form.$el);
             assert.containsNone(form, '.o_selected_row');
             assert.containsNone(form, '.o_field_widget[name=turtles] .o_pager');
@@ -3147,8 +3150,11 @@ QUnit.module('fields', {}, function () {
             // add 4 records (to have more records than the limit)
             await testUtils.form.clickEdit(form);
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'nora');
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'nora');
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+            await testUtils.fields.editInput(form.$('input[name="turtle_foo"]'), 'nora');
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
             assert.containsN(form, 'tr.o_data_row', 5);
@@ -8069,9 +8075,11 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual($('.o_data_cell').text(), "");
 
             // click add pizza
-            // save the modal
+            // press enter to save the record
             // check it's pizza
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(1)'));
+            const $input = form.$('.o_field_widget[name="p"] .o_selected_row .o_field_widget[name="display_name"]');
+            await testUtils.fields.triggerKeydown($input, 'enter');
             // click add pasta
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a:eq(2)'));
             await testUtils.form.clickSave(form);

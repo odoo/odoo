@@ -495,11 +495,14 @@ ListRenderer.include({
      * prevent subsequent editions. These edits would be lost, because the list
      * view only saves records when unselecting a row.
      *
+     * @param {Object} [options]
+     * @param {boolean} [options.canDiscard=false] when set to true,
+     *   discard the record if it is new and not dirty otherwise save it
      * @returns {Promise} The promise resolves if the row was unselected (and
      *   possibly removed). If may be rejected, when the row is dirty and the
      *   user refuses to discard its changes.
      */
-    unselectRow: function () {
+    unselectRow: function (options={}) {
         // Protect against calling this method when no row is selected
         if (this.currentRow === null) {
             return Promise.resolve();
@@ -514,7 +517,23 @@ ListRenderer.include({
         }
 
         toggleWidgets(true);
-        return new Promise((resolve, reject) => {
+        return new Promise(async (resolve, reject) => {
+            const record = this._getRecord(recordID);
+            if (options.canDiscard && record.isNew()) {
+                await this.commitChanges(recordID);
+                if (!record.isDirty()) {
+                    this.trigger_up('mutexify', {
+                        action: () => {
+                            return this.trigger_up('discard_changes', {
+                                recordID: recordID,
+                                onSuccess: resolve,
+                                onFailure: reject,
+                            });
+                        },
+                    });
+                    return;
+                }
+            }
             this.trigger_up('save_line', {
                 recordID: recordID,
                 onSuccess: resolve,
@@ -1325,7 +1344,7 @@ ListRenderer.include({
         var recordId = this._getRecordID(rowIndex);
         // To select a row, the currently selected one must be unselected first
         var self = this;
-        return this.unselectRow().then((selectNextRow = true) => {
+        return this.unselectRow({ canDiscard: true }).then((selectNextRow = true) => {
             if (!selectNextRow) {
                 return Promise.resolve();
             }
@@ -1853,7 +1872,11 @@ ListRenderer.include({
             return;
         }
 
-        this.unselectRow();
+        this.unselectRow({
+            // if save button is clicked then save the record forcefully even if
+            // it is non dirty
+            canDiscard: ![...event.target.classList].includes('o_list_button_save')
+        });
     },
 });
 
