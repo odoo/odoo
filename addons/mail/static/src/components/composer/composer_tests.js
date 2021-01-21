@@ -781,8 +781,6 @@ QUnit.test("channel with no commands should not prompt any command suggestions o
     await afterNextRender(() => {
         document.querySelector('.o_ComposerTextInput_textarea').focus();
         document.execCommand('insertText', false, "/");
-    });
-    await afterNextRender(() => {
         const composer_text_input = document.querySelector('.o_ComposerTextInput_textarea');
         composer_text_input.dispatchEvent(new window.KeyboardEvent('keydown'));
         composer_text_input.dispatchEvent(new window.KeyboardEvent('keyup'));
