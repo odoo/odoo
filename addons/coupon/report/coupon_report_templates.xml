@@ -50,8 +50,8 @@
                                     Use this promo code before
                                     <span t-field="o.expiration_date" t-options='{"format": "yyyy-MM-d"}'/>
                                 </h4>
-                                <h2 class="mt32">
-                                    <strong class="bg-light" t-esc="o.code" style="padding: 20px 10px;"></strong>
+                                <h2 class="mt-4">
+                                    <strong class="bg-light" t-esc="o.code"></strong>
                                 </h2>
                                 <h4 t-if="o.program_id.rule_min_quantity > 1">
                                     <span>Minimum purchase of</span>
