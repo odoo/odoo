@@ -308,6 +308,44 @@ function factory(dependencies) {
         }
 
         /**
+         * Calls "mark all as read" when this thread becomes displayed in a
+         * view (which is notified by `isMarkAllAsReadRequested` being `true`),
+         * but delays the call until some other conditions are met, such as the
+         * messages being loaded.
+         * The reason to wait until messages are loaded is to avoid a race
+         * condition because "mark all as read" will change the state of the
+         * messages in parallel to fetch reading them.
+         *
+         * @private
+         */
+        _onChangeMarkAllAsRead() {
+            if (
+                !this.isMarkAllAsReadRequested ||
+                !this.thread ||
+                !this.thread.mainCache ||
+                !this.isLoaded ||
+                this.isLoading
+            ) {
+                // wait for change of state before deciding what to do
+                return;
+            }
+            this.update({ isMarkAllAsReadRequested: false });
+            if (
+                this.thread.isTemporary ||
+                this.thread.model === 'mail.box' ||
+                this.thread.mainCache !== this ||
+                this.threadViews.length === 0
+            ) {
+                // ignore the request
+                return;
+            }
+            this.env.models['mail.message'].markAllAsRead([
+                ['model', '=', this.thread.model],
+                ['res_id', '=', this.thread.id],
+            ]);
+        }
+
+        /**
          * Loads this thread cache, by fetching the most recent messages in this
          * conversation.
          *
@@ -414,6 +452,16 @@ function factory(dependencies) {
             default: false,
         }),
         /**
+         * Determines whether this cache should consider calling "mark all as
+         * read" on this thread.
+         *
+         * This field is a hint that may or may not lead to an actual call.
+         * @see `_onChangeMarkAllAsRead`
+         */
+        isMarkAllAsReadRequested: attr({
+            default: false,
+        }),
+        /**
          * Last message that has been fetched by this thread cache.
          *
          * This DOES NOT necessarily mean the last message linked to this thread
@@ -456,6 +504,23 @@ function factory(dependencies) {
             dependencies: [
                 'messages',
                 'messagesAreEmpty',
+            ],
+        }),
+        /**
+         * Not a real field, used to trigger its compute method when one of the
+         * dependencies changes.
+         */
+        onChangeMarkAllAsRead: attr({
+            compute: '_onChangeMarkAllAsRead',
+            dependencies: [
+                'isLoaded',
+                'isLoading',
+                'isMarkAllAsReadRequested',
+                'thread',
+                'threadIsTemporary',
+                'threadMainCache',
+                'threadModel',
+                'threadViews',
             ],
         }),
         /**
@@ -519,6 +584,12 @@ function factory(dependencies) {
         }),
         threadMessages: many2many('mail.message', {
             related: 'thread.messages',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        threadModel: attr({
+            related: 'thread.model',
         }),
         /**
          * States the 'mail.thread_view' that are currently displaying `this`.

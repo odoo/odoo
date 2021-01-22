@@ -107,7 +107,6 @@ class ThreadNeedactionPreview extends Component {
             // handled in `_onClickMarkAsRead`
             return;
         }
-        this.thread.markNeedactionMessagesAsOriginThreadAsRead();
         this.thread.open();
         if (!this.env.messaging.device.isMobile) {
             this.env.messaging.messagingMenu.close();
@@ -119,7 +118,10 @@ class ThreadNeedactionPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.thread.markNeedactionMessagesAsOriginThreadAsRead();
+        this.env.models['mail.message'].markAllAsRead([
+            ['model', '=', this.thread.model],
+            ['res_id', '=', this.thread.id],
+        ]);
     }
 
 }
