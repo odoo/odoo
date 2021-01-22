@@ -9,8 +9,10 @@
                     <sheet>
                         <group>
                             <field name="name"/>
+                            <field name="service_salon_chair"/>
                             <field name="price"/>
                             <field name="time_taken" widget="float_time"/>
+                            <field name="service_salon_duration" widget="many2one_tags"/>
                         </group>
                     </sheet>
                 </form>
@@ -25,6 +27,7 @@
                     <field name="service_salon_chair"/>
                     <field name="price"/>
                     <field name="time_taken" widget="float_time"/>
+                    <field name="service_salon_duration" widget="many2one_tags"/>
                 </tree>
             </field>
         </record>

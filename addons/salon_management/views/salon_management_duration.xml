@@ -8,6 +8,7 @@
                 <form>
                     <sheet>
                         <group>
+                            <field name="name"/>
                             <field name="duration" widget="float_time"/>
                         </group>
                     </sheet>
@@ -19,6 +20,7 @@
             <field name="model">salon.duration</field>
             <field name="arch" type="xml">
                 <tree editable="bottom">
+                    <field name="name"/>
                     <field name="duration" widget="float_time"/>
                 </tree>
             </field>

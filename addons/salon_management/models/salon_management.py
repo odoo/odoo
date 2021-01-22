@@ -373,13 +373,15 @@ class SalonServices(models.Model):
     _name = 'salon.service'
 
     name = fields.Char(string="Name")
-    service_salon_chair = fields.Many2one('salon.chair', string="Court", required=False, index=True, copy=False)
     price = fields.Float(string="Price")
     time_taken = fields.Float(string="Time Taken", help="Approximate time taken for this service in Hours")
+    service_salon_chair = fields.Many2one('salon.chair', string="Court", required=False, index=True, copy=False)
+    service_salon_duration = fields.Many2one('salon.duration',string="Service Duration", required=False, index=True, copy=False)
 
 class SalonDurations(models.Model):
     _name = 'salon.duration'
-    duration = fields.Float(string="Duration")
+    name = fields.Char(string="Duration Name")
+    duration = fields.Float(string="Duration Value")
 
     @api.constrains('duration')
     def _check_value(self):
