@@ -138,7 +138,10 @@ function factory(dependencies) {
             this.update({ componentHintList: clear() });
             this.addComponentHint('change-of-thread-cache');
             if (this.threadCache) {
-                this.threadCache.update({ isCacheRefreshRequested: true });
+                this.threadCache.update({
+                    isCacheRefreshRequested: true,
+                    isMarkAllAsReadRequested: true,
+                });
             }
             this.update({ lastVisibleMessage: [['unlink']] });
         }
