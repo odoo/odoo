@@ -187,4 +187,12 @@ weSnippetEditor.Class.include({
         });
     },
 });
+
+weSnippetEditor.Editor.include({
+    layoutElementsSelector: [
+        weSnippetEditor.Editor.prototype.layoutElementsSelector,
+        '.s_parallax_bg',
+        '.o_bg_video_container',
+    ].join(','),
+});
 });
