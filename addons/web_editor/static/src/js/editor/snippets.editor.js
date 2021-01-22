@@ -36,6 +36,10 @@ var SnippetEditor = Widget.extend({
         'snippet_option_update': '_onSnippetOptionUpdate',
         'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
     },
+    layoutElementsSelector: [
+        '.o_we_shape',
+        '.o_we_bg_filter',
+    ].join(','),
 
     /**
      * @constructor
@@ -326,6 +330,17 @@ var SnippetEditor = Widget.extend({
         }
 
         if ($parent.closest(':data("snippet-editor")').length) {
+            const isEmptyAndRemovable = ($el, editor) => {
+                editor = editor || $el.data('snippet-editor');
+                const isEmpty = $el.text().trim() === ''
+                    && $el.children().toArray().every(el => {
+                        // Consider layout-only elements (like bg-shapes) as empty
+                        return el.matches(this.layoutElementsSelector);
+                    });
+                return isEmpty && !$el.hasClass('oe_structure')
+                    && (!editor || editor.isTargetParentEditable);
+            };
+
             var editor = $parent.data('snippet-editor');
             while (!editor) {
                 var $nextParent = $parent.parent();
@@ -349,17 +364,10 @@ var SnippetEditor = Widget.extend({
         this.trigger_up('snippet_removed');
         this.destroy();
         $parent.trigger('content_changed');
-
         // TODO Page content changed, some elements may need to be adapted
         // according to it. While waiting for a better way to handle that this
         // window trigger will handle most cases.
         $(window).trigger('resize');
-
-        function isEmptyAndRemovable($el, editor) {
-            editor = editor || $el.data('snippet-editor');
-            return $el.children().length === 0 && $el.text().trim() === ''
-                && !$el.hasClass('oe_structure') && (!editor || editor.isTargetParentEditable);
-        }
     },
     /**
      * Displays/Hides the editor overlay.
