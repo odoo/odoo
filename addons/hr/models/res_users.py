@@ -199,7 +199,7 @@ class User(models.Model):
 
     def _search_company_employee(self, operator, value):
         employees = self.env['hr.employee'].search([
-            ('name', operator, value),
+            ('id', operator, value),
             '|',
             ('company_id', '=', self.env.company.id),
             ('company_id', '=', False)
