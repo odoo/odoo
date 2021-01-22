@@ -4721,6 +4721,10 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             key: snippetKey,
                             onSuccess: url => thumbnailURL = url,
                         });
+                        let context;
+                        this.trigger_up('context_get', {
+                            callback: ctx => context = ctx,
+                        });
                         this.trigger_up('request_save', {
                             reloadEditor: true,
                             onSuccess: async () => {
@@ -4740,6 +4744,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                         'template_key': this.options.snippets,
                                         'snippet_key': snippetKey,
                                         'thumbnail_url': thumbnailURL,
+                                        'context': context,
                                     },
                                 });
                             },
