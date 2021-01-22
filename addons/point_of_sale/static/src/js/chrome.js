@@ -814,6 +814,9 @@ var Chrome = PosBaseWidget.extend(AbstractAction.prototype, {
                         },2000);
                     } else {
                         clearTimeout(this.confirmed);
+                        this.$el.removeClass('confirm');
+                        this.$el.text(_t('Close'));
+                        this.confirmed = false;
                         this.gui.close();
                     }
                 },
