@@ -99,6 +99,18 @@
                                         </select>
                                     </div>
                                 </div>
+                                <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
+                                    DURATION*
+                                </div>
+                                <div class="col-lg-10 s_title pt16 pb16 row">
+                                    <div class="col-lg-5 s_title pt16 pb16">
+                                        <select id="duration" required="True">
+                                            <t t-foreach="duration_details" t-as="duration">
+                                                <option t-att-value="duration.id" t-esc="duration.name"/>
+                                            </t>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
                             <div class="row s_nb_column_fixed">
                                 <div class="col-lg-2 s_title pt16 pb16 field_booking_chair">
