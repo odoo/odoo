@@ -44,7 +44,7 @@ QUnit.module('thread_needaction_preview_tests.js', {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(4);
+    assert.expect(5);
 
     this.data['mail.message'].records.push({
         id: 21,
@@ -63,8 +63,16 @@ QUnit.test('mark as read', async function (assert) {
         hasChatWindow: true,
         hasMessagingMenu: true,
         async mockRPC(route, args) {
-            if (route.includes('set_message_done')) {
-                assert.step('set_message_done');
+            if (route.includes('mark_all_as_read')) {
+                assert.step('mark_all_as_read');
+                assert.deepEqual(
+                    args.kwargs.domain,
+                    [
+                        ['model', '=', 'res.partner'],
+                        ['res_id', '=', 11],
+                    ],
+                    "should mark all as read the correct thread"
+                );
             }
             return this._super(...arguments);
         },
@@ -87,8 +95,8 @@ QUnit.test('mark as read', async function (assert) {
         document.querySelector('.o_ThreadNeedactionPreview_markAsRead').click()
     );
     assert.verifySteps(
-        ['set_message_done'],
-        "should have marked the message as read"
+        ['mark_all_as_read'],
+        "should have marked the thread as read"
     );
     assert.containsNone(
         document.body,
@@ -98,7 +106,7 @@ QUnit.test('mark as read', async function (assert) {
 });
 
 QUnit.test('click on preview should mark as read and open the thread', async function (assert) {
-    assert.expect(5);
+    assert.expect(6);
 
     this.data['mail.message'].records.push({
         id: 21,
@@ -117,8 +125,16 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         hasChatWindow: true,
         hasMessagingMenu: true,
         async mockRPC(route, args) {
-            if (route.includes('set_message_done')) {
-                assert.step('set_message_done');
+            if (route.includes('mark_all_as_read')) {
+                assert.step('mark_all_as_read');
+                assert.deepEqual(
+                    args.kwargs.domain,
+                    [
+                        ['model', '=', 'res.partner'],
+                        ['res_id', '=', 11],
+                    ],
+                    "should mark all as read the correct thread"
+                );
             }
             return this._super(...arguments);
         },
@@ -146,7 +162,7 @@ QUnit.test('click on preview should mark as read and open the thread', async fun
         document.querySelector('.o_ThreadNeedactionPreview').click()
     );
     assert.verifySteps(
-        ['set_message_done'],
+        ['mark_all_as_read'],
         "should have marked the message as read on clicking on the preview"
     );
     assert.containsOnce(
