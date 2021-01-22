@@ -544,8 +544,17 @@ var ListController = BasicController.extend({
      * @override
      * @param {string} recordId
      */
-    _saveRecord: function (recordId) {
+    _saveRecord: function (recordId, options) {
         var record = this.model.get(recordId, { raw: true });
+        if (!options.forceCreate && !record.isDirty()) {
+            return new Promise((resolve, reject) => {
+                this.trigger_up('discard_changes', {
+                    recordID: recordId,
+                    onSuccess: resolve,
+                    onFailure: reject,
+                });
+            });
+        }
         if (record.isDirty() && this.renderer.isInMultipleRecordEdition(recordId)) {
             // do not save the record (see _saveMultipleRecords)
             const prom = this.multipleRecordsSavingPromise || Promise.reject();
@@ -909,12 +918,7 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onSaveLine: function (ev) {
-        if (!this.isDirty(ev.data.recordID)) {
-            this.updateButtons('readonly');
-            this._abandonRecord(ev.data.recordID);
-            return ev.data.onSuccess();
-        }
-        this.saveRecord(ev.data.recordID)
+        this.saveRecord(ev.data.recordID, {forceCreate: ev.data.forceCreate})
             .then(ev.data.onSuccess)
             .guardedCatch(ev.data.onFailure);
     },

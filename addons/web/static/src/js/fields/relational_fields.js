@@ -1742,8 +1742,16 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
         var self = this;
         ev.stopPropagation();
         this.renderer.commitChanges(ev.data.recordID).then(function () {
+            const record = self.renderer._getRecord(ev.data.recordID);
             self.trigger_up('mutexify', {
                 action: function () {
+                    if (!ev.data.forceCreate && !record.isDirty()) {
+                        return self.trigger_up('discard_changes', {
+                            recordID: ev.data.recordID,
+                            onSuccess: ev.data.onSuccess,
+                            onFailure: ev.data.onFailure,
+                        });
+                    }
                     return self._saveLine(ev.data.recordID)
                         .then(ev.data.onSuccess)
                         .guardedCatch(ev.data.onFailure);

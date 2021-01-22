@@ -7220,7 +7220,6 @@ QUnit.module('Views', {
             list.$('tbody tr.o_data_row').eq(1),
             { position: 'bottom' }
         );
-
         // Drag and drop will discard record as well
         assert.containsOnce(list, '.o_data_row');
         assert.hasClass(list.$('tbody tr:first'), 'o_data_row');
@@ -7527,10 +7526,10 @@ QUnit.module('Views', {
 
         const list = await createView({
             arch: `
-        <tree editable="top">
-            <field name="foo" required="1"/>
-            <field name="int_field"/>
-        </tree>`,
+            <tree editable="top">
+                <field name="foo" required="1"/>
+                <field name="int_field"/>
+            </tree>`,
             data: this.data,
             model: 'foo',
             View: ListView,

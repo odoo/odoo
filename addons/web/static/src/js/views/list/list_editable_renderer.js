@@ -492,26 +492,11 @@ ListRenderer.include({
 
         toggleWidgets(true);
         return new Promise((resolve, reject) => {
-            const record = this._getRecord(recordID);
-            this.commitChanges(recordID).then(() => {
-                if ((!options || !options.forceCreate) && !record.isDirty()) {
-                    this.trigger_up('mutexify', {
-                        action: () => {
-                            return this.trigger_up('discard_changes', {
-                                recordID: recordID,
-                                onSuccess: resolve,
-                                onFailure: reject,
-                            });
-                        },
-                    });
-                } else {
-                    this.trigger_up('save_line', {
-                        recordID: recordID,
-                        onSuccess: resolve,
-                        onFailure: reject,
-                        forceCreate: options && options.forceCreate,
-                    });
-                }
+            this.trigger_up('save_line', {
+                recordID: recordID,
+                onSuccess: resolve,
+                onFailure: reject,
+                forceCreate: options && options.forceCreate,
             });
         }).then(selectNextRow => {
             this._enableRecordSelectors();
