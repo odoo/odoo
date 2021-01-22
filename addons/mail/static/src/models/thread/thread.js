@@ -1519,9 +1519,6 @@ function factory(dependencies) {
             if (this.channel_type === 'chat' && !this.areFollowersLoaded) {
                 this.refreshFollowers();
             }
-            if (this.needactionMessagesAsOriginThread.length > 0) {
-                this.markNeedactionMessagesAsOriginThreadAsRead();
-            }
         }
 
         /**
