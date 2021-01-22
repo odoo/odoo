@@ -692,6 +692,17 @@ class MrpWorkorder(models.Model):
             production_qty = wo._get_real_uom_qty(wo.qty_production)
             wo.qty_remaining = float_round(production_qty - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
 
+    def _update_workorder_lines(self):
+        # OVERRIDE
+        line_values = super(MrpWorkorder, self)._update_workorder_lines()
+        # wo lines without move_id should also be deleted
+        for wo_line in self._workorder_line_ids().filtered(lambda w: not w.move_id and (not w.finished_workorder_id or w.product_id != w.finished_workorder_id.product_id)):
+            if not line_values['to_delete']:
+                line_values['to_delete'] = wo_line
+            elif wo_line not in line_values['to_delete']:
+                line_values['to_delete'] |= wo_line
+        return line_values
+
 
 class MrpWorkorderLine(models.Model):
     _name = 'mrp.workorder.line'
