@@ -43,6 +43,7 @@ class HrEmployeePrivate(models.Model):
         compute='_compute_is_address_home_a_company',
     )
     private_email = fields.Char(related='address_home_id.email', string="Private Email", groups="hr.group_hr_user")
+    lang = fields.Selection(related='address_home_id.lang', string="Lang", groups="hr.group_hr_user", readonly=False)
     country_id = fields.Many2one(
         'res.country', 'Nationality (Country)', groups="hr.group_hr_user", tracking=True)
     gender = fields.Selection([
