@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import logging
 import json
-from odoo import api, fields, models, exceptions, _
-from odoo.addons.iap.tools import iap_tools
-# TDE FIXME: check those errors at iap level ?
-from requests.exceptions import ConnectionError, HTTPError
+import logging
+
+from odoo import api, fields, models, _
 
 _logger = logging.getLogger(__name__)
 
-DEFAULT_ENDPOINT = 'https://partner-autocomplete.odoo.com'
 
 class ResPartner(models.Model):
     _name = 'res.partner'
@@ -76,37 +73,8 @@ class ResPartner(models.Model):
         return country_id, state_id
 
     @api.model
-    def get_endpoint(self):
-        url = self.env['ir.config_parameter'].sudo().get_param('iap.partner_autocomplete.endpoint', DEFAULT_ENDPOINT)
-        url += '/iap/partner_autocomplete'
-        return url
-
-    @api.model
-    def _rpc_remote_api(self, action, params, timeout=15):
-        if self.env.registry.in_test_mode() :
-            return False, 'Insufficient Credit'
-        url = '%s/%s' % (self.get_endpoint(), action)
-        account = self.env['iap.account'].get('partner_autocomplete')
-        if not account.account_token:
-            return False, 'No Account Token'
-        params.update({
-            'db_uuid': self.env['ir.config_parameter'].sudo().get_param('database.uuid'),
-            'account_token': account.account_token,
-            'country_code': self.env.company.country_id.code,
-            'zip': self.env.company.zip,
-        })
-        try:
-            return iap_tools.iap_jsonrpc(url=url, params=params, timeout=timeout), False
-        except (ConnectionError, HTTPError, exceptions.AccessError, exceptions.UserError) as exception:
-            _logger.error('Autocomplete API error: %s' % str(exception))
-            return False, str(exception)
-        except iap_tools.InsufficientCreditError as exception:
-            _logger.warning('Insufficient Credits for Autocomplete Service: %s' % str(exception))
-            return False, 'Insufficient Credit'
-
-    @api.model
     def autocomplete(self, query, timeout=15):
-        suggestions, error = self._rpc_remote_api('search', {
+        suggestions, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search', {
             'query': query,
         }, timeout=timeout)
         if suggestions:
@@ -119,7 +87,7 @@ class ResPartner(models.Model):
 
     @api.model
     def enrich_company(self, company_domain, partner_gid, vat, timeout=15):
-        response, error = self._rpc_remote_api('enrich', {
+        response, error = self.env['iap.autocomplete.api']._request_partner_autocomplete('enrich', {
             'domain': company_domain,
             'partner_gid': partner_gid,
             'vat': vat,
@@ -144,7 +112,7 @@ class ResPartner(models.Model):
 
     @api.model
     def read_by_vat(self, vat, timeout=15):
-        vies_vat_data, error = self._rpc_remote_api('search_vat', {
+        vies_vat_data, _ = self.env['iap.autocomplete.api']._request_partner_autocomplete('search_vat', {
             'vat': vat,
         }, timeout=timeout)
         if vies_vat_data:
