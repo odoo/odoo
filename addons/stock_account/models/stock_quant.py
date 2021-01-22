@@ -20,8 +20,8 @@ class StockQuant(models.Model):
         average cost is the same for all location and the valuation field is
         a estimation more than a real value).
         """
-        self.currency_id = self.env.company.currency_id
         for quant in self:
+            quant.currency_id = quant.company_id.currency_id
             # If the user didn't enter a location yet while enconding a quant.
             if not quant.location_id:
                 quant.value = 0
@@ -36,10 +36,10 @@ class StockQuant(models.Model):
                 if float_is_zero(quantity, precision_rounding=quant.product_id.uom_id.rounding):
                     quant.value = 0.0
                     continue
-                average_cost = quant.product_id.value_svl / quantity
+                average_cost = quant.product_id.with_company(quant.company_id).value_svl / quantity
                 quant.value = quant.quantity * average_cost
             else:
-                quant.value = quant.quantity * quant.product_id.standard_price
+                quant.value = quant.quantity * quant.product_id.with_company(quant.company_id).standard_price
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
