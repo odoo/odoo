@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="salon_duration_form" model="ir.ui.view">
+            <field name="name">salon_duration_form.form</field>
+            <field name="model">salon.duration</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="duration" widget="float_time"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="salon_duration_tree" model="ir.ui.view">
+            <field name="name">salon_duration_tree.tree</field>
+            <field name="model">salon.duration</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="duration" widget="float_time"/>
+                </tree>
+            </field>
+        </record>
+        <record id="salon_duration_action" model="ir.actions.act_window">
+            <field name="name">Sport Duration</field>
+            <field name="res_model">salon.duration</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="salon_management_duration" parent="salon_management_salon" action="salon_duration_action"/>
+    </data>
+</odoo>

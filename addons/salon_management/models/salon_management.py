@@ -377,6 +377,14 @@ class SalonServices(models.Model):
     price = fields.Float(string="Price")
     time_taken = fields.Float(string="Time Taken", help="Approximate time taken for this service in Hours")
 
+class SalonDurations(models.Model):
+    _name = 'salon.duration'
+    duration = fields.Float(string="Duration")
+
+    @api.constrains('duration')
+    def _check_value(self):
+        if self.duration > 24 or self.duration < 0:
+            raise ValidationError(_('Enter Time Value Between 0-24.'))
 
 class SalonOrderLine(models.Model):
     _name = 'salon.order.lines'

@@ -43,6 +43,7 @@
              'views/salon_email_template.xml',
              'views/salon_config.xml',
              'views/working_hours.xml',
+             'views/salon_management_duration.xml',
              'wizard/salon_booking_email.xml',
              'templates/salon_booking_templates.xml',
              ],
