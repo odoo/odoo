@@ -393,6 +393,107 @@ class TestProductAttributeValueConfig(TestProductAttributeValueCommon):
         gen = self.computer._get_possible_combinations()
         self.assertIsNone(next(gen, None))
 
+        # Testing parent case
+        mouse = self.env['product.template'].create({'name': 'Mouse'})
+        self.assertTrue(mouse._is_combination_possible(self.env['product.template.attribute.value']))
+
+        # prep work for the last part of the test
+        color_attribute = self.env['product.attribute'].create({'name': 'Color'})
+        color_red = self.env['product.attribute.value'].create({
+            'name': 'Red',
+            'attribute_id': color_attribute.id,
+        })
+        color_green = self.env['product.attribute.value'].create({
+            'name': 'Green',
+            'attribute_id': color_attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': mouse.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [color_red.id, color_green.id])],
+        })
+
+        mouse_color_red = self._get_product_template_attribute_value(color_red, mouse)
+        mouse_color_green = self._get_product_template_attribute_value(color_green, mouse)
+
+        self._add_exclude(computer_ssd_256, mouse_color_red, mouse)
+        self.assertEqual(mouse._get_first_possible_combination(parent_combination=computer_ssd_256 + computer_ram_8 + computer_hdd_1), mouse_color_green)
+
+        # Test to see if several attribute_line for same attribute is well handled
+        color_blue = self.env['product.attribute.value'].create({
+            'name': 'Blue',
+            'attribute_id': color_attribute.id,
+        })
+        color_yellow = self.env['product.attribute.value'].create({
+            'name': 'Yellow',
+            'attribute_id': color_attribute.id,
+        })
+        self.env['product.template.attribute.line'].create({
+            'product_tmpl_id': mouse.id,
+            'attribute_id': color_attribute.id,
+            'value_ids': [(6, 0, [color_blue.id, color_yellow.id])],
+        })
+        mouse_color_yellow = self._get_product_template_attribute_value(color_yellow, mouse)
+        self.assertEqual(mouse._get_first_possible_combination(necessary_values=mouse_color_yellow), mouse_color_red + mouse_color_yellow)
+
+        # Making sure it's not extremely slow (has to discard invalid combinations early !)
+        product_template = self.env['product.template'].create({
+            'name': 'many combinations',
+        })
+
+        for i in range(10):
+            # create the attributes
+            product_attribute = self.env['product.attribute'].create({
+                'name': "att %s" % i,
+                'create_variant': 'dynamic',
+                'sequence': i,
+            })
+
+            for j in range(50):
+                # create the attribute values
+                value = self.env['product.attribute.value'].create([{
+                    'name': "val %s" % j,
+                    'attribute_id': product_attribute.id,
+                    'sequence': j,
+                }])
+
+            # set attribute and attribute values on the template
+            self.env['product.template.attribute.line'].create([{
+                'attribute_id': product_attribute.id,
+                'product_tmpl_id': product_template.id,
+                'value_ids': [(6, 0, product_attribute.value_ids.ids)]
+            }])
+
+        self._add_exclude(
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[1].value_ids[0],
+                                                       model=product_template),
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[0].value_ids[0],
+                                                       model=product_template),
+            product_template)
+        self._add_exclude(
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[0].value_ids[0],
+                                                       model=product_template),
+            self._get_product_template_attribute_value(product_template.attribute_line_ids[1].value_ids[1],
+                                                       model=product_template),
+            product_template)
+
+        combination = self.env['product.template.attribute.value']
+        for idx, ptal in enumerate(product_template.attribute_line_ids):
+            if idx != 1:
+                value = ptal.product_template_value_ids[0]
+            else:
+                value = ptal.product_template_value_ids[2]
+            combination += value
+
+        started_at = time.time()
+        self.assertEqual(product_template._get_first_possible_combination(), combination)
+        elapsed = time.time() - started_at
+        # It should be about instantaneous, 0.5 to avoid false positives
+        self.assertLess(elapsed, 0.5)
+
+
+
+
     def test_get_closest_possible_combinations(self):
         computer_ssd_256 = self._get_product_template_attribute_value(self.ssd_256)
         computer_ssd_512 = self._get_product_template_attribute_value(self.ssd_512)
