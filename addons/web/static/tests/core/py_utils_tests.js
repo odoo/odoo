@@ -894,7 +894,7 @@ QUnit.module('core', function () {
         var result = pyUtils.eval('contexts', [{
             "__ref": "compound_context",
             "__contexts": [
-                {"__ref": "context", "__debug": "{'type':parent.move_type}",
+                {"__ref": "context", "__debug": "{'move_type':parent.move_type}",
                     "__id": "462b9dbed42f"}
             ],
             "__eval_context": {
@@ -902,7 +902,7 @@ QUnit.module('core', function () {
                 "__contexts": [{
                         "__ref": "compound_context",
                         "__contexts": [
-                            {"__ref": "context", "__debug": "{'type': move_type}",
+                            {"__ref": "context", "__debug": "{'move_type': move_type}",
                                 "__id": "16a04ed5a194"}
                         ],
                         "__eval_context": {
@@ -967,7 +967,7 @@ QUnit.module('core', function () {
             }
         }]);
 
-        assert.deepEqual(result, {type: 'out_invoice'});
+        assert.deepEqual(result, {move_type: 'out_invoice'});
     });
 
     QUnit.test('return-input-value', function (assert) {

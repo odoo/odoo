@@ -330,7 +330,7 @@ class Repair(models.Model):
             currency = repair.pricelist_id.currency_id
             company = repair.env.company
 
-            journal = repair.env['account.move'].with_context(type='out_invoice')._get_default_journal()
+            journal = repair.env['account.move'].with_context(move_type='out_invoice')._get_default_journal()
             if not journal:
                 raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (company.name, company.id))
 

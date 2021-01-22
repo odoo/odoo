@@ -711,7 +711,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': self.company.id
         })
         inv1 = self.create_invoice(invoice_amount=800, currency_id=self.currency_usd_id)
-        inv2 = self.create_invoice(type="out_refund", invoice_amount=400, currency_id=self.currency_usd_id)
+        inv2 = self.create_invoice(move_type="out_refund", invoice_amount=400, currency_id=self.currency_usd_id)
 
         payment = self.env['account.payment'].create({
             'date': time.strftime('%Y') + '-07-15',
@@ -777,7 +777,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self.create_invoice(invoice_amount=658, currency_id=self.currency_usd_id)
-        inv2 = self.create_invoice(type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id)
+        inv2 = self.create_invoice(move_type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id)
 
         payment = self.env['account.payment'].create({
             'payment_method_id': self.inbound_payment_method.id,
@@ -851,7 +851,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self._create_invoice(invoice_amount=658, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-01', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=225, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         payment = self.env['account.payment'].create({
             'date': time.strftime('%Y') + '-07-15',
@@ -923,7 +923,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         })
 
         inv1 = self._create_invoice(invoice_amount=600, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         inv1_receivable = inv1.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         inv2_receivable = inv2.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
@@ -981,7 +981,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self._create_invoice(invoice_amount=600, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=250, currency_id=self.currency_usd_id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         inv1_receivable = inv1.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         inv2_receivable = inv2.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
@@ -1051,7 +1051,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': company.id
         })
         inv1 = self._create_invoice(invoice_amount=600, currency_id=foreign_1.id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
-        inv2 = self._create_invoice(type="out_refund", invoice_amount=250, currency_id=foreign_1.id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
+        inv2 = self._create_invoice(move_type="out_refund", invoice_amount=250, currency_id=foreign_1.id, date_invoice=time.strftime('%Y') + '-07-15', auto_validate=True)
 
         inv1_receivable = inv1.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
         inv2_receivable = inv2.line_ids.filtered(lambda l: l.account_id.internal_type == 'receivable')
