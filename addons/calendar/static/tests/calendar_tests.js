@@ -79,7 +79,7 @@ QUnit.module('calendar', {
             "should have img tag");
         assert.hasAttrValue(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img'),
             'data-src',
-            '/web/image/partner/1/image_128',
+            '/web/avatar/partner/1/image_128',
             "should have correct avatar image");
 
         form.destroy();

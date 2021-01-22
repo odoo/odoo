@@ -1034,7 +1034,7 @@ const Many2OneAvatar = FieldMany2One.extend({
         this.$el.empty();
         if (this.value) {
             this.$el.html(qweb.render(this._template, {
-                url: `/web/image/${this.field.relation}/${this.value.res_id}/image_128`,
+                url: `/web/avatar/${this.field.relation}/${this.value.res_id}/image_128`,
                 value: this.m2o_value,
             }));
         }

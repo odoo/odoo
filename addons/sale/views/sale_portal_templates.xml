@@ -180,8 +180,8 @@
                                 <div class="small mb-1"><strong class="text-muted">Salesperson</strong></div>
                                 <div class="row flex-nowrap">
                                     <div class="col flex-grow-0 pr-2">
-                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sale_order.user_id.image_1024" t-att-src="image_data_uri(sale_order.user_id.image_1024)" alt="Contact"/>
-                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not sale_order.user_id.image_1024" src="/web/static/src/img/placeholder.png" alt="Contact"/>
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="sale_order.user_id.id" t-att-src="'/web/avatar/res.users/%s/image_1024' % sale_order.user_id.id" alt="Contact"/>
+                                        <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not sale_order.user_id.id" src="/web/static/src/img/placeholder.png" alt="Contact"/>
                                     </div>
                                     <div class="col pl-0" style="min-width: 150px">
                                         <span t-field="sale_order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>

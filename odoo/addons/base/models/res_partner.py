@@ -229,6 +229,9 @@ class Partner(models.Model):
                                           store=True)
     company_name = fields.Char('Company Name')
     barcode = fields.Char(help="Use a barcode to identify this contact.", copy=False, company_dependent=True)
+    default_partner_image = fields.Char(
+        string='Default Image URL', compute='_compute_default_partner_image',
+        compute_sudo=True, store=False)
 
     # hack to allow using plain browse record in qweb views, and used in ir.qweb.field.contact
     self = fields.Many2one(comodel_name=_name, compute='_compute_get_ids')
@@ -236,6 +239,11 @@ class Partner(models.Model):
     _sql_constraints = [
         ('check_name', "CHECK( (type='contact' AND name IS NOT NULL) or (type!='contact') )", 'Contacts require a name'),
     ]
+
+    @api.depends('is_company')
+    def _compute_default_partner_image(self):
+        for partner in self:
+            partner.default_partner_image = '/base/static/img/company_image.png' if partner.is_company else '/base/static/img/avatar_grey.png'
 
     @api.depends('is_company', 'name', 'parent_id.display_name', 'type', 'company_name')
     def _compute_display_name(self):
@@ -357,11 +365,6 @@ class Partner(models.Model):
     def _onchange_state(self):
         if self.state_id.country_id:
             self.country_id = self.state_id.country_id
-
-    @api.onchange('email')
-    def onchange_email(self):
-        if not self.image_1920 and self._context.get('gravatar_image') and self.email:
-            self.image_1920 = self._get_gravatar_image(self.email)
 
     @api.onchange('parent_id', 'company_id')
     def _onchange_company_id(self):
@@ -856,19 +859,6 @@ class Partner(models.Model):
         if parsed_email:  # keep default_email in context
             create_values['email'] = parsed_email
         return self.create(create_values)
-
-    def _get_gravatar_image(self, email):
-        email_hash = hashlib.md5(email.lower().encode('utf-8')).hexdigest()
-        url = "https://www.gravatar.com/avatar/" + email_hash
-        try:
-            res = requests.get(url, params={'d': '404', 's': '128'}, timeout=5)
-            if res.status_code != requests.codes.ok:
-                return False
-        except requests.exceptions.ConnectionError as e:
-            return False
-        except requests.exceptions.Timeout as e:
-            return False
-        return base64.b64encode(res.content)
 
     def _email_send(self, email_from, subject, body, on_error=None):
         for partner in self.filtered('email'):

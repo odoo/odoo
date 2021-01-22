@@ -10,13 +10,13 @@
                 use bg-images to get a clean and centred images -->
             <a t-if="! is_self"
                 class="o_media_object rounded-circle o_employee_redirect"
-                t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/image_1024/\')'"
+                t-att-style="'background-image:url(\'/web/avatar/hr.employee.public/' + employee.id + '/image_1024/\')'"
                 t-att-alt="employee.name"
                 t-att-data-employee-id="employee.id"
                 t-att-href="employee.link"/>
             <div t-if="is_self"
                 class="o_media_object rounded-circle"
-                t-att-style="'background-image:url(\'/web/image/hr.employee.public/' + employee.id + '/image_1024/\')'"/>
+                t-att-style="'background-image:url(\'/web/avatar/hr.employee.public/' + employee.id + '/image_1024/\')'"/>
         </div>
 
         <div class="media-body">
@@ -151,7 +151,7 @@
 
 <t t-name="hr_orgchart_emp_popover_title">
     <div>
-        <span t-att-style='"background-image:url(\"/web/image/hr.employee.public/" + employee.id + "/image_1024/\")"'/>
+        <span t-att-style='"background-image:url(\"/web/avatar/hr.employee.public/" + employee.id + "/image_1024/\")"'/>
         <a href="#" class="float-right o_employee_redirect" t-att-data-employee-id="employee.id"><i class="fa fa-external-link" role="img" aria-label='Redirect' title="Redirect"></i></a>
         <b><t t-esc="employee.name"/></b>
     </div>

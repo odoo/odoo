@@ -155,10 +155,10 @@ QUnit.module('hr', {}, function () {
 
         assert.strictEqual(kanban.$('.o_kanban_record').text().trim(), '');
         assert.containsN(kanban, '.o_m2o_avatar', 4);
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0)').data('src'), '/web/image/hr.employee.public/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1)').data('src'), '/web/image/hr.employee.public/7/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2)').data('src'), '/web/image/hr.employee.public/11/image_128');
-        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3)').data('src'), '/web/image/hr.employee.public/23/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(0)').data('src'), '/web/avatar/hr.employee.public/11/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(1)').data('src'), '/web/avatar/hr.employee.public/7/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(2)').data('src'), '/web/avatar/hr.employee.public/11/image_128');
+        assert.strictEqual(kanban.$('.o_m2o_avatar:nth(3)').data('src'), '/web/avatar/hr.employee.public/23/image_128');
 
         kanban.destroy();
     });

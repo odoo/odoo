@@ -68,6 +68,13 @@ class Activity extends Component {
     /**
      * @returns {string}
      */
+    get avatarUrl() {
+        return `/web/avatar/res.users/${this.activity.assignee.id}/image_128`
+    }
+
+    /**
+     * @returns {string}
+     */
     get delayLabel() {
         const today = moment().startOf('day');
         const momentDeadlineDate = moment(auto_str_to_date(this.activity.dateDeadline));

@@ -1940,7 +1940,6 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     fieldDependencies: _.extend({}, AbstractFieldBinary.prototype.fieldDependencies, {
         __last_update: {type: 'datetime'},
     }),
-
     template: 'FieldBinaryImage',
     placeholder: "/web/static/src/img/placeholder.png",
     events: _.extend({}, AbstractFieldBinary.prototype.events, {
@@ -1979,7 +1978,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
     },
     _render: function () {
         var self = this;
-        var url = this.placeholder;
+        var url = this.attrs.options.placeholder || this.recordData.default_partner_image || this.placeholder;
         if (this.value) {
             if (!utils.is_bin_size(this.value)) {
                 // Use magic-word technique for detecting image type

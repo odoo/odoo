@@ -57,6 +57,37 @@ var ActivityRecord = KanbanRecord.extend({
             widget: this,
         };
     },
+        /**
+     * @private
+     * @param {string} model the name of the model
+     * @param {string} field the name of the field
+     * @param {integer} id the id of the resource
+     * @param {string} placeholder
+     * @returns {string} the url of the image
+     */
+    _getImageURL: function (model, field, id, placeholder) {
+        id = (_.isArray(id) ? id[0] : id) || null;
+        var isCurrentRecord = this.modelName === model && this.recordData.id === id;
+        var url;
+        if (isCurrentRecord && this.record[field] && this.record[field].raw_value && !utils.is_bin_size(this.record[field].raw_value)) {
+            // Use magic-word technique for detecting image type
+            url = 'data:image/' + this.file_type_magic_word[this.record[field].raw_value[0]] + ';base64,' + this.record[field].raw_value;
+        } else {
+            var session = this.getSession();
+            var params = {
+                model: model,
+                field: field,
+                id: id
+            };
+            if (isCurrentRecord) {
+                params.unique = this.record.__last_update && this.record.__last_update.value.replace(/[^0-9]/g, '');
+            }
+            url = params.unique ?
+                session.url(`/web/avatar/${model}/${id}/${field}?unique=${params.unique}`) :
+                session.url(`/web/avatar/${model}/${id}/${field}`)
+        }
+        return url;
+    },
 });
 return ActivityRecord;
 });

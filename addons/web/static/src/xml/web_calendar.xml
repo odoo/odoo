@@ -78,7 +78,7 @@
                                 <i class="fa fa-check position-relative"/>
                             </span>
                             <i t-if="filter.value == 'all'" class="o_cw_filter_avatar fa fa-users fa-fw  flex-shrink-0 mr-1" role="img" aria-label="Avatar" title="Avatar"/>
-                            <img t-elif="widget.avatar_field and filter.value" t-attf-src="/web/image/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cw_filter_avatar flex-shrink-0 mr-1" alt="Avatar"/>
+                            <img t-elif="widget.avatar_field and filter.value" t-attf-src="/web/avatar/#{widget.avatar_model}/#{filter.value}/#{widget.avatar_field}" class="o_cw_filter_avatar flex-shrink-0 mr-1" alt="Avatar"/>
                             <span class="o_cw_filter_title text-truncate flex-grow" t-esc="filter.label" t-attf-title="#{ ['all', false].includes(filter.value) or !widget.avatar_field ? filter.label : '' }"/>
                         </label>
 

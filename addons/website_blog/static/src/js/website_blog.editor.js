@@ -168,7 +168,7 @@ options.registry.many2one.include({
                 var $img = $(this).find('img');
                 var css = window.getComputedStyle($img[0]);
                 $img.css({ width: css.width, height: css.height });
-                $img.attr('src', '/web/image/res.partner/'+self.ID+'/image_1024');
+                $img.attr('src', '/web/avatar/res.partner/'+self.ID+'/image_1024');
             });
             setTimeout(function () { $nodes.removeClass('o_dirty'); },0);
         }

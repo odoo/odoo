@@ -658,8 +658,6 @@ class TransactionCase(BaseCase):
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
 
-        self.patch(self.registry['res.partner'], '_get_gravatar_image', lambda *a: False)
-
 
 class SavepointCase(TransactionCase):
     @classmethod

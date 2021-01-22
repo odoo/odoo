@@ -1323,7 +1323,7 @@ QUnit.test('basic rendering of message', async function (assert) {
     );
     assert.strictEqual(
         message.querySelector(`:scope .o_Message_authorAvatar`).dataset.src,
-        "/web/image/res.partner/11/image_128",
+        "/web/avatar/res.partner/11/image_128",
         "should have url of message in author avatar sidebar"
     );
     assert.strictEqual(

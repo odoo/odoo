@@ -41,7 +41,7 @@
                     Speaking With
                     <div name="livechat_operator_id"
                          class="o_field_many2one_avatar o_field_widget font-weight-bold float-right d-inline-block">
-                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/image_128"
+                        <img t-attf-src="/web/avatar/res.partner/#{record.livechat_operator_id.raw_value}/image_128"
                              alt="Operator Avatar" class="o_m2o_avatar"/>
                         <field name="livechat_operator_name"/>
                     </div>
@@ -60,7 +60,7 @@
                 <div class="col mx-2">
                     <div t-if="record.livechat_operator_id.raw_value"
                          class="o_field_many2one_avatar o_field_widget font-weight-bold" name="livechat_operator_id">
-                        <img t-attf-src="/web/image/res.partner/#{record.livechat_operator_id.raw_value}/image_128"
+                        <img t-attf-src="/web/avatar/res.partner/#{record.livechat_operator_id.raw_value}/image_128"
                              alt="Operator Avatar" class="o_m2o_avatar"/>
                         <field name="livechat_operator_name"/>
                     </div>

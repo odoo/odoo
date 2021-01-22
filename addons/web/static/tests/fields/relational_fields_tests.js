@@ -2007,7 +2007,7 @@ QUnit.module('relational_fields', {
         });
 
         assert.containsN(form, '.o_field_many2manytags.avatar.o_field_widget .badge', 2, "should have 2 records");
-        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/image/partner/2/image_128',
+        assert.strictEqual(form.$('.o_field_many2manytags.avatar.o_field_widget .badge:first img').data('src'), '/web/avatar/partner/2/image_128',
             "should have correct avatar image");
 
         form.destroy();

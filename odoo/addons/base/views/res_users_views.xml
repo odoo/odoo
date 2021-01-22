@@ -212,7 +212,7 @@
                             <field name="partner_id" required="0" readonly="1"/>
                           </div>
                         </div>
-                        <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128"}'/>
+                        <field name="image_1920" widget='image' class="oe_avatar" options='{"preview_image": "image_128", "placeholder":"/base/static/img/avatar_grey.png"}'/>
                         <div class="oe_title">
                             <label for="name"/>
                             <h1><field name="name" placeholder="e.g. John Doe" required="1"/></h1>
@@ -288,11 +288,12 @@
                     <field name="lang"/>
                     <field name="active"/>
                     <field name="login_date"/>
+                    <field name="image_128"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
                                 <div class="o_kanban_image">
-                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_128', record.id.raw_value)"/>
+                                    <img alt="Avatar" t-att-src="kanban_image('res.users', 'image_128', record.id.raw_value, '/base/static/img/avatar_grey.png')"/>
                                 </div>
                                 <div class="oe_kanban_details">
                                     <ul>
