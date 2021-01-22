@@ -32,13 +32,14 @@ def send_receive_booking_email(email_booking_data):
             <li> Created Booking Date : {0}</li><br>
             <li> Court : <b>{1}</b></li><br>
             <li> Booking Time : <b>{2}</b></li><br>
-            <li> Customer Name : <b>{3}</b></li><br>
-            <li> Phone Number : <b>{4}</b></li><br>
+            <li> Duration : <b>{3}</b></li><br>
+            <li> Customer Name : <b>{4}</b></li><br>
+            <li> Phone Number : <b>{5}</b></li><br>
         </ul>
     </body>
     </html>
     """.format(local_pp_time,email_booking_data['chair_name'],
-    email_booking_data['time'],email_booking_data['name'],
+    email_booking_data['time'],email_booking_data['duration'],email_booking_data['name'],
     email_booking_data['phone'])
 
     # Turn these into plain/html MIMEText objects

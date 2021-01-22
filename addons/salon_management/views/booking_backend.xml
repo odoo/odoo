@@ -16,12 +16,13 @@
                             <group>
                                 <field name="name"/>
                                 <field name="phone"/>
-                                <field name="services" widget="many2many_tags"/>
+                                <field name="email"/>
                             </group>
                             <group>
                                 <field name="time"/>
-                                <field name="email"/>
+                                <field name="duration_id" widget="many2one_tags"/>
                                 <field name="chair_id"/>
+                                <field name="services" widget="many2many_tags"/>
                                 <field name="lang" invisible="1"/>
                                 <field name="company_id" invisible="1"/>
                             </group>

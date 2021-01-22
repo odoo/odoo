@@ -38,6 +38,7 @@ class SalonBookingWeb(http.Controller):
         time = kwargs['time']
         phone = kwargs['phone']
         chair = kwargs['chair']
+        duration = kwargs['duration']
         j = 0
         dates_time = dates+" "+time+":00"
         date_and_time = datetime.strptime(dates_time, '%m/%d/%Y %H:%M:%S')
@@ -56,6 +57,7 @@ class SalonBookingWeb(http.Controller):
             'phone': phone,
             'time': utc_date_time_strp,
             'chair_id': chair,
+            'duration_id':duration
         }
         
         # IF THERE IS EMAIL IN THE RES.COMPANY, WE SEND THE COMPANY NOTIFICATION EMAIL THAT THERE IS BOOKING  
@@ -72,6 +74,7 @@ class SalonBookingWeb(http.Controller):
                 'time':date_and_time,
                 'name':name,
                 'phone':phone,
+                'duration':duration
             }
             send_receive_booking_email(email_booking_data)
         

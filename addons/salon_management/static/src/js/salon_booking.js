@@ -7,8 +7,11 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
         var time = $("#time").val();
         var phone = $("#phone").val();
         var chair = $("#chair").val();
+        var duration = $("#duration").val();
 
-        if (chair == "" || name == "" || time == "" || phone == "") {
+        console.log("########### ", duration, typeof(duration))
+
+        if (name == "" || date == "" || time == "" || phone == "" || chair == "" || duration == "") {
             alert("All fields are mandatory");
         } else {
             var time_left_char = time.substring(0, 2);
@@ -21,7 +24,7 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
                 var time_right = parseInt(time_right_char);
                 console.log(time_left, time_right)
                 if ((time_left < 24) && (time_right < 60) && (time_left >= 0) && (time_right >= 0)) {
-                    var booking_record = { 'name': name, 'date': date, 'time': time, 'phone': phone, 'chair': chair };
+                    var booking_record = { 'name': name, 'date': date, 'time': time, 'phone': phone, 'chair': chair, 'duration': duration };
                     $.ajax({
                         url: "/page/salon_details",
                         type: "POST",
