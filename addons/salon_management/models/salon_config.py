@@ -21,6 +21,7 @@
 #
 ###################################################################################
 
+import re
 from odoo import models, fields, api
 
 
@@ -39,6 +40,7 @@ class SalonHoliday(models.Model):
     holiday = fields.Boolean(string="Holiday")
 
 
+
 class ConfigurationSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
@@ -50,14 +52,20 @@ class ConfigurationSettings(models.TransientModel):
     def holidays(self):
         return self.env['salon.holiday'].search([('holiday', '=', True)])
 
+    @api.model
+    def durations(self):
+        return self.env['salon.duration'].search([('time_available','=',True)])
+
     salon_booking_chairs = fields.Many2many('salon.chair', string="Booking Chairs", default=booking_chairs)
     salon_holidays = fields.Many2many('salon.holiday', string="Holidays", default=holidays)
+    salon_durations = fields.Many2many('salon.duration',string="Duration",default=durations)
 
     def execute(self):
         salon_chair_obj = self.env['salon.chair'].search([])
         book_chair = []
         for chairs in self.salon_booking_chairs:
             book_chair.append(chairs.id)
+
         for records in salon_chair_obj:
             if records.id in book_chair:
                 records.active_booking_chairs = True
@@ -73,3 +81,14 @@ class ConfigurationSettings(models.TransientModel):
                 records.holiday = True
             else:
                 records.holiday = False
+        
+        # Selecting the available time 
+        salon_duration_obj = self.env['salon.duration'].search([])
+        duration_list = []
+        for durations in self.salon_durations:
+            duration_list.append(durations.id)
+        for records in salon_duration_obj:
+            if records.id in duration_list:
+                records.time_available = True
+            else:
+                records.time_available = False

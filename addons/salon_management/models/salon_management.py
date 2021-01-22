@@ -380,8 +380,10 @@ class SalonServices(models.Model):
 
 class SalonDurations(models.Model):
     _name = 'salon.duration'
+    
     name = fields.Char(string="Duration Name")
     duration = fields.Float(string="Duration Value")
+    time_available = fields.Boolean(string="Time Available")
 
     @api.constrains('duration')
     def _check_value(self):
