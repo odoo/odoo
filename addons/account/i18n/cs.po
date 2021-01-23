@@ -14,7 +14,7 @@
 # milda dvorak <milda.dvorak@optimal4.cz>, 2020
 # Martin Trigaux, 2020
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2020
-# trendspotter, 2020
+# Jiří Podhorecký, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
 # Damian Brencic <brencicdamian12313@gmail.com>, 2021
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
@@ -51,7 +51,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
 msgid "# Reconciled Bills"
-msgstr "# Sladěné účty"
+msgstr "# Odsouhlasené účty"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -640,7 +640,7 @@ msgstr "<span>Popis</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "<span>Disc.%</span>"
-msgstr "<span>Disc.%</span>"
+msgstr "<span>Sleva %</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
@@ -4421,7 +4421,7 @@ msgstr "Výchozí příjemový účet"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Default Incoterm of your company"
-msgstr "Výchozí incoterm vaší společnosti"
+msgstr "Výchozí Incoterm vaší společnosti"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_default_pos_receivable_account_id
@@ -5024,7 +5024,7 @@ msgstr "E-mail ve výchozím nastavení"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_cashbox__end_bank_stmt_ids
 msgid "End Bank Stmt"
-msgstr "Konec banky"
+msgstr "Konec bankového výpisu"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_analytic_default__date_stop
@@ -5207,7 +5207,7 @@ msgstr "Externí reference"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FAS
 msgid "FREE ALONGSIDE SHIP"
-msgstr "ZDARMA PO LODĚ"
+msgstr "ZDARMA K LODI"
 
 #. module: account
 #: model:account.incoterms,name:account.incoterm_FCA
@@ -8366,7 +8366,7 @@ msgstr "Zahajovací zůstatek finančního roku"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__opening_credit
 msgid "Opening Credit"
-msgstr "Zahajovací úvěr"
+msgstr "Úvodní kredit"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_financial_year_op__opening_date
@@ -8957,7 +8957,7 @@ msgstr "Platební podmínky: 30 dní"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "Payment terms: 30% Advance End of Following Month"
+msgstr "Platební podmínky: 30% záloha na konci následujícího měsíce"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
@@ -9339,7 +9339,7 @@ msgstr "Vytisknout šeky k zaplacení dodavatelům"
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__posted
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Processing"
-msgstr "zpracovává se"
+msgstr "Zpracovává se"
 
 #. module: account
 #: model:ir.model,name:account.model_product_product
@@ -10006,7 +10006,7 @@ msgstr "Storno: %s"
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Reverse"
-msgstr "Zvrátit"
+msgstr "Konvertovat"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10297,7 +10297,7 @@ msgstr "Vyhledejte v poznámce k výpisu odkaz na fakturu / platbu"
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_text_location_reference
 msgid ""
 "Search in the Statement's Reference to find the Invoice/Payment's reference"
-msgstr "Vyhledejte v Referenci výpisu odkaz na fakturu / platbu"
+msgstr "Vyhledejte v odkazu na výpisu odkaz na fakturu / platbu"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move_line__display_type__line_section
@@ -10970,7 +10970,7 @@ msgstr "Prohlášení"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Statement %s confirmed."
-msgstr "Tvrzení %s potvrzeno."
+msgstr "Výpis %s potvrzený."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__statement_line_id
@@ -12192,7 +12192,7 @@ msgstr "Den v měsíci použitý pro tento termín musí být přísně pozitivn
 #: model:ir.model.fields,help:account.field_account_move__invoice_origin
 #: model:ir.model.fields,help:account.field_account_payment__invoice_origin
 msgid "The document(s) that generated the invoice."
-msgstr "Dokument (y), které generovaly fakturu."
+msgstr "Dokument(y), které generovali fakturu."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -13117,7 +13117,7 @@ msgstr ""
 #: model:digest.tip,name:account.digest_tip_account_0
 #: model_terms:digest.tip,tip_description:account.digest_tip_account_0
 msgid "Tip: No need to print, put in an envelop and post your invoices"
-msgstr "Tip: Není třeba tisknout, vkládat obálky a zaúčtovat faktury"
+msgstr "Tip: není třeba tisknout, vkládat obálky a zaúčtovat faktury"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__destination_account_id
@@ -13728,7 +13728,7 @@ msgstr "Faktura dodavatele"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Vendor Bill Created"
-msgstr "Účet dodavatele vytvořen"
+msgstr "Faktura dodavatele vytvořena"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -13775,7 +13775,7 @@ msgstr "Úhrada dodavatele"
 #: model:ir.model.fields,field_description:account.field_product_product__supplier_taxes_id
 #: model:ir.model.fields,field_description:account.field_product_template__supplier_taxes_id
 msgid "Vendor Taxes"
-msgstr "Daně prodejce"
+msgstr "Daně dodavatele"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.res_partner_action_supplier
@@ -14362,12 +14362,8 @@ msgstr "Nemůžete vložit / vzít peníze na výpis z účtu, který je uzavře
 #, python-format
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
-"already been used to make accounting entries. If you really need to do that,"
-" please contact tech support."
+"already been used to make accounting entries."
 msgstr ""
-"Nemůžete snížit počet desetinných míst měny, která již byla použita k "
-"provádění účetních záznamů. Pokud to opravdu potřebujete udělat, kontaktujte"
-" technickou podporu."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0

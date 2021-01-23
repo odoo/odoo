@@ -4,11 +4,11 @@
 # 
 # Translators:
 # Alessandro de Lima Folk <sandrofolk@hotmail.com>, 2020
+# falexandresilva <falexandresilva@gmail.com>, 2020
 # Kevin Harrings <kha@odoo.com>, 2020
 # Emanuel Martins <emanuel.breno@gmail.com>, 2020
 # Marcos Abreu <marcoos.abreu@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
-# falexandresilva <falexandresilva@gmail.com>, 2020
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2020
 # Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # Wagner Pereira <wagner@wagner.pereira.nom.br>, 2020
@@ -22,6 +22,7 @@
 # Rodrigo de Almeida Sottomaior Macedo <rmsolucoeseminformatica@protonmail.com>, 2020
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2020
 # Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
+# danimaribeiro <danimaribeiro@gmail.com>, 2020
 # Rui Andrada <shingonoide@gmail.com>, 2020
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2020
 # grazziano <gra.negocia@gmail.com>, 2020
@@ -30,19 +31,18 @@
 # Marcelo Costa <marcelo@comdesk.com.br>, 2020
 # Eduardo Aparicio <eduardo.caparica@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
-# danimaribeiro <danimaribeiro@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
-# Éder Brito <britoederr@gmail.com>, 2020
+# Éder Brito <britoederr@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:08+0000\n"
+"POT-Creation-Date: 2020-12-04 15:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Éder Brito <britoederr@gmail.com>, 2020\n"
+"Last-Translator: Éder Brito <britoederr@gmail.com>, 2021\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -123,12 +123,6 @@ msgid "&amp;lt;head&amp;gt;"
 msgstr "&amp;lt;head&amp;gt;"
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_popup
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
 #: model_terms:ir.ui.view,arch_db:website.sitemap_xml
 msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
@@ -145,13 +139,6 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -188,10 +175,16 @@ msgstr ""
 "            caso padrão com o Google Analytics."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
+#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
+#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 691-3277"
 msgstr "+55 (61) 3333-2222"
 
@@ -225,16 +218,6 @@ msgstr ""
 msgid "...and switch the timeline contents to fit your needs."
 msgstr ""
 "...e mudar o conteúdo da linha do tempo para atender às suas necessidades."
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.footer_custom
-#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
-#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
-#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "1 (650) 691-3277"
-msgstr "55 (61) 3333-2222"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.default_csv
@@ -413,6 +396,13 @@ msgstr "<b>Clique em um Snippet</b> para acessar seu menu de opções."
 
 #. module: website
 #. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Click on a text</b> to start editing it."
+msgstr ""
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/tours/homepage.js:0
 #, python-format
 msgid ""
@@ -501,6 +491,20 @@ msgid ""
 msgstr ""
 "<b>Minha Empresa</b><br/>Av. Brasil, Lote 14, Casa 250, Apto. 3400 <br/> Rio"
 " de Janeiro RJ 94134-777 <br/> Brazil"
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a ${optionTooltipLabel}."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a Color Palette."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -2152,6 +2156,7 @@ msgstr "Clonar esta página"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
+#: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
@@ -2230,7 +2235,7 @@ msgstr "Componentes"
 #. module: website
 #: model:ir.model,name:website.model_res_config_settings
 msgid "Config Settings"
-msgstr "Configurações"
+msgstr "Definições de Configuração"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_global_configuration
@@ -3343,17 +3348,6 @@ msgid "Error"
 msgstr "Erro"
 
 #. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/tour_utils.js:0
-#, python-format
-msgid ""
-"Even if this title is cool, you can change it. <b>Click on a text</b> to "
-"start editing it."
-msgstr ""
-"Ainda que este título seja legal, você poderá alterá-lo. <b>Clique em um "
-"texto</b> para editá-lo."
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "Event"
 msgstr "Evento"
@@ -4345,7 +4339,7 @@ msgid ""
 "possibility to reset the template to its <strong>factory settings</strong>."
 msgstr ""
 "Se este erro for causado por uma mudança sua nos modelos, você tem a "
-"possibilidade de redefinir o modelo para o seu <strong>padrão de "
+"possibilidade de redefinir o modelo para a sua <strong>definição de "
 "fábrica</strong>."
 
 #. module: website
@@ -6381,7 +6375,7 @@ msgstr "Grupo Restrito"
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_rewrite_list
 msgid "Rewrite"
-msgstr "Reescrever"
+msgstr "Redirecionamento"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -6643,7 +6637,7 @@ msgstr "Selecione um tema para seu site."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Select a website to load its settings."
-msgstr "Selecione um site para carregar suas configurações."
+msgstr "Selecione um site para carregar suas definições."
 
 #. module: website
 #. openerp-web
@@ -6710,7 +6704,7 @@ msgstr "Link Separado"
 #: model:ir.model.fields,field_description:website.field_website_page__priority
 #: model:ir.model.fields,field_description:website.field_website_rewrite__sequence
 msgid "Sequence"
-msgstr "Seqüência"
+msgstr "Sequência"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_actions_server
@@ -6734,7 +6728,7 @@ msgstr "Sessão &amp; Segurança"
 #: model:ir.actions.act_window,name:website.action_website_configuration
 #: model:ir.ui.menu,name:website.menu_website_website_settings
 msgid "Settings"
-msgstr "Configurações"
+msgstr "Definições"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -6808,7 +6802,7 @@ msgstr "Barra Lateral"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps
 msgid "Sign in"
-msgstr "Entrada"
+msgstr "Entrar"
 
 #. module: website
 #. openerp-web
@@ -7328,8 +7322,7 @@ msgstr "O limite deve ser entre 1 e 16"
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
 msgid "The selected templates will be reset to their factory settings."
 msgstr ""
-"Os modelos selecionados serão redefinidos para suas configurações de "
-"fábrica."
+"Os modelos selecionados serão redefinidos para suas definições de fábrica."
 
 #. module: website
 #. openerp-web
@@ -8490,7 +8483,7 @@ msgstr "Menu do site"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_menus_form_view
 msgid "Website Menus Settings"
-msgstr "Configurações dos menus do site"
+msgstr "Definições de menus do site"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
@@ -8507,7 +8500,7 @@ msgstr "Página do Site"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Website Page Settings"
-msgstr "Configurações da Página do Site"
+msgstr "Definições de Página do Site"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_pages_list
@@ -8534,7 +8527,7 @@ msgstr "Conjunto Publicado no Site"
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
 #, python-format
 msgid "Website Settings"
-msgstr "Configurações do Site"
+msgstr "Definições de Site"
 
 #. module: website
 #: model:ir.model,name:website.model_website_snippet_filter
@@ -8645,12 +8638,12 @@ msgstr "Imagem de gráfico aberto do site"
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
 msgid "Website rewrite"
-msgstr "Reescrever site"
+msgstr "Redirecionamento de site"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "Website rewrite Settings"
-msgstr "Configurações de Reescrita de Site"
+msgstr "Definições de Redirecionamento de Site"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.action_website_rewrite_tree
@@ -8849,6 +8842,12 @@ msgstr "Você não definiu seu domínio"
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "You may opt-out of a third-party's use of cookies by visiting the"
 msgstr "Você pode cancelar o uso de cookies por terceiros visitando o"
+
+#. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "You must keep at least one website."
+msgstr ""
 
 #. module: website
 #. openerp-web
@@ -9264,7 +9263,7 @@ msgstr "página, trechos, ...)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_view_form_preview
 msgid "phone"
-msgstr ""
+msgstr "telefone"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -9325,12 +9324,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "valuation, rank"
-msgstr ""
-
-#. module: website
-#: code:addons/website/models/website.py:162
-#, python-format
-msgid "You must keep at least one website."
 msgstr ""
 
 #. module: website

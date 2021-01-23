@@ -10,9 +10,9 @@
 # Chris <krystof.reklamy13@gmail.com>, 2020
 # Jaroslav Helemik Nemec <nemec@helemik.cz>, 2020
 # Michal Veselý <michal@veselyberanek.net>, 2020
-# trendspotter, 2020
-# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Jiří Podhorecký, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2021
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2021\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2021\n"
 "Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -697,7 +697,7 @@ msgstr "Akruální alokace"
 #: model:ir.cron,cron_name:hr_holidays.hr_leave_allocation_cron_accrual
 #: model:ir.cron,name:hr_holidays.hr_leave_allocation_cron_accrual
 msgid "Accrual Time Off: Updates the number of time off"
-msgstr "Accrual Time Off: aktualizuje počet volných časů"
+msgstr "Časové rozlišení: aktualizuje počet volných dní"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -1107,7 +1107,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__hr
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__hr
 msgid "By Time Off Officer"
-msgstr "Důstojníkem volna"
+msgstr "Manažerem volna"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1624,7 +1624,7 @@ msgstr "Půl dne"
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_report_hr_holidays_report_holidayssummary
 msgid "Holidays Summary Report"
-msgstr "Holidays Summary Report"
+msgstr "Souhrnný report o svátcích"
 
 #. module: hr_holidays
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_home_working
@@ -2039,7 +2039,7 @@ msgstr "Můj tým má volno"
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_my_leaves
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "My Time Off"
-msgstr "Můj volno"
+msgstr "Moje volno"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.hr_leave_action_my
@@ -2570,7 +2570,7 @@ msgstr "Číselná řada"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Set by Time Off Officer"
-msgstr "Nastaveno důstojníkem volna"
+msgstr "Nastaveno manažerem volna"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -2584,7 +2584,7 @@ msgstr ""
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_sick
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_sick
 msgid "Sick Time Off"
-msgstr "Nemocné volno"
+msgstr "Nemocenské volno"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -2765,7 +2765,8 @@ msgid ""
 "This color will be used in the time off summary located in Reporting > Time "
 "off by Department."
 msgstr ""
-"Tato barva se použije v souhrnu volna v části Hlášení> Volno podle oddělení."
+"Tato barva se použije v souhrnu volna v části Reporting> volno podle "
+"oddělení."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__valid
@@ -3125,7 +3126,7 @@ msgstr "Tz"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__tz_mismatch
 msgid "Tz Mismatch"
-msgstr "Tz Neshoda"
+msgstr "Tzv neshoda"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__unit_per_interval
@@ -3351,7 +3352,7 @@ msgstr "Vaše %(leave_type)s plánováno na %(date)s byl odmítnut"
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_available_holidays_report_tree
 msgid "by Employee"
-msgstr "zaměstnancem"
+msgstr "Zaměstnancem"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_hr_holidays_summary_all
@@ -3381,7 +3382,7 @@ msgstr "dnů"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "e.g. Public Holiday Allocation"
-msgstr "např. Přidělení státních svátků"
+msgstr "např. přidělení státních svátků"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form_manager
@@ -3419,7 +3420,7 @@ msgstr "odmítl"
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #, python-format
 msgid "taken"
-msgstr "zaujatý"
+msgstr "odebrán"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary

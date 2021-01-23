@@ -13,10 +13,11 @@
 # Edgar Yajure <yajure@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Susanna Pujol, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Jose Alejandro Echeverri Valencia <josealejandroeche@gmail.com>, 2020
 # Dany Lopez <almustafa.net@gmail.com>, 2020
+# Caroline Renson <car@odoo.com>, 2021
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:35+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Dany Lopez <almustafa.net@gmail.com>, 2020\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -96,7 +97,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} Factura (Ref ${object.number or 'n/a'})"
+msgstr "${object.company_id.name} Factura (Ref ${object.name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -11041,7 +11042,7 @@ msgstr "Fecha de inicio"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Start by checking your company's data."
-msgstr ""
+msgstr "Empiece por comprobar los datos de su empresa."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__balance_start
@@ -14473,12 +14474,8 @@ msgstr "No puede meter/sacar dinero de un extracto bancario cerrado."
 #, python-format
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
-"already been used to make accounting entries. If you really need to do that,"
-" please contact tech support."
+"already been used to make accounting entries."
 msgstr ""
-"No puede reducir el número de posiciones decimales de una moneda que ya se "
-"ha utilizado para realizar asientos contables. Si realmente necesita "
-"hacerlo, comuníquese con el soporte técnico."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0

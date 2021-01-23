@@ -12,8 +12,8 @@
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Martin Trigaux, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 15:27+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -38,7 +38,7 @@ msgid ""
 "bypassed; users can request time off;"
 msgstr ""
 "\tGeen limiet: standaard geen toewijzing, gebruikers kunnen vrijelijk verlof aanvragen; \n"
-"\tSta werknemersverzoeken toe: toegewezen door HR en gebruikers kunnen verlof en toewijzingen aanvragen; \tIngesteld door leidinggevende: toegewezen door HR en kan niet worden omzeild; gebruikers kunnen vrije tijd aanvragen;"
+"\tSta werknemersverzoeken toe: toegewezen door HR en gebruikers kunnen verlof en toewijzingen aanvragen; \tIngesteld door leidinggevende: toegewezen door HR en kan niet worden omzeild; gebruikers kunnen verlof aanvragen;"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
@@ -1669,6 +1669,7 @@ msgstr "Uur t/m"
 
 #. module: hr_holidays
 #. openerp-web
+#: code:addons/hr_holidays/models/hr_leave.py:0
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #: code:addons/hr_holidays/static/src/xml/time_off_calendar.xml:0
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__unit_per_interval__hours
@@ -1985,7 +1986,7 @@ msgstr "Maximum toewijzing voor verlofsopbouw; 0 betekend geen maximum"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 msgid "Meet the time off dashboard."
-msgstr "Maak kennis met het vrije tijd dashboard."
+msgstr "Maak kennis met het verlof dashboard."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
@@ -2120,7 +2121,7 @@ msgstr ""
 #: code:addons/hr_holidays/static/src/js/time_off_calendar.js:0
 #, python-format
 msgid "New Time Off"
-msgstr "Nieuwe vrije tijd"
+msgstr "Nieuwe verlofaanvraag"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_date_deadline
@@ -2588,7 +2589,7 @@ msgid ""
 "Select the user responsible for approving \"Time Off\" of this employee.\n"
 "If empty, the approval is done by an Administrator or Approver (determined in settings/users)."
 msgstr ""
-"Selecteer de gebruiker die verantwoordelijk is voor het goedkeuren van \"Vrije tijd\" van deze werknemer.\n"
+"Selecteer de gebruiker die verantwoordelijk is voor het goedkeuren van \"Verlof\" van deze werknemer.\n"
 "Indien leeg, wordt de goedkeuring gedaan door een Administrator of Approver (bepaald in instellingen / gebruikers)."
 
 #. module: hr_holidays
@@ -3152,7 +3153,7 @@ msgid ""
 msgstr ""
 "Totaal aantal betaalde vrije dagen toegewezen aan deze werknemer, wijzig "
 "deze waarde om toewijzing / verlofaanvraag te creëren. Totaal gebaseerd op "
-"alle soorten vrije tijd zonder overschrijvende limiet."
+"alle soorten verlof zonder overschrijvende limiet."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3274,7 +3275,7 @@ msgstr "Virtueel resterende verlof"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__virtual_leaves_taken
 msgid "Virtual Time Off Already Taken"
-msgstr "Virtuele vrije tijd al opgenomen"
+msgstr "Virtuele verlof al opgenomen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__confirm
