@@ -53,6 +53,7 @@
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # grazziano <gra.negocia@gmail.com>, 2020
 # Fábio Novais <fabionovais@aptu.com.br>, 2020
+# Silmar <pinheirosilmar@gmail.com>, 2020
 # Marcelo Costa <marcelo@comdesk.com.br>, 2020
 # Luiz Carareto Alonso <Luiz.cararetoalonso@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
@@ -60,7 +61,6 @@
 # Guilherme Libardi <guilherme.libardig@gmail.com>, 2020
 # Marcelo at JambuTec <marcelo@jambu.com.br>, 2020
 # Frederico Freire Boaventura <fboaventura@live.com>, 2020
-# Silmar <pinheirosilmar@gmail.com>, 2020
 # Liane Cafarate <lic@odoo.com>, 2020
 # Luis Felipe Miléo <mileo@kmee.com.br>, 2020
 # Éder Brito <britoederr@gmail.com>, 2021
@@ -5852,7 +5852,7 @@ msgstr ""
 msgid ""
 "Gives the sequence order when displaying a list of payment terms lines."
 msgstr ""
-"Dá uma ordem de sequência quando mostrando uma lista de linhas de termos de "
+"Fornece a ordem de sequência ao exibir uma lista de linhas de condições de "
 "pagamento."
 
 #. module: account
@@ -6154,8 +6154,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "terms without removing it."
 msgstr ""
-"Ao desativar o campo 'Ativo', permite ocultar as condições de pagamento sem "
-"exclui-las."
+"Se o campo ativo for definido como Falso, permitirá que você oculte as "
+"condições de pagamento sem removê-lo."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__to_check
@@ -9141,37 +9141,37 @@ msgstr "Tipo de pagamento"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
 msgid "Payment term explanation for the customer..."
-msgstr "Explicação do Termo de Pagamento para o cliente..."
+msgstr "Explicação da Condição de Pagamento para o cliente..."
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_15days
 msgid "Payment terms: 15 Days"
-msgstr "Prazos de pagamento: 15 Dias"
+msgstr "Condição de pagamento: 15 Dias"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_2months
 msgid "Payment terms: 2 Months"
-msgstr "Condições de pagamento: 2 meses"
+msgstr "Condição de pagamento: 2 meses"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_21days
 msgid "Payment terms: 21 Days"
-msgstr "Condições de Pagamento: 21 Dias"
+msgstr "Condição de pagamento: 21 Dias"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_30days
 msgid "Payment terms: 30 Days"
-msgstr "Condições de Pagamento: 30 Dias"
+msgstr "Condição de pagamento: 30 Dias"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "Payment terms: 30% Advance End of Following Month"
-msgstr "Prazo de pagamento: 30% de Adiantamento no Fim do Mês Seguinte"
+msgstr "Condição de pagamento: 30% adiantado no final do mês seguinte"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_advance_60days
 msgid "Payment terms: 30% Now, Balance 60 Days"
-msgstr "Condições de Pagamento: 30% agora, Saldo em 60 Dias"
+msgstr "Condição de pagamento: 30% agora, Saldo em 60 Dias"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_45days
@@ -9181,12 +9181,12 @@ msgstr "Condições de pagamento: 45 dias"
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_end_following_month
 msgid "Payment terms: End of Following Month"
-msgstr "Prazo de pagamento: Fim do Mês Seguinte"
+msgstr "Condição de pagamento: Fim do Mês Seguinte"
 
 #. module: account
 #: model:account.payment.term,note:account.account_payment_term_immediate
 msgid "Payment terms: Immediate Payment"
-msgstr "Prazo de pagamento: Pagamento imediato"
+msgstr "Condição de pagamento: Pagamento imediato"
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -9277,7 +9277,8 @@ msgstr "Porcentagem de cada linha para executar a ação."
 #, python-format
 msgid "Percentages on the Payment Terms lines must be between 0 and 100."
 msgstr ""
-"As porcentagens nas linhas Termos de Pagamento devem estar entre 0 e 100."
+"As porcentagens nas linhas das Condições de Pagamento devem estar entre 0 e "
+"100."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -10649,7 +10650,7 @@ msgstr "Selecionar o primeiro parceiro"
 #: model:ir.model.fields,help:account.field_account_payment_term_line__value
 msgid "Select here the kind of valuation related to this payment terms line."
 msgstr ""
-"Selecione aqui o tipo de avaliação relacionada a esta linha do prazo de "
+"Selecione aqui o tipo de avaliação relacionada a esta linha da condição de "
 "pagamento."
 
 #. module: account
@@ -10797,7 +10798,7 @@ msgstr "Setembro"
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__sequence
 #: model:ir.model.fields,field_description:account.field_account_tax_template__sequence
 msgid "Sequence"
-msgstr "Seqüência"
+msgstr "Sequência"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__sequence_number
@@ -12689,7 +12690,7 @@ msgstr "O último dia do mês será usado se o dia escolhido não existir."
 #: code:addons/account/models/account_payment_term.py:0
 #, python-format
 msgid "The last line of a Payment Term should have the Balance type."
-msgstr "A última linha de um Termo de Pagamento deve ter o tipo Saldo."
+msgstr "A última linha de uma Condição de Pagamento deve ter o tipo Saldo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -12727,7 +12728,7 @@ msgstr "O movimento desta linha de entrada."
 #, python-format
 msgid "The number of days used for a payment term cannot be negative."
 msgstr ""
-"O número de dias usado para um prazo de pagamento não pode ser negativo."
+"O número de dias usado para uma condição de pagamento não pode ser negativo."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13379,7 +13380,7 @@ msgid ""
 "This payment term will be used instead of the default one for purchase "
 "orders and vendor bills"
 msgstr ""
-"Este prazo de pagamento será usado em vez do padrão de ordens de compra"
+"Esta condição de pagamento será usada em vez da padrão de pedidos de compra"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_partner__property_payment_term_id
@@ -13388,7 +13389,7 @@ msgid ""
 "This payment term will be used instead of the default one for sales orders "
 "and customer invoices"
 msgstr ""
-"Este termo de pagamento será usado no lugar do padrão, para pedidos de "
+"Esta condição de pagamento será usada no lugar da padrão, para pedidos de "
 "vendas e faturas de clientes"
 
 #. module: account
@@ -14081,7 +14082,7 @@ msgstr "Pagamento de Fornecedor"
 #: model:ir.model.fields,field_description:account.field_res_partner__property_supplier_payment_term_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_supplier_payment_term_id
 msgid "Vendor Payment Terms"
-msgstr "Termos de Pagamento do Fornecedor"
+msgstr "Condições de Pagamento do Fornecedor"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -14710,12 +14711,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
-"already been used to make accounting entries. If you really need to do that,"
-" please contact tech support."
+"already been used to make accounting entries."
 msgstr ""
-"Você não pode reduzir o número de casas decimais de uma moeda que já foi "
-"usada para fazer lançamentos contábeis. Se você realmente precisar fazer "
-"isso, entre em contato com o suporte técnico."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
