@@ -943,17 +943,20 @@ class StockMove(models.Model):
     def _key_assign_picking(self):
         self.ensure_one()
         return self.group_id, self.location_id, self.location_dest_id, self.picking_type_id
-
-    def _search_picking_for_assignation(self):
-        self.ensure_one()
-        picking = self.env['stock.picking'].search([
-                ('group_id', '=', self.group_id.id),
+    
+    def _search_picking_for_assignation_domain(self):
+        return [('group_id', '=', self.group_id.id),
                 ('location_id', '=', self.location_id.id),
                 ('location_dest_id', '=', self.location_dest_id.id),
                 ('picking_type_id', '=', self.picking_type_id.id),
                 ('printed', '=', False),
                 ('immediate_transfer', '=', False),
-                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])], limit=1)
+                ('state', 'in', ['draft', 'confirmed', 'waiting', 'partially_available', 'assigned'])]
+
+    def _search_picking_for_assignation(self):
+        self.ensure_one()
+        domain = self._search_picking_for_assignation_domain()
+        picking = self.env['stock.picking'].search(domain, limit=1)
         return picking
 
     def _assign_picking(self):
