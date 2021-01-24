@@ -69,7 +69,7 @@
 # as co02 <asco02@163.com>, 2020
 # xiaobin wu <bd5dml@gmail.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
-# Jeffery CHEN <jeffery9@gmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # Mandy Choy <mnc@odoo.com>, 2020
 # Martin Trigaux, 2020
@@ -1520,17 +1520,11 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
-"\n"
-"使锁定日期后不可逆转：\n"
-"\n"
-" *您无法在总账模块上定义比用户更严格的条件。然后，必须在用户的锁定日期之前设置总账模块程序上的锁定日期\n"
-" *您无法锁定尚未完成的期间。所以，必须在上个月的最后一天之前设置顾问的锁定日期\n"
-" *必须在上一个锁定日期之后设置总账的新锁定日期"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud

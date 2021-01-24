@@ -35,6 +35,7 @@
 # Gilles Mangin <gilles.mangin@phidias.fr>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Richard Mathot <rim@odoo.com>, 2020
+# Christophe Ricevuto <cri@nalios.be>, 2021
 # 
 msgid ""
 msgstr ""
@@ -42,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 07:29+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: Richard Mathot <rim@odoo.com>, 2020\n"
+"Last-Translator: Christophe Ricevuto <cri@nalios.be>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,7 +184,7 @@ msgstr "Disponible"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Available in stock"
-msgstr ""
+msgstr "Disponible en stock"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -213,7 +214,7 @@ msgstr "Date :"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_users__property_warehouse_id
 msgid "Default Warehouse"
-msgstr ""
+msgstr "Entrepôt par défaut"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -223,7 +224,7 @@ msgstr "Livraison"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_cancel__display_delivery_alert
 msgid "Delivery Alert"
-msgstr ""
+msgstr "Alerte de Livraison"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__delivery_count
@@ -337,7 +338,7 @@ msgstr "Espéré:"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__forecast_expected_date
 msgid "Forecast Expected Date"
-msgstr ""
+msgstr "Date Prévue Espérée"
 
 #. module: sale_stock
 #. openerp-web
@@ -354,7 +355,7 @@ msgstr "Qté Disponible aujourd'hui"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__show_json_popover
 msgid "Has late picking"
-msgstr ""
+msgstr "A un picking en retard"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_account_move__id
@@ -529,14 +530,14 @@ msgstr "Avancer les dates de livraison prévues de"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No enough future availaibility"
-msgstr ""
+msgstr "Pas assez de disponibilité future"
 
 #. module: sale_stock
 #. openerp-web
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "No future availaibility"
-msgstr ""
+msgstr "Pas de disponibilité future"
 
 #. module: sale_stock
 #. openerp-web
@@ -597,7 +598,7 @@ msgstr "Devis"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "Remaining demand available at"
-msgstr ""
+msgstr "Demande restante disponible à"
 
 #. module: sale_stock
 #. openerp-web
@@ -645,7 +646,7 @@ msgstr "Bon de commande"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_cancel
 msgid "Sales Order Cancel"
-msgstr ""
+msgstr "Annulation Bon de commande"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order_line
@@ -718,6 +719,8 @@ msgid ""
 "Some products have already been delivered. Returns can be created from the "
 "Delivery Orders."
 msgstr ""
+"Certains produits ont déjà été livrés. Des retours peuvent être créées "
+"depuis les Bons de livraison."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -733,7 +736,7 @@ msgstr "Mouvements de stocks"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Rapport de Réapprovisionnements de Stock"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
@@ -755,7 +758,7 @@ msgstr "Rapport de règle de stock"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "The delivery"
-msgstr ""
+msgstr "La livraison"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -776,6 +779,8 @@ msgid ""
 "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell "
 "%(quantity).2f %(unit)s."
 msgstr ""
+"Le produit est emballé par %(pack_size).2f%(pack_name)s. Vous devriez vendre"
+" %(quantity).2f%(unit)s."
 
 #. module: sale_stock
 #. openerp-web
@@ -891,4 +896,4 @@ msgstr "Traité à la place de"
 #: code:addons/sale_stock/static/src/xml/sale_stock.xml:0
 #, python-format
 msgid "will be late."
-msgstr ""
+msgstr "sera en retard."

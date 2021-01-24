@@ -39,7 +39,6 @@
 # Fabien Bourgeois <fabien@yaltik.com>, 2019
 # Nathan Grognet <ngr@odoo.com>, 2019
 # e34d4dcb8e697b071167e94624cfbccb, 2019
-# Mohamed BENKIRANE <benkirane.med.ali@gmail.com>, 2019
 # Melanie Bernard <mbe@odoo.com>, 2019
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2019
 # e2f <projects@e2f.com>, 2019
@@ -1252,17 +1251,11 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
-"\n"
-"Rendre la date de blocage irréversible :\n"
-"\n"
-" * Vous ne pouvez pas définir des conditions plus strictes pour les conseillers que pour les utilisateurs. Dans ce cas, la date de blocage du conseiller doit être fixée avant la date de blocage pour les utilisateurs.\n"
-"* Vous ne pouvez pas bloquer une période qui n'est pas encore terminée. Dans ce cas, la date de blocage pour les conseillers doit être fixée avant le dernier jour du mois précédent.\n"
-"* La nouvelle date de blocage pour les conseillers doit être fixée après la date de blocage précédente."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
