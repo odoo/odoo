@@ -539,6 +539,13 @@ class Product(models.Model):
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
 
 
+    def _filter_to_unlink(self):
+        domain = [('product_id', 'in', self.ids)]
+        lines = self.env['stock.production.lot'].read_group(domain, ['product_id'], ['product_id'])
+        linked_product_ids = [group['product_id'][0] for group in lines]
+        return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
+
+
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     _check_company_auto = True
