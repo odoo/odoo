@@ -310,7 +310,7 @@ class SaleOrder(models.Model):
             error_status = program._check_promo_code(order, False)
             if not error_status.get('error'):
                 if program.promo_applicability == 'on_next_order':
-                    order._create_reward_coupon(program)
+                    order.state != 'cancel' and order._create_reward_coupon(program)
                 elif program.discount_line_product_id.id not in self.order_line.mapped('product_id').ids:
                     self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
                 order.no_code_promo_program_ids |= program
