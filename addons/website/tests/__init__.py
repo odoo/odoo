@@ -14,6 +14,7 @@ from . import test_res_users
 from . import test_theme
 from . import test_ui
 from . import test_views
+from . import test_views_inherit_module_update
 from . import test_website_favicon
 from . import test_website_reset_password
 from . import test_website_visitor
