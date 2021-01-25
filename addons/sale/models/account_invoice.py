@@ -83,12 +83,10 @@ class AccountInvoice(models.Model):
     @api.model
     def _refund_cleanup_lines(self, lines):
         result = super(AccountInvoice, self)._refund_cleanup_lines(lines)
-        if self.env.context.get('mode') == 'modify':
-            for i, line in enumerate(lines):
-                for name, field in line._fields.items():
-                    if name == 'sale_line_ids':
-                        result[i][2][name] = [(6, 0, line[name].ids)]
-                        line[name] = False
+        for i, line in enumerate(lines):
+            for name, field in line._fields.items():
+                if name == 'sale_line_ids':
+                    result[i][2][name] = [(6, 0, line[name].ids)]
         return result
 
     @api.multi
