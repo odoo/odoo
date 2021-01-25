@@ -299,7 +299,7 @@
                                         <group col="12">
                                             <group colspan="5">
                                                 <field name="name" string="Contact Name" attrs="{'required' : [('type', '=', 'contact')]}"/>
-                                                <field name="title" placeholder="e.g. Mr."
+                                                <field name="title" options="{'no_open': True}" placeholder="e.g. Mr."
                                                     attrs="{'invisible': [('type','!=', 'contact')]}"/>
                                                 <field name="function" placeholder="e.g. Sales Director"
                                                     attrs="{'invisible': [('type','!=', 'contact')]}"/>
