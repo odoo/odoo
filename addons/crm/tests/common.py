@@ -421,7 +421,8 @@ class TestLeadConvertCommon(TestCrmCommon):
         if member.crm_team_id.assignment_domain:
             self.assertEqual(
                 member_leads.filtered_domain(literal_eval(member.crm_team_id.assignment_domain)),
-                member_leads
+                member_leads,
+                'Assign domain not matching: %s' % member.crm_team_id.assignment_domain
             )
 
 class TestLeadConvertMassCommon(TestLeadConvertCommon):

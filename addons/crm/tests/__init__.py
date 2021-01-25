@@ -10,3 +10,4 @@ from . import test_crm_lead_merge
 from . import test_crm_activity
 from . import test_crm_ui
 from . import test_crm_pls
+from . import test_performances
