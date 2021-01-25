@@ -32,7 +32,7 @@ var ColumnQuickCreate = Widget.extend({
      */
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.applyExamplesText = options.applyExampleText || _t("Use This For My Kanban");
+        this.applyExamplesText = options.applyExamplesText || _t("Use This For My Kanban");
         this.examples = options.examples;
         this.folded = true;
         this.isMobile = false;
