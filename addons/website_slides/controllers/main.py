@@ -882,10 +882,23 @@ class WebsiteSlides(WebsiteProfile):
                 'comment': answer['comment']
             }) for answer in answer_ids]
         })
-        return request.env.ref('website_slides.lesson_content_quiz_question')._render({
-            'slide': slide,
-            'question': slide_question,
-        })
+        # along with the rendered question, we provide minimal details needed to immediately display the
+        # validation buttons after question is added
+        channel_slides_ids = slide.channel_id.slide_content_ids.ids
+        slide_index = channel_slides_ids.index(slide.id)
+        next_slide = slide.channel_id.slide_content_ids[slide_index+1] if slide_index < len(channel_slides_ids) - 1 else None
+        return {
+            'quiz_info': self._get_slide_quiz_partner_info(slide),
+            'slide_info': {
+                'channelCanUpload': slide.channel_id.can_upload,
+                'hasNext': 1 if next_slide else 0,
+                'nextSlideUrl': '/slides/slide/%s' % (slug(next_slide)) if next_slide else None,
+            },
+            'renderedQuestion': request.env.ref('website_slides.lesson_content_quiz_question')._render({
+                'slide': slide,
+                'question': slide_question,
+            })
+        }
 
     @http.route('/slides/slide/quiz/get', type="json", auth="public", website=True)
     def slide_quiz_get(self, slide_id):
