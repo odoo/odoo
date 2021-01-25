@@ -21,8 +21,8 @@ class SequenceMixin(models.AbstractModel):
     _sequence_field = "name"
     _sequence_date_field = "date"
     _sequence_index = False
-    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))(\d{4}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))(\d{4}|\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((20|21)\d{2}|(\d{2}(?=\D))))(?P<prefix2>\D*?)(?P<month>(0[1-9]|1[0-2]))(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>((?<=\D)|(?<=^))((20|21)?\d{2}))(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
     _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d{0,9})(?P<suffix>\D*?)$'
 
     sequence_prefix = fields.Char(compute='_compute_split_sequence', store=True)
@@ -91,30 +91,16 @@ class SequenceMixin(models.AbstractModel):
             periodicity. Typically, it is the last before the one you want to give a
             sequence.
         """
-        def _check_grouping(grouping, required):
-            sequence_dict = grouping.groupdict()
-            if 'seq' not in sequence_dict or any(not sequence_dict.get(key) for key in required):
-                return False
-            if 'year' in required and not (
-                2000 <= int(sequence_dict.get('year') or -1) <= 2100
-                or len(sequence_dict.get('year') or '') == 2
-            ):
-                return False
-            if 'month' in required and not 1 <= int(sequence_dict.get('month') or -1) <= 12:
-                return False
-            return True
-
-        if not name:
-            return False
-        sequence = re.match(self._sequence_monthly_regex, name)
-        if sequence and _check_grouping(sequence, ['year', 'month']):
-            return 'month'
-        sequence = re.match(self._sequence_yearly_regex, name)
-        if sequence and _check_grouping(sequence, ['year']):
-            return 'year'
-        sequence = re.match(self._sequence_fixed_regex, name)
-        if sequence and _check_grouping(sequence, []):
-            return 'never'
+        for regex, ret_val, requirements in [
+            (self._sequence_monthly_regex, 'month', ['seq', 'month', 'year']),
+            (self._sequence_yearly_regex, 'year', ['seq', 'year']),
+            (self._sequence_fixed_regex, 'never', ['seq']),
+        ]:
+            match = re.match(regex, name or '')
+            if match:
+                groupdict = match.groupdict()
+                if all(req in groupdict for req in requirements):
+                    return ret_val
         raise ValidationError(_(
             'The sequence regex should at least contain the seq grouping keys. For instance:\n'
             '^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'

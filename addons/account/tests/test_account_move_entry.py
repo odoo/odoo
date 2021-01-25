@@ -513,10 +513,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         next.journal_id.sequence_override_regex = r'^(?P<seq>\d*)(?P<suffix1>.*?)(?P<year>(\d{4})?)(?P<suffix2>)$'
         next.name = '/'
-        next._compute_name()
+        next.action_post()
         self.assertEqual(next.name, '00000877-G 0002/2020')  # Pfew, better!
+        next = self.test_move.copy({'date': self.test_move.date})
+        next.action_post()
+        self.assertEqual(next.name, '00000878-G 0002/2020')
 
-        next = next = self.test_move.copy({'date': self.test_move.date})
+        next = self.test_move.copy({'date': self.test_move.date})
         next.date = "2017-05-02"
         next.action_post()
         self.assertEqual(next.name, '00000001-G 0002/2017')
@@ -583,6 +586,32 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copies[3].state, 'posted')
         self.assertEqual(copies[5].name, 'XMISC/2019/10005')
         self.assertEqual(copies[5].state, 'draft')
+
+    def test_sequence_get_more_specific(self):
+        def test_date(date, name):
+            test = self.test_move.copy({'date': date})
+            test.action_post()
+            self.assertEqual(test.name, name)
+
+        def set_sequence(date, name):
+            return self.test_move.copy({'date': date, 'name': name})._post()
+
+        # Start with a continuous sequence
+        self.test_move.name = 'MISC/00001'
+
+        # Change the prefix to reset every year starting in 2017
+        new_year = set_sequence(self.test_move.date + relativedelta(years=1), 'MISC/2017/00001')
+
+        # Change the prefix to reset every month starting in February 2017
+        new_month = set_sequence(new_year.date + relativedelta(months=1), 'MISC/2017/02/00001')
+
+        test_date(self.test_move.date, 'MISC/00002')  # Keep the old prefix in 2016
+        test_date(new_year.date, 'MISC/2017/00002')  # Keep the new prefix in 2017
+        test_date(new_month.date, 'MISC/2017/02/00002')  # Keep the new prefix in February 2017
+
+        # Change the prefix to never reset (again) year starting in 2018 (Please don't do that)
+        reset_never = set_sequence(self.test_move.date + relativedelta(years=2), 'MISC/00100')
+        test_date(reset_never.date, 'MISC/00101')  # Keep the new prefix in 2018
 
     def test_sequence_concurency(self):
         with self.env.registry.cursor() as cr0,\
