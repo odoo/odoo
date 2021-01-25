@@ -24,13 +24,11 @@ class ChatWindowHeader extends Component {
         useStore(props => {
             const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
             const thread = chatWindow && chatWindow.thread;
-            const correspondent = thread && thread.correspondent;
             return {
                 chatWindow,
                 chatWindowHasShiftNext: chatWindow && chatWindow.hasShiftNext,
                 chatWindowHasShiftPrev: chatWindow && chatWindow.hasShiftPrev,
                 chatWindowName: chatWindow && chatWindow.name,
-                correspondent,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 thread,
                 threadLocalMessageUnreadCounter: thread && thread.localMessageUnreadCounter,
@@ -79,9 +77,6 @@ class ChatWindowHeader extends Component {
      * @param {MouseEvent} ev
      */
     _onClick(ev) {
-        if (isEventHandled(ev, 'ChatWindowHeader.openProfile')) {
-            return;
-        }
         if (isEventHandled(ev, 'ChatWindowHeader.ClickShiftNext')) {
             return;
         }
@@ -90,17 +85,6 @@ class ChatWindowHeader extends Component {
         }
         const chatWindow = this.chatWindow;
         this.trigger('o-clicked', { chatWindow });
-    }
-
-    /**
-     * @private
-     * @param {MouseEvent} ev
-     */
-    _onClickName(ev) {
-        if (this.chatWindow.thread && this.chatWindow.thread.correspondent) {
-            markEventHandled(ev, 'ChatWindowHeader.openProfile');
-            this.chatWindow.thread.correspondent.openProfile();
-        }
     }
 
     /**
