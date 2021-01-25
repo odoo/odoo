@@ -4,6 +4,7 @@ odoo.define('website_form_editor', function (require) {
 const core = require('web.core');
 const FormEditorRegistry = require('website_form.form_editor_registry');
 const options = require('web_editor.snippets.options');
+require('website.editor.snippets.options');
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -1148,5 +1149,22 @@ options.registry.WebsiteFormSubmitRequired = DisableOverlayButtonOption.extend({
         this.disableButton('clone', _t('You can\'t duplicate the submit button of the form.'));
         return this._super.apply(this, arguments);
     }
+});
+
+// Disable "Shown on Mobile" option if for an hidden field
+options.registry.MobileVisibility.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeVisibility() {
+        // Same as default but overridden by other apps
+        return await this._super(...arguments)
+            && !this.$target.hasClass('s_website_form_field_hidden');
+    },
 });
 });
