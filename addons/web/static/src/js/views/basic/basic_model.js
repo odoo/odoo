@@ -159,6 +159,7 @@ var BasicModel = AbstractModel.extend({
         // sequentially, for example, an onchange needs to be completed before a
         // save is performed.
         this.mutex = new concurrency.Mutex();
+        this.bypassMutex = false; // never set this to true manually (see @executeDirectly)
 
         // this array is used to accumulate RPC requests done in the same call
         // stack, so that they can be batched in the minimum number of RPCs
@@ -457,6 +458,21 @@ var BasicModel = AbstractModel.extend({
                     context: context,
                 });
             });
+    },
+    /**
+     * This method allows to execute a callback for which '_notifyChanges' and
+     * 'save' will bypass the mutex. This is useful when we are leaving Odoo
+     * (closing tab/browser), and we want to quickly save pending changes (in
+     * an 'onbeforeunload' handler, which is mostly sync).
+     *
+     * This function should never be called except when we are leaving Odoo.
+     *
+     * @param {Function} callback
+     */
+    executeDirectly(callback) {
+        this.bypassMutex = true;
+        callback();
+        this.bypassMutex = false;
     },
     /**
      * For list resources, this freezes the current records order.
@@ -936,7 +952,11 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string[]>} list of changed fields
      */
     notifyChanges: function (record_id, changes, options) {
-        return this.mutex.exec(this._applyChange.bind(this, record_id, changes, options));
+        const notifyChanges = () => this._applyChange(record_id, changes, options);
+        if (this.bypassMutex) {
+            return notifyChanges();
+        }
+        return this.mutex.exec(notifyChanges);
     },
     /**
      * Reload all data for a given resource. At any time there is at most one
@@ -1087,7 +1107,7 @@ var BasicModel = AbstractModel.extend({
      */
     save: function (recordID, options) {
         var self = this;
-        return this.mutex.exec(function () {
+        function _save() {
             options = options || {};
             var record = self.localData[recordID];
             if (options.savePoint) {
@@ -1179,7 +1199,12 @@ var BasicModel = AbstractModel.extend({
                 record._isDirty = false;
             });
             return prom;
-        });
+        }
+        if (this.bypassMutex) {
+            return _save();
+        } else {
+            return this.mutex.exec(_save);
+        }
     },
     /**
      * Manually sets a resource as dirty. This is used to notify that a field

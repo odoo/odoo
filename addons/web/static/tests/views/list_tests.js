@@ -11332,6 +11332,109 @@ QUnit.module('Views', {
 
         list.destroy();
     });
+
+    QUnit.test("Auto save: save on closing tab/browser", async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                </tree>`,
+            mockRPC(route, { args, method, model }) {
+                if (model === 'foo' && method === 'write') {
+                    assert.deepEqual(args, [
+                        [1],
+                        { foo: 'test' },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name="foo"]'), "test");
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        list.destroy();
+    });
+
+    QUnit.test("Auto save: save on closing tab/browser (invalid field)", async function (assert) {
+        assert.expect(1);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="foo" required="1"/>
+                </tree>`,
+            mockRPC(route, { args, method, model }) {
+                if (model === 'foo' && method === 'write') {
+                    assert.step('save'); // should not be called
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name="foo"]'), '');
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        assert.verifySteps([], 'should not save because of invalid field');
+
+        list.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (onchanges)', async function (assert) {
+        assert.expect(1);
+
+        this.data.foo.onchanges = {
+            int_field: function (obj) {
+                obj.foo = `${obj.int_field}`;
+            },
+        };
+
+        const def = testUtils.makeTestPromise();
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+            mockRPC(route, { args, method, model }) {
+                if (model === 'foo' && method === 'onchange') {
+                    return def;
+                }
+                if (model === 'foo' && method === 'write') {
+                    assert.deepEqual(args, [
+                        [1],
+                        { int_field: 2021 },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.dom.click(list.$('.o_field_cell[name="int_field"]:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name="int_field"]'), '2021');
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        list.destroy();
+    });
 });
 
 });

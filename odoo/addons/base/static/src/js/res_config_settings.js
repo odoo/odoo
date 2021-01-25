@@ -414,6 +414,13 @@ var BaseSettingController = FormController.extend({
             this._super.apply(this, arguments);
         }
     },
+    /**
+     * @override
+     * @private
+     */
+    _onBeforeUnload: function () {
+        // We should not save when leaving Odoo in the settings
+    },
 
 });
 
