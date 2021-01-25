@@ -571,7 +571,7 @@ class Task(models.Model):
     priority = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Important'),
-    ], default='0', index=True, string="Priority")
+    ], default='0', index=True, string="Starred")
     sequence = fields.Integer(string='Sequence', index=True, default=10,
         help="Gives the sequence order when displaying a list of tasks.")
     stage_id = fields.Many2one('project.task.type', string='Stage', compute='_compute_stage_id',
