@@ -9,8 +9,6 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
         var chair = $("#chair").val();
         var duration = $("#duration").val();
 
-        console.log("########### ", duration, typeof(duration))
-
         if (name == "" || date == "" || time == "" || phone == "" || chair == "" || duration == "") {
             alert("All fields are mandatory");
         } else {
@@ -20,6 +18,7 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
             if (isNaN(time_left_char) || isNaN(time_right_char) || time_separator != ":") {
                 alert("Select a valid Time");
             } else {
+                document.querySelector("#submit_button").innerText = "Sending";
                 var time_left = parseInt(time_left_char);
                 var time_right = parseInt(time_right_char);
                 console.log(time_left, time_right)
