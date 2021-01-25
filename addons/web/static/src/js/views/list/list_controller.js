@@ -691,6 +691,17 @@ var ListController = BasicController.extend({
         }
     },
     /**
+     * Save the row in edition, if any, when we are about to leave Odoo.
+     *
+     * @override
+     */
+    _onBeforeUnload: function () {
+        const recordId = this.renderer.getEditableRecordID();
+        if (recordId) {
+            this._urgentSave(recordId);
+        }
+    },
+    /**
      * Handles a click on a button by performing its action.
      *
      * @private
