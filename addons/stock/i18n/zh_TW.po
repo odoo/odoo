@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
 "Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
@@ -736,16 +736,16 @@ msgid "Allowed Route"
 msgstr "允許路線"
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
+msgid ""
+"Allows to start with a pre-filled counted quantity for each lines or with "
+"all counted quantities set to zero."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
 msgstr "允許從零庫存開始。"
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
-msgid ""
-"Allows to start with prefill counted quantity for each lines or with all "
-"counted quantity set to zero."
-msgstr "於盤點開始時輸入目前在手數量，或者將所有盤點數量設置為零。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -3810,7 +3810,6 @@ msgstr "新的"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
-#: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "New Move:"
 msgstr "新移動："
@@ -6686,6 +6685,16 @@ msgid ""
 msgstr ""
 "這個揀貨顯示和另一個作業連結起來。稍後, 如果您正在接收退回的貨物，確保<b>逆轉</b>退回揀貨 ，以防止同樣的物流規則再次被應用 "
 "(這會創建重複操作)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
