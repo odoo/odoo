@@ -29,6 +29,8 @@
                     <separator/>
                     <filter string="Starred" name="starred" domain="[('priority', 'in', [1, 2])]"/>
                     <filter string="Late Tasks" name="late" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter string="Created On" name="created_on" date="create_date"/>
+                    <filter string="Last Stage Update" name="last_stage_update" date="date_last_stage_update"/>
                     <filter string="Rated tasks" name="rating_task" domain="[('rating_last_value', '!=', 0.0)]" groups="project.group_project_rating"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
