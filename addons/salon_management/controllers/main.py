@@ -64,6 +64,7 @@ class SalonBookingWeb(http.Controller):
         email_notify_obj = request.env['salon.booking.email'].search([])
         if email_notify_obj.booking_email_sender and email_notify_obj.booking_email_pass and email_notify_obj.booking_email_receiver and email_notify_obj.booking_smtp_host and email_notify_obj.booking_smtp_port:
             chair_name = request.env['salon.chair'].search([('id','=',chair)]).name
+            duration_name = request.env['salon.duration'].search([('id','=',duration)]).name
             email_booking_data ={
                 'sender_email': email_notify_obj.booking_email_sender,
                 'sender_pass': email_notify_obj.booking_email_pass,
@@ -74,7 +75,7 @@ class SalonBookingWeb(http.Controller):
                 'time':date_and_time,
                 'name':name,
                 'phone':phone,
-                'duration':duration
+                'duration':duration_name
             }
             send_receive_booking_email(email_booking_data)
         
