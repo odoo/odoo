@@ -10,7 +10,7 @@ from psycopg2 import OperationalError
 
 from odoo import SUPERUSER_ID, _, api, fields, models, registry
 from odoo.addons.stock.models.stock_rule import ProcurementException
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import RedirectWarning, UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import add, float_compare, frozendict, split_every
 
@@ -206,7 +206,19 @@ class StockWarehouseOrderpoint(models.Model):
         return action
 
     def action_replenish(self):
-        self._procure_orderpoint_confirm(company_id=self.env.company)
+        try:
+            self._procure_orderpoint_confirm(company_id=self.env.company)
+        except UserError as e:
+            if len(self) != 1:
+                raise e
+            raise RedirectWarning(e, {
+                'name': self.product_id.display_name,
+                'type': 'ir.actions.act_window',
+                'res_model': 'product.product',
+                'res_id': self.product_id.id,
+                'views': [(self.env.ref('product.product_normal_form_view').id, 'form')],
+                'context': {'form_view_initial_mode': 'edit'}
+            }, _('Edit Product'))
         notification = False
         if len(self) == 1:
             notification = self._get_replenishment_order_notification()
@@ -307,9 +319,8 @@ class StockWarehouseOrderpoint(models.Model):
         # In master: the active field should be remove
         orderpoints = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search([])
         # Remove previous automatically created orderpoint that has been refilled.
-        to_remove = orderpoints.filtered(lambda o: o.create_uid.id == SUPERUSER_ID and o.qty_to_order <= 0.0 and o.trigger == 'manual')
-        to_remove.unlink()
-        orderpoints = orderpoints - to_remove
+        orderpoints_removed = orderpoints._unlink_processed_orderpoints()
+        orderpoints = orderpoints - orderpoints_removed
         to_refill = defaultdict(float)
         all_product_ids = []
         all_warehouse_ids = []
@@ -434,6 +445,20 @@ class StockWarehouseOrderpoint(models.Model):
         """Return Quantities that are not yet in virtual stock but should be deduced from orderpoint rule
         (example: purchases created from orderpoints)"""
         return dict(self.mapped(lambda x: (x.id, 0.0)))
+
+    @api.autovacuum
+    def _unlink_processed_orderpoints(self):
+        domain = [
+            ('create_uid', '=', SUPERUSER_ID),
+            ('trigger', '=', 'manual'),
+            ('qty_to_order', '<=', 0)
+        ]
+        if self.ids:
+            expression.AND([domain, [('ids', 'in', self.ids)]])
+        orderpoints_to_remove = self.env['stock.warehouse.orderpoint'].with_context(active_test=False).search(domain)
+        # Remove previous automatically created orderpoint that has been refilled.
+        orderpoints_to_remove.unlink()
+        return orderpoints_to_remove
 
     def _prepare_procurement_values(self, date=False, group=False):
         """ Prepare specific key for moves or other components that will be created from a stock rule
