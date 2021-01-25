@@ -24,7 +24,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Felix Schubert <felix.schubert@go-erp.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
@@ -438,13 +438,10 @@ msgstr "Zugriffswarnung"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"Je nach Produktkonfiguration kann die erhaltene Menge automatisch durch einen Mechanismus berechnet werden:\n"
-"  - Manuell: Die Menge wird manuell auf der Linie eingestellt\n"
-"  - Lagerbewegungen: Die Menge stammt aus bestätigten Kommissionierungen\n"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_needaction
@@ -541,7 +538,7 @@ msgstr ""
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_res_config_settings__group_send_reminder
-msgid "Allow automatically send email to reminde your vendor the receipt date"
+msgid "Allow automatically send email to remind your vendor the receipt date"
 msgstr ""
 
 #. module: purchase
@@ -611,7 +608,7 @@ msgstr "Autovervollständigung"
 #: model:ir.model.fields,field_description:purchase.field_account_move__purchase_vendor_bill_id
 #: model:ir.model.fields,field_description:purchase.field_account_payment__purchase_vendor_bill_id
 msgid "Auto-complete"
-msgstr ""
+msgstr "Automatische Vervollständigung"
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_vendor_bill_id
@@ -619,13 +616,14 @@ msgstr ""
 #: model:ir.model.fields,help:purchase.field_account_payment__purchase_vendor_bill_id
 msgid "Auto-complete from a past bill / purchase order."
 msgstr ""
+"Automatische Vervollständigung einer vergangenen Rechnung / Einkaufsauftrag."
 
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_account_bank_statement_line__purchase_id
 #: model:ir.model.fields,help:purchase.field_account_move__purchase_id
 #: model:ir.model.fields,help:purchase.field_account_payment__purchase_id
 msgid "Auto-complete from a past purchase order."
-msgstr ""
+msgstr "Automatische Vervollständigung eines vergangenen Einkaufsauftrags."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -650,7 +648,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
 msgid "Average Cost"
-msgstr ""
+msgstr "Durchschnittliche Kosten"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__avg_days_to_purchase
@@ -973,7 +971,7 @@ msgstr "Tage zur Bestätigung"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__delay_pass
 msgid "Days to Receive"
-msgstr ""
+msgstr "Tage bis zum Erhalt"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -1122,7 +1120,7 @@ msgstr "FontAwesome Icon, z.B. fa-tasks"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr ""
+msgstr "Verbotenen Werte auf Einkaufsauftragslinien"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -1225,6 +1223,8 @@ msgid ""
 "If installed, the product variants will be added to purchase orders through "
 "a grid entry."
 msgstr ""
+"Falls installiert, dann werden die Produktvarianten zu Einkaufsaufträgen "
+"hinzugefügt."
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.mail_notification_confirm
@@ -1480,7 +1480,7 @@ msgstr "Mindestbestellwert, ab dem eine doppelte Freigabe erforderlich ist"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr ""
+msgstr "Fehlende Werte auf der Einkaufsauftragslinie."
 
 #. module: purchase
 #. openerp-web
@@ -2091,7 +2091,7 @@ msgstr ""
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_billed
 msgid "Qty Billed"
-msgstr ""
+msgstr "Quantität in Rechnung gestellt"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_ordered
@@ -2101,12 +2101,12 @@ msgstr "Bestelle Menge"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_received
 msgid "Qty Received"
-msgstr ""
+msgstr "Quantität erhalten"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__qty_to_be_billed
 msgid "Qty to be Billed"
-msgstr ""
+msgstr "Zu verrechnende Quantität"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
@@ -2176,7 +2176,7 @@ msgstr "Anfragen und Bestellungen"
 #. module: purchase
 #: model:ir.model.fields,help:purchase.field_purchase_order__currency_rate
 msgid "Ratio between the purchase order currency and the company currency"
-msgstr ""
+msgstr "Verhältnis zwischen der Einkaufswährung und der Firmenwährung"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_form
@@ -2604,7 +2604,7 @@ msgstr ""
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.view_product_supplier_inherit
 msgid "This note is added to purchase orders."
-msgstr ""
+msgstr "Diese Notiz wird zu den Einkaufsaufträgen hinzugefügt."
 
 #. module: purchase
 #: code:addons/purchase/models/account_invoice.py:0

@@ -13,9 +13,9 @@
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~13.5\n"
+"Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-07 07:33+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
 "Last-Translator: Noma Yuki, 2020\n"
 "Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
@@ -49,6 +49,13 @@ msgstr "<p>これらの日付は、有効化された領収書%s に合わせて
 #, python-format
 msgid "<p>Those dates have been updated accordingly on the receipt %s.</p>"
 msgstr "<p>これらの日付は、領収書%sに応じて更新されました。</p>"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.purchase_order_view_form_inherit
+msgid ""
+"<span attrs=\"{'invisible': [('on_time_rate', '&gt;=', 0)]}\">No On-time "
+"Delivery Data</span>"
+msgstr ""
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
@@ -95,13 +102,12 @@ msgstr "<strong>出荷先:</strong>"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__qty_received_method
 msgid ""
-"According to product configuration, the recieved quantity can be automatically computed by mechanism :\n"
+"According to product configuration, the received quantity can be automatically computed by mechanism :\n"
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
-"製品構成に応じて、受信数量を仕組みによって自動的に計算できます:\n"
-"  - 手動: 数量はライン上で手動で設定されます\n"
-"  - 在庫の動き: 数量は確定済みのピッキングから得られます\n"
+":\n"
+"\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -375,6 +381,12 @@ msgid "Lot/Serial"
 msgstr "ロット/シリアル"
 
 #. module: purchase_stock
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Manual Replenishment"
+msgstr "手動補充"
+
+#. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Manual actions may be needed."
 msgstr "マニュアルでのフォローが必要かもしれません。"
@@ -402,6 +414,11 @@ msgstr "配送予定を早める日数"
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
 msgid "Next transfer(s) impacted:"
 msgstr "影響を受ける次の転送(複数):"
+
+#. module: purchase_stock
+#: model_terms:ir.ui.view,arch_db:purchase_stock.res_partner_view_purchase_buttons_inherit
+msgid "No data yet"
+msgstr ""
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/account_invoice.py:0
@@ -450,9 +467,9 @@ msgstr "オーダーポイント"
 #: model:ir.model.fields,help:purchase_stock.field_res_partner__on_time_rate
 #: model:ir.model.fields,help:purchase_stock.field_res_users__on_time_rate
 msgid ""
-"Over the past 12 months, number of products received on time / total number "
-"of ordered products."
-msgstr "過去12か月間に、時間どおりに受け取った製品の数/注文した製品の総数。"
+"Over the past 12 months; the number of products received on time divided by "
+"the number of ordered products."
+msgstr ""
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
@@ -559,6 +576,12 @@ msgstr "受け取った数量メソッド"
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids
 msgid "Receptions"
 msgstr "入荷"
+
+#. module: purchase_stock
+#: code:addons/purchase_stock/models/stock_rule.py:0
+#, python-format
+msgid "Replenishment Report"
+msgstr "補充レポート"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
