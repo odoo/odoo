@@ -60,14 +60,21 @@ class StockRule(models.Model):
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
                 orderpoint = production.orderpoint_id
-                if orderpoint:
-                    production.message_post_with_view('mail.message_origin_link',
-                                                      values={'self': production, 'origin': orderpoint},
-                                                      subtype_id=self.env.ref('mail.mt_note').id)
-                if origin_production:
-                    production.message_post_with_view('mail.message_origin_link',
-                                                      values={'self': production, 'origin': origin_production},
-                                                      subtype_id=self.env.ref('mail.mt_note').id)
+                if orderpoint and orderpoint.create_uid.id == SUPERUSER_ID and orderpoint.trigger == 'manual':
+                    production.message_post(
+                        body=_('This production order has been created from Replenishment Report.'),
+                        message_type='comment',
+                        subtype_xmlid='mail.mt_note')
+                elif orderpoint:
+                    production.message_post_with_view(
+                        'mail.message_origin_link',
+                        values={'self': production, 'origin': orderpoint},
+                        subtype_id=self.env.ref('mail.mt_note').id)
+                elif origin_production:
+                    production.message_post_with_view(
+                        'mail.message_origin_link',
+                        values={'self': production, 'origin': origin_production},
+                        subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
     def _get_custom_move_fields(self):
