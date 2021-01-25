@@ -7,10 +7,15 @@ from odoo import api, models
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
-    @api.onchange('lead_enrich_auto')
-    def _onchange_cron_lead_enrich(self):
-        """ change the active status of the cron according to the settings"""
-        if self.module_crm_iap_lead_enrich == True:
-            cron = self.sudo().with_context(active_test=False).env.ref('crm_iap_lead_enrich.ir_cron_lead_enrichment')
-            if cron:
-                cron.active = self.lead_enrich_auto != 'manual'
+    @api.model
+    def get_values(self):
+        values = super(ResConfigSettings, self).get_values()
+        cron = self.sudo().with_context(active_test=False).env.ref('crm_iap_lead_enrich.ir_cron_lead_enrichment', raise_if_not_found=False)
+        values['lead_enrich_auto'] = 'auto' if cron and cron.active else 'manual'
+        return values
+
+    def set_values(self):
+        super(ResConfigSettings, self).set_values()
+        cron = self.sudo().with_context(active_test=False).env.ref('crm_iap_lead_enrich.ir_cron_lead_enrichment', raise_if_not_found=False)
+        if cron:
+            cron.active = self.lead_enrich_auto == 'auto'
