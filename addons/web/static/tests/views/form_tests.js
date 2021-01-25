@@ -9853,6 +9853,207 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.test('Auto save: save on closing tab/browser', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC(route, { args, method, model }) {
+                if (method === 'write' && model === 'partner') {
+                    assert.deepEqual(args, [
+                        [1],
+                        { display_name: 'test' },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        assert.notStrictEqual(form.$('.o_field_widget[name="display_name"]').val(), 'test');
+
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), 'test');
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        form.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (invalid field)', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name" required="1"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC(route, { args, method, model }) {
+                if (method === 'write' && model === 'partner') {
+                    assert.step('save'); // should not be called
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), '');
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        assert.verifySteps([], 'should not save because of invalid field');
+
+        form.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (not dirty)', async function (assert) {
+        assert.expect(1);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC(route, { args, method, model }) {
+                if (method === 'write' && model === 'partner') {
+                    assert.step('save'); // should not be called
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        assert.verifySteps([], 'should not save because we do not change anything');
+
+        form.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (detach form)', async function (assert) {
+        assert.expect(3);
+
+        const actions = [{
+            id: 1,
+            name: 'Partner',
+            res_model: 'partner',
+            type: 'ir.actions.act_window',
+            views: [[false, 'list'], [false, 'form']],
+        }];
+
+        const actionManager = await createActionManager({
+            actions,
+            data: this.data,
+            archs: {
+                'partner,false,list': `
+                    <tree>
+                        <field name="display_name"/>
+                    </tree>
+                `,
+                'partner,false,form': `
+                    <form>
+                        <group>
+                            <field name="display_name"/>
+                        </group>
+                    </form>
+                `,
+                'partner,false,search': '<search></search>',
+            },
+            mockRPC(route, { args, method }) {
+                if (method === 'write') {
+                    assert.step('save');
+                }
+                return this._super(...arguments);
+            },
+        });
+        await actionManager.doAction(1);
+
+        // Click on a row to open a record
+        await testUtils.dom.click(actionManager.$('.o_data_row:first'));
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partnerfirst record');
+
+        // Return in the list view to detach the form view
+        await testUtils.dom.click(actionManager.$('.o_back_button'));
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'Partner');
+
+        // Simulate tab/browser close in the list
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        // write rpc should not trigger because form view has been detached
+        // and list has nothing to save
+        assert.verifySteps([]);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test('Auto save: save on closing tab/browser (onchanges)', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.onchanges = {
+            display_name: function (obj) {
+                obj.name = `copy: ${obj.display_name}`;
+            },
+        };
+
+        const def = testUtils.makeTestPromise();
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="display_name"/>
+                        <field name="name"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+            mockRPC(route, { args, method, model }) {
+                if (method === 'onchange' && model === 'partner') {
+                    return def;
+                }
+                if (method === 'write' && model === 'partner') {
+                    assert.deepEqual(args, [
+                        [1],
+                        { display_name: 'test' },
+                    ]);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await testUtils.form.clickEdit(form);
+        await testUtils.fields.editInput(form.$('.o_field_widget[name="display_name"]'), 'test');
+
+        window.dispatchEvent(new Event("beforeunload"));
+        await testUtils.nextTick();
+
+        form.destroy();
+    });
+
     QUnit.test('Quick Edition: click on a quick editable field', async function (assert) {
         assert.expect(3);
 

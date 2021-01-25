@@ -59,6 +59,32 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.$el.toggleClass('o_cannot_create', !this.activeActions.create);
         await this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    destroy: function () {
+        this._super(...arguments);
+        if (this._boundOnBeforeUnload) {
+            window.removeEventListener("beforeunload", this._boundOnBeforeUnload);
+        }
+    },
+    /**
+     * @override
+     */
+    on_attach_callback: function () {
+        this._super(...arguments);
+        this._boundOnBeforeUnload = this._onBeforeUnload.bind(this);
+        window.addEventListener("beforeunload", this._boundOnBeforeUnload);
+    },
+    /**
+     * @override
+     */
+    on_detach_callback: function () {
+        this._super(...arguments);
+        if (this._boundOnBeforeUnload) {
+            window.removeEventListener("beforeunload", this._boundOnBeforeUnload);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -574,6 +600,9 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {boolean} [options.savePoint=false]
      *        if true, the record will only be 'locally' saved: its changes
      *        will move from the _changes key to the data key
+     * @param {boolean} [options.urgentSave=false]
+     *        if true, we won't wait for saving
+     *        This should be used only when we leave odoo
      * @returns {Promise}
      *        Resolved with the list of field names (whose value has been modified)
      *        Rejected if the record can't be saved
@@ -584,6 +613,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
             stayInEdit: false,
             reload: true,
             savePoint: false,
+            urgentSave: false,
         });
 
         // Check if the view is in a valid state for saving
@@ -594,6 +624,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 reload: options.reload,
                 savePoint: options.savePoint,
                 viewType: options.viewType,
+                urgentSave: options.urgentSave,
             });
             if (!options.stayInEdit) {
                 saveDef = saveDef.then(function (fieldNames) {
@@ -729,6 +760,22 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // reset the scroll position to the top on page changed only
         if (state.limit === limit) {
             this.trigger_up('scrollTo', { top: 0 });
+        }
+    },
+    /**
+     * Called when the user closes the tab or browser.
+     *
+     * @private
+     */
+    _onBeforeUnload: function () {
+        // we can't wait for the returned promise (and thus for onchanges to be applied)
+        // because the 'beforeunload' handler must be *almost* sync (< 10 ms setTimeout
+        // seems fine, but an rpc roundtrip is definitely to long
+        this.renderer.commitChanges();
+        if (this.isDirty()) {
+            this._saveRecord(this.handle, {
+                urgentSave: true,
+            });
         }
     },
     /**

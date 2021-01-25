@@ -890,6 +890,24 @@ var ListController = BasicController.extend({
         }
     },
     /**
+     * @override
+     * @private
+     */
+    _onBeforeUnload: function () {
+        // we can't wait for the returned promise (and thus for onchanges to be applied)
+        // because the 'beforeunload' handler must be *almost* sync (< 10 ms setTimeout
+        // seems fine, but an rpc roundtrip is definitely to long
+        const recordId = this.renderer.getEditableRecordID();
+        if (recordId) {
+            this.renderer.commitChanges(recordId);
+            if (this.isDirty(recordId)) {
+                this._saveRecord(recordId, {
+                    urgentSave: true,
+                });
+            }
+        }
+    },
+    /**
      * Called when the renderer displays an editable row and the user tries to
      * leave it -> Saves the record associated to that line.
      *

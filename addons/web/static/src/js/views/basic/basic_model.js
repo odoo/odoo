@@ -1082,13 +1082,15 @@ var BasicModel = AbstractModel.extend({
      *   be restored later by call discardChanges with option rollback to true
      * @param {string} [options.viewType] current viewType. If not set, we will
      *   assume main viewType from the record
+     * @param {boolean} [options.urgentSave=false] if true, we won't wait for the mutex
+     *   This should be used only when we leave odoo
      * @returns {Promise}
      *   Resolved with the list of field names (whose value has been modified)
      */
     save: function (recordID, options) {
+        options = options || {};
         var self = this;
-        return this.mutex.exec(function () {
-            options = options || {};
+        function _save() {
             var record = self.localData[recordID];
             if (options.savePoint) {
                 self._visitChildren(record, function (rec) {
@@ -1179,7 +1181,12 @@ var BasicModel = AbstractModel.extend({
                 record._isDirty = false;
             });
             return prom;
-        });
+        }
+        if (options.urgentSave) {
+            return _save();
+        } else {
+            return this.mutex.exec(_save);
+        }
     },
     /**
      * Manually sets a resource as dirty. This is used to notify that a field
