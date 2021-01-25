@@ -206,7 +206,13 @@ class Website(models.Model):
     def _prepare_sale_order_values(self, partner, pricelist):
         self.ensure_one()
         affiliate_id = request.session.get('affiliate_id')
-        salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
+        salesperson_id = False
+        if self.env['res.users'].sudo().browse(affiliate_id).exists():
+            salesperson_id = affiliate_id
+        if not salesperson_id and partner.user_id:
+            salesperson_id = partner.user_id.id
+        if not salesperson_id:
+            salesperson_id = request.website.salesperson_id.id
         addr = partner.address_get(['delivery'])
         if not request.website.is_public_user():
             last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
