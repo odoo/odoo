@@ -479,6 +479,14 @@ var FormController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Save the record when we are about to leave Odoo.
+     *
+     * @override
+     */
+    _onBeforeUnload: function () {
+        this._urgentSave(this.handle);
+    },
+    /**
      * @private
      * @param {OdooEvent} ev
      */
