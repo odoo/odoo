@@ -82,9 +82,6 @@ class Composer extends Component {
 
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
-        if (this.composer.message) {
-            this._textInputRef.comp.focus();
-        }
     }
 
     willUnmount() {
@@ -193,30 +190,6 @@ class Composer extends Component {
     //--------------------------------------------------------------------------
 
     /**
-     * Post a message in the composer on related thread.
-     *
-     * Posting of the message could be aborted if it cannot be posted like if there are attachments
-     * currently uploading or if there is no text content and no attachments.
-     *
-     * @private
-     */
-    async _postMessage() {
-        if (!this.composer.canPostMessage) {
-            if (this.composer.hasUploadingAttachment) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("Please wait while the file is uploading."),
-                    type: 'warning',
-                });
-            }
-            return;
-        }
-        await this.composer.postMessage();
-        // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
-        // task-2252858
-        this.trigger('o-message-posted');
-    }
-
-    /**
      * @private
      */
     _update() {
@@ -229,22 +202,6 @@ class Composer extends Component {
         if (this._subjectRef.el) {
             this._subjectRef.el.value = this.composer.subjectContent;
         }
-    }
-
-    /**
-     * @private
-     */
-    _updateMessage() {
-        if (!this.composer.canPostMessage) {
-            if (this.composer.hasUploadingAttachment) {
-                this.env.services['notification'].notify({
-                    message: this.env._t("Please wait while the file is uploading."),
-                    type: 'warning',
-                });
-            }
-            return;
-        }
-        this.composer.updateMessage();
     }
 
     //--------------------------------------------------------------------------
@@ -301,11 +258,7 @@ class Composer extends Component {
      * @private
      */
     _onClickSend() {
-        if (this.composer.message) {
-            this._updateMessage();
-        } else {
-            this._postMessage();
-        }
+        this.composer.sendMessage();
         this.focus();
     }
 
@@ -319,29 +272,8 @@ class Composer extends Component {
     /**
      * @private
      */
-    _onComposerTextInputEscShortcut() {
-        this.composer.message.update({ isEditingMessage: false });
-    }
-
-    /**
-     * @private
-     */
     _onComposerTextInputSendShortcut() {
-        if (this.composer.message) {
-            this._updateMessage();
-        } else {
-            this._postMessage();
-        }
-    }
-
-    /**
-     * @private
-     */
-    _onComposerTextInputUpShortcut() {
-        const messages = this.composer.thread.messages.filter((message) => message.isCurrentPartnerAuthor);
-        if (messages.length) {
-            this.composer._createComposer(messages[0]);
-        }
+        this.composer.sendMessage();
     }
 
     /**
@@ -393,6 +325,9 @@ class Composer extends Component {
                 return;
             }
             if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                return;
+            }
+            if (isEventHandled(ev, 'Composer.escapeMessage')) {
                 return;
             }
             ev.preventDefault();

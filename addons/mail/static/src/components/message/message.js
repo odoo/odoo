@@ -476,8 +476,7 @@ class Message extends Component {
         if (
             !isEventHandled(ev, 'Message.ClickAuthorAvatar') &&
             !isEventHandled(ev, 'Message.ClickAuthorName') &&
-            !isEventHandled(ev, 'Message.ClickFailure') &&
-            !this.env.messaging.device.isMobile
+            !isEventHandled(ev, 'Message.ClickFailure')
         ) {
             this.state.isClicked = !this.state.isClicked;
         }
@@ -512,25 +511,13 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     async _onClickEditMessage(ev) {
-        if (this.env.messaging.device.isMobile) {
-            this.message.originThread.composer.update(
-                Object.assign(
-                    {isLastStateChangeProgrammatic: true},
-                    this.message.originThread.composer._getComposerValues(this.message)
-                )
-            );
-            this.composerRecord = this.message.originThread.composer;
-            document.querySelector('.o_ComposerTextInput_textarea').focus();
+        const messageBeingEdited = this.message.originThread.messages.find(
+            message => message.isEditingMessage
+        );
+        if (messageBeingEdited) {
+            messageBeingEdited.update({ isEditingMessage: false });
         }
-        else {
-            const messageBeingEdited = this.message.originThread.messages.find(
-                message => message.isEditingMessage
-            );
-            if (messageBeingEdited) {
-                messageBeingEdited.update({ isEditingMessage: false });
-            }
-            this.message.originThread.composer._createComposer(this.message);
-        }
+        this.message.originThread.composer.createComposer(this.message);
     }
 
     /**

@@ -134,6 +134,10 @@ function factory(dependencies) {
             }
         }
 
+        escapeMessage() {
+            this.message.update({ isEditingMessage: false });
+        }
+
         /**
          * Focus this composer and remove focus from all others.
          * Focus is a global concern, it makes no sense to have multiple composers focused at the
@@ -161,6 +165,19 @@ function factory(dependencies) {
             body = this._generateMentionsLinks(body);
             body = parseAndTransform(body, addLink);
             return this._generateEmojisOnHtml(body);
+        }
+
+        /**
+         * @param {object} message
+         * @returns {Object}
+         */
+        getComposerValues(message) {
+            return {
+                textInputContent: htmlToTextContentInline(message.body),
+                attachments: [['link', message.attachments]],
+                message: [['link', message]],
+                messageAttachments: message.attachments.map((attachment) => attachment.localId),
+            };
         }
 
         /**
@@ -372,60 +389,12 @@ function factory(dependencies) {
             }
         }
 
-        updateMentions() {
-            const channels = [];
-            const partners = [];
-            const div = document.createElement('div');
-            div.innerHTML = this.message.body;
-            const anchors = div.querySelectorAll('a');
-
-            anchors.forEach((element) => {
-                const id = parseInt(element.dataset.oeId);
-                if (element.dataset.oeModel === 'res.partner') {
-                    const partner = this.env.models["mail.partner"].find(partner => partner.id === id);
-                    if (partner) {
-                        partners.push(partner);
-                    }
-                } else if (element.dataset.oeModel === 'mail.channel') {
-                    const channel = this.env.models["mail.thread"].find(channel => channel.id === id);
-                    if (channel) {
-                        channels.push(channel);
-                    }
-                }
-            });
-            this.update({
-                mentionedPartners: [['link', partners]],
-                mentionedChannels: [['link', channels]],
-            });
-        }
-
-        async updateMessage() {
-            const attachmentIds = this.attachments.map((attachment) => attachment.id);
-            if (
-                htmlToTextContentInline(this.message.body) === this.textInputContent &&
-                JSON.stringify(attachmentIds) === JSON.stringify(this.messageAttachments)
-            ) {
-                this.message.update({ isEditingMessage: false });
-                return;
-            }
-            this.updateMentions();
-            const vals = {
-                body: this.getBody(),
-                attachment_ids: attachmentIds,
-            };
-            const [messageData] = await this.async(() => this.env.services.rpc({
-                model: 'mail.message',
-                method: 'update_message',
-                args: [[this.message.id], vals],
-            }));
-
-            const data = this.env.models['mail.message'].convertData(messageData);
-            this.message.update(Object.assign(data, { isEditingMessage: false }));
-            if (this.thread) {
-                this.update({
-                    textInputContent: "",
-                    isLastStateChangeProgrammatic: true,
-                });
+        upMessage() {
+            const filteredMessages = this.thread.mainCache.orderedMessages.filter((message) => message.isCurrentPartnerAuthor);
+            let lastMessage;
+            lastMessage = filteredMessages[filteredMessages.length - 1];
+            if (lastMessage) {
+                this.createComposer(lastMessage);
             }
         }
 
@@ -442,6 +411,46 @@ function factory(dependencies) {
                 this.thread.refreshCurrentPartnerIsTyping();
             } else {
                 this.thread.registerCurrentPartnerIsTyping();
+            }
+        }
+
+        async sendMessage() {
+            if (!this.canPostMessage) {
+                if (this.hasUploadingAttachment) {
+                    this.env.services['notification'].notify({
+                        message: this.env._t("Please wait while the file is uploading."),
+                        type: 'warning',
+                    });
+                }
+                return;
+            }
+
+            if (this.message) {
+                const attachmentIds = this.attachments.map((attachment) => attachment.id);
+                if (
+                    htmlToTextContentInline(this.message.body) === this.textInputContent &&
+                    JSON.stringify(attachmentIds) === JSON.stringify(this.messageAttachments)
+                ) {
+                    this.message.update({ isEditingMessage: false });
+                    return;
+                }
+                const vals = {
+                    body: this.getBody(),
+                    attachment_ids: attachmentIds,
+                };
+                const [messageData] = await this.async(() => this.env.services.rpc({
+                    model: 'mail.message',
+                    method: 'update_message',
+                    args: [[this.message.id], vals],
+                }));
+
+                const data = this.env.models['mail.message'].convertData(messageData);
+                this.message.update(Object.assign(data, { isEditingMessage: false }));
+            } else {
+                await this.postMessage();
+                // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
+                // task-2252858
+                this.env.bus.trigger('o-message-posted');
             }
         }
 
@@ -663,11 +672,21 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @return {string}
+         */
+        _computeTooltip() {
+            if (!this.message) {
+                return;
+            }
+            return this.env._t("enter to save • escape to cancel");
+        }
+
+        /**
          * @param {object} message
          */
-        async _createComposer(message) {
+        async createComposer(message) {
             message.composerRecord = this.env.models["mail.composer"].create(
-                this._getComposerValues(message)
+                this.getComposerValues(message)
             );
             message.update({ isEditingMessage: true });
         }
@@ -788,20 +807,6 @@ function factory(dependencies) {
                 });
             }
             return undefined;
-        }
-
-        /**
-         * @private
-         * @param {object} message
-         * @returns {Object}
-         */
-        _getComposerValues(message) {
-            return {
-                textInputContent: htmlToTextContentInline(message.body),
-                attachments: [['link', message.attachments]],
-                message: [['link', message]],
-                messageAttachments: message.attachments.map((attachment) => attachment.localId),
-            };
         }
 
         /**
@@ -1178,6 +1183,11 @@ function factory(dependencies) {
          */
         threadSuggestedRecipientInfoListIsSelected: attr({
             related: 'threadSuggestedRecipientInfoList.isSelected',
+        }),
+        toolTip: attr({
+            compute: '_computeTooltip',
+            dependencies: ['message'],
+            default: '',
         }),
         /**
          * Composer subject input content.
