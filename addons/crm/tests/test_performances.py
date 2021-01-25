@@ -1,110 +1,33 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
-from dateutil.relativedelta import relativedelta
-from unittest.mock import patch
+import random
 
-from odoo import fields
-from odoo.addons.crm.tests.common import TestLeadConvertCommon
+from odoo.addons.crm.tests.test_crm_lead_assignment import TestLeadAssignCommon
 from odoo.tests.common import tagged
 from odoo.tools import mute_logger
 
 
 @tagged('lead_assign')
-class TestLeadAssignCommon(TestLeadConvertCommon):
+class TestLeadAssignPerf(TestLeadAssignCommon):
+    """ Test performances of lead assignment feature added in saas-14.2
+
+    Assign process is a random process: randomizing teams leads to searching,
+    assigning and de-duplicating leads in various order. As a lot of search
+    are implied during assign process query counters may vary from run to run.
+    "Heavy" performance test included here ranged from 6K to 6.3K queries. Either
+    we set high counters maximum which makes those tests less useful. Either we
+    avoid random if possible which is what we decided to do by setting the seed
+    of random in tests.
+    """
 
     @classmethod
     def setUpClass(cls):
-        super(TestLeadAssignCommon, cls).setUpClass()
-        cls._switch_to_multi_membership()
-        cls._switch_to_auto_assign()
+        super(TestLeadAssignPerf, cls).setUpClass()
+        random.seed(2042)
 
-        # don't mess with existing teams, deactivate them to make tests repeatable
-        cls.sales_teams = cls.sales_team_1 + cls.sales_team_convert
-        cls.members = cls.sales_team_1_m1 | cls.sales_team_1_m2 | cls.sales_team_1_m3 | cls.sales_team_convert_m1 | cls.sales_team_convert_m2
-        cls.env['crm.team'].search([('id', 'not in', cls.sales_teams.ids)]).write({'active': False})
-
-        # don't mess with existing leads, deactivate those assigned to users used here to make tests repeatable
-        cls.env['crm.lead'].search(['|', ('team_id', '=', False), ('user_id', 'in', cls.sales_teams.member_ids.ids)]).write({'active': False})
-        cls.bundle_size = 5
-        cls.env['ir.config_parameter'].set_param('crm.assignment.bundle', '%s' % cls.bundle_size)
-        cls.env['ir.config_parameter'].set_param('crm.assignment.delay', '0')
-
-    def assertInitialData(self):
-        self.assertEqual(self.sales_team_1.assignment_max, 75)
-        self.assertEqual(self.sales_team_convert.assignment_max, 90)
-
-        # ensure domains
-        self.assertEqual(self.sales_team_1.assignment_domain, False)
-        self.assertEqual(self.sales_team_1_m1.assignment_domain, False)
-        self.assertEqual(self.sales_team_1_m2.assignment_domain, "[('probability', '>=', 10)]")
-        self.assertEqual(self.sales_team_1_m3.assignment_domain, "[('probability', '>=', 20)]")
-
-        self.assertEqual(self.sales_team_convert.assignment_domain, "[('priority', 'in', ['1', '2', '3'])]")
-        self.assertEqual(self.sales_team_convert_m1.assignment_domain, "[('priority', 'in', ['2', '3'])]")
-        self.assertEqual(self.sales_team_convert_m2.assignment_domain, False)
-
-        # start afresh
-        self.assertEqual(self.sales_team_1_m1.lead_month_count, 0)
-        self.assertEqual(self.sales_team_1_m2.lead_month_count, 0)
-        self.assertEqual(self.sales_team_1_m3.lead_month_count, 0)
-        self.assertEqual(self.sales_team_convert_m1.lead_month_count, 0)
-        self.assertEqual(self.sales_team_convert_m2.lead_month_count, 0)
-
-
-@tagged('lead_assign')
-class TestLeadAssign(TestLeadAssignCommon):
-    """ Test lead assignment feature added in saas-14.2 """
-
-    def test_assign_configuration(self):
-        now_patch = datetime(2020, 11, 2, 10, 0, 0)
-
-        with patch.object(fields.Datetime, 'now', return_value=now_patch):
-            config = self.env['res.config.settings'].create({
-                'crm_use_auto_assignment': True,
-                'crm_auto_assignment_action': 'auto',
-                'crm_auto_assignment_interval_number': 19,
-                'crm_auto_assignment_interval_type': 'hours'
-            })
-            config._onchange_crm_auto_assignment_run_datetime()
-            config.execute()
-            self.assertTrue(self.assign_cron.active)
-            self.assertEqual(self.assign_cron.nextcall, datetime(2020, 11, 2, 10, 0, 0) + relativedelta(hours=19))
-
-            config.write({
-                'crm_auto_assignment_interval_number': 2,
-                'crm_auto_assignment_interval_type': 'days'
-            })
-            config._onchange_crm_auto_assignment_run_datetime()
-            config.execute()
-            self.assertTrue(self.assign_cron.active)
-            self.assertEqual(self.assign_cron.nextcall, datetime(2020, 11, 2, 10, 0, 0) + relativedelta(days=2))
-
-            config.write({
-                'crm_auto_assignment_run_datetime': fields.Datetime.to_string(datetime(2020, 11, 1, 10, 0, 0)),
-            })
-            config.execute()
-            self.assertTrue(self.assign_cron.active)
-            self.assertEqual(self.assign_cron.nextcall, datetime(2020, 11, 1, 10, 0, 0))
-
-            config.write({
-                'crm_auto_assignment_action': 'manual',
-            })
-            config.execute()
-            self.assertFalse(self.assign_cron.active)
-            self.assertEqual(self.assign_cron.nextcall, datetime(2020, 11, 1, 10, 0, 0))
-
-            config.write({
-                'crm_use_auto_assignment': False,
-                'crm_auto_assignment_action': 'auto',
-            })
-            config.execute()
-            self.assertFalse(self.assign_cron.active)
-            self.assertEqual(self.assign_cron.nextcall, datetime(2020, 11, 1, 10, 0, 0))
-
-    @mute_logger('odoo.models.unlink')
-    def test_assign_duplicates(self):
+    @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
+    def test_assign_perf_duplicates(self):
         """ Test assign process with duplicates on partner. Allow to ensure notably
         that de duplication is effectively performed. """
         leads = self._create_leads_batch(
@@ -123,7 +46,8 @@ class TestLeadAssign(TestLeadAssignCommon):
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
 
         with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+            with self.assertQueryCount(user_sales_manager=470):  # crm only: 465
+                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -142,7 +66,8 @@ class TestLeadAssign(TestLeadAssignCommon):
 
         # run a second round to finish leads
         with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+            with self.assertQueryCount(user_sales_manager=131):  # crm only: 123
+                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign: everything should be done due to duplicates
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -155,8 +80,8 @@ class TestLeadAssign(TestLeadAssignCommon):
         ])
         self.assertEqual(len(new_assigned_leads_wpartner), 2)
 
-    @mute_logger('odoo.models.unlink')
-    def test_assign_no_duplicates(self):
+    @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
+    def test_assign_perf_no_duplicates(self):
         leads = self._create_leads_batch(
             lead_type='lead',
             user_ids=[False],
@@ -173,7 +98,8 @@ class TestLeadAssign(TestLeadAssignCommon):
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
 
         with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
+            with self.assertQueryCount(user_sales_manager=210):  # crm only: 206
+                self.env['crm.team'].browse(self.sales_teams.ids)._action_assign_leads(work_days=2)
 
         # teams assign
         leads = self.env['crm.lead'].search([('id', 'in', leads.ids)])  # ensure order
@@ -190,11 +116,11 @@ class TestLeadAssign(TestLeadAssignCommon):
         self.assertMemberAssign(self.sales_team_convert_m1, 2)  # 30 max on 15
         self.assertMemberAssign(self.sales_team_convert_m2, 4)  # 60 max on 15
 
-    @mute_logger('odoo.models.unlink')
-    def test_assign_populated(self):
+    @mute_logger('odoo.models.unlink', 'odoo.addons.crm.models.crm_team', 'odoo.addons.crm.models.crm_team_member')
+    def test_assign_perf_populated(self):
         """ Test assignment on a more high volume oriented test set in order to
-        test more real life use cases. """
-        # create leads enough to assign one month of work
+        have more insights on query counts. """
+        # create leads enough to have interesting counters
         _lead_count, _email_dup_count, _partner_count = 500, 50, 150
         leads = self._create_leads_batch(
             lead_type='lead',
@@ -248,7 +174,8 @@ class TestLeadAssign(TestLeadAssignCommon):
                 lead.probability = (idx + 1) * 10 * ((int(lead.priority) + 1) / 2)
 
         with self.with_user('user_sales_manager'):
-            self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
+            with self.assertQueryCount(user_sales_manager=6246):  # crm only: 6237
+                self.env['crm.team'].browse(sales_teams.ids)._action_assign_leads(work_days=30)
 
         self.members.invalidate_cache(fnames=['lead_month_count'])
         self.assertMemberAssign(self.sales_team_1_m1, 45)  # 45 max on one month
