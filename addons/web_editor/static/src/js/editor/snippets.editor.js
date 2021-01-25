@@ -348,6 +348,11 @@ var SnippetEditor = Widget.extend({
         this.destroy();
         $parent.trigger('content_changed');
 
+        // TODO Page content changed, some elements may need to be adapted
+        // according to it. While waiting for a better way to handle that this
+        // window trigger will handle most cases.
+        $(window).trigger('resize');
+
         function isEmptyAndRemovable($el, editor) {
             editor = editor || $el.data('snippet-editor');
             return $el.children().length === 0 && $el.text().trim() === ''
