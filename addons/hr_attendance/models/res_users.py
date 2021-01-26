@@ -12,6 +12,7 @@ class User(models.Model):
     attendance_state = fields.Selection(related='employee_id.attendance_state')
     last_check_in = fields.Datetime(related='employee_id.last_attendance_id.check_in')
     last_check_out = fields.Datetime(related='employee_id.last_attendance_id.check_out')
+    total_overtime = fields.Float(related='employee_id.total_overtime')
 
     @property
     def SELF_READABLE_FIELDS(self):
@@ -20,5 +21,6 @@ class User(models.Model):
             'hours_last_month_display',
             'attendance_state',
             'last_check_in',
-            'last_check_out'
+            'last_check_out',
+            'total_overtime'
         ]
