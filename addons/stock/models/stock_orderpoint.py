@@ -344,7 +344,7 @@ class StockWarehouseOrderpoint(models.Model):
         orderpoint_values_list = []
         for (product, warehouse), product_qty in to_refill.items():
             lot_stock_id = lot_stock_id_by_warehouse[warehouse]
-            orderpoint = self.filtered(lambda o: o.product_id == product and o.location_id == lot_stock_id)
+            orderpoint = orderpoints.filtered(lambda o: o.product_id.id == product and o.location_id.id == lot_stock_id)
             if orderpoint:
                 orderpoint[0].qty_forecast += product_qty
             else:
@@ -354,7 +354,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'warehouse_id': warehouse,
                     'company_id': self.env['stock.warehouse'].browse(warehouse).company_id.id,
                 })
-            orderpoint_values_list.append(orderpoint_values)
+                orderpoint_values_list.append(orderpoint_values)
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:
