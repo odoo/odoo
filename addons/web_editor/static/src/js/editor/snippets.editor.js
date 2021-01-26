@@ -1337,16 +1337,26 @@ var SnippetsMenu = Widget.extend({
             $selectorSiblings = $(_.uniq(($selectorSiblings || $()).add($selectorChildren.children()).get()));
         }
 
+        var noDropZonesSelector = '[data-invisible="1"], .o_we_no_overlay, :not(:visible)';
         if ($selectorSiblings) {
-            $selectorSiblings.not('.oe_drop_zone, .oe_drop_clone').each(function () {
+            $selectorSiblings.not(`.oe_drop_zone, .oe_drop_clone, ${noDropZonesSelector}`).each(function () {
                 var data;
                 var $zone = $(this);
+                var $zoneToCheck = $zone;
 
-                if (!$zone.prev('.oe_drop_zone:visible, .oe_drop_clone').length) {
+                while ($zoneToCheck.prev(noDropZonesSelector).length) {
+                    $zoneToCheck = $zoneToCheck.prev();
+                }
+                if (!$zoneToCheck.prev('.oe_drop_zone:visible, .oe_drop_clone').length) {
                     data = setDropZoneDirection($zone, $zone.parent());
                     self._insertDropzone($('<we-hook/>').insertBefore($zone), data.vertical, data.style);
                 }
-                if (!$zone.next('.oe_drop_zone:visible, .oe_drop_clone').length) {
+
+                $zoneToCheck = $zone;
+                while ($zoneToCheck.next(noDropZonesSelector).length) {
+                    $zoneToCheck = $zoneToCheck.next();
+                }
+                if (!$zoneToCheck.next('.oe_drop_zone:visible, .oe_drop_clone').length) {
                     data = setDropZoneDirection($zone, $zone.parent());
                     self._insertDropzone($('<we-hook/>').insertAfter($zone), data.vertical, data.style);
                 }
