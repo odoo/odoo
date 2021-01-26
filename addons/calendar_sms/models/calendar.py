@@ -27,6 +27,9 @@ class CalendarEvent(models.Model):
                 put_in_queue=False
             )
 
+    def _get_trigger_alarm_types(self):
+        return super()._get_trigger_alarm_types() + ['sms']
+
 
 class CalendarAlarm(models.Model):
     _inherit = 'calendar.alarm'
@@ -40,33 +43,8 @@ class AlarmManager(models.AbstractModel):
     _inherit = 'calendar.alarm_manager'
 
     @api.model
-    def get_next_mail(self):
+    def _send_reminder(self):
         """ Cron method, overridden here to send SMS reminders as well
         """
-        result = super(AlarmManager, self).get_next_mail()
-
-        cron = self.env.ref('calendar.ir_cron_scheduler_alarm', raise_if_not_found=False)
-        if not cron:
-            # Like the super method, do nothing if cron doesn't exist anymore
-            return result
-
-        now = fields.Datetime.to_string(fields.Datetime.now())
-        last_sms_cron = cron.lastcall
-
-        interval_to_second = {
-            "weeks": 7 * 24 * 60 * 60,
-            "days": 24 * 60 * 60,
-            "hours": 60 * 60,
-            "minutes": 60,
-            "seconds": 1
-        }
-
-        cron_interval = cron.interval_number * interval_to_second[cron.interval_type]
-        events_data = self._get_next_potential_limit_alarm('sms', seconds=cron_interval)
-
-        for event in self.env['calendar.event'].browse(events_data):
-            max_delta = events_data[event.id]['max_duration']
-            event_start = fields.Datetime.from_string(event.start)
-            for alert in self.do_check_alarm_for_one_date(event_start, event, max_delta, 0, 'sms', after=last_sms_cron, missing=True):
-                event.browse(alert['event_id'])._do_sms_reminder()
-        return result
+        super()._send_reminder()
+        self._get_events_to_notify(ttype='sms')._do_sms_reminder()

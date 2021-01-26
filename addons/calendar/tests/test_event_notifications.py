@@ -169,4 +169,4 @@ class TestEventNotifications(TransactionCase, MailCase):
                 'message_type': 'user_notification',
                 'subtype': 'mail.mt_note',
             }):
-                self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._send_reminder_email(self.partner)
+                self.env['calendar.alarm_manager'].with_context(lastcall=now - relativedelta(minutes=15))._send_reminder()
