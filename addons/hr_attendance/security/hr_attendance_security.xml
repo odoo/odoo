@@ -72,5 +72,30 @@
             <field name="groups" eval="[(4,ref('base.group_user'))]"/>
         </record>
 
+        <!-- Overtime -->
+        <record id="hr_attendance_overtime_rule_employee" model="ir.rule">
+            <field name="name">Employee: read own overtime only</field>
+            <field name="model_id" ref="model_hr_attendance_overtime"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance'))]"/>
+        </record>
+
+        <record id="hr_attendance_overtime_rule_kiosk" model="ir.rule">
+            <field name="name">Kiosk: read overtime</field>
+            <field name="model_id" ref="model_hr_attendance_overtime"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_kiosk'))]"/>
+        </record>
+
+        <record id="hr_attendance_overtime_rule_user" model="ir.rule">
+            <field name="name">Officer: overtime full access</field>
+            <field name="model_id" ref="model_hr_attendance_overtime"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+            <field name="perm_create" eval="1"/>
+            <field name="perm_unlink" eval="1"/>
+            <field name="groups" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        </record>
     </data>
 </odoo>

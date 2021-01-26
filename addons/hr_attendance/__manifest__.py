@@ -22,6 +22,8 @@ actions(Check in/Check out) performed by them.
         'security/ir.model.access.csv',
         'views/web_asset_backend_template.xml',
         'views/hr_attendance_view.xml',
+        'views/hr_attendance_overtime_view.xml',
+        'report/hr_attendance_report_views.xml',
         'views/hr_department_view.xml',
         'views/hr_employee_view.xml',
         'views/res_config_settings_views.xml',

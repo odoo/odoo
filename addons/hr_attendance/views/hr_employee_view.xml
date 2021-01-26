@@ -53,6 +53,21 @@
                         </span>
                     </div>
                 </button>
+                <button name="%(hr_attendance_overtime_employee_action)d"
+                        class="oe_stat_button"
+                        icon="fa-history"
+                        type="action"
+                        attrs="{'invisible': [('total_overtime', '=', 0.0)]}">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value text-success" attrs="{'invisible': [('total_overtime', '&lt;', 0)]}">
+                            <field name="total_overtime" widget="float_time"/>
+                        </span>
+                        <span class="o_stat_value text-danger" attrs="{'invisible': [('total_overtime', '&gt;=', 0)]}">
+                            <field name="total_overtime" widget="float_time"/>
+                        </span>
+                        <span class="o_stat_text">Extra Hours</span>
+                    </div>
+                </button>
             </xpath>
         </field>
     </record>
@@ -108,6 +123,24 @@
                     </div>
                 </button>
             </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(hr_attendance_overtime_action)d"
+                        class="oe_stat_button"
+                        icon="fa-history"
+                        type="action"
+                        attrs="{'invisible': [('total_overtime', '=', 0.0)]}"
+                        help="Amount of extra hours">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value text-success" attrs="{'invisible': [('total_overtime', '&lt;', 0)]}">
+                            <field name="total_overtime" widget="float_time"/>
+                        </span>
+                        <span class="o_stat_value text-danger" attrs="{'invisible': [('total_overtime', '&gt;=', 0)]}">
+                            <field name="total_overtime" widget="float_time"/>
+                        </span>
+                        <span class="o_stat_text">Extra Hours</span>
+                    </div>
+                </button>
+            </xpath>
         </field>
     </record>
 
@@ -120,6 +153,7 @@
             <kanban class="o_hr_employee_attendance_kanban" create="false">
                 <field name="attendance_state"/>
                 <field name="hours_today"/>
+                <field name="total_overtime"/>
                 <field name="id"/>
                 <templates>
                     <t t-name="kanban-box">

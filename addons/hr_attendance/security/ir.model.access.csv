@@ -1,3 +1,7 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_attendance_user,hr.attendance.user,model_hr_attendance,hr_attendance.group_hr_attendance_user,1,1,1,1
 access_hr_attendance_system_user,hr.attendance.system.user,model_hr_attendance,base.group_user,1,1,1,0
+access_hr_attendance_report_user,hr.attendance.report.user,model_hr_attendance_report,hr_attendance.group_hr_attendance_user,1,1,1,1
+hr_attendance.access_hr_attendance_overtime_user,access_hr_attendance_overtime,hr_attendance.model_hr_attendance_overtime,hr_attendance.group_hr_attendance,1,0,0,0
+hr_attendance.access_hr_attendance_overtime_kiosk,access_hr_attendance_overtime_kiosk,hr_attendance.model_hr_attendance_overtime,hr_attendance.group_hr_attendance_kiosk,1,0,0,0
+hr_attendance.access_hr_attendance_overtime_officer,access_hr_attendance_overtime_oficer,hr_attendance.model_hr_attendance_overtime,hr_attendance.group_hr_attendance_user,1,1,1,1

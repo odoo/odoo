@@ -107,30 +107,6 @@
         </field>
     </record>
 
-    <record id="hr_attendance_view_pivot" model="ir.ui.view">
-        <field name="name">hr.attendance.pivot</field>
-        <field name="model">hr.attendance</field>
-        <field name="arch" type="xml">
-            <pivot string="Attendance" sample="1">
-                <field name="employee_id" type="row"/>
-                <field name="check_in" type="col"/>
-                <field name="worked_hours" type="measure" widget="float_time"/>
-            </pivot>
-        </field>
-    </record>
-
-    <record id="hr_attendance_view_graph" model="ir.ui.view">
-        <field name="name">hr.attendance.graph</field>
-        <field name="model">hr.attendance</field>
-        <field name="arch" type="xml">
-            <graph string="Attendance" sample="1">
-                <field name="employee_id"/>
-                <field name="check_in"/>
-                <field name="worked_hours" type="measure"/>
-            </graph>
-        </field>
-    </record>
-
     <!-- actions -->
 
     <record id="hr_attendance_action" model="ir.actions.act_window">
@@ -158,34 +134,6 @@
                 No attendance records to display
             </p><p>
                 The attendance records of your employees will be displayed here.
-            </p>
-        </field>
-    </record>
-
-    <record id="hr_attendance_action_graph" model="ir.actions.act_window">
-        <field name="name">Attendance Analysis</field>
-        <field name="res_model">hr.attendance</field>
-        <field name="view_mode">graph,pivot</field>
-        <field name="view_id"></field>  <!-- force empty -->
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No data yet!
-            </p>
-        </field>
-    </record>
-
-    <record id="hr_attendance_action_graph_filtered" model="ir.actions.act_window">
-        <field name="name">Attendance Analysis</field>
-        <field name="res_model">hr.attendance</field>
-        <field name="view_mode">graph,pivot</field>
-        <field name="context">{
-            'search_default_department_id': [active_id],
-            'default_department_id': active_id}
-        </field>
-        <field name="view_id"></field>  <!-- force empty -->
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                No data yet!
             </p>
         </field>
     </record>
@@ -221,5 +169,5 @@
 
     <menuitem id="menu_hr_attendance_view_employees_kanban" name="Employees" parent="menu_hr_attendance_manage_attendances" sequence="15" groups="hr_attendance.group_hr_attendance_user" action="hr.open_view_employee_list_my"/>
 
-    <menuitem id="menu_hr_attendance_report" name="Reporting" parent="menu_hr_attendance_root" sequence="30" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_graph"/>
+    <menuitem id="menu_hr_attendance_kiosk_mode" name="Kiosk Mode" parent="menu_hr_attendance_manage_attendances" sequence="20" groups="hr_attendance.group_hr_attendance_user" action="hr_attendance_action_kiosk_mode"/>
 </odoo>

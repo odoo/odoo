@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import pytz
-from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo import models, fields, api, exceptions, _, SUPERUSER_ID
+from odoo import models, fields, api, exceptions, _
+from odoo.tools import float_round
 
 
 class HrEmployeeBase(models.AbstractModel):
@@ -19,6 +19,14 @@ class HrEmployeeBase(models.AbstractModel):
     hours_last_month = fields.Float(compute='_compute_hours_last_month')
     hours_today = fields.Float(compute='_compute_hours_today')
     hours_last_month_display = fields.Char(compute='_compute_hours_last_month')
+    overtime_ids = fields.One2many('hr.attendance.overtime', 'employee_id')
+    total_overtime = fields.Float(compute='_compute_total_overtime', default=0)
+
+    @api.depends('overtime_ids.duration', 'attendance_ids')
+    def _compute_total_overtime(self):
+        self.total_overtime = 0
+        for employee in self.filtered(lambda e: e.company_id.hr_attendance_overtime):
+            employee.total_overtime = float_round(sum(employee.overtime_ids.mapped('duration')), 2)
 
     @api.depends('user_id.im_status', 'attendance_state')
     def _compute_presence_state(self):
@@ -136,6 +144,7 @@ class HrEmployeeBase(models.AbstractModel):
         else:
             modified_attendance = employee._attendance_action_change()
         action_message['attendance'] = modified_attendance.read()[0]
+        action_message['total_overtime'] = employee.total_overtime
         return {'action': action_message}
 
     def _attendance_action_change(self):

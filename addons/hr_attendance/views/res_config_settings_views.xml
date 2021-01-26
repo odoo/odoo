@@ -5,9 +5,9 @@
         <field name="model">res.config.settings</field>
         <field name="priority" eval="80"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Attendances" string="Attendances" data-key="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Attendances" string="Attendances" data-key="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
                     <h2>Check-In/Out</h2>
                     <div class="row mt16 o_settings_container" name="pincode_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box" title="Set PIN codes in the employee detail form (in HR Settings tab).">
@@ -18,6 +18,27 @@
                                 <span class="o_form_label">Employee PIN</span>
                                 <div class="text-muted">
                                     Use PIN codes to check in in Kiosk Mode
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2>Extra Hours</h2>
+                    <div class="row mt16 o_settings_container" name="overtime_settings">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane" title="Activate the count of employees' extra hours.">
+                                <field name="hr_attendance_overtime"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="hr_attendance_overtime" class="o_form_label">Count of Extra Hours</label>
+                                <div class="text-muted">
+                                    Compare attendance with working hours set on employee.
+                                </div>
+                                <div class="mt16" attrs="{'invisible': [('hr_attendance_overtime', '=', False)],
+                                                          'required': [('hr_attendance_overtime', '=', True)]}">
+                                    <div class="mt16 row" title="Count of extra hours is considered from this date. Potential extra hours prior to this date are not considered.">
+                                        <label for="overtime_start_date" string="Start from" class="col-3 col-lg-3 o_light_label"/>
+                                        <field name="overtime_start_date" class="oe_inline" attrs="{'required': [('hr_attendance_overtime', '=', True)]}" />
+                                    </div>
                                 </div>
                             </div>
                         </div>

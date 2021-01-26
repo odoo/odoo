@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
+from collections import defaultdict
+from datetime import datetime
 from odoo import models, fields, api, exceptions, _
 from odoo.tools import format_datetime
+from odoo.osv.expression import AND, OR
+from odoo.tools.float_utils import float_is_zero, float_round
 
 
 class HrAttendance(models.Model):
@@ -98,6 +101,81 @@ class HrAttendance(models.Model):
                         'empl_name': attendance.employee_id.name,
                         'datetime': format_datetime(self.env, last_attendance_before_check_out.check_in, dt_format=False),
                     })
+
+    def _get_attendances_dates(self):
+        attendances_emp = defaultdict(set)
+        for attendance in self.filtered(lambda a: a.employee_id.company_id.hr_attendance_overtime and a.check_in and a.check_in.date() >= a.employee_id.company_id.overtime_start_date and a.check_out):
+            attendances_emp[attendance.employee_id].add(attendance.check_in.date())
+            attendances_emp[attendance.employee_id].add(attendance.check_out.date())
+        return attendances_emp
+
+    def _update_overtime(self, dates=None):
+        if dates is None:
+            dates = self._get_attendances_dates()
+
+        overtime_unlink = self.env['hr.attendance.overtime']
+        overtime_create = []
+        for emp, days in dates.items():
+            domain = []
+            for day in days:
+                start = datetime.combine(day, datetime.min.time())
+                stop = datetime.combine(day, datetime.max.time())
+                domain = OR([domain, [
+                    '&', ('check_in', '>=', start), ('check_in', '<=', stop),
+                ]])
+
+            domain = AND([[('employee_id', '=', emp.id)], domain])
+            day_attendances = defaultdict(self.browse)
+            all_attendances = self.env['hr.attendance'].search(domain)
+            for attendance in all_attendances:
+                day_attendances[attendance.check_in.date()] += attendance
+
+            start = datetime.combine(min(days), datetime.min.time())
+            stop = datetime.combine(max(days), datetime.max.time())
+            working_times = {x[0]: x[1] for x in emp.list_work_time_per_day(start, stop)}
+            overtimes = self.env['hr.attendance.overtime'].sudo().search([
+                ('employee_id', '=', emp.id),
+                ('date', 'in', list(days)),
+                ('adjustment', '=', False),
+            ])
+
+            for day in days:
+                attendances = day_attendances.get(day, self.browse())
+                worked = sum(attendances.mapped('worked_hours'))
+                work_time = working_times.get(day, 0)
+                overtime = overtimes.filtered(lambda o: o.date == day)
+                ot_duration = float_round(worked - work_time, 2)
+                if not float_is_zero(ot_duration, 2):
+                    if not overtime:
+                        overtime_create.append({
+                            'employee_id': emp.id,
+                            'date': day,
+                            'duration': ot_duration,
+                        })
+                    else:
+                        overtime.write({'duration': ot_duration})
+                elif overtime:
+                    overtime_unlink |= overtime
+        self.env['hr.attendance.overtime'].sudo().create(overtime_create)
+        overtime_unlink.unlink()
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res._update_overtime()
+        return res
+
+    def write(self, vals):
+        previous_attendances_dates = self._get_attendances_dates()
+        super(HrAttendance, self).write(vals)
+        if any(check in vals for check in ['employee_id', 'check_in', 'check_out']):
+            attendances_dates = {**previous_attendances_dates, **self._get_attendances_dates()}
+            self._update_overtime(attendances_dates)
+
+    def unlink(self):
+        attendances_dates = self._get_attendances_dates()
+        super(HrAttendance, self).unlink()
+        self._update_overtime(attendances_dates)
 
     @api.returns('self', lambda value: value.id)
     def copy(self):
