@@ -577,15 +577,6 @@ class Channel(models.Model):
             bus_notifications = self._channel_message_notifications(message, message_format_values)
             self.env['bus.bus'].sudo().sendmany(bus_notifications)
 
-            # Message from mailing channel should not make a notification in Odoo for users
-            # with notification "Handled by Email", but web client should receive the message.
-            # To do so, message is still sent from longpolling, but channel is marked as read
-            # in order to remove notification.
-            for channel in self.filtered(lambda c: c.email_send):
-                users = channel.channel_partner_ids.mapped('user_ids')
-                for user in users.filtered(lambda u: u.notification_type == 'email'):
-                    channel.with_user(user).channel_seen(message.id)
-
         else:
             message._notify_pending_by_chat()
             rdata = False
