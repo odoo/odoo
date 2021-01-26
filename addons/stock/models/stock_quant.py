@@ -161,6 +161,9 @@ class StockQuant(models.Model):
             package_id = self.env['stock.quant.package'].browse(vals.get('package_id'))
             owner_id = self.env['res.partner'].browse(vals.get('owner_id'))
             quant = self._gather(product, location, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
+            if lot_id:
+                quant = quant.filtered(lambda q: q.lot_id)
+
             if quant:
                 quant = quant[0]
             else:
@@ -423,7 +426,7 @@ class StockQuant(models.Model):
         quant = None
         if quants:
             # see _acquire_one_job for explanations
-            self._cr.execute("SELECT id FROM stock_quant WHERE id IN %s LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED", [tuple(quants.ids)])
+            self._cr.execute("SELECT id FROM stock_quant WHERE id IN %s ORDER BY lot_id LIMIT 1 FOR NO KEY UPDATE SKIP LOCKED", [tuple(quants.ids)])
             stock_quant_result = self._cr.fetchone()
             if stock_quant_result:
                 quant = self.browse(stock_quant_result[0])
