@@ -349,7 +349,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             return '\n\n'.join(value for value in values if value)
 
         def _get_priority():
-            return original_opp_values['priority']
+            values = [_find_value(lead, 'priority') for lead in leads]
+            return max(values)
 
         try:
             # merge process will modify opportunity

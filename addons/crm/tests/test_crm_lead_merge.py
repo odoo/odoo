@@ -158,5 +158,5 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         with self.assertLeadMerged(self.lead_1, leads,
                                    name='Nibbler Spacecraft Request',
                                    partner_id=self.contact_company_1,
-                                   priority='0'):
+                                   priority='2'):
             leads._merge_opportunity(auto_unlink=False, max_length=None)
