@@ -93,6 +93,9 @@
             <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
         </div>
     </xpath>
+    <xpath expr="//div[@data-js='anchor']" position="attributes">
+        <attribute name="data-exclude" add=".o_newsletter_popup" separator=","/>
+    </xpath>
 </template>
 
 <!-- Extend default mass_mailing snippets with website feature -->
