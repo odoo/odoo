@@ -173,6 +173,10 @@ var KanbanColumn = Widget.extend({
 
         return $.when.apply($, defs);
     },
+    updateProgressBar: function(data){
+        this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, data);
+        this.progressBar.appendTo(this.$header);
+    },
     /**
      * Called when a record has been quick created, as a new column is rendered
      * and appended into a fragment, before replacing the old column in the DOM.

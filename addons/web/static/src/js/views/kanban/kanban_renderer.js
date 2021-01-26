@@ -283,6 +283,20 @@ var KanbanRenderer = BasicRenderer.extend({
             $ghost.appendTo(fragment);
         }
     },
+    _renderGroupedProgressBar: function (data) {
+        var self = this;
+        var KanbanColumn = this.config.KanbanColumn;
+        var data_by_id = {};
+        _.each(data, function(d){
+            data_by_id[d.id] = d;
+        });
+        _.each(this.widgets, function(w){
+            if (w instanceof KanbanColumn) {
+                var d = data_by_id[w.data.id];
+                w.updateProgressBar(d);
+            }
+        });
+    },
     /**
      * Renders an grouped kanban view in a fragment.
      *

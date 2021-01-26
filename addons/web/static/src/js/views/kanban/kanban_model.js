@@ -344,13 +344,29 @@ var KanbanModel = BasicModel.extend({
                 progress_bar: list.progressBar,
                 context: list.context,
             },
+        }, {
+            shadow: true,
         });
-        return $.when(groupsDef, progressBarDef).then(function (a, data) {
+        $.when(groupsDef, progressBarDef).then(function (a, data) {
+            var groups = [];
             _.each(list.data, function (groupID) {
                 var group = self.localData[groupID];
                 group.progressBarValues = _.extend({
                     counts: data[group.value] || {},
                 }, list.progressBar);
+                groups.push(group);
+            });
+            self.trigger_up('kanban_load_progress_bar', groups);
+        });
+        return groupsDef.then(function(){
+            _.each(list.data, function (groupID) {
+                var group = self.localData[groupID];
+                // temporarly fill it with empty values
+                if (!group.progressBarValues){
+                    group.progressBarValues = _.extend({
+                        counts: {},
+                    }, list.progressBar);
+                }
             });
             return list;
         });

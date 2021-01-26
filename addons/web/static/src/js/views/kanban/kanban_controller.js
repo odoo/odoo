@@ -30,6 +30,7 @@ var KanbanController = BasicController.extend({
         kanban_column_resequence: '_onColumnResequence',
         kanban_load_more: '_onLoadMore',
         kanban_load_records: '_onLoadColumnRecords',
+        kanban_load_progress_bar: '_onLoadProgressBar',
         column_toggle_fold: '_onToggleColumn',
         kanban_column_records_toggle_active: '_onToggleActiveRecords',
     }),
@@ -335,6 +336,16 @@ var KanbanController = BasicController.extend({
                     self.reload();
                 }
             });
+    },
+    /**
+     * Loads progress bar info for columns
+     *
+     * @private
+     * @param {OdooEvent} event
+     */
+    _onLoadProgressBar: function (event) {
+        console.log('_onLoadProgressBar');
+        this.renderer._renderGroupedProgressBar(event.data);
     },
     /**
      * Loads the record of a given column (used in mobile, as the columns are
