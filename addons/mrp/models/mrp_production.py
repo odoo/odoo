@@ -1095,6 +1095,8 @@ class MrpProduction(models.Model):
     def action_assign(self):
         for production in self:
             production.move_raw_ids._action_assign()
+            if production.workorder_ids:
+                production.workorder_ids[0]._action_assign()
         return True
 
     def button_plan(self):

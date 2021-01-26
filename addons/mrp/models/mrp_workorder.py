@@ -410,6 +410,11 @@ class MrpWorkorder(models.Model):
         to_confirm._action_confirm()
         return res
 
+    def _action_assign(self):
+        if self.production_id.components_availability_state == 'available':
+             return self.write({'state' : 'ready'})
+        return self.write({'state' : 'waiting'})
+
     def _action_confirm(self):
         workorders_by_production = defaultdict(lambda: self.env['mrp.workorder'])
         for workorder in self:
@@ -452,10 +457,7 @@ class MrpWorkorder(models.Model):
                     })
 
             for workorders in workorders_by_bom.values():
-                if self.production_id.components_availability_state == 'available':
-                    workorders[0].state = 'ready'
-                else:
-                    workorders[0].state = 'waiting'
+                workorders[0]._action_assign()
                 for workorder in workorders:
                     workorder._start_nextworkorder()
 
