@@ -38,7 +38,7 @@
                         <group>
                             <label for="product_uom_qty" string="Quantity Reserved" attrs="{'invisible': [('state', '=', 'done')]}"/>
                             <div class="o_row" attrs="{'invisible': [('state', '=', 'done')]}">
-                                <field name="product_uom_qty"/>
+                                <field name="product_uom_qty" readonly="1"/>
                                 <field name="product_uom_id" options="{'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
                             </div>
                             <label for="qty_done" string="Quantity Done"/>
