@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="salon_booking_payment_form"  model="ir.ui.view" >
+            <field name="name">salon.booking.payment_form</field>
+            <field name="model">salon.booking.payment</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="qr_code_booking_payment" widget="image" class="oe_avatar float_left"></field>
+                        <field name="aba_account_name"></field>
+                        <field name="aba_account_id"></field>
+                    </group>
+                </form>
+            </field>
+        </record>
+        
+        <data noupdate="1">
+            <record model="salon.booking.payment" id="salon_booking_payment_01">
+                <field name="qr_code_booking_payment"></field>
+                <field name="aba_account_name"></field>
+                <field name="aba_account_id"></field>
+            </record>
+        </data>
+            
+        <record id="salon_booking_payment_wizard_action" model="ir.actions.act_window">
+            <field name="name">QR Code Payment Configuration</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">salon.booking.payment</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="salon_booking_payment_form"/>
+            <field name="res_id" ref="salon_booking_payment_01"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem id="salon_booking_payment_menu" parent="salon_config_settings_menu"
+            name="QR Code Payment" action="salon_booking_payment_wizard_action"/>
+    </data>
+</odoo>

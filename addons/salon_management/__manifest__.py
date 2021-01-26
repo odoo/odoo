@@ -45,6 +45,7 @@
              'views/working_hours.xml',
              'views/salon_management_duration.xml',
              'wizard/salon_booking_email.xml',
+             'wizard/salon_booking_payment.xml',
              'templates/salon_booking_templates.xml',
              ],
     'images': ['static/description/banner.png'],
