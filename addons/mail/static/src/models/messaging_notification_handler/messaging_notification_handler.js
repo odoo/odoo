@@ -237,6 +237,10 @@ function factory(dependencies) {
                 channel.mass_mailing &&
                 this.env.session.notification_type === 'email'
             ) {
+                this._handleNotificationChannelSeen(channelId, {
+                    last_message_id: messageData.id,
+                    partner_id: this.env.messaging.currentPartner.id,
+                });
                 return;
             }
             // In all other cases: update counter and notify if necessary
