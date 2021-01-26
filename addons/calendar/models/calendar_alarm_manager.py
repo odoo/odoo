@@ -135,9 +135,16 @@ class AlarmManager(models.AbstractModel):
             })
         return result
 
-    @api.model
-    def _send_reminder_email(self, partners=None):
-        # Executed via cron
+    def _get_events_to_notify(self, ttype):
+        """
+        Get the events with an alarm of the given type between the cron
+        last call and now.
+
+        Please note that all new reminders created since the cron last
+        call with an alarm prior to the cron last call are skipped by
+        design. The attendees receive an invitation for any new event
+        already.
+        """
         self.env.cr.execute('''
             SELECT "event"."id"
               FROM "calendar_event" AS "event"
@@ -146,20 +153,20 @@ class AlarmManager(models.AbstractModel):
               JOIN "calendar_alarm" AS "alarm"
                 ON "event_alarm_rel"."calendar_alarm_id" = "alarm"."id"
              WHERE (
-                   "alarm"."alarm_type" = 'email'
+                   "alarm"."alarm_type" = %s
                AND "event"."active"
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) >= %s
                AND "event"."start" - CAST("alarm"."duration" || ' ' || "alarm"."interval" AS Interval) < now() at time zone 'utc'
-             )''', [self.env.context['lastcall']])
+             )''', [ttype, self.env.context['lastcall']])
 
-        domain = [
-            ("event_id", "in", self.env.cr.fetchall()),
-            ("state", "!=", "declined"),
-        ]
-        if partners is not None:
-            domain.append(("partner_id", "in", partners.ids))
+        ids = [row[0] for row in self.env.cr.fetchall()]
+        return self.env['calendar.event'].browse(ids)
 
-        attendees = self.env["calendar.attendee"].search(domain)
+    @api.model
+    def _send_reminder(self):
+        # Executed via cron
+        events = self._get_events_to_notify('email')
+        attendees = events.attendee_ids.filtered(lambda a: a.state != 'declined')
         attendees._send_mail_to_attendees(
             'calendar.calendar_template_meeting_reminder',
             force_send=True,
