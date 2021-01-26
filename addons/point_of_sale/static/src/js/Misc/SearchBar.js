@@ -37,7 +37,7 @@ odoo.define('point_of_sale.SearchBar', function (require) {
                 selectedFieldId: this.config.searchFields.length ? 0 : null,
                 showSearchFields: false,
                 showFilterOptions: false,
-                selectedFilter: this.config.filter.options[0] || 'Select',
+                selectedFilter: this.config.filter.options[0] || this.env._t('Select'),
             });
             useExternalListener(window, 'click', this._hideOptions);
         }
