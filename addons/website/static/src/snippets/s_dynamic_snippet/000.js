@@ -110,7 +110,8 @@ const DynamicSnippet = publicWidget.Widget.extend({
                         'filter_id': parseInt(this.$el.get(0).dataset.filterId),
                         'template_key': this.$el.get(0).dataset.templateKey,
                         'limit': parseInt(this.$el.get(0).dataset.numberOfRecords),
-                        'search_domain': this._getSearchDomain()
+                        'search_domain': this._getSearchDomain(),
+                        'with_sample': this.editableMode,
                     },
                 })
                 .then(

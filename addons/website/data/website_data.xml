@@ -727,6 +727,7 @@
                 <t t-set="fields" t-value="list(record['fields'].values())"/>
                 <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
                 <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                    <h4 t-if="is_sample" class="o_ribbon_right bg-warning text-uppercase">Sample</h4>
                     <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
                     <div class="card-body">
                         <h5 t-if="len(fields) > 0" class="card-title">
@@ -752,6 +753,7 @@
                 <t t-set="fields" t-value="list(record['fields'].values())"/>
                 <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
                 <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                    <h4 t-if="is_sample" class="o_ribbon_right bg-warning text-uppercase">Sample</h4>
                     <h5 t-if="len(fields) > 0" class="card-header">
                         <t t-raw="fields[0]"/>
                     </h5>
