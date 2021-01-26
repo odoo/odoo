@@ -96,7 +96,8 @@ class Attachment extends Component {
         } else {
             size = '160x160';
         }
-        return `background-image:url(/web/image/${this.attachment.id}/${size}/?crop=true);`;
+        // background-size set to override value from `o_image` which makes small image stretched
+        return `background-image:url(/web/image/${this.attachment.id}/${size}/?crop=true); background-size: auto;`;
     }
 
     //--------------------------------------------------------------------------
