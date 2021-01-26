@@ -22,7 +22,7 @@ def get_video_embed_code(video_url):
     # Regex for few of the widely used video hosting services
     ytRegex = r'^(?:(?:https?:)?\/\/)?(?:www\.)?(?:youtu\.be\/|youtube(-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?$'
     vimeoRegex = r'\/\/(player.)?vimeo.com\/([a-z]*\/)*([0-9]{6,11})[?]?.*'
-    dmRegex = r'.+dailymotion.com\/(video|hub|embed)\/([^_]+)[^#]*(#video=([^_&]+))?'
+    dmRegex = r'.+dailymotion.com\/(video|hub|embed)\/([^_?]+)[^#]*(#video=([^_&]+))?'
     igRegex = r'(.*)instagram.com\/p\/(.[a-zA-Z0-9]*)'
     ykuRegex = r'(.*).youku\.com\/(v_show\/id_|embed\/)(.+)'
 
