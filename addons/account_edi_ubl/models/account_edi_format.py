@@ -94,9 +94,7 @@ class AccountEdiFormat(models.Model):
             # Bank Account
             acc_number = _find_value('//cac:PayeeFinancialAccount/cbc:ID')
             if acc_number:
-                bank_account = self._retrieve_bank_account(acc_number, invoice_form.partner_id, create=True)
-                if not bank_account.active:
-                    invoice_form.imported_bank_id = bank_account
+                self._retrieve_and_assign_bank_account(acc_number, invoice_form)
 
             # Regenerate PDF
             attachments = self.env['ir.attachment']

@@ -189,9 +189,7 @@ class AccountEdiFormat(models.Model):
             # Bank Account
             acc_number = _find_value('//ram:PayeePartyCreditorFinancialAccount/ram:IBANID')
             if acc_number:
-                bank_account = self._retrieve_bank_account(acc_number, invoice_form.partner_id, create=True)
-                if not bank_account.active:
-                    invoice_form.imported_bank_id = bank_account
+                self._retrieve_and_assign_bank_account(acc_number, invoice_form)
 
             # Reference.
             elements = tree.xpath('//rsm:ExchangedDocument/ram:ID', namespaces=tree.nsmap)

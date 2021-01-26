@@ -502,6 +502,20 @@ class AccountEdiFormat(models.Model):
 
         return bank_account
 
+    def _retrieve_and_assign_bank_account(self, acc_number, invoice):
+        '''Search all bank accounts and find one that matches the acc_number.
+        If it exists and is active, it's assigned to invoice.partner_bank_id, otherwise it's created as
+        INACTIVE and assigned to invoice.imported_bank_id.
+
+        :param acc_number: The account number to find.
+        :param invoice:    The invoice to assign.
+        '''
+        bank_account = self._retrieve_bank_account(acc_number, invoice.partner_id, create=True)
+        if bank_account.active:
+            invoice.partner_bank_id = bank_account
+        else:
+            invoice.imported_bank_id = bank_account
+
     ####################################################
     # Other helpers
     ####################################################
