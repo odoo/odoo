@@ -412,7 +412,7 @@ class MrpWorkorder(models.Model):
 
     def _action_assign(self):
         if self.production_id.components_availability_state == 'available':
-             return self.write({'state' : 'ready'})
+            return self.write({'state' : 'ready'})
         return self.write({'state' : 'waiting'})
 
     def _action_confirm(self):
