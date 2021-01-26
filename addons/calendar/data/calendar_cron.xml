@@ -6,7 +6,7 @@
             <field name="name">Calendar: Event Reminder</field>
             <field name="model_id" ref="model_calendar_alarm_manager"/>
             <field name="state">code</field>
-            <field name="code">model._send_reminder_email()</field>
+            <field name="code">model._send_reminder()</field>
             <field eval="True" name="active" />
             <field name="user_id" ref="base.user_root" />
             <field name="interval_number">1</field>

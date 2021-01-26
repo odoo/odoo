@@ -688,14 +688,23 @@ class Meeting(models.Model):
 
         return True
 
+    def _get_trigger_alarm_types(self):
+        return ['email']
+
     def _setup_alarms(self):
-        """ Trigger the cron in the future for every email reminder """
+        """ Schedule cron triggers for future events """
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm')
+        alarm_manager = self.env['calendar.alarm_manager']
+        alarm_types = self._get_trigger_alarm_types()
+
         for event in self:
-            for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type == 'email'):
-                cron._trigger(at=event.start-timedelta(minutes=alarm.duration_minutes))
+            for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type in alarm_types):
+                at = event.start - timedelta(minutes=alarm.duration_minutes)
+                if not cron.lastcall or at > cron.lastcall:
+                    # Don't trigger for past alarms, they would be skipped by design
+                    cron._trigger(at=at)
             if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
-                self.env['calendar.alarm_manager']._notify_next_alarm(event.partner_ids.ids)
+                alarm_manager._notify_next_alarm(event.partner_ids.ids)
 
     @api.model_create_multi
     def create(self, vals_list):
