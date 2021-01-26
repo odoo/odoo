@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="hr_timesheet.project_invoice_form"/>
         <field name="arch" type="xml">
             <div class="oe_button_box" position="inside">
-                <button string="Project Overview" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}"/>
+                <button string="Project Overview" class="oe_stat_button" type="object" name="action_view_timesheet" icon="fa-puzzle-piece" attrs="{'invisible': [('allow_billable', '=', False)]}" groups="project.group_project_manager"/>
                 <button class="d-none d-md-inline oe_stat_button"
                         type="object" name="action_view_so" icon="fa-dollar"
                         attrs="{'invisible': ['|', '|', ('allow_billable', '=', False), ('sale_order_id', '=', False), ('pricing_type', '=', 'task_rate')]}"
