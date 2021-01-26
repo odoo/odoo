@@ -110,6 +110,76 @@ QUnit.test('create', async function (assert) {
     assert.strictEqual(partner.id, 5);
 });
 
+QUnit.test('message without body should be considered empty', async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test('message with body "" should be considered empty', async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "", id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test('message with body "<p></p>" should be considered empty', async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "<p></p>", id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test('message with body "<p><br></p>" should be considered empty', async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "<p><br></p>", id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test('message with body "<p><br/></p>" should be considered empty', async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "<p><br/></p>", id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test(String.raw`message with body "<p>\n</p>" should be considered empty`, async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "<p>\n</p>", id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test(String.raw`message with body "<p>\r\n\r\n</p>" should be considered empty`, async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "<p>\r\n\r\n</p>", id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test('message with body "<p>   </p>  " should be considered empty', async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "<p>   </p>  ", id: 11 });
+    assert.ok(message.isEmpty);
+});
+
+QUnit.test(`message with body "<img src=''>" should not be considered empty`, async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "<img src=''>", id: 11 });
+    assert.notOk(message.isEmpty);
+});
+
+QUnit.test('message with body "test" should not be considered empty', async function (assert) {
+    assert.expect(1);
+    await this.start();
+    const message = this.env.models['mail.message'].create({ body: "test", id: 11 });
+    assert.notOk(message.isEmpty);
+});
+
 });
 });
 });
