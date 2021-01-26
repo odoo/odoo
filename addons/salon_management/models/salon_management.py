@@ -372,12 +372,17 @@ class SalonOrder(models.Model):
 class SalonServices(models.Model):
     _name = 'salon.service'
 
+    @api.onchange('service_salon_duration')
+    def _compute_time_taken(self):
+        if self.service_salon_duration:
+            self.time_taken = self.service_salon_duration.duration
+
     name = fields.Char(string="Name")
     price = fields.Float(string="Price")
-    time_taken = fields.Float(string="Time Taken", help="Approximate time taken for this service in Hours")
+    time_taken = fields.Float(string="Time Taken",help="Approximate time taken for this service in Hours")
     service_salon_chair = fields.Many2one('salon.chair', string="Court", required=False, index=True, copy=False)
     service_salon_duration = fields.Many2one('salon.duration',string="Service Duration", required=False, index=True, copy=False)
-
+    
 class SalonDurations(models.Model):
     _name = 'salon.duration'
     
