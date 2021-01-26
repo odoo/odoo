@@ -420,11 +420,34 @@ function factory(dependencies) {
         }
 
         /**
+         * The method does not attempt to cover all possible cases of empty
+         * messages, but mostly those that happen with a standard flow. Indeed
+         * it is preferable to be defensive and show an empty message sometimes
+         * instead of hiding a non-empty message.
+         *
+         * The main use case for when a message should become empty is for a
+         * message posted with only an attachment (no body) and then the
+         * attachment is deleted.
+         *
+         * The main use case for being defensive with the check is when
+         * receiving a message that has no textual content but has other
+         * meaningful HTML tags (eg. just an <img/>).
+         *
          * @private
+         * @returns {boolean}
          */
         _computeIsEmpty() {
+            const isBodyEmpty = (
+                !this.body ||
+                [
+                    '',
+                    '<p></p>',
+                    '<p><br></p>',
+                    '<p><br/></p>',
+                ].includes(this.body.replace(/\s/g, ''))
+            );
             return (
-                (!this.body || htmlToTextContentInline(this.body) === '') &&
+                isBodyEmpty &&
                 this.attachments.length === 0 &&
                 this.tracking_value_ids.length === 0 &&
                 !this.subtype_description
@@ -603,6 +626,7 @@ function factory(dependencies) {
             dependencies: [
                 'attachments',
                 'body',
+                'subtype_description',
                 'tracking_value_ids',
             ],
         }),
