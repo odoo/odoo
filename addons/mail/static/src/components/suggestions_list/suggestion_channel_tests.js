@@ -1,8 +1,8 @@
-odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion_channel_tests.js', function (require) {
+odoo.define('mail/static/src/components/suggestions_list/suggestion_channel_tests.js', function (require) {
 'use strict';
 
 const components = {
-    ComposerSuggestion: require('mail/static/src/components/composer_suggestion/composer_suggestion.js'),
+    ComposerSuggestion: require('mail/static/src/components/suggestion/suggestion.js'),
 };
 const {
     afterEach,
@@ -13,8 +13,8 @@ const {
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('composer_suggestion', {}, function () {
-QUnit.module('composer_suggestion_channel_tests.js', {
+QUnit.module('suggestion', {}, function () {
+QUnit.module('suggestion_channel_tests.js', {
     beforeEach() {
         beforeEach(this);
 
@@ -48,7 +48,7 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
         model: 'mail.channel',
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        suggestionManagerLocalId: thread.composer.suggestionManager.localId,
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: thread.localId,
@@ -56,7 +56,7 @@ QUnit.test('channel mention suggestion displayed', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        `.o_ComposerSuggestion`,
+        `.o_Suggestion`,
         "Channel mention suggestion should be present"
     );
 });
@@ -74,7 +74,7 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
         model: 'mail.channel',
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        suggestionManagerLocalId: thread.composer.suggestionManager.localId,
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: thread.localId,
@@ -82,16 +82,16 @@ QUnit.test('channel mention suggestion correct data', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_Suggestion',
         "Channel mention suggestion should be present"
     );
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion_part1',
+        '.o_Suggestion_part1',
         "Channel name should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part1`).textContent,
+        document.querySelector(`.o_Suggestion_part1`).textContent,
         "General",
         "Channel name should be displayed"
     );
@@ -107,7 +107,7 @@ QUnit.test('channel mention suggestion active', async function (assert) {
         model: 'mail.channel',
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        suggestionManagerLocalId: thread.composer.suggestionManager.localId,
         isActive: true,
         modelName: 'mail.thread',
         recordLocalId: thread.localId,
@@ -115,11 +115,11 @@ QUnit.test('channel mention suggestion active', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_Suggestion',
         "Channel mention suggestion should be displayed"
     );
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestion'),
+        document.querySelector('.o_Suggestion'),
         'active',
         "should be active initially"
     );

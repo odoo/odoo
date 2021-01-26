@@ -1,8 +1,8 @@
-odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion_command_tests.js', function (require) {
+odoo.define('mail/static/src/components/suggestions_list/composer_suggestion_command_tests.js', function (require) {
 'use strict';
 
 const components = {
-    ComposerSuggestion: require('mail/static/src/components/composer_suggestion/composer_suggestion.js'),
+    ComposerSuggestion: require('mail/static/src/components/suggestion/suggestion.js'),
 };
 const {
     afterEach,
@@ -13,8 +13,8 @@ const {
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
-QUnit.module('composer_suggestion', {}, function () {
-QUnit.module('composer_suggestion_command_tests.js', {
+QUnit.module('suggestion', {}, function () {
+QUnit.module('suggestion_command_tests.js', {
     beforeEach() {
         beforeEach(this);
 
@@ -52,7 +52,7 @@ QUnit.test('command suggestion displayed', async function (assert) {
         help: "Displays who it is",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        suggestionManagerLocalId: thread.composer.suggestionManager.localId,
         isActive: true,
         modelName: 'mail.channel_command',
         recordLocalId: command.localId,
@@ -60,7 +60,7 @@ QUnit.test('command suggestion displayed', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        `.o_ComposerSuggestion`,
+        `.o_Suggestion`,
         "Command suggestion should be present"
     );
 });
@@ -79,7 +79,7 @@ QUnit.test('command suggestion correct data', async function (assert) {
         help: "Displays who it is",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        suggestionManagerLocalId: thread.composer.suggestionManager.localId,
         isActive: true,
         modelName: 'mail.channel_command',
         recordLocalId: command.localId,
@@ -87,26 +87,26 @@ QUnit.test('command suggestion correct data', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_Suggestion',
         "Command suggestion should be present"
     );
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion_part1',
+        '.o_Suggestion_part1',
         "Command name should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part1`).textContent,
+        document.querySelector(`.o_Suggestion_part1`).textContent,
         "whois",
         "Command name should be displayed"
     );
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion_part2',
+        '.o_Suggestion_part2',
         "Command help should be present"
     );
     assert.strictEqual(
-        document.querySelector(`.o_ComposerSuggestion_part2`).textContent,
+        document.querySelector(`.o_Suggestion_part2`).textContent,
         "Displays who it is",
         "Command help should be displayed"
     );
@@ -126,7 +126,7 @@ QUnit.test('command suggestion active', async function (assert) {
         help: "Displays who it is",
     });
     await this.createComposerSuggestion({
-        composerLocalId: thread.composer.localId,
+        suggestionManagerLocalId: thread.composer.suggestionManager.localId,
         isActive: true,
         modelName: 'mail.channel_command',
         recordLocalId: command.localId,
@@ -134,11 +134,11 @@ QUnit.test('command suggestion active', async function (assert) {
 
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_Suggestion',
         "Command suggestion should be displayed"
     );
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestion'),
+        document.querySelector('.o_Suggestion'),
         'active',
         "should be active initially"
     );

@@ -94,23 +94,23 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "@");
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
+            .dispatchEvent(new window.KeyboardEvent('keydown', { bubbles: true }));
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
+            .dispatchEvent(new window.KeyboardEvent('keyup', { bubbles: true }));
         document.execCommand('insertText', false, "T");
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
+            .dispatchEvent(new window.KeyboardEvent('keydown', { bubbles: true }));
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
+            .dispatchEvent(new window.KeyboardEvent('keyup', { bubbles: true }));
         document.execCommand('insertText', false, "e");
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
+            .dispatchEvent(new window.KeyboardEvent('keydown', { bubbles: true }));
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
+            .dispatchEvent(new window.KeyboardEvent('keyup', { bubbles: true }));
     });
     assert.containsOnce(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_Suggestion',
         "mention suggestion should be opened after typing @"
     );
 
@@ -120,7 +120,7 @@ QUnit.test('reply: discard on pressing escape', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestion',
+        '.o_Suggestion',
         "mention suggestion should be closed after pressing escape on mention suggestion"
     );
     assert.containsOnce(

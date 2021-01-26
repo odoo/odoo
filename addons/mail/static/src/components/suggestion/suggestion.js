@@ -1,9 +1,8 @@
-odoo.define('mail/static/src/components/composer_suggestion/composer_suggestion.js', function (require) {
+odoo.define('mail/static/src/components/suggestion/suggestion.js', function (require) {
 'use strict';
 
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
-const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 const { link } = require('mail/static/src/model/model_field_command.js');
 
 const components = {
@@ -12,7 +11,7 @@ const components = {
 
 const { Component } = owl;
 
-class ComposerSuggestion extends Component {
+class Suggestion extends Component {
 
     /**
      * @override
@@ -21,27 +20,25 @@ class ComposerSuggestion extends Component {
         super(...args);
         useShouldUpdateBasedOnProps();
         useStore(props => {
-            const composer = this.env.models['mail.composer'].get(this.props.composerLocalId);
             const record = this.env.models[props.modelName].get(props.recordLocalId);
+            const suggestionManager = this.env.models['mail.suggestionManager'].get(props.suggestionManagerLocalId);
             return {
-                composerHasToScrollToActiveSuggestion: composer && composer.hasToScrollToActiveSuggestion,
                 record: record ? record.__state : undefined,
+                suggestionManager: suggestionManager ? suggestionManager.__state : undefined,
             };
         });
-        useUpdate({ func: () => this._update() });
+    }
+
+    /**
+     * @returns {mail.suggestion}
+     */
+    get suggestionManager() {
+        return this.env.models['mail.suggestionManager'].get(this.props.suggestionManagerLocalId);
     }
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
-
-    /**
-     * @returns {mail.composer}
-     */
-    get composer() {
-        return this.env.models['mail.composer'].get(this.props.composerLocalId);
-    }
-
     get isCannedResponse() {
         return this.props.modelName === "mail.canned_response";
     }
@@ -96,14 +93,13 @@ class ComposerSuggestion extends Component {
      */
     _update() {
         if (
-            this.composer &&
-            this.composer.hasToScrollToActiveSuggestion &&
+            this.suggestionManager.hasToScrollToActiveSuggestion &&
             this.props.isActive
         ) {
             this.el.scrollIntoView({
                 block: 'center',
             });
-            this.composer.update({ hasToScrollToActiveSuggestion: false });
+            this.suggestionManager.update({ hasToScrollToActiveSuggestion: false });
         }
     }
 
@@ -117,28 +113,25 @@ class ComposerSuggestion extends Component {
      */
     _onClick(ev) {
         ev.preventDefault();
-        this.composer.update({ activeSuggestedRecord: link(this.record) });
-        this.composer.insertSuggestion();
-        this.composer.closeSuggestions();
+        this.suggestionManager.update({ activeSuggestedRecord: link(this.record) });
+        this.trigger('suggestion-selected', true);
+        this.suggestionManager.closeSuggestions();
         this.trigger('o-composer-suggestion-clicked');
     }
 
 }
 
-Object.assign(ComposerSuggestion, {
+Object.assign(Suggestion, {
     components,
-    defaultProps: {
-        isActive: false,
-    },
     props: {
-        composerLocalId: String,
+        suggestionManagerLocalId: String,
         isActive: Boolean,
         modelName: String,
         recordLocalId: String,
     },
-    template: 'mail.ComposerSuggestion',
+    template: 'mail.Suggestion',
 });
 
-return ComposerSuggestion;
+return Suggestion;
 
 });

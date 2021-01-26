@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.SuggestionsList" owl="1">
+        <div t-on-keydown="_onKeydown">
+            <t t-if="suggestionManager.hasSuggestions">
+                <div class="o_SuggestionsList" t-att-class="{ 'o-lowPosition': props.isBelow }">
+                    <div class="o_SuggestionsList_drop" t-att-class="{ 'dropdown': props.isBelow, 'dropup': !props.isBelow }">
+                        <div class="o_SuggestionsList_list dropdown-menu show">
+                            <t t-foreach="suggestionManager.mainSuggestedRecords" t-as="record" t-key="record.localId">
+                                <Suggestion
+                                    suggestionManagerLocalId="suggestionManager.localId"
+                                    isActive="record === suggestionManager.activeSuggestedRecord"
+                                    modelName="suggestionManager.suggestionModelName"
+                                    recordLocalId="record.localId"
+                                />
+                            </t>
+                            <t t-if="suggestionManager.mainSuggestedRecords.length > 0 and suggestionManager.extraSuggestedRecords.length > 0">
+                                <div role="separator" class="dropdown-divider"/>
+                            </t>
+                            <t t-foreach="suggestionManager.extraSuggestedRecords" t-as="record" t-key="record.localId">
+                                <Suggestion
+                                    suggestionManagerLocalId="suggestionManager.localId"
+                                    isActive="record === suggestionManager.activeSuggestedRecord"
+                                    modelName="suggestionManager.suggestionModelName"
+                                    recordLocalId="record.localId"
+                                />
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+            <t t-slot="default" />
+        </div>
+    </t>
+
+</templates>

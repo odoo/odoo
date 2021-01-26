@@ -829,12 +829,13 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, "@");
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keydown'));
+            .dispatchEvent(new window.KeyboardEvent('keydown', { bubbles: true }));
         document.querySelector(`.o_ComposerTextInput_textarea`)
-            .dispatchEvent(new window.KeyboardEvent('keyup'));
+            .dispatchEvent(new window.KeyboardEvent('keyup', { bubbles: true }));
     });
+
     assert.hasClass(
-        document.querySelector('.o_ComposerSuggestionList_list'),
+        document.querySelector('.o_SuggestionsList_list'),
         'show',
         "should display mention suggestions on typing '@'"
     );
@@ -845,7 +846,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     });
     assert.containsNone(
         document.body,
-        '.o_ComposerSuggestionList_list',
+        '.o_SuggestionsList_list',
         "mention suggestion should be closed after pressing escape on mention suggestion"
     );
     assert.containsOnce(
