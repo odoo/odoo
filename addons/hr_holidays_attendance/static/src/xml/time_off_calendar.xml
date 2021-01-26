@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<templates id="template" xml:space="preserve">
+    <t t-inherit="hr_holidays.dashboard_calendar_header" t-inherit-mode="extension">
+        <!--inject a first condition-->
+        <xpath expr="//t[@t-if='need_allocation']" position="before">
+            <t t-if="timeoff[1]['overtime_deductible'] == true &amp;&amp; !need_allocation">
+                <span t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_big o_timeoff_green font-weight-bold"/> Hours <span class="o_timeoff_green">Available </span>
+            </t>
+        </xpath>
+        <!--change t-if to t-elif-->
+        <xpath expr="//t[@t-if='need_allocation']" position="attributes">
+            <attribute name="t-if"/>
+            <attribute name="t-elif">need_allocation</attribute>
+        </xpath>
+    </t>
+    <t t-inherit="hr_holidays.dashboard_calendar_header_mobile" t-inherit-mode="extension">
+        <!--inject a first condition-->
+        <xpath expr="//t[@t-if='need_allocation']" position="before">
+            <t t-if="timeoff[1]['overtime_deductible'] == true &amp;&amp; !need_allocation">
+                <strong t-esc="timeoff[1]['virtual_remaining_leaves']" class="o_timeoff_green"/> Hours <span class="o_timeoff_green ml-2">Available </span>
+            </t>
+        </xpath>
+        <!--change t-if to t-elif-->
+        <xpath expr="//t[@t-if='need_allocation']" position="attributes">
+            <attribute name="t-if"/>
+            <attribute name="t-elif">need_allocation</attribute>
+        </xpath>
+    </t>
+</templates>
