@@ -558,6 +558,8 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('date_from', 'date_to', 'employee_id')
     def _check_date(self):
+        if self.env.context.get('leave_skip_date_check', False):
+            return
         for holiday in self.filtered('employee_id'):
             domain = [
                 ('date_from', '<', holiday.date_to),
@@ -827,6 +829,9 @@ class HolidaysRequest(models.Model):
         else:
             for holiday in self.filtered(lambda holiday: holiday.state not in ['draft', 'cancel', 'confirm']):
                 raise UserError(error_message % (state_description_values.get(holiday.state),))
+
+    def unlink(self):
+        return super(HolidaysRequest, self.with_context(leave_skip_date_check=True)).unlink()
 
     def copy_data(self, default=None):
         if default and 'date_from' in default and 'date_to' in default:
