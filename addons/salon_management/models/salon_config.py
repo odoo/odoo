@@ -59,6 +59,7 @@ class ConfigurationSettings(models.TransientModel):
     salon_booking_chairs = fields.Many2many('salon.chair', string="Booking Chairs", default=booking_chairs)
     salon_holidays = fields.Many2many('salon.holiday', string="Holidays", default=holidays)
     salon_durations = fields.Many2many('salon.duration',string="Duration",default=durations)
+    salon_activate_payment = fields.Boolean(string="Activate Booking Payment", default=False)
 
     def execute(self):
         salon_chair_obj = self.env['salon.chair'].search([])
