@@ -9,6 +9,9 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
         var chair = $("#chair").val();
         var duration = $("#duration").val();
         var bank_trx_id = $ ("#bank_trx_id").val();
+        if (typeof bank_trx_id === 'undefined') {
+            bank_trx_id = "None"
+          }
 
         if (name == "" || date == "" || time == "" || phone == "" || chair == "" || duration == "") {
             alert("All fields are mandatory");
