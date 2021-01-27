@@ -525,7 +525,7 @@
             <t t-if="company_id">
                 <t t-set="company" t-value="company_id"/>
             </t>
-            <t t-elif="o and 'company_id' in o">
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
                 <t t-set="company" t-value="o.company_id.sudo()"/>
             </t>
             <t t-else="else">
@@ -546,7 +546,7 @@
             <t t-if="company_id">
                 <t t-set="company" t-value="company_id"/>
             </t>
-            <t t-elif="o and 'company_id' in o">
+            <t t-elif="o and 'company_id' in o and o.company_id.sudo()">
                 <t t-set="company" t-value="o.company_id.sudo()"/>
             </t>
             <t t-else="else">
