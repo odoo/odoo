@@ -2045,7 +2045,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :return: (groupby_terms, orderby_terms)
         """
         orderby_terms = []
-        groupby_terms = [gb['qualified_field'] for gb in annotated_groupbys]
+        groupby_terms = [gb['groupby'] for gb in annotated_groupbys]
         if not orderby:
             return groupby_terms, orderby_terms
 
@@ -2298,7 +2298,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for gb in groupby_fields:
             assert gb in self._fields, "Unknown field %r in 'groupby'" % gb
             gb_field = self._fields[gb].base_field
-            assert gb_field.store and gb_field.column_type, "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
+            assert (
+                gb_field.store and gb_field.column_type or gb_field.compute_raw
+            ), "Fields in 'groupby' must be regular database-persisted fields (no function or related fields), or function fields with store=True"
 
         aggregated_fields = []
         select_terms = []
@@ -2461,6 +2463,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         # handle the case where the field is translated
         if field.translate is True:
             return model._generate_translated_field(alias, fname, query)
+        elif field.compute_raw:
+            return field.compute_raw
         else:
             return '"%s"."%s"' % (alias, fname)
 

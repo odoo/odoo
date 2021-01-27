@@ -227,6 +227,7 @@ class Field(MetaField('DummyField', (object,), {})):
     _depends_context = None             # collection of context key dependencies
     recursive = False                   # whether self depends on itself
     compute = None                      # compute(recs) computes field on recs
+    compute_raw = None                  # sql expression to compute field
     compute_sudo = False                # whether field should be recomputed as superuser
     inverse = None                      # inverse(recs) inverses field on recs
     search = None                       # search(recs, operator, value) searches on self
