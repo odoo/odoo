@@ -4,6 +4,17 @@
 from odoo import fields, models, api, SUPERUSER_ID
 
 
+class UtmStage(models.Model):
+
+    """Stage for utm campaigns. """
+    _name = 'utm.stage'
+    _description = 'Campaign Stage'
+    _order = 'sequence'
+
+    name = fields.Char(required=True, translate=True)
+    sequence = fields.Integer()
+
+
 class UtmMedium(models.Model):
     # OLD crm.case.channel
     _name = 'utm.medium'
@@ -47,16 +58,6 @@ class UtmSource(models.Model):
     _description = 'UTM Source'
 
     name = fields.Char(string='Source Name', required=True, translate=True)
-
-class UtmStage(models.Model):
-
-    """Stage for utm campaigns. """
-    _name = 'utm.stage'
-    _description = 'Campaign Stage'
-    _order = 'sequence'
-
-    name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer()
 
 class UtmTag(models.Model):
     """Model of categories of utm campaigns, i.e. marketing, newsletter, ... """
