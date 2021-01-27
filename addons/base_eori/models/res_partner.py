@@ -62,10 +62,10 @@ class ResPartner(models.Model):
     @tools.ormcache('eori')
     def _validate_eori_gb(self, eori):
         # GB Validation
-        url = 'https://api.service.hmrc.gov.uk/customs/eori/lookup/check-multiple-eori'        
-        task = "{{'eoris': [{}]}}".format(eori)
+        url = 'https://api.service.hmrc.gov.uk/customs/eori/lookup/check-multiple-eori'
 
-        resp = requests.post(url, json=task)
+        task = json.dumps({'eoris': [eori]})
+        resp = requests.post(url, data=task)
         if resp.status_code != 200: 
             raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
 
