@@ -5,9 +5,9 @@
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
+from zeep import Client
 import requests
 import json
-from lxml import etree
 
 
 class ResPartner(models.Model):
@@ -35,32 +35,25 @@ class ResPartner(models.Model):
 
                 if not self._validate_eori(eori_country, eori_number):
                     raise ValidationError(_('Please verify EORI Number.'))
-
     @api.model
     def _validate_eori(self, country_code, eori_number):
+        #TODO: Make a format validation of eoir_number.
         try:
-            if country_code.upper() == 'GB':
+            if country_code.upper() == 'GB' or country_code.upper() == 'XI':
                 return self._validate_eori_gb(country_code.upper() + eori_number)
-            else:
+            else: #TODO: Check if country in EU.
                 return self._validate_eori_eu(country_code.upper() + eori_number)
         except Exception:
-            # IDEA: Could add fallback method if error from service is returned.
             return False
 
     @api.model
     @tools.ormcache('eori')
     def _validate_eori_eu(self, eori):
         # EU Validation
-        url = 'https://ec.europa.eu/taxation_customs/dds2/eos/validation/services/validation?wsdl'
-        body = '<?xml version="1.0" encoding="UTF-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><ev:validateEORI xmlns:ev="http://eori.ws.eos.dds.s/"><ev:eori>{}</ev:eori></ev:validateEORI></soap:Body></soap:Envelope>'.format(eori)
+        client = Client('https://ec.europa.eu/taxation_customs/dds2/eos/validation/services/validation?wsdl')
+        result = client.service.validateEORI(eori)
 
-        resp = requests.post(url, data=body)
-
-        if resp.status_code != 200: 
-            raise ValidationError('POST /taxation_customs/dds2/eos/validation/services/validation?wsdl {}'.format(resp.status_code))
-
-        tree = etree.fromstring((resp.text).replace("<?xml version='1.0' encoding='UTF-8'?>", ""))
-        if tree.findtext('.//statusDescr') == 'Valid':
+        if result['result'][0]['statusDescr'] == 'Valid':
             return True
 
         return False
@@ -77,7 +70,6 @@ class ResPartner(models.Model):
             raise ValidationError('POST /customs/eori/lookup/check-multiple-eori {}'.format(resp.status_code))
 
         answer = json.loads(resp.text)
-        
         if answer[0]['valid'] == True:
             return True
 
