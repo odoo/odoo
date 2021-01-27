@@ -136,14 +136,17 @@ const ColorPaletteWidget = Widget.extend({
         this._markSelectedColor();
 
         // Colorpicker
-        let defaultColor = this.selectedColor;
-        if (defaultColor && !ColorpickerWidget.isCSSColor(defaultColor)) {
-            defaultColor = weUtils.getCSSVariableValue(defaultColor, this.style);
+        if (!this.options.excluded.includes('custom')) {
+            let defaultColor = this.selectedColor;
+            if (defaultColor && !ColorpickerWidget.isCSSColor(defaultColor)) {
+                defaultColor = weUtils.getCSSVariableValue(defaultColor, this.style);
+            }
+            this.colorPicker = new ColorpickerWidget(this, {
+                defaultColor: defaultColor,
+            });
+            await this.colorPicker.prependTo($colorSection);
         }
-        this.colorPicker = new ColorpickerWidget(this, {
-            defaultColor: defaultColor,
-        });
-        await this.colorPicker.prependTo($colorSection);
+
         return res;
     },
     /**
