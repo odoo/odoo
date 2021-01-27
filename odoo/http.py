@@ -1251,7 +1251,11 @@ class DisableCacheMiddleware(object):
             req = werkzeug.wrappers.Request(environ)
             root.setup_session(req)
             if req.session and req.session.debug and not 'wkhtmltopdf' in req.headers.get('User-Agent'):
-                new_headers = [('Cache-Control', 'no-cache')]
+
+                if "assets" in req.session.debug and ".js" in req.base_url:
+                    new_headers = [('Cache-Control', 'no-store')]
+                else:
+                    new_headers = [('Cache-Control', 'no-cache')]
 
                 for k, v in headers:
                     if k.lower() != 'cache-control':
