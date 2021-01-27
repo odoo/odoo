@@ -5,9 +5,12 @@ from psycopg2 import IntegrityError
 
 from odoo.addons.test_mail.tests import common
 from odoo.addons.test_mail.tests.common import mail_new_test_user
+from odoo.tests import tagged
 from odoo.tools.misc import mute_logger
+from odoo.tests import tagged
 
 
+@tagged('mail_followers')
 class BaseFollowersTest(common.BaseFunctionalTest):
 
     @classmethod
@@ -90,6 +93,7 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
 
     def test_followers_multiple_subscription_noforce(self):
+        """ Calling message_subscribe without subtypes on an existing subscription should not do anything (default < existing) """
         test_record = self.test_record.sudo(self.user_employee)
 
         test_record.message_subscribe(partner_ids=[self.user_admin.partner_id.id], subtype_ids=[self.mt_mg_nodef.id, self.mt_al_nodef.id])
@@ -102,6 +106,22 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         self.assertEqual(test_record.message_partner_ids, self.user_admin.partner_id)
         self.assertEqual(test_record.message_channel_ids, self.env['mail.channel'])
         self.assertEqual(test_record.message_follower_ids.subtype_ids, self.mt_mg_nodef | self.mt_al_nodef)
+
+    def test_followers_multiple_subscription_update(self):
+        """ Calling message_subscribe with subtypes on an existing subscription should replace them (new > existing) """
+        test_record = self.test_record.sudo(self.user_employee)
+        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_mg_def.id, self.mt_cl_def.id])
+        self.assertEqual(test_record.message_partner_ids, self.user_employee.partner_id)
+        follower = self.env['mail.followers'].search([
+            ('res_model', '=', 'mail.test.simple'),
+            ('res_id', '=', test_record.id),
+            ('partner_id', '=', self.user_employee.partner_id.id)])
+        self.assertEqual(follower, test_record.message_follower_ids)
+        self.assertEqual(follower.subtype_ids, self.mt_mg_def | self.mt_cl_def)
+
+        # remove one subtype `mt_mg_def` and set new subtype `mt_al_def`
+        test_record.message_subscribe(partner_ids=[self.user_employee.partner_id.id], subtype_ids=[self.mt_cl_def.id, self.mt_al_def.id])
+        self.assertEqual(follower.subtype_ids, self.mt_cl_def | self.mt_al_def)
 
     def test_followers_no_DID(self):
         """Test that a follower cannot suffer from dissociative identity disorder.
@@ -126,12 +146,15 @@ class BaseFollowersTest(common.BaseFunctionalTest):
         )
 
 
+@tagged('mail_followers')
 class AdvancedFollowersTest(common.BaseFunctionalTest):
+
     @classmethod
     def setUpClass(cls):
         super(AdvancedFollowersTest, cls).setUpClass()
 
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
+        cls.partner_portal = cls.user_portal.partner_id
 
         cls.test_track = cls.env['mail.test.track'].sudo(cls.user_employee).create({
             'name': 'Test',
@@ -142,17 +165,59 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
         # clean demo data to avoid interferences
         Subtype.search([('res_model', 'in', ['mail.test', 'mail.test.track'])]).unlink()
 
-        cls.sub_nodef = Subtype.create({'name': 'Sub NoDefault', 'default': False, 'res_model': 'mail.test'})
-        cls.sub_umb1 = Subtype.create({'name': 'Sub Umbrella1', 'default': False, 'res_model': 'mail.test.track'})
-        cls.sub_umb2 = Subtype.create({'name': 'Sub Umbrella2', 'default': False, 'res_model': 'mail.test.track'})
-        cls.umb_def = Subtype.create({'name': 'Umbrella Default', 'default': True, 'res_model': 'mail.test'})
-        # create subtypes for auto subscription from umbrella to sub records
-        cls.umb_sub_def = Subtype.create({
-            'name': 'Umbrella Sub1', 'default': True, 'res_model': 'mail.test',
-            'parent_id': cls.sub_umb1.id, 'relation_field': 'umbrella_id'})
-        cls.umb_sub_nodef = Subtype.create({
-            'name': 'Umbrella Sub2', 'default': False, 'res_model': 'mail.test',
-            'parent_id': cls.sub_umb2.id, 'relation_field': 'umbrella_id'})
+        # mail.test.track subtypes (aka: task records)
+        cls.sub_track_1 = Subtype.create({
+            'name': 'Track (with child relation) 1', 'default': False,
+            'res_model': 'mail.test.track'
+        })
+        cls.sub_track_2 = Subtype.create({
+            'name': 'Track (with child relation) 2', 'default': False,
+            'res_model': 'mail.test.track'
+        })
+        cls.sub_track_nodef = Subtype.create({
+            'name': 'Generic Track subtype', 'default': False, 'internal': False,
+            'res_model': 'mail.test.track'
+        })
+        cls.sub_track_def = Subtype.create({
+            'name': 'Default track subtype', 'default': True, 'internal': False,
+            'res_model': 'mail.test.track'
+        })
+
+        # mail.test subtypes (aka: project records)
+        cls.umb_nodef = Subtype.create({
+            'name': 'Umbrella NoDefault', 'default': False,
+            'res_model': 'mail.test'
+        })
+        cls.umb_def = Subtype.create({
+            'name': 'Umbrella Default', 'default': True,
+            'res_model': 'mail.test'
+        })
+        cls.umb_def_int = Subtype.create({
+            'name': 'Umbrella Default', 'default': True, 'internal': True,
+            'res_model': 'mail.test'
+        })
+        # -> subtypes for auto subscription from umbrella to sub records
+        cls.umb_autosub_def = Subtype.create({
+            'name': 'Umbrella AutoSub (default)', 'default': True, 'res_model': 'mail.test',
+            'parent_id': cls.sub_track_1.id, 'relation_field': 'umbrella_id'
+        })
+        cls.umb_autosub_nodef = Subtype.create({
+            'name': 'Umbrella AutoSub 2', 'default': False, 'res_model': 'mail.test',
+            'parent_id': cls.sub_track_2.id, 'relation_field': 'umbrella_id'
+        })
+
+        # generic subtypes
+        cls.sub_comment = cls.env.ref('mail.mt_comment')
+        cls.sub_generic_int_nodef = Subtype.create({
+            'name': 'Generic internal subtype',
+            'default': False,
+            'internal': True,
+        })
+        cls.sub_generic_int_def = Subtype.create({
+            'name': 'Generic internal subtype (default)',
+            'default': True,
+            'internal': True,
+        })
 
     def test_auto_subscribe_create(self):
         """ Creator of records are automatically added as followers """
@@ -197,21 +262,65 @@ class AdvancedFollowersTest(common.BaseFunctionalTest):
             'name': 'Project-Like',
         })
 
-        umbrella.message_subscribe(partner_ids=[self.user_portal.partner_id.id])
-        self.assertEqual(umbrella.message_partner_ids, self.user_portal.partner_id)
+        umbrella.message_subscribe(partner_ids=self.partner_portal.ids)
+        umbrella.message_subscribe(partner_ids=self.partner_admin.ids, subtype_ids=(self.sub_comment | self.umb_autosub_nodef | self.sub_generic_int_nodef).ids)
+        self.assertEqual(umbrella.message_partner_ids, self.partner_portal | self.partner_admin)
+        follower_por = umbrella.message_follower_ids.filtered(lambda f: f.partner_id == self.partner_portal)
+        follower_adm = umbrella.message_follower_ids.filtered(lambda f: f.partner_id == self.partner_admin)
+        self.assertEqual(
+            follower_por.subtype_ids,
+            self.sub_comment | self.umb_def | self.umb_autosub_def,
+            'Subscribe: Default subtypes: comment (default generic) and two model-related defaults')
+        self.assertEqual(
+            follower_adm.subtype_ids,
+            self.sub_comment | self.umb_autosub_nodef | self.sub_generic_int_nodef,
+            'Subscribe: Asked subtypes when subscribing')
 
         sub1 = self.env['mail.test.track'].sudo(self.user_employee).create({
             'name': 'Task-Like Test',
             'umbrella_id': umbrella.id,
         })
 
-        all_defaults = self.env['mail.message.subtype'].search([('default', '=', True), '|', ('res_model', '=', 'mail.test.track'), ('res_model', '=', False)])
-        external_defaults = all_defaults.filtered(lambda subtype: not subtype.internal)
+        self.assertEqual(
+            sub1.message_partner_ids, self.partner_portal | self.partner_admin | self.user_employee.partner_id,
+            'Followers: creator (employee) + auto subscribe from parent (portal)')
+        follower_por = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal)
+        follower_adm = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_admin)
+        follower_emp = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id)
+        self.assertEqual(
+            follower_por.subtype_ids, self.sub_comment | self.sub_track_1,
+            'AutoSubscribe: comment (generic checked), Track (with child relation) 1 as Umbrella AutoSub (default) was checked'
+        )
+        self.assertEqual(
+            follower_adm.subtype_ids, self.sub_comment | self.sub_track_2 | self.sub_generic_int_nodef,
+            'AutoSubscribe: comment (generic checked), Track (with child relation) 2) as Umbrella AutoSub 2 was checked, Generic internal subtype (generic checked)'
+        )
+        self.assertEqual(
+            follower_emp.subtype_ids, self.sub_comment | self.sub_track_def | self.sub_generic_int_def,
+            'AutoSubscribe: only default one as no subscription on parent'
+        )
 
-        self.assertEqual(sub1.message_partner_ids, self.user_portal.partner_id | self.user_employee.partner_id)
+        # check portal generic subscribe
+        sub1.message_unsubscribe(partner_ids=self.partner_portal.ids)
+        sub1.message_subscribe(partner_ids=self.partner_portal.ids)
+        follower_por = sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.partner_portal)
         self.assertEqual(
-            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_portal.partner_id).subtype_ids,
-            external_defaults | self.sub_umb1)
+            follower_por.subtype_ids, self.sub_comment | self.sub_track_def,
+            'AutoSubscribe: only default one as no subscription on parent (no internal as portal)'
+        )
+
+        # check auto subscribe as creator + auto subscribe as parent follower takes both subtypes
+        umbrella.message_subscribe(
+            partner_ids=self.user_employee.partner_id.ids,
+            subtype_ids=(self.sub_comment | self.sub_generic_int_nodef | self.umb_autosub_nodef).ids)
+        sub2 = self.env['mail.test.track'].sudo(self.user_employee).create({
+            'name': 'Task-Like Test',
+            'umbrella_id': umbrella.id,
+        })
+        follower_emp = sub2.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id)
+        defaults = self.sub_comment | self.sub_track_def | self.sub_generic_int_def
+        parents = self.sub_generic_int_nodef | self.sub_track_2
         self.assertEqual(
-            sub1.message_follower_ids.filtered(lambda fol: fol.partner_id == self.user_employee.partner_id).subtype_ids,
-            all_defaults)
+            follower_emp.subtype_ids, defaults + parents,
+            'AutoSubscribe: at create auto subscribe as creator + from parent take both subtypes'
+        )
