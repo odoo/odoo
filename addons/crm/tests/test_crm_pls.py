@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import timedelta
+
+from odoo import fields, tools
 from odoo.tests.common import TransactionCase
-from odoo import tools
 
 
 class TestCRMPLS(TransactionCase):
@@ -376,3 +378,24 @@ class TestCRMPLS(TransactionCase):
 
         self.assertEqual(tools.float_compare(leads[3].automated_probability, 4.21, 2), 0)
         self.assertEqual(tools.float_compare(leads[8].automated_probability, 0.23, 2), 0)
+
+    def test_settings_pls_start_date(self):
+        # We test here that settings never crash due to ill-configured config param 'crm.pls_start_date'
+        set_param = self.env['ir.config_parameter'].sudo().set_param
+        str_date_8_days_ago = fields.Date.to_string(fields.Date.today() - timedelta(days=8))
+        resConfig = self.env['res.config.settings']
+
+        set_param("crm.pls_start_date", "2021-10-10")
+        res_config_new = resConfig.new()
+        self.assertEqual(fields.Date.to_string(res_config_new.predictive_lead_scoring_start_date),
+            "2021-10-10", "If config param is a valid date, date in settings should match with config param")
+
+        set_param("crm.pls_start_date", "")
+        res_config_new = resConfig.new()
+        self.assertEqual(fields.Date.to_string(res_config_new.predictive_lead_scoring_start_date),
+            str_date_8_days_ago, "If config param is empty, date in settings should be set to 8 days before today")
+
+        set_param("crm.pls_start_date", "One does not simply walk into system parameters to corrupt them")
+        res_config_new = resConfig.new()
+        self.assertEqual(fields.Date.to_string(res_config_new.predictive_lead_scoring_start_date),
+            str_date_8_days_ago, "If config param is not a valid date, date in settings should be set to 8 days before today")
