@@ -1156,14 +1156,17 @@ header {
         z-index: 1000;
 
         > .navbar {
+            @include o-apply-colors(1); // Reset to default colored components
             background-color: transparent !important;
             border-color: transparent;
             color: inherit;
 
             .nav-item {
                 > .nav-link {
-                    background-color: transparent;
-                    color: inherit;
+                    &, &:hover {
+                        background-color: transparent;
+                        color: inherit;
+                    }
 
                     &.active {
                         font-weight: bolder;
