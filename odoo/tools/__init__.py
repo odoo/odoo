@@ -21,3 +21,5 @@ from .date_utils import *
 from .convert import *
 from .template_inheritance import *
 from . import osutil
+from .js_transpiler import transpile_javascript, is_odoo_module
+from .js_sourcemap import SourceMapGenerator
