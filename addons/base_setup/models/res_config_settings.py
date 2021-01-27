@@ -16,7 +16,7 @@ class ResConfigSettings(models.TransientModel):
         config_parameter='base_setup.default_user_rights')
     external_email_server_default = fields.Boolean(
         "Custom Email Servers",
-        config_parameter='base_setup.default_external_email_server')
+        default=lambda self: self.env.company.external_email_server_default)
     module_base_import = fields.Boolean("Allow users to import data from CSV/XLS/XLSX/ODS files")
     module_google_calendar = fields.Boolean(
         string='Allow the users to synchronize their calendar  with Google Calendar')
@@ -123,3 +123,7 @@ class ResConfigSettings(models.TransientModel):
 
         for record in self:
             record.company_informations = informations
+
+    def set_values(self):
+        super(ResConfigSettings, self).set_values()
+        self.env.company.write({'external_email_server_default': self.external_email_server_default})

@@ -122,7 +122,7 @@ class BaseModel(models.AbstractModel):
         res_ids = _records.ids if _records and model else []
         _res_ids = res_ids or [False]  # always have a default value located in False
 
-        alias_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        alias_domain = self.env.company.alias_domain
         result = dict.fromkeys(_res_ids, False)
         result_email = dict()
         doc_names = doc_names if doc_names else dict()

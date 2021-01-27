@@ -455,7 +455,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         })
 
         # setup mail gateway
-        self.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'example.com')
+        self.env.company.write({'alias_domain': 'example.com'})
         self.env['ir.config_parameter'].sudo().set_param('mail.catchall.alias', 'test-catchall')
         self.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'test-bounce')
 

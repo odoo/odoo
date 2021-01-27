@@ -299,7 +299,7 @@ class MockSmtplibCase:
 
     @classmethod
     def _init_mail_servers(cls):
-        cls.env['ir.config_parameter'].sudo().set_param('mail.catchall.domain', 'test.com')
+        cls.env.company.alias_domain = 'test.com'
         cls.env['ir.config_parameter'].sudo().set_param('mail.default.from', 'notifications')
         cls.env['ir.config_parameter'].sudo().set_param('mail.bounce.alias', 'bounce')
 

@@ -96,6 +96,7 @@ class Company(models.Model):
     secondary_color = fields.Char()
     layout_background = fields.Selection([('Blank', 'Blank'), ('Geometric', 'Geometric'), ('Custom', 'Custom')], default="Blank", required=True)
     layout_background_image = fields.Binary("Background Image")
+    alias_domain = fields.Char(string="Alias Domain")
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]

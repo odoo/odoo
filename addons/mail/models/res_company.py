@@ -16,11 +16,14 @@ class Company(models.Model):
     def _compute_catchall(self):
         ConfigParameter = self.env['ir.config_parameter'].sudo()
         alias = ConfigParameter.get_param('mail.catchall.alias')
-        domain = ConfigParameter.get_param('mail.catchall.domain')
-        if alias and domain:
+        if alias:
             for company in self:
-                company.catchall_email = '%s@%s' % (alias, domain)
-                company.catchall_formatted = tools.formataddr((company.name, company.catchall_email))
+                if company.alias_domain:
+                    company.catchall_email = '%s@%s' % (alias, company.alias_domain)
+                    company.catchall_formatted = tools.formataddr((company.name, company.catchall_email))
+                else:
+                    company.catchall_email = ''
+                    company.catchall_formatted = ''
         else:
             for company in self:
                 company.catchall_email = ''

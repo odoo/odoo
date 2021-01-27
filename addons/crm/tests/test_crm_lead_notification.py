@@ -49,7 +49,8 @@ class NewLeadNotification(TestCrmCommon):
 
         crm_team_model = self.env['ir.model'].search([('model', '=', 'crm.team')])
         crm_lead_model = self.env['ir.model'].search([('model', '=', 'crm.lead')])
-        self.env["ir.config_parameter"].sudo().set_param("mail.catchall.domain", 'aqualung.com')
+        company0.write({'alias_domain': 'aqualung.com'})
+        company1.write({'alias_domain': 'aqualung.com'})
 
         crm_team0 = self.env['crm.team'].create({
             'name': 'crm team 0',

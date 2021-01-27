@@ -34,7 +34,7 @@ class Alias(models.Model):
     _order = 'alias_model_id, alias_name'
 
     def _default_alias_domain(self):
-        return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        return self.env.company.alias_domain
 
     alias_name = fields.Char('Alias Name', copy=False, help="The name of the email alias, e.g. 'jobs' if you want to catch emails for <jobs@example.odoo.com>")
     alias_model_id = fields.Many2one('ir.model', 'Aliased Model', required=True, ondelete="cascade",
@@ -171,7 +171,7 @@ class Alias(models.Model):
 
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
-        alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        alias_domain = self.env.company.alias_domain
 
         # matches catchall or bounce alias
         for sanitized_name in sanitized_names:

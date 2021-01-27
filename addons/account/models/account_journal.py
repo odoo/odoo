@@ -42,7 +42,7 @@ class AccountJournal(models.Model):
         return self.__get_bank_statements_available_sources()
 
     def _default_alias_domain(self):
-        return self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
+        return self.env.company.alias_domain
 
     def _default_invoice_reference_model(self):
         """Get the invoice reference model according to the company's country."""

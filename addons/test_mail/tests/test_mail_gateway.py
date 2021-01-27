@@ -655,7 +655,7 @@ class TestMailgateway(TestMailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
     def test_message_route_alias_no_domain(self):
         """ Incoming email: write to alias even if no domain set: considered as valid alias """
-        self.env['ir.config_parameter'].set_param('mail.catchall.domain', '')
+        self.env.company.write({'alias_domain': ''})
 
         new_record = self.format_and_process(MAIL_TEMPLATE, self.partner_1.email_formatted, 'groups@another.domain.com', subject='Test Subject')
         # Test: one group created

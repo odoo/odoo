@@ -425,7 +425,7 @@ class IrMailServer(models.Model):
         '''
         get_param = self.env['ir.config_parameter'].sudo().get_param
         postmaster = get_param('mail.bounce.alias', default='postmaster-odoo')
-        domain = get_param('mail.catchall.domain')
+        domain = self.env.company.alias_domain
         if postmaster and domain:
             return '%s@%s' % (postmaster, domain)
 
@@ -443,7 +443,7 @@ class IrMailServer(models.Model):
             ``--email-from`` CLI/config parameter.
         """
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        domain = get_param('mail.catchall.domain')
+        domain = self.env.company.alias_domain
         email_from = get_param("mail.default.from")
         if email_from and domain:
             return "%s@%s" % (email_from, domain)

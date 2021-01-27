@@ -347,7 +347,7 @@ class MailThread(models.AbstractModel):
         that adds alias information. """
         model = self._context.get('empty_list_help_model')
         res_id = self._context.get('empty_list_help_id')
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        catchall_domain = self.env.company.alias_domain
         document_name = self._context.get('empty_list_help_document_name', _('document'))
         nothing_here = not help
         alias = None
@@ -1527,7 +1527,7 @@ class MailThread(models.AbstractModel):
         """
         # find normalized emails and exclude aliases (to avoid subscribing alias emails to records)
         normalized_email = tools.email_normalize(email)
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        catchall_domain = self.env.company.alias_domain
         if normalized_email and catchall_domain:
             left_part = normalized_email.split('@')[0] if normalized_email.split('@')[1] == catchall_domain.lower() else False
             if left_part:
@@ -1584,7 +1584,7 @@ class MailThread(models.AbstractModel):
             followers = records.mapped('message_partner_ids')
         else:
             followers = self.env['res.partner']
-        catchall_domain = self.env['ir.config_parameter'].sudo().get_param("mail.catchall.domain")
+        catchall_domain = self.env.company.alias_domain
 
         # first, build a normalized email list and remove those linked to aliases to avoid adding aliases as partners
         normalized_emails = [tools.email_normalize(contact) for contact in emails if tools.email_normalize(contact)]
