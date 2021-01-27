@@ -143,7 +143,7 @@ class ProjectTaskRecurrence(models.Model):
 
     @api.model
     def _get_recurring_fields(self):
-        return ['allowed_user_ids', 'company_id', 'description', 'displayed_image_id', 'email_cc',
+        return ['message_partner_ids', 'company_id', 'description', 'displayed_image_id', 'email_cc',
                 'parent_id', 'partner_email', 'partner_id', 'partner_phone', 'planned_hours',
                 'project_id', 'project_privacy_visibility', 'sequence', 'tag_ids', 'recurrence_id',
                 'name', 'recurring_task']

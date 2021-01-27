@@ -194,7 +194,7 @@
                     </div>
                 </t>
                 <t t-set="card_body">
-                    <div class="mb-1" t-if="user in task.sudo().project_id.allowed_user_ids">
+                    <div class="mb-1" t-if="user.partner_id.id in task.sudo().project_id.message_partner_ids.ids">
                         <strong>Project:</strong> <a t-attf-href="/my/project/#{task.project_id.id}" t-field="task.project_id.name"/>
                     </div>
 

@@ -24,7 +24,7 @@ class AccountAnalyticLine(models.Model):
         domain = [('allow_timesheets', '=', True)]
         if not self.user_has_groups('hr_timesheet.group_timesheet_manager'):
             return expression.AND([domain,
-                ['|', ('privacy_visibility', '!=', 'followers'), ('allowed_internal_user_ids', 'in', self.env.user.ids)]
+                ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]
             ])
         return domain
 
@@ -35,7 +35,7 @@ class AccountAnalyticLine(models.Model):
 
     def _domain_task_id(self):
         if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver'):
-            return ['|', ('privacy_visibility', '!=', 'followers'), ('allowed_user_ids', 'in', self.env.user.ids)]
+            return ['|', ('privacy_visibility', '!=', 'followers'), ('message_partner_ids', 'in', [self.env.user.partner_id.id])]
         return []
 
     task_id = fields.Many2one(
@@ -139,11 +139,9 @@ class AccountAnalyticLine(models.Model):
             # Then, he is internal user, and we take the domain for this current user
             return self.env['ir.rule']._compute_domain(self._name)
         return ['&',
-                    '|', '|', '|',
+                    '|',
                     ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
                     ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                    ('task_id.project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
-                    ('task_id.allowed_user_ids', 'in', [self.env.user.id]),
                 ('task_id.project_id.privacy_visibility', '=', 'portal')]
 
     def _timesheet_preprocess(self, vals):
