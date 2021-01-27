@@ -38,6 +38,7 @@ class SalonBookingBackend(models.Model):
     duration_id = fields.Many2one('salon.duration', string="Duration")
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company'].browse(1))
+    bank_trx_id = fields.Char(string="Trx. ID",help="Trx ID of completed transaction")
     lang = fields.Many2one('res.lang', 'Language',
                            default=lambda self: self.env['res.lang'].browse(1))
 
