@@ -148,13 +148,15 @@ class Base(models.AbstractModel):
             'quarter': 'QQQ yyyy',
             'year': 'yyyy'}
 
-        if self._fields[group_by].store and self._fields[progress_bar['field']].store:
+        group_by_field = self._fields[group_by]
+        bar_field = self._fields[progress_bar['field']]
+        if (group_by_field.store or group_by_field.compute_raw) and (bar_field.store or bar_field.compute_raw):
             records_values = self.read_group(domain or [], [progress_bar['field'], group_by], [progress_bar['field'], group_by], lazy=False)
         else:
             records_values = self.search_read(domain or [], [progress_bar['field'], group_by])
 
         data = {}
-        field_type = self._fields[group_by].type
+        field_type = group_by_field.type
         if field_type == 'selection':
             selection_labels = dict(self.fields_get()[group_by]['selection'])
 

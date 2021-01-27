@@ -12,8 +12,13 @@ from odoo.osv import expression
 
 from odoo.tools.misc import clean_context
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
+from odoo.addons.base.models.res_partner import _tz_get
 
 _logger = logging.getLogger(__name__)
+
+
+def tz2int(tz):
+    return int(datetime.now(pytz.timezone(tz or "UTC")).strftime('%z'))
 
 
 class MailActivityType(models.Model):
@@ -166,6 +171,11 @@ class MailActivity(models.Model):
         'res.users', 'Assigned to',
         default=lambda self: self.env.user,
         index=True, required=True)
+    tz = fields.Selection(
+        _tz_get,
+        string='Timezone',
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC',
+        required=True)
     request_partner_id = fields.Many2one('res.partner', string='Requesting Partner')
     state = fields.Selection([
         ('overdue', 'Overdue'),
@@ -203,7 +213,7 @@ class MailActivity(models.Model):
     @api.depends('date_deadline')
     def _compute_state(self):
         for record in self.filtered(lambda activity: activity.date_deadline):
-            tz = record.user_id.sudo().tz
+            tz = record.tz
             date_deadline = record.date_deadline
             record.state = self._compute_state_from_date(date_deadline, tz)
 
@@ -602,7 +612,7 @@ class MailActivity(models.Model):
             res_id = group['res_id']
             activity_type_id = (group.get('activity_type_id') or (False, False))[0]
             res_id_to_deadline[res_id] = group['date_deadline'] if (res_id not in res_id_to_deadline or group['date_deadline'] < res_id_to_deadline[res_id]) else res_id_to_deadline[res_id]
-            state = self._compute_state_from_date(group['date_deadline'], self.user_id.sudo().tz)
+            state = self._compute_state_from_date(group['date_deadline'], self.tz)
             activity_data[res_id][activity_type_id] = {
                 'count': group['__count'],
                 'ids': group['ids'],
@@ -670,6 +680,14 @@ class MailActivityMixin(models.AbstractModel):
         ('today', 'Today'),
         ('planned', 'Planned')], string='Activity State',
         compute='_compute_activity_state',
+        compute_raw="""
+CASE
+        WHEN activity_date_deadline - (CURRENT_DATE AT TIME ZONE activity_date_deadline_tz)::date > 0 THEN 'planned'
+        WHEN activity_date_deadline - (CURRENT_DATE AT TIME ZONE activity_date_deadline_tz)::date < 0 THEN 'overdue'
+        WHEN activity_date_deadline - (CURRENT_DATE AT TIME ZONE activity_date_deadline_tz)::date = 0 THEN 'today'
+        ELSE null
+END
+        """,
         search='_search_activity_state',
         groups="base.group_user",
         help='Status based on activities\nOverdue: Due date is already passed\n'
@@ -687,8 +705,14 @@ class MailActivityMixin(models.AbstractModel):
     activity_type_icon = fields.Char('Activity Type Icon', related='activity_ids.icon')
     activity_date_deadline = fields.Date(
         'Next Activity Deadline',
-        compute='_compute_activity_date_deadline', search='_search_activity_date_deadline',
-        compute_sudo=False, readonly=True, store=False,
+        compute='_compute_activity_date_deadline',
+        compute_sudo=False, readonly=True, store=True,
+        groups="base.group_user")
+    activity_date_deadline_tz = fields.Selection(
+        _tz_get,
+        string='Timezone of Next Activity Deadline',
+        compute='_compute_activity_date_deadline',
+        compute_sudo=False, readonly=True, store=True,
         groups="base.group_user")
     activity_summary = fields.Char(
         'Next Activity Summary',
@@ -726,6 +750,7 @@ class MailActivityMixin(models.AbstractModel):
 
     @api.depends('activity_ids.state')
     def _compute_activity_state(self):
+        # TODO: use compute_raw
         for record in self:
             states = record.activity_ids.mapped('state')
             if 'overdue' in states:
@@ -738,6 +763,7 @@ class MailActivityMixin(models.AbstractModel):
                 record.activity_state = False
 
     def _search_activity_state(self, operator, value):
+        # TODO: compute depending on activity_date_deadline
         all_states = {'overdue', 'today', 'planned', False}
         if operator == '=':
             search_states = {value}
@@ -802,15 +828,20 @@ class MailActivityMixin(models.AbstractModel):
         )
         return [('id', 'not in' if reverse_search else 'in', [r[0] for r in self._cr.fetchall()])]
 
-    @api.depends('activity_ids.date_deadline')
+    @api.depends('activity_ids.date_deadline', 'activity_ids.tz')
     def _compute_activity_date_deadline(self):
         for record in self:
-            record.activity_date_deadline = record.activity_ids[:1].date_deadline
-
-    def _search_activity_date_deadline(self, operator, operand):
-        if operator == '=' and not operand:
-            return [('activity_ids', '=', False)]
-        return [('activity_ids.date_deadline', operator, operand)]
+            deadline = record.activity_ids[:1].date_deadline
+            record.activity_date_deadline = deadline
+            all_tz = record.activity_ids.filtered(lambda r: r.date_deadline == deadline).mapped('tz')
+            if all_tz:
+                all_tz = ((tz2int(tz), tz) for tz in all_tz)
+                # tz2int gives -1200 for GMT+12
+                # We take minimum to get the get easternmost timezone -- a place
+                # where deadlines exprires first
+                record.activity_date_deadline_tz = min(all_tz, key=lambda v: v[0])[1]
+            else:
+                record.activity_date_deadline_tz = None
 
     @api.model
     def _search_activity_user_id(self, operator, operand):
