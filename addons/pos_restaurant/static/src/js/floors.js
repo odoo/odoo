@@ -168,14 +168,7 @@ models.PosModel = models.PosModel.extend({
         if (orders_to_sync.length) {
             this.set_synch('connecting', orders_to_sync.length);
             this._save_to_server(orders_to_sync, {'draft': true}).then(function (server_ids) {
-                server_ids.forEach(function(server_id){
-                    table_orders.some(function(o){
-                        if (o.name === server_id.pos_reference) {
-                            o.server_id = server_id.id;
-                            o.save_to_db();
-                        }
-                    });
-                });
+                server_ids.forEach(server_id => self.update_table_order(server_id, table_orders));
                 if (!ids_to_remove.length) {
                     self.set_synch('connected');
                 } else {
@@ -192,6 +185,15 @@ models.PosModel = models.PosModel.extend({
             }
             self.clean_table_transfer(table);
         }
+    },
+
+    update_table_order: function(server_id, table_orders) {
+        const order = table_orders.find(o => o.name === server_id.pos_reference);
+        if (order) {
+            order.server_id = server_id.id;
+            order.save_to_db();
+        }
+        return order;
     },
 
     /**
