@@ -203,24 +203,19 @@ class Project(models.Model):
         help="Internal email associated with this project. Incoming emails are automatically synchronized "
              "with Tasks (or optionally Issues if the Issue Tracker module is installed).")
     privacy_visibility = fields.Selection([
-            ('followers', 'Invited internal users'),
-            ('employees', 'All internal users'),
-            ('portal', 'Invited portal users and all internal users'),
+            ('followers', 'Invited employees'),
+            ('employees', 'All employees'),
+            ('portal', 'Portal users and all employees'),
         ],
         string='Visibility', required=True,
         default='portal',
         help="Defines the visibility of the tasks of the project:\n"
-                "- Invited internal users: employees may only see the followed projects and tasks.\n"
-                "- All internal users: employees may see all projects and tasks.\n"
-                "- Invited portal and all internal users: employees may see everything.\n"
-                "   Portal users may see project and tasks followed by\n"
-                "   them or by someone in their company.")
-
-    allowed_user_ids = fields.Many2many('res.users', compute='_compute_allowed_users', inverse='_inverse_allowed_user')
-    allowed_internal_user_ids = fields.Many2many('res.users', 'project_allowed_internal_users_rel',
-                                                 string="Allowed Internal Users", default=lambda self: self.env.user, domain=[('share', '=', False)])
-    allowed_portal_user_ids = fields.Many2many('res.users', 'project_allowed_portal_users_rel', string="Allowed Portal Users", domain=[('share', '=', True)])
-    doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of Documents Attached")
+            "- Invited employees: employees may only see the followed project and tasks.\n"
+            "- All employees: employees may see all project and tasks.\n"
+            "- Portal users and all employees: employees may see everything."
+            "   Portal users may see project and tasks followed by.\n"
+            "   them or by someone of their company.")
+    doc_count = fields.Integer(compute='_compute_attached_docs_count', string="Number of documents attached")
     date_start = fields.Date(string='Start Date')
     date = fields.Date(string='Expiration Date', index=True, tracking=True)
     allow_subtasks = fields.Boolean('Sub-tasks', default=lambda self: self.env.user.has_group('project.group_subtask_project'))
@@ -280,18 +275,6 @@ class Project(models.Model):
     def _compute_alias_enabled(self):
         for project in self:
             project.alias_enabled = project.alias_domain and project.alias_id.alias_name
-
-    @api.depends('allowed_internal_user_ids', 'allowed_portal_user_ids')
-    def _compute_allowed_users(self):
-        for project in self:
-            users = project.allowed_internal_user_ids | project.allowed_portal_user_ids
-            project.allowed_user_ids = users
-
-    def _inverse_allowed_user(self):
-        for project in self:
-            allowed_users = project.allowed_user_ids
-            project.allowed_portal_user_ids = allowed_users.filtered('share')
-            project.allowed_internal_user_ids = allowed_users - project.allowed_portal_user_ids
 
     def _compute_access_url(self):
         super(Project, self)._compute_access_url()
@@ -356,27 +339,16 @@ class Project(models.Model):
         # Prevent double project creation
         self = self.with_context(mail_create_nosubscribe=True)
         project = super(Project, self).create(vals)
-        if project.privacy_visibility == 'portal' and project.partner_id.user_ids:
-            project.allowed_user_ids |= project.partner_id.user_ids
+        if project.privacy_visibility == 'portal' and project.partner_id:
+            project.message_subscribe(project.partner_id.ids)
         return project
 
     def write(self, vals):
-        allowed_users_changed = 'allowed_portal_user_ids' in vals or 'allowed_internal_user_ids' in vals
-        if allowed_users_changed:
-            allowed_users = {project: project.allowed_user_ids for project in self}
         # directly compute is_favorite to dodge allow write access right
         if 'is_favorite' in vals:
             vals.pop('is_favorite')
             self._fields['is_favorite'].determine_inverse(self)
         res = super(Project, self).write(vals) if vals else True
-
-        if allowed_users_changed:
-            for project in self:
-                permission_removed = allowed_users.get(project) - project.allowed_user_ids
-                allowed_portal_users_removed = permission_removed.filtered('share')
-                project.message_unsubscribe(partner_ids=allowed_portal_users_removed.partner_id.commercial_partner_id.ids)
-                for task in project.task_ids:
-                    task.allowed_user_ids -= permission_removed
 
         if 'allow_recurring_tasks' in vals and not vals.get('allow_recurring_tasks'):
             self.env['project.task'].search([('project_id', 'in', self.ids), ('recurring_task', '=', True)]).write({'recurring_task': False})
@@ -386,8 +358,9 @@ class Project(models.Model):
             self.with_context(active_test=False).mapped('tasks').write({'active': vals['active']})
         if vals.get('partner_id') or vals.get('privacy_visibility'):
             for project in self.filtered(lambda project: project.privacy_visibility == 'portal'):
-                project.allowed_user_ids |= project.partner_id.user_ids
-
+                project.message_subscribe(project.partner_id.ids)
+        if vals.get('privacy_visibility'):
+            self._change_privacy_visibility()
         return res
 
     def action_unlink(self):
@@ -426,7 +399,6 @@ class Project(models.Model):
     def message_subscribe(self, partner_ids=None, subtype_ids=None):
         """
         Subscribe to all existing active tasks when subscribing to a project
-        And add the portal user subscribed to allowed portal users
         """
         res = super(Project, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
         project_subtypes = self.env['mail.message.subtype'].browse(subtype_ids) if subtype_ids else None
@@ -434,12 +406,6 @@ class Project(models.Model):
         if not subtype_ids or task_subtypes:
             self.mapped('tasks').message_subscribe(
                 partner_ids=partner_ids, subtype_ids=task_subtypes)
-        if partner_ids:
-            all_users = self.env['res.partner'].browse(partner_ids).user_ids
-            portal_users = all_users.filtered('share')
-            internal_users = all_users - portal_users
-            self.allowed_portal_user_ids |= portal_users
-            self.allowed_internal_user_ids |= internal_users
         return res
 
     def message_unsubscribe(self, partner_ids=None):
@@ -543,6 +509,19 @@ class Project(models.Model):
             project._compute_rating_request_deadline()
             self.env.cr.commit()
 
+    # ---------------------------------------------------
+    # Privacy
+    # ---------------------------------------------------
+
+    def _change_privacy_visibility(self):
+        """
+        Unsubscribe non-internal users from the project and tasks if the project privacy visibility
+        goes to a value different than 'portal'
+        """
+        for project in self.filtered(lambda p: p.privacy_visibility != 'portal'):
+            portal_users = project.message_partner_ids.user_ids.filtered('share')
+            project.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
+            project.mapped('tasks')._change_project_privacy_visibility()
 
 class Task(models.Model):
     _name = "project.task"
@@ -653,7 +632,6 @@ class Task(models.Model):
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')
     email_from = fields.Char(string='Email From', help="These people will receive email.", index=True,
         compute='_compute_email_from', store="True", readonly=False)
-    allowed_user_ids = fields.Many2many('res.users', string="Visible to", groups='project.group_project_manager', compute='_compute_allowed_user_ids', store=True, readonly=False, copy=False)
     project_privacy_visibility = fields.Selection(related='project_id.privacy_visibility', string="Project Visibility")
     # Computed field about working time elapsed between record creation and assignation/closing.
     working_hours_open = fields.Float(compute='_compute_elapsed', string='Working Hours to Assign', store=True, group_operator="avg")
@@ -869,34 +847,11 @@ class Task(models.Model):
         if not self._check_recursion():
             raise ValidationError(_('Error! You cannot create a recursive hierarchy of tasks.'))
 
-    @api.constrains('allowed_user_ids')
-    def _check_no_portal_allowed(self):
-        for task in self.filtered(lambda t: t.project_id.privacy_visibility != 'portal'):
-            portal_users = task.allowed_user_ids.filtered('share')
-            if portal_users:
-                user_names = ', '.join(portal_users[:10].mapped('name'))
-                raise ValidationError(_("The project visibility setting doesn't allow portal users to see the project's tasks. (%s)", user_names))
-
     def _compute_attachment_ids(self):
         for task in self:
             attachment_ids = self.env['ir.attachment'].search([('res_id', '=', task.id), ('res_model', '=', 'project.task')]).ids
             message_attachment_ids = task.mapped('message_ids.attachment_ids').ids  # from mail_thread
             task.attachment_ids = [(6, 0, list(set(attachment_ids) - set(message_attachment_ids)))]
-
-    @api.depends('project_id.allowed_user_ids', 'project_id.privacy_visibility')
-    def _compute_allowed_user_ids(self):
-        for task in self:
-            portal_users = task.allowed_user_ids.filtered('share')
-            internal_users = task.allowed_user_ids - portal_users
-            if task.project_id.privacy_visibility == 'followers':
-                task.allowed_user_ids |= task.project_id.allowed_internal_user_ids
-                task.allowed_user_ids -= portal_users
-            elif task.project_id.privacy_visibility == 'portal':
-                task.allowed_user_ids |= task.project_id.allowed_portal_user_ids
-            if task.project_id.privacy_visibility != 'portal':
-                task.allowed_user_ids -= portal_users
-            elif task.project_id.privacy_visibility != 'followers':
-                task.allowed_user_ids -= internal_users
 
     @api.depends('create_date', 'date_end', 'date_assign')
     def _compute_elapsed(self):
@@ -1017,17 +972,6 @@ class Task(models.Model):
             empty_list_help_document_name=tname,
         )
         return super(Task, self).get_empty_list_help(help)
-
-    def message_subscribe(self, partner_ids=None, subtype_ids=None):
-        """
-        Add the users subscribed to allowed portal users
-        """
-        res = super(Task, self).message_subscribe(partner_ids=partner_ids, subtype_ids=subtype_ids)
-        if partner_ids:
-            new_allowed_users = self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
-            tasks = self.filtered(lambda task: task.project_id.privacy_visibility == 'portal')
-            tasks.sudo().write({'allowed_user_ids': [(4, user.id) for user in new_allowed_users]})
-        return res
 
     # ----------------------------------------
     # Case management
@@ -1266,28 +1210,19 @@ class Task(models.Model):
         self.ensure_one()
 
         project_user_group_id = self.env.ref('project.group_project_user').id
-
-        group_func = lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups']
-        if self.project_privacy_visibility == 'followers':
-            allowed_user_ids = self.project_id.allowed_internal_user_ids.partner_id.ids
-            group_func = lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'] and pdata['id'] in allowed_user_ids
-        new_group = ('group_project_user', group_func, {})
-
+        new_group = ('group_project_user', lambda pdata: pdata['type'] == 'user' and project_user_group_id in pdata['groups'], {})
         if not self.user_id and not self.stage_id.fold:
             take_action = self._notify_get_action_link('assign', **msg_vals)
             project_actions = [{'url': take_action, 'title': _('I take it')}]
             new_group[2]['actions'] = project_actions
-
         groups = [new_group] + groups
 
-        if self.project_id.privacy_visibility == 'portal':
-            allowed_user_ids = self.project_id.allowed_portal_user_ids.partner_id.ids
+        if self.project_privacy_visibility == 'portal':
             groups.insert(0, (
                 'allowed_portal_users',
-                lambda pdata: pdata['type'] == 'portal' and pdata['id'] in allowed_user_ids,
+                lambda pdata: pdata['type'] == 'portal',
                 {}
             ))
-
         portal_privacy = self.project_id.privacy_visibility == 'portal'
         for group_name, group_method, group_data in groups:
             if group_name in ('customer', 'user') or group_name == 'portal_customer' and not portal_privacy:
@@ -1462,6 +1397,13 @@ class Task(models.Model):
     def _rating_get_parent_field_name(self):
         return 'project_id'
 
+    # ---------------------------------------------------
+    # Privacy
+    # ---------------------------------------------------
+    def _change_project_privacy_visibility(self):
+        for task in self.filtered(lambda t: t.project_privacy_visibility != 'portal'):
+            portal_users = task.message_partner_ids.user_ids.filtered('share')
+            task.message_unsubscribe(partner_ids=portal_users.partner_id.ids)
 
 class ProjectTags(models.Model):
     """ Tags of project's tasks """
