@@ -839,6 +839,7 @@ options.registry.OptionsTab = options.Class.extend({
             jsLibs: [
                 '/web/static/lib/ace/ace.js',
                 '/web/static/lib/ace/mode-xml.js',
+                '/web/static/lib/ace/mode-qweb.js',
             ],
         });
 
@@ -992,7 +993,7 @@ options.registry.OptionsTab = options.Class.extend({
 
         const aceSession = aceEditor.getSession();
         aceSession.setOptions({
-            mode: "ace/mode/xml",
+            mode: "ace/mode/qweb",
             useWorker: false,
         });
         return aceEditor;

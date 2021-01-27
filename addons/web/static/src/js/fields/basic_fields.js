@@ -3480,7 +3480,8 @@ var AceEditor = DebouncedField.extend({
         '/web/static/lib/ace/ace.js',
         [
             '/web/static/lib/ace/mode-python.js',
-            '/web/static/lib/ace/mode-xml.js'
+            '/web/static/lib/ace/mode-xml.js',
+            '/web/static/lib/ace/mode-qweb.js'
         ]
     ],
     events: {}, // events are triggered manually for this debounced widget
@@ -3573,9 +3574,10 @@ var AceEditor = DebouncedField.extend({
         }
         this.aceEditor.$blockScrolling = true;
         this.aceSession = this.aceEditor.getSession();
+        const mode = this.nodeOptions.mode || 'qweb';
         this.aceSession.setOptions({
             useWorker: false,
-            mode: "ace/mode/" + (this.nodeOptions.mode || 'xml'),
+            mode: "ace/mode/" + (mode === 'xml' ? 'qweb' : mode),
             tabSize: 2,
             useSoftTabs: true,
         });
