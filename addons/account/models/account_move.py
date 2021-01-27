@@ -1500,7 +1500,7 @@ class AccountMove(models.Model):
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
                 if tax_key_add_base not in done_taxes:
                     if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
-                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.context_today(self))
+                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line._get_exchange_rate_date())
                     else:
                         amount = line.tax_base_amount
                     res[line.tax_line_id.tax_group_id]['base'] += amount
@@ -3260,7 +3260,9 @@ class AccountMoveLine(models.Model):
             sign = 1
 
         amount_currency = price_subtotal * sign
-        balance = currency._convert(amount_currency, company.currency_id, company, date or fields.Date.context_today(self))
+        print(amount_currency)
+        balance = currency._convert(amount_currency, company.currency_id, company, date or self._get_exchange_rate_date())
+        # import pdb; pdb.set_trace()
         return {
             'amount_currency': amount_currency,
             'currency_id': currency.id,
@@ -3399,7 +3401,7 @@ class AccountMoveLine(models.Model):
 
             # Convert the unit price to the invoice's currency.
             company = line.move_id.company_id
-            line.price_unit = company.currency_id._convert(line.price_unit, line.move_id.currency_id, company, line.move_id.date, round=False)
+            line.price_unit = company.currency_id._convert(line.price_unit, line.move_id.currency_id, company, line._get_exchange_rate_date(), round=False)
 
     @api.onchange('product_uom_id')
     def _onchange_uom_id(self):
@@ -3416,7 +3418,7 @@ class AccountMoveLine(models.Model):
 
         # Convert the unit price to the invoice's currency.
         company = self.move_id.company_id
-        self.price_unit = company.currency_id._convert(price_unit, self.move_id.currency_id, company, self.move_id.date, round=False)
+        self.price_unit = company.currency_id._convert(price_unit, self.move_id.currency_id, company, self._get_exchange_rate_date(), round=False)
 
     @api.onchange('account_id')
     def _onchange_account_id(self):
@@ -3457,7 +3459,7 @@ class AccountMoveLine(models.Model):
     def _onchange_amount_currency(self):
         for line in self:
             company = line.move_id.company_id
-            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date)
+            balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line._get_exchange_rate_date())
             line.debit = balance if balance > 0.0 else 0.0
             line.credit = -balance if balance < 0.0 else 0.0
 
@@ -3476,6 +3478,18 @@ class AccountMoveLine(models.Model):
             line.update(line._get_price_total_and_subtotal())
             line.update(line._get_fields_onchange_subtotal())
 
+    @api.model
+    def _get_exchange_rate_date(self):
+        self.ensure_one()
+        proposed_date = self.move_id.date or fields.Date.context_today(self)
+        if self.move_id.move_type in ['out_refund', 'in_refund']:
+            proposed_date = self.move_id.reversed_entry_id.date or fields.Date.context_today(self)
+        print('My datesssssssssss %s' % proposed_date)
+        print('Record %s' % repr(self))
+        print('Record %s' % repr(self.move_id.reversed_entry_id))
+        # import pdb; pdb.set_trace()
+        return proposed_date
+
     @api.onchange('currency_id')
     def _onchange_currency(self):
         for line in self:
@@ -3484,7 +3498,7 @@ class AccountMoveLine(models.Model):
             if line.move_id.is_invoice(include_receipts=True):
                 line._onchange_price_subtotal()
             elif not line.move_id.reversed_entry_id:
-                balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line.move_id.date or fields.Date.context_today(line))
+                balance = line.currency_id._convert(line.amount_currency, company.currency_id, company, line._get_exchange_rate_date())
                 line.debit = balance if balance > 0.0 else 0.0
                 line.credit = -balance if balance < 0.0 else 0.0
 
