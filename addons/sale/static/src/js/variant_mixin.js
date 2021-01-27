@@ -342,7 +342,7 @@ var VariantMixin = {
             .find('option, input, label')
             .removeClass('css_not_available')
             .prop('disabled', false)
-            .attr('title', '')
+            .attr('title', function () { return $(this).data('value_name') || ''; })
             .data('excluded-by', '');
 
         // exclusion rules: array of ptav
