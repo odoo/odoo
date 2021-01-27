@@ -55,11 +55,15 @@ class ConfigurationSettings(models.TransientModel):
     @api.model
     def durations(self):
         return self.env['salon.duration'].search([('time_available','=',True)])
+    
+    @api.model
+    def booking_activate_payment(self):
+        return self.env['salon.booking.payment'].search([('activate_payment','=',True)]).activate_payment
 
     salon_booking_chairs = fields.Many2many('salon.chair', string="Booking Chairs", default=booking_chairs)
     salon_holidays = fields.Many2many('salon.holiday', string="Holidays", default=holidays)
     salon_durations = fields.Many2many('salon.duration',string="Duration",default=durations)
-    salon_activate_payment = fields.Boolean(string="Activate Booking Payment", default=False)
+    salon_activate_payment = fields.Boolean(string="Activate Booking Payment", default=booking_activate_payment)
 
     def execute(self):
         salon_chair_obj = self.env['salon.chair'].search([])
@@ -93,3 +97,7 @@ class ConfigurationSettings(models.TransientModel):
                 records.time_available = True
             else:
                 records.time_available = False
+        
+        # Activate the QR Code Booking Payment
+        salon_booking_payment_obj = self.env['salon.booking.payment'].search([])
+        salon_booking_payment_obj.activate_payment = self.salon_activate_payment
