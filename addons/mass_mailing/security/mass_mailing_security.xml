@@ -17,6 +17,7 @@ professional emails and reuse templates.</field>
     <record id="group_mass_mailing_campaign" model="res.groups">
         <field name="name">Manage Mass Mailing Campaigns</field>
         <field name="category_id" ref="base.module_category_hidden"/>
+        <field name="implied_ids" eval="[(4,ref('mass_mailing.group_mass_mailing_user'))]"/>
     </record>
 
     <data noupdate="1">

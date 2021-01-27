@@ -10,8 +10,8 @@ class UtmCampaign(models.Model):
     mailing_mail_ids = fields.One2many(
         'mailing.mailing', 'campaign_id',
         domain=[('mailing_type', '=', 'mail')],
-        string='Mass Mailings')
-    mailing_mail_count = fields.Integer('Number of Mass Mailing', compute="_compute_mailing_mail_count")
+        string='Mass Mailings', groups="mass_mailing.group_mass_mailing_user")
+    mailing_mail_count = fields.Integer('Number of Mass Mailing', compute="_compute_mailing_mail_count", groups="mass_mailing.group_mass_mailing_user")
     # stat fields
     received_ratio = fields.Integer(compute="_compute_statistics", string='Received Ratio')
     opened_ratio = fields.Integer(compute="_compute_statistics", string='Opened Ratio')
