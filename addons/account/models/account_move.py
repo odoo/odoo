@@ -3482,7 +3482,7 @@ class AccountMoveLine(models.Model):
     def _get_exchange_rate_date(self):
         self.ensure_one()
         proposed_date = self.move_id.date or fields.Date.context_today(self)
-        if self.move_id.move_type in ['out_refund', 'in_refund']:
+        if self.move_id.move_type in ['out_refund', 'in_refund'] and self.move_id.reversed_entry_id:
             proposed_date = self.move_id.reversed_entry_id.date or fields.Date.context_today(self)
         print('My datesssssssssss %s' % proposed_date)
         print('Record %s' % repr(self))
