@@ -129,17 +129,19 @@
                                            placeholder="Enter your Phone number(eg:012 345 678)"/>
                                 </div>
                             </div>
-                            <div class="text-center">
-                                <h6>Please make the advanced payment at least 50% of total price by scanning the ABA QR Code or Transfer to the ABA account below </h6>
-                            </div>
-                            <div class="container">
-                                <div class="row">  
-                                    <div class="col-sm">
-                                        <img class="img img-responsive" t-attf-src="data:image/jpg;base64,{{booking_payment.qr_code_booking_payment}}"/>
-                                    </div>
-                                    <div class="col-sm row align-items-center">
-                                        <span><b> ABA Account Number : </b> <span  class="tab"><t t-esc="booking_payment.aba_account_id" /></span></span>
-                                        <span><b> ABA Account Name : </b> <span class="tab"><t t-esc="booking_payment.aba_account_name" /></span> </span>
+                            <div class="row s_nb_column_fixed" t-if="booking_payment">
+                                <div class="text-center">
+                                    <h6>Please make the advanced payment at least 50% of total price by scanning the ABA QR Code or Transfer cash to the ABA account below </h6>
+                                </div>
+                                <div class="container">
+                                    <div class="row">  
+                                        <div class="col-sm">
+                                            <img class="img img-responsive" t-attf-src="data:image/jpg;base64,{{booking_payment.qr_code_booking_payment}}"/>
+                                        </div>
+                                        <div class="col-sm row align-items-center">
+                                            <span><b> ABA Account Number : </b> <span  class="tab"><t t-esc="booking_payment.aba_account_id" /></span></span>
+                                            <span><b> ABA Account Name : </b> <span class="tab"><t t-esc="booking_payment.aba_account_name" /></span> </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

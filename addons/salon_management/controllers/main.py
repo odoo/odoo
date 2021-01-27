@@ -122,8 +122,7 @@ class SalonBookingWeb(http.Controller):
         salon_service_obj = request.env['salon.service'].search([])
         order_obj = order_obj.search([('start_date_only', '=', date_check)])
 
-        booking_payment_obj = request.env['salon.booking.payment'].search([])
-
+        booking_payment_obj = request.env['salon.booking.payment'].search([('activate_payment','=',True)])
         return request.render('salon_management.salon_booking_form',
                               {'chair_details': chair_obj, 'order_details': order_obj,
                                 'duration_details': duration_obj, 
