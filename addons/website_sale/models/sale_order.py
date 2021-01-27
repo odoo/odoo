@@ -351,6 +351,13 @@ class SaleOrder(models.Model):
                 sent_orders |= order
         sent_orders.write({'cart_recovery_email_sent': True})
 
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for order in self:
+            if not order.transaction_ids and not order.amount_total and self._context.get('send_email'):
+                order._send_order_confirmation_mail()
+        return res
+
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
