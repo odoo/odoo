@@ -3,14 +3,14 @@ odoo.define('web.ControlPanel', function (require) {
 
     const ActionMenus = require('web.ActionMenus');
     const ComparisonMenu = require('web.ComparisonMenu');
-    const ActionModel = require('web/static/src/js/views/action_model.js');
+    const ActionModel = require('web.ActionModel');
     const FavoriteMenu = require('web.FavoriteMenu');
     const FilterMenu = require('web.FilterMenu');
     const GroupByMenu = require('web.GroupByMenu');
     const patchMixin = require('web.patchMixin');
     const Pager = require('web.Pager');
     const SearchBar = require('web.SearchBar');
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     const { Component, hooks } = owl;
     const { useRef, useSubEnv } = hooks;

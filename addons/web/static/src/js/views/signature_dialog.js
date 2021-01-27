@@ -1,9 +1,8 @@
-odoo.define('web.signature_dialog', function (require) {
-"use strict";
+/** @odoo-module alias=web.signature_dialog **/
 
-var core = require('web.core');
-var Dialog = require('web.Dialog');
-var NameAndSignature = require('web.name_and_signature').NameAndSignature;
+import core from 'web.core';
+import Dialog from 'web.Dialog';
+import { NameAndSignature } from 'web.name_and_signature';
 
 var _t = core._t;
 
@@ -116,6 +115,4 @@ var SignatureDialog = Dialog.extend({
     },
 });
 
-return SignatureDialog;
-
-});
+export default SignatureDialog;

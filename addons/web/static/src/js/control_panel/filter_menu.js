@@ -4,7 +4,7 @@ odoo.define('web.FilterMenu', function (require) {
     const CustomFilterItem = require('web.CustomFilterItem');
     const DropdownMenu = require('web.DropdownMenu');
     const { FACET_ICONS } = require("web.searchUtils");
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     /**
      * 'Filters' menu

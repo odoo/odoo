@@ -4,7 +4,7 @@ odoo.define('web.CustomFavoriteItem', function (require) {
     const DropdownMenuItem = require('web.DropdownMenuItem');
     const FavoriteMenu = require('web.FavoriteMenu');
     const { useAutofocus } = require('web.custom_hooks');
-    const { useModel } = require('web/static/src/js/model.js');
+    const { useModel } = require('web.Model');
 
     const { useRef } = owl.hooks;
 

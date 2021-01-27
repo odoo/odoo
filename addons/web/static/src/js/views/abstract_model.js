@@ -1,5 +1,4 @@
-odoo.define('web.AbstractModel', function (require) {
-"use strict";
+/** @odoo-module alias=web.AbstractModel **/
 
 /**
  * An AbstractModel is the M in MVC.  We tend to think of MVC more on the server
@@ -29,9 +28,9 @@ odoo.define('web.AbstractModel', function (require) {
  * sample model.
  */
 
-var fieldUtils = require('web.field_utils');
-var mvc = require('web.mvc');
-const SampleServer = require('web.SampleServer');
+import fieldUtils from 'web.field_utils';
+import mvc from 'web.mvc';
+import SampleServer from 'web.SampleServer';
 
 
 var AbstractModel = mvc.Model.extend({
@@ -281,6 +280,4 @@ var AbstractModel = mvc.Model.extend({
     },
 });
 
-return AbstractModel;
-
-});
+export default AbstractModel;
