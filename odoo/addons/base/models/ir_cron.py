@@ -419,6 +419,8 @@ class ir_cron(models.Model):
             call_at += delay
 
         self.env['ir.cron.trigger'].sudo().create({'cron_id': self.id, 'call_at': call_at})
+        _logger.debug("will execute '%s' at %s",
+            self.name, call_at if call_at > now else "soon as possible")
 
         if call_at <= now:
             self._cr.postcommit.add(self._notifydb)
@@ -427,7 +429,7 @@ class ir_cron(models.Model):
         """ Wake up the cron workers """
         with odoo.sql_db.db_connect('postgres').cursor() as cr:
             cr.execute('NOTIFY cron_trigger')
-        _logger.debug("Cron workers triggered")
+        _logger.debug("cron workers notified")
 
 
 class ir_cron_trigger(models.Model):
