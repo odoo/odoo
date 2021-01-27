@@ -1,7 +1,7 @@
-odoo.define('web.RendererWrapper', function (require) {
-    "use strict";
+/** @odoo-module alias=web.RendererWrapper **/
 
-    const { ComponentWrapper } = require('web.OwlCompatibility');
+
+    import { ComponentWrapper } from 'web.OwlCompatibility';
 
     class RendererWrapper extends ComponentWrapper {
         getLocalState() { }
@@ -9,6 +9,4 @@ odoo.define('web.RendererWrapper', function (require) {
         giveFocus() { }
     }
 
-    return RendererWrapper;
-
-});
+    export default RendererWrapper;

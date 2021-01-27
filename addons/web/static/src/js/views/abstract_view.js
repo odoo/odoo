@@ -1,5 +1,4 @@
-odoo.define('web.AbstractView', function (require) {
-"use strict";
+/** @odoo-module alias=web.AbstractView **/
 
 /**
  * This is the base class inherited by all (JS) views. Odoo JS views are the
@@ -23,14 +22,14 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
-const ActionModel = require("web/static/src/js/views/action_model.js");
-var AbstractModel = require('web.AbstractModel');
-var AbstractRenderer = require('web.AbstractRenderer');
-var AbstractController = require('web.AbstractController');
-const ControlPanel = require('web.ControlPanel');
-const SearchPanel = require("web/static/src/js/views/search_panel.js");
-var mvc = require('web.mvc');
-var viewUtils = require('web.viewUtils');
+import ActionModel from "web.ActionModel";
+import AbstractModel from './abstract_model';
+import AbstractRenderer from './abstract_renderer';
+import AbstractController from './abstract_controller';
+import ControlPanel from 'web.ControlPanel';
+import SearchPanel from "web.searchPanel";
+import mvc from 'web.mvc';
+import viewUtils from 'web.viewUtils';
 
 const { Component } = owl;
 
@@ -435,6 +434,4 @@ var AbstractView = Factory.extend({
     },
 });
 
-return AbstractView;
-
-});
+export default AbstractView;

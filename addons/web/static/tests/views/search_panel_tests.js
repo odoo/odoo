@@ -5,7 +5,7 @@ const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
 const ListView = require('web.ListView');
 const testUtils = require('web.test_utils');
-const SearchPanel = require("web/static/src/js/views/search_panel.js");
+const SearchPanel = require("web.searchPanel");
 
 const cpHelpers = testUtils.controlPanel;
 const createActionManager = testUtils.createActionManager;

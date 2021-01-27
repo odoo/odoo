@@ -1,5 +1,4 @@
-odoo.define('web.EditableListRenderer', function (require) {
-"use strict";
+/** @odoo-module alias=web.EditableListRenderer **/
 
 /**
  * Editable List renderer
@@ -11,11 +10,11 @@ odoo.define('web.EditableListRenderer', function (require) {
  * Unlike Odoo v10 and before, this list renderer is independant from the form
  * view. It uses the same widgets, but the code is totally stand alone.
  */
-var core = require('web.core');
-var dom = require('web.dom');
-var ListRenderer = require('web.ListRenderer');
-var utils = require('web.utils');
-const { WidgetAdapterMixin } = require('web.OwlCompatibility');
+import core from 'web.core';
+import dom from 'web.dom';
+import ListRenderer from 'web.ListRenderer';
+import utils from 'web.utils';
+import { WidgetAdapterMixin } from 'web.OwlCompatibility';
 
 var _t = core._t;
 
@@ -1831,4 +1830,3 @@ ListRenderer.include({
     },
 });
 
-});

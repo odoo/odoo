@@ -1,10 +1,10 @@
-odoo.define("web/static/src/js/views/search_panel_model_extension.js", function (require) {
-    "use strict";
+/** @odoo-module alias=web.searchPanelModelExtension **/
 
-    const ActionModel = require("web/static/src/js/views/action_model.js");
-    const { sortBy } = require("web.utils");
-    const Domain = require("web.Domain");
-    const pyUtils = require("web.py_utils");
+
+    import ActionModel from "web.ActionModel";
+    import { sortBy } from "web.utils";
+    import Domain from "web.Domain";
+    import pyUtils from "web.py_utils";
 
     // DefaultViewTypes is the list of view types for which the searchpanel is
     // present by default (if not explicitly stated in the "view_types" attribute
@@ -785,5 +785,4 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
 
     ActionModel.registry.add("SearchPanel", SearchPanelModelExtension, 30);
 
-    return SearchPanelModelExtension;
-});
+    export default SearchPanelModelExtension;
