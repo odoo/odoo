@@ -130,6 +130,9 @@ class AccountPayment(models.Model):
         compute='_compute_show_require_partner_bank',
         help="Technical field used to know whether the field `partner_bank_id` needs to be required or not in the payments form views")
     country_code = fields.Char(related='company_id.country_id.code')
+    amount_signed = fields.Monetary(
+        currency_field='currency_id', compute='_compute_amount_signed',
+        help='Negative value of amount field if payment_type is outbound')
 
     _sql_constraints = [
         (
@@ -314,6 +317,14 @@ class AccountPayment(models.Model):
         for payment in self:
             payment.show_partner_bank_account = payment.payment_method_code in self._get_method_codes_using_bank_account()
             payment.require_partner_bank_account = payment.state == 'draft' and payment.payment_method_code in self._get_method_codes_needing_bank_account()
+
+    @api.depends('amount', 'payment_type')
+    def _compute_amount_signed(self):
+        for payment in self:
+            if payment.payment_type == 'outbound':
+                payment.amount_signed = -payment.amount
+            else:
+                payment.amount_signed = payment.amount
 
     @api.depends('partner_id')
     def _compute_partner_bank_id(self):
