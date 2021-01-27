@@ -58,8 +58,8 @@
         <th t-att-colspan="isXAxis ? cell.width : undefined" t-att-rowspan="isXAxis ? cell.height : undefined" t-att-class="{
                 o_pivot_header_cell_closed: cell.isLeaf,
                 o_pivot_header_cell_opened: !cell.isLeaf,
-            }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + _getPadding(cell) + 'px;' }}" t-att-title="cell.label" t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')">
-            <span t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')" t-esc="cell.title"/>
+            }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + _getPadding(cell) + 'px;' }}" t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')">
+            <span t-att-title="cell.label" t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')" t-esc="cell.title"/>
             <t t-if="_isClicked(cell.groupId, isXAxis)" t-call="web.PivotGroupBySelection"/>
         </th>
     </t>
