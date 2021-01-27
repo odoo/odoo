@@ -91,6 +91,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 if (!confirmed) return;
             }
             if (order) {
+                await this._canDeleteOrder(order);
                 order.destroy({ reason: 'abandon' });
             }
             posbus.trigger('order-deleted');
@@ -190,6 +191,9 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 searchFieldNames: Object.keys(this._searchFields),
                 screenToStatusMap: this._screenToStatusMap,
             });
+        }
+        async _canDeleteOrder(order) {
+            return true;
         }
         getOrderStates() {
             return {
