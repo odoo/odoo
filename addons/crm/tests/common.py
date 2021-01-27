@@ -49,7 +49,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
     FIELDS_FIRST_SET = [
         'name', 'partner_id', 'campaign_id', 'company_id', 'country_id',
         'team_id', 'state_id', 'stage_id', 'medium_id', 'source_id', 'user_id',
-        'title', 'city', 'contact_name', 'description', 'mobile', 'partner_name',
+        'title', 'city', 'contact_name', 'mobile', 'partner_name',
         'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
         'create_date', 'date_action_last', 'email_from', 'email_cc', 'website'
     ]
@@ -323,9 +323,9 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         self.assertIn(opportunity, leads)
 
         # save opportunity value before being modified by merge process
-        fields_all = self.FIELDS_FIRST_SET + ['type', 'priority']
+        fields_all = self.FIELDS_FIRST_SET + ['description', 'type', 'priority']
         # ensure tests are synchronized with crm code
-        self.assertTrue(all(field in fields_all for field in CRM_LEAD_FIELDS_TO_MERGE))
+        self.assertTrue(all(field in fields_all for field in CRM_LEAD_FIELDS_TO_MERGE + list(self.env['crm.lead']._merge_get_fields_specific().keys())))
         original_opp_values = dict(
             (fname, opportunity[fname])
             for fname in fields_all
@@ -359,7 +359,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             for fname, expected in expected.items():
                 self.assertEqual(opportunity[fname], expected)
 
-            # classic fields: first not void wins
+            # classic fields: first not void wins or specific computation
             for fname in fields_all:
                 opp_value = opportunity[fname]
                 if fname == 'description':

@@ -37,11 +37,11 @@ class Lead(models.Model):
             action['context'] = {'search_default_group_by_page': '1'}
         return action
 
-    def _merge_data(self, fields):
-        merged_data = super(Lead, self)._merge_data(fields)
+    def _merge_get_fields_specific(self):
+        fields_info = super(Lead, self)._merge_get_fields_specific()
         # add all the visitors from all lead to merge
-        merged_data['visitor_ids'] = [(6, 0, self.visitor_ids.ids)]
-        return merged_data
+        fields_info['visitor_ids'] = lambda fname, leads: [(6, 0, leads.visitor_ids.ids)]
+        return fields_info
 
     def website_form_input_filter(self, request, values):
         values['medium_id'] = values.get('medium_id') or \

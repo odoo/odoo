@@ -26,10 +26,6 @@ class CrmLead(models.Model):
         copy=True, readonly=False, store=True,
         help="Last date this case was forwarded/assigned to a partner")
 
-    def _merge_data(self, fields):
-        fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
-        return super(CrmLead, self)._merge_data(fields)
-
     @api.depends("partner_assigned_id")
     def _compute_date_partner_assign(self):
         for lead in self:
@@ -37,6 +33,11 @@ class CrmLead(models.Model):
                 lead.date_partner_assign = False
             else:
                 lead.date_partner_assign = fields.Date.context_today(lead)
+
+    def _merge_get_fields(self):
+        fields_list = super(CrmLead, self)._merge_get_fields()
+        fields_list += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
+        return fields_list
 
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
