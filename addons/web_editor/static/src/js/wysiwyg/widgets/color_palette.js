@@ -144,6 +144,13 @@ const ColorPaletteWidget = Widget.extend({
             defaultColor: defaultColor,
         });
         await this.colorPicker.prependTo($colorSection);
+
+        // TODO Added as a fix. In master, the widget should probably not be
+        // instantiated at all.
+        if (this.options.excluded.includes('custom')) {
+            this.colorPicker.$el.addClass('d-none');
+        }
+
         return res;
     },
     /**
