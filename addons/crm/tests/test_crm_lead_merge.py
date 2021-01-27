@@ -157,5 +157,6 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
         with self.assertLeadMerged(self.lead_1, leads,
                                    name='Nibbler Spacecraft Request',
-                                   partner_id=self.contact_company_1):
+                                   partner_id=self.contact_company_1,
+                                   priority='0'):
             leads._merge_opportunity(auto_unlink=False, max_length=None)
