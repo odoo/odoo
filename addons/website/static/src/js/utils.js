@@ -4,7 +4,7 @@ odoo.define('website.utils', function (require) {
 var ajax = require('web.ajax');
 var core = require('web.core');
 
-var qweb = core.qweb;
+const { qweb, _t } = core;
 
 /**
  * Allows to load anchors from a page.
@@ -164,6 +164,8 @@ function prompt(options, _qweb) {
         field_name: '',
         'default': '', // dict notation for IE<9
         init: function () {},
+        btn_primary_title: _t('Create'),
+        btn_secondary_title: _t('Cancel'),
     }, options || {});
 
     var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);

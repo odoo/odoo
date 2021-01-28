@@ -12,7 +12,7 @@
                         <form role="form" t-att-id="id">
                             <div class="form-group row mb0">
                                 <label for="page-name" class="col-md-3 col-form-label">
-                                    <t t-esc="field_name"/>:
+                                    <t t-esc="field_name"/>
                                 </label>
                                 <div class="col-md-9">
                                     <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
@@ -23,8 +23,8 @@
                         </form>
                     </main>
                     <footer class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-continue">Continue</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-continue"><t t-esc="btn_primary_title"/></button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Cancel"><t t-esc="btn_secondary_title"/></button>
                     </footer>
                 </div>
             </div>
