@@ -375,6 +375,21 @@ odoo.define('web.AbstractFieldOwl', function (require) {
             return false;
         }
         /**
+         * Highlights activated element with light green background and green border
+         *
+         */
+        highlightActivated() {
+            if (this.mode === 'edit' && this.isFocusable) {
+                // add o_active_field class on current focusable element and remove when blurred
+                const handler = () => {
+                    this.el.classList.remove('o_active_field');
+                    this.el.removeEventListener("focusout", handler);
+                };
+                this.el.classList.add("o_active_field");
+                this.el.addEventListener("focusout", handler);
+            }
+        }
+        /**
          * This function should be implemented by components that are not able to
          * notify their environment when their value changes (maybe because their
          * are not aware of the changes) or that may have a value in a temporary

@@ -104,6 +104,9 @@ odoo.define('web.FieldWrapper', function (require) {
         activate() {
             return this.componentRef.comp.activate(...arguments);
         }
+        highlightActivated() {
+            return this.componentRef.comp.highlightActivated(...arguments);
+        }
         commitChanges() {
             return this.componentRef.comp.commitChanges(...arguments);
         }

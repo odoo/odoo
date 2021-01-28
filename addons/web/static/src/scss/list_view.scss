@@ -186,13 +186,18 @@
         }
 
         &, &.table-striped {
-            tr:focus-within {
-                background-color: lighten($o-form-lightsecondary, 10%);
+            tr:focus-within:not(.o_selected_row) {
+                background-color: rgba(#00a09d, 0.05);
+                &, + tr {
+                    th, td {
+                        border-top-color: #00a09d !important;
+                    }
+                }
             }
         }
         thead th:focus-within,
         tbody.o_keyboard_navigation td:focus-within {
-            background-color: $o-form-lightsecondary;
+            background-color: rgba(#00a09d, 0.08);
             outline: none;
         }
 
@@ -266,6 +271,16 @@
         .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier):not(.o_invisible_modifier) {
             position: relative; // for o_field_translate
             background-color: white;
+            &.o_active_cell:not(.o_invalid_cell) {
+                background-color: rgba(#00a09d, 0.05);
+                border-bottom-color: #00a09d;
+            }
+            .o_field_widget {
+                @include o_highlight_active_field(transparent, none);
+            }
+            select.o_field_widget.o_active_field:not(.o_field_invalid) {
+                @include o_highlight_active_selection_field(transparent, none);
+            }
             .o_input {
                 border: none;
                 padding: 0;

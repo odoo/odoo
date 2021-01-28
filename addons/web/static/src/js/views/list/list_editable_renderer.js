@@ -883,6 +883,20 @@ ListRenderer.include({
             return hasVisibleRecords;
         }
     },
+    _highlightActivated(widget) {
+        this._super(...arguments);
+        [...this.el.querySelectorAll('.o_selected_row .o_data_cell')].map(el => el.classList.remove('o_active_cell'));
+        const activeField = [...this.el.querySelectorAll('.o_selected_row .o_data_cell')].find((el) => {
+            return el.querySelector('.o_active_field') && el;
+        });
+        if (activeField) {
+            activeField.classList.add('o_active_cell');
+            activeField.addEventListener('focusout', function handler() {
+                this.classList.remove('o_active_cell');
+                this.removeEventListener("focusout", handler);
+            });
+        }
+    },
     /**
      * Returns whether a recordID is currently editable.
      *
@@ -1272,6 +1286,7 @@ ListRenderer.include({
                 inc: options.inc || 1,
                 wrap: wrap,
                 event: options && options.event,
+                ignoreHighlight: options && options.event && options.event.type === "click",
             });
             if (fieldIndex < 0) {
                 self.currentFieldIndex = oldFieldIndex;

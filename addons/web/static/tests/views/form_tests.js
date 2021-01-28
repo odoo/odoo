@@ -4738,7 +4738,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('navigation with tab key in form view', async function (assert) {
-        assert.expect(3);
+        assert.expect(10);
 
         var form = await createView({
             View: FormView,
@@ -4762,14 +4762,24 @@ QUnit.module('Views', {
         // focus first input, trigger tab
         form.$('input[name="foo"]').focus();
 
+        assert.hasClass(form.$('input[name="foo"]'), 'o_active_field',
+            "foo field should have o_active_field class");
         const tabKey = { keyCode: $.ui.keyCode.TAB, which: $.ui.keyCode.TAB };
-        await testUtils.dom.triggerEvent(form.$('input[name="foo"]'), 'keydown', tabKey);
+        await testUtils.dom.triggerEvent(form.$('input[name="foo"]')[0], 'keydown', tabKey);
         assert.ok($.contains(form.$('div[name="bar"]')[0], document.activeElement),
             "bar checkbox should be focused");
+        assert.doesNotHaveClass(form.$('input[name="foo"]'), 'o_active_field',
+            "foo field should not have o_active_field class");
+        assert.hasClass(form.$('div[name="bar"]'), 'o_active_field',
+            "bar field should have o_active_field class");
 
         await testUtils.dom.triggerEvent(document.activeElement, 'keydown', tabKey);
         assert.strictEqual(form.$('input[name="display_name"]')[0], document.activeElement,
             "display_name should be focused");
+        assert.doesNotHaveClass(form.$('div[name="bar"] input'), 'o_active_field',
+            "bar field should not have o_active_field class");
+        assert.hasClass(form.$('input[name="display_name"]'), 'o_active_field',
+            "display_name field should have o_active_field class");
 
         // simulate shift+tab on active element
         const shiftTabKey = Object.assign({}, tabKey, { shiftKey: true });
@@ -4777,12 +4787,16 @@ QUnit.module('Views', {
         await testUtils.dom.triggerEvent(document.activeElement, 'keydown', shiftTabKey);
         assert.strictEqual(document.activeElement, form.$('input[name="foo"]')[0],
             "first input should be focused");
+        assert.hasClass(form.$('input[name="foo"]'), 'o_active_field',
+            "foo field should have o_active_field class");
+        assert.doesNotHaveClass(form.$('input[name="display_name"]'), 'o_active_field',
+            "display_name field should not have o_active_field class");
 
         form.destroy();
     });
 
     QUnit.test('navigation with tab key in readonly form view', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.partner.records[1].product_id = 37;
 
@@ -4804,12 +4818,15 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
+        await testUtils.nextTick();
         // focus first field, trigger tab
         form.$('[name="trululu"]').focus();
         form.$('[name="trululu"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         form.$('[name="foo"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.strictEqual(form.$('[name="product_id"]')[0], document.activeElement,
             "product_id should be focused");
+        assert.doesNotHaveClass(form.$('[name="product_id"]'), 'o_active_field',
+            "product_id should not have o_active_field class in readonly mode");
         form.$('[name="product_id"]').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         form.$('[name="foo"]:eq(1)').trigger($.Event('keydown', {which: $.ui.keyCode.TAB}));
         assert.strictEqual(form.$('div[name="display_name"].o_field_url > a')[0], document.activeElement,

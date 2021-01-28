@@ -21,6 +21,38 @@
     white-space: nowrap;
 }
 
+/* Highlight Active Field */
+@mixin o_highlight_active_field($background, $border) {
+    &[type="text"], &[type="password"], &[type="number"] {
+        &.o_active_field:not(.o_field_invalid) {
+            background-color: $background;
+            border-color: $border !important;
+        }
+    }
+    &.o_field_monetary.o_active_field {
+        border-color: $border !important;
+        .o_input {
+            background-color: $background;
+        }
+    }
+    &.o_field_many2one.o_active_field .o_input, &.o_field_date.o_active_field .o_input {
+        background-color: $background;
+        border-color: $border !important;
+    }
+    &.o_field_many2manytags.o_active_field.o_input {
+        border-color: $border !important;
+        .o_input {
+            background-color: $background;
+        }
+    }
+}
+
+// Highlight selection fields
+@mixin o_highlight_active_selection_field($background, $border) {
+    background-color: $background;
+    border-color: $border !important;
+}
+
 //------------------------------------------------------------------------------
 // Fields
 //------------------------------------------------------------------------------
@@ -538,6 +570,8 @@
         @include o-text-overflow;
         transition: none; // remove transition to prevent badges from flickering at reload
     }
+
+    @include o_highlight_active_field(rgba(#00a09d, 0.05), #00a09d);
 }
 
 span.o_field_copy:empty {
@@ -552,4 +586,8 @@ button.o_field_float_toggle {
 // Selection fields
 select.o_field_widget.o_input {
     padding: 1px;  // Other inputs get a 1px padding automatically added by the browsers but selects do not
+    &.o_active_field:not(.o_field_invalid) {
+        @include o_highlight_active_selection_field(rgba(#00a09d, 0.05), #00a09d);
+    }
+
 }

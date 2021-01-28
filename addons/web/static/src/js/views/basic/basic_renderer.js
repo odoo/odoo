@@ -240,6 +240,9 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
                     noAutomaticCreate: options.noAutomaticCreate || false
                 });
             if (activated) {
+                if (!options.ignoreHighlight) {
+                    this._highlightActivated(recordWidgets[currentIndex]);
+                }
                 return currentIndex;
             }
 
@@ -472,6 +475,15 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     _hasContent: function () {
         return this.state.count !== 0 && (!('isSample' in this.state) || !this.state.isSample);
+    },
+    /**
+     * Highlights widget by calling it's highlightActivated method
+     * can be overridden in list renderer to highlight editable row cell
+     *
+     * @private
+     */
+    _highlightActivated(widget) {
+        widget.highlightActivated();
     },
     /**
      * Force the resequencing of the records after moving one of them to a given

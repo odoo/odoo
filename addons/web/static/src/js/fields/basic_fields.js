@@ -2527,6 +2527,7 @@ var StateSelectionWidget = AbstractField.extend({
     template: 'FormSelection',
     events: {
         'click .dropdown-item': '_setSelection',
+        'keydown a': '_onKeydown',
     },
     supportedFieldTypes: ['selection'],
 
@@ -2616,6 +2617,15 @@ var StateSelectionWidget = AbstractField.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Override so that when TAB is pressed _onKeydown of super is called
+     * this will help to make next field highlighted
+     *
+     * @param {KeyEvent} ev
+     */
+    _onKeydown(ev) {
+        this._super(...arguments);
+    },
     /**
      * Intercepts the click on the FormSelection.Item to set the widget value.
      *
@@ -2712,9 +2722,9 @@ var BooleanToggle = FieldBoolean.extend({
     description: _lt("Toggle"),
     className: FieldBoolean.prototype.className + ' o_boolean_toggle',
     isQuickEditable: true,
-    events: {
+    events: Object.assign({}, FieldBoolean.prototype.events, {
         'click': '_onClick'
-    },
+    }),
 
     //--------------------------------------------------------------------------
     // Handlers
