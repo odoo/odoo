@@ -352,13 +352,13 @@
                             <div t-attf-class="d-flex flex-column p-0 oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_content p-0 m-0 position-relative row d-flex flex-fill">
                                     <div class="col-3 bg-primary p-2 text-center d-flex flex-column justify-content-center">
-                                        <div t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
-                                        <div>
+                                        <div t-if="record.date_begin.raw_value" t-esc="record.date_begin.raw_value.getDate()" class="o_event_fontsize_20"/>
+                                        <div t-if="record.date_begin.raw_value">
                                             <t t-esc="moment(record.date_begin.raw_value).format('MMM')"/>
                                             <t t-esc="record.date_begin.raw_value.getFullYear()"/>
                                         </div>
-                                        <div><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
-                                        <div t-if="moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
+                                        <div t-if="record.date_begin.raw_value"><t t-esc="moment(record.date_begin.raw_value).format('LT')"/></div>
+                                        <div t-if="record.date_begin.raw_value and record.date_end.raw_value and moment(record.date_begin.raw_value).dayOfYear() !== moment(record.date_end.raw_value).dayOfYear()">
                                             <i class="fa fa-arrow-right o_event_fontsize_09" title="End date"/>
                                             <t t-esc="moment(record.date_end.raw_value).format('D MMM')"/>
                                          </div>
