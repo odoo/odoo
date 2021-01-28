@@ -164,6 +164,7 @@ function prompt(options, _qweb) {
         field_name: '',
         'default': '', // dict notation for IE<9
         init: function () {},
+        cta_title: 'Continue'
     }, options || {});
 
     var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
