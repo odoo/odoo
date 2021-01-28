@@ -40,15 +40,5 @@
             </field>
         </record>
 
-        <record id="isr_bank_journal_form" model="ir.ui.view">
-            <field name="name">l10n_ch.bank.journal.form</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='bank_account_id']" position="after">
-                    <field name="l10n_ch_postal" attrs="{'invisible': [('bank_account_id', '=', False)]}"/>
-                </xpath>
-            </field>
-        </record>
     </data>
 </odoo>
