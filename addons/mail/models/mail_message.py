@@ -704,17 +704,17 @@ class Message(models.Model):
         notif_domain = [
             ('res_partner_id', '=', partner_id),
             ('is_read', '=', False)]
-
         if domain:
-            messages_ids = self.search(domain).ids  # need sudo?
-            notif_domain = expression.AND([notif_domain, [('mail_message_id', 'in', messages_ids)]])
+            messages = self.search(domain)
+            messages.set_message_done()
+            return messages.ids
 
         notifications = self.env['mail.notification'].sudo().search(notif_domain)
         notifications.write({'is_read': True})
 
         ids = [n['mail_message_id'] for n in notifications.read(['mail_message_id'])]
 
-        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids]}
+        notification = {'type': 'mark_as_read', 'message_ids': [id[0] for id in ids], 'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()}
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id), notification)
 
         return ids
@@ -752,7 +752,8 @@ class Message(models.Model):
         notifications.write({'is_read': True})
 
         for (msg_ids, channel_ids) in groups:
-            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids]}
+            # channel_ids in result is deprecated and will be removed in a future version
+            notification = {'type': 'mark_as_read', 'message_ids': msg_ids, 'channel_ids': [c.id for c in channel_ids], 'needaction_inbox_counter': self.env.user.partner_id.get_needaction_count()}
             self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner_id.id), notification)
 
     @api.model

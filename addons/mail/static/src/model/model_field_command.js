@@ -35,11 +35,37 @@ function clear() {
     );
 }
 
+/**
+ * Returns a decrement command to give to the model manager at create/update.
+ *
+ * @param {number} [amount=1]
+ */
+function decrement(amount = 1) {
+    return new FieldCommand((field, record, options) => {
+        const oldValue = field.get(record);
+        field.set(record, oldValue - amount, options);
+    });
+}
+
+/**
+ * Returns a increment command to give to the model manager at create/update.
+ *
+ * @param {number} [amount=1]
+ */
+function increment(amount = 1) {
+    return new FieldCommand((field, record, options) => {
+        const oldValue = field.get(record);
+        field.set(record, oldValue + amount, options);
+    });
+}
+
 return {
     // class
     FieldCommand,
     // shortcuts
     clear,
+    decrement,
+    increment,
 };
 
 });
