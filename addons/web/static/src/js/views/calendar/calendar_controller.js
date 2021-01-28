@@ -236,6 +236,9 @@ var CalendarController = AbstractController.extend({
             // When clicking on a random day of a random other week, switch to week view
             this.model.setScale('week');
         }
+        if (event.data.scale) {
+            this.model.setScale(event.data.scale);
+        }
         this.model.setDate(event.data.date);
         this.reload();
     },
