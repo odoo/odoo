@@ -217,10 +217,10 @@ function goBackToBlocks(position = "bottom") {
     };
 }
 
-function goToOptions(position = "bottom") {
+function goToTheme(position = "bottom") {
     return {
         trigger: '.o_we_customize_theme_btn',
-        content: _t("Go to the Options tab"),
+        content: _t("Go to the Theme tab"),
         position: position,
         run: "click",
     };
@@ -280,7 +280,7 @@ return {
     clickOnText,
     dragNDrop,
     goBackToBlocks,
-    goToOptions,
+    goToTheme,
     selectColorPalette,
     selectHeader,
     selectNested,
