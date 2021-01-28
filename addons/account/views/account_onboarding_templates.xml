@@ -29,8 +29,14 @@
     <template id="onboarding_bank_account_step">
         <t t-call="base.onboarding_step">
             <t t-set="title">Bank Account</t>
-            <t t-set="description">Setup your bank account to sync bank feeds.</t>
-            <t t-set="btn_text">Add a bank</t>
+            <t t-set="description">
+                <t t-if="env.user.has_group('account.group_account_user')">
+                    Setup your bank account to sync bank feeds.
+                </t>
+                <t t-else="">
+                    Setup your bank account to receive payments.
+                </t>
+            </t>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'setting_init_bank_account_action'" />
             <t t-set="model" t-value="'res.company'" />
@@ -80,6 +86,7 @@
             <t t-set="text_completed">Congratulations! You are all set.</t>
 
             <t t-call="base.onboarding_company_step" name="company_step" />
+            <t t-call="account.onboarding_bank_account_step" name="bank_account_step" t-if="not env.user.has_group('account.group_account_user')"/>
             <t t-call="account.onboarding_invoice_layout_step" name="invoice_layout_step" />
             <t t-call="account.onboarding_create_invoice_step" name="create_invoice_step" />
         </t>
