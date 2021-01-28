@@ -4,9 +4,10 @@
 import re
 
 from odoo import api, fields, models, _
+from odoo.addons.base.models.res_bank import sanitize_account_number
+from odoo.addons.base_iban.models.res_partner_bank import normalize_iban, pretty_iban, validate_iban
 from odoo.exceptions import ValidationError
 from odoo.tools.misc import mod10r
-from odoo.exceptions import UserError
 
 import werkzeug.urls
 
@@ -37,6 +38,30 @@ def _is_l10n_ch_isr_issuer(account_ref, currency_code):
         return _is_l10n_ch_postal(account_ref)
     return False
 
+def validate_qr_iban(qr_iban):
+    # Check first if it's a valid IBAN.
+    validate_iban(qr_iban)
+
+    # We sanitize first so that _check_qr_iban_range() can extract correct IID from IBAN to validate it.
+    sanitized_qr_iban = sanitize_account_number(qr_iban)
+
+    if sanitized_qr_iban[:2] != 'CH':
+        raise ValidationError(_("QR-IBAN numbers are only available in Switzerland."))
+
+    # Now, check if it's valid QR-IBAN (based on its IID).
+    if not check_qr_iban_range(sanitized_qr_iban):
+        raise ValidationError(_("QR-IBAN '%s' is invalid.") % qr_iban)
+
+    return True
+
+def check_qr_iban_range(iban):
+    if not iban or len(iban) < 9:
+        return False
+    iid_start_index = 4
+    iid_end_index = 8
+    iid = iban[iid_start_index : iid_end_index+1]
+    return re.match(r'\d+', iid) and 30000 <= int(iid) <= 31999 # Those values for iid are reserved for QR-IBANs only
+
 
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
@@ -48,6 +73,14 @@ class ResPartnerBank(models.Model):
         help="This field is used for the Swiss postal account number on a vendor account and for the client number on "
              "your own account. The client number is mostly 6 numbers without -, while the postal account number can "
              "be e.g. 01-162-8")
+
+    l10n_ch_qr_iban = fields.Char(string='QR-IBAN',
+                                  compute='_compute_l10n_ch_qr_iban',
+                                  store=True,
+                                  readonly=False,
+                                  help="Put the QR-IBAN here for your own bank accounts.  That way, you can "
+                                       "still use the main IBAN in the Account Number while you will see the "
+                                       "QR-IBAN for the barcode.  ")
 
     # fields to configure ISR payment slip generation
     l10n_ch_isr_subscription_chf = fields.Char(string='CHF ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in CHF. eg. 01-162-8')
@@ -103,6 +136,33 @@ class ResPartnerBank(models.Model):
         for bank in postal_banks:
             bank.sanitized_acc_number = bank.acc_number
         super(ResPartnerBank, self - postal_banks)._compute_sanitized_acc_number()
+
+    @api.depends('acc_number')
+    def _compute_l10n_ch_qr_iban(self):
+        for record in self:
+            try:
+                validate_qr_iban(record.acc_number)
+                valid_qr_iban = True
+            except ValidationError:
+                valid_qr_iban = False
+
+            if valid_qr_iban:
+                record.l10n_ch_qr_iban = record.sanitized_acc_number
+            else:
+                record.l10n_ch_qr_iban = None
+
+    @api.model
+    def create(self, vals):
+        if vals.get('l10n_ch_qr_iban'):
+            validate_qr_iban(vals['l10n_ch_qr_iban'])
+            vals['l10n_ch_qr_iban'] = pretty_iban(normalize_iban(vals['l10n_ch_qr_iban']))
+        return super().create(vals)
+
+    def write(self, vals):
+        if vals.get('l10n_ch_qr_iban'):
+            validate_qr_iban(vals['l10n_ch_qr_iban'])
+            vals['l10n_ch_qr_iban'] = pretty_iban(normalize_iban(vals['l10n_ch_qr_iban']))
+        return super().write(vals)
 
     @api.model
     def _get_supported_account_types(self):
@@ -197,10 +257,13 @@ class ResPartnerBank(models.Model):
         # just like ISR number for invoices)
         reference_type = 'NON'
         reference = ''
-        if self._is_qr_iban():
+        acc_number = self.sanitized_acc_number
+
+        if self.l10n_ch_qr_iban:
             # _check_for_qr_code_errors ensures we can't have a QR-IBAN without a QR-reference here
             reference_type = 'QRR'
             reference = structured_communication
+            acc_number = sanitize_account_number(self.l10n_ch_qr_iban)
 
         currency = currency or self.currency_id or self.company_id.currency_id
 
@@ -208,7 +271,7 @@ class ResPartnerBank(models.Model):
             'SPC',                                                # QR Type
             '0200',                                               # Version
             '1',                                                  # Coding Type
-            self.sanitized_acc_number,                            # IBAN
+            acc_number,                                           # IBAN / QR-IBAN
             'K',                                                  # Creditor Address Type
             (self.acc_holder_name or self.partner_id.name)[:70],  # Creditor Name
             creditor_addr_1,                                      # Creditor Address Line 1
@@ -248,24 +311,6 @@ class ResPartnerBank(models.Model):
         line_2 = partner.zip + ' ' + partner.city
         return line_1[:70], line_2[:70]
 
-    def _check_qr_iban_range(self, iban):
-        if not iban or len(iban) < 9:
-            return False
-        iid_start_index = 4
-        iid_end_index = 8
-        iid = iban[iid_start_index : iid_end_index+1]
-        return re.match('\d+', iid) \
-               and 30000 <= int(iid) <= 31999 # Those values for iid are reserved for QR-IBANs only
-
-    def _is_qr_iban(self):
-        """ Tells whether or not this bank account has a QR-IBAN account number.
-        QR-IBANs are specific identifiers used in Switzerland as references in
-        QR-codes. They are formed like regular IBANs, but are actually something
-        different.
-        """
-        return self.acc_type == 'iban' \
-               and self._check_qr_iban_range(self.sanitized_acc_number)
-
     @api.model
     def _is_qr_reference(self, reference):
         """ Checks whether the given reference is a QR-reference, i.e. it is
@@ -300,7 +345,7 @@ class ResPartnerBank(models.Model):
             if debtor_partner and not _partner_fields_set(debtor_partner):
                 return _("The partner the QR-code must have a complete postal address (street, zip, city and country).")
 
-            if self._is_qr_iban() and not self._is_qr_reference(structured_communication):
+            if self.l10n_ch_qr_iban and not self._is_qr_reference(structured_communication):
                 return _("When using a QR-IBAN as the destination account of a QR-code, the payment reference must be a QR-reference.")
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)

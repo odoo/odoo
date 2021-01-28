@@ -165,7 +165,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
     def test_swissQR_qriban(self):
         # Now use a proper QR-IBAN, we are good to print a QR Bill
         qriban_account = self.create_account(QR_IBAN)
-        self.assertTrue(qriban_account.acc_type, 'qr-iban')
+        self.assertTrue(qriban_account.l10n_ch_qr_iban)
         self.invoice1.partner_bank_id = qriban_account
         self.invoice1.action_post()
         self.swissqr_generated(self.invoice1, ref_type="QRR")
