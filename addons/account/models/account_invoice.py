@@ -1551,7 +1551,7 @@ class AccountInvoice(models.Model):
         values['date_due'] = values['date_invoice']
         values['state'] = 'draft'
         values['number'] = False
-        values['origin'] = invoice.number
+        values['origin'] = invoice.origin
         values['refund_invoice_id'] = invoice.id
         values['reference'] = False
 
