@@ -816,6 +816,21 @@ class Field(MetaField('DummyField', (object,), {})):
         self.update_db_column(model, column)
         self.update_db_notnull(model, column)
 
+        # optimization for computing simple related fields like 'foo_id.bar'
+        if (
+            not column
+            and len(self.related or ()) == 2
+            and self.related_field.store and not self.related_field.compute
+        ):
+            join_field = model._fields[self.related[0]]
+            if (
+                join_field.type == 'many2one'
+                and join_field.store and not join_field.compute
+            ):
+                model.pool.post_init(self.update_db_related, model)
+                # discard the "classical" computation
+                return False
+
         return not column
 
     def update_db_column(self, model, column):
@@ -865,6 +880,22 @@ class Field(MetaField('DummyField', (object,), {})):
 
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
+
+    def update_db_related(self, model):
+        """ Compute a stored related field directly in SQL. """
+        comodel = model.env[self.related_field.model_name]
+        model.env.cr.execute("""
+            UPDATE "{model_table}" AS x
+            SET "{model_field}" = y."{comodel_field}"
+            FROM "{comodel_table}" AS y
+            WHERE x."{join_field}" = y.id
+        """.format(
+            model_table=model._table,
+            model_field=self.name,
+            comodel_table=comodel._table,
+            comodel_field=self.related[1],
+            join_field=self.related[0],
+        ))
 
     ############################################################################
     #
