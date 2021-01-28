@@ -369,8 +369,28 @@ class ProductProduct(models.Model):
         self.clear_caches()
         return res
 
-    def _filter_to_unlink(self, check_access=True):
-        return self
+    def _filter_to_unlink(self):
+        fields_to_product = [
+            field
+            for model in self.env.values()
+            if not model._abstract
+            for field in model._fields.values()
+            if field.type == 'many2one'
+            and field.comodel_name == 'product.product'
+            and field.store
+            and field.ondelete == 'restrict'
+        ]
+        # TODO: a single raw sql request could work faster
+        to_unlink = self
+        for field in fields_to_product:
+            if not to_unlink:
+                break
+            domain = [(field.name, 'in', to_unlink.ids)]
+            records = self.env[field.model_name].read_group(domain, [field.name], [field.name])
+            linked_product_ids = [group[field.name][0] for group in records]
+            to_unlink = to_unlink - self.browse(linked_product_ids)
+
+        return to_unlink
 
     def _unlink_or_archive(self, check_access=True):
         """Unlink or archive products.
