@@ -276,6 +276,14 @@ var ColorpickerWidget = Widget.extend({
     _onClick: function (ev) {
         ev.originalEvent.__isColorpickerClick = true;
         $(ev.target).find('> .o_opacity_pointer, > .o_slider_pointer, > .o_picker_pointer').addBack('.o_opacity_pointer, .o_slider_pointer, .o_picker_pointer').focus();
+        
+        switch ($(ev.target).data('colorMethod')) {
+            case 'hex':
+                this.$('.o_hex_input').select();
+                break;
+            default:
+                break;
+        }
     },
     /**
      * Updates color when the user starts clicking on the picker.
