@@ -28,7 +28,8 @@ WebsiteNewMenu.include({
         return wUtils.prompt({
             id: "editor_new_product",
             window_title: _t("New Product"),
-            input: _t("Name"),
+            input: _t("Product Name"),
+            cta_title: _t("Create")
         }).then(function (result) {
             if (!result.val) {
                 return;
