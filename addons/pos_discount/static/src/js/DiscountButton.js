@@ -22,48 +22,25 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                 await self.apply_discount(val);
             }
         }
-
         async apply_discount(pc) {
             var order    = this.env.pos.get_order();
             var lines    = order.get_orderlines();
-            var product  = this.env.pos.db.get_product_by_id(this.env.pos.config.discount_product_id[0]);
-            if (product === undefined) {
-                await this.showPopup('ErrorPopup', {
-                    title : this.env._t("No discount product found"),
-                    body  : this.env._t("The discount product seems misconfigured. Make sure it is flagged as 'Can be Sold' and 'Available in Point of Sale'."),
-                });
-                return;
-            }
-
-            // Remove existing discounts
-            var i = 0;
-            while ( i < lines.length ) {
-                if (lines[i].get_product() === product) {
-                    order.remove_orderline(lines[i]);
-                } else {
-                    i++;
-                }
-            }
-
-            // Add discount
-            // We add the price as manually set to avoid recomputation when changing customer.
-            var base_to_discount = order.get_total_without_tax();
-            if (product.taxes_id.length){
-                var first_tax = this.env.pos.taxes_by_id[product.taxes_id[0]];
-                if (first_tax.price_include) {
-                    base_to_discount = order.get_total_with_tax();
-                }
-            }
-            var discount = - pc / 100.0 * base_to_discount;
-
-            if( discount < 0 ){
-                order.add_product(product, {
-                    price: discount,
-                    lst_price: discount,
-                    extras: {
-                        price_manually_set: true,
-                    },
-                });
+            for (const line of lines) {
+                // Don't just set the discount, stack it to the existing one.
+                // E.g. current discount = 20%, global discount to apply = 30%
+                // Price calculation will be = price * (1 - 0.20) * (1 - 0.30)
+                //
+                // But in an orderline, there can be only one discount, so we compute
+                // the 'net' discount before setting.
+                // (1 - prev) * (1 - new) = 1 - prev - new + prev * new
+                // If we pattern this to `total price = price * (1 - netdiscount)`,
+                // netdiscount = prev + new - prev * new;
+                //
+                // In above example, the net discount will be 0.2 + 0.3 - 0.06 = 0.44
+                const _prev = line.get_discount() / 100;
+                const _new = pc / 100;
+                const netdiscount = Math.round((_prev + _new - _prev * _new) * 100);
+                line.set_discount(netdiscount);
             }
         }
     }
@@ -72,7 +49,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
     ProductScreen.addControlButton({
         component: DiscountButton,
         condition: function() {
-            return this.env.pos.config.module_pos_discount && this.env.pos.config.discount_product_id;
+            return this.env.pos.config.module_pos_discount;
         },
     });
 
