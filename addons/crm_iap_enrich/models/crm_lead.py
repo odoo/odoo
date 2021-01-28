@@ -89,18 +89,24 @@ class Lead(models.Model):
                         except iap_tools.InsufficientCreditError:
                             _logger.info('Sent batch %s enrich requests: failed because of credit', len(lead_emails))
                             if not from_cron:
-                                data = {
-                                    'url': self.env['iap.account'].get_credits_url('reveal'),
-                                }
-                                self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
-                                    'message': self.env.ref('crm_iap_enrich.mail_message_lead_enrich_no_credit')._render(data),
-                                    'message_is_html': True,
-                                })
+                                self.env['iap.account']._send_iap_bus_notification(
+                                    service_name='reveal',
+                                    title=_("Not enough credits for Lead Enrichment"),
+                                    error_type='credit')
                             # Since there are no credits left, there is no point to process the other batches
                             break
                         except Exception as e:
+                            if not from_cron:
+                                self.env['iap.account']._send_iap_bus_notification(
+                                    service_name='reveal',
+                                    error_type="exception",
+                                    title=_('Sent batch %s enrich requests: failed with exception %s', len(lead_emails), e))
                             _logger.info('Sent batch %s enrich requests: failed with exception %s', len(lead_emails), e)
                         else:
+                            if not from_cron:
+                                self.env['iap.account']._send_iap_bus_notification(
+                                    service_name='reveal',
+                                    title=_("The leads/opportunities have successfully been enriched"))
                             _logger.info('Sent batch %s enrich requests: success', len(lead_emails))
                             self._iap_enrich_from_response(iap_response)
                 except OperationalError:

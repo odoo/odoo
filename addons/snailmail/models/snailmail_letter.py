@@ -344,6 +344,9 @@ class SnailmailLetter(models.Model):
         response = iap_tools.iap_jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
+                self.env['iap.account']._send_iap_bus_notification(
+                    service_name='snailmail',
+                    title=_("Snail Mails are successfully sent"))
                 note = _('The document was correctly sent by post.<br>The tracking id is %s', doc['send_id'])
                 letter_data = {'info_msg': note, 'state': 'sent', 'error_code': False}
                 notification_data = {
@@ -354,6 +357,11 @@ class SnailmailLetter(models.Model):
             else:
                 error = doc['error'] if response['request_code'] == 200 else response['reason']
 
+                if error == 'CREDIT_ERROR':
+                    self.env['iap.account']._send_iap_bus_notification(
+                        service_name='snailmail',
+                        title=_("Not enough credits for Snail Mail"),
+                        error_type="credit")
                 note = _('An error occurred when sending the document by post.<br>Error: %s', self._get_error_message(error))
                 letter_data = {
                     'info_msg': note,
