@@ -37,7 +37,18 @@ models.load_models({
 
         for(var i = 0; i < printers.length; i++){
             if(active_printers[printers[i].id]){
+<<<<<<< HEAD
                 var printer = self.create_printer(printers[i]);
+=======
+                var url = printers[i].proxy_ip || '';
+                if(url.indexOf('//') < 0){
+                    url = window.location.protocol + '//' + url;
+                }
+                if(url.indexOf(':',url.indexOf('//')+2) < 0 && window.location.protocol === 'http:'){
+                    url = url+':8069';
+                }
+                var printer = new Printer(self,{url:url});
+>>>>>>> a473d5f41aa... temp
                 printer.config = printers[i];
                 self.printers.push(printer);
 
