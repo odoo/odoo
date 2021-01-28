@@ -14,4 +14,4 @@ List of contributors:
 
 Csaba Tóth csaba.toth@i3rendszerhaz.hu https://github.com/tsabi
 Anna Szabó anna.szabo@i3rendszerhaz.hu
-Zsitva Miklós zsitva.miklos@online-erp.hu https://github.com/nurefexc
+Zsitva Miklós zsitva.miklos@online-erp.hu https://github.com/nurefexc nurefexc@users.noreply.github.com
