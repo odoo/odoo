@@ -62,7 +62,7 @@ models.load_models({
                 if(url.indexOf('//') < 0){
                     url = window.location.protocol + '//' + url;
                 }
-                if(url.indexOf(':',url.indexOf('//')+2) < 0 && window.location.protocol === 'http'){
+                if(url.indexOf(':',url.indexOf('//')+2) < 0 && window.location.protocol === 'http:'){
                     url = url+':8069';
                 }
                 var printer = new Printer(self,{url:url});
