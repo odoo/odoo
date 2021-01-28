@@ -1549,3 +1549,23 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {'amount_currency': 226.04,     'debit': 193.22,    'credit': 0.0},
             {'amount_currency': -7767.70,   'debit': 0.0,       'credit': 6640.19},
         ])
+
+    def test_zero_amount_statement_line(self):
+        ''' Ensure the statement line is directly marked as reconciled when having an amount of zero. '''
+        self.company_data['company'].account_journal_suspense_account_id.reconcile = False
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2017-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': "Happy new year",
+                    'amount': 0.0,
+                }),
+            ],
+        })
+        statement_line = statement.line_ids
+
+        self.assertRecordValues(statement_line, [{'is_reconciled': True, 'amount_residual': 0.0}])
