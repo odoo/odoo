@@ -23,13 +23,13 @@
                                 <t t-foreach="working_time" t-as="working_time_obj">
                                     <tr>
                                         <td>
-                                            <span t-field="working_time_obj.name"/>.
+                                            <span t-field="working_time_obj.name" />.
                                         </td>
                                         <td>
-                                            <span t-field="working_time_obj.from_time"/>
+                                            <t t-esc="'%02d:%02d' % (int(working_time_obj.from_time), working_time_obj.from_time % 1 * 60)" />
                                         </td>
                                         <td>
-                                            <span t-field="working_time_obj.to_time"/>
+                                            <t t-esc="'%02d:%02d' % (int(working_time_obj.to_time), working_time_obj.to_time % 1 * 60)" />
                                         </td>
                                     </tr>
                                 </t>
@@ -54,8 +54,7 @@
                                             <span t-field="salon_service_obj.price"/>
                                         </td>
                                         <td>
-                                            <span t-field="salon_service_obj.time_taken"/>
-                                            <span>h</span>
+                                            <span t-esc="'%d min' % (int(salon_service_obj.time_taken)*60 + (salon_service_obj.time_taken % 1 * 60))"/>
                                         </td>
                                     </tr>
                                 </t>

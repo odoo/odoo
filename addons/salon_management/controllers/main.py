@@ -86,8 +86,31 @@ class SalonBookingWeb(http.Controller):
         
         return json.dumps({'result': True})
 
-    @http.route('/page/salon_check_date', type='json', auth="public", website=True)
-    def salon_check(self, **kwargs):
+    @http.route('/page/salon_check_date_booked_court', type='json', auth="public", website=True)
+    def salon_check_booked_court(self, **kwargs):
+        date_check = str(kwargs.get('check_date'))
+        order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
+                                                       ('stage_id', 'in', [1, 2, 3]),
+                                                       ('start_date_only', '=', datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d'))])
+        order_details = {}
+        for orders in order_obj:
+            # This block of function might not included if timzone configuration is right when deployed 
+            time_start_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            time_end_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            # This block of function might not included if timzone configuration is right when deployed 
+            data = {
+                'number': orders.id,
+                'start_time_only': time_start_local_pp,
+                'end_time_only': time_end_local_pp
+            }
+            if orders.chair_id.id not in order_details:
+                order_details[orders.chair_id.id] = {'name': orders.chair_id.name, 'orders': [data]}
+            else:
+                order_details[orders.chair_id.id]['orders'].append(data)
+        return order_details
+    
+    @http.route('/page/salon_check_date_available_court', type='json', auth="public", website=True)
+    def salon_check_available_court(self, **kwargs):
         date_check = str(kwargs.get('check_date'))
         order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
                                                        ('stage_id', 'in', [1, 2, 3]),
@@ -124,9 +147,8 @@ class SalonBookingWeb(http.Controller):
                                                        ('stage_id', 'in', [1, 2, 3])])
         salon_service_obj = request.env['salon.service'].search([])
         order_obj = order_obj.search([('start_date_only', '=', date_check)])
-        
-        court_option = ["Booked Court","Available Court"]
         booking_payment_obj = request.env['salon.booking.payment'].search([('activate_payment','=',True)])
+        court_option = ["Booked Court","Available Court"]
         return request.render('salon_management.salon_booking_form',
                               {'chair_details': chair_obj, 'order_details': order_obj,
                                 'duration_details': duration_obj, 
