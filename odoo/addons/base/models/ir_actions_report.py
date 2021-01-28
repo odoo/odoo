@@ -248,7 +248,6 @@ class IrActionsReport(models.Model):
         '''
         return wkhtmltopdf_state
 
-    @api.model
     def get_paperformat(self):
         return self.paperformat_id or self.env.company.paperformat_id
 
@@ -844,12 +843,10 @@ class IrActionsReport(models.Model):
         data = self._get_rendering_context(docids, data)
         return self._render_template(self.sudo().report_name, data), 'html'
 
-    @api.model
     def _get_rendering_context_model(self):
         report_model_name = 'report.%s' % self.report_name
         return self.env.get(report_model_name)
 
-    @api.model
     def _get_rendering_context(self, docids, data):
         # access the report details with sudo() but evaluation context as current user
         self_sudo = self.sudo()
