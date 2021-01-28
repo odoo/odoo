@@ -433,3 +433,47 @@ class TestCustomFields(common.TransactionCase):
         custom_binary = self.env[self.MODEL]._fields['x_image']
 
         self.assertTrue(custom_binary.attachment)
+
+    def test_related_field(self):
+        """ create a custom related field, and check filled values """
+        #
+        # Add a custom field equivalent to the following definition:
+        #
+        # class Partner(models.Model)
+        #     _inherit = 'res.partner'
+        #     x_oh_boy = fields.Char(related="country_id.code", store=True)
+        #
+
+        # pick N=100 records in comodel
+        countries = self.env['res.country'].search([('code', '!=', False)], limit=100)
+        self.assertEqual(len(countries), 100, "Not enough records in comodel 'res.country'")
+
+        # create records in model, with N distinct values for the related field
+        partners = self.env['res.partner'].create([
+            {'name': country.code, 'country_id': country.id} for country in countries
+        ])
+
+        # determine how many queries it takes to create a non-computed field
+        query_count = self.cr.sql_log_count
+        self.env['ir.model.fields'].create({
+            'model_id': self.env['ir.model']._get_id('res.partner'),
+            'name': 'x_oh_box',
+            'field_description': 'x_oh_box',
+            'ttype': 'char',
+        })
+        query_count = self.cr.sql_log_count - query_count
+
+        # create the related field, and assert it only takes 3 extra queries
+        with self.assertQueryCount(query_count + 3):
+            self.env['ir.model.fields'].create({
+                'model_id': self.env['ir.model']._get_id('res.partner'),
+                'name': 'x_oh_boy',
+                'field_description': 'x_oh_boy',
+                'ttype': 'char',
+                'related': 'country_id.code',
+                'store': True,
+            })
+
+        # check the computed values
+        for partner in partners:
+            self.assertEqual(partner.x_oh_boy, partner.country_id.code)
