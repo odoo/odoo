@@ -8,4 +8,11 @@
         <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
     </record>
 
+    <record model="ir.rule" id="website_blog_public">
+        <field name="name">Blog: active only</field>
+        <field name="model_id" ref="model_blog_blog"/>
+        <field name="domain_force">[('active', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+
 </odoo>
