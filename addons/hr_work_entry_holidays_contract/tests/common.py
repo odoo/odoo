@@ -7,11 +7,11 @@ from odoo.fields import Datetime
 from odoo.addons.hr_work_entry_contract.tests.common import TestWorkEntryBase
 
 
-class TestWorkEntryHolidaysBase(TestWorkEntryBase):
+class TestWorkEntryHolidaysContractBase(TestWorkEntryBase):
 
     @classmethod
     def setUpClass(cls):
-        super(TestWorkEntryHolidaysBase, cls).setUpClass()
+        super(TestWorkEntryHolidaysContractBase, cls).setUpClass()
 
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',

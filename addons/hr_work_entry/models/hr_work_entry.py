@@ -4,6 +4,7 @@
 from contextlib import contextmanager
 from dateutil.relativedelta import relativedelta
 from psycopg2 import OperationalError
+from itertools import chain
 
 from odoo import api, fields, models
 
@@ -207,6 +208,10 @@ class HrWorkEntry(models.Model):
                 # no need to reload work entries.
                 work_entries.exists()._check_if_error()
 
+    @api.model
+    def _from_intervals(self, intervals):
+        return self.browse(chain.from_iterable(recs.ids for start, end, recs in intervals))
+
 
 class HrWorkEntryType(models.Model):
     _name = 'hr.work.entry.type'
@@ -219,6 +224,8 @@ class HrWorkEntryType(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
+    # This field is used in both hr_work_entry_holidays and hr_work_entry_contract
+    is_leave = fields.Boolean(default=False, string="Time Off")
 
     _sql_constraints = [
         ('unique_work_entry_code', 'UNIQUE(code)', 'The same code cannot be associated to multiple work entry types.'),

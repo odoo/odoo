@@ -7,6 +7,14 @@
             <field name="name">Attendance</field>
             <field name="color">0</field>
             <field name="code">WORK100</field>
+            <field name="is_leave">False</field>
+        </record>
+
+        <record id="work_entry_type_absence" model="hr.work.entry.type">
+            <field name="name">Absence</field>
+            <field name="color">3</field>
+            <field name="code">LEAVE101</field>
+            <field name="is_leave">True</field>
         </record>
 
     </data>

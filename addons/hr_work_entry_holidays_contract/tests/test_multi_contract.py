@@ -3,10 +3,10 @@
 
 from datetime import datetime
 from odoo.exceptions import ValidationError
-from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.addons.hr_work_entry_holidays_contract.tests.common import TestWorkEntryHolidaysContractBase
 
 
-class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysBase):
+class TestWorkEntryHolidaysMultiContract(TestWorkEntryHolidaysContractBase):
 
     def setUp(self):
         super().setUp()

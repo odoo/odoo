@@ -146,10 +146,3 @@ class HrWorkEntry(models.Model):
     @api.model
     def _from_intervals(self, intervals):
         return self.browse(chain.from_iterable(recs.ids for start, end, recs in intervals))
-
-
-class HrWorkEntryType(models.Model):
-    _inherit = 'hr.work.entry.type'
-    _description = 'HR Work Entry Type'
-
-    is_leave = fields.Boolean(default=False, string="Time Off")

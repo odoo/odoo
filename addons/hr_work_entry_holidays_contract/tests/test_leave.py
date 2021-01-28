@@ -4,10 +4,14 @@
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.addons.hr_work_entry_holidays_contract.tests.common import TestWorkEntryHolidaysContractBase
 
 
-class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
+class TestWorkEntryLeave(TestWorkEntryHolidaysContractBase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
 
     def test_resource_leave_has_work_entry_type(self):
         leave = self.create_leave()
@@ -119,7 +123,7 @@ class TestWorkEntryLeave(TestWorkEntryHolidaysBase):
 
         leave = self.create_leave(start, end)
         leave.action_validate()
-        work_entries = self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id), ('date_start', '<=', end), ('date_stop', '>=', start)])
+        self.env['hr.work.entry'].search([('employee_id', '=', self.richard_emp.id), ('date_start', '<=', end), ('date_stop', '>=', start)])
         leave_work_entry = self.richard_emp.contract_ids._generate_work_entries(start, end)
         self.assertEqual(leave_work_entry[:1].leave_id, leave)
         leave.action_refuse()

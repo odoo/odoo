@@ -3,15 +3,14 @@
 
 from datetime import datetime, date
 
-from odoo.addons.hr_work_entry_holidays.tests.common import TestWorkEntryHolidaysBase
+from odoo.addons.hr_work_entry_holidays_contract.tests.common import TestWorkEntryHolidaysContractBase
 
 
-class TestPayslipHolidaysComputation(TestWorkEntryHolidaysBase):
+class TestPayslipHolidaysComputation(TestWorkEntryHolidaysContractBase):
 
     @classmethod
     def setUpClass(cls):
-        # arj fixme: check if this works with setUpClass
-        super().setUp()
+        super().setUpClass()
 
         cls.leave_type = cls.env['hr.leave.type'].create({
             'name': 'Legal Leaves',

@@ -2,10 +2,10 @@
 <odoo>
         <!-- add work_entry type to leave type -->
         <record id="hr_holidays.holiday_status_unpaid" model="hr.leave.type">
-            <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_unpaid_leave"></field>
+            <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_absence"></field>
         </record>
 
         <record id="hr_holidays.holiday_status_comp" model="hr.leave.type">
-            <field name="work_entry_type_id" ref="hr_work_entry_contract.work_entry_type_leave"></field>
+            <field name="work_entry_type_id" ref="hr_work_entry.work_entry_type_absence"></field>
         </record>
 </odoo>

@@ -26,17 +26,4 @@
         </field>
     </record>
 
-    <record id="hr_work_entry_contract_type_view_form_inherit" model="ir.ui.view">
-        <field name="name">hr.work.entry.type.contract.view.form.inherit</field>
-        <field name="model">hr.work.entry.type</field>
-        <field name="inherit_id" ref="hr_work_entry.hr_work_entry_type_view_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='identification']" position="after">
-                <group>
-                    <field name="is_leave"/>
-                </group>
-            </xpath>
-        </field>
-    </record>
-
 </odoo>
