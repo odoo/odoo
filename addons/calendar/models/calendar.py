@@ -1124,6 +1124,9 @@ class Meeting(models.Model):
         if 'id' not in order_fields:
             order_fields.append('id')
 
+        # code does not handle '!' operator
+        domain = expression.distribute_not(expression.normalize_domain(domain))
+
         leaf_evaluations = None
         recurrent_ids = [meeting.id for meeting in self if meeting.recurrency and meeting.rrule]
         #compose a query of the type SELECT id, condition1 as domain1, condition2 as domaine2
