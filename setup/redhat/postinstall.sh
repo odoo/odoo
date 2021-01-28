@@ -9,6 +9,7 @@ ODOO_GROUP="odoo"
 ODOO_LOG_DIR=/var/log/odoo
 ODOO_LOG_FILE=$ODOO_LOG_DIR/odoo-server.log
 ODOO_USER="odoo"
+ABI=$(rpm -q --provides python3 | awk '/abi/ {print $NF}')
 
 if ! getent passwd | grep -q "^odoo:"; then
     groupadd $ODOO_GROUP
@@ -28,7 +29,7 @@ db_host = False
 db_port = False
 db_user = $ODOO_USER
 db_password = False
-addons_path = /usr/lib/python3.7/site-packages/odoo/addons
+addons_path = /usr/lib/python${ABI}/site-packages/odoo/addons
 " > $ODOO_CONFIGURATION_FILE
     chown $ODOO_USER:$ODOO_GROUP $ODOO_CONFIGURATION_FILE
     chmod 0640 $ODOO_CONFIGURATION_FILE
