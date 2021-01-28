@@ -51,8 +51,12 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
 
     $(document).on('click', "#check_button", function() {
         var check_date = $("#check_date").val();
+        var court_option = $("#court_option_infor").val();
+
         if (check_date != "") {
-            ajax.jsonRpc("/page/salon_check_date", 'call', { 'check_date': check_date })
+            if(court_option == "Booked Court")
+            {
+                ajax.jsonRpc("/page/salon_check_date", 'call', { 'check_date': check_date })
                 .then(function(order_details) {
                     var x;
                     var total_orders = "";
@@ -86,6 +90,12 @@ odoo.define('salon_management.website_salon_booking_system', function(require) {
                     date_field.innerHTML = "";
                     date_field.innerHTML = date_value;
                 })
+            }
+            else
+            {
+                alert("Available Booking Court Coming Soon")
+            }
+            
         } else {
             alert("Fill the Field");
         }

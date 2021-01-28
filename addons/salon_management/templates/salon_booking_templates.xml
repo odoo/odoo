@@ -181,9 +181,9 @@
                             <h5>Select Court Infor : </h5>
                         </div>
                         <div class="col">
-                            <select id="chair" required="True">
+                            <select id="court_option_infor" required="True">
                                 <t t-foreach="court_option" t-as="option">
-                                    <option t-att-value="option" t-esc="option"/>
+                                    <option t-esc="option"/>
                                 </t>
                             </select>
                         </div>
