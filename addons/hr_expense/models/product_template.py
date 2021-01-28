@@ -15,7 +15,7 @@ class ProductTemplate(models.Model):
         for vals in vals_list:
             # When creating an expense product on the fly, you don't expect to
             # have taxes on it
-            if vals.get('can_be_expensed', False):
+            if vals.get('can_be_expensed', False) and not self.env.context.get('import_file'):
                 vals.update({'supplier_taxes_id': False})
         return super(ProductTemplate, self).create(vals_list)
 
