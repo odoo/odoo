@@ -88,7 +88,7 @@ class Meeting(models.Model):
         attendee_commands = []
         partner_commands = []
         google_attendees = google_event.attendees or []
-        if google_event.organizer and google_event.organizer.get('self', False):
+        if len(google_attendees) == 0 and google_event.organizer and google_event.organizer.get('self', False):
             user = google_event.owner(self.env)
             google_attendees += [{
                 'email': user.partner_id.email,
@@ -107,7 +107,7 @@ class Meeting(models.Model):
                 attendee_commands += [(1, attendees_by_emails[email].id, {'state': attendee.get('responseStatus')})]
             else:
                 # Create new attendees
-                partner = self.env['res.partner'].find_or_create(attendee.get('email'))
+                partner = self.env.user.partner_id if attendee.get('self') else self.env['res.partner'].find_or_create(attendee.get('email'))
                 attendee_commands += [(0, 0, {'state': attendee.get('responseStatus'), 'partner_id': partner.id})]
                 partner_commands += [(4, partner.id)]
                 if attendee.get('displayName') and not partner.name:
