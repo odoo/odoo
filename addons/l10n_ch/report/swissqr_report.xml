@@ -37,7 +37,9 @@
                         <div id="receipt_indication_zone" class="swissqr_column_left receipt_indication_zone">
                             <div class="swissqr_text">
                               <span class="title">Account / Payable to</span><br/>
-                              <span class="content" t-field="o.partner_bank_id.acc_number"/><br/>
+                              <span class="content" t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
+                              <span class="content" t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
+                              <br/>
                               <span class="content" t-field="o.company_id.name"/><br/>
                               <span class="content" t-field="o.company_id.street"/><br/>
                               <span class="content" t-field="o.company_id.country_id.code"/>
@@ -45,7 +47,7 @@
                               <span class="content" t-field="o.company_id.city"/><br/>
                             </div>
 
-                            <t t-if="o.partner_bank_id._is_qr_iban()">
+                            <t t-if="o.partner_bank_id.l10n_ch_qr_iban">
                                 <div class="swissqr_text">
                                     <span class="title">Reference</span><br/>
                                     <span class="content" t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
@@ -93,7 +95,9 @@
                         <div id="indications_zone" class="swissqr_column_right indication_zone">
                             <div class="swissqr_text">
                                 <span class="title">Account / Payable to</span><br/>
-                                <span class="content" t-field="o.partner_bank_id.acc_number"/><br/>
+                                <span class="content" t-field="o.partner_bank_id.acc_number" t-if="not o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <span class="content" t-field="o.partner_bank_id.l10n_ch_qr_iban" t-if="o.partner_bank_id.l10n_ch_qr_iban"/>
+                                <br/>
                                 <span class="content" t-field="o.company_id.name"/><br/>
                                 <span class="content" t-field="o.company_id.street"/><br/>
                                 <span class="content" t-field="o.company_id.country_id.code"/>
@@ -101,14 +105,14 @@
                                 <span class="content" t-field="o.company_id.city"/><br/>
                             </div>
 
-                            <t t-if="o.partner_bank_id._is_qr_iban()">
+                            <t t-if="o.partner_bank_id.l10n_ch_qr_iban">
                                 <div class="swissqr_text">
                                     <span class="title">Reference</span><br/>
                                     <span class="content" t-esc="o.space_qrr_reference(o.payment_reference)"/><br/>
                                 </div>
                             </t>
 
-                            <t t-set="additional_info" t-value="(o.ref or o.name if o.partner_bank_id._is_qr_iban() else o.payment_reference or o.ref or o.name)"/>
+                            <t t-set="additional_info" t-value="(o.ref or o.name if o.partner_bank_id.l10n_ch_qr_iban else o.payment_reference or o.ref or o.name)"/>
                             <t t-if="additional_info">
                                 <div class="swissqr_text">
                                     <span class="title">Additional information</span><br/>

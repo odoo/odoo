@@ -119,9 +119,7 @@ class AccountMove(models.Model):
                 (3) 1: control digit for identification number and reference
         """
         for record in self:
-            has_qriban = record.partner_bank_id and record.partner_bank_id._is_qr_iban() or False
-            isr_subscription = record.l10n_ch_isr_subscription
-            if (has_qriban or isr_subscription) and record.name:
+            if (record.partner_bank_id.l10n_ch_qr_iban or record.l10n_ch_isr_subscription) and record.name:
                 id_number = record._get_isrb_id_number()
                 if id_number:
                     id_number = id_number.zfill(l10n_ch_ISR_ID_NUM_LENGTH)
@@ -246,7 +244,7 @@ class AccountMove(models.Model):
         for inv in self:
             if inv.move_type == 'in_invoice' and inv.company_id.account_fiscal_country_id.code == "CH":
                 partner_bank = inv.partner_bank_id
-                needs_isr_ref = partner_bank._is_qr_iban() or partner_bank._is_isr_issuer()
+                needs_isr_ref = partner_bank.l10n_ch_qr_iban or partner_bank._is_isr_issuer()
                 if needs_isr_ref and not inv._has_isr_ref():
                     inv.l10n_ch_isr_needs_fixing = True
                     continue
