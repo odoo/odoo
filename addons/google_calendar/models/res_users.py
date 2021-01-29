@@ -51,12 +51,12 @@ class User(models.Model):
 
     def _get_google_calendar_token(self):
         self.ensure_one()
-        if self._is_google_calendar_valid():
+        if self.google_calendar_rtoken and not self._is_google_calendar_valid():
             self._refresh_google_calendar_token()
         return self.google_calendar_token
 
     def _is_google_calendar_valid(self):
-        return self.google_calendar_token_validity and self.google_calendar_token_validity < (fields.Datetime.now() + timedelta(minutes=1))
+        return self.google_calendar_token_validity and self.google_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
 
     def _refresh_google_calendar_token(self):
         # LUL TODO similar code exists in google_drive. Should be factorized in google_account
@@ -84,10 +84,11 @@ class User(models.Model):
                 'google_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
             })
         except requests.HTTPError as error:
-            if error.response.status_code == 400:  # invalid grant
+            if error.response.status_code in (400, 401):  # invalid grant or invalid client
                 # Delete refresh token and make sure it's commited
-                with self.pool.cursor() as cr:
-                    self.env.user.with_env(self.env(cr=cr)).write({'google_calendar_rtoken': False})
+                self.env.cr.rollback()
+                self._set_auth_tokens(False, False, 0)
+                self.env.cr.commit()
             error_key = error.response.json().get("error", "nc")
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]", error_key)
             raise UserError(error_msg)
@@ -129,8 +130,10 @@ class User(models.Model):
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
                 user.with_user(user).sudo()._sync_google_calendar(google)
+                self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+                self.env.cr.rollback()
 
     def stop_google_synchronization(self):
         self.ensure_one()

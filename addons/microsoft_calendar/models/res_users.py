@@ -39,12 +39,12 @@ class User(models.Model):
 
     def _get_microsoft_calendar_token(self):
         self.ensure_one()
-        if self._is_microsoft_calendar_valid():
+        if self.microsoft_calendar_rtoken and not self._is_microsoft_calendar_valid():
             self._refresh_microsoft_calendar_token()
         return self.microsoft_calendar_token
 
     def _is_microsoft_calendar_valid(self):
-        return self.microsoft_calendar_token_validity and self.microsoft_calendar_token_validity < (fields.Datetime.now() + timedelta(minutes=1))
+        return self.microsoft_calendar_token_validity and self.microsoft_calendar_token_validity >= (fields.Datetime.now() + timedelta(minutes=1))
 
     def _refresh_microsoft_calendar_token(self):
         self.ensure_one()
@@ -72,10 +72,15 @@ class User(models.Model):
                 'microsoft_calendar_token_validity': fields.Datetime.now() + timedelta(seconds=ttl),
             })
         except requests.HTTPError as error:
-            if error.response.status_code == 400:  # invalid grant
+            if error.response.status_code in (400, 401):  # invalid grant
                 # Delete refresh token and make sure it's commited
-                with self.pool.cursor() as cr:
-                    self.env.user.with_env(self.env(cr=cr)).write({'microsoft_calendar_rtoken': False})
+                self.env.cr.rollback()
+                self.write({
+                    'microsoft_calendar_rtoken': False,
+                    'microsoft_calendar_token': False,
+                    'microsoft_calendar_token_validity': False,
+                })
+                self.env.cr.commit()
             error_key = error.response.json().get("error", "nc")
             error_msg = _("Something went wrong during your token generation. Maybe your Authorization Code is invalid or already expired [%s]", error_key)
             raise UserError(error_msg)
@@ -117,8 +122,10 @@ class User(models.Model):
             _logger.info("Calendar Synchro - Starting synchronization for %s", user)
             try:
                 user.with_user(user).sudo()._sync_microsoft_calendar(microsoft)
+                self.env.cr.commit()
             except Exception as e:
                 _logger.exception("[%s] Calendar Synchro - Exception : %s !", user, exception_to_unicode(e))
+                self.env.cr.rollback()
 
     def stop_microsoft_synchronization(self):
         self.ensure_one()
