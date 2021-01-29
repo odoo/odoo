@@ -48,18 +48,8 @@ def after_commit(func):
 
 @contextmanager
 def microsoft_calendar_token(user):
-    try:
-        yield user._get_microsoft_calendar_token()
-    except requests.HTTPError as e:
-        if e.response.status_code == 401:  # Invalid token.
-            # The transaction should be rolledback, but the user's tokens
-            # should be reset. The user will be asked to authenticate again next time.
-            # Rollback manually first to avoid concurrent access errors/deadlocks.
-            user.env.cr.rollback()
-            with user.pool.cursor() as cr:
-                env = user.env(cr=cr)
-                user.with_env(env)._set_microsoft_auth_tokens(False, False, 0)
-        raise e
+    yield user._get_microsoft_calendar_token()
+
 
 class MicrosoftSync(models.AbstractModel):
     _name = 'microsoft.calendar.sync'
