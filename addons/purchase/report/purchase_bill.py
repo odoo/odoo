@@ -1,7 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+<<<<<<< HEAD
 from odoo import api, fields, models, tools
+||||||| parent of bd4d8766af6 (temp)
+from odoo import fields, models, tools
+=======
+from odoo import api, fields, models, tools
+from odoo.osv import expression
+>>>>>>> bd4d8766af6 (temp)
 from odoo.tools import formatLang
 
 class PurchaseBillUnion(models.Model):
@@ -51,4 +58,21 @@ class PurchaseBillUnion(models.Model):
             if doc.purchase_order_id and doc.purchase_order_id.invoice_status == 'no':
                 amount = 0.0
             name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
+<<<<<<< HEAD
             doc.display_name = name
+||||||| parent of bd4d8766af6 (temp)
+            result.append((doc.id, name))
+        return result
+=======
+            result.append((doc.id, name))
+        return result
+
+    @api.model
+    def _name_search(self, name, args=None, operator='ilike', limit=100, name_get_uid=None):
+        args = args or []
+        domain = []
+        if name:
+            domain = ['|', ('name', operator, name), ('reference', operator, name)]
+        purchase_bills_union_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
+        return self.browse(purchase_bills_union_ids).name_get()
+>>>>>>> bd4d8766af6 (temp)
