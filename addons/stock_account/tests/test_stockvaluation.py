@@ -479,14 +479,7 @@ class TestStockValuation(SavepointCase):
         move6._action_confirm()
         move6._action_assign()
         move6.move_line_ids.qty_done = 10.0
-        move6._action_done()
-
-        # stock_account values for move6
-        self.assertEqual(move6.product_uom_qty, 10)
-        self.assertEqual(move6.price_unit, 12.0)
-        self.assertEqual(move6.remaining_qty, 10.0)
-        self.assertEqual(move6.value, 120)
-        self.assertEqual(move6.remaining_value, 120)
+        move6._action_done()  # move6 triggers vacuum
 
         # account values for move6
         input_aml = self._get_stock_input_move_lines()
@@ -496,8 +489,8 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(move6_input_aml.credit, 120)
 
         valuation_aml = self._get_stock_valuation_move_lines()
-        move6_valuation_aml = valuation_aml[-1]
-        self.assertEqual(len(valuation_aml), 7)
+        move6_valuation_aml = valuation_aml[-2]
+        self.assertEqual(len(valuation_aml), 8)
         self.assertEqual(move6_valuation_aml.debit, 120)
         self.assertEqual(move6_valuation_aml.credit, 0)
         self.assertEqual(move6_valuation_aml.product_id.id, self.product1.id)
@@ -505,45 +498,11 @@ class TestStockValuation(SavepointCase):
         self.assertEqual(move6_valuation_aml.product_uom_id.id, self.uom_unit.id)
 
         output_aml = self._get_stock_output_move_lines()
-        self.assertEqual(len(output_aml), 3)
+        self.assertEqual(len(output_aml), 4)
 
         # link between stock move and account move
         self.assertEqual(len(move6.account_move_ids), 1)
         self.assertTrue(set(move6.account_move_ids.line_ids.ids) == {move6_valuation_aml.id, move6_input_aml.id})
-
-        # older moves
-        self.assertEqual(move1.product_uom_qty, 12)
-        self.assertEqual(move1.price_unit, 10.0)
-        self.assertEqual(move1.remaining_qty, 0)
-        self.assertEqual(move1.value, 120)
-        self.assertEqual(move1.remaining_value, 0)
-        self.assertEqual(move2.product_uom_qty, 10.0)
-        self.assertEqual(move2.price_unit, 8.0)
-        self.assertEqual(move2.remaining_qty, 0)
-        self.assertEqual(move2.value, 80.0)
-        self.assertEqual(move2.remaining_value, 0)
-        self.assertEqual(move3.product_uom_qty, 3.0)
-        self.assertEqual(move3.remaining_qty, 0.0)
-        self.assertEqual(move3.value, -30.0)
-        self.assertEqual(move3.remaining_value, 0.0)
-        self.assertEqual(move4.product_uom_qty, 9.0)
-        self.assertEqual(move4.remaining_qty, 0.0)
-        self.assertEqual(move4.value, -90.0)
-        self.assertEqual(move4.remaining_value, 0)
-        self.assertEqual(move5.product_uom_qty, 20.0)
-        self.assertEqual(move5.remaining_qty, -10.0)
-        self.assertEqual(move5.value, -160.0)
-        self.assertEqual(move5.remaining_value, -80.0)
-        self.assertTrue(set(move1.account_move_ids.mapped('line_ids').ids) == {move1_input_aml.id, move1_valuation_aml.id, move1_correction_input_aml.id, move1_correction_valuation_aml.id})
-        self.assertTrue(set(move2.account_move_ids.line_ids.ids) == {move2_valuation_aml.id, move2_input_aml.id})
-        self.assertTrue(set(move3.account_move_ids.line_ids.ids) == {move3_valuation_aml.id, move3_output_aml.id})
-        self.assertTrue(set(move4.account_move_ids.line_ids.ids) == {move4_valuation_aml.id, move4_output_aml.id})
-        self.assertTrue(set(move5.account_move_ids.line_ids.ids) == {move5_valuation_aml.id, move5_output_aml.id})
-
-        # ---------------------------------------------------------------------
-        # Vacuum is called, we cleanup the negatives.
-        # ---------------------------------------------------------------------
-        self.env['stock.move']._run_fifo_vacuum()
 
         # account values after vacuum
         input_aml = self._get_stock_input_move_lines()
@@ -654,25 +613,18 @@ class TestStockValuation(SavepointCase):
         move7._action_confirm()
         move7._action_assign()
         move7.move_line_ids.qty_done = 4.0
-        move7._action_done()
-
-        # stock_account values for move1
-        self.assertEqual(move7.product_uom_qty, 4.0)
-        self.assertEqual(move7.price_unit, 15.0)
-        self.assertEqual(move7.remaining_qty, 4.0)
-        self.assertEqual(move7.value, 60.0)
-        self.assertEqual(move7.remaining_value, 60.0)
+        move7._action_done()  # move7 triggers vacuum
 
         # account values for move7
         input_aml = self._get_stock_input_move_lines()
-        self.assertEqual(len(input_aml), 6)
-        move7_input_aml = input_aml[-1]
+        self.assertEqual(len(input_aml), 7)
+        move7_input_aml = input_aml[-2]
         self.assertEqual(move7_input_aml.debit, 0)
         self.assertEqual(move7_input_aml.credit, 60)
 
         valuation_aml = self._get_stock_valuation_move_lines()
-        move7_valuation_aml = valuation_aml[-1]
-        self.assertEqual(len(valuation_aml), 10)
+        move7_valuation_aml = valuation_aml[-2]
+        self.assertEqual(len(valuation_aml), 11)
         self.assertEqual(move7_valuation_aml.debit, 60)
         self.assertEqual(move7_valuation_aml.credit, 0)
         self.assertEqual(move7_valuation_aml.product_id.id, self.product1.id)
@@ -682,11 +634,6 @@ class TestStockValuation(SavepointCase):
         # link between stock move and account move
         self.assertEqual(len(move7.account_move_ids), 1)
         self.assertTrue(set(move7.account_move_ids.line_ids.ids) == {move7_valuation_aml.id, move7_input_aml.id})
-
-        # -----------------------------------------------------------
-        # vacuum, compensate in
-        # -----------------------------------------------------------
-        self.env['stock.move']._run_fifo_vacuum()
 
         # account values after vacuum
         input_aml = self._get_stock_input_move_lines()
@@ -1289,28 +1236,7 @@ class TestStockValuation(SavepointCase):
             })]
         })
         move2._action_confirm()
-        move2._action_done()
-
-        # stock values for move2
-        self.assertEqual(move2.value, 600.0)
-        self.assertEqual(move2.remaining_qty, 40.0)
-        self.assertEqual(move2.price_unit, 15.0)
-        self.assertEqual(move2.remaining_value, 600.0)
-
-        # account values for move2
-        valuation_aml = self._get_stock_valuation_move_lines()
-        move2_valuation_aml = valuation_aml[-1]
-        self.assertEqual(move2_valuation_aml.debit, 600)
-        self.assertEqual(move2_valuation_aml.credit, 0)
-        input_aml = self._get_stock_input_move_lines()
-        move2_input_aml = input_aml[-1]
-        self.assertEqual(move2_input_aml.debit, 0)
-        self.assertEqual(move2_input_aml.credit, 600)
-
-        # ---------------------------------------------------------------------
-        # Run the vacuum
-        # ---------------------------------------------------------------------
-        self.env['stock.move']._run_fifo_vacuum()
+        move2._action_done()  #move2 triggers vacuum
 
         # stock values for move1 and move2
         self.assertEqual(move1.value, -680.0)  # 40@15 + 10@8
@@ -1355,27 +1281,7 @@ class TestStockValuation(SavepointCase):
             })]
         })
         move3._action_confirm()
-        move3._action_done()
-
-        # stock values for move3
-        self.assertEqual(move3.value, 500.0)
-        self.assertEqual(move3.remaining_value, 500.0)
-        self.assertEqual(move3.remaining_qty, 20.0)
-
-        # account values for move3
-        valuation_aml = self._get_stock_valuation_move_lines()
-        move3_valuation_aml = valuation_aml[-1]
-        self.assertEqual(move3_valuation_aml.debit, 500)
-        self.assertEqual(move3_valuation_aml.credit, 0)
-        input_aml = self._get_stock_input_move_lines()
-        move3_input_aml = input_aml[-1]
-        self.assertEqual(move3_input_aml.debit, 0)
-        self.assertEqual(move3_input_aml.credit, 500)
-
-        # ---------------------------------------------------------------------
-        # Run the vacuum
-        # ---------------------------------------------------------------------
-        self.env['stock.move']._run_fifo_vacuum()
+        move3._action_done()  #move3 triggers vacuum
 
         # stock values for move1-3
         self.assertEqual(move1.value, -850.0)  # 40@15 + 10@25
@@ -1750,7 +1656,6 @@ class TestStockValuation(SavepointCase):
         DO02 1 product2
         DO02 correction 1 -> 2 (negative stock)
         IN03 2@30 product2
-        vacuum
         """
         self.product1.categ_id.property_cost_method = 'fifo'
 
@@ -1953,15 +1858,7 @@ class TestStockValuation(SavepointCase):
             })]
         })
         move5._action_confirm()
-        move5._action_done()
-
-        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('debit')), 380)
-        self.assertEqual(sum(self._get_stock_valuation_move_lines().mapped('credit')), 260)
-
-        # ---------------------------------------------------------------------
-        # run vacuum
-        # ---------------------------------------------------------------------
-        self.env['stock.move']._run_fifo_vacuum()
+        move5._action_done()  #move5 triggers vacuum
 
         self.assertEqual(sum(self._get_stock_input_move_lines().mapped('debit')), 0)
         self.assertEqual(sum(self._get_stock_input_move_lines().mapped('credit')), 380) # 10*10 + 11*20
@@ -3673,7 +3570,7 @@ class TestStockValuation(SavepointCase):
 
         # send 15
         move3 = self.env['stock.move'].create({
-            'name': 'out 10',
+            'name': 'out 15',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3693,7 +3590,7 @@ class TestStockValuation(SavepointCase):
 
         # send 20
         move4 = self.env['stock.move'].create({
-            'name': 'out 10',
+            'name': 'out 20',
             'location_id': self.stock_location.id,
             'location_dest_id': self.customer_location.id,
             'product_id': self.product1.id,
@@ -3713,7 +3610,7 @@ class TestStockValuation(SavepointCase):
 
         # receive 100@15
         move5 = self.env['stock.move'].create({
-            'name': 'in 10',
+            'name': 'in 100',
             'location_id': self.supplier_location.id,
             'location_dest_id': self.stock_location.id,
             'product_id': self.product1.id,
@@ -3724,16 +3621,10 @@ class TestStockValuation(SavepointCase):
         move5._action_confirm()
         move5._action_assign()
         move5.move_line_ids.qty_done = 100
-        move5._action_done()
+        move5._action_done()  #move5 triggers vacuum
         move5.date = date5
         move5.account_move_ids.write({'date': date5})
 
-        self.assertEqual(self.product1.qty_available, 85)
-        self.assertAlmostEqual(self.product1.qty_at_date, 85.0)
-        self.assertEqual(self.product1.stock_value, 1320)
-
-        # run the vacuum to compensate the negative stock move
-        self.env['stock.move']._run_fifo_vacuum()
         move4.account_move_ids[0].write({'date': date6})
 
         self.assertEqual(self.product1.qty_available, 85)
@@ -3867,13 +3758,13 @@ class TestStockValuation(SavepointCase):
         move4._action_confirm()
         move4._action_assign()
         move4.move_line_ids.qty_done = 10
-        move4._action_done()
+        move4._action_done()  #move4 triggers vacuum
         move4.date = date4
         move4.account_move_ids.write({'date': date4})
 
         self.assertEqual(self.product1.qty_available, 0)
         self.assertAlmostEqual(self.product1.qty_at_date, 0.0)
-        self.assertEqual(self.product1.stock_value, 50)
+        self.assertEqual(self.product1.stock_value, 0)
 
         # receive 10@10
         move5 = self.env['stock.move'].create({
@@ -3892,12 +3783,6 @@ class TestStockValuation(SavepointCase):
         move5.date = date5
         move5.account_move_ids.write({'date': date5})
 
-        self.assertEqual(self.product1.qty_available, 10)
-        self.assertAlmostEqual(self.product1.qty_at_date, 10.0)
-        self.assertEqual(self.product1.stock_value, 150)
-
-        # run the vacuum to compensate the negative stock move
-        self.env['stock.move']._run_fifo_vacuum()
         move3.account_move_ids[0].write({'date': date6})
 
         self.assertEqual(self.product1.qty_available, 10)
