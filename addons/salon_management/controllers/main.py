@@ -89,11 +89,29 @@ class SalonBookingWeb(http.Controller):
     @http.route('/page/salon_check_date_booked_court', type='json', auth="public", website=True)
     def salon_check_booked_court(self, **kwargs):
         date_check = str(kwargs.get('check_date'))
-        order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
-                                                       ('stage_id', 'in', [1, 2, 3]),
-                                                       ('start_date_only', '=', datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d'))])
+        
+        # < FIXED THE TIMING DIFFERENT +7 HOURS BASE
+        date_check_str = datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d')
+        date_check_obj = datetime.strptime(date_check_str,'%Y-%m-%d')
+        date_check_obj_add_17 = datetime.strptime(date_check_str,'%Y-%m-%d') + timedelta(hours=17,minutes=0,seconds=0)    
+        date_check_obj_minus_7 = date_check_obj - timedelta (hours=7,minutes=0,seconds=0)
+        # FIXED THE TIMING DIFFERENT +7 HOURS BASE >
+        
+        # """ ORIGINAL FUNCTION """
+        # order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
+        #                                                ('stage_id', 'in', [1, 2, 3]),
+        #                                                ('start_date_only', '=', datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d'))])
+        # print("JJJJJJJJJJJJJJJJJJJJJ order_obj ",order_obj,type(order_obj))
+        # """ ORIGIN FUNCTION """
+
+        order_obj_17 = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
+                                                       ('stage_id', 'in', [1, 2, 3]), 
+                                                       ('start_time', '>=',date_check_obj_minus_7),
+                                                        ('start_time','<',date_check_obj_add_17) 
+                                                       ])
+             
         order_details = {}
-        for orders in order_obj:
+        for orders in order_obj_17:
             # This block of function might not included if timzone configuration is right when deployed 
             time_start_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
             time_end_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
