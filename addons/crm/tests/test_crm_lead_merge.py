@@ -141,3 +141,22 @@ class TestLeadMerge(TestLeadConvertMassCommon):
         # self.assertEqual(merge_opportunity.team_id, self.sales_team_1)
         # TDE FIXME: BUT team_id is computed after checking stage, based on wizard's team_id
         self.assertEqual(merge_opportunity.stage_id, self.stage_team_convert_1)
+
+    @users('user_sales_manager')
+    def test_merge_method(self):
+        """ In case of mix, opportunities are on top, and result is an opportunity
+
+        lead_1 -------------------opp----seq=1
+        lead_w_partner_company ---opp----seq=1 (ID greater)
+        lead_w_contact -----------lead---seq=30
+        lead_w_email -------------lead---seq=3
+        lead_w_partner -----------lead---seq=False
+        """
+        # ensure initial data
+        (self.lead_w_partner_company | self.lead_1).write({'type': 'opportunity'})
+        leads = self.env['crm.lead'].browse(self.leads.ids)._sort_by_confidence_level(reverse=True)
+        with self.assertLeadMerged(self.lead_1, leads,
+                                   name='Nibbler Spacecraft Request',
+                                   partner_id=self.contact_company_1,
+                                   priority='2'):
+            leads._merge_opportunity(auto_unlink=False, max_length=None)
