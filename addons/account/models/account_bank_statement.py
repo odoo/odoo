@@ -813,18 +813,12 @@ class AccountBankStatementLine(models.Model):
     @api.constrains('amount', 'amount_currency', 'currency_id', 'foreign_currency_id', 'journal_id')
     def _check_amounts_currencies(self):
         ''' Ensure the consistency the specified amounts and the currencies. '''
-        if self._context.get('skip_check_amounts_currencies'):
-            return
 
         for st_line in self:
             if st_line.journal_id != st_line.statement_id.journal_id:
                 raise ValidationError(_('The journal of a statement line must always be the same as the bank statement one.'))
-            if st_line.currency_id.is_zero(st_line.amount):
-                raise ValidationError(_("The amount of a statement line can't be equal to zero."))
             if st_line.foreign_currency_id == st_line.currency_id:
                 raise ValidationError(_("The foreign currency must be different than the journal one: %s", st_line.currency_id.name))
-            if st_line.foreign_currency_id and st_line.foreign_currency_id.is_zero(st_line.amount_currency):
-                raise ValidationError(_("The amount in foreign currency must be set if the amount is not equal to zero."))
             if not st_line.foreign_currency_id and st_line.amount_currency:
                 raise ValidationError(_("You can't provide an amount in foreign currency without specifying a foreign currency."))
 
