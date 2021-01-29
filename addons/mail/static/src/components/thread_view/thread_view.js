@@ -20,7 +20,11 @@ class ThreadView extends Component {
     constructor(...args) {
         super(...args);
         useShouldUpdateBasedOnProps();
-        useStore((...args) => this._useStoreSelector(...args));
+        useStore((...args) => this._useStoreSelector(...args), {
+            compareDepth: {
+                threadTextInputSendShortcuts: 1,
+            },
+        });
         useUpdate({ func: () => this._update() });
         /**
          * Reference of the composer. Useful to set focus on composer when
@@ -133,6 +137,7 @@ class ThreadView extends Component {
             threadIsTemporary: thread && thread.isTemporary,
             threadMassMailing: thread && thread.mass_mailing,
             threadModel: thread && thread.model,
+            threadTextInputSendShortcuts: thread && thread.textInputSendShortcuts || [],
             threadView,
             threadViewIsLoading: threadView && threadView.isLoading,
         };
