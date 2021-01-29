@@ -202,6 +202,7 @@
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
                     <field name="scheduled_date" optional="show" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible':[('state', 'in', ('done', 'cancel'))]}"/>
+                    <field name="date_done" optional="hide" attrs="{'invisible':[('state', '!=', 'done')]}"/>
                     <field name="origin" optional="show"/>
                     <field name="group_id" invisible="1"/>
                     <field name="backorder_id" optional="hide"/>
