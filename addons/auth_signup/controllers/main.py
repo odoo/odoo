@@ -115,10 +115,13 @@ class AuthSignupHome(Home):
                 qcontext['error'] = _("Invalid signup token")
                 qcontext['invalid_token'] = True
         return qcontext
+    
+    def _allowed_field_signup(self):
+        return ('login', 'name', 'password')
 
     def do_signup(self, qcontext):
         """ Shared helper that creates a res.partner out of a token """
-        values = { key: qcontext.get(key) for key in ('login', 'name', 'password') }
+        values = { key: qcontext.get(key) for key in self._allowed_field_signup() }
         if not values:
             raise UserError(_("The form was not properly filled in."))
         if values.get('password') != qcontext.get('confirm_password'):
