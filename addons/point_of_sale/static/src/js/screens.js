@@ -2178,7 +2178,7 @@ var PaymentScreenWidget = ScreenWidget.extend({
         var self = this;
         var order = this.pos.get_order();
 
-        if (order.is_paid_with_cash() && this.pos.config.iface_cashdrawer) { 
+        if ((order.is_paid_with_cash() || order.get_change()) && this.pos.config.iface_cashdrawer) { 
 
                 this.pos.proxy.open_cashbox();
         }
