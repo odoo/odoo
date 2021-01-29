@@ -27,6 +27,8 @@ class TestSyncOdoo2Google(TransactionCase):
     def setUp(self):
         super().setUp()
         self.google_service = GoogleCalendarService(self.env['google.service'])
+        # Make sure this test will work for the next 30 years
+        self.env['ir.config_parameter'].set_param('google_calendar.sync.range_days', 10000)
 
     def assertGoogleEventDeleted(self, google_id):
         GoogleSync._google_delete.assert_called()
