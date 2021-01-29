@@ -40,6 +40,23 @@ class ProductProduct(models.Model):
         if bom:
             self.standard_price = self._compute_bom_price(bom, boms_to_recompute=boms_to_recompute)
 
+    def _compute_average_price(self, qty_invoiced, qty_to_invoice, stock_moves):
+        self.ensure_one()
+        if stock_moves.product_id == self:
+            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves)
+        bom = self.env['mrp.bom']._bom_find(product=self, company_id=stock_moves.company_id.id, bom_type='phantom')
+        if not bom:
+            return super()._compute_average_price(qty_invoiced, qty_to_invoice, stock_moves)
+        dummy, bom_lines = bom.explode(self, 1)
+        bom_lines = {line: data for line, data in bom_lines}
+        value = 0
+        for move in stock_moves:
+            bom_line = move.bom_line_id
+            bom_line_data = bom_lines[bom_line]
+            bom_line_qty = bom_line_data['qty']
+            value += move.product_id._compute_average_price(qty_invoiced * bom_line_qty, qty_to_invoice * bom_line_qty, move)
+        return value
+
     def _compute_bom_price(self, bom, boms_to_recompute=False):
         self.ensure_one()
         if not bom:
