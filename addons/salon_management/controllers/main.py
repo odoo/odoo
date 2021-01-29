@@ -177,11 +177,16 @@ class SalonBookingWeb(http.Controller):
                                                        ('start_time', '>=',date_check_obj_minus_7),
                                                        ('start_time','<',date_check_obj_add_17) 
                                                        ])
+        start_time_only_local_pp = {}
+        end_time_only_local_pp = {}
         for orders in order_obj:
             # This block of function might not included if timzone configuration is right when deployed 
-            start_time_only_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
-            end_time_only_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            # ( WE DON'T CHANGE ANY UTC TIME OR DATE WE IMPORT THEIR DATA & CONVERT TO LOCAL PHNOM PENH TIME ONLY)
+            start_time_only_local_pp [orders.id]= ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            end_time_only_local_pp [orders.id] = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            # ( WE DON'T CHANGE ANY UTC TIME OR DATE WE IMPORT THEIR DATA & CONVERT TO LOCAL PHNOM PENH TIME ONLY)
             # This block of function might not included if timzone configuration is right when deployed 
+        
         salon_service_obj = request.env['salon.service'].search([])
         booking_payment_obj = request.env['salon.booking.payment'].search([('activate_payment','=',True)])
         court_option = ["Booked Court","Available Court"]
