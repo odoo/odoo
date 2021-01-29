@@ -1,8 +1,8 @@
 .s_process_steps {
     .s_process_step_icon {
         margin: $grid-gutter-width 0;
-        span {
-            display: block;
+        hr.s_process_step_line {
+            display: none;
             overflow: hidden;
         }
         .fa {
@@ -18,30 +18,25 @@
             .s_process_step_icon {
                 position: relative;
                 z-index: 1;
-                span:after {
-                    content: '';
-                    z-index: -1;
-                    border-top: 1px solid gray('500');
-                    @include o-position-absolute(50%, 0, 0, auto);
-                }
-            }
-            .s_process_step_icon {
-                span:after {
+                hr.s_process_step_line {
+                    display: block;
                     width: 100%;
+                    margin: 0;
+                    z-index: -1;
+                    border-top-color: gray('500');
+                    @include o-position-absolute(50%, 0, 0, auto);
                 }
             }
             &:first-child .s_process_step_icon,
             &:last-child .s_process_step_icon {
-                span:after {
-                    width: 50%;
-                }
+                hr.s_process_step_line { width: 50%; }
             }
             &:first-child .s_process_step_icon {
                 .fa:after { right: 0; }
                 .fa.float-right:after { width: 0; }
             }
             &:last-child .s_process_step_icon {
-                span:after { left: 0; }
+                hr.s_process_step_line { left: 0; }
                 .fa {
                     &:after { left: 0; }
                     &.float-left:after { width: 0; }

@@ -6,10 +6,9 @@
         <div class="container">
             <div class="row no-gutters">
                 <div class="col-lg-3 s_process_step pt24 pb24">
-                    <div class="s_process_step_icon">
-                        <span>
-                            <i class="fa fa-shopping-basket fa-2x mx-auto rounded-circle bg-primary"/>
-                        </span>
+                    <div class="s_process_step_icon" data-name="Process Line">
+                        <hr class="s_process_step_line" style="border-top-width: 1px; border-top-style: solid;"/>
+                        <i class="fa fa-shopping-basket fa-2x mx-auto rounded-circle bg-primary"/>
                     </div>
                     <div class="s_process_step_content text-center">
                         <h2>Add to cart</h2>
@@ -17,10 +16,9 @@
                     </div>
                 </div>
                 <div class="col-lg-3 s_process_step pt24 pb24">
-                    <div class="s_process_step_icon">
-                        <span>
-                            <i class="fa fa-unlock-alt fa-2x mx-auto rounded-circle bg-o-color-5"/>
-                        </span>
+                    <div class="s_process_step_icon" data-name="Process Line">
+                        <hr class="s_process_step_line" style="border-top-width: 1px; border-top-style: solid;"/>
+                        <i class="fa fa-unlock-alt fa-2x mx-auto rounded-circle bg-o-color-5"/>
                     </div>
                     <div class="s_process_step_content text-center">
                         <h2>Sign in</h2>
@@ -28,10 +26,9 @@
                     </div>
                 </div>
                 <div class="col-lg-3 s_process_step pt24 pb24">
-                    <div class="s_process_step_icon">
-                        <span>
-                            <i class="fa fa-paypal fa-2x mx-auto rounded-circle bg-secondary"/>
-                        </span>
+                    <div class="s_process_step_icon" data-name="Process Line">
+                        <hr class="s_process_step_line" style="border-top-width: 1px; border-top-style: solid;"/>
+                        <i class="fa fa-paypal fa-2x mx-auto rounded-circle bg-secondary"/>
                     </div>
                     <div class="s_process_step_content text-center">
                         <h2>Pay</h2>
@@ -39,10 +36,9 @@
                     </div>
                 </div>
                 <div class="col-lg-3 s_process_step pt24 pb24">
-                    <div class="s_process_step_icon">
-                        <span>
-                            <i class="fa fa-plane fa-2x mx-auto rounded-circle bg-o-color-3"/>
-                        </span>
+                    <div class="s_process_step_icon" data-name="Process Line">
+                        <hr class="s_process_step_line" style="border-top-width: 1px; border-top-style: solid;"/>
+                        <i class="fa fa-plane fa-2x mx-auto rounded-circle bg-o-color-3"/>
                     </div>
                     <div class="s_process_step_content text-center">
                         <h2>Get Delivered</h2>
@@ -52,6 +48,17 @@
             </div>
         </div>
     </section>
+</template>
+
+<template id="s_process_steps_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_process_step_icon" data-target="hr.s_process_step_line">
+            <t t-call="website.snippet_options_border_line_widgets">
+                <t t-set="label">Border</t>
+                <t t-set="direction" t-value="'top'"/>
+            </t>
+        </div>
+    </xpath>
 </template>
 
 <record id="website.s_process_steps_000_scss" model="ir.asset">
