@@ -16,4 +16,10 @@
     </xpath>
 </template>
 
+<template id="assets_tests" inherit_id="website.assets_tests">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mass_mailing/static/tests/tours/newsletter_popup.js"/>
+    </xpath>
+</template>
+
 </odoo>

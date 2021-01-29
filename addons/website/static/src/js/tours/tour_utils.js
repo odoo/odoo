@@ -170,6 +170,7 @@ function clickOnSnippet(snippet, position = "bottom") {
 function clickOnSave(position = "bottom") {
     return {
         trigger: "button[data-action=save]",
+        in_modal: false,
         content: _t("Good job! It's time to <b>Save</b> your work."),
         position: position,
     };
