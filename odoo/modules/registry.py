@@ -601,7 +601,11 @@ class Registry(Mapping):
             elif self.cache_sequence != c:
                 _logger.info("Invalidating all model caches after database signaling.")
                 self.clear_caches()
-                self.cache_invalidated = False
+
+            # prevent re-signaling the clear_caches() above, or any residual one that
+            # would be inherited from the master process (first request in pre-fork mode)
+            self.cache_invalidated = False
+
             self.registry_sequence = r
             self.cache_sequence = c
 
