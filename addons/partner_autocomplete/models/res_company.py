@@ -3,6 +3,7 @@
 
 import json
 import logging
+import threading
 
 from odoo.addons.iap.tools import iap_tools
 from odoo import api, fields, models, tools, _
@@ -22,6 +23,13 @@ class ResCompany(models.Model):
     def _inverse_partner_gid(self):
         for company in self:
             company.partner_id.partner_gid = company.partner_gid
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        if not getattr(threading.currentThread(), 'testing', False):
+            res.iap_enrich_auto()
+        return res
 
     def iap_enrich_auto(self):
         """ Enrich company. This method should be called by automatic processes
