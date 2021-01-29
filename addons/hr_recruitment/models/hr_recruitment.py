@@ -4,9 +4,9 @@
 from random import randint
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
-from odoo.osv.query import Query
-from odoo.tools.translate import _
 from odoo.exceptions import AccessError, UserError
+from odoo.tools import Query
+from odoo.tools.translate import _
 
 from dateutil.relativedelta import relativedelta
 
