@@ -22,11 +22,11 @@ class MassMailingList(models.Model):
     contact_pct_bounce = fields.Float(compute="_compute_mailing_list_statistics", string="Percentage of Bouncing")
     contact_ids = fields.Many2many(
         'mailing.contact', 'mailing_contact_list_rel', 'list_id', 'contact_id',
-        string='Mailing Lists')
+        string='Mailing Lists', copy=False)
     mailing_count = fields.Integer(compute="_compute_mailing_list_count", string="Number of Mailing")
-    mailing_ids = fields.Many2many('mailing.mailing', 'mail_mass_mailing_list_rel', string='Mass Mailings')
+    mailing_ids = fields.Many2many('mailing.mailing', 'mail_mass_mailing_list_rel', string='Mass Mailings', copy=False)
     subscription_ids = fields.One2many('mailing.contact.subscription', 'list_id',
-        string='Subscription Information')
+        string='Subscription Information', copy=True)
     is_public = fields.Boolean(default=True, help="The mailing list can be accessible by recipient in the unsubscription"
                                                   " page to allows him to update his subscription preferences.")
 
@@ -108,6 +108,13 @@ class MassMailingList(models.Model):
 
     def name_get(self):
         return [(list.id, "%s (%s)" % (list.name, list.contact_count)) for list in self]
+
+    def copy(self, default=None):
+        self.ensure_one()
+
+        default = dict(default or {},
+                       name=_('%s (copy)', self.name),)
+        return super(MassMailingList, self).copy(default)
 
     # ------------------------------------------------------
     # ACTIONS
