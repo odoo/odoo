@@ -5,8 +5,8 @@ from datetime import date, datetime, time
 import pytz
 from dateutil.relativedelta import relativedelta
 
-from . import ustr
 from .func import lazy
+from odoo.loglevels import ustr
 
 def get_month(date):
     ''' Compute the month dates range on which the 'date' parameter belongs to.

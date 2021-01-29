@@ -6,7 +6,7 @@ import json
 from odoo import api, fields, models, _, _lt
 from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
-from odoo.osv.query import Query
+from odoo.tools import Query
 
 
 class Project(models.Model):
