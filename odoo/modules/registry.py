@@ -219,7 +219,9 @@ class Registry(Mapping):
         """
         from .. import models
 
-        self.clear_caches()
+        # clear cache to ensure consistency, but do not signal it
+        self.__cache.clear()
+
         lazy_property.reset_all(self)
 
         # Instantiate registered classes (via the MetaModel automatic discovery
@@ -244,7 +246,9 @@ class Registry(Mapping):
             for model in env.values():
                 model._unregister_hook()
 
-        self.clear_caches()
+        # clear cache to ensure consistency, but do not signal it
+        self.__cache.clear()
+
         lazy_property.reset_all(self)
         self.registry_invalidated = True
 
