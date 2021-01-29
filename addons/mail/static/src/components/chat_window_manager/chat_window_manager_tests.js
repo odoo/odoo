@@ -1892,6 +1892,42 @@ QUnit.test('chat window should scroll to the newly posted message just after pos
     );
 });
 
+QUnit.test('chat window: post message on non-mailing channel with "CTRL-Enter" keyboard shortcut for small screen size', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({
+        id: 20,
+        is_minimized: true,
+        mass_mailing: false,
+    });
+    await this.start({
+        env: {
+            device: {
+                isMobile: true, // here isMobile is used for the small screen size, not actually for the mobile devices
+            },
+        },
+    });
+
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
+    );
+    // insert some HTML in editable
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, "Test");
+    });
+    await afterNextRender(() => {
+        const kevt = new window.KeyboardEvent('keydown', { ctrlKey: true, key: "Enter" });
+        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(kevt);
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should now have single message in channel after posting message from pressing 'CTRL-Enter' in text input of composer for small screen"
+    );
+});
+
 QUnit.test('[technical] chat window: composer state conservation on toggle home menu when folded', async function (assert) {
     // technical as show/hide home menu simulation are involved and home menu implementation
     // have side-effects on DOM that may make chat window components not work
