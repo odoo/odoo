@@ -5,7 +5,7 @@ import re
 import warnings
 from zlib import crc32
 
-from odoo.tools import lazy_property
+from .func import lazy_property
 
 IDENT_RE = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 
@@ -137,7 +137,7 @@ class Query(object):
         """ Add a LEFT JOIN to the current table (if necessary), and return the
         alias corresponding to ``rhs_table``.
 
-        See the documentation of :meth:`~odoo.osv.query.Query.join` for a better overview of the
+        See the documentation of :meth:`join` for a better overview of the
         arguments and what they do.
         """
         return self._join('LEFT JOIN', lhs_alias, lhs_column, rhs_table, rhs_column, link, extra, extra_params)
