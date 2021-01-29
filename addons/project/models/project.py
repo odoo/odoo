@@ -1377,6 +1377,7 @@ class Task(models.Model):
         else:
             default_project = self.project_id.subtask_project_id or self.project_id
         ctx = dict(self.env.context)
+        ctx = {k: v for k, v in ctx.items() if not k.startswith('search_default_')}
         ctx.update({
             'default_name': self.env.context.get('name', self.name) + ':',
             'default_parent_id': self.id,  # will give default subtask field in `default_get`
