@@ -538,7 +538,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_1_statement_curr_2(self):
         self.bank_journal_2.currency_id = self.currency_1
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -562,7 +562,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_currency_journal_curr_1_statement_curr_2(self):
         self.bank_journal_2.currency_id = self.currency_1
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -586,7 +586,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_2_statement_curr_1(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -610,7 +610,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_currency_journal_curr_2_statement_curr_1(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -634,7 +634,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_journal_curr_2_statement_curr_3(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -658,7 +658,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
     def test_zero_amount_currency_journal_curr_2_statement_curr_3(self):
         self.bank_journal_2.currency_id = self.currency_2
 
-        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+        statement = self.env['account.bank.statement'].create({
             'name': 'test_statement',
             'date': '2019-01-01',
             'journal_id': self.bank_journal_2.id,
@@ -703,23 +703,10 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
 
         # ==== Test constraints at creation ====
 
-        # Amount can't be 0.0 on a statement line.
-        assertStatementLineConstraint(statement_vals, {
-            **statement_line_vals,
-            'amount': 0.0,
-        })
-
         # Foreign currency must not be the same as the journal one.
         assertStatementLineConstraint(statement_vals, {
             **statement_line_vals,
             'foreign_currency_id': self.currency_1.id,
-        })
-
-        # Can't have amount_currency = 0.0 with a specified foreign currency.
-        assertStatementLineConstraint(statement_vals, {
-            **statement_line_vals,
-            'foreign_currency_id': self.currency_2.id,
-            'amount_currency': 0.0,
         })
 
         # Can't have a stand alone amount in foreign currency without foreign currency set.
