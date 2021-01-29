@@ -546,6 +546,9 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        for vals in vals_list:
+            if vals.get('login'):
+                vals['login'] = vals['login'].lower()
         users = super(Users, self).create(vals_list)
         for user in users:
             # if partner is global we keep it that way
@@ -560,6 +563,8 @@ class Users(models.Model):
         if values.get('active') == False and self._uid in self._ids:
             raise UserError(_("You cannot deactivate the user you're currently logged in as."))
 
+        if values.get('login'):
+            values['login'] = values['login'].lower()
         if values.get('active'):
             for user in self:
                 if not user.active and not user.partner_id.active:
@@ -624,7 +629,7 @@ class Users(models.Model):
             if operator == 'ilike' and not (name or '').strip():
                 domain = []
             else:
-                domain = [('login', '=', name)]
+                domain = [('login', '=', (name or '').lower())]
             user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
             user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
@@ -672,7 +677,7 @@ class Users(models.Model):
 
     @api.model
     def _get_login_domain(self, login):
-        return [('login', '=', login)]
+        return [('login', '=', (login or '').lower())]
 
     @api.model
     def _get_login_order(self):
