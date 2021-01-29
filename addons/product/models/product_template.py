@@ -345,8 +345,7 @@ class ProductTemplate(models.Model):
     @api.depends('product_variant_ids.product_tmpl_id')
     def _compute_product_variant_count(self):
         for template in self:
-            # do not pollute variants to be prefetched when counting variants
-            template.product_variant_count = len(template.with_prefetch().product_variant_ids)
+            template.product_variant_count = len(template.product_variant_ids)
 
     @api.depends('product_variant_ids', 'product_variant_ids.default_code')
     def _compute_default_code(self):
