@@ -249,10 +249,10 @@
                                                                 <span t-field="order_obj.id"/>
                                                             </td>
                                                             <td>
-                                                                <span t-field="order_obj.start_time_only"/>
+                                                                <span t-esc="start_time_only_local_pp"/>
                                                             </td>
                                                             <td>
-                                                                <span t-field="order_obj.end_time_only"/>
+                                                                <span t-esc="end_time_only_local_pp"/>
                                                             </td>
                                                         </tr>
                                                     </t>

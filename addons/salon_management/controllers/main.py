@@ -177,6 +177,11 @@ class SalonBookingWeb(http.Controller):
                                                        ('start_time', '>=',date_check_obj_minus_7),
                                                        ('start_time','<',date_check_obj_add_17) 
                                                        ])
+        for orders in order_obj:
+            # This block of function might not included if timzone configuration is right when deployed 
+            start_time_only_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            end_time_only_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
+            # This block of function might not included if timzone configuration is right when deployed 
         salon_service_obj = request.env['salon.service'].search([])
         booking_payment_obj = request.env['salon.booking.payment'].search([('activate_payment','=',True)])
         court_option = ["Booked Court","Available Court"]
@@ -188,5 +193,7 @@ class SalonBookingWeb(http.Controller):
                                 'working_time': salon_working_hours_obj,
                                 'salon_service' : salon_service_obj, 
                                 'booking_payment': booking_payment_obj,
-                                'court_option': court_option
+                                'court_option': court_option,
+                                'start_time_only_local_pp': start_time_only_local_pp,
+                                'end_time_only_local_pp':end_time_only_local_pp
                                })
