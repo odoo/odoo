@@ -289,8 +289,7 @@ class ComposerTextInput extends Component {
             !ev.altKey &&
             !ev.ctrlKey &&
             !ev.metaKey &&
-            !ev.shiftKey &&
-            !this.env.messaging.device.isMobile
+            !ev.shiftKey
         ) {
             this.trigger('o-composer-text-input-send-shortcut');
             ev.preventDefault();
