@@ -12,41 +12,50 @@ from odoo.addons.phone_validation.tools import phone_validation
 from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 from odoo.tools.translate import _
-from odoo.tools import email_re, email_split, safe_eval
+from odoo.tools import email_re, email_split
 
 from . import crm_stage
 
 _logger = logging.getLogger(__name__)
 
 CRM_LEAD_FIELDS_TO_MERGE = [
-    'name',
-    'partner_id',
+    # UTM mixin
     'campaign_id',
-    'company_id',
-    'country_id',
-    'team_id',
-    'state_id',
-    'stage_id',
     'medium_id',
     'source_id',
+    # Mail mixin
+    'email_cc',
+    # description
+    'name',
     'user_id',
-    'title',
-    'city',
-    'contact_name',
-    'description',
-    'mobile',
-    'partner_name',
-    'phone',
-    'probability',
+    'company_id',
+    'team_id',
+    # pipeline
+    'stage_id',
+    # revenues
     'expected_revenue',
+    # dates
+    'create_date',
+    'date_action_last',
+    # partner / contact
+    'partner_id',
+    'title',
+    'partner_name',
+    'contact_name',
+    'email_from',
+    'mobile',
+    'phone',
+    'website',
+    # address
     'street',
     'street2',
     'zip',
-    'create_date',
-    'date_action_last',
-    'email_from',
-    'email_cc',
-    'website']
+    'city',
+    'state_id',
+    'country_id',
+    # probability
+    'probability',
+]
 
 # Subset of partner fields: sync any of those
 PARTNER_FIELDS_TO_SYNC = [
@@ -99,6 +108,10 @@ class Lead(models.Model):
         help='UX: Limit to lead company or all if no company')
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
+    team_id = fields.Many2one(
+        'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
+        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        compute='_compute_team_id', readonly=False, store=True)
     company_id = fields.Many2one(
         'res.company', string='Company', index=True,
         compute='_compute_company_id', readonly=False, store=True)
@@ -109,13 +122,10 @@ class Lead(models.Model):
         ('lead', 'Lead'), ('opportunity', 'Opportunity')],
         index=True, required=True, tracking=15,
         default=lambda self: 'lead' if self.env['res.users'].has_group('crm.group_use_lead') else 'opportunity')
+    # Pipeline management
     priority = fields.Selection(
         crm_stage.AVAILABLE_PRIORITIES, string='Priority', index=True,
         default=crm_stage.AVAILABLE_PRIORITIES[0][0])
-    team_id = fields.Many2one(
-        'crm.team', string='Sales Team', check_company=True, index=True, tracking=True,
-        domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
-        compute='_compute_team_id', readonly=False, store=True)
     stage_id = fields.Many2one(
         'crm.stage', string='Stage', index=True, tracking=True,
         compute='_compute_stage_id', readonly=False, store=True,
@@ -134,7 +144,7 @@ class Lead(models.Model):
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
     color = fields.Integer('Color Index', default=0)
-    # Opportunity specific
+    # Revenues
     expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
     prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
     recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', groups="crm.group_use_recurring_revenues")
@@ -205,11 +215,13 @@ class Lead(models.Model):
         compute='_compute_probabilities', readonly=False, store=True)
     automated_probability = fields.Float('Automated Probability', compute='_compute_probabilities', readonly=True, store=True)
     is_automated_probability = fields.Boolean('Is automated probability?', compute="_compute_is_automated_probability")
-    # External records
-    meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
+    # Won/Lost
     lost_reason = fields.Many2one(
         'crm.lost.reason', string='Lost Reason',
         index=True, ondelete='restrict', tracking=True)
+    # Statistics
+    meeting_count = fields.Integer('# Meetings', compute='_compute_meeting_count')
+    # UX
     ribbon_message = fields.Char('Ribbon message', compute='_compute_ribbon_message')
 
     _sql_constraints = [
@@ -931,15 +943,7 @@ class Lead(models.Model):
     # MERGE AND CONVERT LEADS / OPPORTUNITIES
     # ------------------------------------------------------------
 
-    def _merge_get_result_type(self):
-        """ Define the type of the result of the merge.  If at least one of the
-        element to merge is an opp, the resulting new element will be an opp.
-        Otherwise it will be a lead. """
-        if any(record.type == 'opportunity' for record in self):
-            return 'opportunity'
-        return 'lead'
-
-    def _merge_data(self, fields):
+    def _merge_data(self, fnames=None):
         """ Prepare lead/opp data into a dictionary for merging. Different types
             of fields are processed in different ways:
                 - text: all the values are concatenated
@@ -950,38 +954,37 @@ class Lead(models.Model):
             :param fields: list of fields to process
             :return dict data: contains the merged values of the new opportunity
         """
+        if fnames is None:
+            fnames = self._merge_get_fields()
+        fcallables = self._merge_get_fields_specific()
+
         # helpers
         def _get_first_not_null(attr, opportunities):
+            value = False
             for opp in opportunities:
-                val = opp[attr]
-                if val:
-                    return val
-            return False
+                if opp[attr]:
+                    value = opp[attr].id if isinstance(opp[attr], models.BaseModel) else opp[attr]
+                    break
+            return value
 
-        def _get_first_not_null_id(attr, opportunities):
-            res = _get_first_not_null(attr, opportunities)
-            return res.id if res else False
-
-        # process the fields' values
+        # process the field's values
         data = {}
-        for field_name in fields:
+        for field_name in fnames:
             field = self._fields.get(field_name)
             if field is None:
                 continue
-            if field.type in ('many2many', 'one2many'):
-                continue
-            elif field.type == 'many2one':
-                data[field_name] = _get_first_not_null_id(field_name, self)  # take the first not null
-            elif field.type == 'text':
-                data[field_name] = '\n\n'.join(it for it in self.mapped(field_name) if it)
-            else:
-                data[field_name] = _get_first_not_null(field_name, self)
 
-        # define the resulting type ('lead' or 'opportunity')
-        data['type'] = self._merge_get_result_type()
+            fcallable = fcallables.get(field_name)
+            if fcallable and callable(fcallable):
+                data[field_name] = fcallable(field_name, self)
+            elif not fcallable and field.type in ('many2many', 'one2many'):
+                continue
+            else:
+                data[field_name] = _get_first_not_null(field_name, self)  # take the first not null
+
         return data
 
-    def _merge_notify_get_merged_fields_message(self, fields):
+    def _merge_notify_get_merged_fields_message(self):
         """ Generate the message body with the changed values
 
         :param fields : list of fields to track
@@ -992,7 +995,7 @@ class Lead(models.Model):
             title = "%s : %s\n" % (_('Merged opportunity') if lead.type == 'opportunity' else _('Merged lead'), lead.name)
             body = [title]
             _fields = self.env['ir.model.fields'].search([
-                ('name', 'in', fields or []),
+                ('name', 'in', self._merge_get_fields()),
                 ('model_id.model', '=', lead._name),
             ])
             for field in _fields:
@@ -1022,12 +1025,10 @@ class Lead(models.Model):
         """
         # TODO JEM: mail template should be used instead of fix body, subject text
         self.ensure_one()
-        # mail message's subject
-        result_type = opportunities._merge_get_result_type()
-        merge_message = _('Merged leads') if result_type == 'lead' else _('Merged opportunities')
+        merge_message = _('Merged leads') if self.type == 'lead' else _('Merged opportunities')
         subject = merge_message + ": " + ", ".join(opportunities.mapped('name'))
         # message bodies
-        message_bodies = opportunities._merge_notify_get_merged_fields_message(list(CRM_LEAD_FIELDS_TO_MERGE))
+        message_bodies = opportunities._merge_notify_get_merged_fields_message()
         message_body = "\n\n".join(message_bodies)
         return self.message_post(body=message_body, subject=subject)
 
@@ -1084,7 +1085,6 @@ class Lead(models.Model):
           include `self` which is the target crm.lead being the result of the merge.
         """
         self.ensure_one()
-        self._merge_notify(opportunities)
         self._merge_opportunity_history(opportunities)
         self._merge_opportunity_attachments(opportunities)
 
@@ -1122,7 +1122,7 @@ class Lead(models.Model):
 
         # merge all the sorted opportunity. This means the value of
         # the first (head opp) will be a priority.
-        merged_data = opportunities._merge_data(list(CRM_LEAD_FIELDS_TO_MERGE))
+        merged_data = opportunities._merge_data(self._merge_get_fields())
 
         # force value for saleperson and Sales Team
         if user_id:
@@ -1130,6 +1130,8 @@ class Lead(models.Model):
         if team_id:
             merged_data['team_id'] = team_id
 
+        # log merge message
+        opportunities_head._merge_notify(opportunities_tail)
         # merge other data (mail.message, attachments, ...) from tail into head
         opportunities_head._merge_dependences(opportunities_tail)
 
@@ -1148,6 +1150,16 @@ class Lead(models.Model):
             opportunities_tail.sudo().unlink()
 
         return opportunities_head
+
+    def _merge_get_fields_specific(self):
+        return {
+            'description': lambda fname, leads: '\n\n'.join(desc for desc in leads.mapped('description') if desc),
+            'type': lambda fname, leads: 'opportunity' if any(lead.type == 'opportunity' for lead in leads) else 'lead',
+            'priority': lambda fname, leads: max(leads.mapped('priority')) if leads else False,
+        }
+
+    def _merge_get_fields(self):
+        return list(CRM_LEAD_FIELDS_TO_MERGE) + list(self._merge_get_fields_specific().keys())
 
     def _convert_opportunity_data(self, customer, team_id=False):
         """ Extract the data from a lead to create the opportunity

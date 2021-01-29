@@ -2,13 +2,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from contextlib import contextmanager
 from unittest.mock import patch
 
+from odoo.addons.crm.models.crm_lead import CRM_LEAD_FIELDS_TO_MERGE
 from odoo.addons.mail.tests.common import MailCase, mail_new_test_user
 from odoo.addons.phone_validation.tools import phone_validation
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.fields import Datetime
-from odoo import tools
+from odoo import models, tools
 
 INCOMING_EMAIL = """Return-Path: {return_path}
 X-Original-To: {to}
@@ -43,6 +45,14 @@ Somebody."""
 
 
 class TestCrmCommon(TestSalesCommon, MailCase):
+
+    FIELDS_FIRST_SET = [
+        'name', 'partner_id', 'campaign_id', 'company_id', 'country_id',
+        'team_id', 'state_id', 'stage_id', 'medium_id', 'source_id', 'user_id',
+        'title', 'city', 'contact_name', 'mobile', 'partner_name',
+        'phone', 'probability', 'expected_revenue', 'street', 'street2', 'zip',
+        'create_date', 'date_action_last', 'email_from', 'email_cc', 'website'
+    ]
 
     @classmethod
     def setUpClass(cls):
@@ -299,6 +309,72 @@ class TestCrmCommon(TestSalesCommon, MailCase):
         new_leads.flush()  # compute notably probability
         return new_leads
 
+    @contextmanager
+    def assertLeadMerged(self, opportunity, leads, **expected):
+        """ Assert result of lead _merge_opportunity process. This is done using
+        a context manager in order to save original opportunity (master lead)
+        values. Indeed those will be modified during merge process. We have to
+        ensure final values are correct taking into account all leads values
+        before merging them.
+
+        :param opportunity: final opportunity
+        :param leads: merged leads (including opportunity)
+        """
+        self.assertIn(opportunity, leads)
+
+        # save opportunity value before being modified by merge process
+        fields_all = self.FIELDS_FIRST_SET + ['description', 'type', 'priority']
+        # ensure tests are synchronized with crm code
+        self.assertTrue(all(field in fields_all for field in CRM_LEAD_FIELDS_TO_MERGE + list(self.env['crm.lead']._merge_get_fields_specific().keys())))
+        original_opp_values = dict(
+            (fname, opportunity[fname])
+            for fname in fields_all
+        )
+
+        def _find_value(lead, fname):
+            if lead == opportunity:
+                return original_opp_values[fname]
+            return lead[fname]
+
+        def _first_set(fname):
+            values = [_find_value(lead, fname) for lead in leads]
+            return next((value for value in values if value), False)
+
+        def _get_type():
+            values = [_find_value(lead, 'type') for lead in leads]
+            return 'opportunity' if 'opportunity' in values else 'lead'
+
+        def _get_description():
+            values = [_find_value(lead, 'description') for lead in leads]
+            return '\n\n'.join(value for value in values if value)
+
+        def _get_priority():
+            values = [_find_value(lead, 'priority') for lead in leads]
+            return max(values)
+
+        try:
+            # merge process will modify opportunity
+            yield
+        finally:
+            # support specific values caller may want to check in addition to generic tests
+            for fname, expected in expected.items():
+                self.assertEqual(opportunity[fname], expected)
+
+            # classic fields: first not void wins or specific computation
+            for fname in fields_all:
+                opp_value = opportunity[fname]
+                if fname == 'description':
+                    self.assertEqual(opp_value, _get_description())
+                elif fname == 'type':
+                    self.assertEqual(opp_value, _get_type())
+                elif fname == 'priority':
+                    self.assertEqual(opp_value, _get_priority())
+                else:
+                    self.assertEqual(
+                        opp_value if opp_value or not isinstance(opp_value, models.BaseModel) else False,
+                        _first_set(fname)
+                    )
+
 
 class TestLeadConvertCommon(TestCrmCommon):
 
@@ -421,7 +497,8 @@ class TestLeadConvertCommon(TestCrmCommon):
         if member.crm_team_id.assignment_domain:
             self.assertEqual(
                 member_leads.filtered_domain(literal_eval(member.crm_team_id.assignment_domain)),
-                member_leads
+                member_leads,
+                'Assign domain not matching: %s' % member.crm_team_id.assignment_domain
             )
 
 class TestLeadConvertMassCommon(TestLeadConvertCommon):
@@ -453,6 +530,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
         cls.lead_w_partner = cls.env['crm.lead'].create({
             'name': 'New1',
             'type': 'lead',
+            'priority': '0',
             'probability': 10,
             'user_id': cls.user_sales_manager.id,
             'stage_id': False,
@@ -480,6 +558,7 @@ class TestLeadConvertMassCommon(TestLeadConvertCommon):
         cls.lead_w_email = cls.env['crm.lead'].create({
             'name': 'LeadEmailAsContact',
             'type': 'lead',
+            'priority': '2',
             'probability': 15,
             'email_from': 'contact.email@test.example.com',
             'user_id': cls.user_sales_salesman.id,
