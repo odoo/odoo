@@ -44,7 +44,8 @@ from operator import attrgetter, itemgetter
 
 import babel.dates
 import dateutil.relativedelta
-import psycopg2, psycopg2.extensions
+import psycopg2
+import psycopg2.extensions
 from lxml import etree
 from lxml.builder import E
 
@@ -53,17 +54,15 @@ from . import SUPERUSER_ID
 from . import api
 from . import tools
 from .exceptions import AccessError, MissingError, ValidationError, UserError
-from .osv.query import Query
-from .tools import frozendict, lazy_classproperty, ormcache, \
-                   LastOrderedSet, OrderedSet, ReversedIterable, \
-                   unique, discardattr, partition
-from .tools.config import config
+from .tools import (
+    clean_context, config, CountingStream, date_utils, discardattr,
+    DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, frozendict,
+    get_lang, LastOrderedSet, lazy_classproperty, OrderedSet, ormcache,
+    partition, populate, Query, ReversedIterable, split_every, unique,
+)
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang, split_every
-from .tools.translate import _, _lt
-from .tools import date_utils
-from .tools import populate
 from .tools.lru import LRU
+from .tools.translate import _, _lt
 
 _logger = logging.getLogger(__name__)
 _unlink = logging.getLogger(__name__ + '.unlink')
@@ -2315,7 +2314,7 @@ class BaseModel(metaclass=MetaModel):
             These dictionaries contain the qualified name of each groupby
             (fully qualified SQL name for the corresponding field),
             and the (non raw) field name.
-        :param osv.Query query: the query under construction
+        :param Query query: the query under construction
         :return: (groupby_terms, orderby_terms)
         """
         orderby_terms = []
@@ -4616,7 +4615,7 @@ class BaseModel(metaclass=MetaModel):
         :param bool active_test: whether the default filtering of records with
             ``active`` field set to ``False`` should be applied.
         :return: the query expressing the given domain as provided in domain
-        :rtype: osv.query.Query
+        :rtype: Query
         """
         # if the object has an active field ('active', 'x_active'), filter out all
         # inactive records unless they were explicitly asked for
