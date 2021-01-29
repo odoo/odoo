@@ -27,6 +27,8 @@ class MailingTrace(models.Model):
     )
     email = fields.Char(string="Email", help="Normalized email address")
     message_id = fields.Char(string='Message-ID')
+    medium_id = fields.Many2one(related='mass_mailing_id.medium_id')
+    source_id = fields.Many2one(related='mass_mailing_id.source_id')
     # document
     model = fields.Char(string='Document model')
     res_id = fields.Integer(string='Document ID')
@@ -97,6 +99,16 @@ class MailingTrace(models.Model):
             if 'mail_mail_id' in values:
                 values['mail_mail_id_int'] = values['mail_mail_id']
         return super(MailingTrace, self).create(values_list)
+
+    def action_view_contact(self):
+        self.ensure_one()
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': self.model,
+            'target': 'current',
+            'res_id': self.res_id
+        }
 
     def _get_records(self, mail_mail_ids=None, mail_message_ids=None, domain=None):
         if not self.ids and mail_mail_ids:
