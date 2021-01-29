@@ -101,15 +101,13 @@ class SalonBookingWeb(http.Controller):
         # order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
         #                                                ('stage_id', 'in', [1, 2, 3]),
         #                                                ('start_date_only', '=', datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d'))])
-        # print("JJJJJJJJJJJJJJJJJJJJJ order_obj ",order_obj,type(order_obj))
         # """ ORIGIN FUNCTION """
 
         order_obj_17 = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
                                                        ('stage_id', 'in', [1, 2, 3]), 
                                                        ('start_time', '>=',date_check_obj_minus_7),
-                                                        ('start_time','<',date_check_obj_add_17) 
+                                                       ('start_time','<',date_check_obj_add_17) 
                                                        ])
-             
         order_details = {}
         for orders in order_obj_17:
             # This block of function might not included if timzone configuration is right when deployed 
@@ -130,11 +128,19 @@ class SalonBookingWeb(http.Controller):
     @http.route('/page/salon_check_date_available_court', type='json', auth="public", website=True)
     def salon_check_available_court(self, **kwargs):
         date_check = str(kwargs.get('check_date'))
-        order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
-                                                       ('stage_id', 'in', [1, 2, 3]),
-                                                       ('start_date_only', '=', datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d'))])
+        # < FIXED THE TIMING DIFFERENT +7 HOURS BASE
+        date_check_str = datetime.strptime(date_check, '%m/%d/%Y').strftime('%Y-%m-%d')
+        date_check_obj = datetime.strptime(date_check_str,'%Y-%m-%d')
+        date_check_obj_add_17 = datetime.strptime(date_check_str,'%Y-%m-%d') + timedelta(hours=17,minutes=0,seconds=0)    
+        date_check_obj_minus_7 = date_check_obj - timedelta (hours=7,minutes=0,seconds=0)
+        # FIXED THE TIMING DIFFERENT +7 HOURS BASE >
+        order_obj_17 = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
+                                                       ('stage_id', 'in', [1, 2, 3]), 
+                                                       ('start_time', '>=',date_check_obj_minus_7),
+                                                       ('start_time','<',date_check_obj_add_17) 
+                                                       ])
         order_details = {}
-        for orders in order_obj:
+        for orders in order_obj_17:
             # This block of function might not included if timzone configuration is right when deployed 
             time_start_local_pp = ((datetime.strptime(orders.start_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
             time_end_local_pp = ((datetime.strptime(orders.end_time_only,"%H:%M") + timedelta(hours=7)).time()).strftime("%H:%M")
@@ -148,6 +154,7 @@ class SalonBookingWeb(http.Controller):
                 order_details[orders.chair_id.id] = {'name': orders.chair_id.name, 'orders': [data]}
             else:
                 order_details[orders.chair_id.id]['orders'].append(data)
+
         return order_details
 
     @http.route('/page/sport_management.sport_booking_thank_you', type='http', auth="public", website=True)
@@ -158,13 +165,19 @@ class SalonBookingWeb(http.Controller):
     def chair_info(self, **post):
         salon_working_hours_obj = request.env['salon.working.hours'].search([])
         salon_holiday_obj = request.env['salon.holiday'].search([('holiday', '=', True)])
-        date_check = date.today()
         chair_obj = request.env['salon.chair'].search([('active_booking_chairs', '=', True)])
         duration_obj = request.env['salon.duration'].search([('time_available','=',True)])
+        # < FIXED THE TIMING DIFFERENT +7 HOURS BASE
+        date_check = datetime.strptime(datetime.strftime(date.today(),'%Y-%m-%d'),'%Y-%m-%d')
+        date_check_obj_add_17 = date_check + timedelta(hours=17,minutes=0,seconds=0) 
+        date_check_obj_minus_7 = date_check - timedelta (hours=7,minutes=0,seconds=0)
+        # FIXED THE TIMING DIFFERENT +7 HOURS BASE >
         order_obj = request.env['salon.order'].search([('chair_id.active_booking_chairs', '=', True),
-                                                       ('stage_id', 'in', [1, 2, 3])])
+                                                       ('stage_id', 'in', [1, 2, 3]), 
+                                                       ('start_time', '>=',date_check_obj_minus_7),
+                                                       ('start_time','<',date_check_obj_add_17) 
+                                                       ])
         salon_service_obj = request.env['salon.service'].search([])
-        order_obj = order_obj.search([('start_date_only', '=', date_check)])
         booking_payment_obj = request.env['salon.booking.payment'].search([('activate_payment','=',True)])
         court_option = ["Booked Court","Available Court"]
         return request.render('salon_management.salon_booking_form',
