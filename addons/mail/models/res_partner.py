@@ -60,7 +60,14 @@ class Partner(models.Model):
                 if partners:
                     return partners
 
-        return super(Partner, self).find_or_create(email, assert_valid_email=assert_valid_email)
+        # We don't want to call `super()` to avoid searching twice on the email
+        # Especially when the search `email =ilike` cannot be as efficient as
+        # a search on email_normalized with a btree index
+        # If you want to override `find_or_create()` your module should depend on `mail`
+        create_values = {self._rec_name: parsed_name or parsed_email}
+        if parsed_email:  # otherwise keep default_email in context
+            create_values['email'] = parsed_email
+        return self.create(create_values)
 
     def mail_partner_format(self):
         self.ensure_one()
