@@ -3,10 +3,13 @@
 from ast import literal_eval
 from collections import OrderedDict
 from odoo import models, fields, api, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, MissingError
 from odoo.osv import expression
 from odoo.tools import html_escape as escape
 from lxml import etree as ET
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 class WebsiteSnippetFilter(models.Model):
@@ -70,20 +73,27 @@ class WebsiteSnippetFilter(models.Model):
                 domain = expression.AND([domain, [('is_published', '=', True)]])
             if search_domain:
                 domain = expression.AND([domain, search_domain])
-
-            records = self.env[filter_sudo.model_id].search(
-                domain,
-                order=','.join(literal_eval(filter_sudo.sort)) or None,
-                limit=limit
-            )
-            return self._filter_records_to_dict_values(records)
+            try:
+                records = self.env[filter_sudo.model_id].search(
+                    domain,
+                    order=','.join(literal_eval(filter_sudo.sort)) or None,
+                    limit=limit
+                )
+                return self._filter_records_to_dict_values(records)
+            except MissingError:
+                _logger.warning("The provided domain %s in 'ir.filters' generated a MissingError in '%s'", domain, self._name)
+                return []
         elif self.action_server_id:
-            return self.action_server_id.with_context(
-                dynamic_filter=self,
-                limit=limit,
-                search_domain=search_domain,
-                get_rendering_data_structure=self._get_rendering_data_structure,
-            ).sudo().run()
+            try:
+                return self.action_server_id.with_context(
+                    dynamic_filter=self,
+                    limit=limit,
+                    search_domain=search_domain,
+                    get_rendering_data_structure=self._get_rendering_data_structure,
+                ).sudo().run()
+            except MissingError:
+                _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
+                return []
 
     @api.model
     def _get_rendering_data_structure(self):

@@ -104,7 +104,11 @@ class GoogleSync(models.AbstractModel):
             synced.write({self._active_name: False})
             self = self - synced
         elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Google Calendar, archive it instead."))
+            # Since we can not delete such an event (see method comment), we archive it.
+            # Notice that archiving an event will delete the associated event on Google.
+            # Then, since it has been deleted on Google, the event is also deleted on Odoo DB (_sync_google2odoo).
+            self.action_archive()
+            return True
         return super().unlink()
 
     @api.model

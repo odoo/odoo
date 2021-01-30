@@ -348,6 +348,14 @@ class TestEventTicketData(TestEventCommon):
         })
         self.assertFalse(second_ticket.sale_available)
         self.assertFalse(second_ticket.is_expired)
+        # sale started today
+        second_ticket.write({
+            'start_sale_date': date(2020, 1, 31),
+            'end_sale_date': date(2020, 2, 20),
+        })
+        self.assertTrue(second_ticket.sale_available)
+        self.assertTrue(second_ticket.is_launched())
+        self.assertFalse(second_ticket.is_expired)
         # incoherent dates are invalid
         with self.assertRaises(exceptions.UserError):
             second_ticket.write({'end_sale_date': date(2020, 1, 20)})

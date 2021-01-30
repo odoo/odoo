@@ -1099,7 +1099,7 @@ var ListRenderer = BasicRenderer.extend({
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
                 );
-                this.$('table').append(this._renderOptionalColumnsDropdown());
+                this.$el.append(this._renderOptionalColumnsDropdown());
             }
             if (this.selection.length) {
                 const $checked_rows = this.$('tr').filter(
@@ -1271,6 +1271,13 @@ var ListRenderer = BasicRenderer.extend({
         // default, which is why we need to toggle the dropdown manually.
         ev.stopPropagation();
         this.$('.o_optional_columns .dropdown-toggle').dropdown('toggle');
+        // Explicitly set left of the optional column dropdown as it is pushed inside
+        // this.$el, so we need to position it at the end of top right/left corner based
+        // on language direction.
+        var left = _t.database.parameters.direction === 'rtl' ?
+            this.$('.o_optional_columns .o_optional_columns_dropdown').width() :
+            this.$("table").width();
+        this.$('.o_optional_columns').css("left", left);
     },
     /**
      * Manages the keyboard events on the list. If the list is not editable, when the user navigates to

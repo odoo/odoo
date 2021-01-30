@@ -73,6 +73,15 @@ var MassMailingFieldHtml = FieldHtml.extend({
                 convertInline.fontToImg($editable);
                 convertInline.classToStyle($editable);
 
+                // fix outlook image rendering bug
+                _.each(['width', 'height'], function(attribute) {
+                    $editable.find('img[style*="width"], img[style*="height"]').attr(attribute, function(){
+                        return $(this)[attribute]();
+                    }).css(attribute, function(){
+                        return $(this).get(0).style[attribute] || 'auto';
+                    });
+                });
+
                 self.trigger_up('field_changed', {
                     dataPointID: self.dataPointID,
                     changes: _.object([fieldName], [self._unWrap($editable.html())])

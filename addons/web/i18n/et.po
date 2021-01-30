@@ -7,24 +7,25 @@
 # Gert Valdek <gert@airobot.ee>, 2020
 # Martin Aavastik <martin@avalah.ee>, 2020
 # Helen Sulaoja <helen@avalah.ee>, 2020
-# Algo Kärp <algokarp@gmail.com>, 2020
 # Rivo Zängov <eraser@eraser.ee>, 2020
 # Martin Trigaux, 2020
 # Arma Gedonsky <armagedonsky@hot.ee>, 2020
 # Maidu Targama <m.targama@gmail.com>, 2020
 # Marek Pontus, 2020
-# Eneli Õigus <enelioigus@gmail.com>, 2020
-# Triine Aavik <triine@avalah.ee>, 2020
-# Piia Paurson <piia@avalah.ee>, 2020
 # Egon Raamat <egon@avalah.ee>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
+# Piia Paurson <piia@avalah.ee>, 2020
+# atriine <triine@avalah.ee>, 2021
+# Andre Roomet <andreroomet@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-01-04 08:58+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Egon Raamat <egon@avalah.ee>, 2020\n"
+"Last-Translator: Andre Roomet <andreroomet@gmail.com>, 2021\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -58,7 +59,7 @@ msgstr "# Koodi redigeerija"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "${-diffDays} days ago"
-msgstr ""
+msgstr "${-diffDays} päeva eest"
 
 #. module: web
 #. openerp-web
@@ -101,13 +102,6 @@ msgstr "%d aasta eest"
 #, python-format
 msgid "%s Files"
 msgstr ""
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: web
 #. openerp-web
@@ -315,7 +309,7 @@ msgstr ""
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>Amount</span>"
-msgstr ""
+msgstr "<span>Summa</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -453,7 +447,7 @@ msgstr "Toimingu ID:"
 #. module: web
 #: model:ir.model,name:web.model_ir_actions_act_window_view
 msgid "Action Window View"
-msgstr ""
+msgstr "Tegevuseakna vaade"
 
 #. module: web
 #. openerp-web
@@ -504,7 +498,7 @@ msgstr "Lisa kohandatud grupp"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add a Column"
-msgstr ""
+msgstr "Lisa veerg"
 
 #. module: web
 #. openerp-web
@@ -537,7 +531,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Add column"
-msgstr ""
+msgstr "Lisa veerg"
 
 #. module: web
 #. openerp-web
@@ -588,14 +582,14 @@ msgstr "Lisa:"
 #: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt Your Signature"
-msgstr ""
+msgstr "Lisa oma allkiri"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/signature_dialog.js:0
 #, python-format
 msgid "Adopt and Sign"
-msgstr ""
+msgstr "Lisa ja kirjuta alla"
 
 #. module: web
 #. openerp-web
@@ -768,7 +762,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete these records?"
-msgstr ""
+msgstr "Kas olete kindel, et soovite need kirjed kustutada?"
 
 #. module: web
 #. openerp-web
@@ -782,14 +776,14 @@ msgstr "Kas oled kindel, et soovid selle kirje kustutada?"
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this record?"
-msgstr ""
+msgstr "Kas olete kindel, et soovite selle kirje kustutada?"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Are you sure you want to perform the following update on those"
-msgstr ""
+msgstr "Kas olete kindel, et soovite uuendada järgmist"
 
 #. module: web
 #. openerp-web
@@ -923,6 +917,10 @@ msgid ""
 "for all purposes when it is used on documents, including legally binding "
 "contracts."
 msgstr ""
+"Valides \"Lisa ja kirjuta alla\" nõustun sellega, et valitud "
+"allkiri/initsiaalid kehtivalt esindavad minu käsitsi kirjutatud "
+"allkirja/initsiaale igal dokumendiga seotud otstarbel, kaasa arvatud "
+"seaduslikult sõlmivatel lepingutel."
 
 #. module: web
 #. openerp-web
@@ -969,7 +967,7 @@ msgstr "Kalendrivaates pole kirjeldatud \"date_start\" atribuuti."
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 #, python-format
 msgid "Cancel"
-msgstr "Loobu"
+msgstr "Tühista"
 
 #. module: web
 #. openerp-web
@@ -1123,7 +1121,7 @@ msgstr "Ettevõte"
 #. module: web
 #: model:ir.model,name:web.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "Ettevõtte Dokumendi kavand"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__logo
@@ -1233,7 +1231,7 @@ msgstr "Kopeeritud !"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Copy Text"
-msgstr ""
+msgstr "Kopeeri tekst"
 
 #. module: web
 #. openerp-web
@@ -1397,7 +1395,7 @@ msgstr "Looja kasutaja:"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Current state"
-msgstr ""
+msgstr "Praegune olek"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__custom_colors
@@ -1764,7 +1762,7 @@ msgstr "Viga, salasõna ei muudetud !"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Esc to discard"
-msgstr ""
+msgstr "Esc tühistamiseks"
 
 #. module: web
 #. openerp-web
@@ -1932,7 +1930,7 @@ msgstr "Voldi"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Followed by"
-msgstr ""
+msgstr "Jälgitud"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__font
@@ -2015,6 +2013,7 @@ msgstr "Roheline"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "Rühmitamine"
@@ -2119,7 +2118,7 @@ msgstr "Pilt"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "In ${diffDays} days"
-msgstr ""
+msgstr "${diffDays} päeva pärast"
 
 #. module: web
 #. openerp-web
@@ -2395,6 +2394,13 @@ msgstr "Mac"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -2444,7 +2450,7 @@ msgstr "Many2one"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Match"
-msgstr ""
+msgstr "Sobita"
 
 #. module: web
 #. openerp-web
@@ -2469,6 +2475,7 @@ msgstr ""
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2496,13 +2503,6 @@ msgstr ""
 #, python-format
 msgid "Method:"
 msgstr "Meetod:"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:92
-#, python-format
-msgid "MailDeliveryException"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3317,7 +3317,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/relational_fields.js:0
 #, python-format
 msgid "Quick search: %s"
-msgstr ""
+msgstr "Kiirotsing: %s"
 
 #. module: web
 #: model:ir.model,name:web.model_ir_qweb_field_image
@@ -3492,7 +3492,7 @@ msgstr ""
 #: code:addons/web/static/src/js/fields/signature.js:0
 #, python-format
 msgid "SIGNATURE"
-msgstr ""
+msgstr "ALLKIRI"
 
 #. module: web
 #. openerp-web
@@ -3609,7 +3609,7 @@ msgstr "Vaata detaile"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "See examples"
-msgstr ""
+msgstr "See examples"
 
 #. module: web
 #. openerp-web
@@ -3658,7 +3658,7 @@ msgstr "Vali vaade"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Select all"
-msgstr ""
+msgstr "Vali kõik"
 
 #. module: web
 #. openerp-web
@@ -4204,7 +4204,7 @@ msgstr "Võta arhiivist välja"
 #: code:addons/web/static/src/xml/kanban.xml:0
 #, python-format
 msgid "Unarchive All"
-msgstr ""
+msgstr "Võta arhiivist kõik välja"
 
 #. module: web
 #. openerp-web
@@ -4272,7 +4272,7 @@ msgstr "Pealkirjata"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Update to:"
-msgstr ""
+msgstr "Uuenda:"
 
 #. module: web
 #. openerp-web
@@ -4381,7 +4381,7 @@ msgstr "Kasutaja"
 #: code:addons/web/static/src/js/services/crash_manager.js:0
 #, python-format
 msgid "User Error"
-msgstr ""
+msgstr "Veateade"
 
 #. module: web
 #. openerp-web
@@ -4938,7 +4938,7 @@ msgstr "vähem kui"
 #: code:addons/web/static/src/js/core/translation.js:0
 #, python-format
 msgid "less than a minute ago"
-msgstr "vähe kui minuti eest"
+msgstr "vähem kui minuti eest"
 
 #. module: web
 #. openerp-web
@@ -5017,7 +5017,7 @@ msgstr "ülem"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "record(s)"
-msgstr "kirje(d)"
+msgstr "kirje(t)"
 
 #. module: web
 #. openerp-web
@@ -5046,14 +5046,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "selected"
-msgstr ""
+msgstr "valitud"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "selected records,"
-msgstr ""
+msgstr "valitud kirjet,"
 
 #. module: web
 #. openerp-web

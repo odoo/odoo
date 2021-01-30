@@ -40,6 +40,7 @@ models.PosModel = models.PosModel.extend({
             return records.then(function (products) {
                 self.db.add_products(_.map(products, function (product) {
                     product.categ = _.findWhere(self.product_categories, {'id': product.categ_id[0]});
+                    product.pos = self;
                     return new models.Product({}, product);
                 }));
             });

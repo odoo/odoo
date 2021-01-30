@@ -9,7 +9,7 @@
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -494,8 +494,8 @@ msgstr "Klantenservice (pre paid)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
-msgid "Customer Type"
-msgstr "Klanttype"
+msgid "Invoice Tasks to"
+msgstr "Factureer taak aan"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order__partner_id
@@ -529,7 +529,7 @@ msgstr "Geregistreerde dagen"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
 msgid "Default Sales Order Item"
-msgstr "Standaard verkooporder-artikel"
+msgstr "Standaard verkooporderregel"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_project_view_form
@@ -622,8 +622,8 @@ msgstr "Vaste prijs diensten"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
-msgid "Fixed rate"
-msgstr "Vast tarief"
+msgid "Project rate"
+msgstr "Projecttarief"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
@@ -736,8 +736,8 @@ msgstr "Factuur"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
-msgid "Invoice all tasks to a single customer"
-msgstr "Factureer alle taken aan één klant."
+msgid "A unique customer"
+msgstr "Een unieke klant"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
@@ -746,8 +746,8 @@ msgstr "Factuur aangemaakt van urenstaat"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
-msgid "Invoice tasks separately to different customers"
-msgstr "Factureer taken afzonderlijk aan verschillende klanten."
+msgid "Different customers"
+msgstr "Verschillende klanten"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__allow_billable
@@ -994,14 +994,14 @@ msgid ""
 "distinction."
 msgstr ""
 "Alleen urenstaten die nog niet zijn gefactureerd (en indien van toepassing "
-"gevalideerd) uit deze periode worden gefactureerd. Als de periode niet is "
-"aangegeven, worden alle nog niet gefactureerde (en gevalideerde, indien van "
+"goedgekeurd) uit deze periode worden gefactureerd. Als de periode niet is "
+"aangegeven, worden alle nog niet gefactureerde (en goedgekeurde, indien van "
 "toepassing) urenstaten zonder onderscheid gefactureerd."
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
-msgid "Ordered quantities"
-msgstr "Bestelde hoeveelheden"
+msgid "Prepaid"
+msgstr "Prepaid"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -1278,7 +1278,7 @@ msgid ""
 "Select a Service product with which you would like to bill your time spent "
 "on this task."
 msgstr ""
-"Selecteer een serviceproduct waarmee je de tijd die je aan deze taak "
+"Selecteer een diensten-product waarmee je de tijd die je aan deze taak "
 "besteedt wilt factureren."
 
 #. module: sale_timesheet
@@ -1394,7 +1394,7 @@ msgid ""
 "The %s product is required by the Timesheet app and cannot be "
 "archived/deleted."
 msgstr ""
-"Het %s product is vereist voor de Timesheet-app en kan niet worden "
+"Het %s product is vereist voor de Urenstaat-app en kan niet worden "
 "gearchiveerd / verwijderd."
 
 #. module: sale_timesheet
@@ -1428,8 +1428,8 @@ msgstr ""
 "gewerkt uur of dag factureert, ongeacht de medewerker die het heeft "
 "uitgevoerd. Het medewerkerstarief heeft de voorkeur als je medewerkers "
 "dezelfde dienst leveren tegen een ander tarief. Junior en senior consultants"
-" leveren bijvoorbeeld dezelfde service (= consultancy), maar tegen een ander"
-" tarief vanwege hun senioriteitsniveau."
+" leveren bijvoorbeeld dezelfde dienst (= consultancy), maar tegen een ander "
+"tarief vanwege hun senioriteitsniveau."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0

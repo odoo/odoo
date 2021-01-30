@@ -7,6 +7,7 @@ const components = {
     ThreadNeedactionPreview: require('mail/static/src/components/thread_needaction_preview/thread_needaction_preview.js'),
     ThreadPreview: require('mail/static/src/components/thread_preview/thread_preview.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -18,6 +19,7 @@ class NotificationList extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         this.storeProps = useStore((...args) => this._useStoreSelector(...args), {
             compareDepth: {
                 // list + notification object created in useStore

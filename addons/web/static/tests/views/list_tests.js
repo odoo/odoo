@@ -2863,6 +2863,30 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('editable list view, click on m2o dropdown do not close editable row', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree string="Phonecalls" editable="top">' +
+                '<field name="m2o"/>' +
+                '</tree>',
+        });
+
+        await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
+        await testUtils.dom.click(list.$('.o_selected_row .o_data_cell .o_field_many2one input'));
+        const $dropdown = list.$('.o_selected_row .o_data_cell .o_field_many2one input').autocomplete('widget');
+        await testUtils.dom.click($dropdown);
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        await testUtils.dom.click($dropdown.find("li:first"));
+        assert.containsOnce(list, '.o_selected_row', "should still have editable row");
+
+        list.destroy();
+    });
+
     QUnit.test('width of some of the fields should be hardcoded if no data (grouped case)', async function (assert) {
         const assertions = [
             { field: 'bar', expected: 70, type: 'Boolean' },
@@ -8175,6 +8199,84 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('editable list with many2one: click out does not discard the row', async function (assert) {
+        // In this test, we simulate a long click by manually triggering a mousedown and later on
+        // mouseup and click events
+        assert.expect(5);
+
+        this.data.bar.fields.m2o = {string: "M2O field", type: "many2one", relation: "foo"};
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="o2m">
+                        <tree editable="bottom">
+                            <field name="m2o" required="1"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(form, '.o_data_row');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        assert.containsOnce(form, '.o_data_row');
+
+        // focus and write something in the m2o
+        form.$('.o_field_many2one input').focus().val('abcdef').trigger('keyup');
+        await testUtils.nextTick();
+
+        // then simulate a mousedown outside
+        form.$('.o_field_widget[name="display_name"]').focus().trigger('mousedown');
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal', "should ask confirmation to create a record");
+
+        // trigger the mouseup and the click
+        form.$('.o_field_widget[name="display_name"]').trigger('mouseup').trigger('click');
+        await testUtils.nextTick();
+
+        assert.containsOnce(document.body, '.modal', "modal should still be displayed");
+        assert.containsOnce(form, '.o_data_row', "the row should still be there");
+
+        form.destroy();
+    });
+
+    QUnit.test('editable list alongside html field: click out to unselect the row', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="text" widget="html"/>
+                    <field name="o2m">
+                        <tree editable="bottom">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+        });
+
+        assert.containsNone(form, '.o_data_row');
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add > a'));
+        assert.containsOnce(form, '.o_data_row');
+        assert.hasClass(form.$('.o_data_row'), 'o_selected_row');
+
+        // click outside to unselect the row
+        await testUtils.dom.click(document.body);
+        assert.containsOnce(form, '.o_data_row');
+        assert.doesNotHaveClass(form.$('.o_data_row'), 'o_selected_row');
+
+        form.destroy();
+    });
+
     QUnit.test('list grouped by date:month', async function (assert) {
         assert.expect(1);
 
@@ -8953,6 +9055,44 @@ QUnit.module('Views', {
         // reload without groupBy
         await list.reload({groupBy: []});
         assert.isVisible(list.$buttons.find('.o_list_button_add'));
+
+        list.destroy();
+    });
+
+    QUnit.test('control panel buttons in multi editable grouped list views', async function (assert) {
+        assert.expect(8);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            groupBy: ['foo'],
+            arch:
+                `<tree multi_edit="1">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>`,
+        });
+
+        assert.containsNone(list, '.o_data_row', "all groups should be closed");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
+
+        await testUtils.dom.click(list.$('.o_group_header:first'));
+        assert.containsN(list, '.o_data_row', 1, "first group should be opened");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
+
+        await testUtils.dom.click(list.$('.o_data_row:eq(0) .o_list_record_selector input'));
+        assert.containsOnce(list, '.o_data_row:eq(0) .o_list_record_selector input:enabled',
+            "should have selected first record");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
+
+        await testUtils.dom.click(list.$('.o_group_header:last'));
+        assert.containsN(list, '.o_data_row', 2, "two groups should be opened");
+        assert.isVisible(list.$buttons.find('.o_list_button_add'),
+            "should have a visible Create button");
 
         list.destroy();
     });
@@ -10096,10 +10236,10 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the second last element');
-        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields dropdown is the last element');
 
@@ -10164,10 +10304,10 @@ QUnit.module('Views', {
         assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle',
             "should have the optional columns dropdown toggle inside the table");
 
-        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild.previousSibling;
+        const optionalFieldsToggler = list.el.querySelector('table').lastElementChild;
         assert.ok(optionalFieldsToggler.classList.contains('o_optional_columns_dropdown_toggle'),
             'The optional fields toggler is the last element');
-        const optionalFieldsDropdown = list.el.querySelector('table').lastElementChild;
+        const optionalFieldsDropdown = list.el.querySelector('.o_list_view').lastElementChild;
         assert.ok(optionalFieldsDropdown.classList.contains('o_optional_columns'),
             'The optional fields is the last element');
 

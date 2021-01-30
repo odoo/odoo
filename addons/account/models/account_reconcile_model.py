@@ -2,6 +2,7 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
+from odoo.osv.expression import get_unaccent_wrapper
 from odoo.exceptions import UserError, ValidationError
 import re
 from math import copysign
@@ -31,7 +32,7 @@ class AccountReconcileModelLine(models.Model):
     _order = 'sequence, id'
     _check_company_auto = True
 
-    model_id = fields.Many2one('account.reconcile.model', readonly=True)
+    model_id = fields.Many2one('account.reconcile.model', readonly=True, ondelete='cascade')
     match_total_amount = fields.Boolean(related='model_id.match_total_amount')
     match_total_amount_param = fields.Float(related='model_id.match_total_amount_param')
     rule_type = fields.Selection(related='model_id.rule_type')
@@ -393,6 +394,8 @@ class AccountReconcileModel(models.Model):
 
         partner = partner or st_line.partner_id
 
+        has_full_write_off= any(rec_mod_line.amount == 100.0 for rec_mod_line in self.line_ids)
+
         lines_vals_list = []
         amls = self.env['account.move.line'].browse(aml_ids)
         st_line_residual_before = st_line_residual
@@ -403,6 +406,9 @@ class AccountReconcileModel(models.Model):
             if aml.balance * st_line_residual > 0:
                 # Meaning they have the same signs, so they can't be reconciled together
                 assigned_balance = -aml.amount_residual
+            elif has_full_write_off:
+                assigned_balance = -aml.amount_residual
+                st_line_residual -= min(-aml.amount_residual, st_line_residual, key=abs)
             else:
                 assigned_balance = min(-aml.amount_residual, st_line_residual, key=abs)
                 st_line_residual -= assigned_balance
@@ -423,13 +429,8 @@ class AccountReconcileModel(models.Model):
             st_line_residual -= st_line.company_currency_id.round(line_vals['balance'])
 
         # Check we have enough information to create an open balance.
-        if not st_line.company_currency_id.is_zero(st_line_residual):
-            if st_line.amount > 0:
-                open_balance_account = partner.property_account_receivable_id
-            else:
-                open_balance_account = partner.property_account_payable_id
-            if not open_balance_account:
-                return []
+        if open_balance_vals and not open_balance_vals.get('account_id'):
+            return []
 
         return lines_vals_list + writeoff_vals_list
 
@@ -582,6 +583,8 @@ class AccountReconcileModel(models.Model):
         if self.rule_type != 'invoice_matching':
             raise UserError(_('Programmation Error: Can\'t call _get_invoice_matching_query() for different rules than \'invoice_matching\''))
 
+        unaccent = get_unaccent_wrapper(self._cr)
+
         # N.B: 'communication_flag' is there to distinguish invoice matching through the number/reference
         # (higher priority) from invoice matching using the partner (lower priority).
         query = r'''
@@ -641,7 +644,10 @@ class AccountReconcileModel(models.Model):
                         within the payment_ref, in any order, with any characters between them. */
 
                         aml_partner.name IS NOT NULL
-                        AND st_line.payment_ref ~* concat('(?=.*', array_to_string(regexp_split_to_array(lower(aml_partner.name), ' '),'.*)(?=.*'), '.*)')
+                        AND """ + unaccent("st_line.payment_ref") + r""" ~* ('^' || (
+                            SELECT string_agg(concat('(?=.*\m', chunk[1], '\M)'), '')
+                              FROM regexp_matches(""" + unaccent("aml_partner.name") + r""", '\w{3,}', 'g') AS chunk
+                        ))
                     )
                 """
 
@@ -803,7 +809,8 @@ class AccountReconcileModel(models.Model):
         # We check the amount criteria of the reconciliation model, and select the
         # candidates if they pass the verification. Candidates from the first priority
         # level (even already selected) bypass this check, and are selected anyway.
-        if priorities & {1,2} or self._check_rule_propositions(st_line, candidates):
+        disable_bypass = self.env['ir.config_parameter'].sudo().get_param('account.disable_rec_models_bypass')
+        if (not disable_bypass and priorities & {1,2}) or self._check_rule_propositions(st_line, candidates):
             rslt = {
                 'model': self,
                 'aml_ids': [candidate['aml_id'] for candidate in candidates],

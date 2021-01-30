@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/follower_list_menu/follower_list_menu.js
 const components = {
     Follower: require('mail/static/src/components/follower/follower.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
@@ -15,6 +16,7 @@ class FollowerListMenu extends Component {
      */
     constructor(...args) {
         super(...args);
+        useShouldUpdateBasedOnProps();
         this.state = useState({
             /**
              * Determine whether the dropdown is open or not.
@@ -25,8 +27,8 @@ class FollowerListMenu extends Component {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
             const followers = thread ? thread.followers : [];
             return {
-                followers: followers.map(follower => follower.__state),
-                thread: thread ? thread.__state : undefined,
+                followers,
+                threadChannelType: thread && thread.channel_type,
             };
         }, {
             compareDepth: {

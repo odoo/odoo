@@ -403,6 +403,9 @@ Triggers an action implemented entirely in the client.
 tells the client to start the Point of Sale interface, the server has no idea
 how the POS interface works.
 
+.. seealso::
+   - :ref:`Tutorial: Client Actions <howtos/web/client_actions>`
+
 .. _reference/actions/cron:
 
 Automated Actions (``ir.cron``)

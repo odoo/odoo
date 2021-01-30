@@ -14,7 +14,7 @@
 
     <record id="ir_rule_event_track_tag_public" model="ir.rule">
         <field name="name">Event Track Tag: public/portal: color = published</field>
-        <field name="model_id" ref="event.model_event_tag"/>
+        <field name="model_id" ref="website_event_track.model_event_track_tag"/>
         <field name="domain_force">['&amp;', ('color', '!=', False), ('color', '!=', 0)]</field>
         <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
         <field name="perm_read" eval="True"/>

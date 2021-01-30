@@ -139,7 +139,6 @@
                 <field name="vehicle_id" string="Vehicle" filter_domain="[('vehicle_id.name','ilike', self)]"/>
                 <field name="purchaser_id" string="Driver" filter_domain="[('purchaser_id','child_of', self)]"/>
                 <field name="insurer_id" string="Vendor" filter_domain="[('insurer_id','child_of', self)]"/>
-                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
                 <filter string="In Progress" name="open" domain="[('state', '=', 'open')]"/>
                 <filter string="Expired" name="expired" domain="[('state', '=', 'expired')]"/>
                 <separator/>

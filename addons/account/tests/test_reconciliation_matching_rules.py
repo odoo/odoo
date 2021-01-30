@@ -448,12 +448,14 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         ])
 
     def test_larger_invoice_auto_reconcile(self):
-        ''' Test auto reconciliation with an invoice with larger amount than the statement line's.'''
+        ''' Test auto reconciliation with an invoice with larger amount than the
+        statement line's, for rules without write-offs.'''
         self.bank_line_1.amount = 40
         self.invoice_line_1.move_id.payment_reference = self.bank_line_1.payment_ref
 
         self.rule_1.sequence = 2
         self.rule_1.auto_reconcile = True
+        self.rule_1.line_ids = [(5, 0, 0)]
 
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.bank_line_1.partner_id},
@@ -565,6 +567,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.bank_line_1.write({
             'payment_ref': 'Tournicoti66',
             'partner_id': None,
+            'amount': 95,
         })
 
         self.rule_1.write({
@@ -578,6 +581,39 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
             self.bank_line_2.id: {'aml_ids': []},
         }, self.bank_st)
+
+    def test_inv_matching_rule_auto_rec_no_partner_with_writeoff(self):
+        self.invoice_line_1.move_id.write({'payment_reference': 'doudlidou355'})
+
+        self.bank_line_1.write({
+            'payment_ref': 'doudlidou355',
+            'partner_id': None,
+            'amount': 95,
+        })
+
+        self.rule_1.write({
+            'match_partner': False,
+            'match_label': 'contains',
+            'match_label_param': 'doudlidou',  # So that we only match what we want to test
+            'match_total_amount_param': 90,
+            'auto_reconcile': True,
+        })
+
+        # Check bank reconciliation
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id, 'status': 'reconciled'},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
+        # Check invoice line has been fully reconciled, with a write-off.
+        self.assertRecordValues(self.bank_line_1.line_ids, [
+            {'partner_id': self.partner_1.id, 'debit': 95.0, 'credit': 0.0, 'account_id': self.bank_journal.default_account_id.id, 'reconciled': False},
+            {'partner_id': self.partner_1.id, 'debit': 5.0, 'credit': 0.0, 'account_id': self.current_assets_account.id, 'reconciled': False},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 100.0, 'account_id': self.invoice_line_1.account_id.id, 'reconciled': True},
+        ])
+
+        self.assertEqual(self.invoice_line_1.amount_residual, 0.0, "The invoice should have been fully reconciled")
 
     def test_partner_mapping_rule(self):
         self.bank_line_1.write({'partner_id': None, 'payment_ref': 'toto42', 'narration': None})
@@ -637,6 +673,18 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.rule_1.write({'match_partner': False})
 
         # bank_line_1 should match, as its communication contains the invoice's partner name
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
+    def test_partner_name_with_regexp_chars(self):
+        self.invoice_line_1.partner_id.write({'name': "Archibald + Haddock"})
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK+Archibald'})
+        self.bank_line_2.write({'partner_id': None})
+        self.rule_1.write({'match_partner': False})
+
+        # The query should still work
         self._check_statement_matching(self.rule_1, {
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'partner': self.bank_line_1.partner_id},
             self.bank_line_2.id: {'aml_ids': []},
@@ -767,3 +815,56 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         }
 
         self.assertDictEqual(expected_write_off, to_compare)
+
+    def test_inv_matching_with_write_off_autoreconcile(self):
+        self.bank_line_1.amount = 95
+
+        self.rule_1.sequence = 2
+        self.rule_1.auto_reconcile = True
+        self.rule_1.match_total_amount_param = 90
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'reconciled', 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, statements=self.bank_st)
+
+        # Check first line has been properly reconciled.
+        self.assertRecordValues(self.bank_line_1.line_ids, [
+            {'partner_id': self.partner_1.id, 'debit': 95.0, 'credit': 0.0, 'account_id': self.bank_journal.default_account_id.id, 'reconciled': False},
+            {'partner_id': self.partner_1.id, 'debit': 5.0, 'credit': 0.0, 'account_id': self.current_assets_account.id, 'reconciled': False},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 100.0, 'account_id': self.invoice_line_1.account_id.id, 'reconciled': True},
+        ])
+
+        self.assertEqual(self.invoice_line_1.amount_residual, 0.0, "The invoice should have been fully reconciled")
+
+    def test_avoid_amount_matching_bypass(self):
+        """ By the default, if the label of statement lines exactly matches a payment reference, it bypasses any kind of amount verification.
+        This is annoying in some setups, so a config parameter was introduced to handle that.
+        """
+        self.env['ir.config_parameter'].set_param('account.disable_rec_models_bypass', '1')
+        self.rule_1.match_total_amount_param = 90
+        second_inv_matching_rule = self.env['account.reconcile.model'].create({
+            'name': 'Invoices Matching Rule',
+            'sequence': 2,
+            'rule_type': 'invoice_matching',
+            'auto_reconcile': False,
+            'match_nature': 'both',
+            'match_same_currency': False,
+            'match_total_amount': False,
+            'match_partner': True,
+            'company_id': self.company.id,
+        })
+
+        self.bank_line_1.write({
+            'payment_ref': self.invoice_line_1.move_id.payment_reference,
+            'amount': 99,
+        })
+        self.bank_line_2.write({
+            'payment_ref': self.invoice_line_2.move_id.payment_reference,
+            'amount': 1,
+        })
+
+        self._check_statement_matching(self.rule_1 + second_inv_matching_rule, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1, 'status': 'write_off', 'partner': self.bank_line_1.partner_id},
+            self.bank_line_2.id: {'aml_ids': [self.invoice_line_2.id], 'model': second_inv_matching_rule, 'partner': self.bank_line_2.partner_id}
+        }, statements=self.bank_st)

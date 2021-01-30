@@ -446,7 +446,7 @@ class SaleOrder(models.Model):
 
     @api.onchange('pricelist_id')
     def _onchange_pricelist_id(self):
-        if self.order_line and self.pricelist_id and self._origin.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
+        if self.order_line and self.pricelist_id and self._origin.pricelist_id != self.pricelist_id:
             self.show_update_pricelist = True
         else:
             self.show_update_pricelist = False
@@ -625,6 +625,33 @@ Reason(s) of this behavior could be:
         """)
         return UserError(msg)
 
+    def _get_invoiceable_lines(self, final=False):
+        """Return the invoiceable lines for order `self`."""
+        down_payment_line_ids = []
+        invoiceable_line_ids = []
+        pending_section = None
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+
+        for line in self.order_line:
+            if line.display_type == 'line_section':
+                # Only invoice the section if one of its lines is invoiceable
+                pending_section = line
+                continue
+            if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
+                continue
+            if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final) or line.display_type == 'line_note':
+                if line.is_downpayment:
+                    # Keep down payment lines separately, to put them together
+                    # at the end of the invoice, in a specific dedicated section.
+                    down_payment_line_ids.append(line.id)
+                    continue
+                if pending_section:
+                    invoiceable_line_ids.append(pending_section.id)
+                    pending_section = None
+                invoiceable_line_ids.append(line.id)
+
+        return self.env['sale.order.line'].browse(invoiceable_line_ids + down_payment_line_ids)
+
     def _create_invoices(self, grouped=False, final=False, date=None):
         """
         Create the invoice associated to the SO.
@@ -640,54 +667,41 @@ Reason(s) of this behavior could be:
             except AccessError:
                 return self.env['account.move']
 
-        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-
         # 1) Create invoices.
         invoice_vals_list = []
-        invoice_item_sequence = 0
+        invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
             order = order.with_company(order.company_id)
             current_section_vals = None
             down_payments = order.env['sale.order.line']
 
-            # Invoice values.
             invoice_vals = order._prepare_invoice()
+            invoiceable_lines = order._get_invoiceable_lines(final)
 
-            # Invoice line values (keep only necessary sections).
-            invoice_lines_vals = []
-            for line in order.order_line:
-                if line.display_type == 'line_section':
-                    current_section_vals = line._prepare_invoice_line(sequence=invoice_item_sequence + 1)
-                    continue
-                if line.display_type != 'line_note' and float_is_zero(line.qty_to_invoice, precision_digits=precision):
-                    continue
-                if line.qty_to_invoice > 0 or (line.qty_to_invoice < 0 and final) or line.display_type == 'line_note':
-                    if line.is_downpayment:
-                        down_payments += line
-                        continue
-                    if current_section_vals:
-                        invoice_item_sequence += 1
-                        invoice_lines_vals.append(current_section_vals)
-                        current_section_vals = None
-                    invoice_item_sequence += 1
-                    prepared_line = line._prepare_invoice_line(sequence=invoice_item_sequence)
-                    invoice_lines_vals.append(prepared_line)
-
-            # If down payments are present in SO, group them under common section
-            if down_payments:
-                invoice_item_sequence += 1
-                down_payments_section = order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
-                invoice_lines_vals.append(down_payments_section)
-                for down_payment in down_payments:
-                    invoice_item_sequence += 1
-                    invoice_down_payment_vals = down_payment._prepare_invoice_line(sequence=invoice_item_sequence)
-                    invoice_lines_vals.append(invoice_down_payment_vals)
-
-            if not any(new_line['display_type'] is False for new_line in invoice_lines_vals):
+            if not any(not line.display_type for line in invoiceable_lines):
                 raise self._nothing_to_invoice_error()
 
-            invoice_vals['invoice_line_ids'] = [(0, 0, invoice_line_id) for invoice_line_id in invoice_lines_vals]
+            invoice_line_vals = []
+            down_payment_section_added = False
+            for line in invoiceable_lines:
+                if not down_payment_section_added and line.is_downpayment:
+                    # Create a dedicated section for the down payments
+                    # (put at the end of the invoiceable_lines)
+                    invoice_line_vals.append(
+                        (0, 0, order._prepare_down_payment_section_line(
+                            sequence=invoice_item_sequence,
+                        )),
+                    )
+                    dp_section = True
+                    invoice_item_sequence += 1
+                invoice_line_vals.append(
+                    (0, 0, line._prepare_invoice_line(
+                        sequence=invoice_item_sequence,
+                    )),
+                )
+                invoice_item_sequence += 1
 
+            invoice_vals['invoice_line_ids'] = invoice_line_vals
             invoice_vals_list.append(invoice_vals)
 
         if not invoice_vals_list:
@@ -956,11 +970,11 @@ Reason(s) of this behavior could be:
         transaction = self.get_portal_last_transaction()
         return (self.state == 'sent' or (self.state == 'draft' and include_draft)) and not self.is_expired and self.require_payment and transaction.state != 'done' and self.amount_total
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Give access button to users and portal customer as portal is integrated
         in sale. Customer and portal group have probably no right to see
         the document so they don't have the access button. """
-        groups = super(SaleOrder, self)._notify_get_groups()
+        groups = super(SaleOrder, self)._notify_get_groups(msg_vals=msg_vals)
 
         self.ensure_one()
         if self.state not in ('draft', 'cancel'):

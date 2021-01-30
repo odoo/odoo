@@ -330,7 +330,7 @@ class Repair(models.Model):
             currency = repair.pricelist_id.currency_id
             company = repair.env.company
 
-            journal = repair.env['account.move'].with_context(type='out_invoice')._get_default_journal()
+            journal = repair.env['account.move'].with_context(move_type='out_invoice')._get_default_journal()
             if not journal:
                 raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (company.name, company.id))
 
@@ -749,7 +749,7 @@ class RepairFee(models.Model):
     name = fields.Text('Description', index=True, required=True)
     product_id = fields.Many2one(
         'product.product', 'Product', check_company=True,
-        domain="[('type', 'in', ['product', 'consu']), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
+        domain="[('type', '=', 'service'), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
     product_uom_qty = fields.Float('Quantity', digits='Product Unit of Measure', required=True, default=1.0)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price')
     product_uom = fields.Many2one('uom.uom', 'Product Unit of Measure', required=True, domain="[('category_id', '=', product_uom_category_id)]")

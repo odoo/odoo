@@ -19,7 +19,6 @@ from odoo import registry, SUPERUSER_ID
 from odoo.http import request
 from odoo.tools.safe_eval import safe_eval
 from odoo.osv.expression import FALSE_DOMAIN
-
 from odoo.addons.http_routing.models.ir_http import ModelConverter, _guess_mimetype
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 
@@ -75,9 +74,12 @@ class Http(models.AbstractModel):
     def _slug_matching(cls, adapter, endpoint, **kw):
         for arg in kw:
             if isinstance(kw[arg], models.BaseModel):
-                kw[arg] = kw[arg].with_user(request.uid)
+                kw[arg] = kw[arg].with_context(slug_matching=True)
         qs = request.httprequest.query_string.decode('utf-8')
-        return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
+        try:
+            return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
+        except odoo.exceptions.MissingError:
+            raise werkzeug.exceptions.NotFound()
 
     @classmethod
     def _match(cls, path_info, key=None):
@@ -419,6 +421,11 @@ class Http(models.AbstractModel):
 
 
 class ModelConverter(ModelConverter):
+
+    def to_url(self, value):
+        if value.env.context.get('slug_matching'):
+            return value.env.context.get('_converter_value', str(value.id))
+        return super().to_url(value)
 
     def generate(self, uid, dom=None, args=None):
         Model = request.env[self.model].with_user(uid)

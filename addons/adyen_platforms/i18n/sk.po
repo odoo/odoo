@@ -5,20 +5,20 @@
 # Translators:
 # Martin Trigaux, 2020
 # Matus Krnac <matus.krnac@gmail.com>, 2020
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2020
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2020
 # gebri <gebri@inmail.sk>, 2020
 # Jan Prokop, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 15:42+0000\n"
 "PO-Revision-Date: 2020-11-16 13:49+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2021\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr ""
 #. module: adyen_platforms
 #: code:addons/adyen_platforms/models/adyen_account.py:0
 #, python-format
-msgid "A timeout occured whil trying to reach the Adyen proxy."
+msgid "A timeout occured while trying to reach the Adyen proxy."
 msgstr ""
 
 #. module: adyen_platforms
@@ -145,11 +145,6 @@ msgid "Adyen UUID should be unique"
 msgstr ""
 
 #. module: adyen_platforms
-#: model:ir.model,name:adyen_platforms.model_adyen_transaction
-msgid "Adyen for Plaforms Transaction"
-msgstr ""
-
-#. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_account
 msgid "Adyen for Platforms Account"
 msgstr ""
@@ -177,6 +172,11 @@ msgstr ""
 #. module: adyen_platforms
 #: model:ir.model,name:adyen_platforms.model_adyen_shareholder
 msgid "Adyen for Platforms Shareholder"
+msgstr ""
+
+#. module: adyen_platforms
+#: model:ir.model,name:adyen_platforms.model_adyen_transaction
+msgid "Adyen for Platforms Transaction"
 msgstr ""
 
 #. module: adyen_platforms
@@ -225,12 +225,12 @@ msgstr "Bankové účty"
 #. module: adyen_platforms
 #: model_terms:ir.ui.view,arch_db:adyen_platforms.kyc_status_message
 msgid "Bank Accounts:"
-msgstr ""
+msgstr "Bankový účet"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_code
 msgid "Bank Code"
-msgstr ""
+msgstr "Kód banky"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_bank_account__bank_statement
@@ -327,7 +327,7 @@ msgstr "Spoločnosť"
 #: code:addons/adyen_platforms/static/src/js/adyen_account_views.js:0
 #, python-format
 msgid "Confirm your Adyen Account Creation"
-msgstr ""
+msgstr "Potvrď vytvorenie Adyen účtu"
 
 #. module: adyen_platforms
 #. openerp-web
@@ -385,7 +385,7 @@ msgstr "Vytvoriť"
 #. module: adyen_platforms
 #: model:ir.actions.act_window,name:adyen_platforms.adyen_account_action_create
 msgid "Create an Adyen Account"
-msgstr ""
+msgstr "Vytvoriť Adyen účet"
 
 #. module: adyen_platforms
 #: model:ir.model.fields,field_description:adyen_platforms.field_adyen_account__create_uid
@@ -1219,7 +1219,7 @@ msgstr ""
 #: code:addons/adyen_platforms/static/src/xml/adyen_account_templates.xml:0
 #, python-format
 msgid ""
-"We will notify you when the status of the review changes or if additionnal "
+"We will notify you when the status of the review changes, or if additional "
 "data is required."
 msgstr ""
 

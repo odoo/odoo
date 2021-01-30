@@ -35,16 +35,18 @@
 # wangting <39181819@qq.com>, 2020
 # Jeanphy <hzh0292@qq.com>, 2020
 # Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # fausthuang, 2020
+# Lei Xu <xulei8@qq.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# 希 杜 <dx19910707@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-29 15:48+0000\n"
+"POT-Creation-Date: 2021-01-04 08:58+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: fausthuang, 2020\n"
+"Last-Translator: 希 杜 <dx19910707@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,13 +123,6 @@ msgstr "%d 年前"
 #, python-format
 msgid "%s Files"
 msgstr "%s 文件"
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/xml/notification.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: web
 #. openerp-web
@@ -262,7 +257,7 @@ msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone
 msgid ""
 "<span class=\"o_footer_copyright_name mr-2\">Copyright &amp;copy; Company "
 "name</span>"
-msgstr ""
+msgstr "<span class=\"o_footer_copyright_name mr-2\">版权 &amp;copy; 公司名称</span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -391,7 +386,7 @@ msgstr "<strong>到期日期:</strong>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<strong>Invoice Date:</strong>"
-msgstr "<strong>发票日期:</strong>"
+msgstr "<strong>结算单日期:</strong>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -781,14 +776,14 @@ msgstr "你确定要移除此筛选吗？"
 #: code:addons/web/static/src/js/views/list/list_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete these records ?"
-msgstr ""
+msgstr "您确认要删除这些数据吗？"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete these records?"
-msgstr ""
+msgstr "您确认要删除这些数据吗？"
 
 #. module: web
 #. openerp-web
@@ -802,7 +797,7 @@ msgstr "你确定要删除此记录吗？"
 #: code:addons/web/static/src/js/views/basic/basic_controller.js:0
 #, python-format
 msgid "Are you sure you want to delete this record?"
-msgstr ""
+msgstr "您确认要删除这些数据吗？"
 
 #. module: web
 #. openerp-web
@@ -1601,7 +1596,7 @@ msgstr "你真的要从你的喜好中删除这个过滤器吗？"
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Do you want to create"
-msgstr ""
+msgstr "您确认要创建吗？"
 
 #. module: web
 #: model:ir.model.fields,field_description:web.field_base_document_layout__external_report_layout_id
@@ -1643,7 +1638,7 @@ msgstr ""
 #: code:addons/web/static/src/js/widgets/domain_selector.js:0
 #, python-format
 msgid "Domain not supported"
-msgstr ""
+msgstr "域名未设置"
 
 #. module: web
 #. openerp-web
@@ -2036,6 +2031,7 @@ msgstr "绿色"
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/js/control_panel/groupby_menu.js:0
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #, python-format
 msgid "Group By"
 msgstr "分组"
@@ -2414,6 +2410,13 @@ msgstr "Mac"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/services/crash_manager.js:0
+#, python-format
+msgid "MailDeliveryException"
+msgstr ""
+
+#. module: web
+#. openerp-web
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
 #: code:addons/web/static/src/xml/base.xml:0
@@ -2488,6 +2491,7 @@ msgstr "若长时间未响应，请按下F5重新加载应用"
 
 #. module: web
 #. openerp-web
+#: code:addons/web/static/src/js/views/graph/graph_controller.js:0
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "Measures"
@@ -2515,13 +2519,6 @@ msgstr "元数据（%s）"
 #, python-format
 msgid "Method:"
 msgstr "方法："
-
-#. module: web
-#. openerp-web
-#: code:addons/web/static/src/js/services/crash_manager.js:92
-#, python-format
-msgid "MailDeliveryException"
-msgstr ""
 
 #. module: web
 #. openerp-web
@@ -3121,7 +3118,7 @@ msgstr "请先点击“保存”按钮"
 #: code:addons/web/static/src/js/fields/basic_fields.js:0
 #, python-format
 msgid "Please enter a numerical value"
-msgstr ""
+msgstr "请输入一个数字"
 
 #. module: web
 #. openerp-web

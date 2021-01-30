@@ -157,7 +157,7 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="mailing_type" widget="radio" options="{'horizontal': true}" invisible="1"
-                                attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="subject" string="Subject" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. New Sale on all T-shirts"/>
                             <field name="preview" string="Preview Text" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}" widget="char_emojis" placeholder="e.g. Check it out before it's too late!"/>
                             <label for="mailing_model_id" string="Recipients"/>

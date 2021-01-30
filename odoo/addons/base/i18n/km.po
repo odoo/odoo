@@ -1160,17 +1160,11 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
-"\n"
-"ធ្វើឱ្យកាលបរិច្ឆេទចាក់សោមិនអាចត្រឡប់វិញបាន៖\n"
-"\n"
-"    * អ្នកមិនអាចកំណត់លក្ខខណ្ឌតឹងរ៉ឹងជាងទីប្រឹក្សាជាងអ្នកប្រើ។ បន្ទាប់មកកាលបរិច្ឆេទចាក់សោរលើទីប្រឹក្សាត្រូវកំណត់មុនកាលបរិច្ឆេទចាក់សោរសម្រាប់អ្នកប្រើប្រាស់។\n"
-"    * អ្នកមិនអាចចាក់សោរយៈពេលដែលមិនទាន់បញ្ចប់ទេ។ បន្ទាប់មកកាលបរិច្ឆេទចាក់សោសម្រាប់អ្នកប្រឹក្សាត្រូវកំណត់មុនថ្ងៃចុងក្រោយនៃខែមុន។\n"
-"    * កាលបរិច្ឆេទចាក់សោថ្មីសម្រាប់ទីប្រឹក្សាត្រូវកំណត់បន្ទាប់ពីកាលបរិច្ឆេទចាក់សោមុន។"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -19225,6 +19219,12 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -26438,6 +26438,13 @@ msgid ""
 msgstr ""
 "អ្នកនឹងអាចកំណត់សិទ្ធិចូលបន្ថែមដោយការកែសម្រួលអ្នកប្រើដែលបានបង្កើតថ្មីនៅក្រោមម៉ឺនុយការកំណត់"
 " / អ្នកប្រើ។"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0

@@ -4,6 +4,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import UserError
 from odoo.tools.pdf import OdooPdfFileReader, OdooPdfFileWriter
+from odoo.osv import expression
 
 from lxml import etree
 import base64
@@ -97,7 +98,7 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return False
 
-    def _support_batching(self):
+    def _support_batching(self, move=None, state=None, company=None):
         """ Indicate if we can send multiple documents in the same time to the web services.
         If True, the _post_%s_edi methods will get multiple documents in the same time.
         Otherwise, these methods will be called with only one record at a time.
@@ -107,6 +108,26 @@ class AccountEdiFormat(models.Model):
         # TO OVERRIDE
         return False
 
+    def _get_batch_key(self, move, state):
+        """ Returns a tuple that will be used as key to partitionnate the invoices/payments when creating batches
+        with multiple invoices/payments.
+        The type of move (invoice or payment), its company_id, its edi state and the edi_format are used by default, if
+        no further partition is needed for this format, this method should return ().
+
+        :returns: The key to be used when partitionning the batches.
+        """
+        move.ensure_one()
+        return ()
+
+    def _check_move_configuration(self, move):
+        """ Checks the move and relevant records for potential error (missing data, etc).
+
+        :param invoice: The move to check.
+        :returns:       A list of error messages.
+        """
+        # TO OVERRIDE
+        return []
+
     def _post_invoice_edi(self, invoices, test_mode=False):
         """ Create the file content representing the invoice (and calls web services if necessary).
 
@@ -115,6 +136,7 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * attachment:       The attachment representing the invoice in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
+        * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -128,6 +150,7 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the invoice as key and as value, another dictionary:
         * success:          True if the invoice was successfully cancelled.
         * error:            An error if the edi was not successfully cancelled.
+        * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -141,6 +164,7 @@ class AccountEdiFormat(models.Model):
         :returns:           A dictionary with the payment as key and as value, another dictionary:
         * attachment:       The attachment representing the payment in this edi_format if the edi was successfully posted.
         * error:            An error if the edi was not successfully posted.
+        * blocking_level:    (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -154,6 +178,7 @@ class AccountEdiFormat(models.Model):
         :returns:         A dictionary with the payment as key and as value, another dictionary:
         * success:        True if the payment was successfully cancelled.
         * error:          An error if the edi was not successfully cancelled.
+        * blocking_level:  (optional, requires account_edi_extended) How bad is the error (how should the edi flow be blocked ?)
         """
         # TO OVERRIDE
         self.ensure_one()
@@ -223,7 +248,7 @@ class AccountEdiFormat(models.Model):
         """
         attachments = []
         for edi_format in self:
-            attachment = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format).attachment_id
+            attachment = invoice._get_edi_attachment(edi_format)
             if attachment and edi_format._is_embedding_to_invoice_pdf_needed():
                 datas = base64.b64decode(attachment.with_context(bin_size=False).datas)
                 attachments.append({'name': attachment.name, 'datas': datas})
@@ -296,8 +321,11 @@ class AccountEdiFormat(models.Model):
             return to_process
 
         # Process embedded files.
-        for xml_name, content in pdf_reader.getAttachments():
-            to_process.extend(self._decode_xml(xml_name, content))
+        try:
+            for xml_name, content in pdf_reader.getAttachments():
+                to_process.extend(self._decode_xml(xml_name, content))
+        except NotImplementedError as e:
+            _logger.warning("Unable to access the attachments of %s. Tried to decrypt it, but %s." % (filename, e))
 
         # Process the pdf itself.
         to_process.append({
@@ -379,3 +407,84 @@ class AccountEdiFormat(models.Model):
                         res.write({'extract_state': 'done'})
                     return res
         return self.env['account.move']
+
+    ####################################################
+    # Import helpers
+    ####################################################
+
+    def _find_value(self, xpath, xml_element, namespaces=None):
+        element = xml_element.xpath(xpath, namespaces=namespaces)
+        return element[0].text if element else None
+
+    def _retrieve_partner(self, name=None, phone=None, mail=None, vat=None):
+        '''Search all partners and find one that matches one of the parameters.
+
+        :param name:    The name of the partner.
+        :param phone:   The phone or mobile of the partner.
+        :param mail:    The mail of the partner.
+        :param vat:     The vat number of the partner.
+        :returns:       A partner or an empty recordset if not found.
+        '''
+        domains = []
+        for value, domain in (
+            (name, [('name', 'ilike', name)]),
+            (phone, expression.OR([[('phone', '=', phone)], [('mobile', '=', phone)]])),
+            (mail, [('email', '=', mail)]),
+            (vat, [('vat', 'like', vat)]),
+        ):
+            if value is not None:
+                domains.append(domain)
+
+        domain = expression.OR(domains)
+        return self.env['res.partner'].search(domain, limit=1)
+
+    def _retrieve_product(self, name=None, default_code=None, barcode=None):
+        '''Search all products and find one that matches one of the parameters.
+
+        :param name:            The name of the product.
+        :param default_code:    The default_code of the product.
+        :param barcode:         The barcode of the product.
+        :returns:               A product or an empty recordset if not found.
+        '''
+        domains = []
+        for value, domain in (
+            (name, ('name', 'ilike', name)),
+            (default_code, ('default_code', '=', default_code)),
+            (barcode, ('barcode', '=', barcode)),
+        ):
+            if value is not None:
+                domains.append([domain])
+
+        domain = expression.OR(domains)
+        return self.env['product.product'].search(domain, limit=1)
+
+    def _retrieve_tax(self, amount, type_tax_use):
+        '''Search all taxes and find one that matches all of the parameters.
+
+        :param amount:          The amount of the tax.
+        :param type_tax_use:    The type of the tax.
+        :returns:               A tax or an empty recordset if not found.
+        '''
+        domains = [
+            [('amount', '=', float(amount))],
+            [('type_tax_use', '=', type_tax_use)]
+        ]
+
+        return self.env['account.tax'].search(expression.AND(domains), order='sequence ASC', limit=1)
+
+    def _retrieve_currency(self, code):
+        '''Search all currencies and find one that matches the code.
+
+        :param code: The code of the currency.
+        :returns:    A currency or an empty recordset if not found.
+        '''
+        return self.env['res.currency'].search([('name', '=', code.upper())], limit=1)
+
+    ####################################################
+    # Other helpers
+    ####################################################
+
+    @api.model
+    def _format_error_message(self, error_title, errors):
+        bullet_list_msg = ''.join('<li>%s</li>' % msg for msg in errors)
+        return '%s<ul>%s</ul>' % (error_title, bullet_list_msg)

@@ -7,7 +7,7 @@ var tour = require('web_tour.tour');
 var _t = core._t;
 
 tour.register('project_tour', {
-    sequence: 30,
+    sequence: 110,
     url: "/web",
     rainbowManMessage: "Congratulations, you are now a master of project management.",
 }, [tour.stepUtils.showAppsMenuItem(), {
@@ -76,7 +76,7 @@ tour.register('project_tour', {
     position: "bottom",
     run: "drag_and_drop .o_kanban_group:eq(1) ",
 }, {
-    trigger: ".o_kanban_group:eq(1) > .o_kanban_record",
+    trigger: ".o_kanban_record:first",
     extra_trigger: '.o_kanban_project_tasks',
     content: _t("Let's start working on your task."),
     position: "bottom",

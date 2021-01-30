@@ -47,9 +47,7 @@ odoo.define('web.PivotRenderer', function (require) {
 
             onPatched(() => this._updateTooltip());
 
-            if (!this.env.device.isMobile) {
-                useExternalListener(window, 'click', this._resetState);
-            }
+            useExternalListener(window, 'click', this._resetState);
         }
 
         //----------------------------------------------------------------------

@@ -143,7 +143,7 @@ class Product(models.Model):
             domain_move_in_done = list(domain_move_in)
             domain_move_out_done = list(domain_move_out)
         if from_date:
-            date_date_expected_domain_from = [('date', '<=', from_date)]
+            date_date_expected_domain_from = [('date', '>=', from_date)]
             domain_move_in += date_date_expected_domain_from
             domain_move_out += date_date_expected_domain_from
         if to_date:
@@ -540,6 +540,13 @@ class Product(models.Model):
             return seen_rules | rule
         else:
             return self._get_rules_from_location(rule.location_src_id, seen_rules=seen_rules | rule)
+
+
+    def _filter_to_unlink(self):
+        domain = [('product_id', 'in', self.ids)]
+        lines = self.env['stock.production.lot'].read_group(domain, ['product_id'], ['product_id'])
+        linked_product_ids = [group['product_id'][0] for group in lines]
+        return super(Product, self - self.browse(linked_product_ids))._filter_to_unlink()
 
 
 class ProductTemplate(models.Model):

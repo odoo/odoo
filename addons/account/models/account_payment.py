@@ -224,7 +224,7 @@ class AccountPayment(models.Model):
         }
 
         default_line_name = self.env['account.move.line']._get_default_line_name(
-            payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
+            _("Internal Transfer") if self.is_internal_transfer else payment_display_name['%s-%s' % (self.payment_type, self.partner_type)],
             self.amount,
             self.currency_id,
             self.date,
@@ -319,7 +319,7 @@ class AccountPayment(models.Model):
     def _compute_partner_bank_id(self):
         ''' The default partner_bank_id will be the first available on the partner. '''
         for pay in self:
-            available_partner_bank_accounts = pay.partner_id.bank_ids
+            available_partner_bank_accounts = pay.partner_id.bank_ids.filtered(lambda x: x.company_id in (False, pay.company_id))
             if available_partner_bank_accounts:
                 pay.partner_bank_id = available_partner_bank_accounts[0]._origin
             else:

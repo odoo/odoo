@@ -196,17 +196,19 @@ class PurchaseOrder(models.Model):
     @api.onchange('date_planned')
     def onchange_date_planned(self):
         if self.date_planned:
-            self.order_line.date_planned = self.date_planned
+            self.order_line.filtered(lambda line: not line.display_type).date_planned = self.date_planned
 
     @api.model
     def create(self, vals):
+        company_id = vals.get('company_id', self.default_get(['company_id'])['company_id'])
+        # Ensures default picking type and currency are taken from the right company.
+        self_comp = self.with_company(company_id)
         if vals.get('name', 'New') == 'New':
-            company_id = vals.get("company_id", self.env.company.id)
             seq_date = None
             if 'date_order' in vals:
                 seq_date = fields.Datetime.context_timestamp(self, fields.Datetime.to_datetime(vals['date_order']))
-            vals['name'] = self.env['ir.sequence'].with_company(company_id).next_by_code('purchase.order', sequence_date=seq_date) or '/'
-        return super(PurchaseOrder, self).create(vals)
+            vals['name'] = self_comp.env['ir.sequence'].next_by_code('purchase.order', sequence_date=seq_date) or '/'
+        return super(PurchaseOrder, self_comp).create(vals)
 
     def unlink(self):
         for order in self:
@@ -1031,7 +1033,7 @@ class PurchaseOrderLine(models.Model):
         # If not seller, use the standard price. It needs a proper currency conversion.
         if not seller:
             price_unit = self.env['account.tax']._fix_tax_included_price_company(
-                self.product_id.standard_price,
+                self.product_id.uom_id._compute_price(self.product_id.standard_price, self.product_id.uom_po_id),
                 self.product_id.supplier_taxes_id,
                 self.taxes_id,
                 self.company_id,

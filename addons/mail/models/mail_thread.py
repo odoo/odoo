@@ -978,7 +978,7 @@ class MailThread(models.AbstractModel):
             message_dict.pop('parent_id', None)
 
             # check it does not directly contact catchall
-            if catchall_alias and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
+            if catchall_alias and email_to_localparts and all(email_localpart == catchall_alias for email_localpart in email_to_localparts):
                 _logger.info('Routing mail from %s to %s with Message-Id %s: direct write to catchall, bounce', email_from, email_to, message_id)
                 body = self.env.ref('mail.mail_bounce_catchall')._render({
                     'message': message,
@@ -2212,7 +2212,7 @@ class MailThread(models.AbstractModel):
 
         model = msg_vals.get('model') if msg_vals else message.model
         model_name = model_description or (self._fallback_lang().env['ir.model']._get(model).display_name if model else False) # one query for display name
-        recipients_groups_data = self._notify_classify_recipients(partners_data, model_name)
+        recipients_groups_data = self._notify_classify_recipients(partners_data, model_name, msg_vals=msg_vals)
 
         if not recipients_groups_data:
             return True
@@ -2486,22 +2486,23 @@ class MailThread(models.AbstractModel):
         return hm
 
     def _notify_get_action_link(self, link_type, **kwargs):
-        local_kwargs = dict(kwargs)  # do not modify in-place, modify copy instead
-        base_params = {
+        """ Prepare link to an action: view document, follow document, ... """
+        params = {
             'model': kwargs.get('model', self._name),
             'res_id': kwargs.get('res_id', self.ids and self.ids[0] or False),
         }
-
-        local_kwargs.pop('message_id', None)
-        local_kwargs.pop('model', None)
-        local_kwargs.pop('res_id', None)
+        # whitelist accepted parameters: action (deprecated), token (assign), access_token
+        # (view), auth_signup_token and auth_login (for auth_signup support)
+        params.update(dict(
+            (key, value)
+            for key, value in kwargs.items()
+            if key in ('action', 'token', 'access_token', 'auth_signup_token', 'auth_login')
+        ))
 
         if link_type in ['view', 'assign', 'follow', 'unfollow']:
-            params = dict(base_params, **local_kwargs)
             base_link = '/mail/%s' % link_type
         elif link_type == 'controller':
-            controller = local_kwargs.pop('controller')
-            params = dict(base_params, **local_kwargs)
+            controller = kwargs.get('controller')
             params.pop('model')
             base_link = '%s' % controller
         else:
@@ -2517,7 +2518,7 @@ class MailThread(models.AbstractModel):
 
         return link
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Return groups used to classify recipients of a notification email.
         Groups is a list of tuple containing of form (group_name, group_func,
         group_data) where
@@ -2556,7 +2557,7 @@ class MailThread(models.AbstractModel):
             )
         ]
 
-    def _notify_classify_recipients(self, recipient_data, model_name):
+    def _notify_classify_recipients(self, recipient_data, model_name, msg_vals=None):
         """ Classify recipients to be notified of a message in groups to have
         specific rendering depending on their group. For example users could
         have access to buttons customers should not have in their emails.
@@ -2587,10 +2588,10 @@ class MailThread(models.AbstractModel):
         }]
         only return groups with recipients
         """
-
-        groups = self._notify_get_groups()
-
-        access_link = self._notify_get_action_link('view')
+        # keep a local copy of msg_vals as it may be modified to include more information about groups or links
+        local_msg_vals = dict(msg_vals) if msg_vals else {}
+        groups = self._notify_get_groups(msg_vals=local_msg_vals)
+        access_link = self._notify_get_action_link('view', **local_msg_vals)
 
         if model_name:
             view_title = _('View %s', model_name)
@@ -2774,7 +2775,7 @@ class MailThread(models.AbstractModel):
             values = {
                 'object': record,
                 'model_description': model_description,
-                'access_link': self._notify_get_action_link('view'),
+                'access_link': record._notify_get_action_link('view'),
             }
             assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
@@ -2810,9 +2811,10 @@ class MailThread(models.AbstractModel):
 
         new_partners, new_channels = dict(), dict()
 
-        # fetch auto subscription subtypes data
+        # return data related to auto subscription based on subtype matching (aka: 
+        # default task subtypes or subtypes from project triggering task subtypes)
         updated_relation = dict()
-        all_ids, def_ids, int_ids, parent, relation = self.env['mail.message.subtype']._get_auto_subscription_subtypes(self._name)
+        child_ids, def_ids, all_int_ids, parent, relation = self.env['mail.message.subtype']._get_auto_subscription_subtypes(self._name)
 
         # check effectively modified relation field
         for res_model, fnames in relation.items():
@@ -2821,15 +2823,21 @@ class MailThread(models.AbstractModel):
         udpated_fields = [fname for fnames in updated_relation.values() for fname in fnames if updated_values.get(fname)]
 
         if udpated_fields:
+            # fetch "parent" subscription data (aka: subtypes on project to propagate on task)
             doc_data = [(model, [updated_values[fname] for fname in fnames]) for model, fnames in updated_relation.items()]
             res = self.env['mail.followers']._get_subscription_data(doc_data, None, None, include_pshare=True, include_active=True)
             for fid, rid, pid, cid, subtype_ids, pshare, active in res:
+                # use project.task_new -> task.new link
                 sids = [parent[sid] for sid in subtype_ids if parent.get(sid)]
-                sids += [sid for sid in subtype_ids if sid not in parent and sid in def_ids or sid in int_ids]
+                # add checked subtypes matching model_name
+                sids += [sid for sid in subtype_ids if sid not in parent and sid in child_ids]
                 if pid and active:  # auto subscribe only active partners
-                    new_partners[pid] = (set(sids) & set(all_ids)) - set(int_ids) if pshare else set(sids) & set(all_ids)
-                if cid:
-                    new_channels[cid] = (set(sids) & set(all_ids)) - set(int_ids)
+                    if pshare:  # remove internal subtypes for customers
+                        new_partners[pid] = set(sids) - set(all_int_ids)
+                    else:
+                        new_partners[pid] = set(sids)
+                if cid:  # never subscribe channels to internal subtypes
+                    new_channels[cid] = set(sids) - set(all_int_ids)
 
         notify_data = dict()
         res = self._message_auto_subscribe_followers(updated_values, def_ids)

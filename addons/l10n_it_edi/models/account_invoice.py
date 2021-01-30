@@ -244,6 +244,15 @@ class AccountMove(models.Model):
         content = self.env.ref('l10n_it_edi.account_invoice_it_FatturaPA_export')._render(template_values)
         return content
 
+    def _post(self, soft=True):
+        # OVERRIDE
+        posted = super()._post(soft=soft)
+
+        for move in posted.filtered(lambda m: m.l10n_it_send_state == 'to_send'):
+            move.send_pec_mail()
+
+        return posted
+
     def send_pec_mail(self):
         self.ensure_one()
         allowed_state = ['to_send', 'invalid']

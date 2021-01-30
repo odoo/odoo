@@ -10,15 +10,16 @@
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2020
 # Jon Perez <jop@odoo.com>, 2020
 # Martin Trigaux, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Víctor Martínez <victor.martinez@tecnativa.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -563,7 +564,7 @@ msgstr "<strong>¿Adónde quiere enviar estos productos?</strong>"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? Esto puede dar lugar a inconsistencias en su inventario."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -756,18 +757,16 @@ msgid "Allowed Route"
 msgstr ""
 
 #. module: stock
+#: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
+msgid ""
+"Allows to start with a pre-filled counted quantity for each lines or with "
+"all counted quantities set to zero."
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
 msgid "Allows to start with an empty inventory."
 msgstr "Permite comenzar con un inventario vacío."
-
-#. module: stock
-#: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
-msgid ""
-"Allows to start with prefill counted quantity for each lines or with all "
-"counted quantity set to zero."
-msgstr ""
-"Permite comenzar con la cantidad contada de precarga para cada línea o con "
-"toda la cantidad contada establecida en cero"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1647,7 +1646,7 @@ msgstr "Ubicaciones de cliente"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_dhl
 msgid "DHL USA Connector"
-msgstr ""
+msgstr "Conector de DHL USA"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__date
@@ -3914,7 +3913,6 @@ msgstr "Nuevo"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
-#: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "New Move:"
 msgstr "Nuevo movimiento:"
@@ -4885,7 +4883,7 @@ msgstr "Plantilla de producto"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__tracking
 msgid "Product Tracking"
-msgstr ""
+msgstr "Seguimiento de productos"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__type
@@ -6146,8 +6144,8 @@ msgid ""
 "Some products of the inventory adjustment are tracked. Are you sure you "
 "don't want to specify a serial or lot number for them?"
 msgstr ""
-"Algunos productos del ajuste de inventario tienen seguimiento por numero de "
-"lote/serie. Esta seguro que no quiere especificar un numero de lote/serie "
+"Algunos productos del ajuste de inventario tienen seguimiento por número de "
+"lote/serie. ¿Está seguro que no quiere especificar un número de lote/serie "
 "para ellos?"
 
 #. module: stock
@@ -6909,6 +6907,16 @@ msgstr ""
 "productos que está devolviendo ahora, asegúrese de <b>anular</b> el albarán "
 "devuelto para evitar que se apliquen de nuevo las reglas de logísticas (lo "
 "que crearía operaciones duplicadas)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -8229,7 +8237,7 @@ msgstr "Por ejemplo, PO0032"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "from location"
-msgstr ""
+msgstr "desde el lugar"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
