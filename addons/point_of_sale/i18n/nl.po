@@ -13,15 +13,15 @@
 # Martin Trigaux, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:16+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -168,7 +168,7 @@ msgstr "<span class=\"o_form_label\">Betalinsgmethodes</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"oe_inline\"><b>Skip Preview Screen</b></span>"
-msgstr "<span class=\"oe_inline\"><b>Preview scherm overslaan</b></span>"
+msgstr "<span class=\"oe_inline\"><b>Voorbeeldscherm overslaan</b></span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.customer_facing_display_html
@@ -334,7 +334,7 @@ msgstr "Accepteer betalingen met een Adyen betaalterminal"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
 msgid "Account"
-msgstr "Account"
+msgstr "Rekening"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_cash_rounding
@@ -522,6 +522,8 @@ msgid ""
 "Allow invoicing of paid orders by activating 'Invoicing' in the 'Bills &amp;"
 " Receipts' section."
 msgstr ""
+"Sta facturering van betaalde bestellingen toe door 'Invoicing' te activeren "
+"in de 'Bills & amp; Bonnen' sectie."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
@@ -1533,6 +1535,12 @@ msgstr "Bureaus"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_real_difference
 msgid "Difference"
 msgstr "Verschil"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid "Difference at closing PoS session"
+msgstr "Verschil bij het sluiten van PoS-sessie."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_difference
@@ -2858,7 +2866,7 @@ msgstr "Alleen afronden op cash betalingen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Only on cash methods"
-msgstr ""
+msgstr "Alleen bij contant geld"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__restrict_price_control
@@ -4090,7 +4098,7 @@ msgstr "Omkeerverzoek verstuurd naar terminal"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Reverse"
-msgstr "Retourneren"
+msgstr "Crediteren"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4833,6 +4841,8 @@ msgstr ""
 msgid ""
 "The payment method selected is not allowed in the config of the POS session."
 msgstr ""
+"De geselecteerde betaalmethode is niet toegestaan in de configuratie van de "
+"POS-sessie."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -5168,7 +5178,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "This session is already closed."
-msgstr ""
+msgstr "Deze sessie is al gesloten."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5802,6 +5812,8 @@ msgstr ""
 msgid ""
 "You must have at least one payment method configured to launch a session."
 msgstr ""
+"Je moet ten minste één betalingsmethode hebben geconfigureerd om een sessie "
+"te starten."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
