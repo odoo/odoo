@@ -55,6 +55,9 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
+"'pending') and 'Ordine in sospeso' or 'Ordine'} (Rif. ${object.name or 'n/d'"
+" })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -668,7 +671,7 @@ msgstr "Accetta e paga"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr ""
+msgstr "Accetta e paga preventivo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -678,7 +681,7 @@ msgstr "Accetta e firma"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Sign Quotation"
-msgstr ""
+msgstr "Accetta e firma preventivo"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_warning
@@ -945,7 +948,7 @@ msgstr "Annulla"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Cancel Sales Order"
-msgstr ""
+msgstr "Annulla ordine di vendita"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
@@ -2412,7 +2415,7 @@ msgstr ""
 #: code:addons/sale/static/src/js/variant_mixin.js:0
 #, python-format
 msgid "Not available with %s"
-msgstr ""
+msgstr "Non disponibile con %s"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_order_confirmation_state__not_done
@@ -3589,7 +3592,7 @@ msgstr "Firma e paga"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Sign &amp; Pay Quotation"
-msgstr ""
+msgstr "Firma e paga preventivo"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
@@ -4267,7 +4270,7 @@ msgstr "Opportunità di incremento"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "Valid Until"
-msgstr "Valido fino"
+msgstr "Valido fino al"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -4282,7 +4285,7 @@ msgstr "Voce griglia per variante"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "View Quotation"
-msgstr ""
+msgstr "Vedi preventivo"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -4388,8 +4391,8 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"Impossibile cambiare la tipologia di una riga in un ordine di vendita. "
-"Eliminare invece la riga corrente e crearne una nuova del tipo corretto."
+"Impossibile cambiare il tipo di riga in un ordine di vendita. Eliminare "
+"invece la riga attuale e crearne una nuova del tipo corretto."
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.product_template_action

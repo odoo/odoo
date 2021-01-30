@@ -6,8 +6,8 @@
 # Martin Trigaux, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # renodoo <ren@odoo.com>, 2020
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Oscar Tejada <oscar.tejada@epvsaisa.com>, 2020
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 14:12+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Oscar Tejada <oscar.tejada@epvsaisa.com>, 2020\n"
+"Last-Translator: Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2021\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,8 +53,8 @@ msgid ""
 "Cannot deactivate (%s) on this journal because not all documents are "
 "synchronized"
 msgstr ""
-"No es posible desactivar ( 1%s ) en este diario debido a que no han sido "
-"sincronizados todos los documentos. "
+"No es posible desactivar (%s) en este diario debido a que no han sido "
+"sincronizados todos los documentos"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_format__code
@@ -113,7 +113,7 @@ msgstr "Formato EDI"
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_journal__compatible_edi_ids
 msgid "EDI format that support moves in this journal"
-msgstr "Formato EDI que soporta los movimientos en este diario. "
+msgstr "Formato EDI que soporta los movimientos en este diario"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_bank_statement_line__edi_document_ids
@@ -146,7 +146,7 @@ msgstr "Mostrar botón de Cancelación Edi"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_web_services_to_process
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_web_services_to_process
 msgid "Edi Web Services To Process"
-msgstr "Web Services Edi a procesar "
+msgstr "Web Services Edi a procesar"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_journal_form_inherited
@@ -301,7 +301,7 @@ msgstr "Solicitar cancelación de intercambio electrónico de datos EDI"
 #: model:ir.model.fields,help:account_edi.field_account_invoice_send__edi_format_ids
 #: model:ir.model.fields,help:account_edi.field_account_journal__edi_format_ids
 msgid "Send XML/EDI invoices"
-msgstr "enviar facturas XML/EDI"
+msgstr "Enviar facturas XML/EDI"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
@@ -319,6 +319,15 @@ msgstr "Enviado"
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__state
 msgid "State"
 msgstr "Estado"
+
+#. module: account_edi
+#: model:ir.model.fields,help:account_edi_extended.field_account_edi_document__error
+msgid ""
+"The text of the last error that happened during Electronic Invoice "
+"operation."
+msgstr ""
+"El texto del último error ocurrido durante la operación de Factura "
+"Electrónica."
 
 #. module: account_edi
 #: model:ir.model.fields,help:account_edi.field_account_bank_statement_line__edi_web_services_to_process
@@ -392,7 +401,7 @@ msgid ""
 msgstr ""
 "No puede editar el siguiente asiento contable porque ya se ha enviado un "
 "documento electrónico %s. En lugar de esto, por favor use botón de "
-"'Solicitar Cancelación EDI'"
+"'Solicitar Cancelación EDI’."
 
 #. module: account_edi
 #: code:addons/account_edi/models/ir_attachment.py:0

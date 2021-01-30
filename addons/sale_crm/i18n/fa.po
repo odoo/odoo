@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_crm
+# 	* sale_crm
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Martin Trigaux, 2020
+# Hamid Darabi, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-04-21 10:46+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23,28 +25,82 @@ msgstr ""
 #. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "<span class=\"o_stat_text\"> Orders</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> سفارش‌ها</span>"
 
 #. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
-msgid "<span class=\"o_stat_text\"> Quotation(s) </span>"
-msgstr ""
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__lead_id
+msgid "Associated Lead"
+msgstr "سرنخ مربوطه"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__campaign_id
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__campaign_id
-msgid "Campaign"
-msgstr "کمپین"
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
+msgid "Cancel"
+msgstr "لغو"
 
 #. module: sale_crm
-#: model:ir.model,name:sale_crm.model_account_invoice
-msgid "Invoice"
-msgstr "فاکتور"
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
+msgid "Confirm"
+msgstr "تایید"
+
+#. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__create
+msgid "Create a new customer"
+msgstr "ایجاد مشتری جدید"
+
+#. module: sale_crm
+#: model:ir.model,name:sale_crm.model_crm_quotation_partner
+msgid "Create new or use existing Customer on new Quotation"
+msgstr "ایجاد مشتری جدید یا استفاده از موجود برای پیش‌فاکتور جدید"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_uid
+msgid "Created by"
+msgstr "ایجاد توسط"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__create_date
+msgid "Created on"
+msgstr "ایجاد شده در"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__partner_id
+msgid "Customer"
+msgstr "مشتری"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__display_name
+msgid "Display Name"
+msgstr "نام نمایشی"
+
+#. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__nothing
+msgid "Do not link to a customer"
+msgstr "به مشتری انتساب نشود"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__id
+msgid "ID"
+msgstr "شناسه"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_res_users__target_sales_invoiced
 msgid "Invoiced in Sales Orders Target"
-msgstr ""
+msgstr "فاکتور شده در هدف سفارش‌های فروش"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner____last_update
+msgid "Last Modified on"
+msgstr "آخرین تغییر در"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_uid
+msgid "Last Updated by"
+msgstr "آخرین به روز رسانی توسط"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__write_date
+msgid "Last Updated on"
+msgstr "آخرین به روز رسانی در"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_lead
@@ -52,35 +108,36 @@ msgid "Lead/Opportunity"
 msgstr "سرنخ / فرصت"
 
 #. module: sale_crm
+#: model:ir.model.fields.selection,name:sale_crm.selection__crm_quotation_partner__action__exist
+msgid "Link to an existing customer"
+msgstr "انتساب به یک مشتری موجود"
+
+#. module: sale_crm
 #: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
 msgid "Log in the chatter from which opportunity the order originates"
-msgstr ""
-
-#. module: sale_crm
-#: model_terms:ir.ui.view,arch_db:sale_crm.sale_view_inherit123
-msgid "Marketing"
-msgstr "بازاریابی"
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__medium_id
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__medium_id
-msgid "Medium"
-msgstr "متوسط"
+msgstr "ورود به گفتگو که این فرصت سفارش از آن نشأت می‌گیرد"
 
 #. module: sale_crm
 #: model:ir.ui.menu,name:sale_crm.sale_order_menu_quotations_crm
 msgid "My Quotations"
-msgstr ""
+msgstr "پیشفاکتورهای من"
 
 #. module: sale_crm
+#: model:ir.actions.act_window,name:sale_crm.crm_quotation_partner_action
 #: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_quotation_partner_view_form
 msgid "New Quotation"
-msgstr "پیش‌فاکتور جدید"
+msgstr "پیشفاکتور جدید"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_number
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__quotation_count
 msgid "Number of Quotations"
-msgstr ""
+msgstr "تعداد پیش‌فاکتورها"
+
+#. module: sale_crm
+#: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_order_count
+msgid "Number of Sale Orders"
+msgstr "تعداد سفارش‌های فروش"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_sale_order__opportunity_id
@@ -90,83 +147,62 @@ msgstr "فرصت"
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__order_ids
 msgid "Orders"
-msgstr "سفارشات"
-
-#. module: sale_crm
-#: code:addons/sale_crm/models/crm_team.py:12
-#, python-format
-msgid "Pipeline"
-msgstr ""
+msgstr "سفارش‌ها"
 
 #. module: sale_crm
 #: model:ir.actions.act_window,name:sale_crm.sale_action_quotations_new
 msgid "Quotation"
-msgstr "پیش فاکتور"
+msgstr "پیش‌فاکتور"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.sale_action_quotations
+#: model:ir.model.fields,field_description:sale_crm.field_crm_quotation_partner__action
+msgid "Quotation Customer"
+msgstr "مشتری پیش‌فاکتور"
+
+#. module: sale_crm
+#: model_terms:ir.ui.view,arch_db:sale_crm.crm_case_form_view_oppor
 msgid "Quotations"
 msgstr "پیش فاکتورها"
 
 #. module: sale_crm
+#: code:addons/sale_crm/models/crm_team.py:0
+#, python-format
+msgid "Sales Analysis"
+msgstr "تحلیل فروش"
+
+#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "سفارش فروش"
 
 #. module: sale_crm
-#: model:ir.actions.act_window,name:sale_crm.sale_action_orders
-msgid "Sale orders"
-msgstr ""
-
-#. module: sale_crm
 #: model:ir.model,name:sale_crm.model_crm_team
-msgid "Sales Channels"
-msgstr "کانالهای فروش"
+msgid "Sales Team"
+msgstr "تیم فروش"
 
 #. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_account_invoice__source_id
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__source_id
-msgid "Source"
-msgstr "مبدا"
+#: code:addons/sale_crm/models/crm_team.py:0
+#, python-format
+msgid "Sales: Untaxed Total"
+msgstr "فروش: مبلغ کل بدون مالیات"
 
 #. module: sale_crm
 #: model:ir.model.fields,field_description:sale_crm.field_crm_lead__sale_amount_total
 msgid "Sum of Orders"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,field_description:sale_crm.field_sale_order__tag_ids
-msgid "Tags"
-msgstr "برچسب‌ها"
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_account_invoice__campaign_id
-#: model:ir.model.fields,help:sale_crm.field_sale_order__campaign_id
-msgid ""
-"This is a name that helps you keep track of your different campaign efforts,"
-" e.g. Fall_Drive, Christmas_Special"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_account_invoice__medium_id
-#: model:ir.model.fields,help:sale_crm.field_sale_order__medium_id
-msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
-msgstr ""
-
-#. module: sale_crm
-#: model:ir.model.fields,help:sale_crm.field_account_invoice__source_id
-#: model:ir.model.fields,help:sale_crm.field_sale_order__source_id
-msgid ""
-"This is the source of the link, e.g. Search Engine, another domain, or name "
-"of email list"
-msgstr ""
+msgstr "جمع سفارش‌ها"
 
 #. module: sale_crm
 #: model:ir.model.fields,help:sale_crm.field_crm_lead__sale_amount_total
 msgid "Untaxed Total of Confirmed Orders"
-msgstr ""
+msgstr "جمع کل بدون مالیات مربوط به سفارش‌های تایید شده"
 
 #. module: sale_crm
 #: model:ir.model,name:sale_crm.model_res_users
 msgid "Users"
 msgstr "کاربران"
+
+#. module: sale_crm
+#: code:addons/sale_crm/wizard/crm_opportunity_to_quotation.py:0
+#, python-format
+msgid "You can only apply this action from a lead."
+msgstr "شما این کنش را فقط از یک سرنخ می‌توانید اعمال کنید"

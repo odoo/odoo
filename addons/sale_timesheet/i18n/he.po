@@ -11,6 +11,7 @@
 # דודי מלכה <Dudimalka6@gmail.com>, 2020
 # ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
 # Yves Goldberg <admin@ygol.com>, 2020
+# Lilach Gilliam <lilach.gilliam@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-10-29 15:48+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
-"Last-Translator: Yves Goldberg <admin@ygol.com>, 2020\n"
+"Last-Translator: Lilach Gilliam <lilach.gilliam@gmail.com>, 2021\n"
 "Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -462,7 +463,7 @@ msgstr "שירות לקוחות (שעות מראש)"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_project__bill_type
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__bill_type
-msgid "Customer Type"
+msgid "Invoice Tasks to"
 msgstr ""
 
 #. module: sale_timesheet
@@ -575,6 +576,9 @@ msgid ""
 "Employee/Sale Order Item Mapping:\n"
 " Defines to which sales order item an employee's timesheet entry will be linked.By extension, it defines the rate at which an employee's time on the project is billed."
 msgstr ""
+"מיפוי פריט של הזמנת לקוח/ עובדים: מגדיר לאיזה פריט הזמנת לקוח יקושר דיווח "
+"השעות הראשי של העובד. לפי הרחבה, הוא מגדיר את קצב החיוב של זמן העובד "
+"בפרויקט."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_advance_payment_inv__date_end_invoice_timesheet
@@ -588,7 +592,7 @@ msgstr "שירותים במחיר קבוע"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__pricing_type__fixed_rate
-msgid "Fixed rate"
+msgid "Project rate"
 msgstr ""
 
 #. module: sale_timesheet
@@ -658,7 +662,7 @@ msgstr "בתהליך"
 msgid ""
 "Includes the time logged from the Timesheet module that is linked to a "
 "project, but not to a task."
-msgstr ""
+msgstr "כולל את הזמן שנרשם ממודול ה- Timesheet המקושר לפרויקט, אך לא למשימה."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -673,6 +677,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on ordered "
 "quantities or on milestones."
 msgstr ""
+"כולל את הזמן שנכנס למשימות שעבורן אתה מחייב על סמך כמויות שהוזמנו או על אבני"
+" דרך."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -680,6 +686,8 @@ msgid ""
 "Includes the time logged into tasks for which you invoice based on "
 "timesheets on tasks."
 msgstr ""
+"מוצר של פריט הזמנת הלקוח. חייב להיות שירות שמחויב על בסיס דיווחי שעות "
+"במשימות. דיווח השעות הקיים יקושר למוצר זה."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__info_invoice
@@ -694,7 +702,7 @@ msgstr "חשבונית"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_project
-msgid "Invoice all tasks to a single customer"
+msgid "A unique customer"
 msgstr ""
 
 #. module: sale_timesheet
@@ -704,7 +712,7 @@ msgstr "חשבונית שנוצרה מדיווח השעות"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__project_project__bill_type__customer_task
-msgid "Invoice tasks separately to different customers"
+msgid "Different customers"
 msgstr ""
 
 #. module: sale_timesheet
@@ -742,7 +750,7 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_task__is_project_map_empty
 msgid "Is Project map empty"
-msgstr ""
+msgstr "האם מיפוי הפרוייקט ריק"
 
 #. module: sale_timesheet
 #: model:ir.model,name:sale_timesheet.model_account_move
@@ -954,8 +962,8 @@ msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__ordered_timesheet
-msgid "Ordered quantities"
-msgstr "כמויות שהוזמנו"
+msgid "Prepaid"
+msgstr ""
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__expense_cost
@@ -1002,6 +1010,8 @@ msgid ""
 "Product of the sales order item. Must be a service invoiced based on "
 "timesheets on tasks."
 msgstr ""
+"מוצר של פריט הזמנת הלקוח. חייב להיות שירות שמחויב על בסיס דיווחי שעות "
+"במשימות. דיווח השעות הקיים יקושר למוצר זה."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_task_create_sale_order__product_id
@@ -1097,7 +1107,7 @@ msgstr "פרויקט שעבורו אנו יוצרים הזמנת לקוח"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_invoice__project_id
 msgid "Project to make billable"
-msgstr ""
+msgstr "הפרויקט ניתן לחיוב."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project_overview.py:0
@@ -1380,12 +1390,14 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
+"לא ניתן ליצור הזמנת הלקוח מכיוון שדיווחי השעות של משימה זו כבר מקושרים "
+"להזמנת לקוח אחרת."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #, python-format
 msgid "The selected Sales Order should contain something to invoice."
-msgstr ""
+msgstr "הזמנת המכירה שנבחרה צריכה להכיל משהו לחשבונית."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_task_create_sale_order.py:0
@@ -1418,6 +1430,7 @@ msgid ""
 "This cost is based on the \"Timesheet cost\" set in the HR Settings of your "
 "employees."
 msgstr ""
+"עלות זו מבוססת על \"עלות דיווחי השעות\" שנקבעה בהגדרות משאבי אנוש של עובדיך."
 
 #. module: sale_timesheet
 #: model_terms:ir.actions.act_window,help:sale_timesheet.project_profitability_report_action
@@ -1426,6 +1439,9 @@ msgid ""
 "compare the amount to invoice, the ones already invoiced and the project "
 "cost (via timesheet cost of your employees)."
 msgstr ""
+"דוח זה מאפשר לך לנתח את רווחיות הפרויקטים שלך: להשוות את הסכום לחשבונית, את "
+"אלה שכבר בוצעה חשבונית ואת עלות הפרויקט (באמצעות עלות לודיווחי השעות של "
+"העובדים שלך)."
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account.py:0
@@ -1435,6 +1451,8 @@ msgid ""
 " the task, nor on the project. Please define one to save your timesheet "
 "line."
 msgstr ""
+"לא ניתן לחייב את שורת דיווח השעות הזו: לא מוגדר פריט הזמנת מכירה כזו במשימה "
+"וגם לא בפרויקט. הגדר פריט זה כדי לשמור את שורת הדיווח שלך."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_encode_uom_id
@@ -1453,7 +1471,7 @@ msgstr "זמן לפי אנשים"
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.product_template_view_search_sale_timesheet
 msgid "Time-based services"
-msgstr ""
+msgstr "שירותים מבוססי זמן"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.action_timesheet_from_invoice
@@ -1492,17 +1510,17 @@ msgstr "מוצר גיליון זמנים"
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
 msgid "Timesheet Total Duration"
-msgstr ""
+msgstr "משך דיווח זמן כולל"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr ""
+msgstr "פעילויות בדיווח שעות"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr ""
+msgstr "משימות הקשורות למכירה זו"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1542,7 +1560,7 @@ msgstr "דיווחי שעות של %s"
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr ""
+msgstr "גיליונות זמנים בפרויקט (מחיר אחד לכל SO / פרויקט)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_timesheet
@@ -1566,6 +1584,8 @@ msgid ""
 "Total amount to invoice on the sales order, including all items (services, "
 "storables, expenses, ...)"
 msgstr ""
+"הסכום הכולל לחשבונית בהזמנת המכירה, כולל כל הפריטים (שירותים, חנויות, "
+"הוצאות, ...)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1641,6 +1661,8 @@ msgid ""
 "What is still to deliver based on sold hours and hours already done. Equals "
 "to sold hours - done hours."
 msgstr ""
+"מה עדיין נותר לספק על סמך שעות שנמכרו, שעות שכבר בוצעו ותחזית שעות. שווה "
+"לשעות שנמכרו - שעות שנעשו - ותחזית שעות."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__bill_type
@@ -1669,7 +1691,7 @@ msgstr ""
 #: code:addons/sale_timesheet/models/account.py:0
 #, python-format
 msgid "You can not modify timesheets from different employees"
-msgstr ""
+msgstr "אינך יכול לשנות גיליונות זמנים מעובדים שונים"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0

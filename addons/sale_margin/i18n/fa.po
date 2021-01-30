@@ -1,17 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_margin
+# 	* sale_margin
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
+# Martin Trigaux, 2020
+# Hamid Darabi, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Hamid Darabi, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Mohsen Mohammadi <iammohsen.123@gmail.com>, 2021\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +28,25 @@ msgid "Cost"
 msgstr "هزینه"
 
 #. module: sale_margin
-#: model:ir.model.fields,help:sale_margin.field_sale_order__margin
-msgid ""
-"It gives profitability by calculating the difference between the Unit Price "
-"and the cost."
-msgstr ""
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__display_name
+msgid "Display Name"
+msgstr "نام نمایشی"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__id
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report__id
+msgid "ID"
+msgstr "شناسه"
+
+#. module: sale_margin
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:sale_margin.field_sale_report____last_update
+msgid "Last Modified on"
+msgstr "آخرین تغییر در"
 
 #. module: sale_margin
 #: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin
@@ -39,14 +56,20 @@ msgid "Margin"
 msgstr "حاشیه"
 
 #. module: sale_margin
-#: model:ir.model,name:sale_margin.model_sale_order
-msgid "Sale Order"
-msgstr "سفارش فروش"
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order__margin_percent
+#: model:ir.model.fields,field_description:sale_margin.field_sale_order_line__margin_percent
+msgid "Margin (%)"
+msgstr "حاشیه (%)"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "گزارش تحلیل فروش"
+
+#. module: sale_margin
+#: model:ir.model,name:sale_margin.model_sale_order
+msgid "Sales Order"
+msgstr "سفارش فروش"
 
 #. module: sale_margin
 #: model:ir.model,name:sale_margin.model_sale_order_line

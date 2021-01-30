@@ -57,10 +57,11 @@
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
 # Martin Trigaux, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -68,7 +69,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2021\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1139,6 +1140,11 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+" 受益于pain.001消息，我们建议按照SEPA规范生成付款单。 支持的pain版本（国家/地区）为pain.001.001.03（通用），pain.001.001.03.ch.02（瑞士）和pain.001.003.03（德国）。 然后可以将生成的XML文件上传到您的银行。\n"
+"\n"
+"该模块遵循欧洲支付委员会发布的实施指南。\n"
+"有关SEPA标准的更多信息，请访问：http://www.iso20022.org/和http://www.europeanpaymentscouncil.eu/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1604,6 +1610,12 @@ msgid ""
 "    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
+"\n"
+"使锁定日期不可逆：\n"
+"\n"
+"* 您不能对顾问设置比用户更严格的限制。 因此，所有用户锁定日期必须在发票/帐单锁定日期之前（或等于）。\n"
+"* 您无法锁定尚未结束的时间段。 因此，“所有用户锁定日期”必须在上个月的最后一天之前（或等于）。\n"
+"* 任何新的“所有用户锁定日期”必须在前一个之后（或等于）。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -3337,6 +3349,32 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"委内瑞拉会计科目表。\n"
+"===============================\n"
+"\n"
+"委内瑞拉依法没有任何会计科目表，但默认\n"
+"在Odoo中提出的建议应符合委内瑞拉一些公认的最佳做法，\n"
+"该计划符合此惯例。\n"
+"\n"
+"该模块已作为1000多家公司的基础进行了测试，因为\n"
+"它基于委内瑞拉市场上最常见的软件的混合体，这将确\n"
+"保会计师使用Odoo迈出的第一步更加舒适。\n"
+"\n"
+"该模块并不假装实现了委内瑞拉的全部本地化，\n"
+"但是它将帮助您在这个国家真正快速地开始使用Odoo。\n"
+"\n"
+"这个模块给你。\n"
+"---------------------\n"
+"\n"
+"-委内瑞拉的基本税。\n"
+"-具有基本数据以通过社区本地化来运行测试。\n"
+"-如果您的基本需求来自会计PoV，请从0开始创建公司。\n"
+"\n"
+"委内瑞拉没有发票的情况下，如果您想评估自己的库存价值，建议您使用 account_anglo_saxon。\n"
+"\n"
+"如果您安装此模块，然后选择“自定义科目表”，则会提供一个基本科目表，\n"
+"但您需要手动设置帐户默认税金。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3846,6 +3884,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI智利本地化\n"
+"========================\n"
+"此代码允许生成智利发票的DTE文档。\n"
+"- XML格式的DTE（电子应税文件）\n"
+"- 与SII（Servicio de Impuestos Internos）的直接通信，以发送与销售有关的发票和其他税务文件。\n"
+"- 与客户沟通以发送销售DTE。\n"
+"- 与供应商（供应商）进行沟通以接受来自他们的DTE。\n"
+"- 与SII的直接通信，通知接受或拒绝供应商票据或其他DTE。\n"
+"\n"
+" 为了查看发票上的条形码，您需要pdf417gen库。\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -8329,6 +8380,8 @@ msgid ""
 "\n"
 "This module is used for Online bank synchronization."
 msgstr ""
+"\n"
+"此模块用于在线银行同步。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -8990,6 +9043,12 @@ msgid ""
 "module.\n"
 "    "
 msgstr ""
+"\n"
+"使用此模块，用户将能够将银行日记帐链接到他们的\n"
+"在线银行帐户（适用于支持的银行机构），并进行配置\n"
+"定期定期自动同步其银行对帐单。\n"
+"该模块已在2020年底添加，目的是与\n"
+"最新的提供商。 应该在先前的account_online_sync模块上使用。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_sips
@@ -9193,7 +9252,7 @@ msgstr "%s (副本)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Day of the week number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w - 星期天数 [0(周日),6].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9414,7 +9473,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
-msgstr ""
+msgstr "<code>用户错误</code>：可用的警告异常 <code>抛出</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9532,7 +9591,7 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
 msgid "<span aria-label=\"Close\">×</span>"
-msgstr ""
+msgstr "<span aria-label=\"Close\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -11049,7 +11108,7 @@ msgstr "库存会计高级特性"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
 msgid "Advantage Proration"
-msgstr ""
+msgstr "优势比例分摊"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
@@ -11060,7 +11119,7 @@ msgstr "Adyen付款"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_adyen_platforms
 msgid "Adyen for Platforms"
-msgstr ""
+msgstr "平台Adyen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -11158,7 +11217,7 @@ msgstr "启用从工单生成现场服务任务"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
 msgid "Allow payslip edition"
-msgstr ""
+msgstr "允许工资单版本"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
