@@ -42,7 +42,7 @@
 # Mandy Choy <mnc@odoo.com>, 2020
 # Shiping Lv <lvshiping@sina.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -50,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-01-12 07:31+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2020\n"
+"Last-Translator: Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -67,13 +67,13 @@ msgstr "这个频道是私有的. 只有被邀请的人才可以参与."
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "${object.partner_id.lang}"
-msgstr ""
+msgstr "${object.partner_id.lang}"
 
 #. module: mail
 #: code:addons/mail/models/mail_activity.py:0
 #, python-format
 msgid "%(activity_name)s: %(summary)s assigned to you"
-msgstr ""
+msgstr "%(activity_name)s: %(summary)s 分配给您"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:0
@@ -92,7 +92,7 @@ msgstr "%(user_name)s 邀请您跟踪新文件。"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%d Message"
-msgstr ""
+msgstr "%d 消息"
 
 #. module: mail
 #. openerp-web
@@ -113,7 +113,7 @@ msgstr "%d 天超期"
 #: code:addons/mail/static/src/components/activity/activity.js:0
 #, python-format
 msgid "%d days overdue:"
-msgstr ""
+msgstr "逾期%d 天："
 
 #. module: mail
 #: code:addons/mail/models/mail_template.py:0
@@ -139,14 +139,14 @@ msgstr "%s 创建"
 #: code:addons/mail/static/src/models/messaging_notification_handler/messaging_notification_handler.js:0
 #, python-format
 msgid "%s from %s"
-msgstr ""
+msgstr "%s 由 %s"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/notification_request/notification_request.js:0
 #, python-format
 msgid "%s has a request"
-msgstr ""
+msgstr "%s 有一个请求"
 
 #. module: mail
 #. openerp-web
@@ -213,6 +213,8 @@ msgid ""
 "<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
 "warning\">No record for this model</b>"
 msgstr ""
+"<b attrs=\"{'invisible': [('no_record', '=', False)]}\" class=\"text-"
+"warning\">该模型没有记录</b>"
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:0
@@ -270,7 +272,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_document_file_kanban
 msgid "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" aria-label=\"Document url\"/>"
 
 #. module: mail
 #. openerp-web
@@ -314,7 +316,7 @@ msgstr "<p>在此创建新频道。</p>"
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a public or private channel.</p>"
-msgstr ""
+msgstr "<p>创建一个公共或私人频道。</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -349,7 +351,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_template_preview_view_form
 msgid "<span class=\"col-md-5 col-lg-4 col-sm-12 pl-0\">Force a language: </span>"
-msgstr ""
+msgstr "<span class=\"col-md-5 col-lg-4 col-sm-12 pl-0\">强制语言：</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
@@ -665,7 +667,7 @@ msgstr "在黑名单里新增邮箱地址"
 #: code:addons/mail/static/src/xml/text_emojis.xml:0
 #, python-format
 msgid "Add an emoji"
-msgstr ""
+msgstr "添加一个表情"
 
 #. module: mail
 #. openerp-web
@@ -679,7 +681,7 @@ msgstr "添加附件"
 #: code:addons/mail/static/src/components/attachment_box/attachment_box.xml:0
 #, python-format
 msgid "Add attachments"
-msgstr ""
+msgstr "添加附件"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -697,7 +699,7 @@ msgstr "添加联系人到通知中  ..."
 #: code:addons/mail/static/src/components/discuss_sidebar/discuss_sidebar.xml:0
 #, python-format
 msgid "Add or join a channel"
-msgstr ""
+msgstr "添加或加入频道"
 
 #. module: mail
 #. openerp-web
@@ -807,14 +809,14 @@ msgstr "要 find_or_create功能工作，需要一个电子邮件"
 #: code:addons/mail/static/src/components/notification_group/notification_group.xml:0
 #, python-format
 msgid "An error occurred when sending an email."
-msgstr ""
+msgstr "发送电子邮件时发生错误。"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/models/user/user.js:0
 #, python-format
 msgid "An unexpected error occurred during the creation of the chat."
-msgstr ""
+msgstr "创建聊天时发生意外错误。"
 
 #. module: mail
 #. openerp-web
@@ -860,7 +862,7 @@ msgstr "已归档"
 msgid ""
 "Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
-msgstr ""
+msgstr "您确定要丢弃%s邮件传递失败吗？ 您以后将无法重新发送这些邮件！"
 
 #. module: mail
 #. openerp-web
@@ -907,7 +909,7 @@ msgstr "附件数量"
 #: code:addons/mail/static/src/components/chatter_topbar/chatter_topbar.xml:0
 #, python-format
 msgid "Attachment counter loading..."
-msgstr ""
+msgstr "附件计数器加载中..."
 
 #. module: mail
 #. openerp-web
@@ -1006,7 +1008,7 @@ msgstr "头像"
 #: code:addons/mail/static/src/components/notification_request/notification_request.xml:0
 #, python-format
 msgid "Avatar of OdooBot"
-msgstr ""
+msgstr "OdooBot的头像"
 
 #. module: mail
 #. openerp-web
@@ -1061,7 +1063,7 @@ msgstr "黑名单日期"
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_blacklist_action
 msgid "Blacklisted Email Addresses"
-msgstr ""
+msgstr "列入黑名单的电子邮件地址"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__body_html
@@ -1078,7 +1080,7 @@ msgstr "正文"
 #: code:addons/mail/static/src/widgets/common.xml:0
 #, python-format
 msgid "Bot"
-msgstr ""
+msgstr "机器人"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_thread_blacklist__message_bounce
@@ -1177,7 +1179,7 @@ msgstr "抄送"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
 msgid "Carbon copy recipients"
-msgstr ""
+msgstr "复本收件人"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc

@@ -5,7 +5,7 @@
 # Translators:
 # Martin Trigaux, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
-# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2021
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 07:29+0000\n"
 "PO-Revision-Date: 2020-12-11 11:03+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2021\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -31,13 +31,13 @@ msgstr "%(reminder_type)s - %(duration)s Zile"
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Hours"
-msgstr ""
+msgstr "%(reminder_type)s - %(duration)s Ore"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "%(reminder_type)s - %(duration)s Minutes"
-msgstr ""
+msgstr "%(reminder_type)s - %(duration)s Minute"
 
 #. module: microsoft_calendar
 #: code:addons/microsoft_calendar/models/calendar.py:0
@@ -49,7 +49,7 @@ msgstr ""
 #: code:addons/microsoft_calendar/models/calendar.py:0
 #, python-format
 msgid "(No title)"
-msgstr ""
+msgstr "(Fără Titlu)"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_calendar_event__active
@@ -123,12 +123,12 @@ msgstr "Creat în"
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_odoo
 msgid "Delete from Odoo"
-msgstr ""
+msgstr "Șterge din Odoo"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_both
 msgid "Delete from both"
-msgstr ""
+msgstr "Șterge din amandouă"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__delete_microsoft
@@ -195,7 +195,7 @@ msgstr "Ultima actualizare pe"
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__delete_policy__dont_delete
 msgid "Leave them untouched"
-msgstr ""
+msgstr "Lăsați-le neatinse"
 
 #. module: microsoft_calendar
 #: model:ir.actions.act_window,name:microsoft_calendar.microsoft_calendar_reset_account_action
@@ -254,7 +254,7 @@ msgstr ""
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Next Sync Token"
-msgstr ""
+msgstr "Aveți nevoie de jeton de sinrcronizare"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__sync_policy
@@ -284,17 +284,17 @@ msgstr ""
 #: code:addons/microsoft_calendar/static/src/js/microsoft_calendar.js:0
 #, python-format
 msgid "Redirection"
-msgstr ""
+msgstr "Redirecționare"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Refresh Token"
-msgstr ""
+msgstr "Jeton de Actualizare"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Reset Account"
-msgstr ""
+msgstr "Resetare Cont"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.microsoft_calendar_reset_account_view_form
@@ -308,6 +308,8 @@ msgid ""
 "Something went wrong during your token generation. Maybe your Authorization "
 "Code is invalid or already expired [%s]"
 msgstr ""
+"Ceva nu a funcționat în timpul generației dvs. de simboluri. Poate că Codul "
+"dvs. de autorizare este nevalid sau deja expirat [%s]"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -331,12 +333,12 @@ msgstr ""
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__all
 msgid "Synchronize all existing events"
-msgstr ""
+msgstr "Sincronizați toate evenimentele existente"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields.selection,name:microsoft_calendar.selection__microsoft_calendar_account_reset__sync_policy__new
 msgid "Synchronize only new events"
-msgstr ""
+msgstr "Sincronizați numai evenimente noi"
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -357,11 +359,13 @@ msgstr ""
 #: model:ir.model.fields,help:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "This will only affect events for which the user is the owner"
 msgstr ""
+"Acest lucru va afecta doar evenimentele pentru care utilizatorul este "
+"proprietar"
 
 #. module: microsoft_calendar
 #: model_terms:ir.ui.view,arch_db:microsoft_calendar.view_users_form
 msgid "Token Validity"
-msgstr ""
+msgstr "Validitate Jeton"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__user_id
@@ -376,7 +380,7 @@ msgstr ""
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__delete_policy
 msgid "User's Existing Events"
-msgstr ""
+msgstr "Evenimente existente ale utilizatorului"
 
 #. module: microsoft_calendar
 #: model:ir.model,name:microsoft_calendar.model_res_users

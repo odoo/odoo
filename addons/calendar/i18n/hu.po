@@ -10,7 +10,7 @@
 # krnkris, 2020
 # gezza <geza.nagy@oregional.hu>, 2020
 # Martin Trigaux, 2020
-# Tamás Németh <ntomasz81@gmail.com>, 2020
+# Tamás Németh <ntomasz81@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
@@ -18,7 +18,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-12-11 07:28+0000\n"
 "PO-Revision-Date: 2016-08-05 12:57+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2020\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -43,12 +43,14 @@ msgid ""
 "%(date_start)s at %(time_start)s To\n"
 " %(date_end)s at %(time_end)s (%(timezone)s)"
 msgstr ""
+"%(date_start)s  %(time_start)s -\n"
+" %(date_end)s  %(time_end)s (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "%(day)s at (%(start)s To %(end)s) (%(timezone)s)"
-msgstr ""
+msgstr "%(day)s (%(start)s - %(end)s) (%(timezone)s)"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_attendee.py:0
@@ -388,7 +390,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__all_events
 msgid "All events"
-msgstr ""
+msgstr "Összes esemény"
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
@@ -713,7 +715,7 @@ msgstr "Befejezés dátuma"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__end_type
 msgid "End Type"
-msgstr ""
+msgstr "Befejezés típusa"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__end_type__end_date
@@ -1135,7 +1137,7 @@ msgstr "Nem én nem veszek részt."
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.invitation_page_anonymous
 msgid "No feedback yet"
-msgstr ""
+msgstr "Még nincs visszajelzés"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_alarm__alarm_type__notification
@@ -1274,7 +1276,7 @@ msgstr "Időszakos"
 #. module: calendar
 #: model:ir.model.fields,help:calendar.field_calendar_event__recurrency
 msgid "Recurrent Event"
-msgstr ""
+msgstr "Időszakos esemény"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__rrule
@@ -1506,7 +1508,7 @@ msgstr ""
 #. module: calendar
 #: model:ir.model.constraint,message:calendar.constraint_calendar_recurrence_month_day
 msgid "The day must be between 1 and 31"
-msgstr ""
+msgstr "A napnak 1 és 31 közé kell esnie."
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_event.py:0
@@ -1546,7 +1548,7 @@ msgstr "Harmadik"
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__future_events
 #, python-format
 msgid "This and following events"
-msgstr ""
+msgstr "Jelenlegi és következő események"
 
 #. module: calendar
 #. openerp-web
@@ -1554,7 +1556,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__recurrence_update__self_only
 #, python-format
 msgid "This event"
-msgstr ""
+msgstr "Jelenlegi esemény"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__th
@@ -1693,7 +1695,7 @@ msgstr "Nem sokszorozhat meg egy naptári résztvevőt."
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "You have to choose at least one day in the week"
-msgstr ""
+msgstr "Ki kell választania legalább egy napot a héten"
 
 #. module: calendar
 #: code:addons/calendar/models/calendar_recurrence.py:0
