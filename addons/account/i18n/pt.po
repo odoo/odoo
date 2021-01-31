@@ -20,6 +20,7 @@
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
+# Álvaro Brunido <abrunido@outlook.pt>, 2021
 # 
 msgid ""
 msgstr ""
@@ -27,7 +28,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020\n"
+"Last-Translator: Álvaro Brunido <abrunido@outlook.pt>, 2021\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -452,6 +453,8 @@ msgid ""
 "<span class=\"text-muted\">Only journals not yet linked to a bank account "
 "are proposed</span>"
 msgstr ""
+"<span class=\"text-muted\">Apenas diários ainda não ligados a uma conta "
+"bancária são propostos</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -622,6 +625,8 @@ msgid ""
 "<strong class=\"text-center\">The SEPA QR Code informations are not set "
 "correctly.</strong><br/>"
 msgstr ""
+"<strong class=\"text-center\">As informações do código QR SEPA não estão "
+"definidas corretamente.</strong><br/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -806,6 +811,10 @@ msgid ""
 "posted. Those will be posted automatically after performing the bank "
 "reconciliation."
 msgstr ""
+"Uma entrada de diário de pagamento gerada num diário configurado para "
+"registar entradas apenas quando os pagamentos são conciliados com um extrato"
+" bancário não pode ser postado manualmente. Estes serão publicados "
+"automaticamente após a reconciliação do banco."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -900,6 +909,8 @@ msgid ""
 "Account %s (%s) does not allow reconciliation. First change the "
 "configuration of this account to allow it."
 msgstr ""
+"A conta %s (%s) não permite a reconciliação. Primeiro altere a configuração "
+"desta conta para permitir.."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cash_rounding
@@ -1018,7 +1029,7 @@ msgstr "Conta a Receber"
 #. module: account
 #: model:ir.model,name:account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Ferramenta de reconciliação de conta"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position_account_template__account_src_id
