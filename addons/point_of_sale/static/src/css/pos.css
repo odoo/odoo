@@ -1349,6 +1349,12 @@ td {
     flex-direction: column;
 }
 
+@media screen and (min-width: 768px) {
+    .screen .left-content {
+        max-width: 34%
+    }
+}
+
 .pos .btn-switch-payment {
     background-color: #6ec89b;
     border-radius: 0px;
@@ -1701,7 +1707,7 @@ td {
         top: 0;
         left: 0;
     }
-    .pos .receipt-screen .pos-receipt-container * {
+    .pos .receipt-screen .pos-receipt-container, .pos .receipt-screen .pos-receipt-container  * {
         visibility: visible;
         background: white !important;
         color: black !important;

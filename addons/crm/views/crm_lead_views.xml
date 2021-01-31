@@ -90,8 +90,11 @@
                             <group name="lead_partner" attrs="{'invisible': [('type', '=', 'opportunity')]}">
                                 <!-- Preload all the partner's information -->
                                 <field name="partner_id" widget="res_partner_many2one"
-                                    context="{'default_name': contact_name,
+                                    context="{
+                                        'default_name': contact_name,
+                                        'default_title': title,
                                         'default_street': street,
+                                        'default_street2': street2,
                                         'default_city': city,
                                         'default_state_id': state_id,
                                         'default_zip': zip,
@@ -414,7 +417,16 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" string='Organization / Contact'/>
+                        <field name="partner_id" widget="res_partner_many2one"
+                            string='Organization / Contact'
+                            context="{
+                            'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
+                            'default_name': contact_name or partner_name,
+                            'default_is_company': type == 'opportunity' and contact_name == False,
+                            'default_company_name': type == 'opportunity' and partner_name,
+                            'default_phone': phone,
+                            'default_email': email_from,
+                            'show_vat': True}"/>
                         <field name="name" placeholder="e.g. Product Pricing" />
                         <field name="email_from" string="Email" />
                         <field name="phone" string="Phone" />
@@ -430,6 +442,9 @@
                         </div>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
+                        <field name="user_id" invisible="1"/>
+                        <field name="team_id" invisible="1"/>
+                        <field name="type" invisible="1"/>
                         <field name="partner_name" invisible="1"/>
                         <field name="contact_name" invisible="1"/>
                         <field name="country_id" invisible="1"/>
@@ -808,6 +823,7 @@
                     <filter string="Won" name="won" domain="['&amp;', ('active', '=', True), ('stage_id.is_won', '=', True)]"/>
                     <filter string="Lost" name="lost" domain="['&amp;', ('active', '=', False), ('probability', '=', 0)]"/>
                     <separator/>
+                    <filter invisible="1" string="Overdue Opportunities" name="overdue_opp" domain="[('date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all opportunities for which the next action date is before today"/>

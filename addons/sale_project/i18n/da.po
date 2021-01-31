@@ -15,7 +15,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
 "PO-Revision-Date: 2020-09-07 08:18+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -189,7 +189,7 @@ msgstr "Salgsordre"
 #: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Sales Order Item"
-msgstr "Salg ranger varer"
+msgstr "Salgsordre Emne"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_sale_order_line
@@ -298,12 +298,6 @@ msgid "Tasks associated to this sale"
 msgstr "Opgaver tilknyttet dette salg"
 
 #. module: sale_project
-#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
-msgid ""
-"The Project should be linked to a Sale Order to select an Sale Order Items."
-msgstr "Projektet bør forbindes til en Salgsordre for at vælge en Salgsordre."
-
-#. module: sale_project
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid ""
@@ -332,6 +326,14 @@ msgid ""
 msgstr ""
 "Produktet %s bør ikke have en produkt skabelon, eftersom det vil generere en"
 " sag i et globalt projekt."
+
+#. module: sale_project
+#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
+msgid ""
+"The project should be linked to a sale order to select a sale order item."
+msgstr ""
+"Projektet bør være forbundet til en salgsordre for at vælge en salgsordre "
+"genstand."
 
 #. module: sale_project
 #: code:addons/sale_project/models/sale_order.py:0

@@ -48,7 +48,7 @@ class ResPartnerBank(models.Model):
     def _check_for_qr_code_errors(self, qr_method, amount, currency, debtor_partner, free_communication, structured_communication):
         if qr_method == 'sct_qr':
             if not self.acc_holder_name and not self.partner_id.name:
-                return _("The account receiving the payment must have an account horder name or partner name set.")
+                return _("The account receiving the payment must have an account holder name or partner name set.")
 
         return super()._check_for_qr_code_errors(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 

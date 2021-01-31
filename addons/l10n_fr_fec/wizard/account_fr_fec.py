@@ -253,7 +253,10 @@ class AccountFrFec(models.TransientModel):
             ELSE ''
             END
             AS CompAuxNum,
-            COALESCE(replace(rp.name, '|', '/'), '') AS CompAuxLib,
+            CASE WHEN aat.type IN ('receivable', 'payable')
+            THEN COALESCE(replace(rp.name, '|', '/'), '')
+            ELSE ''
+            END AS CompAuxLib,
             '-' AS PieceRef,
             %s AS PieceDate,
             '/' AS EcritureLib,
@@ -315,7 +318,10 @@ class AccountFrFec(models.TransientModel):
             ELSE ''
             END
             AS CompAuxNum,
-            COALESCE(replace(replace(rp.name, '|', '/'), '\t', ''), '') AS CompAuxLib,
+            CASE WHEN aat.type IN ('receivable', 'payable')
+            THEN COALESCE(replace(replace(rp.name, '|', '/'), '\t', ''), '')
+            ELSE ''
+            END AS CompAuxLib,
             CASE WHEN am.ref IS null OR am.ref = ''
             THEN '-'
             ELSE replace(replace(am.ref, '|', '/'), '\t', '')

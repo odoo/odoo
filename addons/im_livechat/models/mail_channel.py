@@ -104,12 +104,13 @@ class MailChannel(models.Model):
         if not partners:
             # operator probably testing the livechat with his own user
             partners = channel_partner_ids
-        if partners and partners[0] != self.env.ref('base.public_partner'):
+        first_partner = partners and partners[0]
+        if first_partner and (not first_partner.user_ids or not any(user._is_public() for user in first_partner.user_ids)):
             # legit non-public partner
             return {
-                'country': partners[0].country_id.name_get()[0] if partners[0].country_id else False,
-                'id': partners[0].id,
-                'name': partners[0].name,
+                'country': first_partner.country_id.name_get()[0] if first_partner.country_id else False,
+                'id': first_partner.id,
+                'name': first_partner.name,
             }
         return {
             'country': self.country_id.name_get()[0] if self.country_id else False,

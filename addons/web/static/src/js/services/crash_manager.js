@@ -48,6 +48,7 @@ var CrashManagerDialog = Dialog.extend({
         this._super.apply(this, [parent, options]);
         this.message = error.message;
         this.traceback = error.traceback;
+        core.bus.off('close_dialogs', this);
     },
 });
 
@@ -359,7 +360,8 @@ var RedirectWarningHandler = Widget.extend(ExceptionHandler, {
                         {
                             additional_context: additional_context,
                         });
-                }},
+                        self.destroy();
+                }, close: true},
                 {text: _t("Cancel"), click: function() { self.destroy(); }, close: true}
             ]
         }, {

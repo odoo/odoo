@@ -214,7 +214,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
     ####################################################
 
     def test_invoice_edi_pdf(self):
-        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
+        invoice = self._create_empty_vendor_bill()
         invoice_count = len(self.env['account.move'].search([]))
         self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.pdf', invoice)
 
@@ -227,7 +227,7 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
         self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)
 
     def test_invoice_edi_xml(self):
-        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
+        invoice = self._create_empty_vendor_bill()
         invoice_count = len(self.env['account.move'].search([]))
         self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml', invoice)
 

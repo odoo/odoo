@@ -1,17 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pad_project
+# 	* pad_project
 # 
 # Translators:
-# Martin Trigaux, 2018
+# Martin Trigaux, 2020
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Martin Trigaux, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,6 +21,63 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__pad_availability
+#: model:ir.model.fields,field_description:pad_project.field_project_task__pad_availability
+msgid "Availability of collaborative pads"
+msgstr ""
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Available to:"
+msgstr ""
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid "Collaborative Pads"
+msgstr "Collaborative Pads"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__display_name
+#: model:ir.model.fields,field_description:pad_project.field_project_task__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Edit"
+msgstr "แก้ไข"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.project_project_view_form
+msgid ""
+"Edit tasks' description collaboratively in real time.<br/>\n"
+"                            See each author's text in a distinct color."
+msgstr ""
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__id
+#: model:ir.model.fields,field_description:pad_project.field_project_task__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__internal
+msgid "Internal Users"
+msgstr "ผู้ใช้ภายใน"
+
+#. module: pad_project
+#: model:ir.model.fields.selection,name:pad_project.selection__project_project__pad_availability__portal
+msgid "Internal Users & Portal Users"
+msgstr ""
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project____last_update
+#: model:ir.model.fields,field_description:pad_project.field_project_task____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"
+
+#. module: pad_project
+#: model:ir.model.fields,field_description:pad_project.field_project_project__description_pad
 #: model:ir.model.fields,field_description:pad_project.field_project_task__description_pad
 msgid "Pad URL"
 msgstr ""
@@ -28,6 +86,11 @@ msgstr ""
 #: model:ir.model,name:pad_project.model_project_project
 msgid "Project"
 msgstr "โปรเจค"
+
+#. module: pad_project
+#: model_terms:ir.ui.view,arch_db:pad_project.portal_my_task
+msgid "Save"
+msgstr "บันทึก"
 
 #. module: pad_project
 #: model:ir.model,name:pad_project.model_project_task

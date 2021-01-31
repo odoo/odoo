@@ -15,7 +15,6 @@
 # Christophe CHAUVET <christophe.chauvet@gmail.com>, 2020
 # Olivier Dony <odo@odoo.com>, 2020
 # Bertrand LATOUR <divoir@gmail.com>, 2020
-# Sébastien BÜHL <buhlsebastien@gmail.com>, 2020
 # Jonathan Castillo <jcs@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Digvijay Singh Gehlot <dih@odoo.com>, 2020
@@ -32,7 +31,6 @@
 # Lucas Deliege <lud@odoo.com>, 2020
 # Pandraghon <pandraghon@outlook.com>, 2020
 # Olivier ANDRE <frsw194@gmail.com>, 2020
-# Moka Tourisme <hello@mokatourisme.fr>, 2020
 # Fabri Yohann <psn@fabri.pw>, 2020
 # Xavier Symons <xsy@openerp.com>, 2020
 # Jérôme Tanché <jerome.tanche@ouest-dsi.fr>, 2020
@@ -48,16 +46,15 @@
 # Frédéric LIETART <stuff@tifred.fr>, 2020
 # Olivier Lenoir <olivier.lenoir@free.fr>, 2020
 # Fabien Bourgeois <fabien@yaltik.com>, 2020
+# Melanie Bernard <mbe@odoo.com>, 2020
 # Matillon Samantha <smatillon@gmail.com>, 2020
 # Aurélien Pillevesse <aurelienpillevesse@hotmail.fr>, 2020
 # Fred Gilson <fgi@odoo.com>, 2020
 # Nathan Grognet <ngr@odoo.com>, 2020
 # gdp Odoo <gdp@odoo.com>, 2020
-# Fabien Pinckaers <fp@openerp.com>, 2020
 # Richard Mathot <rim@odoo.com>, 2020
 # Kévin R., 2020
 # Nicolas Roussey <nro@odoo.com>, 2020
-# Melanie Bernard <mbe@odoo.com>, 2020
 # adrien didenot <adrien.didenot@horanet.com>, 2020
 # William Olhasque <william.olhasque@scopea.fr>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
@@ -65,16 +62,22 @@
 # Martin Trigaux, 2020
 # Eloïse Stilmant <est@odoo.com>, 2020
 # Nathan Noël <nathan070@me.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Priscilla (prs) Odoo <prs@odoo.com>, 2020
+# Moka Tourisme <hello@mokatourisme.fr>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Sébastien BÜHL <buhlsebastien@gmail.com>, 2020
+# Pierre Delacroix <pde@odoo.com>, 2021
+# Fabien Pinckaers <fp@openerp.com>, 2021
+# Nicolas JEUDY <njeudy@panda-chi.io>, 2021
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:08+0000\n"
+"POT-Creation-Date: 2020-12-04 15:13+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Priscilla (prs) Odoo <prs@odoo.com>, 2020\n"
+"Last-Translator: Anthony Chaussin <chaussin.anthony@gmail.com>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -105,7 +108,7 @@ msgstr "\"URL vers\" ne peut pas être vide."
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must start with a leading slash."
-msgstr ""
+msgstr "\"URL vers\" doit commencer par une barre oblique."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -155,12 +158,6 @@ msgid "&amp;lt;head&amp;gt;"
 msgstr ""
 
 #. module: website
-#: model_terms:ir.ui.view,arch_db:website.s_popup
-#: model_terms:ir.ui.view,arch_db:website.show_website_info
-msgid "&amp;times;"
-msgstr "&amp;times;"
-
-#. module: website
 #: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
 #: model_terms:ir.ui.view,arch_db:website.sitemap_xml
 msgid "&lt;?xml version=\"1.0\" encoding=\"UTF-8\"?&gt;"
@@ -177,13 +174,6 @@ msgstr "&lt;?xml version=\"1.0\" encoding=\"utf-8\"?&gt;"
 #, python-format
 msgid "&nbsp;"
 msgstr "&nbsp;"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
-#, python-format
-msgid "&times;"
-msgstr "&times;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
@@ -216,10 +206,16 @@ msgid ""
 msgstr ""
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.footer_custom
 #: model_terms:ir.ui.view,arch_db:website.template_footer_centered
 #: model_terms:ir.ui.view,arch_db:website.template_footer_contact
 #: model_terms:ir.ui.view,arch_db:website.template_footer_descriptive
+#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
+#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
+#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
+#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
 msgid "+1 (650) 691-3277"
 msgstr "+1 (650) 691-3277"
 
@@ -249,16 +245,6 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_timeline
 msgid "...and switch the timeline contents to fit your needs."
-msgstr ""
-
-#. module: website
-#: model_terms:ir.ui.view,arch_db:website.footer_custom
-#: model_terms:ir.ui.view,arch_db:website.template_footer_headline
-#: model_terms:ir.ui.view,arch_db:website.template_header_contact_oe_structure_header_contact_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_hamburger_oe_structure_header_hamburger_3
-#: model_terms:ir.ui.view,arch_db:website.template_header_sidebar_oe_structure_header_sidebar_1
-#: model_terms:ir.ui.view,arch_db:website.template_header_vertical_oe_structure_header_vertical_2
-msgid "1 (650) 691-3277"
 msgstr ""
 
 #. module: website
@@ -425,14 +411,20 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click Edit</b> to start designing your homepage."
-msgstr ""
-"<b>Cliquer sur Editer</b> pour commencer à créer votre page d'accueil."
+msgstr "<b>Cliquez sur Editer</b> pour construire votre page d'accueil."
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "<b>Click on a snippet</b> to access its options menu."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Click on a text</b> to start editing it."
 msgstr ""
 
 #. module: website
@@ -516,6 +508,20 @@ msgstr ""
 msgid ""
 "<b>My Company</b><br/>250 Executive Park Blvd, Suite 3400 <br/> San "
 "Francisco CA 94134 <br/>United States"
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a ${optionTooltipLabel}."
+msgstr ""
+
+#. module: website
+#. openerp-web
+#: code:addons/website/static/src/js/tours/tour_utils.js:0
+#, python-format
+msgid "<b>Select</b> a Color Palette."
 msgstr ""
 
 #. module: website
@@ -1041,6 +1047,9 @@ msgid ""
 "                    <span class=\"css_publish\">Unpublished</span>\n"
 "                    <span class=\"css_unpublish\">Published</span>"
 msgstr ""
+"<span/>\n"
+"                    <span class=\"css_publish\">Non publié</span>\n"
+"                    <span class=\"css_unpublish\">Publié</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -1312,6 +1321,8 @@ msgid ""
 "Adding a font requires a reload of the page. This will save all your "
 "changes."
 msgstr ""
+"L'ajout d'une police nécessite un rechargement de la page. Cela enregistrera"
+" toutes vos modifications."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -1592,7 +1603,7 @@ msgstr "Disponible sur le site web"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
-msgstr ""
+msgstr "BSgzTvR5L1GB9jriT451iTN4huVPxHmltG6T6eo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.color_combinations_debug_view
@@ -1950,6 +1961,9 @@ msgid ""
 "changes, are you sure you want to proceed? Be careful that changing the "
 "theme will reset all your color customizations."
 msgstr ""
+"Changer de thème nécessite de quitter l'éditeur. Cela sauvera tous vos "
+"changements, êtes vous sûr de vouloir continuer? Notez que changer de thème "
+"remettra à zero vos customisations de couleurs."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2055,7 +2069,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Click on"
-msgstr "Cliquer sur"
+msgstr "Cliquez sur"
 
 #. module: website
 #. openerp-web
@@ -2106,6 +2120,7 @@ msgstr "Cloner cette page"
 #: code:addons/website/static/src/snippets/s_image_gallery/000.xml:0
 #: code:addons/website/static/src/xml/website.xml:0
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
+#: model_terms:ir.ui.view,arch_db:website.s_popup
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 #, python-format
 msgid "Close"
@@ -2743,6 +2758,8 @@ msgid ""
 "Deleting a font requires a reload of the page. This will save all your "
 "changes and reload the page, are you sure you want to proceed?"
 msgstr ""
+"Supprimer une police nécessite de recharger la page. Ceci sauvera tous vos "
+"changements et rechargera la page, êtes vous sûr de vouloir continuer?"
 
 #. module: website
 #. openerp-web
@@ -3117,7 +3134,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.publish_management
 #, python-format
 msgid "Edit"
-msgstr "Modifier"
+msgstr "Editer"
 
 #. module: website
 #. openerp-web
@@ -3271,15 +3288,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Error"
 msgstr "Erreur"
-
-#. module: website
-#. openerp-web
-#: code:addons/website/static/src/js/tours/tour_utils.js:0
-#, python-format
-msgid ""
-"Even if this title is cool, you can change it. <b>Click on a text</b> to "
-"start editing it."
-msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -3762,7 +3770,7 @@ msgstr ""
 #: code:addons/website/static/src/js/tours/tour_utils.js:0
 #, python-format
 msgid "Good job! It's time to <b>Save</b> your work."
-msgstr ""
+msgstr "Bon travail! Il est temps de <b>Sauver</b>votre travail."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_analytics
@@ -4084,6 +4092,8 @@ msgid ""
 "Hint: How to use Google Map on your website (Contact Us page and as a "
 "snippet)"
 msgstr ""
+"Astuce: Comment utiliser Google Map sur votre site Web (page Contactez-nous "
+"et sous forme d'extrait)"
 
 #. module: website
 #. openerp-web
@@ -4283,6 +4293,8 @@ msgid ""
 "If you discard the current edits, all unsaved changes will be lost. You can "
 "cancel to return to edit mode."
 msgstr ""
+"Si vous annuler vos changements, tous ceux non-sauvés seront perdus. Vous "
+"pouvez annuler et retourner en mode edition."
 
 #. module: website
 #. openerp-web
@@ -6358,26 +6370,26 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.view_edit_robots
 #, python-format
 msgid "Save"
-msgstr "Sauvegarder"
+msgstr "Sauver"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Save & Reload"
-msgstr ""
+msgstr "Sauver et recharger"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Save & copy"
-msgstr ""
+msgstr "Sauver et copier"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Save the block to use it elsewhere"
-msgstr ""
+msgstr "Sauver l'élément pour l'utiliser ailleurs"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_rating_options
@@ -6967,7 +6979,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Switch Theme"
-msgstr ""
+msgstr "Changer de theme"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
@@ -7814,6 +7826,8 @@ msgstr "Utilisez Google Maps sur votre site web ("
 #, python-format
 msgid "Use Google Map on your website (Contact Us page, snippets, etc)."
 msgstr ""
+"Utilisez Google Map sur votre site Web (page Contactez-nous, snippets, "
+"etc.)."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -8533,6 +8547,7 @@ msgstr "Largeur"
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
 msgstr ""
+"Sera préfixé par http dans les URL canoniques si aucun schéma n'est spécifié"
 
 #. module: website
 #: model:ir.model.fields.selection,name:website.selection__ir_ui_view__visibility__password
@@ -8662,6 +8677,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
 msgid "You may opt-out of a third-party's use of cookies by visiting the"
 msgstr ""
+
+#. module: website
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid "You must keep at least one website."
+msgstr "Vous devez conserver au moins un site web."
 
 #. module: website
 #. openerp-web
@@ -8946,7 +8967,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "https://fonts.google.com/specimen/Roboto"
-msgstr ""
+msgstr "https://fonts.google.com/specimen/Roboto"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -8967,7 +8988,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "in the top right corner to start designing."
-msgstr ""
+msgstr "dans le coin supérieur droit pour commencer."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -9050,7 +9071,7 @@ msgstr ""
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.user_navbar
 msgid "or Edit Master"
-msgstr "ou modifier la source"
+msgstr "ou Modifier la Source"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
@@ -9126,12 +9147,6 @@ msgstr "cette page"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "valuation, rank"
-msgstr ""
-
-#. module: website
-#: code:addons/website/models/website.py:162
-#, python-format
-msgid "You must keep at least one website."
 msgstr ""
 
 #. module: website

@@ -41,7 +41,7 @@ class SendSMS(models.TransientModel):
     res_ids = fields.Char('Document IDs')
     res_ids_count = fields.Integer(
         'Visible records count', compute='_compute_recipients_count', compute_sudo=False,
-        help='Number of recipients that will recieve the SMS if sent in mass mode, without applying the Active Domain value')
+        help='Number of recipients that will receive the SMS if sent in mass mode, without applying the Active Domain value')
     use_active_domain = fields.Boolean('Use active domain')
     active_domain = fields.Text('Active domain', readonly=True)
     active_domain_count = fields.Integer(

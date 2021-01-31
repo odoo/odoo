@@ -15,6 +15,7 @@
 .o_DiscussSidebarItem_activeIndicator {
     width: $o-mail-discuss-sidebar-active-indicator-width;
     align-self: stretch;
+    flex: 0 0 auto;
 }
 
 .o_DiscussSidebarItem_command {
@@ -51,6 +52,7 @@
 .o_DiscussSidebarItem_name {
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: nowrap;
 
     &.o-editable {
         margin-left: $o-mail-discuss-sidebar-active-indicator-width + $o-mail-discuss-sidebar-active-indicator-margin-right;

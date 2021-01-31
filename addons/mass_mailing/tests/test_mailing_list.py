@@ -19,6 +19,40 @@ class TestMailingListMerge(MassMailCommon):
             ]
         })
 
+
+    @users('user_marketing')
+    def test_mailing_contact_create(self):
+        default_list_ids = (self.mailing_list_2 | self.mailing_list_3).ids
+
+        # simply set default list in context
+        new = self.env['mailing.contact'].with_context(default_list_ids=default_list_ids).create([{
+            'name': 'Contact_%d' % x,
+            'email': 'contact_%d@test.example.com' % x,
+        } for x in range(0, 5)])
+        self.assertEqual(new.list_ids, (self.mailing_list_2 | self.mailing_list_3))
+
+        # default list and subscriptions should be merged
+        new = self.env['mailing.contact'].with_context(default_list_ids=default_list_ids).create([{
+            'name': 'Contact_%d' % x,
+            'email': 'contact_%d@test.example.com' % x,
+            'subscription_list_ids': [(0, 0, {
+                'list_id': self.mailing_list_1.id,
+                'opt_out': True,
+            }), (0, 0, {
+                'list_id': self.mailing_list_2.id,
+                'opt_out': True,
+            })],
+        } for x in range(0, 5)])
+        self.assertEqual(new.list_ids, (self.mailing_list_1 | self.mailing_list_2 | self.mailing_list_3))
+        # should correctly take subscription opt_out value
+        for list_id in (self.mailing_list_1 | self.mailing_list_2).ids:
+            new = new.with_context(default_list_ids=[list_id])
+            self.assertTrue(all(contact.opt_out for contact in new))
+        # not opt_out for new subscription without specific create values
+        for list_id in self.mailing_list_3.ids:
+            new = new.with_context(default_list_ids=[list_id])
+            self.assertFalse(any(contact.opt_out for contact in new))
+
     @users('user_marketing')
     def test_mailing_list_merge(self):
         # TEST CASE: Merge A,B into the existing mailing list C

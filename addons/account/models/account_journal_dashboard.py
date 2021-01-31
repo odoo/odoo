@@ -431,7 +431,7 @@ class account_journal(models.Model):
     def to_check_ids(self):
         self.ensure_one()
         domain = self.env['account.move.line']._get_suspense_moves_domain()
-        domain.append(('journal_id', '=', self.id))
+        domain += [('journal_id', '=', self.id),('statement_line_id.is_reconciled', '=', False)]
         statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
         return statement_line_ids
 
@@ -518,7 +518,7 @@ class account_journal(models.Model):
         ctx = dict(self.env.context, default_journal_id=self.id)
         if ctx.get('search_default_journal', False):
             ctx.update(search_default_journal_id=self.id)
-            del ctx['search_default_journal']  # otherwise it will do a useless groupby in bank statements
+            ctx['search_default_journal'] = False  # otherwise it will do a useless groupby in bank statements
         ctx.pop('group_by', None)
         action = self.env['ir.actions.act_window']._for_xml_id(f"account.{action_name}")
         action['context'] = ctx

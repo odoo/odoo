@@ -32,6 +32,39 @@ class CustomerPortal(CustomerPortal):
 
         return values
 
+    def _order_get_page_view_values(self, order, access_token, **kwargs):
+        values = {
+            'sale_order': order,
+            'token': access_token,
+            'return_url': '/shop/payment/validate',
+            'bootstrap_formatting': True,
+            'partner_id': order.partner_id.id,
+            'report_type': 'html',
+            'action': order._get_portal_return_action(),
+        }
+        if order.company_id:
+            values['res_company'] = order.company_id
+
+        if order.has_to_be_paid():
+            domain = expression.AND([
+                ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order.company_id.id)],
+                ['|', ('country_ids', '=', False), ('country_ids', 'in', [order.partner_id.country_id.id])]
+            ])
+            acquirers = request.env['payment.acquirer'].sudo().search(domain)
+
+            values['acquirers'] = acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
+                                                     (acq.payment_flow == 's2s' and acq.registration_view_template_id))
+            values['pms'] = request.env['payment.token'].search([('partner_id', '=', order.partner_id.id)])
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order.amount_total, order.currency_id, order.partner_id.country_id.id)
+
+        if order.state in ('draft', 'sent', 'cancel'):
+            history = request.session.get('my_quotations_history', [])
+        else:
+            history = request.session.get('my_orders_history', [])
+        values.update(get_records_pager(history, order))
+
+        return values
+
     #
     # Quotations and Sales Orders
     #
@@ -165,36 +198,8 @@ class CustomerPortal(CustomerPortal):
                     partner_ids=order_sudo.user_id.sudo().partner_id.ids,
                 )
 
-        values = {
-            'sale_order': order_sudo,
-            'message': message,
-            'token': access_token,
-            'return_url': '/shop/payment/validate',
-            'bootstrap_formatting': True,
-            'partner_id': order_sudo.partner_id.id,
-            'report_type': 'html',
-            'action': order_sudo._get_portal_return_action(),
-        }
-        if order_sudo.company_id:
-            values['res_company'] = order_sudo.company_id
-
-        if order_sudo.has_to_be_paid():
-            domain = expression.AND([
-                ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order_sudo.company_id.id)],
-                ['|', ('country_ids', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
-            ])
-            acquirers = request.env['payment.acquirer'].sudo().search(domain)
-
-            values['acquirers'] = acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
-                                                     (acq.payment_flow == 's2s' and acq.registration_view_template_id))
-            values['pms'] = request.env['payment.token'].search([('partner_id', '=', order_sudo.partner_id.id)])
-            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order_sudo.amount_total, order_sudo.currency_id, order_sudo.partner_id.country_id.id)
-
-        if order_sudo.state in ('draft', 'sent', 'cancel'):
-            history = request.session.get('my_quotations_history', [])
-        else:
-            history = request.session.get('my_orders_history', [])
-        values.update(get_records_pager(history, order_sudo))
+        values = self._order_get_page_view_values(order_sudo, access_token, **kw)
+        values['message'] = message
 
         return request.render('sale.sale_order_portal_template', values)
 

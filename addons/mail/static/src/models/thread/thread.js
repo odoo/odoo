@@ -547,14 +547,10 @@ function factory(dependencies) {
          * @returns {mail.thread_cache}
          */
         cache(stringifiedDomain = '[]') {
-            let cache = this.caches.find(cache => cache.stringifiedDomain === stringifiedDomain);
-            if (!cache) {
-                cache = this.env.models['mail.thread_cache'].create({
-                    stringifiedDomain,
-                    thread: [['link', this]],
-                });
-            }
-            return cache;
+            return this.env.models['mail.thread_cache'].insert({
+                stringifiedDomain,
+                thread: [['link', this]],
+            });
         }
 
         /**
@@ -656,7 +652,16 @@ function factory(dependencies) {
         }
 
         /**
-         * Mark all needaction messages of this thread as read.
+         * Marks as read all needaction messages with this thread as origin.
+         */
+        async markNeedactionMessagesAsOriginThreadAsRead() {
+            await this.async(() =>
+                this.env.models['mail.message'].markAsRead(this.needactionMessagesAsOriginThread)
+            );
+        }
+
+        /**
+         * Mark as read all needaction messages of this thread.
          */
         async markNeedactionMessagesAsRead() {
             await this.async(() =>
@@ -819,6 +824,7 @@ function factory(dependencies) {
                     res_model: this.model,
                 },
             }, { shadow: true }));
+            this.update({ areFollowersLoaded: true });
             if (followers.length > 0) {
                 this.update({
                     followers: [['insert-and-replace', followers.map(data =>
@@ -1067,6 +1073,7 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {boolean}
          */
         _computeHasSeenIndicators() {
             if (this.model !== 'mail.channel') {
@@ -1239,6 +1246,24 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeLastNeedactionMessageAsOriginThread() {
+            const orderedNeedactionMessagesAsOriginThread = this.needactionMessagesAsOriginThread.sort(
+                (m1, m2) => m1.id < m2.id ? -1 : 1
+            );
+            const {
+                length: l,
+                [l - 1]: lastNeedactionMessageAsOriginThread,
+            } = orderedNeedactionMessagesAsOriginThread;
+            if (lastNeedactionMessageAsOriginThread) {
+                return [['link', lastNeedactionMessageAsOriginThread]];
+            }
+            return [['unlink']];
+        }
+
+        /**
+         * @private
          * @returns {mail.thread_cache}
          */
         _computeMainCache() {
@@ -1250,6 +1275,10 @@ function factory(dependencies) {
          * @returns {integer}
          */
         _computeLocalMessageUnreadCounter() {
+            if (this.model !== 'mail.channel') {
+                // unread counter only makes sense on channels
+                return clear();
+            }
             // By default trust the server up to the last message it used
             // because it's not possible to do better.
             let baseCounter = this.serverMessageUnreadCounter;
@@ -1291,6 +1320,14 @@ function factory(dependencies) {
          */
         _computeNeedactionMessages() {
             return [['replace', this.messages.filter(message => message.isNeedaction)]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeNeedactionMessagesAsOriginThread() {
+            return [['replace', this.messagesAsOriginThread.filter(message => message.isNeedaction)]];
         }
 
         /**
@@ -1401,6 +1438,20 @@ function factory(dependencies) {
         }
 
         /**
+         * Compute an url string that can be used inside a href attribute
+         *
+         * @private
+         * @returns {string}
+         */
+        _computeUrl() {
+            const baseHref = this.env.session.url('/web');
+            if (this.model === 'mail.channel') {
+                return `${baseHref}#action=mail.action_discuss&active_id=${this.model}_${this.id}`;
+            }
+            return `${baseHref}#model=${this.model}&id=${this.id}`;
+        }
+
+        /**
          * @private
          * @param {Object} param0
          * @param {boolean} param0.isTyping
@@ -1427,12 +1478,48 @@ function factory(dependencies) {
         }
 
         /**
+         * Cleans followers of current thread. In particular, chats are supposed
+         * to work with "members", not with "followers". This clean up is only
+         * necessary to remove illegitimate followers in stable version, it can
+         * be removed in master after proper migration to clean the database.
+         *
+         * @private
+         */
+        _onChangeFollowersPartner() {
+            if (this.channel_type !== 'chat') {
+                return;
+            }
+            for (const follower of this.followers) {
+                if (follower.partner) {
+                    follower.remove();
+                }
+            }
+        }
+
+        /**
          * @private
          */
         _onChangeLastSeenByCurrentPartnerMessageId() {
             this.env.messagingBus.trigger('o-thread-last-seen-by-current-partner-message-id-changed', {
                 thread: this,
             });
+        }
+
+        /**
+         * @private
+         */
+        _onChangeThreadViews() {
+            if (this.threadViews.length === 0) {
+                return;
+            }
+            /**
+             * Fetches followers of chats when they are displayed for the first
+             * time. This is necessary to clean the followers.
+             * @see `_onChangeFollowersPartner` for more information.
+             */
+            if (this.channel_type === 'chat' && !this.areFollowersLoaded) {
+                this.refreshFollowers();
+            }
         }
 
         /**
@@ -1563,6 +1650,13 @@ function factory(dependencies) {
             ],
         }),
         areAttachmentsLoaded: attr({
+            default: false,
+        }),
+        /**
+         * States whether followers have been loaded at least once for this
+         * thread.
+         */
+        areFollowersLoaded: attr({
             default: false,
         }),
         attachments: many2many('mail.attachment', {
@@ -1748,6 +1842,15 @@ function factory(dependencies) {
             dependencies: ['needactionMessages'],
         }),
         /**
+         * States the last known needaction message having this thread as origin.
+         */
+        lastNeedactionMessageAsOriginThread: many2one('mail.message', {
+            compute: '_computeLastNeedactionMessageAsOriginThread',
+            dependencies: [
+                'needactionMessagesAsOriginThread',
+            ],
+        }),
+        /**
          * Last non-transient message.
          */
         lastNonTransientMessage: many2one('mail.message', {
@@ -1820,11 +1923,29 @@ function factory(dependencies) {
             inverse: 'threads',
         }),
         /**
+         * All messages that have been originally posted in this thread.
+         */
+        messagesAsOriginThread: one2many('mail.message', {
+            inverse: 'originThread',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        messagesAsOriginThreadIsNeedaction: attr({
+            related: 'messagesAsOriginThread.isNeedaction',
+        }),
+        /**
          * All messages that are contained on this channel on the server.
          * Equivalent to the inverse of python field `channel_ids`.
          */
         messagesAsServerChannel: many2many('mail.message', {
             inverse: 'serverChannels',
+        }),
+        /**
+         * Serves as compute dependency.
+         */
+        messagesIsNeedaction: attr({
+            related: 'messages.isNeedaction',
         }),
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
@@ -1851,7 +1972,30 @@ function factory(dependencies) {
         name: attr(),
         needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
-            dependencies: ['messages'],
+            dependencies: [
+                'messages',
+                'messagesIsNeedaction',
+            ],
+        }),
+        /**
+         * States all known needaction messages having this thread as origin.
+         */
+        needactionMessagesAsOriginThread: many2many('mail.message', {
+            compute: '_computeNeedactionMessagesAsOriginThread',
+            dependencies: [
+                'messagesAsOriginThread',
+                'messagesAsOriginThreadIsNeedaction',
+            ],
+        }),
+        /**
+         * Not a real field, used to trigger `_onChangeFollowersPartner` when one of
+         * the dependencies changes.
+         */
+        onChangeFollowersPartner: attr({
+            compute: '_onChangeFollowersPartner',
+            dependencies: [
+                'followersPartner',
+            ],
         }),
         /**
          * Not a real field, used to trigger `_onChangeLastSeenByCurrentPartnerMessageId` when one of
@@ -1861,6 +2005,16 @@ function factory(dependencies) {
             compute: '_onChangeLastSeenByCurrentPartnerMessageId',
             dependencies: [
                 'lastSeenByCurrentPartnerMessageId',
+            ],
+        }),
+        /**
+         * Not a real field, used to trigger `_onChangeThreadViews` when one of
+         * the dependencies changes.
+         */
+        onChangeThreadView: attr({
+            compute: '_onChangeThreadViews',
+            dependencies: [
+                'threadViews',
             ],
         }),
         /**
@@ -2018,6 +2172,17 @@ function factory(dependencies) {
             compute: '_computeTypingStatusText',
             default: '',
             dependencies: ['orderedOtherTypingMembers'],
+        }),
+        /**
+         * URL to access to the conversation.
+         */
+        url: attr({
+            compute: '_computeUrl',
+            default: '',
+            dependencies: [
+                'id',
+                'model',
+            ]
         }),
         uuid: attr(),
     };

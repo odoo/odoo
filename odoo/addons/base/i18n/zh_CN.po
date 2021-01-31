@@ -18,13 +18,12 @@
 # Zamba Lee <zambalee@gmail.com>, 2020
 # KWOKYUK CHEUNG <cheungkwokyuk@gmail.com>, 2020
 # as co02 <asco02@163.com>, 2020
-# Xu Lei <xulei8@qq.com>, 2020
+# Lei Xu <xulei8@qq.com>, 2020
 # v2exerer <9010446@qq.com>, 2020
 # 湘子 南 <1360857908@qq.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
 # mrshelly <mrshelly@hotmail.com>, 2020
 # John Lin <linyinhuan@139.com>, 2020
-# xu xiaohu <xu.xiaohu@gmail.com>, 2020
 # 苏州远鼎 <tiexinliu@126.com>, 2020
 # Connie Xiao <connie.xiao@elico-corp.com>, 2020
 # Lisa Zhang <lzh@odoo.com>, 2020
@@ -56,20 +55,21 @@
 # F4NNIU <sparkamax+fanniu@gmail.com>, 2020
 # 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # ljsrzc007 <ljsrzc007@gmail.com>, 2020
-# Martin Trigaux, 2020
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
-# liAnGjiA <liangjia@qq.com>, 2020
 # e2f_cn c5 <jarvisn@ecinnovations.com>, 2020
+# Martin Trigaux, 2020
 # guohuadeng <guohuadeng@hotmail.com>, 2020
 # 稀饭~~ <wangwhai@qq.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2021
+# Daniel Yang <daniel.yang.zhenyu@gmail.com>, 2021
+# liAnGjiA <liangjia@qq.com>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:46+0000\n"
+"POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: 稀饭~~ <wangwhai@qq.com>, 2020\n"
+"Last-Translator: liAnGjiA <liangjia@qq.com>, 2021\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -122,15 +122,15 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"将结构化通信添加到客户发票。\n"
+"将结构化通信添加到客户结算单。\n"
 "--------------------------------------------------\n"
 "\n"
-"使用BBA结构化通信简化核销发票和付款之间的对账。\n"
+"使用BBA结构化通信简化核销结算单和付款之间的对账。\n"
 "您可以在开票／会计设置中选择结构化通信作为支付通信。\n"
 "建议使用兩种算法：\n"
 "\n"
-"    1) 发票号码 +++RRR/RRRR/RRRDD+++\n"
-"        **R..R =** 发票号码, **DD =** 校验数字\n"
+"    1) 结算单号码 +++RRR/RRRR/RRRDD+++\n"
+"        **R..R =** 结算单号码, **DD =** 校验数字\n"
 "    2) 客户参考 +++RRR/RRRR/SSSDD+++\n"
 "        **R..R =** 无数字字母客户参考， **SSS =** 序列号, **DD =** 校验数字\n"
 "    "
@@ -1087,18 +1087,18 @@ msgstr ""
 "        * 2 （杜阿） 数字 pertama adalah Tahun Penerbitan\n"
 "        * 8 （德拉潘） 数字贝里库特尼亚阿达拉诺莫尔乌鲁特\n"
 "        \n"
-"为了能够将客户发票导出为电子发票，\n"
+"为了能够将客户结算单导出为电子结算单，\n"
 "        您需要将分配的数字范围\n"
 "        由政府会计 + 客户 + 电子法克图尔\n"
 "                    \n"
-"验证发票时，合作伙伴具有 ID PKP\n"
-"        字段，将税务编号分配给该发票。\n"
+"验证结算单时，合作伙伴具有 ID PKP\n"
+"        字段，将税务编号分配给该结算单。\n"
 "        之后，您可以筛选仍在\n"
-"        发票列表，然后单击操作 + 下载电子法图尔下载\n"
+"        结算单列表，然后单击操作 + 下载电子法图尔下载\n"
 "        csv 并上传到政府网站。\n"
 "        \n"
 "您可以通过指示\n"
-"        更换的发票和新发票，您可以重置发票\n"
+"        更换的结算单和新结算单，您可以重置结算单\n"
 "        您尚未发送给政府以重复使用其号码。\n"
 "    "
 
@@ -1140,6 +1140,11 @@ msgid ""
 "        For more information about the SEPA standards : http://www.iso20022.org/ and http://www.europeanpaymentscouncil.eu/\n"
 "    "
 msgstr ""
+"\n"
+" 受益于pain.001消息，我们建议按照SEPA规范生成付款单。 支持的pain版本（国家/地区）为pain.001.001.03（通用），pain.001.001.03.ch.02（瑞士）和pain.001.003.03（德国）。 然后可以将生成的XML文件上传到您的银行。\n"
+"\n"
+"该模块遵循欧洲支付委员会发布的实施指南。\n"
+"有关SEPA标准的更多信息，请访问：http://www.iso20022.org/和http://www.europeanpaymentscouncil.eu/"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_winbooks_import
@@ -1171,7 +1176,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"     特定的产品出租 (产品, 报价, 发票, ...)\n"
+"     特定的产品出租 (产品, 报价, 结算单, ...)\n"
 "      管理产品状态, 出租, 延迟\n"
 "       管理用户和管理通知\n"
 "    "
@@ -1359,17 +1364,17 @@ msgstr ""
 "\n"
 "        Odoo 会让您知道这些要求是否满足。\n"
 "\n"
-"        任何为具有授权的客户验证的发票都将\n"
+"        任何为具有授权的客户验证的结算单都将\n"
 "        自动设置为 'paid'状态，并将生成付款。然后，仪表板中的选项将允许您查看生成的所有付款\n"
 "        然后，仪表板中的选项将允许您查看生成的所有付款\n"
 "        通过 SDD 并生成 XML 收集文件，将它们分组为\n"
 "        你认为合适。\n"
 "\n"
 "        专用的\"SEPA 直接借记\"付款方式也可用于\n"
-"        在\"注册付款\"向导中选择银行帐户时，打开发票。\n"
-"        如果您添加了授权，则使用它为发票生成 SDD 付款\n"
+"        在\"注册付款\"向导中选择银行帐户时，打开结算单。\n"
+"        如果您添加了授权，则使用它为结算单生成 SDD 付款\n"
 "        验证后的所有者。如果您\n"
-"        尝试在无法使用任何授权付款的发票上使用此方法。\n"
+"        尝试在无法使用任何授权付款的结算单上使用此方法。\n"
 "    "
 
 #. module: base
@@ -1600,18 +1605,17 @@ msgid ""
 "\n"
 "    Make the lock date irreversible:\n"
 "\n"
-"    * You cannot define stricter conditions on advisors than on users. Then, the lock date on advisor must be set before the lock date for users.\n"
-"    * You cannot lock a period that is not finished yet. Then, the lock date for advisors must be set before the last day of the previous month.\n"
-"    * The new lock date for advisors must be set after the previous lock date.\n"
+"    * You cannot set stricter restrictions on advisors than on users. Therefore, the All Users Lock Date must be anterior (or equal) to the Invoice/Bills Lock Date.\n"
+"    * You cannot lock a period that has not yet ended. Therefore, the All Users Lock Date must be anterior (or equal) to the last day of the previous month.\n"
+"    * Any new All Users Lock Date must be posterior (or equal) to the previous one.\n"
 "    "
 msgstr ""
 "\n"
-"使锁定日期后不可逆转：\n"
+"使锁定日期不可逆：\n"
 "\n"
-" *您无法在总账模块上给顾问定义比用户更严格的条件。然后，必须在用户的锁定日期之前设置总账模块程序上的锁定日期\n"
-" *您无法锁定尚未完成的期间。所以，必须在上个月的最后一天之前设置顾问的锁定日期\n"
-" *必须在上一个锁定日期之后设置总账的新锁定日期\n"
-"    "
+"* 您不能对顾问设置比用户更严格的限制。 因此，所有用户锁定日期必须在发票/帐单锁定日期之前（或等于）。\n"
+"* 您无法锁定尚未结束的时间段。 因此，“所有用户锁定日期”必须在上个月的最后一天之前（或等于）。\n"
+"* 任何新的“所有用户锁定日期”必须在前一个之后（或等于）。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud
@@ -2257,13 +2261,13 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"将结构化通信添加到客户发票和供应商帐单。\n"
+"将结构化通信添加到客户结算单和供应商帐单。\n"
 "------------------------------------------------------------------\n"
 "\n"
-"使用 OCR 结构化通信可简化发票和付款之间的对账。\n"
+"使用 OCR 结构化通信可简化结算单和付款之间的对账。\n"
 "\n"
 "用于 OCR 级别 1 到 4 的客户开票支持。OCR 编号可以基于合作伙伴或\n"
-"发票。\n"
+"结算单。\n"
 "\n"
 "对于默认供应商特定 OCR 的供应商账单支持，将添加和验证 OCR。\n"
 "    "
@@ -2333,7 +2337,7 @@ msgid ""
 "This module is compatible with base_vat module in order to be able to validate VAT numbers for each country that have or not have the possibility to manage multiple identification types.\n"
 msgstr ""
 "\n"
-"添加一个名为“标识类型”的新模型，该模型扩展了合作伙伴中的增值税字段功能，使用户不仅可以使用其税收ID（VAT）还能使用其他类型的标识（例如国家文件）来标识（最终发票） ，护照，外国身份证等。安装此模块后，您现在将在合作伙伴表单视图中看到两个字段：\n"
+"添加一个名为“标识类型”的新模型，该模型扩展了合作伙伴中的增值税字段功能，使用户不仅可以使用其税收ID（VAT）还能使用其他类型的标识（例如国家文件）来标识（最终结算单） ，护照，外国身份证等。安装此模块后，您现在将在合作伙伴表单视图中看到两个字段：\n"
 "\n"
 "* 标识类型\n"
 "* 识别号\n"
@@ -2423,7 +2427,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"为产品添加电子邮件模板，可供发送发票时使用。\n"
+"为产品添加电子邮件模板，可供发送结算单时使用。\n"
 "有了这个模块，可以把产品相关的模板以发送完整的信息发给你的客户。\n"
 "例如为培训开票的时候，培训日程和材料将被自动发送到你的客户。'\n"
 "    "
@@ -2444,7 +2448,7 @@ msgid ""
 "Add the ability to create invoices from the document module.\n"
 msgstr ""
 "\n"
-"增加从文档模块建立发票功能。\n"
+"增加从文档模块建立结算单功能。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_documents_sign
@@ -2476,7 +2480,7 @@ msgid ""
 "The wizard to launch the report has several options to help you get the data you need.\n"
 msgstr ""
 "\n"
-"在产品上添加一个报告菜单，基于发票计算销售、采购、毛利，以及其他有趣的指标。\n"
+"在产品上添加一个报告菜单，基于结算单计算销售、采购、毛利，以及其他有趣的指标。\n"
 "=============================================================================================================================\n"
 "\n"
 "此向导加载的报表有若干选项用来帮助你获取你需要的数据。\n"
@@ -2752,7 +2756,7 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"允许用户通过邮件方式发送发票\n"
+"允许用户通过邮件方式发送结算单\n"
 "=====================================================\n"
 "        "
 
@@ -2778,7 +2782,7 @@ msgstr ""
 "\n"
 "允许添加发货方式在销售订单和分拣。============\n"
 "你可以定义自己的快递公司的价格。当创建\n"
-"分拣的发票，该系统能够添加和计算运输行。\n"
+"分拣的结算单，该系统能够添加和计算运输行。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_account_enterprise
@@ -3221,7 +3225,7 @@ msgid ""
 msgstr ""
 "\n"
 "会计和文档应用间的桥梁模块。\n"
-"从文档模块创建发票，并在会计报表上添加按钮，允许以所需格式将报表保存在文档应用中。\n"
+"从文档模块创建结算单，并在会计报表上添加按钮，允许以所需格式将报表保存在文档应用中。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mail_enterprise
@@ -3345,6 +3349,32 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"委内瑞拉会计科目表。\n"
+"===============================\n"
+"\n"
+"委内瑞拉依法没有任何会计科目表，但默认\n"
+"在Odoo中提出的建议应符合委内瑞拉一些公认的最佳做法，\n"
+"该计划符合此惯例。\n"
+"\n"
+"该模块已作为1000多家公司的基础进行了测试，因为\n"
+"它基于委内瑞拉市场上最常见的软件的混合体，这将确\n"
+"保会计师使用Odoo迈出的第一步更加舒适。\n"
+"\n"
+"该模块并不假装实现了委内瑞拉的全部本地化，\n"
+"但是它将帮助您在这个国家真正快速地开始使用Odoo。\n"
+"\n"
+"这个模块给你。\n"
+"---------------------\n"
+"\n"
+"-委内瑞拉的基本税。\n"
+"-具有基本数据以通过社区本地化来运行测试。\n"
+"-如果您的基本需求来自会计PoV，请从0开始创建公司。\n"
+"\n"
+"委内瑞拉没有发票的情况下，如果您想评估自己的库存价值，建议您使用 account_anglo_saxon。\n"
+"\n"
+"如果您安装此模块，然后选择“自定义科目表”，则会提供一个基本科目表，\n"
+"但您需要手动设置帐户默认税金。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -3807,7 +3837,7 @@ msgid ""
 "Display orders to invoice in website dashboard.\n"
 msgstr ""
 "\n"
-" 在网站面板中展示订单转发票。\n"
+" 在网站面板中展示订单转结算单。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it_edi
@@ -3817,7 +3847,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"电子发票安装\n"
+"电子结算单安装\n"
 "    "
 
 #. module: base
@@ -3854,6 +3884,19 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"EDI智利本地化\n"
+"========================\n"
+"此代码允许生成智利发票的DTE文档。\n"
+"- XML格式的DTE（电子应税文件）\n"
+"- 与SII（Servicio de Impuestos Internos）的直接通信，以发送与销售有关的发票和其他税务文件。\n"
+"- 与客户沟通以发送销售DTE。\n"
+"- 与供应商（供应商）进行沟通以接受来自他们的DTE。\n"
+"- 与SII的直接通信，通知接受或拒绝供应商票据或其他DTE。\n"
+"\n"
+" 为了查看发票上的条形码，您需要pdf417gen库。\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
@@ -3982,7 +4025,7 @@ msgstr ""
 "=======================================\n"
 "EDI 是使用标准化格式进行商业信息的电子交换。\n"
 "\n"
-"这是各种 EDI 格式的发票导入和导出的基本模块，\n"
+"这是各种 EDI 格式的结算单导入和导出的基本模块，\n"
 "将该文件传送给交易所的各方（其他公司，\n"
 "治理等）\n"
 "    "
@@ -4231,19 +4274,19 @@ msgstr ""
 "功能\n"
 "----------\n"
 "\n"
-"能够在 Odoo 中创建日记帐以创建电子客户发票，然后向 AFIP 报告（通过网络信息）。\n"
+"能够在 Odoo 中创建日记帐以创建电子客户结算单，然后向 AFIP 报告（通过网络信息）。\n"
 "可用的选项包括：\n"
 "\n"
-"* 电子发票 - 网络服务\n"
+"* 电子结算单 - 网络服务\n"
 "    * 出口券 - 网络服务\n"
 "    * 电子财政债券 - 网络服务\n"
 "\n"
-"在电子期刊中，如果您验证发票，将在 Odoo 和 AFIP 中验证此发票。此验证是\n"
-"在瞬间，我们收到和\"批准/批准与观察/拒绝\"状态从AFIP。如果发票有\n"
+"在电子期刊中，如果您验证结算单，将在 Odoo 和 AFIP 中验证此结算单。此验证是\n"
+"在瞬间，我们收到和\"批准/批准与观察/拒绝\"状态从AFIP。如果结算单有\n"
 "被 AFIP 拒绝不会在系统中发布，并且将显示一个弹出消息，同时显示两个错误详细信息（拒绝原因）\n"
 "我们收到一个提示， 关于问题可能是什么。\n"
 "\n"
-"出于审核和故障排除目的，我们还添加一个菜单\"AFIP 中的 Consulit 发票\"，让我们之前查阅发票\n"
+"出于审核和故障排除目的，我们还添加一个菜单\"AFIP 中的 Consulit 结算单\"，让我们之前查阅结算单\n"
 "发送到 AFIP，最后一个号码用于支持 Odoo 和 AFIP 之间序列同步上任何可能的问题。\n"
 "\n"
 "注：从《华尔街日报》的表单视图中，我们能够强制 odoo 序列与\n"
@@ -4259,9 +4302,9 @@ msgstr ""
 "1.1. 配置 AFIP Web 服务模式：\n"
 "\n"
 "* 测试环境，以便使用演示证书，用于测试实例和使\n"
-"      给 Afip 的实际发票。只是为了测试。对于演示 Instaces 已预定义，您将不需要配置\n"
+"      给 Afip 的实际结算单。只是为了测试。对于演示 Instaces 已预定义，您将不需要配置\n"
 "      它（通常在 AFIP 中称为同源环境）。\n"
-"    * 生产环境，以便向AFIP生成真正的证书和法律发票，\n"
+"    * 生产环境，以便向AFIP生成真正的证书和法律结算单，\n"
 "\n"
 "1.2. 配置 AFIP 证书：如果您在演示实例中，默认情况下将设置此证书。如果您\n"
 "         在生产实例中只需要去上传您的 Afip 证书\n"
@@ -4273,7 +4316,7 @@ msgstr ""
 "2.1. 默认情况下设置使用文档字段请不要更改\n"
 "    2.2. 为其中一个电子设置 AFIP POS 系统。\n"
 "\n"
-"* 电子发票 - 网络服务'\n"
+"* 电子结算单 - 网络服务'\n"
 "        * 电子财政债券 - 网络服务'\n"
 "        * 出口券 - 网络服务'\n"
 "\n"
@@ -4281,17 +4324,17 @@ msgstr ""
 "\n"
 "注意：您可以使用日记本窗体中的\"检查可用 AFIP POS\"按钮来证实 用于创建日志的 。\n"
 "\n"
-"有关阿根廷电子发票的信息，请转到http://www.afip.gob.ar/fe/ayuda.asp\n"
+"有关阿根廷电子结算单的信息，请转到http://www.afip.gob.ar/fe/ayuda.asp\n"
 "\n"
 "技术\n"
 "---------\n"
 "\n"
 "实现的 Web 服务是最常见的：\n"
 "\n"
-"* wsfev1 - \"事实电子发票\" （电子发票）\n"
+"* wsfev1 - \"事实电子结算单\" （电子结算单）\n"
 "* wsbfev1 - \"博诺财政电子货币\"（电子财政债券）\n"
-"* wsfexv1 - \"电子出口发票 - 与出口券相同）\n"
-"* wscdc - \"合作委员会\" （发票验证）\n"
+"* wsfexv1 - \"电子出口结算单 - 与出口券相同）\n"
+"* wscdc - \"合作委员会\" （结算单验证）\n"
 "\n"
 "用于开发的信息将http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 
@@ -4321,11 +4364,11 @@ msgstr ""
 "功能\n"
 "----------\n"
 "\n"
-"在一些拉丁美洲国家，包括阿根廷和智利，一些会计交易（如发票和供应商票据）按政府财政当局定义的单据类型进行分类（在阿根廷，AFIP案，智利案SII）。\n"
+"在一些拉丁美洲国家，包括阿根廷和智利，一些会计交易（如结算单和供应商票据）按政府财政当局定义的单据类型进行分类（在阿根廷，AFIP案，智利案SII）。\n"
 "\n"
-"此模块旨在通过本地化进行扩展，以便管理这些文档类型，并且是一种必需的信息，需要在打印的报表中显示，并且需要在发票集和帐户移动中轻松识别。\n"
+"此模块旨在通过本地化进行扩展，以便管理这些文档类型，并且是一种必需的信息，需要在打印的报表中显示，并且需要在结算单集和帐户移动中轻松识别。\n"
 "\n"
-"每个单据类型都有自己的规则和序列号，最后一个与发票编号和日志序列集成，以便本地化用户易于使用。为了支持或不支持此文档类型，日记帐有一个新选项，允许不使用文档。\n"
+"每个单据类型都有自己的规则和序列号，最后一个与结算单编号和日志序列集成，以便本地化用户易于使用。为了支持或不支持此文档类型，日记帐有一个新选项，允许不使用文档。\n"
 "\n"
 "技术\n"
 "---------\n"
@@ -4421,8 +4464,8 @@ msgstr ""
 "  * （AR） 埃森托\n"
 "  * （AR） 单一\n"
 "\n"
-"• 在所有公司中配置为预打印和世博发票的日志销售\n"
-"• 发票和其他文档示例已在\"（AR） 可问责 Inscripto\"公司中验证\n"
+"• 在所有公司中配置为预打印和世博结算单的日志销售\n"
+"• 结算单和其他文档示例已在\"（AR） 可问责 Inscripto\"公司中验证\n"
 "• 不同责任类型的合作伙伴示例：\n"
 "\n"
 "• ADHOC（IVA 可记名）\n"
@@ -4436,13 +4479,13 @@ msgstr ""
 "\n"
 "* 会计科目表不会自动安装，每个 CoA 模板取决于公司的 AFIP 责任，您需要根据您的需要安装 CoA。\n"
 "• 安装 CoA 时不会生成任何销售日志，您需要手动配置日志。\n"
-"• 创建发票时，将根据单据和相关日记帐的发行人和收货人的财政责任正确预先选择单据类型。\n"
+"• 创建结算单时，将根据单据和相关日记帐的发行人和收货人的财政责任正确预先选择单据类型。\n"
 "• 已添加 CBU 帐户类型，并添加了 CBU 验证\n"
 "\n"
 "技术\n"
 "---------\n"
 "\n"
-"此模块添加最终用于电子发票模块的模型和字段。以下是主要功能的摘要：\n"
+"此模块添加最终用于电子结算单模块的模型和字段。以下是主要功能的摘要：\n"
 "\n"
 "主数据：\n"
 "\n"
@@ -4525,7 +4568,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"       生成带有海关编号的电子发票\n"
+"       生成带有海关编号的电子结算单\n"
 "    "
 
 #. module: base
@@ -4588,7 +4631,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"基于发票为申报生成国际联盟XML报告\n"
+"基于结算单为申报生成国际联盟XML报告\n"
 "\n"
 "增加了在国际联盟 XML报告中指定货物原产地和合作伙伴增值税的可能性。\n"
 "    "
@@ -4602,7 +4645,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"基于发票为申报生成荷兰国际联盟报告。\n"
+"基于结算单为申报生成荷兰国际联盟报告。\n"
 "    "
 
 #. module: base
@@ -4757,9 +4800,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"在许多国家/地区，借方票据用作现有发票金额的增加\n"
+"在许多国家/地区，借方票据用作现有结算单金额的增加\n"
 "或在某些情况下取消贷方通知单。\n"
-"它就像普通发票，但我们需要跟踪与原始发票的链接。 \n"
+"它就像普通结算单，但我们需要跟踪与原始结算单的链接。 \n"
 "使用的向导与贷方通知单的向导类似。\n"
 "    "
 
@@ -5182,7 +5225,7 @@ msgstr ""
 "\n"
 " 这种情况的解决方案是在收到供应商账单时\n"
 "（根据订购的数量）创建自己的供应商账单，但仅在已接收的\n"
-" 的数量（在采购单行）与记录的供应商账单匹配时，才支付发票费用。\n"
+" 的数量（在采购单行）与记录的供应商账单匹配时，才支付结算单费用。\n"
 "\n"
 " 此模块引入了“发布支付”机制，它会标记每个供应商\n"
 " 账单（无论是否可支付）。\n"
@@ -5191,7 +5234,7 @@ msgstr ""
 "\n"
 " - 是（该订单可支付）\n"
 " - 否 （该订单不可支付，还未发货）\n"
-" - 例外情况（已收到的数量与发票数量不同）\n"
+" - 例外情况（已收到的数量与结算单数量不同）\n"
 "    "
 
 #. module: base
@@ -5277,7 +5320,7 @@ msgstr ""
 "管理雇员费用\n"
 "============================\n"
 "\n"
-"本应用允许管理雇员每日费用. 经理可以访问雇员薪酬记录、完成确认和拒绝.在完成确认后创建雇员发票 .\n"
+"本应用允许管理雇员每日费用. 经理可以访问雇员薪酬记录、完成确认和拒绝.在完成确认后创建雇员结算单 .\n"
 "雇员能够编码他们的费用和确认流程，由经理确认后自动完成财务记账.\n"
 "\n"
 "\n"
@@ -5288,7 +5331,7 @@ msgstr ""
 "* 经理确认\n"
 "* 会计确认和记账条目生成\n"
 "\n"
-"本模块同时使用分析财务并和计工单模块发票兼容，因此在项目中，你能够自动为客户费用重开发票.\n"
+"本模块同时使用分析财务并和计工单模块结算单兼容，因此在项目中，你能够自动为客户费用重开结算单.\n"
 "    "
 
 #. module: base
@@ -5331,7 +5374,7 @@ msgstr ""
 "\n"
 "它会处理整个销售工作流:\n"
 "\n"
-"* **报价** -> **销售订单** -> **发票**\n"
+"* **报价** -> **销售订单** -> **结算单**\n"
 "\n"
 "首选项 (仅与已安装的仓库管理共同使用)\n"
 "------------------------------------------------------\n"
@@ -5339,16 +5382,16 @@ msgstr ""
 "如果也安装了仓库管理，则可以处理以下首选项:\n"
 "\n"
 "* 发货：整批发货或部分发货\n"
-"* 开具发票：选择发票的支付方式\n"
+"* 开具结算单：选择结算单的支付方式\n"
 "* 国际贸易术语解释通则：国际贸易术语\n"
 "\n"
 "您可以选择灵活的开票方式:\n"
 "\n"
-"* *按需开票*: 当需要时从销售订单中手动创建发票\n"
-"* *按订单发货顺序开票*: 从分拣（发货）中生成发票\n"
-"* *发货前*: 在发货前创建草拟发票，且必须支付\n"
+"* *按需开票*: 当需要时从销售订单中手动创建结算单\n"
+"* *按订单发货顺序开票*: 从分拣（发货）中生成结算单\n"
+"* *发货前*: 在发货前创建草拟结算单，且必须支付\n"
 "\n"
-"通过此模块，您可以使用类别、小计或分页符定制销售订单和发票报告.\n"
+"通过此模块，您可以使用类别、小计或分页符定制销售订单和结算单报告.\n"
 "\n"
 "销售经理面板将包含\n"
 "------------------------------------------------\n"
@@ -5645,7 +5688,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-" 使用多级别催款自动标记未支付发票。\n"
+" 使用多级别催款自动标记未支付结算单。\n"
 "=========================================================================\n"
 "\n"
 " 您可以通过菜单定义您的多级别催款：\n"
@@ -6317,7 +6360,7 @@ msgstr ""
 "* 在 eBay 上发布产品\n"
 "* 在 eBay 上修订、重新提交、终止项目\n"
 "* 集成库存移动\n"
-"* 自动创建销售订单和发票\n"
+"* 自动创建销售订单和结算单\n"
 "\n"
 "  "
 
@@ -6395,11 +6438,11 @@ msgid ""
 "This module allow to reinvoice employee expense, by setting the SO directly on the expense.\n"
 msgstr ""
 "\n"
-" 重新开具员工费用发票\n"
+" 重新开具员工费用结算单\n"
 "==========================\n"
 "\n"
-" 创建一些可为其重新开具费用发票的产品。\n"
-" 此模块支持通过在费用上直接设置 SO 而重新开具员工费用发票。\n"
+" 创建一些可为其重新开具费用结算单的产品。\n"
+" 此模块支持通过在费用上直接设置 SO 而重新开具员工费用结算单。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_repair
@@ -6776,19 +6819,19 @@ msgstr ""
 "\n"
 "瑞士本地化\n"
 "==================\n"
-"此模块会定义瑞士（瑞士 PME/KMU 2015）科目表、税收，并在打印发票或通过电子邮件发送时启生成 ISR 。\n"
+"此模块会定义瑞士（瑞士 PME/KMU 2015）科目表、税收，并在打印结算单或通过电子邮件发送时启生成 ISR 。\n"
 "\n"
 "如果你指定了其所需要的信息，则将会生成 ISR：\n"
 " －必须设置您希望进行支付的银行账户，并具有有效的邮政参考。\n"
-" －必须已为发票设置分配的银行账户，以接受发票付款（可以手动设置，但如果已定义银行账户则会自动设置缺省值）。\n"
+" －必须已为结算单设置分配的银行账户，以接受结算单付款（可以手动设置，但如果已定义银行账户则会自动设置缺省值）。\n"
 " －必须已设置你的银行之邮政参考。\n"
-" － 您的发票必须为欧元或瑞士法郎 （因为 ISR 不接受其他货币）\n"
+" － 您的结算单必须为欧元或瑞士法郎 （因为 ISR 不接受其他货币）\n"
 "\n"
 "如果满足之前的条件，则会自动生成 ISR。\n"
 "\n"
 " 以下就是它的运行过程：\n"
-"    - 打印发票将触发两个文件的下载：发票及其 ISR\n"
-"   - 点击‘通过邮件发送’按钮将会附加两个文件至您的草拟邮件：发票和相应的 ISR。\n"
+"    - 打印结算单将触发两个文件的下载：结算单及其 ISR\n"
+"   - 点击‘通过邮件发送’按钮将会附加两个文件至您的草拟邮件：结算单和相应的 ISR。\n"
 "    "
 
 #. module: base
@@ -6995,7 +7038,7 @@ msgstr ""
 "\n"
 "该模块增加了以下功能：\n"
 "\n"
-" 不可更改性：取消或取消修改POS订单，发票和日记账分录的关键数据的所有方法\n"
+" 不可更改性：取消或取消修改POS订单，结算单和日记账分录的关键数据的所有方法\n"
 "\n"
 " 安全性：链接算法验证不可比性\n"
 "\n"
@@ -7087,7 +7130,7 @@ msgstr ""
 "安装此模块后，您将可以访问 ：\n"
 "    * 芬兰会计科目表\n"
 "    * 财政状况\n"
-"    * 发票付款参考类型（芬兰标准参考和芬兰债权人参考 （RF））\n"
+"    * 结算单付款参考类型（芬兰标准参考和芬兰债权人参考 （RF））\n"
 "\n"
 "从销售日记帐设置付款参考类型。\n"
 "    "
@@ -7197,7 +7240,7 @@ msgstr ""
 "\n"
 "本模块提供的向导：\n"
 "--------------------------------\n"
-"    • 合作伙伴增值税内部：用相关增值税和发票登记合作伙伴\n"
+"    • 合作伙伴增值税内部：用相关增值税和结算单登记合作伙伴\n"
 "      金额。准备 XML 文件格式。\n"
 "\n"
 "[访问:*路径] 开票/报告/法律报告/比利时报表/合作伙伴增值税内部\n"
@@ -8088,7 +8131,7 @@ msgstr ""
 " 功能：\n"
 " – 创建和编辑订阅\n"
 " – 修改订阅及销售订单\n"
-" – 按固定时间间隔自动生成发票\n"
+" – 按固定时间间隔自动生成结算单\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_purchase_requisition
@@ -8330,6 +8373,15 @@ msgstr ""
 "安装社团协会的档案，用于管理活动，注册信息，会员信息，\n"
 "会员产品（方案）等。\n"
 " "
+
+#. module: base
+#: model:ir.module.module,summary:base.module_account_online_synchronization
+msgid ""
+"\n"
+"This module is used for Online bank synchronization."
+msgstr ""
+"\n"
+"此模块用于在线银行同步。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals
@@ -8722,10 +8774,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"通用商务语言(UBL <http://ubl.xml.org/>`_)是标准电子化XML商务文档的库，如发票。\n"
+"通用商务语言(UBL <http://ubl.xml.org/>`_)是标准电子化XML商务文档的库，如结算单。\n"
 "UBL 标准成为2016年1月的 `ISO/IEC 19845 <http://www.iso.org/iso/catalogue_detail.htm?csnumber=66370>` 标准。\n"
 "(参见 `正式发布 <http://www.prweb.com/releases/2016/01/prweb13186919.htm>`_)。\n"
-"比利时电子发票使用 UBL 2.0 使用 e-fff 协议。\n"
+"比利时电子结算单使用 UBL 2.0 使用 e-fff 协议。\n"
 "    "
 
 #. module: base
@@ -8980,6 +9032,25 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_account_online_synchronization
+msgid ""
+"\n"
+"With this module, users will be able to link bank journals to their\n"
+"online bank accounts (for supported banking institutions), and configure\n"
+"a periodic and automatic synchronization of their bank statements.\n"
+"This module has been added end of 2020 and is purpose is to work with\n"
+"the latest providers. It should be used over the previous account_online_sync\n"
+"module.\n"
+"    "
+msgstr ""
+"\n"
+"使用此模块，用户将能够将银行日记帐链接到他们的\n"
+"在线银行帐户（适用于支持的银行机构），并进行配置\n"
+"定期定期自动同步其银行对帐单。\n"
+"该模块已在2020年底添加，目的是与\n"
+"最新的提供商。 应该在先前的account_online_sync模块上使用。"
+
+#. module: base
 #: model:ir.module.module,description:base.module_payment_sips
 msgid ""
 "\n"
@@ -9022,7 +9093,7 @@ msgid ""
 msgstr ""
 " 用于将多个公司之间的文档同步的模块。例如，该模块可以实现您在验证一个采购单时候自动生成一个销售订单（需为系统内用户），反之亦然。\n"
 "\n"
-"支持的文档为销售订单、采购单以及发票/信用凭证。\n"
+"支持的文档为销售订单、采购单以及结算单/信用凭证。\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_approvals_purchase_stock
@@ -9181,7 +9252,7 @@ msgstr "%s (副本)"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
 msgid "%w - Day of the week number [0(Sunday),6].\""
-msgstr ""
+msgstr "%w - 星期天数 [0(周日),6].\""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_lang_form
@@ -9402,7 +9473,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid ""
 "<code>UserError</code>: Warning Exception to use with <code>raise</code>"
-msgstr ""
+msgstr "<code>用户错误</code>：可用的警告异常 <code>抛出</code>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -9519,8 +9590,8 @@ msgstr "<i class=\"fa fa-times\" title=\"Close the onboarding panel\"/>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.onboarding_container
-msgid "<span aria-label=\"Close\">&amp;times;</span>"
-msgstr "<span aria-label=\"Close\">&amp;times;</span>"
+msgid "<span aria-label=\"Close\">×</span>"
+msgstr "<span aria-label=\"Close\">×</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
@@ -9547,7 +9618,7 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label o_td_label\" name=\"address_name\">\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', 'contact')]}\">公司地址</b>\n"
-"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">发票地址</b>\n"
+"                                <b attrs=\"{'invisible': [('type', '!=', 'invoice')]}\">结算单地址</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', 'delivery')]}\">交货地址</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', 'other')]}\">其他地址</b>\n"
 "                                <b attrs=\"{'invisible': [('type', '!=', 'private')]}\">个人地址</b>\n"
@@ -9972,16 +10043,16 @@ msgstr ""
 "\n"
 ".. figure :: static/description/picking_done_sale.png\n"
 "\n"
-"*创建并验证与销售订单关联的新发票\n"
+"*创建并验证与销售订单关联的新结算单\n"
 "\n"
 ".. figure :: static/description/validate_invoice_customs.png\n"
 "\n"
-"*海关信息可在相关发票的行中找到\n"
+"*海关信息可在相关结算单的行中找到\n"
 " 与每个产品.\n"
 "\n"
 ".. figure :: static/description/invoice_custom_pedimento.png\n"
 "\n"
-"*检查与产品所在地相关的电子发票\n"
+"*检查与产品所在地相关的电子结算单\n"
 " 显示海关信息\n"
 
 #. module: base
@@ -10317,12 +10388,12 @@ msgstr "账户持有人名称"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract
 msgid "Account Invoice Extract"
-msgstr "帐户发票导出"
+msgstr "帐户结算单导出"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr "从采购提取会计发票"
+msgstr "从采购提取会计结算单"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
@@ -10752,6 +10823,22 @@ msgid "Add views and tweaks on event"
 msgstr "添加视图并且在活动上改变"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_31
+msgid "Addison Olson is a mighty sales representative at Deco Addict."
+msgstr "艾迪森·奥尔森是Deco Addict的一位出色的销售代表。"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_31
+msgid ""
+"Addison Olson works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+"艾迪森·奥尔森在<b>从事</b>。他是众所周知的\n"
+"    特别是出售鼠标陷阱。用那个把戏， 他削减\n"
+"    过去两年内，IT 预算几乎减半。"
+
+#. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
 #: model_terms:ir.ui.view,arch_db:base.contact
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -11011,12 +11098,17 @@ msgstr "收银POS的高级功能"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_enterprise
 msgid "Advanced features for Stock"
-msgstr "库存高级特性"
+msgstr "库存的高级特性"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account_enterprise
 msgid "Advanced features for stock_account"
 msgstr "库存会计高级特性"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_l10n_be_hr_payroll_proration
+msgid "Advantage Proration"
+msgstr "优势比例分摊"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_adyen
@@ -11027,7 +11119,7 @@ msgstr "Adyen付款"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_adyen_platforms
 msgid "Adyen for Platforms"
-msgstr ""
+msgstr "平台Adyen"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_module_module__license__agpl-3
@@ -11121,6 +11213,11 @@ msgstr "分配假期并关注休假申请"
 #: model:ir.module.module,summary:base.module_helpdesk_fsm
 msgid "Allow generating fsm tasks from ticket"
 msgstr "启用从工单生成现场服务任务"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_hr_payroll_edit_lines
+msgid "Allow payslip edition"
+msgstr "允许工资单版本"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
@@ -11537,6 +11634,16 @@ msgid "Aruba"
 msgstr "阿鲁巴"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "As a team, we are happy to contribute to this event."
+msgstr "做为一个团队，我们乐于为这个事件付出。"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
 msgstr "评估你的员工"
@@ -11689,7 +11796,7 @@ msgstr "Authorize.Net支付"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module_dependency__auto_install_required
 msgid "Auto Install Required"
-msgstr "自动安装"
+msgstr "要求自动安装"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_partner_autocomplete
@@ -11732,7 +11839,7 @@ msgstr "自动安装下载的APP，当前不可用。"
 msgid ""
 "Automatically finds the purchase order linked to a vendor bill when using "
 "invoice extraction"
-msgstr "在使用发票提取时可以自动找到链接到供应商账单的采购单"
+msgstr "在使用结算单提取时可以自动找到链接到供应商账单的采购单"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_translation__state
@@ -11761,6 +11868,13 @@ msgstr "头像"
 #: model:res.country,name:base.az
 msgid "Azerbaijan"
 msgstr "阿塞拜疆"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_12
+msgid ""
+"Azure Interior brings honesty and seriousness to wood industry while helping"
+" customers deal with trees, flowers and fungi."
+msgstr "Azure 内饰为木材行业带来诚实和严肃，同时帮助客户处理树木、花卉和真菌。"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_B
@@ -12099,6 +12213,11 @@ msgid "Belgian Intrastat Declaration"
 msgstr "比利时国际联盟申报"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_proration
+msgid "Belgian Payroll - Advantage Proration"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_posted_employee
 msgid "Belgian Payroll - Posted Employee"
 msgstr ""
@@ -12278,6 +12397,17 @@ msgstr "下边距（毫米）"
 #: model:res.country,name:base.bv
 msgid "Bouvet Island"
 msgstr "罗得岛"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_15
+msgid ""
+"Brandon works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
+"布兰登在 IT 行业工作<b> 10 年</b>。他是众所周知的\n"
+"                特别是出售鼠标陷阱。用那个把戏， 他削减\n"
+"                过去两年内，IT 预算几乎减半。"
 
 #. module: base
 #: model:res.country,name:base.br
@@ -12974,6 +13104,17 @@ msgid "Collect payments from your customers through SEPA direct debit."
 msgstr "通过 SEPA 直接扣款从您的客户收款。"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_28
+msgid ""
+"Colleen Diaz works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years."
+msgstr ""
+"科琳·迪亚兹在<b>从事10</b>。他是众所周知的\n"
+"                特别是出售鼠标陷阱。用那个把戏， 他削减\n"
+"                过去两年内，IT 预算几乎减半。"
+
+#. module: base
 #: model:res.country,name:base.co
 msgid "Colombia"
 msgstr "哥伦比亚"
@@ -13031,6 +13172,16 @@ msgstr "栏位指向在comodel表中的记录"
 #: model:ir.model.fields,help:base.field_ir_model_fields__column1
 msgid "Column referring to the record in the model table"
 msgstr "栏位指向在model表中的记录"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Come see us live, we hope to meet you !"
+msgstr "欢迎再来，我们期望再见！"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__comm10e
@@ -13220,7 +13371,7 @@ msgstr "计算分数并且自动分配线索"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription_taxcloud
 msgid "Compute taxes with TaxCloud after automatic invoice creation."
-msgstr "自动发票创建后，使用TaxCloud计算税金。"
+msgstr "自动的结算单创建后，使用TaxCloud计算税金。"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_taxcloud_delivery
@@ -13660,6 +13811,7 @@ msgstr "创建上下文操作"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__create_date
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
+#: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
 msgstr "创建日期"
 
@@ -13960,7 +14112,6 @@ msgstr "创建者"
 #: model:ir.model.fields,field_description:base.field_res_partner_category__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_industry__create_date
 #: model:ir.model.fields,field_description:base.field_res_partner_title__create_date
-#: model:ir.model.fields,field_description:base.field_res_users__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_apikeys_description__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_identitycheck__create_date
 #: model:ir.model.fields,field_description:base.field_res_users_log__create_date
@@ -13984,7 +14135,7 @@ msgstr "创建日期"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Creation details"
-msgstr "Log详情"
+msgstr "创建详情"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner__credit_limit
@@ -14394,6 +14545,13 @@ msgid "Decimal Separator"
 msgstr "小数分割符"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_2
+msgid ""
+"Deco Addict brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr "装饰成瘾带来诚实和严肃木材行业，同时帮助客户处理树木，鲜花和真菌。"
+
+#. module: base
 #: model:ir.actions.act_window,name:base.action_partner_deduplicate
 msgid "Deduplicate Contacts"
 msgstr "删除重复联系人"
@@ -14456,7 +14614,7 @@ msgstr "定义的报表"
 #. module: base
 #: model:ir.module.module,summary:base.module_web_map
 msgid "Defines the map view for odoo enterprise"
-msgstr "定义地图视图(企业版)"
+msgstr "定义地图视图企业版"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_constraint__definition
@@ -14700,6 +14858,16 @@ msgstr "不允许的车队开支"
 #: model_terms:ir.ui.view,arch_db:base.res_config_settings_view_form
 msgid "Discard"
 msgstr "丢弃"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Discover more"
+msgstr "了解更多"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_discuss
@@ -15089,6 +15257,22 @@ msgid "Done!"
 msgstr "完成！"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_3
+msgid "Douglas Fletcher is a mighty functional consultant at Deco Addict"
+msgstr "道格拉斯·弗莱彻是德科强大的分析师的一位强大的职能顾问"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_3
+msgid ""
+"Douglas Fletcher works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+"道格拉斯·弗莱彻在<b>从事10</b>。他是众所周知的\n"
+"    特别是出售鼠标陷阱。用那个把戏， 他削减\n"
+"    过去两年内，IT 预算几乎减半。"
+
+#. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_doctor
 msgid "Dr."
 msgstr "博士."
@@ -15291,7 +15475,7 @@ msgstr ""
 "墨西哥电子会计和财政报告\n"
 "================================================== =\n"
 "\n"
-"将财务报告添加到墨西哥电子发票\n"
+"将财务报告添加到墨西哥电子结算单\n"
 "\n"
 " - COA\n"
 " - 试算平衡\n"
@@ -15915,7 +16099,7 @@ msgstr "从费用扫描中提取数据来自动填充它们"
 #. module: base
 #: model:ir.module.module,summary:base.module_account_invoice_extract
 msgid "Extract data from invoice scans to fill them automatically"
-msgstr "从发票扫描中提取数据以自动填充它们"
+msgstr "从结算单扫描中提取数据以自动填充它们"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_U
@@ -16503,6 +16687,22 @@ msgid "Float"
 msgstr "浮动"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_address_4
+msgid "Floyd Steward is a mighty analyst at Deco Addict."
+msgstr "弗洛伊德 · 斯图尔特是一个强大的分析师在Deco Addict。"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_4
+msgid ""
+"Floyd Steward works in IT sector <b>since 10 years</b>. He is known\n"
+"    notably for selling mouse traps. With that trick he cut\n"
+"    IT budget by almost half within the last 2 years."
+msgstr ""
+"弗洛伊德·斯图尔特在<B>从事</B>。他是众所周知的\n"
+"    特别是出售鼠标陷阱。用那个把戏， 他削减\n"
+"    过去两年内，IT 预算几乎减半。"
+
+#. module: base
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__folio
 msgid "Folio 27  210 x 330 mm"
 msgstr "Folio 27 210 x 330 毫米"
@@ -16673,7 +16873,7 @@ msgstr "来自"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_management
 msgid "From quotations to invoices"
-msgstr "从报价到发票"
+msgstr "从报价到结算单"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_access_view_search
@@ -16799,6 +16999,13 @@ msgid "Gauge Widget for Kanban"
 msgstr "看板的仪表挂件"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_3
+msgid ""
+"Gemini Furniture brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
+msgstr "Gemini家具为木材行业带来诚实和严肃，同时帮助客户处理树木、鲜花和真菌。"
+
+#. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
 msgid "General"
 msgstr "一般"
@@ -16844,7 +17051,7 @@ msgstr "从联系表单创建线索"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_subscription
 msgid "Generate recurring invoices and manage renewals"
-msgstr "生成定期重复性发票并管理续订"
+msgstr "生成定期重复性结算单并管理续订"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_links
@@ -17022,6 +17229,19 @@ msgstr "谷歌用户"
 #: model:ir.module.module,shortdesc:base.module_google_recaptcha
 msgid "Google reCAPTCHA integration"
 msgstr "Google 验证码集成"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_18
+msgid ""
+"Gordon Owens works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Senior Consultant."
+msgstr ""
+"戈登·欧文斯在<b>从事</b>。他是众所周知的\n"
+"                特别是出售鼠标陷阱。用那个把戏， 他削减\n"
+"                过去两年内，IT 预算几乎减半。\n"
+"                著名的高级顾问。"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_act_window_view__view_mode__graph
@@ -17217,6 +17437,16 @@ msgid "Handle lunch orders of your employees"
 msgstr "处理员工的午餐订单"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_1
+#: model_terms:res.partner,website_description:base.res_partner_10
+#: model_terms:res.partner,website_description:base.res_partner_12
+#: model_terms:res.partner,website_description:base.res_partner_2
+#: model_terms:res.partner,website_description:base.res_partner_3
+#: model_terms:res.partner,website_description:base.res_partner_4
+msgid "Happy to be Sponsor"
+msgstr "很高兴成为赞助商"
+
+#. module: base
 #: model:ir.module.module,summary:base.module_hw_escpos
 msgid "Hardware Driver for ESC/POS Printers and Cashdrawers"
 msgstr "硬件驱动ESC/POS打印机和钱箱"
@@ -17330,14 +17560,39 @@ msgid ""
 msgstr "帮你处理记账需要，如果你不是会计师，我们建议你只安装开票应用。"
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_sales_sales
+msgid "Helps you handle your quotations, sale orders and invoicing."
+msgstr "帮你处理报价单，销售订单以及开票。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_attendances
+msgid "Helps you manage the attendances."
+msgstr "帮您管理出勤。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_services_timesheets
+msgid "Helps you manage the timesheets."
+msgstr "帮你管理计工单。"
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_user_type
 msgid "Helps you manage users."
 msgstr "帮助你管理用戶。"
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_marketing_events
+msgid "Helps you manage your Events."
+msgstr "帮助你管理活动。"
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_appraisals
 msgid "Helps you manage your appraisals."
 msgstr "帮助你管理你的评价。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_approvals
+msgid "Helps you manage your approvals."
+msgstr "帮助你管理审批工作流。"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_contracts
@@ -17350,6 +17605,11 @@ msgid "Helps you manage your employees."
 msgstr "帮你管理你的员工。"
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_expenses
+msgid "Helps you manage your expenses."
+msgstr "帮助你管理费用。"
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_inventory_inventory
 msgid ""
 "Helps you manage your inventory and main stock operations: delivery orders, "
@@ -17357,9 +17617,57 @@ msgid ""
 msgstr "帮助你管理你的库存以及主要的仓储作业：发货单、入库单等。"
 
 #. module: base
+#: model:ir.module.category,description:base.module_category_manufacturing_manufacturing
+msgid ""
+"Helps you manage your manufacturing processes and generate reports on those "
+"processes."
+msgstr "帮助你管理你的生产过程并基于这些过程生成报告。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_marketing_email_marketing
+msgid ""
+"Helps you manage your mass mailing to design\n"
+"professional emails and reuse templates."
+msgstr "帮助你群发邮件，并管理邮件模板。"
+
+#. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_payroll
 msgid "Helps you manage your payrolls."
 msgstr "帮助你管理你的工资表。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_services_project
+msgid ""
+"Helps you manage your projects and tasks by tracking them, generating "
+"plannings, etc..."
+msgstr "帮助你管理你的项目和任务，通过跟进进展，生成规划等。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_inventory_purchase
+msgid ""
+"Helps you manage your purchase-related processes such as requests for "
+"quotations, supplier bills, etc..."
+msgstr "帮助你管理与采购相关的流程，如询价单，供应商账单等。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_manufacturing_quality
+msgid "Helps you manage your quality alerts and quality checks."
+msgstr "帮你管理质量警告和质量检查."
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_recruitment
+msgid "Helps you manage your recruitments."
+msgstr "帮助你管理你的招聘。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_marketing_surveys
+msgid "Helps you manage your survey for review of different-different users."
+msgstr "帮助您管理调查问卷，以便评估不同的用户。"
+
+#. module: base
+#: model:ir.module.category,description:base.module_category_human_resources_time_off
+msgid "Helps you manage your time off."
+msgstr "帮助你管理你的休假。"
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_sales_sign
@@ -17390,7 +17698,7 @@ msgstr "隐藏徽章"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Hide seconds"
-msgstr "隐藏秒钟"
+msgstr "隐藏秒数"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -17479,7 +17787,7 @@ msgstr "HR招聘面试表单"
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Human Readable"
-msgstr "可读"
+msgstr "人类可读"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources
@@ -17987,17 +18295,17 @@ msgstr "从互联网导入汇率。\n"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi
 msgid "Import/Export Invoices From XML/PDF"
-msgstr "从 XML/PDF 导入、导出发票"
+msgstr "从 XML/PDF 导入、导出结算单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_facturx
 msgid "Import/Export invoices with Factur-X"
-msgstr "使用 Factur-X 的导入、导出发票"
+msgstr "使用 Factur-X 的导入、导出结算单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_edi_ubl
 msgid "Import/Export invoices with generic UBL"
-msgstr "使用通用 UBL 的导入、导出发票"
+msgstr "使用通用 UBL 的导入、导出结算单"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model__modules
@@ -18293,7 +18601,7 @@ msgstr "收银POS整合 Adyen 支付终端"
 #: model:ir.module.module,shortdesc:base.module_account_inter_company_rules
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_inter_company_rules
 msgid "Inter Company Module for Sale/Purchase Orders and Invoices"
-msgstr "启用 多公司关联交易 管理销售/采购单和发票"
+msgstr "启用 多公司关联交易 管理销售/采购单和结算单"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -18536,7 +18844,7 @@ msgstr "库存，物流，估值，会计"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Invoice"
-msgstr "发票"
+msgstr "结算单"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner__type
@@ -18544,12 +18852,12 @@ msgstr "发票"
 msgid ""
 "Invoice & Delivery addresses are used in sales orders. Private addresses are"
 " only visible by authorized users."
-msgstr "发票和发货地址用于销售订单。专用地址仅供授权用户查看。"
+msgstr "结算单和发货地址用于销售订单。专用地址仅供授权用户查看。"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_partner__type__invoice
 msgid "Invoice Address"
-msgstr "发票地址"
+msgstr "结算单地址"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account
@@ -18559,7 +18867,7 @@ msgstr "开票和付款"
 #. module: base
 #: model:ir.module.module,summary:base.module_documents_account
 msgid "Invoices from Documents"
-msgstr "来自文档的发票"
+msgstr "来自文档的结算单"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account
@@ -18722,7 +19030,7 @@ msgstr "JIT即时调度"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__base_onboarding_company_state__just_done
 msgid "Just done"
-msgstr "完成"
+msgstr "刚刚完成"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_K
@@ -19265,7 +19573,7 @@ msgstr "线索评分"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_helpdesk
 msgid "Lead to Tickets"
-msgstr "客服中心 - CRM"
+msgstr "线索到工单"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -19481,7 +19789,7 @@ msgstr "实时活动追踪"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_im_livechat_enterprise
 msgid "Live chat enterprise"
-msgstr "在线聊天(企业版)"
+msgstr "在线聊天企业版"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_language_install
@@ -19520,7 +19828,7 @@ msgstr "日志"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_logging_form_view
 msgid "Logging details"
-msgstr "Logging 视图"
+msgstr "日志详情"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__login
@@ -19992,7 +20300,7 @@ msgstr "管理您的员工工资表记录"
 #. module: base
 #: model:ir.module.module,summary:base.module_planning
 msgid "Manage your employees' schedule"
-msgstr "管理员工日程"
+msgstr "管理员工排程"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_fleet
@@ -20020,6 +20328,7 @@ msgstr "管理你的库存及物流活动"
 #: model:ir.module.category,name:base.module_category_manufacturing_manufacturing
 #: model:ir.module.module,shortdesc:base.module_mrp
 #: model:res.partner.industry,name:base.res_partner_industry_C
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Manufacturing"
 msgstr "生产"
 
@@ -20070,6 +20379,7 @@ msgstr "销售订单的毛利"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_marketing
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Marketing"
 msgstr "市场营销"
 
@@ -20204,7 +20514,7 @@ msgstr "菜单"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
 msgid "Menus Customization"
-msgstr "菜单定制"
+msgstr "菜单定制化"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_merge
@@ -21054,6 +21364,30 @@ msgid "Nice work! Your configuration is done."
 msgstr "干得好！设置已完成。"
 
 #. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole is <b>author of several books</b>, including Amazon best seller\n"
+"                \"How Azure and Odoo will change the business world!\"."
+msgstr ""
+"妮可是<b>几本书的作者</b>，包括亚马逊畅销书\n"
+"                \"Azure 和 Odoo 将如何改变商业世界！"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_16
+msgid ""
+"Nicole works in IT sector <b>since 20 years</b>. She\n"
+"                develops software to help develop websites.  She sold her\n"
+"                first company at 30 years old and manage to grow Azure Interior\n"
+"                from 1 to 55 employees mostly by reselling services on\n"
+"                Odoo."
+msgstr ""
+"妮可在<b>自 20 年以来</b>。她\n"
+"                开发软件以帮助开发网站。 她卖掉了她\n"
+"                第一家公司在 30 岁， 并设法增长 Azure 内部\n"
+"                从 1 到 55 名员工，主要通过转售服务\n"
+"               Odoo"
+
+#. module: base
 #: model:res.country,name:base.ne
 msgid "Niger"
 msgstr "尼日尔"
@@ -21124,7 +21458,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.open_module_tree
 msgid "No module found!"
-msgstr "没有模块！"
+msgstr "找不到模块！"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_ids
@@ -22641,11 +22975,11 @@ msgstr ""
 "-----------------\n"
 "\n"
 "通过 Odoo\n"
-"<a href=\"https://www.odoo.com/page/purchase\">开源供应链</a>自动申请付款，管理发票。\n"
+"<a href=\"https://www.odoo.com/page/purchase\">开源供应链</a>自动申请付款，管理结算单。\n"
 "\n"
 "自动提出采购建议，启动报价请求，跟踪\n"
 "采购单，管理供应商信息，管理产品接收以及\n"
-"检查供应商的发票。\n"
+"检查供应商的结算单。\n"
 "\n"
 "自动化的采购建议\n"
 "----------------------------------\n"
@@ -22656,7 +22990,7 @@ msgstr ""
 "采购和库存绩效。\n"
 "\n"
 "只需点击一下即可向您的供应商发送报价请求或采购单。\n"
-"从接收产品并获取采购单的发票。\n"
+"从接收产品并获取采购单的结算单。\n"
 "\n"
 "采购招标\n"
 "----------------\n"
@@ -22688,7 +23022,7 @@ msgstr ""
 "数量和特殊合同条件做出更明智的采购决策。您甚至可以根据供应商的价格确定\n"
 "您的销售价格。\n"
 "\n"
-"控制产品和发票\n"
+"控制产品和结算单\n"
 "-----------------------------\n"
 "\n"
 "不会遗留任何产品或订单，通过库存控制您可以管理\n"
@@ -22696,8 +23030,8 @@ msgstr ""
 "控制方法。\n"
 "\n"
 "轻松控制供应商账单。根据\n"
-"需要选择正确的方法：根据采购单预先生成草稿发票，在产品\n"
-"接收中手动创建发票并从采购单中导入行\n"
+"需要选择正确的方法：根据采购单预先生成草稿结算单，在产品\n"
+"接收中手动创建结算单并从采购单中导入行\n"
 "等。\n"
 "\n"
 
@@ -23213,6 +23547,12 @@ msgid ""
 msgstr "一个你试图访问的文档已经被删除，请刷新后重试。"
 
 #. module: base
+#: code:addons/base/models/ir_actions_report.py:0
+#, python-format
+msgid "One of the documents, you try to merge is encrypted"
+msgstr ""
+
+#. module: base
 #: code:addons/models.py:0
 #, python-format
 msgid ""
@@ -23240,6 +23580,11 @@ msgstr "一对多字段不能作为“commercial_fields”或“地址字段”�
 #: model:ir.module.category,name:base.module_category_marketing_online_appointment
 msgid "Online Appointment"
 msgstr "在线预约"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_account_online_synchronization
+msgid "Online Bank Statement Synchronization"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_event_sale
@@ -23656,7 +24001,7 @@ msgstr ""
 "\n"
 "### 自动化注册和支付流程\n"
 "\n"
-"通过“多重开票”功能出售活动的注册权。活动既可以免费，也可以收费。参与者可以根据您的配置使用信用卡或凭发票在线支付。\n"
+"通过“多重开票”功能出售活动的注册权。活动既可以免费，也可以收费。参与者可以根据您的配置使用信用卡或凭结算单在线支付。\n"
 "\n"
 "通过早买优惠价格、会员特殊条款或购买多张门票提供额外服务等方法提高您的销售量。\n"
 "\n"
@@ -24282,7 +24627,12 @@ msgstr "工资表会计"
 #. module: base
 #: model:ir.module.category,name:base.module_category_payroll_localization
 msgid "Payroll Localization"
-msgstr "工资条本地化"
+msgstr "工资单本地化"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_hr_payroll_edit_lines
+msgid "Payroll: Edit lines - Recompute work entries"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payulatam
@@ -24632,6 +24982,7 @@ msgstr "产品变体二维操作表格"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Productivity"
 msgstr "生产力"
 
@@ -24798,7 +25149,7 @@ msgstr ""
 "---------------------------------\n"
 "\n"
 "项目会自动与客户合同集成，以便您可以根据时间和材料\n"
-"开具发票，并轻松记录计工单。\n"
+"开具结算单，并轻松记录计工单。\n"
 "\n"
 "跟踪问题\n"
 "------------\n"
@@ -24831,7 +25182,7 @@ msgstr "项目，任务，会计"
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_sale
 msgid "Project, Tasks, After Sales"
-msgstr "项目，任务，客服中心"
+msgstr "项目，任务，售后"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_helpdesk_repair
@@ -25117,7 +25468,7 @@ msgstr "轨迹的测验"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_quotation_builder
 msgid "Quotation Builder"
-msgstr "报价单生成器"
+msgstr "报价单构建器"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_expense
@@ -25268,6 +25619,13 @@ msgstr "读访问权限"
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_search
 msgid "Readonly"
 msgstr "只读"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_4
+msgid ""
+"Ready Mat brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr "Ready Mat 为木材行业带来诚实和严肃，同时帮助客户处理树木、鲜花和真菌。"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_L
@@ -26603,6 +26961,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
 #: model:res.partner.category,name:base.res_partner_category_11
+#: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Services"
 msgstr "服务"
 
@@ -26868,7 +27227,7 @@ msgstr "社交媒体"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_push_notifications
 msgid "Social Push Notifications"
-msgstr "社交媒体推送"
+msgstr "社交媒体推送通知"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_social_twitter
@@ -27757,6 +28116,13 @@ msgid ""
 msgstr ""
 "ISO 国家代码使用两个字符。\n"
 " 您可以使用此字段进行快速搜索。"
+
+#. module: base
+#: model:res.partner,website_short_description:base.res_partner_10
+msgid ""
+"The Jackson Group brings honesty and seriousness to wood industry while "
+"helping customers deal with trees, flowers and fungi."
+msgstr "Jackson Group 为木材行业带来了诚实和严肃，同时帮助客户处理树木、鲜花和真菌。"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__url_code
@@ -28737,6 +29103,19 @@ msgstr "托克劳"
 #: model:res.country,name:base.to
 msgid "Tonga"
 msgstr "汤加"
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_address_17
+msgid ""
+"Toni Rhodes works in IT sector <b>since 10 years</b>. He is known\n"
+"                notably for selling mouse traps. With that trick he cut\n"
+"                IT budget by almost half within the last 2 years.\n"
+"                Famous Managing Partner."
+msgstr ""
+"托尼·罗兹在<b>自 10 年以来</b>。他是众所周知的\n"
+"                特别是出售鼠标陷阱。用那个把戏， 他削减\n"
+"                过去两年内，IT 预算几乎减半。\n"
+"                著名的管理合伙人。"
 
 #. module: base
 #: code:addons/base/models/res_users.py:0
@@ -30034,6 +30413,25 @@ msgid "Water supply"
 msgstr "供水"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_18
+msgid ""
+"We are a technology consulting & strategic advisory firm that creates value "
+"enhancing solutions through the use of advanced software for our clients "
+"worldwide. At Lumber Inc we bring operational experience combined..."
+msgstr "我们是一家技术咨询和战略咨询公司，通过为全球客户使用先进的软件，创造价值提升解决方案。在 Lumber Inc，我们将运营经验相结合..."
+
+#. module: base
+#: model_terms:res.partner,website_description:base.res_partner_18
+msgid ""
+"We are a technology consulting &amp; strategic advisory firm that creates value enhancing solutions through the use of advanced software for our clients worldwide.\n"
+" <br> <br>\n"
+"At Lumber Inc we bring operational experience combined with technological acumen. We understand that any software that supports business operations needs to be designed in such a way that facilitates the execution of critical operational processes, and serves as a tool to the users rather than a barrier. Our approach is focused on the process first, ensuring that it contributes to the goals of the company, we then optimize it, and design the software solutions to best support it."
+msgstr ""
+"我们是一家技术咨询和战略咨询公司，通过为全球客户使用先进的软件，创造价值提升的解决方案。\n"
+"<br> <br>\n"
+"在 Lumber Inc，我们带来了运营经验和技术敏锐性。我们理解，任何支持业务运营的软件都需要以便于执行关键运营流程的方式进行设计，并充当用户的工具，而不是障碍。我们的方法首先侧重于流程，确保它有助于实现公司的目标，然后对其进行优化，并设计软件解决方案以最好地支持它。"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_web
 msgid "Web"
 msgstr "网页"
@@ -30360,6 +30758,13 @@ msgid "Wkhtmltopdf failed (error code: %s). Message: %s"
 msgstr "Wkhtmltopdf 失败 (错误代码: %s). 消息: %s"
 
 #. module: base
+#: model:res.partner,website_short_description:base.res_partner_1
+msgid ""
+"Wood Corner brings honesty and seriousness to wood industry while helping "
+"customers deal with trees, flowers and fungi."
+msgstr "木角为木材行业带来诚实和严肃，同时帮助客户处理树木、花卉和真菌。"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry
 msgid "Work Entries"
 msgstr "工作分录"
@@ -30648,6 +31053,13 @@ msgid ""
 "You will be able to define additional access rights by editing the newly "
 "created user under the Settings / Users menu."
 msgstr "通过编辑在设置/用户菜单下的新建用户，你将能够定义额外的访问权。"
+
+#. module: base
+#: model_terms:ir.ui.view,arch_db:base.view_currency_form
+msgid ""
+"You won't be able to reduce the number of decimal places of a currency which"
+" has already been used to make accounting entries."
+msgstr ""
 
 #. module: base
 #: code:addons/base/models/ir_mail_server.py:0

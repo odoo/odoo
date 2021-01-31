@@ -638,7 +638,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
         hasThreadView: true,
         thread: [['insert', { id: 20, model: 'res.partner' }]],
     });
-    const message = this.env.models['mail.message'].find(message => message.id === 10);
+    const message = this.env.models['mail.message'].findFromIdentifyingData({ id: 10 });
     await this.createMessageComponent(message, {
         threadViewLocalId: threadViewer.threadView.localId,
     });

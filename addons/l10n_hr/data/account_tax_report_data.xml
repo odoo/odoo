@@ -494,7 +494,7 @@
         <field name="name">NEPRIZNATI PRETPOREZ</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="2"/>
-        <field name="formula">0.3 * nepriznati_pretporez_25_30 + 0.7 * nepriznati_pretporez_25_70 + nepriznati_pretporez_25_other + nepriznati_pretporez_10 + pretporez_koji + nepriznati_pretporez_porez + pretporez_koji_ukupno</field>
+        <field name="formula">0.3 * nepriznati_pretporez_25_30 + 0.7 * nepriznati_pretporez_25_70 + nepriznati_pretporez_25_other + pretporez_koji</field>
         <field name="parent_id" ref="account_tax_report_line_pdv_ostalo"/>
     </record>
 
@@ -502,7 +502,7 @@
         <field name="name">NEPRIZNATI PRETPOREZ (osnovica 30 ili 70%)</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
-        <field name="formula">0.3 * nepriznati_pretporez_25_30 + 0.7 * nepriznati_pretporez_25_70 + nepriznati_pretporez_25_other + nepriznati_pretporez_10</field>
+        <field name="formula">0.3 * nepriznati_pretporez_25_30 + 0.7 * nepriznati_pretporez_25_70 + nepriznati_pretporez_25_other</field>
         <field name="parent_id" ref="account_tax_report_line_nepriznati_pretporez"/>
     </record>
 
@@ -510,7 +510,6 @@
         <field name="name">Nepriznati pretporez 10% (o)</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="1"/>
-        <field name="code">nepriznati_pretporez_10</field>
         <field name="parent_id" ref="account_tax_report_line_nepriznati_pretporez_osnovica_3070"/>
     </record>
 
@@ -567,7 +566,6 @@
 
     <record id="account_tax_report_line_nepriznati_pretporez_porez" model="account.tax.report.line">
         <field name="name">NEPRIZNATI PRETPOREZ (porez)</field>
-        <field name="code">nepriznati_pretporez_porez</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="3"/>
         <field name="parent_id" ref="account_tax_report_line_nepriznati_pretporez"/>
@@ -605,7 +603,6 @@
 
     <record id="account_tax_report_line_pretporez_koji_ukupno" model="account.tax.report.line">
         <field name="name">Pretporez koji još nije priznan (ukupno)</field>
-        <field name="code">pretporez_koji_ukupno</field>
         <field name="report_id" ref="tax_report"/>
         <field name="sequence" eval="4"/>
         <field name="parent_id" ref="account_tax_report_line_nepriznati_pretporez"/>

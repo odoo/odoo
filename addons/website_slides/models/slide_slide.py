@@ -505,9 +505,9 @@ class Slide(models.Model):
             }
         return super(Slide, self).get_access_action(access_uid)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Add access button to everyone if the document is active. """
-        groups = super(Slide, self)._notify_get_groups()
+        groups = super(Slide, self)._notify_get_groups(msg_vals=msg_vals)
 
         if self.website_published:
             for group_name, group_method, group_data in groups:
@@ -632,6 +632,7 @@ class Slide(models.Model):
         ])
         if quiz_attempts_inc and existing_sudo:
             sql.increment_field_skiplock(existing_sudo, 'quiz_attempts_count')
+            SlidePartnerSudo.invalidate_cache(fnames=['quiz_attempts_count'], ids=existing_sudo.ids)
 
         new_slides = self_sudo - existing_sudo.mapped('slide_id')
         return SlidePartnerSudo.create([{

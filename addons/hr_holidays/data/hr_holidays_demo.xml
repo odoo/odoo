@@ -8,7 +8,7 @@
 
     <!--Leave Type-->
     <record id="hr_holiday_status_dv" model="hr.leave.type">
-        <field name="name">Parental Time Off</field>
+        <field name="name">Parental Leaves</field>
         <field name="allocation_type">fixed</field>
         <field name="color_name">brown</field>
         <field name="leave_validation_type">both</field>
@@ -132,7 +132,7 @@
     </record>
 
     <record id="hr_holidays_allocation_pl_al" model="hr.leave.allocation">
-        <field name="name">Parental Time Off</field>
+        <field name="name">Parental Leaves</field>
         <field name="holiday_status_id" ref="hr_holiday_status_dv"/>
         <field name="number_of_days">10</field>
         <field name="employee_id" ref="hr.employee_al"/>

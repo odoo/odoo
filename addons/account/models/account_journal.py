@@ -67,7 +67,7 @@ class AccountJournal(models.Model):
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
         string='Default Account',
         domain="[('deprecated', '=', False), ('company_id', '=', company_id),"
-               "('user_type_id', '=', default_account_type),"
+               "'|', ('user_type_id', '=', default_account_type), ('user_type_id', 'in', type_control_ids),"
                "('user_type_id.type', 'not in', ('receivable', 'payable'))]")
     payment_debit_account_id = fields.Many2one(
         comodel_name='account.account', check_company=True, copy=False, ondelete='restrict',
@@ -306,46 +306,6 @@ class AccountJournal(models.Model):
         ''', [tuple(self.ids)])
         if self._cr.fetchone():
             raise UserError(_("You can't change the company of your journal since there are some journal entries linked to it."))
-
-    @api.constrains('default_account_id', 'payment_debit_account_id', 'payment_credit_account_id')
-    def _check_journal_not_shared_accounts(self):
-        liquidity_journals = self.filtered(lambda journal: journal.type in ('bank', 'cash'))
-
-        accounts = liquidity_journals.default_account_id \
-                   + liquidity_journals.payment_debit_account_id \
-                   + liquidity_journals.payment_credit_account_id
-
-        if not accounts:
-            return
-
-        self.env['account.journal'].flush([
-            'default_account_id',
-            'payment_debit_account_id',
-            'payment_credit_account_id',
-        ])
-        self._cr.execute('''
-            SELECT
-                account.name,
-                ARRAY_AGG(DISTINCT journal.name) AS journal_names
-            FROM account_account account
-            LEFT JOIN account_journal journal ON
-                journal.default_account_id = account.id
-                OR
-                journal.payment_debit_account_id = account.id
-                OR
-                journal.payment_credit_account_id = account.id
-            WHERE account.id IN %s
-            AND journal.type IN ('bank', 'cash')
-            GROUP BY account.name
-            HAVING COUNT(DISTINCT journal.id) > 1
-        ''', [tuple(accounts.ids)])
-        res = self._cr.fetchone()
-        if res:
-            raise ValidationError(_(
-                "The account %(account_name)s can't be shared between multiple journals: %(journals)s",
-                account_name=res[0],
-                journals=', '.join(res[1])
-            ))
 
     @api.constrains('type', 'default_account_id')
     def _check_type_default_account_id_type(self):
@@ -680,13 +640,14 @@ class AccountJournal(models.Model):
         a logic based on accounts.
 
         :param domain:  An additional domain to be applied on the account.move.line model.
-        :return:        The balance expressed in the journal's currency.
+        :return:        Tuple having balance expressed in journal's currency
+                        along with the total number of move lines having the same account as of the journal's default account.
         '''
         self.ensure_one()
         self.env['account.move.line'].check_access_rights('read')
 
         if not self.default_account_id:
-            return 0.0
+            return 0.0, 0
 
         domain = (domain or []) + [
             ('account_id', 'in', tuple(self.default_account_id.ids)),

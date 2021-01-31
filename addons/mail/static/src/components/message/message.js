@@ -10,6 +10,7 @@ const components = {
     NotificationPopover: require('mail/static/src/components/notification_popover/notification_popover.js'),
     PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
 };
+const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
@@ -43,6 +44,7 @@ class Message extends Component {
              */
             isClicked: false,
         });
+        useShouldUpdateBasedOnProps();
         useStore(props => {
             const message = this.env.models['mail.message'].get(props.messageLocalId);
             const author = message ? message.author : undefined;
@@ -50,28 +52,34 @@ class Message extends Component {
             const originThread = message ? message.originThread : undefined;
             const threadView = this.env.models['mail.thread_view'].get(props.threadViewLocalId);
             const thread = threadView ? threadView.thread : undefined;
-            const threadStringifiedDomain = threadView
-                ? threadView.stringifiedDomain
-                : undefined;
             return {
                 attachments: message
                     ? message.attachments.map(attachment => attachment.__state)
-                    : undefined,
-                author: author ? author.__state : undefined,
+                    : [],
+                author,
+                authorAvatarUrl: author && author.avatarUrl,
+                authorImStatus: author && author.im_status,
+                authorNameOrDisplayName: author && author.nameOrDisplayName,
+                correspondent: thread && thread.correspondent,
                 hasMessageCheckbox: message ? message.hasCheckbox : false,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 isMessageChecked: message && threadView
-                    ? message.isChecked(thread, threadStringifiedDomain)
+                    ? message.isChecked(thread, threadView.stringifiedDomain)
                     : false,
                 message: message ? message.__state : undefined,
                 notifications: message ? message.notifications.map(notif => notif.__state) : [],
-                originThread: originThread ? originThread.__state : undefined,
-                partnerRoot: partnerRoot ? partnerRoot.__state : undefined,
-                thread: thread ? thread.__state : undefined,
-                threadView: threadView ? threadView.__state : undefined,
+                originThread,
+                originThreadModel: originThread && originThread.model,
+                originThreadName: originThread && originThread.name,
+                originThreadUrl: originThread && originThread.url,
+                partnerRoot,
+                thread,
+                threadHasSeenIndicators: thread && thread.hasSeenIndicators,
+                threadMassMailing: thread && thread.mass_mailing,
             };
         }, {
             compareDepth: {
+                attachments: 1,
                 notifications: 1,
             },
         });
@@ -80,6 +88,16 @@ class Message extends Component {
          * The intent of the reply button depends on the last rendered state.
          */
         this._wasSelected;
+        /**
+         * Value of the last rendered prettyBody. Useful to compare to new value
+         * to decide if it has to be updated.
+         */
+        this._lastPrettyBody;
+        /**
+         * Reference to element containing the prettyBody. Useful to be able to
+         * replace prettyBody with new value in JS (which is faster than t-raw).
+         */
+        this._prettyBodyRef = useRef('prettyBody');
         /**
          * Reference to the content of the message.
          */
@@ -158,13 +176,6 @@ class Message extends Component {
     }
 
     /**
-     * @returns {mail.attachment[]}
-     */
-    get imageAttachments() {
-        return this.message.attachments.filter(attachment => attachment.fileType === 'image');
-    }
-
-    /**
      * Tell whether the bottom of this message is visible or not.
      *
      * @param {Object} param0
@@ -211,14 +222,6 @@ class Message extends Component {
     get message() {
         return this.env.models['mail.message'].get(this.props.messageLocalId);
     }
-
-    /**
-     * @returns {mail.attachment[]}
-     */
-    get nonImageAttachments() {
-        return this.message.attachments.filter(attachment => attachment.fileType !== 'image');
-    }
-
     /**
      * @returns {string}
      */
@@ -385,6 +388,10 @@ class Message extends Component {
     _update() {
         if (!this.message) {
             return;
+        }
+        if (this._prettyBodyRef.el && this.message.prettyBody !== this._lastPrettyBody) {
+            this._prettyBodyRef.el.innerHTML = this.message.prettyBody;
+            this._lastPrettyBody = this.message.prettyBody;
         }
         // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
         // This is needed because _insertReadMoreLess is working with direct DOM mutations

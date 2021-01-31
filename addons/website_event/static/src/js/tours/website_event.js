@@ -9,7 +9,7 @@ odoo.define("website_event.tour", function (require) {
     tour.register("event", {
         url: "/",
     }, [{
-        content: _t("Click here to add new content on your website."),
+        content: _t("Click here to add new content to your website."),
         trigger: '#new-content-menu > a',
         position: 'bottom',
     }, {

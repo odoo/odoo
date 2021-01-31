@@ -207,6 +207,10 @@ class Challenge(models.Model):
         - Create the missing goals (eg: modified the challenge to add lines)
         - Update every running challenge
         """
+        # in cron mode, will do intermediate commits
+        # cannot be replaced by a parameter because it is intended to impact side-effects of
+        # write operations
+        self = self.with_context(commit_gamification=commit)
         # start scheduled challenges
         planned_challenges = self.search([
             ('state', '=', 'draft'),
@@ -225,9 +229,7 @@ class Challenge(models.Model):
 
         records = self.browse(ids) if ids else self.search([('state', '=', 'inprogress')])
 
-        # in cron mode, will do intermediate commits
-        # FIXME: replace by parameter
-        return records.with_context(commit_gamification=commit)._update_all()
+        return records._update_all()
 
     def _update_all(self):
         """Update the challenges and related goals
@@ -390,6 +392,9 @@ class Challenge(models.Model):
                     to_update |= Goals.create(values)
 
             to_update.update_goal()
+
+            if self.env.context.get('commit_gamification'):
+                self.env.cr.commit()
 
         return True
 

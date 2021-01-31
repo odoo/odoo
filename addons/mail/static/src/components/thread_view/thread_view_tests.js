@@ -1169,6 +1169,48 @@ QUnit.test('Post a message containing an email address followed by a mention on 
     );
 });
 
+QUnit.test(`Mention a partner with special character (e.g. apostrophe ')`, async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({ id: 11 });
+    this.data['res.partner'].records.push({
+        id: 1952,
+        email: "usatyi@example.com",
+        name: "Pynya's spokesman",
+    });
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 11,
+        model: 'mail.channel',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => {
+        ["@", "P", "y", "n"].forEach((char)=>{
+            document.execCommand('insertText', false, char);
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keydown'));
+            document.querySelector(`.o_ComposerTextInput_textarea`)
+                .dispatchEvent(new window.KeyboardEvent('keyup'));
+        });
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerSuggestion').click()
+    );
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.containsOnce(
+        document.querySelector(`.o_Message_content`),
+        `.o_mail_redirect[data-oe-id="1952"][data-oe-model="res.partner"]:contains("@Pynya's spokesman")`,
+        "Conversation should have a message that has been posted, which contains partner mention"
+    );
+});
+
 QUnit.test('mention 2 different partners that have the same name', async function (assert) {
     assert.expect(3);
 
@@ -1697,10 +1739,11 @@ QUnit.test('first unseen message should be directly preceded by the new message 
     document.querySelector('.o_ComposerTextInput_textarea').focus();
     await afterNextRender(() => document.execCommand('insertText', false, "/who"));
     await afterNextRender(() => {
-        document.querySelector('.o_Composer_buttonSend').focus();
         document.querySelector('.o_Composer_buttonSend').click();
     });
 
+    // composer is focused by default, we remove that focus
+    document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a message
     await afterNextRender(() => this.env.services.rpc({
         route: '/mail/chat_post',
@@ -1729,6 +1772,32 @@ QUnit.test('first unseen message should be directly preceded by the new message 
             this.env.models['mail.message'].find(m => m.isTransient).localId
         }"] + .o_MessageList_separatorNewMessages`,
         "separator should be shown just after transient message"
+    );
+});
+
+QUnit.test('composer should be focused automatically after clicking on the send button [REQUIRE FOCUS]', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.channel'].records.push({id: 20,});
+    await this.start();
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
+        id: 20,
+        model: 'mail.channel'
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
+        thread: [['link', thread]],
+    });
+    await this.createThreadViewComponent(threadViewer.threadView, { hasComposer: true });
+    document.querySelector('.o_ComposerTextInput_textarea').focus();
+    await afterNextRender(() => document.execCommand('insertText', false, "Dummy Message"));
+    await afterNextRender(() => {
+        document.querySelector('.o_Composer_buttonSend').click();
+    });
+    assert.hasClass(
+        document.querySelector('.o_Composer'),
+        'o-focused',
+        "composer should be focused automatically after clicking on the send button"
     );
 });
 

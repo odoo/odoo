@@ -13,6 +13,18 @@
         </field>
     </record>
 
+    <record id="view_edit_project_inherit_form" model="ir.ui.view">
+        <field name="name">project.project.view.inherit</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_sale_project_inherit_form" model="ir.ui.view">
         <field name="name">project.task.view.inherit</field>
         <field name="model">project.task</field>
@@ -26,9 +38,13 @@
                         string="Sales Order"
                         groups="sales_team.group_sale_salesman"/>
             </div>
+            <xpath expr="//field[@name='partner_id']" position="attributes">
+                <attribute name="options">{'always_reload': True}</attribute>
+                <attribute name="context">{'res_partner_search_mode': 'customer'}</attribute>
+            </xpath>
             <xpath expr="//field[@name='partner_phone']" position="after">
-                <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': ['|', ('partner_id', '=', False), '&amp;', ('sale_order_id', '!=', False), ('sale_line_id', '=', False)]}" options='{"no_open": True}' readonly="1" context="{'create': False, 'edit': False, 'delete': False}" groups="sales_team.group_sale_salesman"/>
-                <field name="sale_order_id" attrs="{'invisible': [('project_id', '!=', False)]}" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_order_id" attrs="{'invisible': True}" groups="sales_team.group_sale_salesman"/>
+                <field name="sale_line_id" string="Sales Order Item" attrs="{'invisible': [('partner_id', '=', False)]}" options='{"no_open": True}' readonly="1" context="{'create': False, 'edit': False, 'delete': False}"/>
                 <field name="commercial_partner_id" invisible="1" />
                 <field name="project_sale_order_id" invisible="1"/>
             </xpath>

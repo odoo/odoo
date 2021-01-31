@@ -7,6 +7,7 @@ from string import digits
 from werkzeug.urls import url_encode
 
 from odoo import api, fields, models, _
+from odoo.osv.query import Query
 from odoo.exceptions import ValidationError, AccessError
 from odoo.modules.module import get_module_resource
 
@@ -162,7 +163,11 @@ class HrEmployeePrivate(models.Model):
         """
         if self.check_access_rights('read', raise_exception=False):
             return super(HrEmployeePrivate, self)._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
-        return self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        ids = self.env['hr.employee.public']._search(args, offset=offset, limit=limit, order=order, count=count, access_rights_uid=access_rights_uid)
+        if not count and isinstance(ids, Query):
+            # the result is expected from this table, so we should link tables
+            ids = super(HrEmployeePrivate, self.sudo())._search([('id', 'in', ids)])
+        return ids
 
     def get_formview_id(self, access_uid=None):
         """ Override this method in order to redirect many2one towards the right model depending on access_uid """

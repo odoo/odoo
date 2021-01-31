@@ -611,16 +611,16 @@ blockquote {
         .dropdown-menu .dropdown-item { // Need to add +1 priority thanks to
                                         // .dropdown-menu to counter a:not(.btn)
             &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                color: $dropdown-link-color;
+                color: $dropdown-link-color !important;
 
                 @include hover-focus {
-                    color: $dropdown-link-hover-color;
+                    color: $dropdown-link-hover-color !important;
                 }
             }
             &.disabled,
             &:disabled {
                 &, h6 { // Quick fix: sometimes we use h6 in dropdowns
-                    color: $dropdown-link-disabled-color;
+                    color: $dropdown-link-disabled-color !important;
                 }
             }
         }

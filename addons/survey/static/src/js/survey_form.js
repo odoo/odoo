@@ -914,7 +914,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend({
 
         var minDate = minDateData
             ? this._formatDateTime(minDateData, datetimepickerFormat)
-            : moment({ y: 1 });
+            : moment({ y: 1000 });
 
         var maxDate = maxDateData
             ? this._formatDateTime(maxDateData, datetimepickerFormat)

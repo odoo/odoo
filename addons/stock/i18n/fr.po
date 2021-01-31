@@ -47,7 +47,6 @@
 # Laura Piraux <lap@odoo.com>, 2020
 # Nathan Noël <nathan070@me.com>, 2020
 # Bertrand LATOUR <divoir@gmail.com>, 2020
-# Cécile Collart <cco@odoo.com>, 2020
 # Thomas Dobbelsteyn <tdo@odoo.com>, 2020
 # Marie Willemyns <mwi@odoo.com>, 2020
 # Maxence del Marmol <mdm@odoo.com>, 2020
@@ -56,14 +55,19 @@
 # Martin Trigaux, 2020
 # Rémi CAZENAVE <remi@le-filament.com>, 2020
 # guillaume bauer <guillaume.bauer@syentys.fr>, 2020
+# Arnaud Willem <contact@arnaud-willem.eu>, 2020
+# Cécile Collart <cco@odoo.com>, 2020
+# Yael Terrettaz <yael.terrettaz@camptocamp.com>, 2021
+# Anthony Chaussin <chaussin.anthony@gmail.com>, 2021
+# Christophe Ricevuto <cri@nalios.be>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 13:33+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: guillaume bauer <guillaume.bauer@syentys.fr>, 2020\n"
+"Last-Translator: Christophe Ricevuto <cri@nalios.be>, 2021\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -693,7 +697,7 @@ msgstr "État de l'Activité"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_type_icon
 msgid "Activity Type Icon"
-msgstr ""
+msgstr "Icône de type d'activité"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_production_lot_form
@@ -809,18 +813,18 @@ msgid "Allowed Route"
 msgstr ""
 
 #. module: stock
-#: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
-msgid "Allows to start with an empty inventory."
-msgstr "Autorise de commencer avec un inventaire vide."
-
-#. module: stock
 #: model:ir.model.fields,help:stock.field_stock_inventory__prefill_counted_quantity
 msgid ""
-"Allows to start with prefill counted quantity for each lines or with all "
-"counted quantity set to zero."
+"Allows to start with a pre-filled counted quantity for each lines or with "
+"all counted quantities set to zero."
 msgstr ""
 "Permet de commencer avec la quantité comptée pré-remplie pour chaque ligne, "
 "ou avec la quantité comptée à zéro pour chaque ligne."
+
+#. module: stock
+#: model:ir.model.fields,help:stock.field_stock_inventory__start_empty
+msgid "Allows to start with an empty inventory."
+msgstr "Autorise de commencer avec un inventaire vide."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -960,7 +964,7 @@ msgstr "Quantité disponible"
 #: code:addons/stock/models/product.py:0
 #, python-format
 msgid "Available quantity should be set to zero before changing type"
-msgstr ""
+msgstr "La quantité disponible doit être mise à zéro avant de changer de type"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -3975,7 +3979,6 @@ msgstr "Nouveau"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
-#: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "New Move:"
 msgstr "Nouveau mouvement :"
@@ -5540,7 +5543,7 @@ msgstr "Réapprovisionnement"
 #: code:addons/stock/models/stock_orderpoint.py:0
 #, python-format
 msgid "Replenishment Report"
-msgstr ""
+msgstr "Rapport de Réapprovisionnements"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
@@ -6404,7 +6407,7 @@ msgstr "Rapport de quantité en stock"
 #: model:ir.model,name:stock.model_report_stock_report_product_product_replenishment
 #: model:ir.model,name:stock.model_report_stock_report_product_template_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Rapport de Réapprovisionnements de Stock"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -6978,6 +6981,20 @@ msgid ""
 msgstr ""
 "Cette opération semble être chaînée avec une autre. Plus tard, si vous recevez les produits\n"
 "que vous venez de retourner, assurez-vous <b>d'inverser</b> l'opération de retour dans le but d'éviter que les règles logistiques s'appliquent à nouveau (ce qui créerait des opérations dupliquées)"
+
+#. module: stock
+#: code:addons/stock/models/product.py:0
+#, python-format
+msgid ""
+"This product has been used in at least one inventory movement. It is not "
+"advised to change the Product Type since it can lead to inconsistencies. A "
+"better solution could be to archive the product and create a new one "
+"instead."
+msgstr ""
+"Ce produit a été utilisé dans au moins un mouvement de stock. Il n'est pas "
+"conseillé de changer le type de produit car cela peut entraîner des "
+"incohérences. Une meilleure solution pourrait consister à archiver le "
+"produit et à en créer un nouveau à la place."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
@@ -7720,6 +7737,9 @@ msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
 "the default route when products pass through this warehouse."
 msgstr ""
+"Lorsqu'un entrepôt est sélectionné pour cet itinéraire, celui-ci doit être "
+"considéré comme l'itinéraire par défaut lorsque les produits passent par cet"
+" entrepôt."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7732,11 +7752,15 @@ msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
 "Product form."
 msgstr ""
+"Lorsqu'il est coché, l'itinéraire sera sélectionnable dans l'onglet "
+"Inventaire du formulaire Produit."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
+"Une fois vérifié, l'itinéraire sera sélectionnable dans la Catégorie de "
+"Produit."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -8132,6 +8156,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
+"Vous n'avez pas enregistrer les quantités faites, en cliquant sur "
+"<i>validé</i> Odoo validera toutes les quantités."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation

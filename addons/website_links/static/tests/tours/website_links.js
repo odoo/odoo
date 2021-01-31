@@ -29,10 +29,7 @@ tour.register('website_links_tour', {
         // 2. Visit it
         {
             content: "check that link was created and visit it",
-            // Depending of the speed of `requests.get` from `_get_title_from_url`,
-            // the link name will either be "About us" (page title) or
-            // "http://url/aboutus" (page url).
-            extra_trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact us"), #o_website_links_recent_links .truncate_text:first():contains("contactus")',
+            extra_trigger: '#o_website_links_recent_links .truncate_text:first():contains("Contact Us")',
             trigger: '#o_website_links_link_tracker_form #generated_tracked_link:contains("/r/")',
             run: function () {
                 window.location.href = $('#generated_tracked_link').text();

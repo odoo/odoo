@@ -49,7 +49,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
             // We add the price as manually set to avoid recomputation when changing customer.
             var base_to_discount = order.get_total_without_tax();
             if (product.taxes_id.length){
-                var first_tax = this.pos.taxes_by_id[product.taxes_id[0]];
+                var first_tax = this.env.pos.taxes_by_id[product.taxes_id[0]];
                 if (first_tax.price_include) {
                     base_to_discount = order.get_total_with_tax();
                 }

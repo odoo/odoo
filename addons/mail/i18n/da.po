@@ -26,7 +26,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
@@ -874,11 +874,11 @@ msgstr "Arkiveret"
 #: code:addons/mail/wizard/mail_resend_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s mail delivery failures. You won't be "
+"Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
-"Er du sikker på du vil kassére %s mail leveringsfejl. Du vil ikke være i "
-"stand til at gensende disse emails senere!"
+"Er du sikker på du vil kassére %s mail fejlet leveringer? Du vil ikke være i"
+" stand til at gen-afsende disse mails senere!"
 
 #. module: mail
 #. openerp-web
@@ -1652,6 +1652,12 @@ msgstr "Tilpasset kanal navn"
 #: model:ir.model.constraint,message:mail.constraint_mail_message_res_partner_needaction_rel_notification_partner_required
 msgid "Customer is required for inbox / email notification"
 msgstr "Kunde kræves for indbakke / email notifikation"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr "Kan ikke opdatere beskeden eller modtageren af en notifikation."
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2574,6 +2580,14 @@ msgstr "Kun følgere"
 #, python-format
 msgid "Following"
 msgstr "Following"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
+"Følgende invitationer er ugyldige eftersom brugergrupper ikke stemmer "
+"overens: %s"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon

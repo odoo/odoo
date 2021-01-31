@@ -3,16 +3,17 @@
 # 	* purchase_mrp
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
+# krnkris, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: krnkris, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:17+0000\n"
+"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,14 +22,75 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.purchase_order_form_mrp
+msgid "<span class=\"o_stat_text\">Manufacturing</span>"
+msgstr "<span class=\"o_stat_text\">Termelés</span>"
+
+#. module: purchase_mrp
+#: model_terms:ir.ui.view,arch_db:purchase_mrp.mrp_production_form_view_purchase
+msgid "<span class=\"o_stat_text\">Purchases</span>"
+msgstr "<span class=\"o_stat_text\">Beszerzések</span>"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__mrp_production_count
+msgid "Count of MO Source"
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__purchase_order_count
+msgid "Count of generated PO"
+msgstr ""
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order_line__display_name
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__display_name
+msgid "Display Name"
+msgstr "Név megjelenítése"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order_line__id
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_move__id
+msgid "ID"
+msgstr "Azonosító"
+
+#. module: purchase_mrp
+#: model:ir.model.fields,field_description:purchase_mrp.field_mrp_production____last_update
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order____last_update
+#: model:ir.model.fields,field_description:purchase_mrp.field_purchase_order_line____last_update
+#: model:ir.model.fields,field_description:purchase_mrp.field_stock_move____last_update
+msgid "Last Modified on"
+msgstr "Legutóbb módosítva"
+
+#. module: purchase_mrp
+#: code:addons/purchase_mrp/models/purchase.py:0
+#, python-format
+msgid "Manufacturing Source of %s"
+msgstr ""
+
+#. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_mrp_production
 msgid "Production Order"
-msgstr "Termelési megrendelés"
+msgstr "Termelési rendelés"
+
+#. module: purchase_mrp
+#: model:ir.model,name:purchase_mrp.model_purchase_order
+msgid "Purchase Order"
+msgstr "Beszerzési rendelés"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_purchase_order_line
 msgid "Purchase Order Line"
-msgstr "Beszállítói megrendelés sor"
+msgstr "Beszerzési rendelés sor"
+
+#. module: purchase_mrp
+#: code:addons/purchase_mrp/models/mrp_production.py:0
+#, python-format
+msgid "Purchase Order generated from %s"
+msgstr "Beszerzési rendelés generálva ebből: %s"
 
 #. module: purchase_mrp
 #: model:ir.model,name:purchase_mrp.model_stock_move

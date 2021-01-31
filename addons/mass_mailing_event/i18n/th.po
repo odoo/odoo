@@ -1,18 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * mass_mailing_event
+# 	* mass_mailing_event
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Seksan Poltree <seksan.poltree@gmail.com>, 2018
+# Martin Trigaux, 2020
+# Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:20+0000\n"
-"Last-Translator: Seksan Poltree <seksan.poltree@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:14+0000\n"
+"Last-Translator: Khwunchai Jaengsawang <khwunchai.j@ku.th>, 2020\n"
 "Language-Team: Thai (https://www.transifex.com/odoo/teams/41243/th/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,8 +22,13 @@ msgstr ""
 
 #. module: mass_mailing_event
 #: model_terms:ir.ui.view,arch_db:mass_mailing_event.event_event_view_form_inherit_mass_mailing
-msgid "<span class=\"o_stat_text\">Mail Attendees</span>"
+msgid "Contact Attendees"
 msgstr ""
+
+#. module: mass_mailing_event
+#: model:ir.model.fields,field_description:mass_mailing_event.field_event_event__display_name
+msgid "Display Name"
+msgstr "ชื่อที่ใช้แสดง"
 
 #. module: mass_mailing_event
 #: model:ir.model,name:mass_mailing_event.model_event_event
@@ -31,6 +36,16 @@ msgid "Event"
 msgstr "เหตุการณ์"
 
 #. module: mass_mailing_event
-#: model:ir.model,name:mass_mailing_event.model_mail_mass_mailing
-msgid "Mass Mailing"
-msgstr "การส่งจดหมายจำนวนมาก"
+#: model:ir.model.fields,field_description:mass_mailing_event.field_event_event__id
+msgid "ID"
+msgstr "รหัส"
+
+#. module: mass_mailing_event
+#: model_terms:ir.ui.view,arch_db:mass_mailing_event.event_event_view_form_inherit_mass_mailing
+msgid "Invite"
+msgstr "เชิญ"
+
+#. module: mass_mailing_event
+#: model:ir.model.fields,field_description:mass_mailing_event.field_event_event____last_update
+msgid "Last Modified on"
+msgstr "แก้ไขครั้งสุดท้ายเมื่อ"

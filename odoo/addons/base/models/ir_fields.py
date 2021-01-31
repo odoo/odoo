@@ -344,7 +344,7 @@ class IrFieldsConverter(models.AbstractModel):
             else:
                 xmlid = "%s.%s" % (self._context.get('_import_current_module', ''), value)
             flush(xml_id=xmlid)
-            id = self.env['ir.model.data'].xmlid_to_res_id(xmlid, raise_if_not_found=False) or None
+            id = self._xmlid_to_record_id(xmlid, RelatedModel)
         elif subfield is None:
             field_type = _(u"name")
             if value == '':
@@ -382,6 +382,31 @@ class IrFieldsConverter(models.AbstractModel):
                 {'field_type': field_type, 'value': value, 'error_message': error_msg},
                 {'moreinfo': action})
         return id, field_type, warnings
+
+    def _xmlid_to_record_id(self, xmlid, model):
+        """ Return the record id corresponding to the given external id,
+        provided that the record actually exists; otherwise return ``None``.
+        """
+        import_cache = self.env.context.get('import_cache', {})
+        result = import_cache.get(xmlid)
+
+        if not result:
+            module, name = xmlid.split('.', 1)
+            query = """
+                SELECT d.model, d.res_id
+                FROM ir_model_data d
+                JOIN "{}" r ON d.res_id = r.id
+                WHERE d.module = %s AND d.name = %s
+            """.format(model._table)
+            self.env.cr.execute(query, [module, name])
+            result = self.env.cr.fetchone()
+
+        if result:
+            res_model, res_id = import_cache[xmlid] = result
+            if res_model != model._name:
+                MSG = "Invalid external ID %s: expected model %r, found %r"
+                raise ValueError(MSG % (xmlid, model._name, res_model))
+            return res_id
 
     def _referencing_subfield(self, record):
         """ Checks the record for the subfields allowing referencing (an

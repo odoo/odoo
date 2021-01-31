@@ -325,7 +325,15 @@ class Lead(models.Model):
     def _inverse_phone(self):
         for lead in self:
             if lead.partner_id and lead.phone != lead.partner_id.phone:
-                lead.partner_id.phone = lead.phone
+                # force reset
+                if not lead.phone or not lead.partner_id.phone:
+                    lead.partner_id.phone = lead.phone
+                # compare formatted values as we may have encoding differences between equivalent numbers
+                else:
+                    lead_phone_formatted = lead.phone_format(lead.phone)
+                    partner_phone_formatted = lead.phone_format(lead.partner_id.phone)
+                    if lead_phone_formatted != partner_phone_formatted:
+                        lead.partner_id.phone = lead.phone
 
     @api.depends('phone', 'country_id.code')
     def _compute_phone_state(self):
@@ -398,9 +406,18 @@ class Lead(models.Model):
     @api.depends('email_from', 'phone', 'partner_id')
     def _compute_ribbon_message(self):
         for lead in self:
-            partner_formatted_phone = lead.partner_id.phone and self.phone_format(lead.partner_id.phone)
             will_write_email = lead.partner_id and lead.email_from != lead.partner_id.email
-            will_write_phone = lead.partner_id and lead.phone != partner_formatted_phone
+            will_write_phone = False
+            if lead.partner_id and lead.phone != lead.partner_id.phone:
+                # if reset -> obviously new value will be propagated
+                if not lead.phone or not lead.partner_id.phone:
+                    will_write_phone = True
+                # otherwise compare formatted values as we may have encoding differences
+                else:
+                    lead_phone_formatted = lead.phone_format(lead.phone)
+                    partner_phone_formatted = lead.phone_format(lead.partner_id.phone)
+                    if lead_phone_formatted != partner_phone_formatted:
+                        will_write_phone = True
 
             if will_write_email and will_write_phone:
                 lead.ribbon_message = _('By saving this change, the customer email and phone number will also be updated.')
@@ -492,7 +509,7 @@ class Lead(models.Model):
 
         for lead, values in zip(leads, vals_list):
             if any(field in ['active', 'stage_id'] for field in values):
-                lead._handle_won_lost(vals)
+                lead._handle_won_lost(values)
 
         return leads
 
@@ -771,6 +788,7 @@ class Lead(models.Model):
     def _get_rainbowman_message(self):
         message = False
         if self.user_id and self.team_id and self.expected_revenue:
+            self.flush()  # flush fields to make sure DB is up to date
             query = """
                 SELECT
                     SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
@@ -1318,24 +1336,29 @@ class Lead(models.Model):
             return self.env.ref('crm.mt_lead_lost')
         return super(Lead, self)._track_subtype(init_values)
 
-    def _notify_get_groups(self):
+    def _notify_get_groups(self, msg_vals=None):
         """ Handle salesman recipients that can convert leads into opportunities
         and set opportunities as won / lost. """
-        groups = super(Lead, self)._notify_get_groups()
+        groups = super(Lead, self)._notify_get_groups(msg_vals=msg_vals)
+        msg_vals = msg_vals or {}
 
         self.ensure_one()
         if self.type == 'lead':
-            convert_action = self._notify_get_action_link('controller', controller='/lead/convert')
+            convert_action = self._notify_get_action_link('controller', controller='/lead/convert', **msg_vals)
             salesman_actions = [{'url': convert_action, 'title': _('Convert to opportunity')}]
         else:
-            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won')
-            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost')
+            won_action = self._notify_get_action_link('controller', controller='/lead/case_mark_won', **msg_vals)
+            lost_action = self._notify_get_action_link('controller', controller='/lead/case_mark_lost', **msg_vals)
             salesman_actions = [
                 {'url': won_action, 'title': _('Won')},
                 {'url': lost_action, 'title': _('Lost')}]
 
         if self.team_id:
-            salesman_actions.append({'url': self._notify_get_action_link('view', res_id=self.team_id.id, model=self.team_id._name), 'title': _('Sales Team Settings')})
+            custom_params = dict(msg_vals, res_id=self.team_id.id, model=self.team_id._name)
+            salesman_actions.append({
+                'url': self._notify_get_action_link('view', **custom_params),
+                'title': _('Sales Team Settings')
+            })
 
         salesman_group_id = self.env.ref('sales_team.group_sale_salesman').id
         new_group = (

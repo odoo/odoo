@@ -7,6 +7,7 @@
 $(function () {
 
     if ($('#PDFViewer') && $('#PDFViewerCanvas')) { // check if presentation only
+        var MIN_ZOOM=1, MAX_ZOOM=10, ZOOM_INCREMENT=.5;
 
         // define embedded viewer (minimal object of the website.slide.PDFViewer widget)
         var EmbeddedViewer = function ($viewer) {
@@ -46,9 +47,12 @@ $(function () {
                     this.navUpdate(pageNumber);
                 }
             },
+            on_resize: function() {
+                this.render_page(this.pdf_viewer.pdf_page_current);
+            },
             // page switching
             render_page: function (pageNumber) {
-                this.pdf_viewer.renderPage(pageNumber).then(this.on_rendered_page.bind(this));
+                this.pdf_viewer.queueRenderPage(pageNumber).then(this.on_rendered_page.bind(this));
                 this.navUpdate(pageNumber);
             },
             change_page: function () {
@@ -96,10 +100,24 @@ $(function () {
                     self.$("#slide_suggest").addClass('d-none');
                 });
             },
+            zoomIn: function() {
+                if(this.pdf_viewer.pdf_zoom < MAX_ZOOM) {
+                    this.pdf_viewer.pdf_zoom += ZOOM_INCREMENT;
+                    this.render_page(this.pdf_viewer.pdf_page_current);
+                }
+            },
+            zoomOut: function() {
+                if(this.pdf_viewer.pdf_zoom > MIN_ZOOM) {
+                    this.pdf_viewer.pdf_zoom -= ZOOM_INCREMENT;
+                    this.render_page(this.pdf_viewer.pdf_page_current);
+                }
+            },
             navUpdate: function (pageNum) {
                 this.$('#first').toggleClass('disabled', pageNum < 3 );
                 this.$('#previous').toggleClass('disabled', pageNum < 2 );
                 this.$('#next, #last').removeClass('disabled');
+                this.$('#zoomout').toggleClass('disabled', this.pdf_viewer.pdf_zoom <= MIN_ZOOM);
+                this.$('#zoomin').toggleClass('disabled', this.pdf_viewer.pdf_zoom >= MAX_ZOOM);
             },
             // full screen mode
             fullscreen: function () {
@@ -133,6 +151,12 @@ $(function () {
         $('#last').on('click', function () {
             embeddedViewer.last();
         });
+        $('#zoomin').on('click', function () {
+            embeddedViewer.zoomIn();
+        });
+        $('#zoomout').on('click', function () {
+            embeddedViewer.zoomOut();
+        });
         $('#page_number').on('change', function () {
             embeddedViewer.change_page();
         });
@@ -142,6 +166,19 @@ $(function () {
         $('#PDFViewer').on('click', function (ev) {
             embeddedViewer.fullScreenFooter(ev);
         });
+        $('#PDFViewer').on('wheel', function (ev) {
+            if (ev.metaKey || ev.ctrlKey) {
+                if (ev.originalEvent.deltaY > 0) {
+                    embeddedViewer.zoomOut();
+                } else if(ev.originalEvent.deltaY < 0) {
+                    embeddedViewer.zoomIn();
+                }
+                return false;
+            }
+        });
+        $(window).on('resize', _.debounce(function() {
+            embeddedViewer.on_resize();
+        }, 500));
 
         // switching slide with keyboard
         $(document).keydown(function (ev) {

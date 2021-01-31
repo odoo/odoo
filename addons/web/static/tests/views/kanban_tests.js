@@ -1478,6 +1478,53 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('quick create record: cancel when modal is opened', async function (assert) {
+        assert.expect(3);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: '<kanban on_create="quick_create" quick_create_view="some_view_ref">' +
+                    '<templates><t t-name="kanban-box">' +
+                    '<div><field name="foo"/></div>' +
+                    '</t></templates>' +
+                  '</kanban>',
+            archs: {
+                'partner,some_view_ref,form': '<form>' +
+                    '<field name="product_id"/>' +
+                '</form>',
+            },
+            groupBy: ['bar'],
+        });
+
+        // click to add an element
+        await testUtils.dom.click(kanban.$('.o_kanban_header .o_kanban_quick_add i').first());
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "should have open the quick create widget");
+
+        kanban.$('.o_kanban_quick_create input')
+            .val('test')
+            .trigger('keyup')
+            .trigger('focusout');
+        await nextTick();
+
+        // When focusing out of the many2one, a modal to add a 'product' will appear.
+        // The following assertions ensures that a click on the body element that has 'modal-open'
+        // will NOT close the quick create.
+        // This can happen when the user clicks out of the input because of a race condition between
+        // the focusout of the m2o and the global 'click' handler of the quick create.
+        // Check odoo/odoo#61981 for more details.
+        const $body = kanban.$el.closest('body');
+        assert.hasClass($body, 'modal-open',
+            "modal should be opening after m2o focusout");
+        await testUtils.dom.click($body);
+        assert.containsOnce(kanban, '.o_kanban_quick_create',
+            "quick create should stay open while modal is opening");
+
+        kanban.destroy();
+    });
+
     QUnit.test('quick create record: cancel when dirty', async function (assert) {
         assert.expect(7);
 

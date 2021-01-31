@@ -28,24 +28,24 @@
                             <t t-esc="thread.displayName"/>
                         </span>
                         <span class="o_ThreadNeedactionPreview_counter">
-                            (<t t-esc="thread.needactionMessages.length"/>)
+                            (<t t-esc="thread.needactionMessagesAsOriginThread.length"/>)
                         </span>
                         <span class="o-autogrow"/>
-                        <t t-if="thread.lastNeedactionMessage">
+                        <t t-if="thread.lastNeedactionMessageAsOriginThread">
                             <span class="o_ThreadNeedactionPreview_date">
-                                <t t-esc="thread.lastNeedactionMessage.date.fromNow()"/>
+                                <t t-esc="thread.lastNeedactionMessageAsOriginThread.date.fromNow()"/>
                             </span>
                         </t>
                     </div>
                     <div class="o_ThreadNeedactionPreview_core">
-                        <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText" t-att-class="{ 'o-empty': inlineLastNeedactionMessageBody.length === 0 }">
-                            <t t-if="thread.lastNeedactionMessage and thread.lastNeedactionMessage.author">
+                        <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_inlineText" t-att-class="{ 'o-empty': inlineLastNeedactionMessageAsOriginThreadBody.length === 0 }">
+                            <t t-if="thread.lastNeedactionMessageAsOriginThread and thread.lastNeedactionMessageAsOriginThread.author">
                                 <MessageAuthorPrefix
-                                    messageLocalId="thread.lastNeedactionMessage.localId"
+                                    messageLocalId="thread.lastNeedactionMessageAsOriginThread.localId"
                                     threadLocalId="thread.localId"
                                 />
                             </t>
-                            <t t-esc="inlineLastNeedactionMessageBody"/>
+                            <t t-esc="inlineLastNeedactionMessageAsOriginThreadBody"/>
                         </span>
                         <span class="o-autogrow"/>
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_markAsRead fa fa-check" title="Mark as Read" t-on-click="_onClickMarkAsRead" t-ref="markAsRead"/>

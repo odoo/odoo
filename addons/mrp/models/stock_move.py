@@ -3,7 +3,7 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, float_is_zero
+from odoo.tools import float_compare, float_round, float_is_zero, OrderedSet
 
 
 class StockMoveLine(models.Model):
@@ -222,16 +222,16 @@ class StockMove(models.Model):
         # in order to explode a move, we must have a picking_type_id on that move because otherwise the move
         # won't be assigned to a picking and it would be weird to explode a move into several if they aren't
         # all grouped in the same picking.
-        moves_to_return = self.env['stock.move']
-        moves_to_unlink = self.env['stock.move']
+        moves_ids_to_return = OrderedSet()
+        moves_ids_to_unlink = OrderedSet()
         phantom_moves_vals_list = []
         for move in self:
             if not move.picking_type_id or (move.production_id and move.production_id.product_id == move.product_id):
-                moves_to_return |= move
+                moves_ids_to_return.add(move.id)
                 continue
             bom = self.env['mrp.bom'].sudo()._bom_find(product=move.product_id, company_id=move.company_id.id, bom_type='phantom')
             if not bom:
-                moves_to_return |= move
+                moves_ids_to_return.add(move.id)
                 continue
             if move.picking_id.immediate_transfer:
                 factor = move.product_uom._compute_quantity(move.quantity_done, bom.product_uom_id) / bom.product_qty
@@ -244,14 +244,14 @@ class StockMove(models.Model):
                 else:
                     phantom_moves_vals_list += move._generate_move_phantom(bom_line, line_data['qty'], 0)
             # delete the move with original product which is not relevant anymore
-            moves_to_unlink |= move
+            moves_ids_to_unlink.add(move.id)
 
-        moves_to_unlink.sudo().unlink()
+        self.env['stock.move'].browse(moves_ids_to_unlink).sudo().unlink()
         if phantom_moves_vals_list:
             phantom_moves = self.env['stock.move'].create(phantom_moves_vals_list)
             phantom_moves._adjust_procure_method()
-            moves_to_return |= phantom_moves.action_explode()
-        return moves_to_return
+            moves_ids_to_return |= phantom_moves.action_explode().ids
+        return self.env['stock.move'].browse(moves_ids_to_return)
 
     def action_show_details(self):
         self.ensure_one()

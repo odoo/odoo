@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models import ir_http
@@ -13,7 +13,10 @@ class ProductRibbon(models.Model):
     _name = "product.ribbon"
     _description = 'Product ribbon'
 
-    html = fields.Char(string='Ribbon html', required=True)
+    def name_get(self):
+        return [(ribbon.id, '%s (#%d)' % (tools.html2plaintext(ribbon.html), ribbon.id)) for ribbon in self]
+
+    html = fields.Char(string='Ribbon html', required=True, translate=True)
     bg_color = fields.Char(string='Ribbon background color', required=False)
     text_color = fields.Char(string='Ribbon text color', required=False)
     html_class = fields.Char(string='Ribbon class', required=True, default='')
@@ -91,6 +94,7 @@ class ProductPricelist(models.Model):
         - Have its `website_id` set to current website (specific pricelist).
         - Have no `website_id` set and should be `selectable` (generic pricelist)
           or should have a `code` (generic promotion).
+        - Have no `company_id` or a `company_id` matching its website one.
 
         Note: A pricelist without a website_id, not selectable and without a
               code is a backend pricelist.
@@ -98,13 +102,17 @@ class ProductPricelist(models.Model):
         Change in this method should be reflected in `_get_website_pricelists_domain`.
         """
         self.ensure_one()
+        if self.company_id and self.company_id != self.env["website"].browse(website_id).company_id:
+            return False
         return self.website_id.id == website_id or (not self.website_id and (self.selectable or self.sudo().code))
 
     def _get_website_pricelists_domain(self, website_id):
         ''' Check above `_is_available_on_website` for explanation.
         Change in this method should be reflected in `_is_available_on_website`.
         '''
+        company_id = self.env["website"].browse(website_id).company_id.id
         return [
+            '&', ('company_id', 'in', [False, company_id]),
             '|', ('website_id', '=', website_id),
             '&', ('website_id', '=', False),
             '|', ('selectable', '=', True), ('code', '!=', False),
@@ -314,6 +322,21 @@ class ProductTemplate(models.Model):
         :rtype: recordset of `product.product`
         """
         return self._create_product_variant(self._get_first_possible_combination(), log_warning)
+
+    def _get_image_holder(self):
+        """Returns the holder of the image to use as default representation.
+        If the product template has an image it is the product template,
+        otherwise if the product has variants it is the first variant
+
+        :return: this product template or the first product variant
+        :rtype: recordset of 'product.template' or recordset of 'product.product'
+        """
+        self.ensure_one()
+        if self.image_1920:
+            return self
+        variant = self.env['product.product'].browse(self._get_first_possible_variant_id())
+        # if the variant has no image anyway, spare some queries by using template
+        return variant if variant.image_variant_1920 else self
 
     def _get_current_company_fallback(self, **kwargs):
         """Override: if a website is set on the product or given, fallback to

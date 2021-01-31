@@ -45,8 +45,9 @@ class StockQuant(models.Model):
         if not self._is_inventory_mode():
             return
         domain = [('type', '=', 'product')]
-        if self.env.context.get('product_tmpl_id'):
-            domain = expression.AND([domain, [('product_tmpl_id', '=', self.env.context['product_tmpl_id'])]])
+        if self.env.context.get('product_tmpl_ids') or self.env.context.get('product_tmpl_id'):
+            products = self.env.context.get('product_tmpl_ids', []) + [self.env.context.get('product_tmpl_id', 0)]
+            domain = expression.AND([domain, [('product_tmpl_id', 'in', products)]])
         return domain
 
     product_id = fields.Many2one(
@@ -65,7 +66,7 @@ class StockQuant(models.Model):
         domain=lambda self: self._domain_location_id(),
         auto_join=True, ondelete='restrict', readonly=True, required=True, index=True, check_company=True)
     lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number',
+        'stock.production.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', readonly=True, check_company=True,
         domain=lambda self: self._domain_lot_id())
     package_id = fields.Many2one(
@@ -412,7 +413,7 @@ class StockQuant(models.Model):
 
         for quant in quants:
             try:
-                with self._cr.savepoint():
+                with self._cr.savepoint(flush=False):  # Avoid flush compute store of package
                     self._cr.execute("SELECT 1 FROM stock_quant WHERE id = %s FOR UPDATE NOWAIT", [quant.id], log_exceptions=False)
                     quant.write({
                         'quantity': quant.quantity + quantity,
@@ -423,6 +424,9 @@ class StockQuant(models.Model):
                 if e.pgcode == '55P03':  # could not obtain the lock
                     continue
                 else:
+                    # Because savepoint doesn't flush, we need to invalidate the cache
+                    # when there is a error raise from the write (other than lock-error)
+                    self.clear_caches()
                     raise
         else:
             self.create({

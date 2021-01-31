@@ -7,18 +7,18 @@
 # Cas Vissers <casvissers@brahoo.nl>, 2020
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
-# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
-# Eric Geens <ericgeens@yahoo.com>, 2020
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2020
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
+# Eric Geens <ericgeens@yahoo.com>, 2020
+# Odoo Experts Consultants <consultants@odooexperts.nl>, 2020
+# Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 06:09+0000\n"
+"POT-Creation-Date: 2020-11-27 15:41+0000\n"
 "PO-Revision-Date: 2020-09-07 08:20+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
+"Last-Translator: Erwin van der Ploeg (Odoo Experts) <erwin@odooexperts.nl>, 2021\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -211,8 +211,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_view_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Post date\" title=\"Post date\"/>"
 msgstr ""
-"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Boekdatum\" "
-"title=\"Boekdatum\"/>"
+"<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Publicatiedatum\" "
+"title=\"Publicatiedatum\"/>"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_follow_us
@@ -307,7 +307,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "A new post"
-msgstr "Een nieuw bericht"
+msgstr "Een nieuwe post"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_1
@@ -349,7 +349,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_template_new_post
 msgid "Access post"
-msgstr "Bekijk bericht"
+msgstr "Bekijk post"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_needaction
@@ -390,10 +390,10 @@ msgstr "Hoe moeilijk is het opzetten en afbreken volgens die lijnen?"
 
 #. module: website_blog
 #. openerp-web
-#: code:addons/website_blog/static/src/js/website_blog.js:77
+#: code:addons/website_blog/static/src/js/website_blog.js:0
 #, python-format
 msgid "Amazing blog article: %s! Check it live: %s"
-msgstr ""
+msgstr "Geweldig blogartikel: %s! Bekijk het live: %s"
 
 #. module: website_blog
 #. openerp-web
@@ -403,9 +403,8 @@ msgid ""
 "An error occured with this latest posts block. If the problem persists, "
 "please consider deleting it and adding a new one"
 msgstr ""
-"Er is een fout opgetreden met dit laatste blogbericht. Als het probleem "
-"blijft bestaan, overweeg dan dit blog te verwijderen en een nieuwe aan te "
-"maken."
+"Er is een fout opgetreden met dit laatste blogpost. Als het probleem blijft "
+"bestaan, overweeg dan dit blog te verwijderen en een nieuwe aan te maken."
 
 #. module: website_blog
 #: model:blog.post,subtitle:website_blog.blog_post_1
@@ -758,8 +757,8 @@ msgstr "Kies een afbeelding uit de bibliotheek."
 #. openerp-web
 #: code:addons/website_blog/static/src/js/tours/website_blog.js:0
 #, python-format
-msgid "Click here to add new content on your website."
-msgstr ""
+msgid "Click here to add new content to your website."
+msgstr "Klik hier om nieuwe inhoud aan je website toe te voegen."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -905,12 +904,12 @@ msgstr "Wijzig de '"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the 'All Blogs' page header."
-msgstr "Wijzig de pagina hoofding voor 'Alle blogs'."
+msgstr "Wijzig de paginakop voor 'Alle blogs'."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_short
 msgid "Edit the 'Filter Results' page header."
-msgstr "Wijzig de 'Filter resultaten' pagina hoofding."
+msgstr "Wijzig de 'Filter resultaten' paginakop."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.snippet_options
@@ -1471,8 +1470,8 @@ msgstr "Nieuw label"
 #, python-format
 msgid "No blog post was found. Make sure your posts are published."
 msgstr ""
-"Er is geen blogbericht gevonden. Zorg ervoor dat uw blogberichten "
-"gepubliceerd zijn."
+"Er is geen blogpost gevonden. Zorg ervoor dat uw blogposts gepubliceerd "
+"zijn."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1653,7 +1652,7 @@ msgstr "Foto gemaakt door Teddy Kelley, @teddykelley"
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__post_ids
 #: model_terms:ir.ui.view,arch_db:website_blog.s_latest_posts_options
 msgid "Posts"
-msgstr "Berichten"
+msgstr "Posts"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1669,7 +1668,7 @@ msgstr "Publicatiedatum"
 #: model:mail.message.subtype,description:website_blog.mt_blog_blog_published
 #: model:mail.message.subtype,name:website_blog.mt_blog_blog_published
 msgid "Published Post"
-msgstr "Gepubliceerd bericht"
+msgstr "Gepubliceerde post"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -2100,7 +2099,7 @@ msgid ""
 "is absolutely vital to some."
 msgstr ""
 "De site moet een gedetailleerde analyse bieden van vrijetijdsdiensten in het"
-" hotel - spa, zwembad, fitnessruimte, sauna - evenals details van andere "
+" hotel –  spa, zwembad, fitnessruimte, sauna - evenals details van andere "
 "faciliteiten in de buurt, zoals golfbanen. 7. Speciale behoeften: de site "
 "van de hotelgids moet de bezoeker informeren over de speciale behoeften en "
 "het toegankelijkheidsbeleid van elk hotel. Hoewel dit nogmaals niet voor "
@@ -2336,7 +2335,7 @@ msgstr "Aantal ongelezen berichten"
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_heading
 msgid "Untitled Post"
-msgstr "Naamloze bericht"
+msgstr "Naamloze post"
 
 #. module: website_blog
 #. openerp-web

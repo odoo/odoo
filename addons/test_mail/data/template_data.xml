@@ -21,4 +21,16 @@
     <template id="mail_test_ticket_tracking_view">
     	<p><span t-esc="object.name"/> datetime has been updated to <span t-esc="object.datetime"/></p>
     </template>
+
+    <template id="mail_test_ticket_test_template">
+        <t t-call="web.html_container">
+            <t t-set="o" t-value="res_company"/>
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <p>This is a sample of an external report.</p>
+                </div>
+            </t>
+        </t>
+    </template>
+
 </odoo>

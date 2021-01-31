@@ -40,6 +40,22 @@ odoo.define('pos_restaurant.tour.TicketScreen', function (require) {
     TicketScreen.do.selectOrder('-0002');
     ProductScreen.check.totalAmountIs('2.0');
     Chrome.check.backToFloorTextIs('Main Floor', 'T2');
+    Chrome.do.backToFloor();
+
+    // Make sure that order is deleted properly.
+    FloorScreen.do.clickTable('T5');
+    ProductScreen.exec.addOrderline('Minute Maid', '1', '3');
+    ProductScreen.check.totalAmountIs('3.0');
+    Chrome.do.backToFloor();
+    FloorScreen.check.orderCountSyncedInTableIs('T5', '1');
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.deleteOrder('-0004');
+    Chrome.do.confirmPopup();
+    TicketScreen.do.clickDiscard();
+    FloorScreen.check.isShown();
+    FloorScreen.check.orderCountSyncedInTableIs('T5', '0');
+    FloorScreen.do.clickTable('T5');
+    ProductScreen.check.orderIsEmpty();
 
     Tour.register('PosResTicketScreenTour', { test: true, url: '/pos/ui' }, getSteps());
 });

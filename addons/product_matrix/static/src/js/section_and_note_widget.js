@@ -71,17 +71,8 @@ SectionAndNoteFieldOne2Many.include({
                 grid_product_tmpl_id: {id: productTemplateId}
             },
             viewType: 'form',
-            onSuccess: function (result) {
-                // result = list of widgets
-                // find one of the SO widget
-                // (not so lines because the grid values are computed on the SO)
-                // and get the grid information from its recordData.
-                var gridInfo = result.find(
-                    r => r.recordData.grid && r.recordData.grid.includes("header")
-                ).recordData.grid;
-                // includes "header" is necessary to ensure the correct data is taken
-                // because the grid data isn't correctly updated in all widgets
-                // when in an new record environment.
+            onSuccess: function () {
+                const gridInfo = self.recordData.grid;
                 self._openMatrixConfigurator(gridInfo, productTemplateId, editedCellAttributes);
             }
         });

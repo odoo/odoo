@@ -762,7 +762,7 @@
                     </tr>
                     <tr>
                         <td>
-                            <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> 2016 All Rights Reserved</p>
+                            <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
                         </td>
                     </tr>
                 </tbody>
@@ -785,7 +785,7 @@
                                 <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                             </div>
                             <div>
-                                <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> 2016 All Rights Reserved</p>
+                                <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> <t t-esc="datetime.datetime.now().year"/> All Rights Reserved</p>
                             </div>
                         </td>
                         <td class="o_mail_footer_social">
@@ -851,8 +851,11 @@
         data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
         data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
 
-    <div data-js="SnippetSave"
-        t-att-data-selector="mailing_content_selector">
+    <!-- TODO remove in master, the option has been disabled in 14.0 because -->
+    <!-- of tricky problems to resolve that require refactoring -->
+    <div t-if="False"
+         data-js="SnippetSave"
+         t-att-data-selector="mailing_content_selector">
         <we-button class="fa fa-fw fa-save"
                    title="Save the block to use it elsewhere"
                    data-save-snippet=""

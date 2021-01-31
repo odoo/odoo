@@ -25,6 +25,7 @@ have real delivered quantities in sales orders.
         'views/hr_timesheet_views.xml',
         'views/res_config_settings_views.xml',
         'views/hr_timesheet_templates.xml',
+        'views/report_invoice.xml',
         'views/sale_timesheet_portal_templates.xml',
         'report/project_profitability_report_analysis_views.xml',
         'data/sale_timesheet_filters.xml',
@@ -40,4 +41,5 @@ have real delivered quantities in sales orders.
         'data/sale_service_demo.xml',
     ],
     'auto_install': True,
+    'uninstall_hook': 'uninstall_hook',
 }

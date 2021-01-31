@@ -10,7 +10,7 @@ odoo.define("website_blog.tour", function (require) {
         url: "/",
     }, [{
         trigger: '#new-content-menu > a',
-        content: _t("Click here to add new content on your website."),
+        content: _t("Click here to add new content to your website."),
         position: 'bottom',
 
     }, {

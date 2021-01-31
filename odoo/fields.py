@@ -929,30 +929,36 @@ class Field(MetaField('DummyField', (object,), {})):
         # only a single record may be accessed
         record.ensure_one()
 
-        recomputed = False
-        if self.compute and (record.id in env.all.tocompute.get(self, ())) \
-                and not env.is_protected(self, record):
-            # self must be computed on record
-            if self.recursive:
-                recs = record
-            else:
-                ids = expand_ids(record.id, env.all.tocompute[self])
-                recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
-            try:
-                self.compute_value(recs)
-            except (AccessError, MissingError):
-                self.compute_value(record)
-            recomputed = True
+        if self.compute and self.store:
+            # process pending computations
+            self.recompute(record)
 
         try:
             value = env.cache.get(record, self)
 
         except KeyError:
+            # behavior in case of cache miss:
+            #
+            #   on a real record:
+            #       stored -> fetch from database (computation done above)
+            #       not stored and computed -> compute
+            #       not stored and not computed -> default
+            #
+            #   on a new record w/ origin:
+            #       stored and not (computed and readonly) -> fetch from origin
+            #       stored and computed and readonly -> compute
+            #       not stored and computed -> compute
+            #       not stored and not computed -> default
+            #
+            #   on a new record w/o origin:
+            #       stored and computed -> compute
+            #       stored and not computed -> new delegate or default
+            #       not stored and computed -> compute
+            #       not stored and not computed -> default
+            #
             if self.store and record.id:
                 # real record: fetch from database
                 recs = record._in_cache_without(self)
-                if recomputed and self.compute_sudo:
-                    recs = recs.sudo()
                 try:
                     recs._fetch_field(self)
                 except AccessError:
@@ -964,7 +970,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     ]))
                 value = env.cache.get(record, self)
 
-            elif self.store and record._origin:
+            elif self.store and record._origin and not (self.compute and self.readonly):
                 # new record with origin: fetch from origin
                 value = self.convert_to_cache(record._origin[self.name], record)
                 env.cache.set(record, self, value)
@@ -1031,16 +1037,9 @@ class Field(MetaField('DummyField', (object,), {})):
             # not stored in cache
             return list(records._ids)
 
-        if self.compute:
-            # Force the computation of the subset of 'records' to compute. This
-            # is necessary because the values in cache are not valid for the
-            # records to compute. Note that this explicitly prevents an infinite
-            # loop upon recompute, which invokes mapped() on the records, which
-            # fetches record values, which calls flush, which calls recompute.
-            to_compute_ids = records.env.all.tocompute.get(self, ())
-            ids = [id_ for id_ in records._ids if id_ in to_compute_ids]
-            for record in records.browse(ids):
-                self.__get__(record, type(records))
+        if self.compute and self.store:
+            # process pending computations
+            self.recompute(records)
 
         # retrieve values in cache, and fetch missing ones
         vals = records.env.cache.get_until_miss(records, self)
@@ -1078,10 +1077,10 @@ class Field(MetaField('DummyField', (object,), {})):
             # new records: no business logic
             new_records = records.browse(new_ids)
             with records.env.protecting(records.pool.field_computed.get(self, [self]), records):
-                new_records.modified([self.name])
-                self.write(new_records, value)
                 if self.relational:
-                    new_records.modified([self.name])
+                    new_records.modified([self.name], before=True)
+                self.write(new_records, value)
+                new_records.modified([self.name])
 
             if self.inherited:
                 # special case: also assign parent records if they are new
@@ -1099,6 +1098,29 @@ class Field(MetaField('DummyField', (object,), {})):
     # Computation of field values
     #
 
+    def recompute(self, records):
+        """ Process the pending computations of ``self`` on ``records``. This
+        should be called only if ``self`` is computed and stored.
+        """
+        to_compute_ids = records.env.all.tocompute.get(self)
+        if not to_compute_ids:
+            return
+
+        if self.recursive:
+            for record in records:
+                if record.id in to_compute_ids:
+                    self.compute_value(record)
+            return
+
+        for record in records:
+            if record.id in to_compute_ids:
+                ids = expand_ids(record.id, to_compute_ids)
+                recs = record.browse(itertools.islice(ids, PREFETCH_MAX))
+                try:
+                    self.compute_value(recs)
+                except (AccessError, MissingError):
+                    self.compute_value(record)
+
     def compute_value(self, records):
         """ Invoke the compute method on ``records``; the results are in cache. """
         env = records.env
@@ -1112,14 +1134,16 @@ class Field(MetaField('DummyField', (object,), {})):
         # with _read(), which will flush() it. If the field is still to compute,
         # the latter flush() will recursively compute this field!
         for field in fields:
-            env.remove_to_compute(field, records)
+            if field.store:
+                env.remove_to_compute(field, records)
 
         try:
             with records.env.protecting(fields, records):
                 records._compute_field_value(self)
         except Exception:
             for field in fields:
-                env.add_to_compute(field, records)
+                if field.store:
+                    env.add_to_compute(field, records)
             raise
 
     def determine_inverse(self, records):
@@ -1473,7 +1497,7 @@ class _String(Field):
                 update_trans = True
             elif lang != 'en_US' and lang is not None:
                 # update the translations only except if emptying
-                update_column = cache_value is None
+                update_column = not cache_value
                 update_trans = True
             # else: lang = None
 
@@ -1483,7 +1507,7 @@ class _String(Field):
             for rid in real_recs._ids:
                 # cache_value is already in database format
                 towrite[rid][self.name] = cache_value
-            if self.translate is True and cache_value is not None:
+            if self.translate is True and cache_value:
                 tname = "%s,%s" % (records._name, self.name)
                 records.env['ir.translation']._set_source(tname, real_recs._ids, value)
             if self.translate:
@@ -1506,7 +1530,7 @@ class _String(Field):
                     source_recs[self.name] = value
                     source_value = value
                 tname = "%s,%s" % (self.model_name, self.name)
-                if value is None:
+                if not value:
                     records.env['ir.translation'].search([
                         ('name', '=', tname),
                         ('type', '=', 'model'),
@@ -2597,8 +2621,8 @@ class Many2one(_Relational):
         else:
             id_ = None
 
-        if self.delegate and record and not record.id:
-            # the parent record of a new record is a new record
+        if self.delegate and record and not any(record._ids):
+            # if all records are new, then so is the parent
             id_ = id_ and NewId(id_)
 
         return id_

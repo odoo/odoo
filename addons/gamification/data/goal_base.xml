@@ -232,9 +232,12 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" ref="base.model_res_users"/>
-            <field name="domain">[('id','=',user.id),('partner_id.tz', '!=', False)]</field>
+            <field name="domain">[('partner_id.tz', '!=', False)]</field>
             <field name="action_id" ref="base.action_res_users_my"/>
             <field name="res_id_field">user.id</field>
+            <field name="batch_mode">True</field>
+            <field name="batch_distinctive_field" ref="base.field_res_users__id"/>
+            <field name="batch_user_expression">user.id</field>
         </record>
 
         <record model="gamification.goal.definition" id="definition_base_company_data">
@@ -254,7 +257,7 @@
             <field name="computation_mode">count</field>
             <field name="display_mode">boolean</field>
             <field name="model_id" ref="base.model_res_company"/>
-            <field name="domain">[('user_ids', 'in', user.id),('logo', '!=', False)]</field>
+            <field name="domain">[('user_ids', 'in', [user.id]),('logo', '!=', False)]</field>
             <field name="action_id" ref="base.action_res_company_form"/>
             <field name="res_id_field">user.company_id.id</field>
         </record>

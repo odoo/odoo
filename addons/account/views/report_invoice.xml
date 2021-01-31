@@ -22,23 +22,23 @@
                     </h2>
 
                     <div id="informations" class="row mt32 mb32">
-                        <div class="col-auto mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date" name="invoice_date">
                             <strong>Invoice Date:</strong>
                             <p class="m-0" t-field="o.invoice_date"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_date_due and o.move_type == 'out_invoice' and o.state == 'posted'" name="due_date">
                             <strong>Due Date:</strong>
                             <p class="m-0" t-field="o.invoice_date_due"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.invoice_origin" name="origin">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.invoice_origin" name="origin">
                             <strong>Source:</strong>
                             <p class="m-0" t-field="o.invoice_origin"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.partner_id.ref" name="customer_code">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.partner_id.ref" name="customer_code">
                             <strong>Customer Code:</strong>
                             <p class="m-0" t-field="o.partner_id.ref"/>
                         </div>
-                        <div class="col-auto mw-100 mb-2" t-if="o.ref" name="reference">
+                        <div class="col-auto col-3 mw-100 mb-2" t-if="o.ref" name="reference">
                             <strong>Reference:</strong>
                             <p class="m-0" t-field="o.ref"/>
                         </div>

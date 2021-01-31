@@ -193,6 +193,20 @@
         <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
     </record>
 
+    <record id="account_invoice_send_rule_see_personal" model="ir.rule">
+        <field name="name">Personal Invoice Send and Print</field>
+        <field name="model_id" ref="account.model_account_invoice_send"/>
+        <field name="domain_force">[('invoice_ids.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund')), '|', ('invoice_ids.invoice_user_id', '=', user.id), ('invoice_ids.invoice_user_id', '=', False)]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman'))]"/>
+    </record>
+
+    <record id="account_invoice_send_rule_see_all" model="ir.rule">
+        <field name="name">All Invoice Send and Print</field>
+        <field name="model_id" ref="account.model_account_invoice_send"/>
+        <field name="domain_force">[('invoice_ids.move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]</field>
+        <field name="groups" eval="[(4, ref('sales_team.group_sale_salesman_all_leads'))]"/>
+    </record>
+
     <!-- Wizard access rules -->
     <record id="sale_payment_acquirer_onboarding_wizard_rule" model="ir.rule">
         <field name="name">Payment Acquier Onboarding Wizard Rule</field>

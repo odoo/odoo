@@ -6,8 +6,8 @@
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # Pedro Castro Silva <pedrocs@exo.pt>, 2020
 # Joao Felix <jrmfelix@gmail.com>, 2020
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # Pedro Filipe <pedro2.10@hotmail.com>, 2020
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-01 07:28+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Pedro Filipe <pedro2.10@hotmail.com>, 2020\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,6 +37,16 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"    - Grupo de Imposto: O imposto é um conjunto de impostos secundários.\n"
+"    - Fixo: O valor do imposto é o mesmo independentemente do preço.\n"
+"    - Percentagem do Preço: O valor do imposto é uma percentagem do preço:\n"
+"        ex. 100 * (1 + 10%) = 110 (preço não incluído)\n"
+"        ex. 110 / (1 + 10%) = 100 (preço incluído)\n"
+"    - Percentagem do Preço com Imposto Incluído: O valor do imposto está incluído no preço:\n"
+"        ex. 180 / (1 - 10%) = 200 (preço não incluído)\n"
+"        ex. 200 * (1 - 10%) = 180 (preço incluído)\n"
+"        "
 
 #. module: account_tax_python
 #: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable

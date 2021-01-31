@@ -1240,6 +1240,7 @@
 
     const patch = init([eventListenersModule, attrsModule, propsModule, classModule]);
 
+    let localStorage = null;
     const browser = {
         setTimeout: window.setTimeout.bind(window),
         clearTimeout: window.clearTimeout.bind(window),
@@ -1249,7 +1250,12 @@
         random: Math.random,
         Date: window.Date,
         fetch: (window.fetch || (() => { })).bind(window),
-        localStorage: window.localStorage,
+        get localStorage() {
+            return localStorage || window.localStorage;
+        },
+        set localStorage(newLocalStorage) {
+            localStorage = newLocalStorage;
+        },
     };
 
     /**
@@ -1364,6 +1370,7 @@
     const TRANSLATABLE_ATTRS = ["label", "title", "placeholder", "alt"];
     const lineBreakRE = /[\r\n]/;
     const whitespaceRE = /\s+/g;
+    const translationRE = /^(\s*)([\s\S]+?)(\s*)$/;
     const NODE_HOOKS_PARAMS = {
         create: "(_, n)",
         insert: "vn",
@@ -1718,7 +1725,8 @@
                 }
                 if (this.translateFn) {
                     if (node.parentNode.getAttribute("t-translation") !== "off") {
-                        text = this.translateFn(text);
+                        const match = translationRE.exec(text);
+                        text = match[1] + this.translateFn(match[2]) + match[3];
                     }
                 }
                 if (ctx.parentNode) {
@@ -2660,7 +2668,8 @@
         priority: 80,
         atNodeEncounter({ ctx, value, node, qweb }) {
             const slotKey = ctx.generateID();
-            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + '${value}'];`);
+            const valueExpr = value.match(INTERP_REGEXP) ? ctx.interpolate(value) : `'${value}'`;
+            ctx.addLine(`const slot${slotKey} = this.constructor.slots[context.__owl__.slotId + '_' + ${valueExpr}];`);
             ctx.addIf(`slot${slotKey}`);
             let parentNode = `c${ctx.parentNode}`;
             if (!ctx.parentNode) {
@@ -3408,6 +3417,7 @@
             this.parent = parent;
             let oldFiber = __owl__.currentFiber;
             if (oldFiber && !oldFiber.isCompleted) {
+                this.force = true;
                 if (oldFiber.root === oldFiber && !parent) {
                     // both oldFiber and this fiber are root fibers
                     this._reuseFiber(oldFiber);
@@ -3509,7 +3519,8 @@
         complete() {
             let component = this.component;
             this.isCompleted = true;
-            if (!this.target && !component.__owl__.isMounted) {
+            const { isMounted, isDestroyed } = component.__owl__;
+            if (isDestroyed) {
                 return;
             }
             // build patchQueue
@@ -3521,14 +3532,16 @@
             this._walk(doWork);
             const patchLen = patchQueue.length;
             // call willPatch hook on each fiber of patchQueue
-            for (let i = 0; i < patchLen; i++) {
-                const fiber = patchQueue[i];
-                if (fiber.shouldPatch) {
-                    component = fiber.component;
-                    if (component.__owl__.willPatchCB) {
-                        component.__owl__.willPatchCB();
+            if (isMounted) {
+                for (let i = 0; i < patchLen; i++) {
+                    const fiber = patchQueue[i];
+                    if (fiber.shouldPatch) {
+                        component = fiber.component;
+                        if (component.__owl__.willPatchCB) {
+                            component.__owl__.willPatchCB();
+                        }
+                        component.willPatch();
                     }
-                    component.willPatch();
                 }
             }
             // call __patch on each fiber of (reversed) patchQueue
@@ -3588,17 +3601,19 @@
                 this.component.env.qweb.trigger("dom-appended");
             }
             // call patched/mounted hook on each fiber of (reversed) patchQueue
-            for (let i = patchLen - 1; i >= 0; i--) {
-                const fiber = patchQueue[i];
-                component = fiber.component;
-                if (fiber.shouldPatch && !this.target) {
-                    component.patched();
-                    if (component.__owl__.patchedCB) {
-                        component.__owl__.patchedCB();
+            if (isMounted || inDOM) {
+                for (let i = patchLen - 1; i >= 0; i--) {
+                    const fiber = patchQueue[i];
+                    component = fiber.component;
+                    if (fiber.shouldPatch && !this.target) {
+                        component.patched();
+                        if (component.__owl__.patchedCB) {
+                            component.__owl__.patchedCB();
+                        }
                     }
-                }
-                else if (this.target ? inDOM : true) {
-                    component.__callMounted();
+                    else {
+                        component.__callMounted();
+                    }
                 }
             }
         }
@@ -3872,6 +3887,7 @@
                 if (!this.env.qweb) {
                     this.env.qweb = new QWeb();
                 }
+                // TODO: remove this in owl 2.0
                 if (!this.env.browser) {
                     this.env.browser = browser;
                 }
@@ -4024,7 +4040,15 @@
             }
             if (__owl__.currentFiber) {
                 const currentFiber = __owl__.currentFiber;
-                if (currentFiber.target === target && currentFiber.position === position) {
+                if (!currentFiber.target && !currentFiber.position) {
+                    // this means we have a pending rendering, but it was a render operation,
+                    // not a mount operation. We can simply update the fiber with the target
+                    // and the position
+                    currentFiber.target = target;
+                    currentFiber.position = position;
+                    return scheduler.addFiber(currentFiber);
+                }
+                else if (currentFiber.target === target && currentFiber.position === position) {
                     return scheduler.addFiber(currentFiber);
                 }
                 else {
@@ -4036,7 +4060,7 @@
                 message += `\nMaybe the DOM is not ready yet? (in that case, you can use owl.utils.whenReady)`;
                 throw new Error(message);
             }
-            const fiber = new Fiber(null, this, false, target, position);
+            const fiber = new Fiber(null, this, true, target, position);
             fiber.shouldPatch = false;
             if (!__owl__.vnode) {
                 this.__prepareAndRender(fiber, () => { });
@@ -4068,10 +4092,7 @@
         async render(force = false) {
             const __owl__ = this.__owl__;
             const currentFiber = __owl__.currentFiber;
-            if (!__owl__.isMounted && !currentFiber) {
-                // if we get here, this means that the component was either never mounted,
-                // or was unmounted and some state change  triggered a render. Either way,
-                // we do not want to actually render anything in this case.
+            if (!__owl__.vnode && !currentFiber) {
                 return;
             }
             if (currentFiber && !currentFiber.isRendered && !currentFiber.isCompleted) {
@@ -4087,8 +4108,6 @@
                     if (fiber.isCompleted) {
                         return;
                     }
-                    // we are mounted (__owl__.isMounted), or if we are currently being
-                    // mounted (!isMounted), so we call __render
                     this.__render(fiber);
                 }
                 else {
@@ -4427,6 +4446,23 @@
     Component.env = {};
     // expose scheduler s.t. it can be mocked for testing purposes
     Component.scheduler = scheduler;
+    async function mount(C, params) {
+        const { env, props, target } = params;
+        let origEnv = C.hasOwnProperty("env") ? C.env : null;
+        if (env) {
+            C.env = env;
+        }
+        const component = new C(null, props);
+        if (origEnv) {
+            C.env = origEnv;
+        }
+        else {
+            delete C.env;
+        }
+        const position = params.position || "last-child";
+        await component.mount(target, { position });
+        return component;
+    }
 
     /**
      * The `Context` object provides a way to share data between an arbitrary number
@@ -4533,16 +4569,6 @@
             __owl__.observer = new Observer();
             __owl__.observer.notifyCB = component.render.bind(component);
         }
-        const currentCB = __owl__.observer.notifyCB;
-        __owl__.observer.notifyCB = function () {
-            if (ctx.rev > mapping[id]) {
-                // in this case, the context has been updated since we were rendering
-                // last, and we do not need to render here with the observer. A
-                // rendering is coming anyway, with the correct props.
-                return;
-            }
-            currentCB();
-        };
         mapping[id] = 0;
         const renderFn = __owl__.renderFn;
         __owl__.renderFn = function (comp, params) {
@@ -4666,6 +4692,23 @@
         };
     }
     // -----------------------------------------------------------------------------
+    // "Builder" hooks
+    // -----------------------------------------------------------------------------
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the component calling them.
+     */
+    function useComponent() {
+        return Component.current;
+    }
+    /**
+     * This hook is useful as a building block for some customized hooks, that may
+     * need a reference to the env of the component calling them.
+     */
+    function useEnv() {
+        return Component.current.env;
+    }
+    // -----------------------------------------------------------------------------
     // useSubEnv
     // -----------------------------------------------------------------------------
     /**
@@ -4709,6 +4752,8 @@
         onWillStart: onWillStart,
         onWillUpdateProps: onWillUpdateProps,
         useRef: useRef,
+        useComponent: useComponent,
+        useEnv: useEnv,
         useSubEnv: useSubEnv,
         useExternalListener: useExternalListener
     });
@@ -4742,6 +4787,10 @@
             }, ...payload);
             return result;
         }
+        __notifyComponents() {
+            this.trigger("before-update");
+            return super.__notifyComponents();
+        }
     }
     const isStrictEqual = (a, b) => a === b;
     function useStore(selector, options = {}) {
@@ -4764,12 +4813,15 @@
             const newRevNumber = hashFn(result);
             if ((newRevNumber > 0 && revNumber !== newRevNumber) || !isEqual(oldResult, result)) {
                 revNumber = newRevNumber;
-                if (options.onUpdate) {
-                    options.onUpdate(result);
-                }
                 return true;
             }
             return false;
+        }
+        if (options.onUpdate) {
+            store.on("before-update", component, () => {
+                const newValue = selector(store.state, component.props);
+                options.onUpdate(newValue);
+            });
         }
         store.updateFunctions[componentId].push(function () {
             return selectCompareUpdate(store.state, component.props);
@@ -4789,6 +4841,9 @@
         const __destroy = component.__destroy;
         component.__destroy = (parent) => {
             delete store.updateFunctions[componentId];
+            if (options.onUpdate) {
+                store.off("before-update", component);
+            }
             __destroy.call(component, parent);
         };
         if (typeof result !== "object" || result === null) {
@@ -5305,19 +5360,21 @@
     exports.QWeb = QWeb;
     exports.Store = Store$1;
     exports.__info__ = __info__;
+    exports.browser = browser;
     exports.config = config;
     exports.core = core;
     exports.hooks = hooks$1;
     exports.misc = misc;
+    exports.mount = mount;
     exports.router = router;
     exports.tags = tags;
     exports.useState = useState$1;
     exports.utils = utils;
 
 
-    __info__.version = '1.0.13';
-    __info__.date = '2020-10-26T07:38:42.693Z';
-    __info__.hash = 'd615ffd';
+    __info__.version = '1.2.3';
+    __info__.date = '2021-01-19T14:42:29.241Z';
+    __info__.hash = '490cf18';
     __info__.url = 'https://github.com/odoo/owl';
 
 

@@ -7,7 +7,15 @@
     position: relative;
 }
 
-.o_ComposerTextInput_textarea {
+.o_ComposerTextInput_mirroredTextarea {
+    height: 0;
+    position: absolute;
+    opacity: 0;
+    overflow: hidden;
+    top: -10000px;
+}
+
+.o_ComposerTextInput_textareaStyle {
     padding: 10px;
     resize: none;
     border-radius: $o-mail-rounded-rectangle-border-radius-lg;
@@ -27,6 +35,6 @@
     &:not(.o-composer-is-compact) {
         // Don't allow the input to take the whole height when it's not compact
         // (like in chatter for example) but allow it to take some more place
-        max-height: 150px;
+        max-height: 400px;
     }
 }

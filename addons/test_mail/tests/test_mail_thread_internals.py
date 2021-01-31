@@ -145,6 +145,51 @@ class TestDiscuss(TestMailCommon, TestRecipients):
             (False, 'cc2@example.com', 'CC Email'),
         ], 'cc should be in suggestions')
 
+    def test_inbox_message_fetch_needaction(self):
+        user1 = self.env['res.users'].create({'login': 'user1', 'name': 'User 1'})
+        user1.notification_type = 'inbox'
+        user2 = self.env['res.users'].create({'login': 'user2', 'name': 'User 2'})
+        user2.notification_type = 'inbox'
+        message1 = self.test_record.with_user(self.user_admin).message_post(body='Message 1', partner_ids=[user1.partner_id.id, user2.partner_id.id])
+        message2 = self.test_record.with_user(self.user_admin).message_post(body='Message 2', partner_ids=[user1.partner_id.id, user2.partner_id.id])
+
+        # both notified users should have the 2 messages in Inbox initially
+        messages = self.env['mail.message'].with_user(user1).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 2)
+        messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 2)
+
+        # first user is marking one message as done: the other message is still Inbox, while the other user still has the 2 messages in Inbox
+        message1.with_user(user1).set_message_done()
+        messages = self.env['mail.message'].with_user(user1).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 1)
+        self.assertEqual(messages[0].get('id'), message2.id)
+        messages = self.env['mail.message'].with_user(user2).message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(messages), 2)
+
+    def test_notification_has_error_filter(self):
+        """Ensure message_has_error filter is only returning threads for which
+        the current user is author of a failed message."""
+        message = self.test_record.with_user(self.user_admin).message_post(
+            body='Test', message_type='comment', subtype_xmlid='mail.mt_comment',
+            partner_ids=[self.user_employee.partner_id.id]
+        )
+        self.assertFalse(message.has_error)
+        with self.mock_mail_gateway(sim_error='connect_smtp_notfound'):
+            self.user_admin.notification_type = 'email'
+            message2 = self.test_record.with_user(self.user_employee).message_post(
+                body='Test', message_type='comment', subtype_xmlid='mail.mt_comment',
+                partner_ids=[self.user_admin.partner_id.id]
+            )
+            self.assertTrue(message2.has_error)
+        # employee is author of message which has a failure
+        threads_employee = self.test_record.with_user(self.user_employee).search([('message_has_error', '=', True)])
+        self.assertEqual(len(threads_employee), 1)
+        # admin is also author of a message, but it doesn't have a failure
+        # and the failure from employee's message should not be taken into account for admin
+        threads_admin = self.test_record.with_user(self.user_admin).search([('message_has_error', '=', True)])
+        self.assertEqual(len(threads_admin), 0)
+
 
 @tagged('-at_install', 'post_install')
 class TestMultiCompany(HttpCase):

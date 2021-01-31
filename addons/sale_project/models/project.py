@@ -12,13 +12,15 @@ class Project(models.Model):
 
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item', copy=False,
-        domain="[('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
+        domain="[('is_service', '=', True), ('is_expense', '=', False), ('order_id', '=', sale_order_id), ('state', 'in', ['sale', 'done']), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Sales order item to which the project is linked. Link the timesheet entry to the sales order item defined on the project. "
         "Only applies on tasks without sale order item defined, and if the employee is not in the 'Employee/Sales Order Item Mapping' of the project.")
-    sale_order_id = fields.Many2one('sale.order', 'Sales Order', domain="[('partner_id', '=', partner_id)]", readonly=True, copy=False, help="Sales order to which the project is linked.")
+    sale_order_id = fields.Many2one('sale.order', 'Sales Order',
+        domain="[('order_line.product_id.type', '=', 'service'), ('partner_id', '=', partner_id)]",
+        copy=False, help="Sales order to which the project is linked.")
 
     _sql_constraints = [
-        ('sale_order_required_if_sale_line', "CHECK((sale_line_id IS NOT NULL AND sale_order_id IS NOT NULL) OR (sale_line_id IS NULL))", 'The Project should be linked to a Sale Order to select an Sale Order Items.'),
+        ('sale_order_required_if_sale_line', "CHECK((sale_line_id IS NOT NULL AND sale_order_id IS NOT NULL) OR (sale_line_id IS NULL))", 'The project should be linked to a sale order to select a sale order item.'),
     ]
 
     @api.model
@@ -48,7 +50,7 @@ class ProjectTask(models.Model):
                 task.partner_id = task.project_id.sale_line_id.order_partner_id
         super()._compute_partner_id()
 
-    @api.depends('partner_id.commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
+    @api.depends('commercial_partner_id', 'sale_line_id.order_partner_id.commercial_partner_id', 'parent_id.sale_line_id', 'project_id.sale_line_id')
     def _compute_sale_line(self):
         for task in self:
             if not task.sale_line_id:
@@ -65,7 +67,7 @@ class ProjectTask(models.Model):
                     raise ValidationError(_(
                         'You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense.',
                         order_id=task.sale_line_id.order_id.id,
-                        product_name=task.sale_line_id.product_id.name,
+                        product_id=task.sale_line_id.product_id.name,
                     ))
 
     def unlink(self):
@@ -148,6 +150,8 @@ class ProjectTaskRecurrence(models.Model):
     def _new_task_values(self, task):
         values = super(ProjectTaskRecurrence, self)._new_task_values(task)
         task = self.sudo().task_ids[0]
-        if not task.is_fsm:
-            values['sale_line_id'] = task.sale_line_id.id
+        values['sale_line_id'] = self._get_sale_line_id(task)
         return values
+
+    def _get_sale_line_id(self, task):
+        return task.sale_line_id.id

@@ -104,7 +104,11 @@ class GoogleSync(models.AbstractModel):
             synced.write({self._active_name: False})
             self = self - synced
         elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Google Calendar, archive it instead."))
+            # Since we can not delete such an event (see method comment), we archive it.
+            # Notice that archiving an event will delete the associated event on Google.
+            # Then, since it has been deleted on Google, the event is also deleted on Odoo DB (_sync_google2odoo).
+            self.action_archive()
+            return True
         return super().unlink()
 
     @api.model
@@ -163,7 +167,8 @@ class GoogleSync(models.AbstractModel):
             # This could be dangerous if google server time and odoo server time are different
             updated = parse(gevent.updated)
             odoo_record = self.browse(gevent.odoo_id(self.env))
-            if updated >= pytz.utc.localize(odoo_record.write_date):
+            # Migration from 13.4 does not fill write_date. Therefore, we force the update from Google.
+            if not odoo_record.write_date or updated >= pytz.utc.localize(odoo_record.write_date):
                 vals = dict(self._odoo_values(gevent, default_reminders), need_sync=False)
                 odoo_record.write(vals)
                 synced_records |= odoo_record

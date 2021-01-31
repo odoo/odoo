@@ -50,6 +50,7 @@
 
     &:not(.o-mobile) {
         display: flex;
+        flex-shrink: 0; // Forces Safari to not shrink below fit content
     }
 
     &.o-mobile {
@@ -104,7 +105,7 @@
 }
 
 .o_MessagingMenu_counter {
-    background-color: $o-brand-primary;
+    background-color: $o-enterprise-primary-color;
 }
 
 .o_MessagingMenu_dropdownMenu.o-mobile {

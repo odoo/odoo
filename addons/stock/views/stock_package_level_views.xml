@@ -29,7 +29,7 @@
                             <field name="state" invisible="1"/>
                         </tree>
                     </field>
-                    <field name="move_line_ids" attrs="{'invisible': [('state', 'in', ('draft', 'confirmed', 'cancel'))]}">
+                    <field name="move_line_ids" attrs="{'invisible': [('state', 'in', ('confirmed', 'cancel'))]}">
                         <tree>
                             <field name="product_id"/>
                             <field name="lot_id" attrs="{'column_invisible': [('parent.show_lots_m2o', '=', False)]}" groups="stock.group_production_lot"/>
@@ -43,6 +43,22 @@
                     </field>
                 </group>
             </form>
+        </field>
+    </record>
+
+
+    <record id="package_level_form_edit_view" model="ir.ui.view">
+        <field name="name">Package Level</field>
+        <field name="model">stock.package_level</field>
+        <field name="inherit_id" ref="stock.package_level_form_view"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr='//form' position='inside'>
+                <footer class="oe_edit_only">
+                    <button string="Confirm" special="save" class="oe_highlight"/>
+                    <button string="Discard" special="cancel"/>
+                </footer>
+            </xpath>
         </field>
     </record>
 

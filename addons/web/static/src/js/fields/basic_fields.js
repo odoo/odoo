@@ -994,9 +994,9 @@ const RemainingDays = AbstractField.extend({
         } else if (diffDays === 0) {
             text = _t("Today");
         } else if (diffDays < 0) {
-            text = diffDays === -1 ? _t("Yesterday") : _t(`${-diffDays} days ago`);
+            text = diffDays === -1 ? _t("Yesterday") : _.str.sprintf(_t('%s days ago'), -diffDays);
         } else {
-            text = diffDays === 1 ? _t("Tomorrow") : _t(`In ${diffDays} days`);
+            text = diffDays === 1 ? _t("Tomorrow") : _.str.sprintf(_t('In %s days'), diffDays);
         }
         this.$el.text(text).attr('title', this._formatValue(this.value, 'date'));
         this.$el.toggleClass('text-bf', diffDays <= 0);

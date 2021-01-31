@@ -1,16 +1,18 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * pad
+# 	* pad
 # 
 # Translators:
-# Sengtha Chay <sengtha@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Sengtha Chay <sengtha@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-02-13 07:24+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,7 +23,7 @@ msgstr ""
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "API Key"
-msgstr ""
+msgstr "សោរAPI"
 
 #. module: pad
 #: model:ir.model,name:pad.model_res_company
@@ -31,7 +33,7 @@ msgstr "ក្រុមហ៊ុន"
 #. module: pad
 #: model:ir.model,name:pad.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "កំណត់រចនាសម្ព័ន្ធ"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__display_name
@@ -42,18 +44,18 @@ msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 #: model:ir.model.fields,help:pad.field_res_company__pad_key
 #: model:ir.model.fields,help:pad.field_res_config_settings__pad_key
 msgid "Etherpad lite api key."
-msgstr ""
+msgstr "កូនសោ Etherpad lite api ។"
 
 #. module: pad
 #: model:ir.model.fields,help:pad.field_res_company__pad_server
 #: model:ir.model.fields,help:pad.field_res_config_settings__pad_server
 msgid "Etherpad lite server. Example: beta.primarypad.com"
-msgstr ""
+msgstr "ម៉ាស៊ីនមេអេកថេបភ្លែត។ ឧទាហរណ៍ៈ beta.primarypad.co"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common__id
 msgid "ID"
-msgstr "ID"
+msgstr "អត្តសញ្ញាណ"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_pad_common____last_update
@@ -62,80 +64,76 @@ msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោ
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:147
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Loading"
 msgstr "ដំណើរការ"
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_company__pad_key
-msgid "Pad Api Key"
+#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
+msgid "Pad API Key"
 msgstr ""
 
 #. module: pad
-#: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_key
-msgid "Pad Api Key *"
-msgstr ""
+#: model:ir.model.fields,field_description:pad.field_res_company__pad_key
+msgid "Pad Api Key"
+msgstr "បន្ទះអេភីភីឃី។"
+
+#. module: pad
+#: model:ir.model,name:pad.model_pad_common
+msgid "Pad Common"
+msgstr "ការបង់លើការចរចារ"
 
 #. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_company__pad_server
-msgid "Pad Server"
-msgstr ""
-
-#. module: pad
 #: model:ir.model.fields,field_description:pad.field_res_config_settings__pad_server
-msgid "Pad Server *"
-msgstr ""
+msgid "Pad Server"
+msgstr "ការបង់លើបណ្តាញ"
 
 #. module: pad
-#: code:addons/pad/models/pad.py:57
+#: code:addons/pad/models/pad.py:0
 #, python-format
 msgid ""
 "Pad creation failed, either there is a problem with your pad server URL or "
 "with your connection."
 msgstr ""
+"ការបង្កើតបន្ទះបានបរាជ័យទាំងមានបញ្ហាជាមួយ URL "
+"ម៉ាស៊ីនមេរបស់អ្នកឬជាមួយការភ្ជាប់របស់អ្នក។"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:6
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
-msgid ""
-"Please enter your Etherpad credentials through the menu 'Settings > General "
-"Settings'."
+msgid "Please, enter your Etherpad credentials through the Settings."
 msgstr ""
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "Server"
-msgstr ""
+msgstr "បំរើ"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/xml/pad.xml:14
+#: code:addons/pad/static/src/xml/pad.xml:0
 #, python-format
 msgid "Switch pad"
-msgstr ""
+msgstr "ប្តូរបន្ទះ។"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:166
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "This pad will be initialized on first edit"
-msgstr ""
+msgstr "ផ្ទាំងនេះនឹងត្រូវបានចាប់ផ្តើមលើការកែប្រែដំបូង។"
 
 #. module: pad
 #. openerp-web
-#: code:addons/pad/static/src/js/pad.js:160
+#: code:addons/pad/static/src/js/pad.js:0
 #, python-format
 msgid "Unable to load pad"
-msgstr ""
+msgstr "មិនអាចផ្ទុកបន្ទះបានទេ។"
 
 #. module: pad
 #: model_terms:ir.ui.view,arch_db:pad.res_config_settings_view_form
 msgid "e.g. beta.primarypad.com"
-msgstr ""
-
-#. module: pad
-#: model:ir.model,name:pad.model_pad_common
-msgid "pad.common"
-msgstr ""
+msgstr "ឧ។ beta.primarypad.com ។"

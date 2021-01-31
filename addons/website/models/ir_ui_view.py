@@ -326,6 +326,8 @@ class View(models.Model):
 
     @api.model
     def read_template(self, xml_id):
+        """ This method is deprecated
+        """
         view = self._view_obj(self.get_view_id(xml_id))
         if view.visibility and view._handle_visibility(do_raise=False):
             self = self.sudo()
@@ -362,11 +364,11 @@ class View(models.Model):
                 else:
                     error = werkzeug.exceptions.Forbidden('website_visibility_password_required')
 
-            # elif self.visibility == 'restricted_group' and self.groups_id: or if groups_id set from backend
-            try:
-                self._check_view_access()
-            except AccessError:
-                error = werkzeug.exceptions.Forbidden()
+            if self.visibility not in ('password', 'connected'):
+                try:
+                    self._check_view_access()
+                except AccessError:
+                    error = werkzeug.exceptions.Forbidden()
 
         if error:
             if do_raise:

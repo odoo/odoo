@@ -932,3 +932,112 @@ class TestReports(TestReportsCommon):
         self.assertTrue(line_2['replenishment_filled'])
         self.assertEqual(line_2['document_in'].id, receipt_2.id)
         self.assertEqual(line_2['document_out'].id, delivery.id)
+
+    def test_report_forecast_8_delivery_to_receipt_link(self):
+        """
+        Create 2 deliveries, and 1 receipt tied to the second delivery.
+        The report should show the source document as the 2nd delivery, and show the first
+        delivery completely unfilled.
+        """
+        delivery_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.picking_type_out
+        with delivery_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 100
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        delivery_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.picking_type_out
+        with delivery_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 200
+        delivery2 = delivery_form.save()
+        delivery2.action_confirm()
+
+        receipt_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        receipt = receipt_form.save()
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 200
+        receipt = receipt_form.save()
+        receipt.move_lines[0].write({
+            'move_dest_ids': [(4, delivery2.move_lines[0].id)],
+        })
+        receipt.action_confirm()
+        self.env['base'].flush()
+
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+
+        self.assertEqual(len(lines), 2, 'Only 2 lines')
+        delivery_line = [l for l in lines if l['document_out'].id == delivery.id][0]
+        self.assertTrue(delivery_line, 'No line for delivery 1')
+        self.assertFalse(delivery_line['replenishment_filled'])
+        delivery2_line = [l for l in lines if l['document_out'].id == delivery2.id][0]
+        self.assertTrue(delivery2_line, 'No line for delivery 2')
+        self.assertTrue(delivery2_line['replenishment_filled'])
+
+    def test_report_forecast_9_delivery_to_receipt_link_over_received(self):
+        """
+        Create 2 deliveries, and 1 receipt tied to the second delivery.
+        Set the quantity on the receipt to be enough for BOTH deliveries.
+        For example, this can happen if they have manually increased the quantity on the generated PO.
+        The report should show both deliveries fulfilled.
+        """
+        delivery_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.picking_type_out
+        with delivery_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 100
+        delivery = delivery_form.save()
+        delivery.action_confirm()
+
+        delivery_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        delivery_form.partner_id = self.partner
+        delivery_form.picking_type_id = self.picking_type_out
+        with delivery_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 200
+        delivery2 = delivery_form.save()
+        delivery2.action_confirm()
+
+        receipt_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        receipt_form.partner_id = self.partner
+        receipt_form.picking_type_id = self.picking_type_in
+        receipt = receipt_form.save()
+        with receipt_form.move_ids_without_package.new() as move_line:
+            move_line.product_id = self.product
+            move_line.product_uom_qty = 300
+        receipt = receipt_form.save()
+        receipt.move_lines[0].write({
+            'move_dest_ids': [(4, delivery2.move_lines[0].id)],
+        })
+        receipt.action_confirm()
+        self.env['base'].flush()
+
+        _, _, lines = self.get_report_forecast(product_template_ids=self.product_template.ids)
+
+        self.assertEqual(len(lines), 2, 'Only 2 lines')
+        delivery_line = [l for l in lines if l['document_out'].id == delivery.id][0]
+        self.assertTrue(delivery_line, 'No line for delivery 1')
+        self.assertTrue(delivery_line['replenishment_filled'])
+        delivery2_line = [l for l in lines if l['document_out'].id == delivery2.id][0]
+        self.assertTrue(delivery2_line, 'No line for delivery 2')
+        self.assertTrue(delivery2_line['replenishment_filled'])

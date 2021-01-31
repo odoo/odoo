@@ -271,7 +271,7 @@ class StockWarehouseOrderpoint(models.Model):
         for g in rules_groups:
             if not g.get('route_id'):
                 continue
-            orderpoints = self.filtered(lambda o: o.location_id == g['location_id'])
+            orderpoints = self.filtered(lambda o: o.location_id.id == g['location_id'][0])
             orderpoints.route_id = g['route_id']
 
     def _get_product_context(self):
@@ -312,16 +312,22 @@ class StockWarehouseOrderpoint(models.Model):
         if not to_refill:
             return action
 
-        # Remove incoming quantity from other otigin than moves (e.g RFQ)
+        # Remove incoming quantity from other origin than moves (e.g RFQ)
         product_ids, warehouse_ids = zip(*to_refill)
-        # lot_stock_ids = [lot_stock_id_by_warehouse[w] for w in warehouse_ids]
         dummy, qty_by_product_wh = self.env['product.product'].browse(product_ids)._get_quantity_in_progress(warehouse_ids=warehouse_ids)
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        # Group orderpoint by product-warehouse
+        grouped_orderpoint_data = self.env['stock.warehouse.orderpoint'].read_group(
+            [('id', 'in', orderpoints.ids)],
+            ['product_id', 'warehouse_id', 'qty_to_order:sum'],
+            ['product_id', 'warehouse_id'], lazy=False)
+        orderpoint_by_product_warehouse = {
+            (record.get('product_id')[0], record.get('warehouse_id')[0]): record.get('qty_to_order')
+            for record in grouped_orderpoint_data
+        }
         for (product, warehouse), product_qty in to_refill.items():
             qty_in_progress = qty_by_product_wh.get((product, warehouse)) or 0.0
-            qty_in_progress += sum(orderpoints.filtered(
-                lambda o: o.product_id.id == product and o.warehouse_id.id == warehouse
-            ).mapped('qty_to_order'))
+            qty_in_progress += orderpoint_by_product_warehouse.get((product, warehouse), 0.0)
             # Add qty to order for other orderpoint under this warehouse.
             if not qty_in_progress:
                 continue
@@ -334,16 +340,10 @@ class StockWarehouseOrderpoint(models.Model):
         ], ['lot_stock_id'])
         lot_stock_id_by_warehouse = {w['id']: w['lot_stock_id'][0] for w in lot_stock_id_by_warehouse}
 
-        product_qty_available = {}
-        for warehouse, group in groupby(sorted(to_refill, key=lambda p_w: p_w[1]), key=lambda p_w: p_w[1]):
-            products = self.env['product.product'].browse([p for p, w in group])
-            products_qty_available_list = products.with_context(location=lot_stock_id_by_warehouse[warehouse]).mapped('qty_available')
-            product_qty_available.update({(p.id, warehouse): q for p, q in zip(products, products_qty_available_list)})
-
         orderpoint_values_list = []
         for (product, warehouse), product_qty in to_refill.items():
             lot_stock_id = lot_stock_id_by_warehouse[warehouse]
-            orderpoint = self.filtered(lambda o: o.product_id == product and o.location_id == lot_stock_id)
+            orderpoint = orderpoints.filtered(lambda o: o.product_id.id == product and o.location_id.id == lot_stock_id)
             if orderpoint:
                 orderpoint[0].qty_forecast += product_qty
             else:
@@ -353,7 +353,7 @@ class StockWarehouseOrderpoint(models.Model):
                     'warehouse_id': warehouse,
                     'company_id': self.env['stock.warehouse'].browse(warehouse).company_id.id,
                 })
-            orderpoint_values_list.append(orderpoint_values)
+                orderpoint_values_list.append(orderpoint_values)
 
         orderpoints = self.env['stock.warehouse.orderpoint'].with_user(SUPERUSER_ID).create(orderpoint_values_list)
         for orderpoint in orderpoints:

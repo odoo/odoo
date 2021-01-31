@@ -301,7 +301,7 @@ class AdyenAccount(models.Model):
             req = requests.post(url_join(url, operation), json=payload, auth=auth, timeout=TIMEOUT)
             req.raise_for_status()
         except requests.exceptions.Timeout:
-            raise UserError(_('A timeout occured whil trying to reach the Adyen proxy.'))
+            raise UserError(_('A timeout occured while trying to reach the Adyen proxy.'))
         except Exception as e:
             raise UserError(_('The Adyen proxy is not reachable, please try again later.'))
         response = req.json()

@@ -3,19 +3,20 @@
 # 	* partner_autocomplete
 # 
 # Translators:
-# Martin Trigaux, 2019
-# krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
-# Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
+# Martin Trigaux, 2021
+# krnkris, 2021
+# Tamás Németh <ntomasz81@gmail.com>, 2021
+# gezza <geza.nagy@oregional.hu>, 2021
+# Ákos Nagy <akos.nagy@oregional.hu>, 2021
+# Zsolt Godó <zsolttokio@gmail.com>, 2021
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Tibor Kőnig <konig.tibor@evitalit.hu>, 2019\n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Zsolt Godó <zsolttokio@gmail.com>, 2021\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -24,89 +25,14 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "(Time Now)"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-building text-primary\"/>\n"
-"                <b>Company type:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-calendar text-primary\"/>\n"
-"                <b>Founded:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-cube text-primary\"/>\n"
-"                <b>Technology Used :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-envelope text-primary\"/>\n"
-"                <b>Email :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-globe text-primary\"/>\n"
-"                <b>Timezone :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-industry text-primary\"/>\n"
-"                <b>Sector:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Annual revenue:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-money text-primary\"/>\n"
-"                <b>Estimated annual revenue:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-phone text-primary\"/>\n"
-"                <b>Phone :</b>"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid ""
-"<i class=\"fa fa-fw mr-2 fa-users text-primary\"/>\n"
-"                <b>Employees:</b>"
-msgstr ""
-
-#. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__additional_info
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_users__additional_info
 msgid "Additional info"
-msgstr ""
+msgstr "További infó"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:21
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Buy more credits"
 msgstr ""
@@ -126,7 +52,7 @@ msgstr ""
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_config_settings
 msgid "Config Settings"
-msgstr "Konfigurációs beállítások"
+msgstr "Beállítások módosítása"
 
 #. module: partner_autocomplete
 #: model:ir.model,name:partner_autocomplete.model_res_partner
@@ -144,11 +70,24 @@ msgid "Created on"
 msgstr "Létrehozva"
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__display_name
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: partner_autocomplete
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
+#, python-format
+msgid "IAP Account Token missing"
+msgstr ""
+
+#. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings__id
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner__id
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__id
 msgid "ID"
 msgstr "Azonosító"
@@ -164,9 +103,12 @@ msgid "Is synched"
 msgstr ""
 
 #. module: partner_autocomplete
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_company____last_update
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner____last_update
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync____last_update
 msgid "Last Modified on"
-msgstr "Legutóbb frissítve"
+msgstr "Legutóbb módosítva"
 
 #. module: partner_autocomplete
 #: model:ir.model.fields,field_description:partner_autocomplete.field_res_partner_autocomplete_sync__write_uid
@@ -180,7 +122,7 @@ msgstr "Frissítve "
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:320
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_core.js:0
 #, python-format
 msgid "Not enough credits for Partner Autocomplete"
 msgstr ""
@@ -203,30 +145,28 @@ msgid "Partner Autocomplete Sync"
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
+#: code:addons/partner_autocomplete/models/res_partner.py:0
+#, python-format
 msgid "Partner created by Odoo Partner Autocomplete Service"
 msgstr ""
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:8
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
 #, python-format
 msgid "Placeholder"
-msgstr "Helyörző"
+msgstr "Helykitöltő"
 
 #. module: partner_autocomplete
 #. openerp-web
-#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:23
+#: code:addons/partner_autocomplete/static/src/js/partner_autocomplete_many2one.js:0
 #, python-format
 msgid "Searching Autocomplete..."
 msgstr ""
 
 #. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "Twitter :"
-msgstr ""
-
-#. module: partner_autocomplete
-#: model_terms:ir.ui.view,arch_db:partner_autocomplete.additional_info_template
-msgid "followers)"
+#. openerp-web
+#: code:addons/partner_autocomplete/static/src/xml/partner_autocomplete.xml:0
+#, python-format
+msgid "Set Your Account Token"
 msgstr ""

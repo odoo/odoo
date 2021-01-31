@@ -209,7 +209,7 @@
                                 <field name="partner_id" context="{'default_is_company': True}"
                                        attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="destination_account_id"
-                                       options="{'no_create': True}"
+                                       options="{'no_create': True}" required="1"
                                        attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('is_internal_transfer', '=', True)]}"/>
                                 <field name="is_internal_transfer"
                                        attrs="{'readonly': [('state', '!=', 'draft')]}"/>
@@ -224,7 +224,7 @@
                                        required="1"
                                        attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('hide_payment_method', '=', True)]}"/>
                                 <field name="partner_bank_id" context="{'default_partner_id': partner_id}"
-                                       attrs="{'invisible': [('show_partner_bank_account', '=', False)], 'required': [('require_partner_bank_account', '=', True)]}"/>
+                                       attrs="{'invisible': [('show_partner_bank_account', '=', False)], 'required': [('require_partner_bank_account', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <!-- /!\ Required due to the _inherits but must not be required when saving a new
                                 record. Using 'required': [('id', '!=', False)] is not working due to the groups set on

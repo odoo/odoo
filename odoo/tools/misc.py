@@ -1229,7 +1229,6 @@ else:
     def html_escape(text):
         return werkzeug.utils.escape(text)
 
-
 def get_lang(env, lang_code=False):
     """
     Retrieve the first lang object installed, by checking the parameter lang_code,
@@ -1248,6 +1247,14 @@ def get_lang(env, lang_code=False):
         lang = env.user.company_id.partner_id.lang
     return env['res.lang']._lang_get(lang)
 
+def babel_locale_parse(lang_code):
+    try:
+        return babel.Locale.parse(lang_code)
+    except:
+        try:
+            return babel.Locale.default()
+        except:
+            return babel.Locale.parse("en_US")
 
 def formatLang(env, value, digits=None, grouping=True, monetary=False, dp=False, currency_obj=False):
     """
@@ -1307,7 +1314,7 @@ def format_date(env, value, lang_code=False, date_format=False):
             value = odoo.fields.Datetime.from_string(value)
 
     lang = get_lang(env, lang_code)
-    locale = babel.Locale.parse(lang.code)
+    locale = babel_locale_parse(lang.code)
     if not date_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
 
@@ -1326,7 +1333,7 @@ def parse_date(env, value, lang_code=False):
         :rtype: datetime.date
     '''
     lang = get_lang(env, lang_code)
-    locale = babel.Locale.parse(lang.code)
+    locale = babel_locale_parse(lang.code)
     try:
         return babel.dates.parse_date(value, locale=locale)
     except:
@@ -1358,7 +1365,7 @@ def format_datetime(env, value, tz=False, dt_format='medium', lang_code=False):
 
     lang = get_lang(env, lang_code)
 
-    locale = babel.Locale.parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
+    locale = babel_locale_parse(lang.code or lang_code)  # lang can be inactive, so `lang`is empty
     if not dt_format:
         date_format = posix_to_ldml(lang.date_format, locale=locale)
         time_format = posix_to_ldml(lang.time_format, locale=locale)
@@ -1387,7 +1394,7 @@ def format_time(env, value, tz=False, time_format='medium', lang_code=False):
         return ''
 
     lang = get_lang(env, lang_code)
-    locale = babel.Locale.parse(lang.code)
+    locale = babel_locale_parse(lang.code)
     if not time_format:
         time_format = posix_to_ldml(lang.time_format, locale=locale)
 
@@ -1398,7 +1405,7 @@ def _format_time_ago(env, time_delta, lang_code=False, add_direction=True):
     if not lang_code:
         langs = [code for code, _ in env['res.lang'].get_installed()]
         lang_code = env.context['lang'] if env.context.get('lang') in langs else (env.user.company_id.partner_id.lang or langs[0])
-    locale = babel.Locale.parse(lang_code)
+    locale = babel_locale_parse(lang_code)
     return babel.dates.format_timedelta(-time_delta, add_direction=add_direction, locale=locale)
 
 

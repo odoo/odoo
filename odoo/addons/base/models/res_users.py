@@ -1440,25 +1440,46 @@ class UsersView(models.Model):
     def fields_get(self, allfields=None, attributes=None):
         res = super(UsersView, self).fields_get(allfields, attributes=attributes)
         # add reified groups fields
-        for app, kind, gs, category_name in self.env['res.groups'].sudo().get_groups_by_application():
+        Group = self.env['res.groups'].sudo()
+        for app, kind, gs, category_name in Group.get_groups_by_application():
             if kind == 'selection':
                 # 'User Type' should not be 'False'. A user is either 'employee', 'portal' or 'public' (required).
                 selection_vals = [(False, '')]
                 if app.xml_id == 'base.module_category_user_type':
                     selection_vals = []
-                field_name = name_selection_groups(gs.ids)
-                if allfields and field_name not in allfields:
-                    continue
-                # selection group field
-                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
-                res[field_name] = {
-                    'type': 'selection',
-                    'string': app.name or _('Other'),
-                    'selection': selection_vals + [(g.id, g.name) for g in gs],
-                    'help': '\n'.join(tips),
-                    'exportable': False,
-                    'selectable': False,
-                }
+
+                # FIXME: in Accounting, the groups in the selection are not
+                # totally ordered, and their order therefore partially depends
+                # on their name, which is translated!  So we generate all the
+                # possible field names according to the partial order.
+                gs_list = [gs]
+                if app.xml_id == 'base.module_category_accounting_accounting':
+                    # ranks = {0: [A, B], 2: [C], 3: [D]}
+                    ranks = defaultdict(list)
+                    for g in gs:
+                        ranks[len(g.trans_implied_ids & gs)].append(g)
+                    # perms = [[AB, BA], [C], [D]]
+                    perms = [
+                        [Group.concat(*perm) for perm in itertools.permutations(rank)]
+                        for k, rank in sorted(ranks.items())
+                    ]
+                    # gs_list = [ABCD, BACD]
+                    gs_list = [Group.concat(*perm) for perm in itertools.product(*perms)]
+
+                for gs in gs_list:
+                    field_name = name_selection_groups(gs.ids)
+                    if allfields and field_name not in allfields:
+                        continue
+                    # selection group field
+                    tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
+                    res[field_name] = {
+                        'type': 'selection',
+                        'string': app.name or _('Other'),
+                        'selection': selection_vals + [(g.id, g.name) for g in gs],
+                        'help': '\n'.join(tips),
+                        'exportable': False,
+                        'selectable': False,
+                    }
             else:
                 # boolean group fields
                 for g in gs:
@@ -1568,7 +1589,14 @@ class APIKeysUser(models.Model):
         return False
 
     def _check_credentials(self, password, user_agent_env):
-        if user_agent_env['interactive']:
+        user_agent_env = user_agent_env or {}
+        if user_agent_env.get('interactive', True):
+            if 'interactive' not in user_agent_env:
+                _logger.warning(
+                    "_check_credentials without 'interactive' env key, assuming interactive login. \
+                    Check calls and overrides to ensure the 'interactive' key is properly set in \
+                    all _check_credentials environments"
+                )
             return super()._check_credentials(password, user_agent_env)
 
         if not self.env.user._rpc_api_keys_only():

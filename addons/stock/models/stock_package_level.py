@@ -183,11 +183,13 @@ class StockPackageLevel(models.Model):
             all_in = False
         return all_in
 
-    @api.depends('state', 'is_fresh_package', 'move_ids', 'move_line_ids')
+    @api.depends('package_id', 'state', 'is_fresh_package', 'move_ids', 'move_line_ids')
     def _compute_location_id(self):
         for pl in self:
             if pl.state == 'new' or pl.is_fresh_package:
                 pl.location_id = False
+            elif pl.package_id:
+                pl.location_id = pl.package_id.location_id
             elif pl.state == 'confirmed' and pl.move_ids:
                 pl.location_id = pl.move_ids[0].location_id
             elif pl.state in ('assigned', 'done') and pl.move_line_ids:
@@ -197,7 +199,7 @@ class StockPackageLevel(models.Model):
 
     def action_show_package_details(self):
         self.ensure_one()
-        view = self.env.ref('stock.package_level_form_view')
+        view = self.env.ref('stock.package_level_form_edit_view', raise_if_not_found=False) or self.env.ref('stock.package_level_form_view')
 
         return {
             'name': _('Package Content'),

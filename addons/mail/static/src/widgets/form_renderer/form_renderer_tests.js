@@ -462,24 +462,16 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
 });
 
 QUnit.test('chatter updating', async function (assert) {
-    assert.expect(3);
+    assert.expect(1);
 
     this.data['mail.message'].records.push({ body: "not empty", model: 'res.partner', res_id: 12 });
     this.data['res.partner'].records.push(
         { display_name: "first partner", id: 11 },
         { display_name: "second partner", id: 12 }
     );
-    const messageFetchChannelDef = makeDeferred();
     await this.createView({
         data: this.data,
         hasView: true,
-        async mockRPC(route, args) {
-            const res = await this._super(...arguments);
-            if (route.includes('message_fetch')) {
-                messageFetchChannelDef.resolve();
-            }
-            return res;
-        },
         // View params
         View: FormView,
         model: 'res.partner',
@@ -498,27 +490,35 @@ QUnit.test('chatter updating', async function (assert) {
                 </div>
             </form>
         `,
+        waitUntilEvent: {
+            eventName: 'o-thread-view-hint-processed',
+            message: "should wait until partner 11 thread loaded messages initially",
+            predicate: ({ hint, threadViewer }) => {
+                return (
+                    hint.type === 'messages-loaded' &&
+                    threadViewer.thread.model === 'res.partner' &&
+                    threadViewer.thread.id === 11
+                );
+            },
+        }
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Chatter',
-        "there should be a chatter"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_Message',
-        "there should be no message"
-    );
 
-    await afterNextRender(async () => {
-        document.querySelector('.o_pager_next').click();
-        // wait until messages are fetched, ignore other renders that are too early
-        await messageFetchChannelDef;
+    await this.afterEvent({
+        eventName: 'o-thread-view-hint-processed',
+        func: () => document.querySelector('.o_pager_next').click(),
+        message: "should wait until partner 12 thread loaded messages after clicking on next",
+        predicate: ({ hint, threadViewer }) => {
+            return (
+                hint.type === 'messages-loaded' &&
+                threadViewer.thread.model === 'res.partner' &&
+                threadViewer.thread.id === 12
+            );
+        },
     });
     assert.containsOnce(
         document.body,
         '.o_Message',
-        "there should be a message"
+        "there should be a message in partner 12 thread"
     );
 });
 

@@ -35,7 +35,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-17 10:35+0000\n"
+"POT-Creation-Date: 2020-11-27 11:23+0000\n"
 "PO-Revision-Date: 2020-09-07 08:14+0000\n"
 "Last-Translator: Maja Stawicka <mjstwck@wp.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
@@ -879,11 +879,9 @@ msgstr "Zarchiwizowane"
 #: code:addons/mail/wizard/mail_resend_cancel.py:0
 #, python-format
 msgid ""
-"Are you sure you want to discard %s mail delivery failures. You won't be "
+"Are you sure you want to discard %s mail delivery failures? You won't be "
 "able to re-send these mails later!"
 msgstr ""
-"Czy na pewno chcesz odrzucić błędy dostarczenia poczty %s. Nie będziesz mógł"
-" ponownie wysłać tych wiadomości później!"
 
 #. module: mail
 #. openerp-web
@@ -1660,6 +1658,12 @@ msgid "Customer is required for inbox / email notification"
 msgstr ""
 "Klient jest wymagany do otrzymania powiadomienia na skrzynkę odbiorczą / "
 "e-mail"
+
+#. module: mail
+#: code:addons/mail/models/mail_notification.py:0
+#, python-format
+msgid "Can not update the message or recipient of a notification."
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__date
@@ -2580,6 +2584,12 @@ msgstr "Tylko obserwatorzy"
 #, python-format
 msgid "Following"
 msgstr "Obserwujący"
+
+#. module: mail
+#: code:addons/mail/models/mail_channel.py:778
+#, python-format
+msgid "Following invites are invalid as user groups do not match: %s"
+msgstr ""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity__icon

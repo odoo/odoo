@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * bus
+# 	* bus
 # 
 # Translators:
-# Sengtha Chay <sengtha@gmail.com>, 2018
-# Chan Nath <channath@gmail.com>, 2018
+# Sengtha Chay <sengtha@gmail.com>, 2020
+# Chan Nath <channath@gmail.com>, 2020
+# Lux Sok <sok.lux@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~13.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Chan Nath <channath@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Lux Sok <sok.lux@gmail.com>, 2020\n"
 "Language-Team: Khmer (https://www.transifex.com/odoo/teams/41243/km/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -20,12 +22,12 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: bus
-#: sql_constraint:bus.presence:0
+#: model:ir.model.constraint,message:bus.constraint_bus_presence_bus_user_presence_unique
 msgid "A user can only have one IM status."
-msgstr ""
+msgstr "អ្នកប្រើអាចមានស្ថានភាព IM មួយប៉ុណ្ណោះ"
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__away
 msgid "Away"
 msgstr "មិននៅកន្លែង"
 
@@ -37,7 +39,7 @@ msgstr "ឆានែល"
 #. module: bus
 #: model:ir.model,name:bus.model_bus_bus
 msgid "Communication Bus"
-msgstr ""
+msgstr "រថយន្តទំនាក់ទំនង"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_partner
@@ -57,37 +59,43 @@ msgstr "បង្កើតនៅ"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__display_name
 #: model:ir.model.fields,field_description:bus.field_bus_presence__display_name
+#: model:ir.model.fields,field_description:bus.field_res_partner__display_name
+#: model:ir.model.fields,field_description:bus.field_res_users__display_name
 msgid "Display Name"
 msgstr "ឈ្មោះសំរាប់បង្ហាញ"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__id
 #: model:ir.model.fields,field_description:bus.field_bus_presence__id
+#: model:ir.model.fields,field_description:bus.field_res_partner__id
+#: model:ir.model.fields,field_description:bus.field_res_users__id
 msgid "ID"
-msgstr "ID"
+msgstr "អត្តសញ្ញាណ"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__status
 #: model:ir.model.fields,field_description:bus.field_res_partner__im_status
 #: model:ir.model.fields,field_description:bus.field_res_users__im_status
 msgid "IM Status"
-msgstr ""
+msgstr "ស្ថានភាព IM"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus____last_update
 #: model:ir.model.fields,field_description:bus.field_bus_presence____last_update
+#: model:ir.model.fields,field_description:bus.field_res_partner____last_update
+#: model:ir.model.fields,field_description:bus.field_res_users____last_update
 msgid "Last Modified on"
 msgstr "កាលបរិច្ឆេតកែប្រែចុងក្រោយ"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_poll
 msgid "Last Poll"
-msgstr ""
+msgstr "ការស្ទង់មតិចុងក្រោយ"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_presence__last_presence
 msgid "Last Presence"
-msgstr ""
+msgstr "វត្តមានចុងក្រោយ"
 
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__write_uid
@@ -102,22 +110,37 @@ msgstr "ផ្លាស់ប្តូរចុងក្រោយ"
 #. module: bus
 #: model:ir.model.fields,field_description:bus.field_bus_bus__message
 msgid "Message"
-msgstr ""
+msgstr "សារ"
 
 #. module: bus
-#: selection:bus.presence,status:0
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__offline
 msgid "Offline"
+msgstr "បិទប្រពន្ឋ័សេវា"
+
+#. module: bus
+#: model:ir.model.fields.selection,name:bus.selection__bus_presence__status__online
+msgid "Online"
+msgstr "បើកប្រពន្ឋ័ទាក់ទង"
+
+#. module: bus
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "Refresh"
 msgstr ""
 
 #. module: bus
-#: selection:bus.presence,status:0
-msgid "Online"
+#. openerp-web
+#: code:addons/bus/static/src/js/web_client_bus.js:0
+#, python-format
+msgid "The page appears to be out of date."
 msgstr ""
 
 #. module: bus
 #: model:ir.model,name:bus.model_bus_presence
 msgid "User Presence"
-msgstr ""
+msgstr "វត្តមានរបស់អ្នកប្រើ"
 
 #. module: bus
 #: model:ir.model,name:bus.model_res_users
@@ -126,7 +149,7 @@ msgid "Users"
 msgstr "អ្នកប្រើ"
 
 #. module: bus
-#: code:addons/bus/controllers/main.py:41
+#: code:addons/bus/controllers/main.py:0
 #, python-format
 msgid "bus.Bus not available in test mode"
-msgstr ""
+msgstr "bus.Bus មិនមាននៅក្នុងរបៀបតេស្ត"

@@ -191,7 +191,9 @@ class ProjectCreateSalesOrder(models.TransientModel):
             self._make_billable_at_employee_rate(sale_order)
 
     def _make_billable_at_project_rate(self, sale_order):
+        self.ensure_one()
         task_left = self.project_id.tasks.filtered(lambda task: not task.sale_line_id)
+        ticket_timesheet_ids = self.env.context.get('ticket_timesheet_ids', [])
         for wizard_line in self.line_ids:
             task_ids = self.project_id.tasks.filtered(lambda task: not task.sale_line_id and task.timesheet_product_id == wizard_line.product_id)
             task_left -= task_ids
@@ -211,6 +213,17 @@ class ProjectCreateSalesOrder(models.TransientModel):
                 'product_uom_qty': 0.0,
             })
 
+            if ticket_timesheet_ids and not self.project_id.sale_line_id and not task_ids:
+                # With pricing = "project rate" in project. When the user wants to create a sale order from a ticket in helpdesk
+                # The project cannot contain any tasks. Thus, we need to give the first sale_order_line created to link
+                # the timesheet to this first sale order line.
+                # link the project to the SO line
+                self.project_id.write({
+                    'sale_order_id': sale_order.id,
+                    'sale_line_id': sale_order_line.id,
+                    'partner_id': self.partner_id.id,
+                })
+
             # link the tasks to the SO line
             task_ids.write({
                 'sale_line_id': sale_order_line.id,
@@ -219,19 +232,29 @@ class ProjectCreateSalesOrder(models.TransientModel):
             })
 
             # assign SOL to timesheets
-            self.env['account.analytic.line'].search([('task_id', 'in', task_ids.ids), ('so_line', '=', False)]).write({
+            search_domain = [('task_id', 'in', task_ids.ids), ('so_line', '=', False)]
+            if ticket_timesheet_ids:
+                search_domain = [('id', 'in', ticket_timesheet_ids), ('so_line', '=', False)]
+
+            self.env['account.analytic.line'].search(search_domain).write({
                 'so_line': sale_order_line.id
             })
             sale_order_line.with_context({'no_update_planned_hours': True}).write({
                 'product_uom_qty': sale_order_line.qty_delivered
             })
 
-        # link the project to the SO line
-        self.project_id.write({
-            'sale_order_id': sale_order.id,
-            'sale_line_id': sale_order_line.id,  # we take the last sale_order_line created
-            'partner_id': self.partner_id.id,
-        })
+        if ticket_timesheet_ids and self.project_id.sale_line_id and not self.project_id.tasks and len(self.line_ids) > 1:
+            # Then, we need to give to the project the last sale order line created
+            self.project_id.write({
+                'sale_line_id': sale_order_line.id
+            })
+        else:  # Otherwise, we are in the normal behaviour
+            # link the project to the SO line
+            self.project_id.write({
+                'sale_order_id': sale_order.id,
+                'sale_line_id': sale_order_line.id,  # we take the last sale_order_line created
+                'partner_id': self.partner_id.id,
+            })
 
         if task_left:
             task_left.sale_line_id = False
@@ -296,7 +319,13 @@ class ProjectCreateSalesOrder(models.TransientModel):
         tasks = self.project_id.tasks.filtered(lambda t: not t.non_allow_billable)
         # assign SOL to timesheets
         for map_entry in map_entries:
-            self.env['account.analytic.line'].search([('task_id', 'in', tasks.ids), ('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False)]).write({
+            search_domain = [('employee_id', '=', map_entry.employee_id.id), ('so_line', '=', False)]
+            ticket_timesheet_ids = self.env.context.get('ticket_timesheet_ids', [])
+            if ticket_timesheet_ids:
+                search_domain.append(('id', 'in', ticket_timesheet_ids))
+            else:
+                search_domain.append(('task_id', 'in', tasks.ids))
+            self.env['account.analytic.line'].search(search_domain).write({
                 'so_line': map_entry.sale_line_id.id
             })
             map_entry.sale_line_id.with_context({'no_update_planned_hours': True}).write({

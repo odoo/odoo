@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/messaging_notification_handler/messaging_not
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { one2one } = require('mail/static/src/model/model_field.js');
+const { htmlToTextContentInline } = require('mail.utils');
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -251,9 +252,9 @@ function factory(dependencies) {
                 channel.correspondent === this.env.messaging.partnerRoot
             );
             if (!isChatWithOdooBot) {
-                // Notify if out of focus
                 const isOdooFocused = this.env.services['bus_service'].isOdooFocused();
-                if (!isOdooFocused) {
+                // Notify if out of focus
+                if (!isOdooFocused && channel.isChatChannel) {
                     this._notifyNewChannelMessageWhileOutOfFocus({
                         channel,
                         message,
@@ -428,12 +429,10 @@ function factory(dependencies) {
             } else if (type === 'moderator') {
                 return this._handleNotificationPartnerModerator(data);
             } else if (type === 'simple_notification') {
-                const escapedTitle = owl.utils.escape(data.title);
                 const escapedMessage = owl.utils.escape(data.message);
                 this.env.services['notification'].notify({
                     message: escapedMessage,
                     sticky: data.sticky,
-                    title: escapedTitle,
                     type: data.warning ? 'warning' : 'danger',
                 });
             } else if (type === 'toggle_star') {
@@ -444,7 +443,7 @@ function factory(dependencies) {
                 return this._handleNotificationPartnerUnsubscribe(data.id);
             } else if (type === 'user_connection') {
                 return this._handleNotificationPartnerUserConnection(data);
-            } else {
+            } else if (!type) {
                 return this._handleNotificationPartnerChannel(data);
             }
         }
@@ -501,7 +500,6 @@ function factory(dependencies) {
                         this.env._t("You have been invited to: %s"),
                         owl.utils.escape(channel.name)
                     ),
-                    title: this.env._t("Invitation"),
                     type: 'warning',
                 });
             }
@@ -518,7 +516,7 @@ function factory(dependencies) {
         _handleNotificationPartnerDeletion({ message_ids }) {
             const moderationMailbox = this.env.messaging.moderation;
             for (const id of message_ids) {
-                const message = this.env.models['mail.message'].find(message => message.id === id);
+                const message = this.env.models['mail.message'].findFromIdentifyingData({ id });
                 if (message) {
                     if (
                         message.moderation_status === 'pending_moderation' &&
@@ -571,7 +569,7 @@ function factory(dependencies) {
                 // Furthermore, server should not send back all message_ids marked as read
                 // but something like last read message_id or something like that.
                 // (just imagine you mark 1000 messages as read ... )
-                const message = this.env.models['mail.message'].find(m => m.id === message_id);
+                const message = this.env.models['mail.message'].findFromIdentifyingData({ id: message_id });
                 if (message) {
                     message.update({
                         isNeedaction: false,
@@ -584,10 +582,10 @@ function factory(dependencies) {
             let channels;
             if (channel_ids) {
                 channels = channel_ids
-                    .map(id => this.env.models['mail.thread'].find(thread =>
-                        thread.id === id &&
-                        thread.model === 'mail.channel'
-                    ))
+                    .map(id => this.env.models['mail.thread'].findFromIdentifyingData({
+                        id,
+                        model: 'mail.channel',
+                    }))
                     .filter(thread => !!thread);
             } else {
                 // flux specific: channel_ids unset means "mark all as read"
@@ -630,9 +628,9 @@ function factory(dependencies) {
         _handleNotificationPartnerToggleStar({ message_ids = [], starred }) {
             const starredMailbox = this.env.messaging.starred;
             for (const messageId of message_ids) {
-                const message = this.env.models['mail.message'].find(message =>
-                    message.id === messageId
-                );
+                const message = this.env.models['mail.message'].findFromIdentifyingData({
+                    id: messageId,
+                });
                 if (!message) {
                     continue;
                 }
@@ -675,10 +673,10 @@ function factory(dependencies) {
          * @param {integer} channelId
          */
         _handleNotificationPartnerUnsubscribe(channelId) {
-            const channel = this.env.models['mail.thread'].find(thread =>
-                thread.id === channelId &&
-                thread.model === 'mail.channel'
-            );
+            const channel = this.env.models['mail.thread'].findFromIdentifyingData({
+                id: channelId,
+                model: 'mail.channel',
+            });
             if (!channel) {
                 return;
             }
@@ -700,7 +698,6 @@ function factory(dependencies) {
             channel.update({ isServerPinned: false });
             this.env.services['notification'].notify({
                 message,
-                title: this.env._t("Unsubscribed"),
                 type: 'warning',
             });
         }
@@ -759,7 +756,7 @@ function factory(dependencies) {
                     notificationTitle = owl.utils.escape(authorName);
                 }
             }
-            const notificationContent = message.prettyBody.substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = htmlToTextContentInline(message.body).substr(0, PREVIEW_MSG_MAX_SIZE);
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
             messaging.update({ outOfFocusUnreadMessageCounter: messaging.outOfFocusUnreadMessageCounter + 1 });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1

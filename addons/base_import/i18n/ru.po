@@ -5,10 +5,10 @@
 # Translators:
 # Martin Trigaux, 2020
 # Collex100, 2020
-# Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # Vasiliy Korobatov <korobatov@gmail.com>, 2020
 # ILMIR <karamov@it-projects.info>, 2020
 # Irina Fedulova <istartlin@gmail.com>, 2020
+# Ivan Yelizariev <yelizariev@itpp.dev>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:10+0000\n"
-"Last-Translator: Irina Fedulova <istartlin@gmail.com>, 2020\n"
+"Last-Translator: Ivan Yelizariev <yelizariev@itpp.dev>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -98,7 +98,7 @@ msgstr "Базовое сопоставление импорта"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Batch limit"
-msgstr ""
+msgstr "Разбивка"
 
 #. module: base_import
 #. openerp-web
@@ -112,7 +112,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Cancel"
-msgstr "Отменить"
+msgstr "Отмена"
 
 #. module: base_import
 #. openerp-web
@@ -230,7 +230,7 @@ msgstr "Валюта"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Database ID"
-msgstr "ID базы данных"
+msgstr "Номер в базе данных"
 
 #. module: base_import
 #. openerp-web
@@ -327,14 +327,16 @@ msgstr "Ошибка парсинга данных [ %s: L %d]: %s "
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Everything seems valid."
-msgstr "Все кажется корректным."
+msgstr "Вроде всё правильно"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Excel files are recommended as fields formatting is automatic."
-msgstr "Файлы Excel рекомендуются как автоматическое форматирование полей."
+msgstr ""
+"Удобнее использовать Excel-файлы, чтобы не выбирать вручную параметры "
+"форматирования."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -387,7 +389,7 @@ msgstr "Для файлов CSV вам нужно будет выбрать пр
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Formatting Options…"
-msgstr "Функции форматирования ..."
+msgstr "Параметры форматирования..."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -448,6 +450,8 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Если у данной модели есть комментарии, будут настроены подписки и отправлены"
+" уведомления, но это может сильно замедлить импорт."
 
 #. module: base_import
 #. openerp-web
@@ -461,14 +465,14 @@ msgstr "Импорт"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import FAQ"
-msgstr "импортировать FAQ"
+msgstr "Ответы на часто задаваемые вопросы"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Import a File"
-msgstr "Импортировать файл"
+msgstr "Импорт из файла"
 
 #. module: base_import
 #. openerp-web
@@ -482,7 +486,7 @@ msgstr "Импорт предварительного просмотра не у
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Import records"
-msgstr ""
+msgstr "Импортировать записи"
 
 #. module: base_import
 #. openerp-web
@@ -572,21 +576,21 @@ msgstr "Последнее обновление"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Load File"
-msgstr "Загрузить файл"
+msgstr "Выбрать файл"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Load New File"
-msgstr "Скачать новый файл"
+msgstr "Выбрать другой файл"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Map your columns to import"
-msgstr "Отметьте колонки для импорта"
+msgstr "Распределите столбцы по полям"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__res_model
@@ -604,7 +608,7 @@ msgstr "Название"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Need Help?"
-msgstr "Нужна помощь?"
+msgstr "Не получается?"
 
 #. module: base_import
 #. openerp-web
@@ -669,7 +673,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Select a CSV or Excel file to import."
-msgstr "Выбрать файл CSV или Excel для импорта."
+msgstr "Выберете CSV- или Excel-файл для импорта."
 
 #. module: base_import
 #. openerp-web
@@ -717,7 +721,7 @@ msgstr "Пробел"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Start at line"
-msgstr ""
+msgstr "Начать со строки"
 
 #. module: base_import
 #. openerp-web
@@ -731,7 +735,7 @@ msgstr "Табуляция"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Test"
-msgstr "Тест"
+msgstr "Проверка"
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_tests_models_preview
@@ -822,7 +826,7 @@ msgstr "Ограничитель текста:"
 msgid ""
 "The first row\n"
 "                         contains the label of the column"
-msgstr ""
+msgstr "В первой строке находится шапка таблицы"
 
 #. module: base_import
 #. openerp-web
@@ -836,7 +840,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "This is a preview of the first 10 rows of your file"
-msgstr ""
+msgstr "Показаны первые десять строк файла"
 
 #. module: base_import
 #. openerp-web
@@ -850,7 +854,7 @@ msgstr "Разделитель тысяч:"
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Track history during import"
-msgstr "Отслеживание истории при импорте"
+msgstr "Уведомлять об обновлениях"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

@@ -1575,7 +1575,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
 
         const datepickersOptions = {
-            minDate: moment({ y: 1 }),
+            minDate: moment({ y: 1000 }),
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
             defaultDate: moment().format(),
@@ -2771,6 +2771,12 @@ const SnippetOptionWidget = Widget.extend({
         // Ask a mutexed snippet update according to the widget value change
         const shouldRecordUndo = (!previewMode && !ev.data.isSimulatedEvent);
         this.trigger_up('snippet_edition_request', {exec: async () => {
+            // If some previous snippet edition in the mutex removed the target from
+            // the DOM, the widget can be destroyed, in that case the edition request
+            // is now useless and can be discarded.
+            if (this.isDestroyed()) {
+                return;
+            }
             // Filter actions that are counterbalanced by earlier/later actions
             const actionQueue = this._actionQueues.get(widget).filter(({previewMode}, i, actions) => {
                 const prev = actions[i - 1];
@@ -4005,6 +4011,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
         } else {
             // Remove custom bg image and let the shape class set the bg shape
             $(shapeContainer).css('background-image', '');
+            $(shapeContainer).css('background-position', '');
         }
         if (previewMode === false) {
             this.prevShapeContainer = shapeContainer.cloneNode(true);
@@ -4699,6 +4706,10 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                             key: snippetKey,
                             onSuccess: url => thumbnailURL = url,
                         });
+                        let context;
+                        this.trigger_up('context_get', {
+                            callback: ctx => context = ctx,
+                        });
                         this.trigger_up('request_save', {
                             reloadEditor: true,
                             onSuccess: async () => {
@@ -4718,6 +4729,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                         'template_key': this.options.snippets,
                                         'snippet_key': snippetKey,
                                         'thumbnail_url': thumbnailURL,
+                                        'context': context,
                                     },
                                 });
                             },

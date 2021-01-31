@@ -23,7 +23,7 @@ registerInstancePatchModel('mail.messaging_notification_handler', 'im_livechat/s
         }
         let partnerId;
         let partnerName;
-        if (partner_id === this.env.messaging.publicPartner.id) {
+        if (this.env.messaging.publicPartners.some(publicPartner => publicPartner.id === partner_id)) {
             // Some shenanigans that this is a typing notification
             // from public partner.
             partnerId = channel.correspondent.id;
