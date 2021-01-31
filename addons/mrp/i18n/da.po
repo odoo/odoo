@@ -15,7 +15,7 @@
 # lhmflexerp <lhm@flexerp.dk>, 2019
 # Sanne Kristensen <sanne@vkdata.dk>, 2020
 # Mads Søndergaard, 2020
-# Mads Søndergaard <mads@vkdata.dk>, 2020
+# Mads Søndergaard <mads@vkdata.dk>, 2021
 # 
 msgid ""
 msgstr ""
@@ -23,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2020\n"
+"Last-Translator: Mads Søndergaard <mads@vkdata.dk>, 2021\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -436,7 +436,7 @@ msgid ""
 "An unbuild order is used to break down a finished product into its "
 "components."
 msgstr ""
-"En ordre adskillelse bruges til at nedbryde det færdige produkt til dets "
+"Tilbagefør Produktion bruges til at nedbryde det færdige produkt til dets "
 "komponenter."
 
 #. module: mrp
@@ -929,7 +929,7 @@ msgstr "Opret et ny arbejdsordre præstation"
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
 msgid "Create an unbuild order"
-msgstr "Opret en ordre til adskillelse"
+msgstr "Opret Tilbageførsel af Produktion"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_move__created_production_id
@@ -3864,20 +3864,20 @@ msgstr "Adskil"
 #: model:ir.model,name:mrp.model_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Order"
-msgstr "Adskil ordrer"
+msgstr "Tilbagefør Produktion"
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_unbuild.py:77
 #, python-format
 msgid "Unbuild Order product quantity has to be strictly positive."
-msgstr "Produktmængden ved adskilte ordrer skal være større end 0."
+msgstr "Produktmængden ved Tilbageførte Produktioner skal være større end 0."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_unbuild
 #: model:ir.ui.menu,name:mrp.menu_mrp_unbuild
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_unbuild_form_view
 msgid "Unbuild Orders"
-msgstr "Adskil ordrer"
+msgstr "Tilbagefør Produktion"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
@@ -4461,7 +4461,8 @@ msgstr "Du kan ikke oprette en ny stykliste herfra."
 #: code:addons/mrp/models/mrp_unbuild.py:88
 #, python-format
 msgid "You cannot delete an unbuild order if the state is 'Done'."
-msgstr "Du kan ikke slette en adskillelse ordre hvis status er 'Færdig'."
+msgstr ""
+"Du kan ikke slette en Tilbageført Produktion hvis dens status er 'Færdig'."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_production.py:533
@@ -4480,7 +4481,7 @@ msgstr "Du kan ikke producere det samme serienummer to gange."
 #: code:addons/mrp/models/mrp_unbuild.py:99
 #, python-format
 msgid "You cannot unbuild a undone manufacturing order."
-msgstr "Du kan ikke afmontere en omstødt produktionsordre."
+msgstr "Du kan ikke omstøde en Tilbageført Produktion."
 
 #. module: mrp
 #: code:addons/mrp/wizard/change_production_qty.py:48
