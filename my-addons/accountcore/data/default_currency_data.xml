@@ -1,0 +1,22 @@
+<odoo>
+    <!-- 初始化数据 -->
+    <data noupdate="1">
+        <!-- 币别-开始 -->
+        <record id='ac_currency_1' model='accountcore.ac_currency'>
+            <field name='number' >1</field>
+            <field name='name' >美元</field>
+            <field name="exchange_rate">0.1413</field>
+        </record>
+        <record id='ac_currency_2' model='accountcore.ac_currency'>
+            <field name='number' >2</field>
+            <field name='name' >人民币</field>
+            <field name="exchange_rate">1.0</field>
+        </record>
+        <record id='ac_currency_3' model='accountcore.ac_currency'>
+            <field name='number' >3</field>
+            <field name='name' >日元</field>
+            <field name="exchange_rate">15.0980</field>
+        </record>
+        <!-- 币别-结束 -->
+    </data>
+</odoo>

@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="fastreport_designer_action" model="ir.actions.act_window">
+            <field name="name">fastreport.designer.action</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">fastreport.designer</field>
+            <field name="view_mode">form</field>
+            <field name="target">current</field>
+        </record>
+        
+        <record id="act_report_xml_view" model="ir.ui.view">
+            <field name="name">ir.actions.report.fastreport</field>
+            <field name="model">ir.actions.report</field>
+            <field name="inherit_id" ref="base.act_report_xml_view"/>
+            <field name="arch" type="xml">
+                <field name="report_name" position="after">
+                    <field name="fastreport_output"/>
+                    <button string="Update from attachments" name="update" type="object" colspan="2"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="act_report_fastreport_file_form" model="ir.ui.view">
+            <field name="name">ir.actions.report.fastreport.file.form</field>
+            <field name="model">fastreport.template.content</field>
+            <field name="arch" type="xml">
+                <form string="FastReport Reports File">
+                    <group col="4" colspan="4">
+<!--                        <field name="file" string="Select .frx file" filename="filename"/>-->
+                        <field name="file" string="Select .frx file"/>
+                        <field name="filename"/>
+                        <field name="default"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record id="act_report_fastreport_file_tree" model="ir.ui.view">
+            <field name="name">ir.actions.report.fastreport.file.tree</field>
+            <field name="model">fastreport.template.content</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="file"/>
+                    <field name="filename"/>
+                    <field name="default"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="act_report_fastreport_form" model="ir.ui.view">
+            <field name="name">ir.actions.report.fastreport.form</field>
+            <field name="model">ir.actions.report</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="FastReport Reports">
+                    <header>
+                         <button type="action" string="设计报表" class="oe_hightlight"
+                                    name="%(fastreport_odoo.fastreport_designer_action)d" />
+                         <button type="object" string="获取字段" name="design_field"></button>
+                         <button type="object" string="清空字段" name="empty_field"></button>
+                         <button type="object" string="读取报表结构" name="read_report_structure"></button>
+                         <button type="object" string="获取报表数据" name="transfer_report_data"></button>
+                    </header>
+                    <group colspan="4" col='4'>
+                        <field name="name"/>
+                        <field name="model_id" required="True" readonly="False"/>
+                        <field name="report_name" string="Report Name"/>
+                        <field name="report_cate_id" string="报表类别"/>
+                        <field name="fastreport_output" required="True"/>
+                        <field name="fastreport_report" invisible='1'/>
+                    </group>
+                    <group colspan="4" col='4'>
+                        <field name="attachment"/>
+                        <field name="attachment_use"/>
+                    </group>
+                    <group colspan="4" col='4'>
+                        <field name="is_enable"></field>
+                        <field name="rule"></field>
+                        <field name="is_download" ></field>
+                        <field name="is_client_open"></field>
+                    </group>
+                    <group>
+                        <button name="jump_multiple_tree" string="字段多选" type="object"></button>
+                    </group>
+                    <notebook>
+                        <page string="字段">
+                            <field name="field_option_ids" colspan="4" nolabel="1" string="字段">
+                                <tree decoration-danger="child_count ==0 and relevance_model!=False" editable="bottom">
+                                    <field name="name_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                    <field name="alias"/>
+                                    <field name="name" invisible="1"/>
+                                    <field name="child_count" attrs="{'invisible': [('relevance_model','&lt;',1)]}"/>
+                                    <field name="ttype"/>
+                                    <field name="parent_model_id" invisible="1"/>
+                                    <field name="relevance_model"/>
+                                    <button type="object" name="delete" string="删除字段"></button>
+                                    <button type="object" name="form_button" string="获取关联字段"></button>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Files">
+                            <field name="fastreport_file_ids" colspan="4" nolabel="1">
+                                <form string="FastReport Reports File">
+                                    <group col="4" colspan="4">
+                                        <field name="file" filename="filename" string="Upload .frx file"/>
+                                        <field name="filename"/>
+                                        <field name="default"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </page>
+                        <page string="Groups">
+                            <field name="groups_id" colspan="4" nolabel="1"/>
+                        </page>
+                        <page string="参数">
+                            <field name="children_information_ids">
+                                <tree>
+                                    <field name="name"></field>
+                                    <field name="code"></field>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="infor_mation_form1" model="ir.ui.view">
+            <field name="name">report.parameter.form</field>
+            <field name="model">report.parameter</field>
+            <field name="arch" type="xml">
+                <form string="字段属性">
+                    <group>
+                        <field name="name"></field>
+                        <field name="code" style="height:100px !imporntant"></field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="ir_actions_view_report_search" model="ir.ui.view">
+            <field name="name">ir actions report 搜索tree视图</field>
+            <field name="model">ir.actions.report</field>
+            <field name="arch" type="xml">
+                 <search>
+                     <searchpanel>
+                         <field name="report_cate_id" icon="fa-users" enable_counters="1" ></field>
+                     </searchpanel>
+                </search>
+            </field>
+        </record>
+
+<!--        <record id="ir_actions_view_field_option_search" model="ir.ui.view">-->
+<!--            <field name="name">field option 搜索tree视图</field>-->
+<!--            <field name="model">field.option</field>-->
+<!--            <field name="arch" type="xml">-->
+<!--                 <search>-->
+<!--                     <field name="name_id" icon="fa-users"></field>-->
+<!--                </search>-->
+<!--            </field>-->
+<!--        </record>-->
+
+        <record id="act_report_fastreport_form1" model="ir.ui.view">
+            <field name="name">field.option.fastreport.form1</field>
+            <field name="model">field.option</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <form string="FastReport Reports">
+                    <group>
+                        <field name="relevance_model" />
+                        <field name="parent_model_id" invisible="1" />
+                        <field name="name_id" />
+                        <field name="child_count" />
+                        <field name="field_option_id" invisible="1"/>
+                        <field name="report_id" invisible="1" />
+                    </group>
+                    <group>
+                        <button name="jump_multiple_tree" string="字段多选" type="object"></button>
+                        <button type="object" string="获取字段" name="design_fields"></button>
+                        <button type="object" string="清空字段" name="empty_fields"></button>
+                    </group>
+                    <group colspan="4">
+                        <field name="children_ids">
+                            <tree editable="bottom" decoration-danger="child_count ==0 and relevance_model!=False" edit="true">
+                                <field name="name_id" options="{'no_create':True,'no_create_edit':True,'no_open':True}"/>
+                                <field name="alias"/>
+                                <field name="name" invisible="1"/>
+                                <field name="child_count" attrs="{'invisible': [('relevance_model','&lt;',1)]}"/>
+                                <field name="ttype"/>
+                                <field name="parent_model_id" invisible="1"/>
+                                <field name="relevance_model"/>
+                                <button type="object" name="delete" string="删除字段"></button>
+                                <button type="object" name="form_button" string="获取关联字段"></button>
+                            </tree>
+                        </field>
+                    </group>
+                    <footer>
+                        <button string="保存" special="save" ></button>
+                        <button string="丢弃" special="cancel" ></button>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="act_report_fastreport_tree" model="ir.ui.view">
+            <field name="name">ir.actions.report.fastreport.tree</field>
+            <field name="model">ir.actions.report</field>
+            <field name="priority">20</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="report_name"/>
+                    <field name="report_cate_id" context="{'report_cate_id':'report_cate_id.id'}"/>
+                    <field name="fastreport_output"/>
+                    <field name="attachment"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="ir_action_report_fastreport" model="ir.actions.act_window">
+            <field name="name">FastReport Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">ir.actions.report</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'default_fastreport_report': True,'fastreport_report':True}</field>
+            <field name="domain">[('fastreport_report','=',True)]</field>
+            <field name="target">main</field>
+        </record>
+        
+        <record id="ir_action_report_fastreport_view0" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="ir_action_report_fastreport"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="act_report_fastreport_tree"/>
+            <field name="sequence">0</field>
+        </record>
+        
+        <record id="ir_action_report_fastreport_view1" model="ir.actions.act_window.view">
+            <field name="act_window_id" ref="ir_action_report_fastreport"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="act_report_fastreport_form"/>
+            <field name="sequence">1</field>
+        </record>
+        
+        <menuitem action="ir_action_report_fastreport"
+            id="menu_ir_action_report_fastreport"
+            parent="fastreport_reports_menu"
+            sequence="1"/>
+       
+    </data>
+</odoo>

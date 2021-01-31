@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 3.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sale_order_report" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Empty">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="ODOO_RELATIONS" value="[&apos;order_line&apos;]"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Jasper Odoo Quotation"/>
+	<queryString language="xPath">
+		<![CDATA[data/record]]>
+	</queryString>
+	<field name="Order_Reference-name" class="java.lang.String">
+		<fieldDescription><![CDATA[Order_Reference-name]]></fieldDescription>
+	</field>
+	<field name="Date-date_order" class="java.lang.String">
+		<fieldDescription><![CDATA[Date-date_order]]></fieldDescription>
+	</field>
+	<field name="Name-display_name" class="java.lang.String">
+		<fieldDescription><![CDATA[Customer-partner_id/Name-display_name]]></fieldDescription>
+	</field>
+	<field name="Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[Order_Lines-order_line/Product-product_id/Name-name]]></fieldDescription>
+	</field>
+	<field name="Unit_Price-price_unit" class="java.lang.String">
+		<fieldDescription><![CDATA[Order_Lines-order_line/Unit_Price-price_unit]]></fieldDescription>
+	</field>
+	<field name="Total-amount_total" class="java.lang.String">
+		<fieldDescription><![CDATA[Total-amount_total]]></fieldDescription>
+	</field>
+	<field name="Quantity-product_uom_qty" class="java.lang.String">
+		<fieldDescription><![CDATA[Order_Lines-order_line/Quantity-product_uom_qty]]></fieldDescription>
+	</field>
+	<field name="Subtotal-price_subtotal" class="java.lang.String">
+		<fieldDescription><![CDATA[Order_Lines-order_line/Subtotal-price_subtotal]]></fieldDescription>
+	</field>
+	<field name="ID-id" class="java.lang.String">
+		<fieldDescription><![CDATA[ID-id]]></fieldDescription>
+	</field>
+	<variable name="INITIAL" class="java.lang.String">
+		<variableExpression><![CDATA[$V{prev_id}]]></variableExpression>
+		<initialValueExpression><![CDATA[new BigDecimal(0)]]></initialValueExpression>
+	</variable>
+	<variable name="prev_id" class="java.lang.String">
+		<variableExpression><![CDATA[$F{ID-id}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="92">
+			<printWhenExpression><![CDATA[!$V{INITIAL}.equals($V{prev_id})]]></printWhenExpression>
+			<staticText>
+				<reportElement mode="Transparent" x="176" y="32" width="202" height="29"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="19" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sale Order Report]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="455" y="0" width="100" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="1" y="1" width="135" height="47"/>
+				<imageExpression class="java.lang.String"><![CDATA["http://serpentcs.com/logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="170">
+			<printWhenExpression><![CDATA[!$F{Name-display_name}.equals("Name-display_name")]]></printWhenExpression>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="63" y="16" width="200" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Order_Reference-name}.equals("Order_Reference-name") ? "" : $F{Order_Reference-name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="110" y="64" width="100" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Date-date_order}.equals("Date-date_order") || $V{INITIAL}.equals($V{prev_id}) ? "" : new SimpleDateFormat("dd/MM/yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{Date-date_order}))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement isPrintRepeatedValues="false" x="23" y="144" width="510" height="1" isRemoveLineWhenBlank="true" forecolor="#9C9A9A">
+					<printWhenExpression><![CDATA[!$V{INITIAL}.equals($V{prev_id})]]></printWhenExpression>
+				</reportElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="0" y="16" width="63" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) ? "" : "Order : "]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="0" y="64" width="110" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) ? "" :  "Order Date :"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="24" y="118" width="100" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) ? "" : "Product"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="180" y="118" width="100" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) ? "" : "Quantity"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="312" y="118" width="100" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) ? "" : "Price"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="434" y="118" width="100" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) ? "" : "Subtotal"]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="277" y="16" width="103" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) ? "" : "Customer :"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="24" y="150" width="155" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : $F{Name-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="180" y="150" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Quantity-product_uom_qty}.equals("Quantity-product_uom_qty") ? "" : Float.valueOf( $F{Quantity-product_uom_qty} )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="311" y="150" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Unit_Price-price_unit}.equals("Unit_Price-price_unit") ? "" :  Float.valueOf( $F{Unit_Price-price_unit} )]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="16" width="163" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{INITIAL}.equals($V{prev_id}) || $F{Name-display_name}.equals("Name-display_name") ? "" : $F{Name-display_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="433" y="150" width="100" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Subtotal-price_subtotal}.equals("Subtotal-price_subtotal") ? "" :  Float.valueOf( $F{Subtotal-price_subtotal} )]]></textFieldExpression>
+			</textField>
+			<break>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="555" height="1" isRemoveLineWhenBlank="true">
+					<printWhenExpression><![CDATA[!$V{INITIAL}.equals($V{prev_id})]]></printWhenExpression>
+				</reportElement>
+			</break>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20">
+			<textField>
+				<reportElement x="430" y="0" width="100" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[Float.valueOf( $F{Total-amount_total} )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="373" y="0" width="58" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single">
+					<font size="17" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total :]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="68">
+			<textField>
+				<reportElement x="205" y="21" width="80" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="286" y="21" width="40" height="20"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

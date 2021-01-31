@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <!-- form- 批量修改机构/主体组名向导 -->
+        <record id="accountcore_org_change_class_form" model="ir.ui.view">
+            <field name="name">批量改变机构/主体组名</field>
+            <field name="model">accountcore.org_change_class</field>
+            <field name="arch" type="xml">
+                <form>
+                        <group>
+                            <field name="org_class" />
+                        </group>
+                    <footer>
+                        <button name="do" type="object" string="确定" class='btn-primary' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-批量修改机构/主体组名向导-->
+        <act_window id="accountcore_org_change_class_action" name="改变组名" binding_model="accountcore.org" res_model="accountcore.org_change_class" view_mode="form" target="new" />
+    </data>
+</odoo>

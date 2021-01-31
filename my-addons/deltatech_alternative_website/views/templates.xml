@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template
+            id="product_item_code"
+            inherit_id="website_sale.products_item"
+            name="Internal code"
+            customize_show="True"
+        >
+            <xpath expr="//div[@itemprop='offers']" position="before">
+                <div t-if="product.default_code">
+                    <span itemprop="productID" t-field="product.default_code" class="text-muted" />
+                </div>
+            </xpath>
+        </template>
+        <template id="product_code" inherit_id="website_sale.product" name="Internal code" customize_show="True">
+            <xpath expr="//h1[@t-field='product.name']" position="after">
+                <div t-if="product.default_code">
+                    <span>Code</span>
+                    <span itemprop="productID" t-field="product.default_code" />
+                </div>
+                <span t-if="product.barcode" itemprop="gtin" style="display:none;" t-field="product.barcode" />
+            </xpath>
+        </template>
+        <template
+            id="product_alterantive_code"
+            inherit_id="website_sale.product"
+            active="True"
+            customize_show="True"
+            name="Alternative code"
+        >
+            <xpath expr="//hr[@t-if='product.description_sale']" position="before">
+                <t t-foreach="product.alternative_ids" t-as="alternative">
+                    <span itemprop="alternateName" style="display:none;" t-field="alternative.name" />
+                </t>
+                <t t-if="website.user_id != user_id">
+                    <t t-if="product.alternative_code">
+                        <hr />
+                        <div>
+                            <span>Alternative code:</span>
+                            <span itemprop="alternateName" t-field="product.alternative_code" />
+                        </div>
+                    </t>
+                </t>
+            </xpath>
+        </template>
+        <template
+            id="product_used_for"
+            inherit_id="website_sale.product"
+            active="True"
+            customize_show="True"
+            name="Used For"
+        >
+            <xpath expr="//hr[@t-if='product.description_sale']" position="after">
+                <t t-if="product.used_for">
+                    <div>
+                        <span>User for:</span>
+                        <span itemprop="isConsumableFor" t-field="product.used_for" class="text-muted" />
+                    </div>
+                    <hr />
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

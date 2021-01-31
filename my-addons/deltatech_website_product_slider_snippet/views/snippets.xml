@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="s_products_slider" name="Products Slider">
+        <section
+            class="s_wsale_products_slider d-none pt24 pb24"
+            style="min-height: 400px;"
+            data-id="0"
+            data-object="product.list"
+        >
+            <div class="container">
+                <div
+                    class="alert alert-info alert-dismissible rounded-0 fade show d-print-none css_non_editable_mode_hidden o_not_editable"
+                >
+                    This is a preview of the slider products .
+                    <br />
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">×</button>
+                </div>
+                <h3 class="text-center mb32">Products slider</h3>
+                <div class="slider o_not_editable" style="display: none;" />
+                <!-- TODO master: remove deprecated inline style -->
+            </div>
+        </section>
+    </template>
+    <template id="snippets" inherit_id="website.snippets" name="e-commerce snippets">
+        <xpath expr="//div[@id='snippet_feature']//t[@t-snippet][last()]" position="after">
+            <t
+                t-snippet="deltatech_website_product_slider_snippet.s_products_slider"
+                t-thumbnail="/deltatech_website_product_slider_snippet/static/src/img/s_products_slider.png"
+            />
+        </xpath>
+        <xpath expr="//div[@id='snippet_options']" position="inside">
+            <div
+                data-js='edit_product_list'
+                data-selector=".s_wsale_products_slider"
+                data-drop-near="p, h1, h2, h3, blockquote, .card"
+            >
+                <a class="dropdown-item" data-select_product_list="" data-no-preview="true">Change Product List</a>
+            </div>
+        </xpath>
+    </template>
+</odoo>

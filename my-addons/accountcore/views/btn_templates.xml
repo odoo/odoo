@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- 凭证的核算项目容器 -->
+    <t t-name="accountcore_voucher_choice_items">
+        <div class="container ac-items-choice">
+        </div>
+    </t>
+    <!-- 凭证列表排序按钮-->
+    <t t-name="accountcore.voucher_sort_by_number">
+        <button class='btn btn-secondary ac_voucher_number_sort' type="button" style="margin-left:5px">策略号排序</button>
+    </t>
+    <!-- 科目期初平衡检查按钮 -->
+    <t t-name="accountcore.check_balance">
+        <button class="btn btn-secondary ac_balance_check" type="button">平衡检查</button>
+    </t>
+    <!-- 快速选取期间 \addons\accountcore\static\js\accountcore.js\server\addons\accountcore\static\js\accountcore.js-->
+    <t t-name="accountcore_fast_period">
+        <center>
+            <button type="button" class="btn btn-sm" >上月</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">本月</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">本年</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">去年</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">本季</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">上季</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">去年上半年</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">去年下半年</button>
+            <button type="button" class="btn btn-sm" style="margin-left:1.5em">今年上半年</button>
+        </center>
+    </t>
+    <!--列表视图导出excel按钮 -->
+    <t t-name="accountcore.list2excel_t">
+        <button class="btn btn-secondary fa fa-download" type="button" title='导出EXCEL'>EXCEL</button>
+    </t>
+</templates>
+
+

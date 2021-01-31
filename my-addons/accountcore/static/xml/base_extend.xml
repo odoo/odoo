@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+<!-- 科目余额表和明细账等查询向导中机构的展现方式 -->
+<t t-name="FieldMany2ManyCheckBoxes_flowToLeft">
+    <div aria-atomic="true">
+    <button type='button' class="btn btn-sm btn-dark choose_all" >全选</button>
+        <div t-foreach="widget.m2mValues" t-as="m2m_value" >
+            <t t-set="id_for_label" t-value="'o_many2many_checkbox_' + _.uniqueId()"/>
+            <div class="custom-control custom-checkbox" style="float:left;width:32%;" >
+                <input type="checkbox" t-att-id="id_for_label" class="custom-control-input" t-att-data-record-id="JSON.stringify(m2m_value[0])"/>
+                <label t-att-for="id_for_label" class="custom-control-label o_form_label"><t t-esc="m2m_value[1]"/></label>
+            </div>
+        </div>
+        <script>
+$(function () {
+    $('.choose_all').on('click', function () {
+        var checkboxs = $('[name="orgs"]').find('[type="checkbox"]');
+        if ($(this).text() == '全选') {
+            checkboxs.each(function () {
+                $(this).prop('checked', true);
+                $(this).trigger('change');
+            });
+            $(this).text("取消");
+        } else {
+            checkboxs.each(function () {
+                $(this).prop('checked', false);
+                <!-- $(this).trigger('change'); -->
+            });
+            checkboxs.trigger('change');
+            $(this).text("全选");
+        }
+    });
+});
+        </script>
+        
+    </div>  
+</t>
+<!-- 自定义按钮，用于ac_btn_trigger_onchange等小部件 -->
+<t t-name="accountcor.ac_btn">
+<button class='btn btn-secondary'><span>自定义按钮</span></button>
+</t>
+</templates>

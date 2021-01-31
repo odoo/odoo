@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report ScriptLanguage="CSharp" DoublePass="true" ReportInfo.Created="12/30/2020 13:47:12" ReportInfo.Modified="12/30/2020 13:52:09" ReportInfo.CreatorVersion="2019.3.5.0">
+  <Dictionary>
+    <TableDataSource Name="khInfoDSet" ReferenceName="khInfoDSet" DataType="System.Int32" Enabled="true">
+      <Column Name="_identify" DataType="System.Int32"/>
+      <Column Name="khid" DataType="System.Int32"/>
+      <Column Name="工厂款号" DataType="System.String"/>
+      <Column Name="楦头号" DataType="System.String"/>
+      <Column Name="码段" DataType="System.String"/>
+      <Column Name="标准码段" DataType="System.String"/>
+      <Column Name="选择码段" DataType="System.String"/>
+      <Column Name="映射码段" DataType="System.String"/>
+      <Column Name="鞋码标准" DataType="System.String"/>
+      <Column Name="_Locked" DataType="System.Boolean" BindableControl="CheckBox"/>
+      <Column Name="System_Sort_Temporary" DataType="System.Int32"/>
+      <Column Name="System_Filter_Temporary" DataType="System.Int32"/>
+      <Column Name="System_Filter_Unique" DataType="System.Int32"/>
+    </TableDataSource>
+  </Dictionary>
+  <ReportPage Name="Page1" Watermark.Font="宋体, 60pt">
+    <PageHeaderBand Name="PageHeader1" Width="718.2" Height="85.05">
+      <TextObject Name="Text1" Left="245.7" Top="9.45" Width="226.8" Height="47.25" Text="测试报表" HorzAlign="Center" VertAlign="Center" Font="宋体, 24pt, style=Bold"/>
+      <TextObject Name="Text3" Left="9.45" Top="66.15" Width="160.65" Height="18.9" Text="工厂款号" HorzAlign="Center" VertAlign="Center" Font="宋体, 10pt"/>
+      <TextObject Name="Text5" Left="170.1" Top="66.15" Width="160.65" Height="18.9" Text="码段" HorzAlign="Center" VertAlign="Center" Font="宋体, 10pt"/>
+    </PageHeaderBand>
+    <DataBand Name="Data1" Top="88.38" Width="718.2" Height="18.9" DataSource="khInfoDSet">
+      <TextObject Name="Text2" Left="9.45" Width="160.65" Height="18.9" Text="[khInfoDSet.工厂款号]" HorzAlign="Center" VertAlign="Center" Font="宋体, 10pt"/>
+      <TextObject Name="Text4" Left="170.1" Width="160.65" Height="18.9" Text="[khInfoDSet.码段]" HorzAlign="Center" VertAlign="Center" Font="宋体, 10pt"/>
+    </DataBand>
+    <PageFooterBand Name="PageFooter1" Top="110.62" Width="718.2" Height="28.35">
+      <TextObject Name="Text6" Left="236.25" Top="9.45" Width="226.8" Height="18.9" Text="[PageNofM]" HorzAlign="Center" VertAlign="Center" Font="宋体, 10pt"/>
+    </PageFooterBand>
+  </ReportPage>
+</Report>

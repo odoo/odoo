@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="app_view_translation_tree" model="ir.ui.view">
+        <field name="name">app.ir.translation.tree</field>
+        <field name="model">ir.translation</field>
+        <field name="inherit_id" ref="base.view_translation_tree"/>
+        <field name="arch" type="xml">
+            <field name="value" position="after">
+                <field name="module" readonly="1"/>
+            </field>
+        </field>
+    </record>
+    <record id="app_view_translation_search" model="ir.ui.view">
+        <field name="name">app.ir.translation.search</field>
+        <field name="model">ir.translation</field>
+        <field name="inherit_id" ref="base.view_translation_search"/>
+        <field name="arch" type="xml">
+            <field name="value" position="after">
+                <field name="module"/>
+            </field>
+        </field>
+    </record>
+</odoo>

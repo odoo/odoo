@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="portrait_header" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="792" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.366026910730142"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="DOCUMENT" class="java.lang.String"/>
+	<parameter name="LANG" class="java.lang.String"/>
+	<parameter name="REWIND" class="java.lang.Object">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[$P{REPORT_DATA_SOURCE}.moveFirst()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="WITH_DATE" class="java.lang.Boolean"/>
+	<queryString language="xPath">
+		<![CDATA[]]>
+	</queryString>
+	<field name="street" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/Carrer-street]]></fieldDescription>
+	</field>
+	<field name="street2" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/Carrer2-street2]]></fieldDescription>
+	</field>
+	<field name="zip" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/C.P.-zip]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/Ciutat-city]]></fieldDescription>
+	</field>
+	<field name="state" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/Provincia-state_id/name]]></fieldDescription>
+	</field>
+	<field name="country" class="java.lang.Object">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/Pais-country_id/name]]></fieldDescription>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/Telefon-phone]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Empresa-partner_id/Contactes-address/Email-email]]></fieldDescription>
+	</field>
+	<field name="logo" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/User-User/Companyia-company_id/Logo-logo]]></fieldDescription>
+	</field>
+	<field name="Usuario-login" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Usuario-User/Usuario-login]]></fieldDescription>
+	</field>
+	<field name="lang" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Empresa-partner_id/Idioma-lang]]></fieldDescription>
+	</field>
+	<field name="Nombre-name" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Usuario-User/Compania-company_id/Empresa-partner_id/Nombre-name]]></fieldDescription>
+	</field>
+	<field name="CIF_NIF-vat" class="java.lang.String">
+		<fieldDescription><![CDATA[/data/record/Usuario-User/Compania-company_id/Empresa-partner_id/CIF_NIF-vat]]></fieldDescription>
+	</field>
+	<variable name="now" class="java.util.Date" calculation="Count">
+		<variableExpression><![CDATA[new Date()]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="L" class="java.util.Locale">
+		<variableExpression><![CDATA[$F{lang} != null && $F{lang}.length() == 5 ? new Locale( $F{lang}.substring(0,2), $F{lang}.substring(3,5) ) : ( $F{lang} != null && $F{lang}.length() == 2 ? new Locale( $F{lang}.substring(0,2) ) : $P{REPORT_LOCALE} )]]></variableExpression>
+		<initialValueExpression><![CDATA[$F{lang} != null && $F{lang}.length() == 5 ? new Locale( $F{lang}.substring(0,2), $F{lang}.substring(3,5) ) : ( $F{lang} != null && $F{lang}.length() == 2 ? new Locale( $F{lang}.substring(0,2) ) : $P{REPORT_LOCALE} )]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="54" splitType="Stretch">
+			<image onErrorType="Icon">
+				<reportElement x="0" y="2" width="173" height="52"/>
+				<imageExpression class="java.lang.String"><![CDATA[$F{logo}]]></imageExpression>
+			</image>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="596" y="11" width="181" height="15"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{DOCUMENT}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="175" y="14" width="176" height="31" forecolor="#666666"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{street} + " " + $F{street2} + " \n" +
+$F{zip} + " " + $F{city} + " (" + $F{state} + ") " + $F{country}.get($P{LANG}) + "\n" +
+"e-mail: " + $F{email}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="2" width="186" height="12"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Nombre-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="42" width="74" height="12" forecolor="#666666"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CIF_NIF-vat}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="173" y="2" width="1" height="52" forecolor="#666666"/>
+			</line>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

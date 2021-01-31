@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="xreport_param_wizard_form" model="ir.ui.view">
+            <field name="name">xreport.param.wizard.form</field>
+            <field name="model">academy.report.param.wizard</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="name"/>
+                    </group>                  
+                    <footer>
+                        <button name="action_ok" type="object" string="确定" class="oe_highlight"/>
+                        <button string="取消" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

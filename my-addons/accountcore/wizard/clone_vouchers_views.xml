@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <!-- form- 克隆凭证向导 -->
+        <record id="accountcore_clone_vouchers_form" model="ir.ui.view">
+            <field name="name">克隆凭证向导</field>
+            <field name="model">accountcore.clone_vouchers</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                        <group>
+                            <field name="org" string='克隆到该机构/主体' options="{'no_create_edit':1,'no_create':1,'no_open':1}" ></field>
+                            <field name="voucherdate"></field>
+                            <field name="real_date"></field>
+                            <field name="copy_appendixCount" />
+                            <field name="copy_v_number" />
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="do" type="object" string="开始克隆" class='btn-primary' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-打开克隆凭证向导-->
+        <act_window id="accountcore_clone_vouchers_action" name="克隆凭证" binding_model="accountcore.voucher" res_model="accountcore.clone_vouchers" view_mode="form" target="new" />
+    </data>
+</odoo>

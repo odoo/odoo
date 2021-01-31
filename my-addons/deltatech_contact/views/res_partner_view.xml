@@ -1,0 +1,130 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="deltatech_res_partner_form_view" model="ir.ui.view">
+            <field name="name">deltatech.res.partner.form</field>
+            <field name="model">res.partner</field>
+            <field name="type">form</field>
+            <field name="priority">99</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+                <field name="is_company" position="after">
+                    <field name="is_department" invisible="1" />
+                </field>
+                <field name="function" position="replace">
+                    <field
+                        name="function"
+                        placeholder="e.g. Sales Director"
+                        attrs="{'invisible': ['|',('is_company','=', True),('is_department','=',True)]}"
+                    />
+                </field>
+                <xpath expr="//field[@name='vat']" position="after">
+                    <field
+                        name="id_nr"
+                        attrs="{'invisible': ['|',('is_company','=', True),('type','!=', 'contact'),]}"
+                    />
+                    <field
+                        name="id_issued_by"
+                        placeholder="SPCLEP .."
+                        attrs="{'invisible': ['|',('is_company','=', True),('type','!=', 'contact') ]}"
+                    />
+                    <field name="cnp" attrs="{'invisible': ['|',('is_company','=', True),('type','!=', 'contact') ]}" />
+                    <field
+                        name="birthdate"
+                        attrs="{'invisible': ['|',('is_company','=', True),('type','!=', 'contact') ]}"
+                    />
+                    <field
+                        name="gender"
+                        attrs="{'invisible': ['|',('is_company','=', True),('type','!=', 'contact') ]}"
+                    />
+                </xpath>
+                <xpath expr="//field[@name='ref']" position="after">
+                    <field
+                        name="mean_transp"
+                        attrs="{'invisible': ['|',('is_company','=', True),('is_department','=',False)]}"
+                    />
+                </xpath>
+                <xpath expr="//kanban//field[@name='is_company']" position="after">
+                    <field name="is_department" />
+                </xpath>
+                <!--
+                <xpath expr="//t[@t-if='record.is_company.raw_value === false']" position="replace">
+                    <t t-if="record.is_company.raw_value === false">
+                        <t t-if="record.is_department.raw_value == false">
+                            <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_image" />
+                        </t>
+                        <t t-if="record.is_department.raw_value != false">
+                            <img t-att-src='_s + "/deltatech_contact/static/src/img/partner_group.png"' class="oe_kanban_image" />
+                        </t>
+                    </t>
+                </xpath>
+                 -->
+                <xpath expr="//field[@name='child_ids']/form/sheet/group" position="inside">
+                    <group colspan="5" name="person_id" attrs="{'invisible': [('type','!=', 'contact') ]}">
+                        <field name="id_nr" />
+                        <field name="id_issued_by" placeholder="SPCLEP .." />
+                        <field name="cnp" />
+                        <field name="birthdate" />
+                        <field name='gender' />
+                        <field name='is_department' invisible="1" />
+                        <field name='is_company' invisible="1" />
+                        <field name="mean_transp" />
+                    </group>
+                </xpath>
+                <!--Pentru eroarea care apare cand numele este gol-->
+                <xpath expr="//field[@name='child_ids']/form/sheet//field[@name='name']" position="replace">
+                    <field name="name" string="Contact Name" required="1" />
+                </xpath>
+            </field>
+        </record>
+        <record id="view_partner_simple_form" model="ir.ui.view">
+            <field name="name">res.partner.simplified.form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_simple_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//form" position="inside">
+                    <group
+                        name="person_id"
+                        attrs="{'invisible': ['|',('is_company','=', True),('is_department','=',True)]}"
+                    >
+                        <field name="id_nr" />
+                        <field name="id_issued_by" placeholder="SPCLEP .." />
+                        <field name="cnp" />
+                        <field name="birthdate" />
+                        <field name='gender' />
+                        <field name='is_department' invisible="1" />
+                        <field name="mean_transp" />
+                    </group>
+                </xpath>
+            </field>
+        </record>
+        <!-- Partner Kanban View -->
+        <record model="ir.ui.view" id="deltatech_res_partner_kanban_view">
+            <field name="name">deltatech.res.partner.kanban</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.res_partner_kanban_view" />
+            <field name="arch" type="xml">
+                <field name="is_company" position="after">
+                    <field name="vat" />
+                    <field name="is_department" />
+                </field>
+                <xpath expr="//div[hasclass('oe_kanban_details')]//ul/li" position="after">
+                    <li t-if="record.vat">
+                        <field name="vat" attrs="{'invisible': [('is_company','=', False)]}" />
+                    </li>
+                </xpath>
+                <!--                <xpath expr="//t[@t-if='record.is_company.raw_value === false']" position="replace">-->
+                <!--                    <t t-if="record.is_company.raw_value === false">-->
+                <!--                        <t t-if="record.is_department.raw_value == false">-->
+                <!--                            <img t-att-src='_s + "/base/static/img/avatar.png"' class="oe_kanban_image" alt="Avatar"/>-->
+                <!--                        </t>-->
+                <!--                        <t t-if="record.is_department.raw_value != false">-->
+                <!--                            <img t-att-src='_s + "/deltatech_contact/static/src/img/partner_group.png"' alt="Avatar"-->
+                <!--                                 class="oe_kanban_image"/>-->
+                <!--                        </t>-->
+                <!--                    </t>-->
+                <!--                </xpath>-->
+            </field>
+        </record>
+    </data>
+</odoo>

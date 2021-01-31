@@ -1,0 +1,2236 @@
+<odoo>
+    <!-- 初始化数据 -->
+    <data noupdate="1">
+        <record id='base.CNY' model="res.currency">
+            <field name="active">1</field>
+        </record>
+        <!-- 全局标签类别-开始 -->
+        <record id='glob_tag_class_2' model='accountcore.glob_tag_class'>
+            <field name='name' >演示数据类</field>
+        </record>
+        <record id='glob_tag_class_3' model='accountcore.glob_tag_class'>
+            <field name='name' >基础系统内置类</field>
+        </record>
+        <record id='glob_tag_class_4' model='accountcore.glob_tag_class'>
+            <field name='name' >关联事项类</field>
+        </record>
+        <record id='glob_tag_class_5' model='accountcore.glob_tag_class'>
+            <field name='name' >核算方案类</field>
+        </record>
+        <record id='glob_tag_class_6' model='accountcore.glob_tag_class'>
+            <field name='name' >对应机构/主体类</field>
+        </record>
+        <!-- 全局标签类别-结束 -->
+        <!-- 全局标签-开始 -->
+        <record id='glob_tag_3' model='accountcore.glob_tag'>
+            <field name='name' >基础系统</field>
+            <field name='application' >标记系统内置数据，不得修改或删除</field>
+            <field name='summary' >标记系统内置数据</field>
+            <field name='glob_tag_class' eval='glob_tag_class_3' />
+        </record>
+        <record id='glob_tag_4' model='accountcore.glob_tag'>
+            <field name='name' >关联交易</field>
+            <field name='application' >标记关联方发生的交易，机构/主体是关联方的业务</field>
+            <field name='summary' >标记关联交易标签</field>
+            <field name='glob_tag_class' eval='glob_tag_class_4' />
+        </record>
+        <record id='glob_tag_5' model='accountcore.glob_tag'>
+            <field name='name' >方案加载</field>
+            <field name='application' >标记通过方案模块加载的内容</field>
+            <field name='summary' >标记通过某个方案模块加载的内容</field>
+            <field name='glob_tag_class' eval='glob_tag_class_5' />
+        </record>
+        <!-- 全局标签-结束 -->
+        <!-- 机构 -->
+        <record id="org_1" model="accountcore.org">
+            <field name="number">1</field>
+            <field name="name">某公司</field>
+        </record>
+        <record id='accountsarch_1' model='accountcore.accounts_arch'>
+            <field name='number'>1</field>
+            <field name='name'>通用科目</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='accountsarch_2' model='accountcore.accounts_arch'>
+            <field name='number'>2</field>
+            <field name='name'>某行业专用明细科目</field>
+        </record>
+        <record id='accountsarch_3' model='accountcore.accounts_arch'>
+            <field name='number'>3</field>
+            <field name='name'>某方案专用明细科目</field>
+        </record>
+        <!-- 账簿类别 -->
+        <record id="rulebook_1" model="accountcore.rulebook">
+            <field name="number">1</field>
+            <field name="name">结转损益</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="rulebook_2" model="accountcore.rulebook">
+            <field name="number">2</field>
+            <field name="name">批量转账</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="rulebook_3" model="accountcore.rulebook">
+            <field name="number">3</field>
+            <field name="name">计提折旧</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="rulebook_4" model="accountcore.rulebook">
+            <field name="number">4</field>
+            <field name="name">无形资产摊销</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="rulebook_5" model="accountcore.rulebook">
+            <field name="number">5</field>
+            <field name="name">摊销</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="rulebook_6" model="accountcore.rulebook">
+            <field name="number">6</field>
+            <field name="name">计息</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="rulebook_7" model="accountcore.rulebook">
+            <field name="number">7</field>
+            <field name="name">计提坏账</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="rulebook_8" model="accountcore.rulebook">
+            <field name="number">8</field>
+            <field name="name">冲销</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="voucher_number_tastics_1" model="accountcore.voucher_number_tastics">
+            <field name="number">1</field>
+            <field name="name">记</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 报表类型 -开始-->
+        <record id='report_type_1' model='accountcore.report_type'>
+            <field name='name' >资产负债表类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='report_type_2' model='accountcore.report_type'>
+            <field name='name' >利润表类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='report_type_3' model='accountcore.report_type'>
+            <field name='name' >现金流量表类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='report_type_4' model='accountcore.report_type'>
+            <field name='name' >内部自定义类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 报表类型-结束 -->
+        <!-- 接收者-开始 -->
+        <record id='receiver_1' model='accountcore.receiver'>
+            <field name='name' >税务</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='receiver_2' model='accountcore.receiver'>
+            <field name='name' >工商</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='receiver_3' model='accountcore.receiver'>
+            <field name='name' >统计局</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='receiver_4' model='accountcore.receiver'>
+            <field name='name' >海关</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='receiver_5' model='accountcore.receiver'>
+            <field name='name' >人民银行</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='receiver_6' model='accountcore.receiver'>
+            <field name='name' >机构内部</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 接收者-结束 -->
+        <!-- 核算项目类别开始 -->
+        <record id="item_class_1" model="accountcore.itemclass">
+            <field name="number">1</field>
+            <field name="name">往来</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_2" model="accountcore.itemclass">
+            <field name="number">2</field>
+            <field name="name">员工</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_3" model="accountcore.itemclass">
+            <field name="number">3</field>
+            <field name="name">部门</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_4" model="accountcore.itemclass">
+            <field name="number">4</field>
+            <field name="name">成本费用</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_5" model="accountcore.itemclass">
+            <field name="number">5</field>
+            <field name="name">原材料</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_6" model="accountcore.itemclass">
+            <field name="number">6</field>
+            <field name="name">库存商品</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_7" model="accountcore.itemclass">
+            <field name="number">7</field>
+            <field name="name">低值易耗品</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_8" model="accountcore.itemclass">
+            <field name="number">8</field>
+            <field name="name">固定资产</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_9" model="accountcore.itemclass">
+            <field name="number">9</field>
+            <field name="name">无形资产</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+                <record id="item_class_10" model="accountcore.itemclass">
+            <field name="number">10</field>
+            <field name="name">在建工程</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_11" model="accountcore.itemclass">
+            <field name="number">11</field>
+            <field name="name">周转材料</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_12" model="accountcore.itemclass">
+            <field name="number">12</field>
+            <field name="name">成本对象</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="item_class_13" model="accountcore.itemclass">
+            <field name="number">13</field>
+            <field name="name">结算方式</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 核算项目类别结束 -->
+        <!-- 现金流量类别开始 -->
+        <record id="cashflow_class_1" model="accountcore.cashflowtype">
+            <field name="number">1</field>
+            <field name="name">经营活动产生的现金流量</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_class_2" model="accountcore.cashflowtype">
+            <field name="number">2</field>
+            <field name="name">投资活动产生的现金流量</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_class_3" model="accountcore.cashflowtype">
+            <field name="number">3</field>
+            <field name="name">筹资活动产生的现金流量</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_class_4" model="accountcore.cashflowtype">
+            <field name="number">4</field>
+            <field name="name">汇率变动产生的现金流量</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="source_1" model="accountcore.source">
+            <field name="number">1</field>
+            <field name="name">手工</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="source_2" model="accountcore.source">
+            <field name="number">2</field>
+            <field name="name">机制</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="source_3" model="accountcore.source">
+            <field name="number">3</field>
+            <field name="name">推送</field>       
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="source_4" model="accountcore.source">
+            <field name="number">4</field>
+            <field name="name">导入</field>       
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="source_5" model="accountcore.source">
+            <field name="number">5</field>
+            <field name="name">接口</field>       
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 现金流量类别结束 -->
+        <!-- 现金流量项目开始 -->
+        <record id="cashflow_1" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_1" />
+            <field name="number">100</field>
+            <field name="name">+销售商品、提供劳务收到的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_2" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_1" />
+            <field name="number">101</field>
+            <field name="name">+收到的税费返还</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_3" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_1" />
+            <field name="number">102</field>
+            <field name="name">+收到其他与经营活动有关的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_4" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_1" />
+            <field name="number">103</field>
+            <field name="name">-购买商品、接受劳务支付的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_5" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_1" />
+            <field name="number">104</field>
+            <field name="name">-支付给职工以及为职工支付的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_6" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_1" />
+            <field name="number">105</field>
+            <field name="name">-支付的各项税费</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_7" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_1" />
+            <field name="number">106</field>
+            <field name="name">-支付其他与经营活动有关的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_8" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">200</field>
+            <field name="name">+收回投资收到的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_9" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">201</field>
+            <field name="name">+取得投资收益收到的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_10" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">202</field>
+            <field name="name">+处置固定资产、无形资产和其他长期资产收回的现金净额</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_11" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">203</field>
+            <field name="name">+处置子公司及其他营业单位收到的现金净额</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_12" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">204</field>
+            <field name="name">+收到其他与投资活动有关的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_13" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">205</field>
+            <field name="name">-购建固定资产、无形资产和其他长期资产支付的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_14" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">206</field>
+            <field name="name">-投资支付的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_15" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">207</field>
+            <field name="name">-取得子公司及其他营业单位支付的现金净额</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_16" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_2" />
+            <field name="number">208</field>
+            <field name="name">-支付其他与投资活动有关的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_17" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_3" />
+            <field name="number">300</field>
+            <field name="name">+吸收投资收到的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_18" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_3" />
+            <field name="number">301</field>
+            <field name="name">+取得借款收到的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_19" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_3" />
+            <field name="number">302</field>
+            <field name="name">+收到其他与筹资活动有关的现金</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_20" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_3" />
+            <field name="number">303</field>
+            <field name="name">-偿还债务支付的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_21" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_3" />
+            <field name="number">304</field>
+            <field name="name">-分配股利、利润或偿付利息支付的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_22" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_3" />
+            <field name="number">305</field>
+            <field name="name">-支付其他与筹资活动有关的现金</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_23" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_4" />
+            <field name="number">400</field>
+            <field name="name">+汇率变动流入</field>
+            <field name="direction">1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="cashflow_24" model="accountcore.cashflow">
+            <field name="cashFlowType" eval="cashflow_class_4" />
+            <field name="number">401</field>
+            <field name="name">-汇率变动流出</field>
+            <field name="direction">-1</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 现金流量类别结束 -->
+        <!-- 科目类别开始 -->
+        <record id="account_class_1" model="accountcore.accountclass">
+            <field name="number">1</field>
+            <field name="name">资产类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_2" model="accountcore.accountclass">
+            <field name="number">2</field>
+            <field name="name">负债类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_3" model="accountcore.accountclass">
+            <field name="number">3</field>
+            <field name="name">共同类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_4" model="accountcore.accountclass">
+            <field name="number">4</field>
+            <field name="name">所有者权益类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_5" model="accountcore.accountclass">
+            <field name="number">5</field>
+            <field name="name">成本类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_6" model="accountcore.accountclass">
+            <field name="number">6</field>
+            <field name="name">损益类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_91" model="accountcore.accountclass">
+            <field name="number">91</field>
+            <field name="name">净资产类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_92" model="accountcore.accountclass">
+            <field name="number">92</field>
+            <field name="name">收入类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id="account_class_93" model="accountcore.accountclass">
+            <field name="number">93</field>
+            <field name="name">支出类</field>
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 科目类别结束 -->
+        <!-- 科目表开始 -->
+        <record id='account_1' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1001</field>
+            <field name='name' >库存现金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >1</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_2' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1002</field>
+            <field name='name' >银行存款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >1</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_3' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1003</field>
+            <field name='name' >存放中央银行款项</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_4' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1011</field>
+            <field name='name' >存放同业</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_5' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1015</field>
+            <field name='name' >其他货币资金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >1</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_6' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1021</field>
+            <field name='name' >结算备付金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_7' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1031</field>
+            <field name='name' >存出保证金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_8' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1051</field>
+            <field name='name' >拆出资金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_9' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1101</field>
+            <field name='name' >交易性金融资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_10' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1111</field>
+            <field name='name' >买入返售金融资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_11' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1121</field>
+            <field name='name' >应收票据</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_12' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1122</field>
+            <field name='name' >应收账款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_13' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1123</field>
+            <field name='name' >预付账款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_14' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1131</field>
+            <field name='name' >应收股利</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_15' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1132</field>
+            <field name='name' >应收利息</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_15_1164' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1164</field>
+            <field name='name' >合同资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_15_1164' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1165</field>
+            <field name='name' >合同资产减值准备</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_16' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1211</field>
+            <field name='name' >应收保护储金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_17' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1221</field>
+            <field name='name' >应收代位追偿款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_18' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1222</field>
+            <field name='name' >应收分保账款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_19' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1223</field>
+            <field name='name' >应收分保未到期责任准备金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_20' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1224</field>
+            <field name='name' >应收分保保险责任准备金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_21' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1231</field>
+            <field name='name' >其他应收款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_22' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1241</field>
+            <field name='name' >坏账准备</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_23' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1251</field>
+            <field name='name' >贴现资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_24' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1301</field>
+            <field name='name' >贷款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_25' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1302</field>
+            <field name='name' >贷款损失准备</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_26' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1311</field>
+            <field name='name' >代理兑付证券</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_27' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1321</field>
+            <field name='name' >代理业务资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_28' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1401</field>
+            <field name='name' >材料采购</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_29' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1402</field>
+            <field name='name' >在途物资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_30' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1403</field>
+            <field name='name' >原材料</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_31' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1404</field>
+            <field name='name' >材料成本差异</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_32' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1406</field>
+            <field name='name' >库存商品</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_33' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1407</field>
+            <field name='name' >发出商品</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_34' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1410</field>
+            <field name='name' >商品进销差价</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_35' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1411</field>
+            <field name='name' >委托加工物资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_36' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1412</field>
+            <field name='name' >低值易耗品</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_37' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1421</field>
+            <field name='name' >消耗性物物资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_38' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1431</field>
+            <field name='name' >周转材料</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_39' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1441</field>
+            <field name='name' >贵金属</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_40' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1442</field>
+            <field name='name' >抵债资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_41' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1451</field>
+            <field name='name' >损余物资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_42' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1461</field>
+            <field name='name' >存货跌价准备</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_43' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1501</field>
+            <field name='name' >待摊费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+                <record id='account_43_1505' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1505</field>
+            <field name='name' >债权投资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_43_1507' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1507</field>
+            <field name='name' >其他债权投资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_44' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1511</field>
+            <field name='name' >独立账户资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_45' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1521</field>
+            <field name='name' >持有至到期投资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_46' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1522</field>
+            <field name='name' >持有至到期投资减值准备</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_47' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1523</field>
+            <field name='name' >可供出售金融资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_48' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1524</field>
+            <field name='name' >长期股权投资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_49' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1525</field>
+            <field name='name' >长期股权投资减值准备</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_50' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1526</field>
+            <field name='name' >投资性房地产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_50_1528' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1528</field>
+            <field name='name' >其他权益工具投资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_51' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1531</field>
+            <field name='name' >长期应收款</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_52' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1541</field>
+            <field name='name' >未实现融资收益</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_53' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1551</field>
+            <field name='name' >存出资本保证金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_54' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1601</field>
+            <field name='name' >固定资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_55' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1602</field>
+            <field name='name' >累计折旧</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_56' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1603</field>
+            <field name='name' >固定资产减值准备</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_57' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1604</field>
+            <field name='name' >在建工程</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_58' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1605</field>
+            <field name='name' >工程物资</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_59' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1606</field>
+            <field name='name' >固定资产清理</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_60' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1611</field>
+            <field name='name' >融资租赁资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_61' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1612</field>
+            <field name='name' >未担保余值</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_62' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1621</field>
+            <field name='name' >生产性生物资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_63' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1622</field>
+            <field name='name' >生产性生物资产累计折旧</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_64' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1623</field>
+            <field name='name' >公益性生物资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_65' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1631</field>
+            <field name='name' >油气资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_66' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1632</field>
+            <field name='name' >累计折耗</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_67' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1701</field>
+            <field name='name' >无形资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_68' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1702</field>
+            <field name='name' >累计摊销</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_69' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1703</field>
+            <field name='name' >无形资产减值准备</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_70' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1711</field>
+            <field name='name' >商誉</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_71' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1801</field>
+            <field name='name' >长期待摊费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_72' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1811</field>
+            <field name='name' >递延所得资产</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_73' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_1' />
+            <field name='number' >1901</field>
+            <field name='name' >待处理财产损益</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_74' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2001</field>
+            <field name='name' >短期借款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_75' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2002</field>
+            <field name='name' >存入保证金</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_76' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2003</field>
+            <field name='name' >拆入资金</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_77' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2004</field>
+            <field name='name' >向中央银行借款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_78' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2011</field>
+            <field name='name' >同业存放</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_79' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2012</field>
+            <field name='name' >吸收存款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_80' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2021</field>
+            <field name='name' >贴现负债</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_81' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2101</field>
+            <field name='name' >交易性金融负债</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_82' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2111</field>
+            <field name='name' >专出回购金融资产款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_83' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2201</field>
+            <field name='name' >应付票据</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_84' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2202</field>
+            <field name='name' >应付账款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_85' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2205</field>
+            <field name='name' >预收账款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_86' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2211</field>
+            <field name='name' >应付职工薪酬</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_87' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2221</field>
+            <field name='name' >应交税费</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_88' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2231</field>
+            <field name='name' >应付股利</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_89' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2232</field>
+            <field name='name' >应付利息</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_90' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2241</field>
+            <field name='name' >其他应付款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_91' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2251</field>
+            <field name='name' >应付保户红利</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_92' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2261</field>
+            <field name='name' >应付分保账款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_93' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2311</field>
+            <field name='name' >代理买卖证券款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_94' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2312</field>
+            <field name='name' >代理承销证券款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_95' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2313</field>
+            <field name='name' >代理兑付证券款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_96' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2314</field>
+            <field name='name' >代理业务负债</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_97' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2401</field>
+            <field name='name' >预提费用</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_98' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2411</field>
+            <field name='name' >预计负债</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_99' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2501</field>
+            <field name='name' >递延收益</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_100' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2601</field>
+            <field name='name' >长期借款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_101' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2602</field>
+            <field name='name' >长期债券</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_102' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2701</field>
+            <field name='name' >未到期责任准备金</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_103' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2702</field>
+            <field name='name' >保险责任准备金</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_104' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2711</field>
+            <field name='name' >保户储金</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_105' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2721</field>
+            <field name='name' >独立账户负债</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_106' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2801</field>
+            <field name='name' >长期应付款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_107' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2802</field>
+            <field name='name' >未确认融资费用</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_108' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2811</field>
+            <field name='name' >专项应付款</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_109' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_2' />
+            <field name='number' >2901</field>
+            <field name='name' >递延所得税负债</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_110' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_3' />
+            <field name='number' >3001</field>
+            <field name='name' >清算资金往来</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_111' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_3' />
+            <field name='number' >3002</field>
+            <field name='name' >外汇买卖</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_112' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_3' />
+            <field name='number' >3101</field>
+            <field name='name' >衍生工具</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_113' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_3' />
+            <field name='number' >3201</field>
+            <field name='name' >套期工具</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_114' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_3' />
+            <field name='number' >3202</field>
+            <field name='name' >被套期项目</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_115' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4001</field>
+            <field name='name' >实收资本</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_116' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4002</field>
+            <field name='name' >资本公积</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_116_4003' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4003</field>
+            <field name='name' >其他综合收益</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_117' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4101</field>
+            <field name='name' >盈余公积</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_118' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4102</field>
+            <field name='name' >一般风险准备</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_119' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4103</field>
+            <field name='name' >本年利润</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_120' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4104</field>
+            <field name='name' >利润分配</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_121' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_4' />
+            <field name='number' >4201</field>
+            <field name='name' >库存股</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_122' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_5' />
+            <field name='number' >5001</field>
+            <field name='name' >生产成本</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_123' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_5' />
+            <field name='number' >5101</field>
+            <field name='name' >制造费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_124' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_5' />
+            <field name='number' >5201</field>
+            <field name='name' >劳务成本</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_125' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_5' />
+            <field name='number' >5301</field>
+            <field name='name' >研发支出</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_126' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_5' />
+            <field name='number' >5401</field>
+            <field name='name' >工程施工</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_127' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_5' />
+            <field name='number' >5402</field>
+            <field name='name' >工程结算</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_128' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_5' />
+            <field name='number' >5403</field>
+            <field name='name' >机械作业</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_129' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6001</field>
+            <field name='name' >主营业务收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_130' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6011</field>
+            <field name='name' >利息收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_131' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6021</field>
+            <field name='name' >手续费收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_132' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6031</field>
+            <field name='name' >保费收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_133' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6032</field>
+            <field name='name' >分保费收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_134' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6041</field>
+            <field name='name' >租赁收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_135' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6051</field>
+            <field name='name' >其他业务收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_136' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6061</field>
+            <field name='name' >汇兑损益</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_137' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6101</field>
+            <field name='name' >公允价值变动损益</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_138' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6111</field>
+            <field name='name' >投资收益</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_139' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6201</field>
+            <field name='name' >摊回保险责任准备金</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_140' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6202</field>
+            <field name='name' >摊回赔付支出</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_141' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6203</field>
+            <field name='name' >摊回分保费用</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_142' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6301</field>
+            <field name='name' >营业外收入</field>
+            <field name='direction' >-1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_143' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6401</field>
+            <field name='name' >主营业务成本</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_144' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6402</field>
+            <field name='name' >其他业务成本</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_145' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6405</field>
+            <field name='name' >营业税金及附加</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_146' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6411</field>
+            <field name='name' >利息支出</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_147' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6421</field>
+            <field name='name' >手续费支出</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_148' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6501</field>
+            <field name='name' >提取未到期责任准备金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_149' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6502</field>
+            <field name='name' >撮保险责任准备金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_150' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6511</field>
+            <field name='name' >赔付支出</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_151' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6521</field>
+            <field name='name' >保户红利支出</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_152' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6531</field>
+            <field name='name' >退保金</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_153' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6541</field>
+            <field name='name' >分出保费</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_154' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6542</field>
+            <field name='name' >分保费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_155' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6601</field>
+            <field name='name' >销售费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_156' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6602</field>
+            <field name='name' >管理费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_157' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6603</field>
+            <field name='name' >财务费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_158' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6604</field>
+            <field name='name' >勘探费用</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_159' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6701</field>
+            <field name='name' >资产减值损失</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_160' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6711</field>
+            <field name='name' >营业外支出</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_161' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6801</field>
+            <field name='name' >所得税</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='account_162' model='accountcore.account'>
+            <field name='org' eval='False' />
+            <field name='accountClass' eval='account_class_6' />
+            <field name='number' >6901</field>
+            <field name='name' >以前年度损益调整</field>
+            <field name='direction' >1</field>
+            <field name='cashFlowControl' >0</field>
+            <field name='accountsArch' eval='accountsarch_1' />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 科目表结束 -->
+        <!-- 特殊会计科目开始 -->
+        <record id='special_accounts_1' model='accountcore.special_accounts'>
+            <field name='name' >本年利润科目</field>
+            <field name='purpos' >用于自动结转损益</field>
+            <field name='children' >0</field>
+            <field name='accounts' eval="[(6,0,[account_119])]" />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='special_accounts_2' model='accountcore.special_accounts'>
+            <field name='name' >利润分配科目</field>
+            <field name='purpos' >用于自动结转损益</field>
+            <field name='children' >0</field>
+            <field name='accounts' eval="[(6,0,[account_120])]" />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <record id='special_accounts_3' model='accountcore.special_accounts'>
+            <field name='name' >以前年度损益调整科目</field>
+            <field name='purpos' >"以前年度损益调整科目",本年结转损益默认不包含该科目,不结转到"本年利润"科目.该科目应转入"利润分配---未分配利润"</field>
+            <field name='children' >0</field>
+            <field name='accounts' eval="[(6,0,[account_162])]" />
+            <field name='glob_tag' eval='[(6, 0, [ref("glob_tag_3")])]' />
+        </record>
+        <!-- 特殊会计科目结束 -->
+        <!-- 科目取数金额类型开始 -->
+        <record id='account_amount_type_1' model='accountcore.account_amount_type'>
+            <field name='name' >期初余额</field>
+        </record>
+        <record id='account_amount_type_2' model='accountcore.account_amount_type'>
+            <field name='name' >期初借方余额</field>
+        </record>
+        <record id='account_amount_type_3' model='accountcore.account_amount_type'>
+            <field name='name' >期初贷方余额</field>
+        </record>
+        <record id='account_amount_type_4' model='accountcore.account_amount_type'>
+            <field name='name' >借方发生额</field>
+        </record>
+        <record id='account_amount_type_5' model='accountcore.account_amount_type'>
+            <field name='name' >贷方发生额</field>
+        </record>
+        <record id='account_amount_type_6' model='accountcore.account_amount_type'>
+            <field name='name' >期末余额</field>
+        </record>
+        <record id='account_amount_type_7' model='accountcore.account_amount_type'>
+            <field name='name' >期末借方余额</field>
+        </record>
+        <record id='account_amount_type_8' model='accountcore.account_amount_type'>
+            <field name='name' >期末贷方余额</field>
+        </record>
+        <record id='account_amount_type_9' model='accountcore.account_amount_type'>
+            <field name='name' >本年借方累计发生额</field>
+        </record>
+        <record id='account_amount_type_10' model='accountcore.account_amount_type'>
+            <field name='name' >本年贷方累计发生额</field>
+        </record>
+        <record id='account_amount_type_11' model='accountcore.account_amount_type'>
+            <field name='name' >损益表本期实际发生额</field>
+        </record>
+        <record id='account_amount_type_12' model='accountcore.account_amount_type'>
+            <field name='name' >损益表本年实际发生额</field>
+        </record>
+        <record id='account_amount_type_13' model='accountcore.account_amount_type'>
+            <field name='name' >即时余额</field>
+        </record>
+        <record id='account_amount_type_14' model='accountcore.account_amount_type'>
+            <field name='name' >即时本年借方累计</field>
+        </record>
+        <record id='account_amount_type_15' model='accountcore.account_amount_type'>
+            <field name='name' >即时本年贷方累计</field>
+        </record>
+        <!-- 科目取数金额类型结束 -->
+    </data>
+    </odoo>

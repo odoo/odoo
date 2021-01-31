@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="custom_report_template">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                <div>
+                    <t t-esc="report_name" />
+                </div>
+                <table>
+                    <tr>
+                        <th>id</th>
+                        <th>name</th>
+                    </tr>
+                    <t t-foreach="lines_data" t-as="o">
+                        <tr>
+                            <td><span t-esc="o['data']" /></td>
+                        </tr>
+                    </t>
+                    <t t-foreach="docs" t-as="o">
+                        <tr>
+                            <td><span t-esc="o['id']"/></td>
+                            <td><span t-esc="o['name']"/></td>
+                        </tr>
+                    </t>
+                    <t t-foreach="lines_data2" t-as="ln">
+                        <tr>
+                            <td>
+                                <span t-esc="ln.id"/>
+                            </td>
+                            <td>
+                                <span t-esc="ln.name"/>
+                            </td>
+                        </tr>
+                    </t>
+                </table>
+                </div>
+            </t>
+        </t>
+    </template>
+       <report
+        id="action_custom_report"
+        model="academy.teachers"
+        string="报表测试"
+        report_type="qweb-html"
+        file="academy.custom_report"
+        print_report_name="'%s' % (object.name)"
+        name="academy.custom_report_template"/>
+</odoo>
+
+

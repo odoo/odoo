@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <record id="view_formio_version_github_tag_tree" model="ir.ui.view">
+        <field name="name">formio.version.github.tag.tree</field>
+        <field name="model">formio.version.github.tag</field>
+        <field name="arch" type="xml">
+            <tree create="0" edit="0" delete="0" decoration-success="state == 'installed'">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="create_date" optional="show"/>
+                <field name="install_date" optional="show"/>                
+                <field name="changelog_url" widget="url"/>
+                <field name="archive_url" widget="url" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_formio_version_github_tag_form" model="ir.ui.view">
+        <field name="name">formio.version.github.tag.form</field>
+        <field name="model">formio.version.github.tag</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0">
+                <header>
+                    <button
+                        name="action_download_install" type="object" string="Download and Install"
+                        attrs="{'invisible': [('formio_version_id', '!=', False)]}"
+                        confirm="Are you sure to download and install? This could take some time to load, please be patient."
+                        class="btn-primary"/>
+                    <button
+                        name="action_reset_installed" type="object" string="Reset (to download and install again)"
+                        attrs="{'invisible': [('formio_version_id', '=', False)]}"
+                        confirm="Are you to Reset, to download and install again?"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group name="version_header">
+                            <field name="name"/>
+                            <field name="formio_version_id"/>
+                        </group>
+                        <group name="record_info">
+                            <field name="create_date"/>
+                            <field name="install_date"/>
+                        </group>
+                        <group colspan="2" name="urls">
+                            <field name="changelog_url" widget="url" attrs="{'invisible': [('changelog_url', '=', False)]}"/>
+                            <field name="archive_url" widget="url" attrs="{'invisible': [('archive_url', '=', False)]}"/>
+                        </group>                            
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_formio_version_github_tag_search" model="ir.ui.view">
+        <field name="name">formio.version.github.tag.search</field>
+        <field name="model">formio.version.github.tag</field>
+        <field name="arch" type="xml">
+            <search string="Version GitHub tags">
+                <field name="name"/>
+                <separator/>
+                <filter string="Installed" name="state_installed"
+                        domain="[('state', '=', 'installed')]"/>
+                <filter string="Available" name="state_available"
+                        domain="[('state', '=', 'available')]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_formio_version_github_tag" model="ir.actions.act_window">
+        <field name="name">Versions GitHub tags</field>
+        <field name="res_model">formio.version.github.tag</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_formio_version_github_tag_tree"/>
+    </record>
+</odoo>

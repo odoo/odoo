@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 用户机构/主体权限-开始 -->
+    <record id="accountcore_search_org_read_rule" model="ir.rule">
+        <field name="name">只查询组拥有的机构/主体读权限</field>
+        <field name="model_id" ref="accountcore.model_accountcore_org" />
+        <field name="domain_force">['|',('user_ids','=?',False),('user_ids','in',user.id)]</field>
+        <field name="groups" eval="[(4,ref('accountcore.group_role_search'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="False" />
+        <field name="perm_create" eval="False" />
+        <field name="perm_unlink" eval="False" />
+    </record>
+    <!-- 用户机核算构权限-结束 -->
+    <!-- 用户对凭证的权限-开始 -->
+    <record model="ir.rule" id="accountcore_search_voucher_r_rule">
+        <field name="name">只查询组只能查看自己有权限机构/主体的凭证</field>
+        <field name="model_id" ref="accountcore.model_accountcore_voucher" />
+        <field name="domain_force">["|",("org.user_ids",'in',user.id),("org.user_ids",'=?',False)] </field>
+        <field name="groups" eval="[(4,ref('accountcore.group_role_search'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <!-- 用户对凭证的权限-结束 -->
+    <!-- 用户对凭证分录的权限-开始 -->
+    <record model="ir.rule" id="accountcore_search_entry_r_rule">
+        <field name="name">只查询组只能查看自己有权限机构/主体的凭证分录</field>
+        <field name="model_id" ref="accountcore.model_accountcore_entry" />
+        <field name="domain_force">["|",("voucher.org.user_ids",'in',user.id),("voucher.org.user_ids",'=?',False)] </field>
+        <field name="groups" eval="[(4,ref('accountcore.group_role_search'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <!-- 用户对凭证分录的权限-结束 -->
+    <!-- 用户对核算项目的权限-开始 -->
+    <record model="ir.rule" id="accountcore_search_item_r_rule">
+        <field name="name">只查询组只能查看自己有权限机构/主体的核算项目</field>
+        <field name="model_id" ref="accountcore.model_accountcore_item" />
+        <field name="domain_force">["|",("org.user_ids",'in',user.id),("org",'=?',False)] </field>
+        <field name="groups" eval="[(4,ref('accountcore.group_role_search'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <!-- 用户对核算项目的权限-结束 -->
+        <!-- 用户对会计科目的权限-开始 -->
+    <record model="ir.rule" id="accountcore_search_account_r_rule">
+        <field name="name">只查询组只能查看自己有权限机构/主体的会计科目</field>
+        <field name="model_id" ref="accountcore.model_accountcore_account" />
+        <field name="domain_force">["|",("org.user_ids",'in',user.id),("org",'=?',False)] </field>
+        <field name="groups" eval="[(4,ref('accountcore.group_role_search'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <!-- 用户对会计科目的权限-结束 -->
+</odoo>

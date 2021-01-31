@@ -1,0 +1,64 @@
+<odoo>
+    <data>
+        <!--form-快建记账凭证向导 -->
+        <record id="accountcore_build_voucher_form" model="ir.ui.view">
+            <field name="name">快建记账凭证向导</field>
+            <field name="model">accountcore.build_voucher</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <field name='voucher_date' ></field>
+                            <field name="org" options="{'no_create_edit':1,'no_create':1,'no_open':1}"></field>
+                            <field name="explain"></field>
+                        </group>
+                        <div class="row">
+                            <div class="col-6" style='border-right:5px solid #eee'>
+                                <separator string="取数科目" />
+                                <group>
+                                    <field name="out_direction"></field>
+                                    <field name="amount_type"></field>
+                                    <field name="amount_control"></field>
+                                </group>
+                            </div>
+                            <div class="col-6">
+                                <separator string="对方科目" />
+                                <group>
+                                    <field name="in_direction"></field>
+                                    <field name="account" domain="[('is_show','=',True)]" context="{'search_default_group_by_accountClassClass':1,'search_default_is_show':1,'org_id':org,'show_balance':True}" options="{'no_create_edit':1,'no_create':1,'no_open':1}" class='oe_ac_account' widget='ChoiceAccountBuildVoucher'></field>
+                                    <field name='accountItemClass' string="核算项目类别" class="oe_grey" />
+                                    <field name="item"  domain="['|',('org','=',False),('org','in',org),('itemClass.id','=',accountItemClass)]" context="{'org_id':org}" attrs="{'required':[('accountItemClass','!=',False)],'readonly':[('accountItemClass','=',False)]}" options="{'no_create_edit':1,'no_create':1,'no_open':1}" ></field>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <group>
+                                    <field name="in_account_items" readonly='1'></field>
+                                </group>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <group>
+                                    <field name="account_items" readonly='1'></field>
+                                    <field name="temp" invisible='1'></field>
+                                </group>
+                            </div>
+                        </div>
+                    </sheet>
+                    <footer>
+                        <button name="do" type="object" string="生成凭证" class='btn-primary' confirm="确认要生成凭证?请注意是否需要使用非明细科目" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-打开快建记账凭证向导 -->
+        <record model='ir.actions.act_window' id='accountore_build_voucher_actions_window'>
+            <field name="name">快建记账凭证</field>
+            <field name="res_model">accountcore.build_voucher</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

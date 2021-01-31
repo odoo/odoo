@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- PLANT -->
+    <record id="nursery_plant_view_search" model="ir.ui.view">
+        <field name="name">nursery.plant.view.search</field>
+        <field name="model">nursery.plant</field>
+        <field name="arch" type="xml">
+            <search string="Plants">
+                <field name="name"/>
+                <field name="category_id"/>
+                <field name="user_id"/>
+                <separator/>
+                <filter string="Activities Todo" name="activities_my"
+                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all opportunities for which the next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                    ]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_category" string="Category" domain="[]" context="{'group_by': 'category_id'}"/>
+                    <filter name="group_by_user" string="User" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter name="group_by_exposure" string="Exposure" domain="[]" context="{'group_by': 'exposure'}"/>
+                    <filter name="group_by_ground" string="Ground" domain="[]" context="{'group_by': 'ground'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="nursery_plant_view_form" model="ir.ui.view" >
+        <field name="name">nursery.plant.view.form</field>
+        <field name="model">nursery.plant</field>
+        <field name="arch" type="xml">
+            <form string="Plant">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                            name="action_view_orders"
+                            icon="fa-dollar">
+                            <field string="Orders" name="order_count" widget="statinfo"/>
+                        </button>
+                        <field name="is_published" widget="website_redirect_button"/>
+                    </div>
+                    <widget name="web_ribbon" text="Published" bg_color="bg-success" attrs="{'invisible': [('website_published', '=', False)]}"/>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Plant Name"/>
+                        </h1>
+                    </div>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <group>
+                        <group string="Characteristics" name="group_charac">
+                            <field name="user_id"/>
+                            <field name="exposure"/>
+                            <field name="ground"/>
+                        </group>
+                        <group string="Shop" name="group_shop">
+                            <field name="category_id"/>
+                            <field name="website_published" invisible="1"/>
+                            <field name="website_id"/>
+                            <field name="price"/>
+                            <field name="internal"/>
+                            <field name="number_in_stock"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Short description">
+                            <field name="description_short"/>
+                        </page>
+                        <page string="Description">
+                            <group>
+                                <field name="description"/>
+                                <field name="description_care"/>
+                                <field name="description_preservation"/>
+                            </group>
+                        </page>
+                        <page string="Planning">
+                            <group>
+                                <field name="event_ids"/>
+                                <field name="grouping_ids"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="nursery_plant_view_list" model="ir.ui.view">
+        <field name="name">nursery.plant.view.list</field>
+        <field name="model">nursery.plant</field>
+        <field name="arch" type="xml">
+            <tree string="Plants">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="category_id"/>
+                <field name="price"/>
+                <field name="exposure"/>
+                <field name="ground"/>
+                <field name="activity_ids" widget="list_activity"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="nursery_plant_view_kanban" model="ir.ui.view">
+        <field name="name">nursery.plant.view.kanban</field>
+        <field name="model">nursery.plant</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile o_plant_nursery_kanban">
+                <field name="id"/>
+                <field name="image"/>
+                <field name="user_id"/>
+                <field name="exposure"/>
+                <field name="number_in_stock"/>
+                <field name="event_next_id"/>
+                <field name="event_next_from"/>
+                <field name="event_next_to"/>
+                <field name="message_needaction_counter"/>
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button">
+                                    <span class="fa fa-ellipsis-v" aria-label="menuitems"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a type="edit" role="menuitem" class="dropdown-item">Edit Plant</a></t>
+                                    <t t-if="widget.deletable"><a type="delete" role="menuitem" class="dropdown-item">Delete</a></t>
+                                </ul>
+                            </div>
+
+                            <div class="o_kanban_image_fill_left d-none d-md-block"
+                                t-attf-style="background-image:url('#{kanban_image('nursery.plant', 'image', record.id.raw_value)}')">
+                                <img class="o_kanban_image_inner_pic"
+                                    t-att-alt="record.user_id.value"
+                                    t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"/>
+                            </div>
+                            <div class="o_kanban_image rounded-circle d-md-none"
+                                t-attf-style="background-image:url('#{kanban_image('nursery.plant', 'image', record.id.raw_value)}')">
+                                <img class="o_kanban_image_inner_pic"
+                                    t-att-alt="record.user_id.value"
+                                    t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)"/>
+                            </div>
+                            <div class="oe_kanban_details d-flex flex-column">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <t t-if="record.number_in_stock.raw_value > 4">
+                                            <span class="badge badge-info badge-pill border-0 float-right mr-3">Stock: <field name="number_in_stock"/></span>
+                                        </t>
+                                        <t t-elif="record.number_in_stock.raw_value > 1">
+                                            <span class="badge badge-warning badge-pill border-0 float-right mr-3">Stock: <field name="number_in_stock"/></span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge badge-danger badge-pill border-0 float-right mr-3">Stock: <field name="number_in_stock"/></span>
+                                        </t>
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                        <small class="o_kanban_record_subtitle text-muted font-weight-bold">
+                                            <field name="category_id"/>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-sun-o mr-2 font-weight-bold" aria-label="Exposure" role="img" title="Exposure"/><field name="exposure"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-arrow-circle-up mr-2 font-weight-bold" aria-label="Ground" role="img" title="Ground"/><field name="ground"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-leaf mr-2 font-weight-bold" aria-label="Sow" role="img" title="Next Event"/>
+                                        <t t-if="record.event_next_id.raw_value">
+                                            <span class="mr-2"><field name="event_next_from"/></span>
+                                            <span class="mr-2">·</span><field name="event_next_to"/>
+                                        </t>
+                                        <t t-else="">-</t>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                        <div class="o_kanban_inline_block">
+                                            <field name="activity_ids" widget="kanban_activity"/>
+                                        </div>
+                                        <t t-if="record.message_needaction_counter.raw_value">
+                                            <span class='oe_kanban_mail_new ml8' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="nursery_plant_view_calendar" model="ir.ui.view">
+        <field name="name">nursery.plant.view.calendar</field>
+        <field name="model">nursery.plant</field>
+        <field name="arch" type="xml">
+            <calendar string="Next Events" mode="month" date_start="event_next_from" date_stop="event_next_to" color="event_next_color" hide_time="true">
+                <field name="name"/>
+                <field name="user_id" avatar_field="image_256"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="nursery_plant_action" model="ir.actions.act_window">
+        <field name="name">Plants</field>
+        <field name="res_model">nursery.plant</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+    </record>
+
+    <record id="nursery_plant_action_category" model="ir.actions.act_window">
+        <field name="name">Plants</field>
+        <field name="res_model">nursery.plant</field>
+        <field name="view_mode">kanban,tree,form,calendar</field>
+        <field name="context">{'search_default_category_id': active_id, 'default_category_id': active_id}</field>
+    </record>
+
+    <!-- PLANT.EVENT -->
+    <record id="nursery_plant_event_view_form" model="ir.ui.view" >
+        <field name="name">nursery.plant.event.view.form</field>
+        <field name="model">nursery.plant.event</field>
+        <field name="arch" type="xml">
+            <form string="Event">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="plant_id"/>
+                            <field name="event_type"/>
+                            <field name="color"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="nursery_plant_event_view_list" model="ir.ui.view">
+        <field name="name">nursery.plant.event.view.list</field>
+        <field name="model">nursery.plant.event</field>
+        <field name="arch" type="xml">
+            <tree string="Plants">
+                <field name="plant_id"/>
+                <field name="event_type"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="nursery_plant_event_view_calendar" model="ir.ui.view">
+        <field name="name">nursery.plant.event.view.calendar</field>
+        <field name="model">nursery.plant.event</field>
+        <field name="arch" type="xml">
+            <calendar string="Events" mode="month" date_start="date_from" date_stop="date_to" color="color" hide_time="true">
+                <field name="event_type"/>
+                <field name="plant_id" avatar_field="image"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="nursery_plant_event_action" model="ir.actions.act_window">
+        <field name="name">Events</field>
+        <field name="res_model">nursery.plant.event</field>
+        <field name="view_mode">calendar,tree,form</field>
+    </record>
+
+    <!-- PLANT.CATEGORY -->
+    <record id="nursery_plant_category_view_kanban" model="ir.ui.view">
+        <field name="name">nursery.plant.category.view.kanban</field>
+        <field name="model">nursery.plant.category</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile o_plant_nursery_kanban">
+                <field name="id"/>
+                <field name="alias_id"/>
+                <field name="image"/>
+                <field name="rating_ids"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button">
+                                    <span class="fa fa-ellipsis-v" aria-label="menuitems" title="Actions"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a type="edit" role="menuitem" class="dropdown-item">Edit Category</a></t>
+                                    <t t-if="widget.deletable"><a type="delete" role="menuitem" class="dropdown-item">Delete</a></t>
+                                </ul>
+                            </div>
+
+                            <div class="o_kanban_image_fill_left d-none d-md-block"
+                                t-attf-style="background-image:url('#{kanban_image('nursery.plant.category', 'image', record.id.raw_value)}')">
+                            </div>
+                            <div class="o_kanban_image rounded-circle d-md-none"
+                                t-attf-style="background-image:url('#{kanban_image('nursery.plant.category', 'image', record.id.raw_value)}')">
+                            </div>
+                            <div class="oe_kanban_details d-flex flex-column">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="d-flex align-items-baseline text-primary" t-if="record.rating_ids.raw_value.length">
+                                        <a type="object" name="action_view_ratings">
+                                            <i class="fa fa-smile-o mr-2 font-weight-bold" aria-label="Satisfaction" role="img" title="Satisfaction"/>
+                                            <field name="rating_percentage_satisfaction"/><span> % satisfaction</span>
+                                        </a>
+                                    </div>
+                                    <t t-if="record.alias_id.raw_value">
+                                        <field name="alias_id"/>
+                                    </t>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="nursery_plant_category_view_form" model="ir.ui.view">
+        <field name="name">nursery.plant.category.view.form</field>
+        <field name="model">nursery.plant.category</field>
+        <field name="arch" type="xml">
+            <form string="Category">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_ratings" type="object"
+                                class="oe_stat_button" icon="fa-star">
+                            <field name="rating_percentage_satisfaction" string="Satisfaction" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                            name="action_view_plants"
+                            icon="fa-leaf">
+                            <field string="Plants" name="plant_count" widget="statinfo"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                            name="action_view_orders"
+                            icon="fa-dollar">
+                            <field string="Orders" name="order_count" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Category Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="alias_id"/>
+                        <field name="order_user_id"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="nursery_plant_category_view_list" model="ir.ui.view">
+        <field name="name">nursery.plant.category.view.list</field>
+        <field name="model">nursery.plant.category</field>
+        <field name="arch" type="xml">
+            <tree string="Categories">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="alias_id"/>
+                <field name="order_user_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="nursery_plant_category_action" model="ir.actions.act_window">
+        <field name="name">Categories</field>
+        <field name="res_model">nursery.plant.category</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+     <!-- PLANT.TAG -->
+    <record id="nursery_plant_tag_view_form" model="ir.ui.view">
+        <field name="name">nursery.plant.tag.view.form</field>
+        <field name="model">nursery.plant.tag</field>
+        <field name="arch" type="xml">
+            <form string="Tag">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="nursery_plant_tag_view_list" model="ir.ui.view">
+        <field name="name">nursery.plant.tag.view.list</field>
+        <field name="model">nursery.plant.tag</field>
+        <field name="arch" type="xml">
+            <tree string="Tags">
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+     <record id="nursery_plant_tag_action" model="ir.actions.act_window">
+        <field name="name">Tags</field>
+        <field name="res_model">nursery.plant.tag</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="nursery_plant_menu" model="ir.ui.menu">
+        <field name="action" ref="nursery_plant_action"/>
+    </record>
+    <record id="nursery_plant_menu_plant" model="ir.ui.menu">
+        <field name="action" ref="nursery_plant_action"/>
+    </record>
+    <record id="nursery_plant_menu_planning" model="ir.ui.menu">
+        <field name="action" ref="nursery_plant_event_action"/>
+    </record>
+
+    <record id="nursery_plant_category_menu" model="ir.ui.menu">
+        <field name="action" ref="nursery_plant_category_action"/>
+    </record>
+    <record id="nursery_plant_tag_menu" model="ir.ui.menu">
+        <field name="action" ref="nursery_plant_tag_action"/>
+    </record>
+</odoo>

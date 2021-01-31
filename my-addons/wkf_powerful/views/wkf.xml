@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <menuitem id="menu_wkf_root" name="WorkFlow" web_icon="wkf_powerful,static/description/icon.png"/>
+
+        <record model="ir.ui.view" id="wkf_base_tree_view">
+            <field name="name">wkf.base.tree</field>
+            <field name="model">wkf.base</field>
+            <field name="arch" type="xml">
+                <tree string="Custom WorkFollow">
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <field name="default_state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="wkf_base_form_view">
+            <field name="name">wkf.base.form</field>
+            <field name="model">wkf.base</field>
+            <field name="arch" type="xml">
+                <form string="Custom WorkFollow">
+                    <header>
+                        <button name="sync2ref_model" string="Update WorkFollow Setting" type="object"
+                                class="oe_highlight"/>
+                        <button name="action_no_active" string="Cancel WorkFollow Setting" type="object"
+                                class="oe_highlight"/>
+                    </header>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="model_id"/>
+                            <field name="model"/>
+                            <field name="tracking"/>
+                            <field name="field_id" groups="base.group_system"/>
+                        </group>
+                        <group>
+                            <field name="model_view_id"
+                                   domain="[('model','=',model),('type','=','form'),('mode','=','primary')]"/>
+                            <field name="view_id" domain="[('id','=',0)]"/>
+                            <field name="default_state" groups="base.group_system"/>
+                            <field name="show_states" groups="base.group_system"/>
+                            <field name="no_reset_states" groups="base.group_system"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Node">
+                            <field name="node_ids"  context="{'default_wkf_id': id}">
+                                <tree>
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="split_mode" invisible="1"/>
+                                    <field name="join_mode"/>
+                                    <field name="action"/>
+                                    <field name="arg"/>
+                                    <field name="is_start"/>
+                                    <field name="is_stop"/>
+                                    <field name="show_state"/>
+                                    <field name="no_reset"/>
+
+                                    <field name="event_need"/>
+                                    <field name="event_users" widget="many2many_tags"/>
+
+
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Transfer">
+                            <field name="trans_ids">
+                                <tree editable="top">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="node_from" domain="[('wkf_id','=', parent.id)]"/>
+                                    <field name="node_to" domain="[('wkf_id','=', parent.id)]"/>
+                                    <field name="group_ids" widget="many2many_tags"/>
+                                    <field name="condition"/>
+                                    <field name="is_backward"/>
+                                    <field name="need_note"/>
+                                    <field name="auto"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+        
+        <!--<record id="view_wkf_base_diagram" model="ir.ui.view">
+            <field name="name">wkf.base.diagram</field>
+            <field name="model">wkf.base</field>
+            <field name="arch" type="xml">
+                <diagram string="Custom WorkFollow">
+                    --><!--<node object="wkf.node" bgcolor="gray:is_start==True;grey:is_stop==True">
+                        <field name="name"/>
+                        <field name="action"/>
+                    </node>
+                    <arrow object="wkf.trans" source="node_from" destination="node_to" label="['name','condition']">
+                        <field name="node_from"/>
+                        <field name="node_to"/>
+                    </arrow>--><!--
+                    <label string="Custom WorkFollow"/>
+                </diagram>
+            </field>
+        </record>-->
+        <record id="view_wkf_base_kanban" model="ir.ui.view">
+            <field name="name">wkf.base.kanban</field>
+            <field name="model">wkf.base</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="name"/>
+                    <field name="active"/>
+                    <templates>
+                        <t t-name="kanban-box">
+           
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <!--web_icon="wkf_powerful,static/description/icon.png"-->
+
+        <record model="ir.actions.act_window" id="action_wkf_base_view">
+            <field name="name">Custom WorkFollow</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wkf.base</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+        
+        <menuitem id="wkf_base_menu" name="WorkFlow" parent="menu_wkf_root"
+                  action="action_wkf_base_view" sequence="101"/>
+                  
+        <record model="ir.ui.view" id="wkf_node_tree_view">
+            <field name="name">wkf.node.tree</field>
+            <field name="model">wkf.node</field>
+            <field name="arch" type="xml">
+                <tree string="Custom WorkFollow Node">
+                    <field name="name"/>
+                    <field name="wkf_id"/>
+                    <field name="join_mode"/>
+                    <field name="action"/>
+                    <field name="arg"/>
+                    <field name="is_start"/>
+                    <field name="is_stop"/>
+                    <field name="show_state"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="wkf_node_form_view">
+            <field name="name">wkf.node.form</field>
+            <field name="model">wkf.node</field>
+            <field name="arch" type="xml">
+                <form string="Custom WorkFollow Node">
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="wkf_id"/>
+                            <field name="event_need"/>
+                            <field name="event_users" widget="many2many_tags"/>
+                            <field name="action"/>
+                            <field name="arg"/>
+                        </group>
+                        <group>
+                            <field name="join_mode"/>
+                            <field name="is_start"/>
+                            <field name="is_stop"/>
+                            <field name="show_state"/>
+                            <field name="no_reset"/>
+                        </group>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_wkf_node_view">
+            <field name="name">Custom WorkFollow Node</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wkf.node</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="wkf_node_menu" name="WorkFollow Node" parent="menu_wkf_root"
+                  action="action_wkf_node_view" sequence="102"/>
+
+        <record model="ir.ui.view" id="wkf_trans_tree_view">
+            <field name="name">wkf.trans.tree</field>
+            <field name="model">wkf.trans</field>
+            <field name="arch" type="xml">
+                <tree string="Custom WorkFollow Transfer">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="group_ids"/>
+                    <field name="condition"/>
+                    <field name="node_from"/>
+                    <field name="node_to"/>
+                    <field name="need_note"/>
+                    <field name="wkf_id"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="wkf_trans_form_view">
+            <field name="name">wkf.trans.form</field>
+            <field name="model">wkf.trans</field>
+            <field name="arch" type="xml">
+                <form string="Custom WorkFollow Trans">
+                    <group>
+                        <field name="name"/>
+                        <field name="code"/>
+                        <field name="group_ids" widget="many2many_tags"/>
+                        <field name="condition"/>
+                        <field name="node_from"/>
+                        <field name="node_to"/>
+                        <field name="wkf_id"/>
+                        <field name="xml_groups"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_wkf_trans_view">
+            <field name="name">WorkFollow Transfer</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">wkf.trans</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="wkf_trans_menu" name="WorkFollow Transfer" parent="menu_wkf_root"
+                  action="action_wkf_trans_view" sequence="103"/>
+
+
+        <record model="ir.ui.view" id="log_wkf_trans_tree_view">
+            <field name="name">log_wkf_trans.tree</field>
+            <field name="model">log.wkf.trans</field>
+            <field name="arch" type="xml">
+                <tree string="Transfer log" create="false" edit="false" delete="false">
+                    <field name="name"/>
+                    <field name="trans_id"/>
+                    <field name="create_uid"/>
+                    <field name="create_date"/>
+                    <field name="note"/>
+                    <field name="active"/>
+                    <field name="create_date"/>
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_log_wkf_trans_view">
+            <field name="name">Transfer log</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">log.wkf.trans</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem id="log_wkf_trans_menu" name="Transfer Log" parent="menu_wkf_root"
+                  action="action_log_wkf_trans_view" sequence="104"/>
+    </data>
+</odoo>

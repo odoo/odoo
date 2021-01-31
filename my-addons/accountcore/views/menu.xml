@@ -1,0 +1,69 @@
+<odoo>
+    <menuitem name="总账报表" id="accountcore_menu" web_icon="accountcore,static/description/icon.png" />
+    <menuitem name='机构/主体' id='accountcore_org_menu' parent='accountcore_menu' action='accountcore_org_action_window' sequence="33" />
+    <menuitem name='用户' id='accountcore_user_menu' parent='accountcore_menu' action='base.action_res_users' sequence="35" groups="base.group_system"/>
+    <menuitem name='会计科目' id='accountcore_account_menu' parent='accountcore_menu' sequence="36" />
+    <menuitem name="启用期初" id='accountcore_begining_menu' parent='accountcore_menu' sequence='38'/>
+    <menuitem name="科目初始余额" id='accountcore_begining_balance_menu' parent='accountcore_begining_menu' action='accountcore_accounts_balance_actions_window'/>
+    <menuitem name="下载导入模板" id='accountcore_down_begin_model_menu' parent='accountcore_begining_menu' action='accountcore_down_begin_model_action_url'/>
+
+    <menuitem name="导入初始余额" id='accountcore_import_begin_menu' parent='accountcore_begining_menu' action='accountcore_import_begin_action'/>
+    <menuitem name='科目体系' id='accountcore_accountarch_menu' parent='accountcore_account_menu' action='accountcore_accountsarch_action_window'/>
+    <menuitem name='科目类别' id='acctountcore_accountclass_menu' parent='accountcore_account_menu' action='accountcore_accountclass_action_window' />
+    <menuitem name='★管理科目' id='accountcore_accounts_menu' parent='accountcore_account_menu' action='accountcore_account_action_window' />
+    <menuitem name='核算项目' id='accountcore_item_menu' parent='accountcore_account_menu' />
+    <menuitem name='核算项目类别' id='accountcore_itemclass_menu' parent='accountcore_item_menu' action='accountcore_itemclass_action_window' />
+    <menuitem name='★管理核算项目' id='accountcore_items_menu' parent='accountcore_item_menu' action='accountcore_items_action_window' />
+    <menuitem name='特殊科目' id='accountcore_special_accounts_menu' parent='accountcore_account_menu' action='accountcore_special_accounts_actions_window' />
+    <menuitem name='管理币别' id='accountcore_ac_currency_menu' parent='accountcore_account_menu' action='accountcore_ac_currency_list_action_window' />
+    <menuitem name='记账凭证' id='accountcore_voucher_menu' parent='accountcore_menu' sequence="40" />
+    
+    <menuitem name='★查询分录' id='accountcore_entrys_menu' parent='accountcore_voucher_menu' action='accountcore_entrys_action_server' sequence="49" />
+    <menuitem name='管理凭证' id='accountcore_vouchers_menu' parent='accountcore_voucher_menu' action='accountcore_vouchers_action_server' sequence="50" />
+    <menuitem name='结转损益' id='accountcore_voucher_sunyi_menu' parent='accountcore_voucher_menu' action='accountore_voucher_shunyi_actions_window' />
+    <menuitem name='凭证导入' id='accountcore_vouche_import_menu' parent='accountcore_voucher_menu' action='accountore_voucher_shunyi_actions_window' sequence='52' />
+    <menuitem name='批量导入凭证' id='accountcore_import_vouchers_menu' parent='accountcore_vouche_import_menu' action='accountcore_import_voucher_action' />
+    <menuitem name='下载导入样板' id='accountcore_down_vocher_model_menu' parent='accountcore_vouche_import_menu' action='accountcore_down_vouchers_model_action_url' />
+
+    <menuitem name='凭证策略号' id='accountcore_voucher_number_memu' parent='accountcore_voucher_menu' sequence='58' />
+    <menuitem name='策略列表' id='accountcore_voucher_number_tastics_menu' parent='accountcore_voucher_number_memu' action='accountcore_voucher_number_acionts_window' sequence='50' />
+    <menuitem name='切换策略' id='accountcore_set_number_tastics_menu' parent='accountcore_voucher_number_memu' action='accountcore_set_number_acionts_window' sequence='51' />
+    <menuitem name='新增凭证' id='accountcore_voucher_new_menu' parent='accountcore_menu' action='accountore_voucher_new_actions_window' sequence='42' />
+    <menuitem name='默认值' id='accountcore_serdefaults_menu' parent='accountcore_menu' action='accountcore_userdefaults_action' sequence="45" />
+    <menuitem name='现金流量' id='accountcore_cashflow_menu' parent='accountcore_menu' sequence="53" />
+    <menuitem name='现金流量项目类别' id='accountcore_cashflowtypw_menu' parent='accountcore_cashflow_menu' action='accountcore_cashflowtype_action_window' />
+    <menuitem name='管理现金流量' id='accountcore_cashflows_menu' parent='accountcore_cashflow_menu' action='accountcore_cashflowitems_action_window' />
+
+    <menuitem name='科目余额表' id='accountcore_accountsBalance_menu' parent='accountcore_menu' action='accountcore_get_accounts_balance_actions_window' sequence="60"/>
+    
+    <menuitem name='明细/总账' id='accountcore_subsidiary_book_menu' parent='accountcore_menu' action='accountcore_get_subsidiary_book_window' sequence="70"/>
+    
+    <menuitem name='报表' id='accountcore_reports_menu' parent='accountcore_menu' sequence="75" />
+    <menuitem name='接收者' id='accountcore_receiver_menu' parent='accountcore_reports_menu' action='accountcore_receivers_actions_window' sequence="760" />
+    <menuitem name='报表类型' id='accountcore_report_type_menu' parent='accountcore_reports_menu' action='accountcore_report_type_actions_window' sequence="761" />
+    <menuitem name='★已归档报表' id='accountcore_storage_report_menu' parent='accountcore_reports_menu' action='accountcore_storage_report_actions_window' sequence="762" />
+    <menuitem name='★报表模板' id='accountcore_report_model_menu' parent='accountcore_reports_menu' action='accountcore_report_model_actions_window' sequence="763" />
+    <menuitem name='★生成报表(自动计算)' id='accountcore_get_report_menu' parent='accountcore_reports_menu' action='accountcore_get_report_actions_window' sequence="764" />
+    
+    <menuitem name='备份' id='accountcore_data_menu' parent='accountcore_menu' action='accountcore_report_model_actions_sever' sequence="78" groups="base.group_system" />
+
+    <menuitem name='全局标签' id='accountcore_glob_tag_menu' parent='accountcore_menu' action='accountcore_glob_tag_actions_window' sequence="80"/>
+    <menuitem name='全局标签类别' id='accountcore_glob_tag_class_menu' parent='accountcore_glob_tag_menu' action='accountcore_glob_tag_class_actions_window' />
+    <menuitem name='管理全局标签' id='accountcore_globs_tag_menu' parent='accountcore_glob_tag_menu' action='accountcore_glob_tag_actions_window' />
+    <menuitem name='扩展' id='accountcore_expand_menu' parent='accountcore_menu' action='accountcore_glob_tag_actions_window' sequence="90"/>
+    <menuitem name='接口集成' id='accountcore_expand_interface__menu' parent='accountcore_expand_menu' action='accountcore_helps_actions_window' />
+    <menuitem name='会计智能' id='accountcore_expand_robot__menu' parent='accountcore_expand_menu' action='accountcore_helps_actions_window' />
+    <menuitem name='系统运维' id='accountcore_expand_openration__menu' parent='accountcore_expand_menu'/>
+    <menuitem name='内部科目余额表' id='accountcore_accounts_balance__menu' parent='accountcore_expand_openration__menu' action='accountcore_accounts_balance_window' groups="base.group_system"/>
+    <menuitem id="accountcore_kjhw_menu" name="会计好物" parent="accountcore.accountcore_menu"  action="accountcore_kjhw_url_action" sequence="98"/>
+    <menuitem name='向导' id='accountcore_guide_menu' parent='accountcore_menu' action='accountcore_org_action_window' sequence="99" />
+    <menuitem name='第1步:添加机构/主体' id='accountcore_guide_menu_1' parent='accountcore_guide_menu' action='accountcore_org_action_window' sequence="10" />
+    <menuitem name='第2步:添加核算项目类别' id='accountcore_guide_menu_2' parent='accountcore_guide_menu' action='accountcore_itemclass_action_window' sequence="20" />
+    <menuitem name='第3步:添加核算项目' id='accountcore_guide_menu_3' parent='accountcore_guide_menu' action='accountcore_items_action_window' sequence="30" />
+    <menuitem name='第4步:完善会计科目' id='accountcore_guide_menu_4' parent='accountcore_guide_menu' action='accountcore_account_action_window' sequence="40" />
+    <menuitem name='第5步:设置凭证默认值' id='accountcore_guide_menu_6' parent='accountcore_guide_menu' action='accountcore_userdefaults_action' sequence="60" />
+    <menuitem name='第6步:录入期初余额' id='accountcore_guide_menu_5' parent='accountcore_guide_menu' action='accountcore_accounts_balance_actions_window' sequence="50" />
+    <menuitem name='第7步:设置凭证编号策略' id='accountcore_guide_menu_7' parent='accountcore_guide_menu' action='accountcore_set_number_acionts_window' sequence="70" />
+    <menuitem name='第8步:可以开始录入凭证了' id='accountcore_guide_menu_8' parent='accountcore_guide_menu' action='accountcore_vouchers_action_window' sequence="80" />
+    
+</odoo>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="purchase_order_form" model="ir.ui.view">
+            <field name="name">purchase.order.form</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="action_button_confirm_to_invoice"
+                        states="draft,sent"
+                        confirm="Are you sure you want to make the automatic receipt with the quantities and price from the purchase order?"
+                        string="Confirm, Receipt and Bill"
+                        type="object"
+                        groups="base.group_user"
+                    />
+                    <button
+                        name="action_button_confirm_to_invoice"
+                        states="purchase"
+                        confirm="Are you sure you want to make the automatic receipt with the quantities and price from the purchase order?"
+                        string="Receipt and Bill"
+                        type="object"
+                        groups="base.group_user"
+                    />
+                    <button
+                        name="action_button_confirm_notice"
+                        states="purchase"
+                        string="Receipt Notice"
+                        type="object"
+                        groups="base.group_user"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,86 @@
+<odoo>
+    <data>
+        <!-- 添加自定义js,css资产到 -->
+        <template id="accountcore_assets_css" inherit_id="web.assets_backend" name="accountcore assets">
+            <xpath expr="link[last()]" position="after">
+                <link rel='stylesheet' type='text/css' href="/accountcore/static/css/accountcore.css" />
+            </xpath>
+        </template>
+        <!-- 报表样式 -->
+        <template id="accountcore_report_assets_css" inherit_id="web.report_assets_common" name="accountcore report assets">
+            <xpath expr="link[last()]" position="after">
+                <link rel='stylesheet' type='text/css' href="/accountcore/static/css/accountcore.css" />
+            </xpath>
+        </template>
+        <!-- jexcel插件-开始-->
+        <template id="accountcore_jsuites_js" inherit_id="web.assets_backend" name="accountcore jsuites">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/jsuites.js"></script>
+            </xpath>
+        </template>
+        <template id="accountcore_jexcel_js" inherit_id="web.assets_backend" name="accountcore jexcel">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/jexcel.js"></script>
+            </xpath>
+        </template>
+        <template id="accountcore_jexcel_css" inherit_id="web.assets_backend" name="accountcore jexcel css">
+            <xpath expr="link[last()]" position="after">
+                <link rel='stylesheet' type='text/css' href="/accountcore/static/css/jexcel.css" />
+                <link rel='stylesheet' type='text/css' href="/accountcore/static/css/jexcel.theme.css" />
+            </xpath>
+        </template>
+        <template id="accountcore_jsuites_css" inherit_id="web.assets_backend" name="accountcore jsuites css">
+            <xpath expr="link[last()]" position="after">
+                <link rel='stylesheet' type='text/css' href="/accountcore/static/css/jsuites.css" />
+            </xpath>
+        </template>
+        <!-- excel插件-结束-->
+        <template id="accountcore_assets_js" inherit_id="web.assets_backend" name="accountcore jsassets">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/accountcore.js"></script>
+                <script type="text/javascript" src="/accountcore/static/js/account.js"></script>
+            </xpath>
+        </template>
+        <!-- print.js插件开始 -->
+        <template id="accountcore_print_js" inherit_id="web.assets_backend" name="accountcore print js">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/print.min.js"></script>
+            </xpath>
+        </template>
+        <template id="accountcore_print_css" inherit_id="web.report_assets_common" name="accountcore print css">
+            <xpath expr="link[last()]" position="after">
+                <link rel='stylesheet' type='text/css' href="/accountcore/static/css/print.min.css" />
+            </xpath>
+        </template>
+        <!-- print.js插件结束 -->
+        <!-- accounting.js插件开始 -->
+        <template id="accountcore_accounting_js" inherit_id="web.assets_backend" name="accountcore accounting js">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/accounting.js"></script>
+            </xpath>
+        </template>
+        <!-- accounting.js插件结束 -->
+        <!-- print.js插件结束 -->
+        <!-- table2excel.js插件开始 -->
+        <template id="accountcore_table2excel_js" inherit_id="web.assets_backend" name="accountcore table2excel js">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/table2excel.js"></script>
+            </xpath>
+        </template>
+        <!-- table2excel.js插件结束 -->
+        <!-- 报表添加前端table2excel.js插件开始 -->
+        <template id="accountcore_report_assets" inherit_id="web.report_assets_common" name="accountcore report assets">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/table2excel.js"></script>
+            </xpath>
+        </template>
+        <!-- 报表添加前端table2excel.js插件开始结束 -->
+        <!-- 报表添加acshop会计商店开始 -->
+        <template id="accountcore_acshop_assets" inherit_id="web.assets_backend" name="accountcore asshop assets">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/accountcore/static/js/acshop.js"></script>
+            </xpath>
+        </template>
+        <!-- 报表添加acshop会计商店结束 -->
+    </data>
+</odoo>

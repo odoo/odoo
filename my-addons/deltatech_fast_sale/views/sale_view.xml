@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="view_order_form" model="ir.ui.view">
+            <field name="name">Sale Order</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='payment_term_id']" position="after">
+                    <field name="client_order_ref" />
+                    <field name="date_order" />
+                </xpath>
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="action_button_confirm_to_invoice"
+                        states="draft,sent"
+                        confirm="Are you sure you want to make the automatic delivery with the quantities and price from the sale order?"
+                        string="Confirm, Deliver and Invoice"
+                        type="object"
+                        groups="base.group_user"
+                    />
+                    <button
+                        name="action_button_confirm_to_invoice"
+                        states="sale"
+                        confirm="Are you sure you want to make the automatic delivery with the quantities and price from the sale order?"
+                        string="Deliver and Invoice"
+                        type="object"
+                        groups="base.group_user"
+                    />
+                    <button
+                        name="action_button_confirm_notice"
+                        states="sale"
+                        string="Deliver Notice"
+                        type="object"
+                        groups="base.group_user"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

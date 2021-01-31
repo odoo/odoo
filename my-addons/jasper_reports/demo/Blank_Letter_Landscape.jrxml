@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_Letter_Landscape" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="256"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="737"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Odoo Jasper"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT public.res_partner.name,
+	public.sale_order.name,
+	public.sale_order.state,
+	public.sale_order.date_order,
+	public.sale_order.validity_date,
+	public.sale_order.create_date,
+	public.sale_order.confirmation_date,
+	public.sale_order.note,
+	public.sale_order.amount_tax,
+	public.sale_order.amount_total,
+	public.sale_order.amount_untaxed,
+	public.sale_order_line.name,
+	public.sale_order_line.price_unit,
+	public.sale_order_line.price_subtotal,
+	public.sale_order_line.price_tax,
+	public.sale_order_line.price_total,
+	public.sale_order_line.price_reduce,
+	public.sale_order_line.discount,
+	public.sale_order_line.product_uom_qty,
+	public.product_template.name,
+	public.product_product.id
+FROM public.sale_order_line
+	INNER JOIN public.sale_order ON 
+	 public.sale_order_line.order_id = public.sale_order.id 
+	INNER JOIN public.res_partner ON 
+	 public.sale_order.partner_id = public.res_partner.id 
+	 AND public.sale_order.partner_shipping_id = public.res_partner.id 
+	 AND public.sale_order.partner_invoice_id = public.res_partner.id 
+	 AND public.sale_order_line.order_partner_id = public.res_partner.id 
+	INNER JOIN public.product_product ON 
+	 public.sale_order_line.product_id = public.product_product.id 
+	INNER JOIN public.product_template ON 
+	 public.product_product.product_tmpl_id = public.product_template.id LIMIT 10]]>
+	</queryString>
+	<field name="name" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="COLUMN_2" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="state" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="state"/>
+	</field>
+	<field name="date_order" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="date_order"/>
+	</field>
+	<field name="validity_date" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.label" value="validity_date"/>
+	</field>
+	<field name="create_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="create_date"/>
+	</field>
+	<field name="confirmation_date" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="confirmation_date"/>
+	</field>
+	<field name="note" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="note"/>
+	</field>
+	<field name="amount_tax" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_tax"/>
+	</field>
+	<field name="amount_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_total"/>
+	</field>
+	<field name="amount_untaxed" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="amount_untaxed"/>
+	</field>
+	<field name="COLUMN_12" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="price_unit" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="price_unit"/>
+	</field>
+	<field name="price_subtotal" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="price_subtotal"/>
+	</field>
+	<field name="price_tax" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.label" value="price_tax"/>
+	</field>
+	<field name="price_total" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="price_total"/>
+	</field>
+	<field name="price_reduce" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="price_reduce"/>
+	</field>
+	<field name="discount" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="discount"/>
+	</field>
+	<field name="product_uom_qty" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.label" value="product_uom_qty"/>
+	</field>
+	<field name="COLUMN_20" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="name"/>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="id"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="82" splitType="Stretch">
+			<staticText>
+				<reportElement x="116" y="58" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Product]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="329" y="58" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Quantity]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="58" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="222" y="58" width="70" height="19"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Unit Price]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="314" y="3" width="100" height="17">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c78322e2-1104-4db0-b656-b0fad3c7ab2a"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{product_uom_qty}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="421" y="3" width="100" height="17">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ce4a2f40-70f5-4276-80b2-a9492f5b6d6a"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{price_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="207" y="4" width="100" height="16">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="85187de9-8a6f-4b04-8fb5-2d8681427c6d"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{price_unit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="101" y="4" width="100" height="16"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COLUMN_12}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

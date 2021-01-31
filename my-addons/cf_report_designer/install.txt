@@ -1,0 +1,20 @@
+﻿
+
+本模块依赖 pycrypto和pycf_loader 两个python模块
+
+=============================================
+正常情况下安装：
+pip3 install pycryptodome,pycf_loader
+或
+python3 -m pip install pycryptodome,pycf_loader
+
+==============================================
+在使用docker容器情况下安装（以Ubuntu为例，其他操作系统请自行搜索解决）:
+
+以root用户进入容器！！！！
+docker exec -ti -u root <容器名或窗口id> /bin/bash
+
+然后
+pip3 install pycryptodome,pycf_loader
+或
+python3 -m pip install pycryptodome,pycf_loader

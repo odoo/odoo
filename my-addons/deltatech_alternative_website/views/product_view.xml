@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="view_product_catalog_form" model="ir.ui.view">
+            <field name="name">Product Catalog</field>
+            <field name="model">product.catalog</field>
+            <field name="inherit_id" ref="deltatech_alternative.view_product_catalog_form" />
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="categ_id" position="after">
+                    <field name="public_categ_ids" widget="many2many_tags" />
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

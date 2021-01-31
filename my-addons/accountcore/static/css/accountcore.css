@@ -1,0 +1,399 @@
+/* 凭证列表表格-开始 */
+table {
+    border-collapse: collapse !important;
+}
+
+.oe_accountcore_table_fix th {
+    white-space: nowrap;
+
+}
+
+.oe_accountcore_table_fix td {
+    white-space: nowrap;
+}
+
+.oe_accountcore_entrys {
+    margin: 0px;
+    /* width: 1000px; */
+
+}
+
+div.ac_rulebook {
+    white-space: normal !important;
+    vertical-align: middle !important;
+}
+
+/* 凭证列表分录内容 */
+th[data-name="entrysHtml"] {
+    max-width: 1200px !important;
+    width: 1110px !important;
+}
+
+.oe_accountcore_entrys>div:nth-child(odd) {
+    background-color: whitesmoke;
+}
+
+
+div.oe_accountcore_entrys>div {
+    padding-bottom: 10px !important;
+}
+
+div.oe_accountcore_entrys>div:hover {
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+}
+
+.oe_accountcore_entrys>div>div {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.oe_accountcore_entrys>div>div.oe_ac_explain {
+    width: 200px !important;
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+}
+
+.oe_accountcore_entrys>div>div.oe_ac_account {
+    width: 300px !important;
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    margin-left: 30px;
+
+}
+
+.oe_accountcore_entrys>div>div.oe_ac_account>span {
+    font-style: italic
+}
+
+.oe_accountcore_entrys>div>div.o_list_number {
+    width: 135px !important;
+    text-align: right;
+}
+
+.oe_accountcore_entrys>div>div.oe_ac_cashflow {
+    width: 250px !important;
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    margin-left: 5px;
+}
+
+
+/* 凭证列表分录内容 结束*/
+/* 分录列表开始 */
+.oe_ac_entrylist table {
+    table-layout: fixed !important;
+}
+
+.oe_ac_entrylist th {
+    white-space: nowrap;
+}
+
+.oe_ac_entrylist td {
+    vertical-align: middle !important;
+}
+
+/* 按钮 */
+.oe_ac_entrylist table tr th:nth-child(2) {
+    width: 2rem !important;
+}
+
+/* 记账日期 */
+.oe_ac_entrylist table tr th:nth-child(3) {
+    width: 9rem !important;
+}
+
+/* 借方金额 */
+.oe_ac_entrylist table tr th:nth-child(7) {
+    width: 11rem !important;
+}
+
+/* 贷方方金额 */
+.oe_ac_entrylist table tr th:nth-child(8) {
+    width: 11rem !important;
+}
+
+/* 凭证号*/
+.oe_ac_entrylist table tr th:nth-child(10) {
+    width: 4rem !important;
+}
+
+/* 所属凭证*/
+.oe_ac_entrylist table tr th:nth-child(11) {
+    width: 6rem !important;
+}
+
+/* 业务日期*/
+.oe_ac_entrylist table tr th:nth-child(13) {
+    width: 9rem !important;
+}
+
+/* 分录列表结束 */
+/* 会计凭证界面(非打印)-开始 */
+.oe_ac_voucher_entrys {
+    margin: 0px;
+    width: 1070px;
+}
+
+.oe_ac_voucher_entrys>div {
+    border: 1px solid gainsboro
+        /* overflow: hidden; */
+}
+
+.oe_ac_voucher_entrys .o_input {
+    width: 100%;
+    border: 0px;
+}
+
+.oe_ac_voucher_entrys th {
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+}
+
+.oe_ac_voucher_entrys td {
+    vertical-align: middle !important;
+}
+
+.amount-zero {
+    /* 凭证分录借贷金额为零显示颜色 */
+    color: white !important;
+}
+
+.amount-negative {
+    /* 凭证分录借贷金额小于零显示颜色 */
+    color: red !important;
+}
+
+/* 凭证分录开始*/
+.oe_ac_voucher_entrys thead>tr>th {
+    border-bottom: 0px !important;
+}
+
+.oe_ac_voucher_entrys tbody td.o_data_cell {
+    border: 1px solid gainsboro;
+}
+
+.oe_ac_voucher_entrys tfoot {
+    border: 0px !important;
+}
+
+.oe_ac_voucher_entrys tbody>tr {
+    vertical-align: middle;
+    height: 6rem !important;
+
+}
+
+/* 第1列 跳转按钮 */
+.oe_ac_voucher_entrys table tr th:nth-child(1) {
+    width: 2rem !important;
+}
+
+.oe_ac_voucher_entrys table tr td:nth-child(1) {
+    border-left: 0px !important;
+    border-right: 0px !important;
+}
+
+/* 说明 */
+.oe_ac_voucher_entrys table tr th:nth-child(2) {
+    width: 150px !important;
+    border-left: 0px !important;
+    text-align: center;
+
+}
+
+.oe_ac_voucher_entrys table tr td:nth-child(2) {
+    width: 150px !important;
+    border-left: 0px !important;
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+}
+
+/* 科目 */
+.oe_ac_voucher_entrys table tr th:nth-child(3) {
+    width: 235px !important;
+    text-align: center;
+
+}
+
+.oe_ac_voucher_entrys table tr td:nth-child(3) {
+    width: 235px !important;
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+}
+
+/* 借方 */
+.oe_ac_voucher_entrys table tr th:nth-child(4) {
+    width: 130px !important;
+}
+
+/* 贷方 */
+.oe_ac_voucher_entrys table tr th:nth-child(5) {
+    width: 130px !important;
+}
+
+/*核算统计项目 */
+.oe_ac_voucher_entrys table tr th:nth-child(6) {
+    width: 230px !important;
+    text-align: center;
+}
+
+/* 现金流量 */
+.oe_ac_voucher_entrys table tr th:nth-child(7) {
+    width: 110px !important;
+    text-align: center;
+
+}
+
+.oe_ac_voucher_entrys table tr td:nth-child(7) {
+    width: 110px !important;
+    word-break: break-all !important;
+    word-wrap: break-word !important;
+    white-space: normal !important;
+    border-right: 0px !important;
+}
+
+.oe_ac_voucher_entrys table tr th:nth-child(8) {
+    width: 1.5rem !important;
+    border-left: 0px !important;
+    border-right: 0px !important;
+
+}
+
+.oe_ac_voucher_entrys table tr td:nth-child(8) {
+    width: 1.5rem !important;
+    border-left: 0px !important;
+    border-right: 0px !important;
+}
+
+.oe_ac_voucher_entrys .oe_ac_account input {
+    height: 6rem !important;
+}
+
+/* 凭证分录结束 */
+/* 会计凭证界面-结束 */
+[name='fast_period'] button {
+    background-color: white;
+    border: 1px solid grey;
+}
+
+/* 无边框 ,凭证打印等*/
+.ac-no-border {
+    border-width: 0px !important;
+    border-color: white !important;
+}
+
+/* jexel 在弹出窗口下面*/
+table.jexcel {
+    border-collapse: initial !important;
+}
+
+.jexcel>thead>tr>td {
+    z-index: 80 !important;
+}
+
+/* jexel 工具栏 */
+@font-face {
+    font-family: 'Material Icons';
+    font-style: normal;
+    font-weight: 400;
+    src: url(/accountcore/static/css/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2) format('woff2');
+}
+
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+    width: 30px !important;
+    height: 30px !important;
+    text-align: center !important;
+}
+
+/* 报表设计器工具栏 */
+.jexcel_toolbar {
+    position: fixed !important;
+    bottom: 0 !important;
+    height: 35px !important;
+    display: flex !important;
+    top: initial !important;
+    z-index: 85 !important;
+}
+
+.jexcel_content td {
+    overflow: hidden !important;
+}
+
+/* jexel 工具下拉框宽度 */
+select.jexcel_toolbar_item {
+    width: 100px;
+}
+
+/* 右键查单靠左对齐 */
+.jcontextmenu {
+    text-align: left;
+}
+
+/* 隐藏about */
+.jcontextmenu>li:last-child {
+    font-size: 0px;
+    color: white;
+}
+
+/* 报表设计器公式向导公式内容高度 */
+textarea.formula {
+    max-height: 20rem;
+    overflow-y: scroll !important;
+    max-width: 95%;
+}
+
+/* 报表设计器全屏时,计算弹出的遮罩应在最前面z-index=1000 */
+.fullscreen {
+    z-index: 999 !important;
+}
+
+/* 移动报表设计器工具栏 */
+.jexecl_toolbar_place {
+    bottom: initial !important;
+    top: 0px !important;
+}
+
+/* 报表设计器打印时隐藏 */
+@media print {
+    .jexcel_toolbar {
+        display: none !important;
+    }
+
+    .jexcel_content table>thead {
+        visibility: hidden !important;
+    }
+
+    .jexcel_content .jexcel_row {
+        visibility: hidden !important;
+    }
+
+}
+
+/* 移动报表设计器列头浮动上边距为0*/
+.with-toolbar .jexcel>thead>tr>td {
+    top: 0px !important;
+}
+
+/* 快建凭证行背景色 */
+.back-color {
+    background-color: #7B7BAC;
+    color: white
+}

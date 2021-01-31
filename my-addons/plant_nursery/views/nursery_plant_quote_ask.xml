@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Container for quote ask for plants
+        :partner-name string: customer name that signs
+        :access-token string: access token for customer portal
+    -->
+
+    <template id="quote_ask" name="Ask Quote">
+        <div t-att-class="'o_plant_quote_ask'"
+                t-att-data-plant-id="plantId"
+                t-att-data-access-token="accessToken">
+        </div>
+    </template>
+</odoo>

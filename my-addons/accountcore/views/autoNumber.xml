@@ -1,0 +1,23 @@
+ <odoo>
+ <!-- odoo自动编号 -->
+  <!-- 记账凭证唯一编号 -->
+  <data noupdate='True'>
+    <record id='voucher_unique_number' model='ir.sequence'>
+      <field name='name'>记账凭证唯一号</field>
+      <field name='code'>voucher.uniqueNumber</field>
+      <field name='prefix'>V</field>
+      <field name='suffix'></field>
+      <field name='padding'>8</field>
+    </record>
+  </data>
+  <!-- 核算项目唯一编号 -->
+  <data noupdate='True'>
+    <record id='item_unique_number' model='ir.sequence'>
+      <field name='name'>核算项目唯一号</field>
+      <field name='code'>item.uniqueNumber</field>
+      <field name='prefix'>I</field>
+      <field name='suffix'></field>
+      <field name='padding'>8</field>
+    </record>
+  </data>
+</odoo>

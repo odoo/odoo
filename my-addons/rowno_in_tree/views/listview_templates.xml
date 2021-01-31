@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+    	<template id="assets_backend" name="rowno_in_tree assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+            	<link rel="stylesheet" href="/rowno_in_tree/static/src/scss/list_view.scss" />
+            	<script type="text/javascript" src="/rowno_in_tree/static/src/js/list_view.js"></script>
+            </xpath> 
+        </template>
+    </data>
+</odoo>

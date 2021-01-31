@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+    <t t-extend="Dialog">
+        <t t-jquery="button.close" t-operation="inner">
+            <i class="fa fa-close" />
+        </t>
+        <t t-jquery="button.close" t-operation="before">
+            <button type="button" class="dialog_button_extend close">
+                <i class="fa fa-expand" />
+            </button>
+            <button type="button" class="dialog_button_restore close">
+                <i class="fa fa-compress" />
+            </button>
+        </t>
+    </t>
+</templates>

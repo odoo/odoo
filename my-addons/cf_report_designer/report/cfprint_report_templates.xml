@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="rpt_sale_order">
+            <t t-call="report.html_container">
+                <t t-raw="show_message" />
+            </t>
+            <script type="text/javascript">
+                <t t-raw="cfprint_json" />
+            </script>
+        </template>
+    </data>
+</odoo>
+

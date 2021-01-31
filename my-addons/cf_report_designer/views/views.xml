@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+
+    <record id="cf_report_define_list" model="ir.ui.view">
+      <field name="name">CF Report Define List</field>
+      <field name="model">cf.report.define</field>
+<!--      <field name="comment">报表定义</field>-->
+      <field name="arch" type="xml">
+        <tree string="Define of Report">
+          <!--<field name="sequence"/>-->
+          <field name="name"/>
+          <field name="comment"/>
+          <field name="model_id"/>
+          <field name="template_id"/>
+          <field name="category_id"/>
+          <field name="use_client_templ" invisible="1"/>
+          <field name="client_templ_name" invisible="1"/>
+          <field name="company_id" invisible="1"/>
+          <!--<field name="open_print"/>-->
+          <field name="note" invisible="1"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="cf_report_define_form" model="ir.ui.view">
+      <field name="name">CF Report Define From</field>
+      <field name="model">cf.report.define</field>
+<!--      <field name="comment">报表定义</field>-->
+      <field name="arch" type="xml">
+        <form string="Define of Report">
+          <header>
+              <button name="action_retrieve_fields" string="Retrieve Fields" type="object" class="btn-primary"/>
+              <button name="action_remove_fields" string="Remove Fields" type="object" class="btn-secondary" attrs="{'invisible': [('field_ids','=', [])]}"/>
+              <button name="action_generate" string="Generate" type="object" class="btn-primary" attrs="{'invisible': [('field_ids','=', [])]}"/>
+              <button name="action_design" string="Design" type="object" class="btn-primary" attrs="{'invisible': ['|', ('state','!=', 'defined'), ('field_ids','=', [])]}"/>
+          </header>
+          <sheet style="max-width: 1366px;">
+            <group>
+              <group>
+                <field name="name" required="1" placeholder="ID of Report(Only letters, numbers and underscores are allowed)"/> <!-- 请输入报表ID(只允许英文字母、数字和下划线)-->
+                <field name="comment" required="1" placeholder="Name of Report"/>  <!--请输入报表中文名-->
+                <field name="technical_name"/>  <!--报表技术名称-->
+                <field name="model_id" required="1" placeholder="Model of Report"/><!--报表取数的数据表(model)-->
+                <field name="prn_server_address" placeholder="Address of printer server. (Keep default if you do not understand this parameter.)"/><!--打印服务器地址-->
+                <field name="prn_server_port" placeholder="Port of printer server. (Keep default if you do not understand this parameter.)"/><!--打印服务器端口(model)-->
+                <field name="note"/>
+              </group>
+              <group>
+                <field name="company_id" invisible="1"/>
+                <field name="template_id" attrs="{'required': [('use_client_templ','!=', True)]}" placeholder="Select template will to use"/>
+                <field name="hide_print_menu"/>
+                <field name="use_client_templ"/>
+                <field name="client_templ_name" attrs="{'invisible': [('use_client_templ','!=', True)], 'required': [('use_client_templ','=', True)]}"/>
+                <!--<field name="open_print"/>-->
+                <field name="printer_id" placeholder="Name of printer will to use.(Keep blank if you do not understand this parameter.)"/>
+                <field name="category_id"/>
+                <field name="back_after_print"/>
+                <field name="state" invisible="1"/>
+              </group>
+            </group>
+            <notebook>
+              <page name="fields" string="Fields">
+                <field name="field_ids" context="{'default_report_id': id, 'default_model_id': model_id}"  domain="[('model_id', '=', model_id)]"/>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="cf_report_define_field_list" model="ir.ui.view">
+      <field name="name">CF Report Define Field List</field>
+      <field name="model">cf.report.define.field</field>
+<!--      <field name="comment">报表字段定义</field>-->
+      <field name="arch" type="xml">
+        <tree string="Fields of Report" decoration-danger="(ttype=='one2many' or ttype=='many2many' or ttype=='many2one') and len(related_external_field_ids) &lt;= 0" decoration-success="len(related_external_field_ids) &gt; 0">
+          <field name="report_id" invisible="1"/>
+          <field name="model_id" invisible="1"/>
+          <field name="field_id"/>
+          <field name="name"/>
+          <field name="field_description"/>
+          <field name="ttype"/>
+          <field name="related_field_model_id" invisible="1"/>
+          <field name="related_external_field_ids"/>
+          <button name="action_view_sub_fields" string="View Related Model Fields" type="object" class="oe_highlight" attrs="{'invisible':[('ttype','!=','one2many'),('ttype', '!=', 'many2many'),('ttype', '!=', 'many2one')]}"/>
+        </tree>
+      </field>
+    </record>
+
+    <!--
+    <record id="cf_report_define_field_form_relation" model="ir.ui.view">
+      <field name="name">CF Report Define Field From of Relation Model</field>
+      <field name="model">cf.report.define.field</field>
+      <field name="priority">99</field>
+      <field name="comment">关联表字段定义</field>
+      <field name="arch" type="xml">
+        <form string="Fields of Related Model">
+          <group>
+            <group>
+              <field name="id" invisible="1"/>
+              <field name="report_id" invisible="1"/>
+              <field name="model_id" readonly="1"/>
+              <field name="model_name" readonly="1"/>
+              <field name="field_id" attrs="{'readonly':[('id','!=',False)]}"/>
+              <field name="name" attrs="{'readonly':[('id','!=',False)]}"/>
+              <field name="related_field_model_id" readonly="1"/>
+            </group>
+            <group>
+              <field name="field_description" attrs="{'readonly':[('id','!=',False)]}"/>
+              <field name="ttype" attrs="{'readonly':[('id','!=',False)]}"/>
+              <field name="note"/>
+            </group>
+          </group>
+          <group attrs="{'invisible': [('ttype', '!=', 'one2many'),('ttype', '!=', 'many2many'),('ttype', '!=', 'many2one')]}">
+            <div style="width:100%; text-align:center;">
+              <button name="action_retrieve_fields" string="Retrieve Sub Fields" type="object" class="btn-primary"/>
+              <button name="action_remove_fields" string="Remove Related Model Fields" type="object" class="btn-secondary"/>
+            </div>
+          </group>
+          <notebook>
+            <page string="Fields of Related Model" name="Fields_of_Related_Model">
+              <field name="related_external_field_ids" nolabel="1" widget="one2many_multiselect" context="{'default_related_field_id':id, 'default_report_id': report_id, 'default_model_id': related_field_model_id}"/>
+            </page>
+          </notebook>
+        </form>
+      </field>
+    </record>
+    -->
+
+    <record id="cf_report_define_field_form" model="ir.ui.view">
+      <field name="name">CF Report Define Field From</field>
+      <field name="model">cf.report.define.field</field>
+<!--      <field name="comment">报表字段定义</field>-->
+      <field name="arch" type="xml">
+        <form string="Fields of Report">
+          <sheet class="cf_wide_sheet">
+            <group>
+              <group>
+                <field name="id" invisible="1"/>
+                <field name="report_id" invisible="1"/>
+                <field name="model_id" readonly="1"/>
+                <field name="model_name" readonly="1"/>
+                <field name="field_id" attrs="{'readonly':[('id','!=',False)]}" domain="[('model_id', '=', related_field_model_id or model_id)]"/>
+                <field name="name" attrs="{'readonly':[('id','!=',False)]}"/>
+                <field name="related_field_model_id" readonly="1"/>
+              </group>
+              <group>
+                <field name="field_description" attrs="{'readonly':[('id','!=',False)]}"/>
+                <field name="ttype" attrs="{'readonly':[('id','!=',False)]}"/>
+                <field name="note"/>
+              </group>
+            </group>
+            <group attrs="{'invisible': [('ttype', '!=', 'one2many'),('ttype', '!=', 'many2many'),('ttype', '!=', 'many2one')]}">
+              <div style="width:100%; text-align:center;">
+                <button name="action_retrieve_fields" string="Retrieve Sub Fields" type="object" class="btn-primary"/>
+                <button name="action_remove_fields" string="Remove Related Model Fields" type="object" class="btn-secondary"/>
+              </div>
+            </group>
+            <notebook>
+              <page string="Fields of Related Model" name="Fields_of_Related_Model">
+                <field name="related_external_field_ids" nolabel="1" widget="one2many_multiselect" context="{'default_related_field_id':id, 'default_report_id': report_id, 'default_model_id': model_id, 'default_related_field_model_id':related_field_model_id}">  <!-- , 'default_model_name':model_name -->
+                  <form string="Fields of Related Model">
+                    <group>
+                      <group>
+                        <field name="id" invisible="1"/>
+                        <field name="report_id" invisible="1"/>
+                        <field name="model_id" readonly="1"/>
+                        <field name="model_name" readonly="1"/>
+                        <field name="field_id" attrs="{'readonly':[('id','!=',False)]}" domain="[('model_id', '=', related_field_model_id)]"/>
+                        <field name="name" attrs="{'readonly':[('id','!=',False)]}"/>
+                        <field name="related_field_model_id" readonly="1"/>
+                      </group>
+                      <group>
+                        <field name="field_description" attrs="{'readonly':[('id','!=',False)]}"/>
+                        <field name="ttype" attrs="{'readonly':[('id','!=',False)]}"/>
+                        <field name="note"/>
+                      </group>
+                    </group>
+                    <group attrs="{'invisible': [('ttype', '!=', 'one2many'),('ttype', '!=', 'many2many'),('ttype', '!=', 'many2one')]}">
+                      <div style="width:100%; text-align:center;">
+                        <button name="action_retrieve_fields" string="Retrieve Sub Fields" type="object" class="btn-primary"/>
+                        <button name="action_remove_fields" string="Remove Related Model Fields" type="object" class="btn-secondary" attrs="{'invisible': [('related_external_field_ids', '=', [])]}"/>
+                      </div>
+                    </group>
+                    <notebook>
+                      <page string="Fields of Related Model" name="Fields_of_Related_Model">
+                        <field name="related_external_field_ids" nolabel="1" widget="one2many_multiselect" context="{'default_related_field_id':id, 'default_report_id': report_id, 'default_model_id': related_field_model_id, 'default_related_field_model_id':related_field_model_id}"/>
+                      </page>
+                    </notebook>
+                  </form>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="cf_cfprint_license_form" model="ir.ui.view">
+      <field name="name">CFPrint License From</field>
+      <field name="model">cf.cfprint.license</field>
+<!--      <field name="comment">许可证信息</field>-->
+      <field name="arch" type="xml">
+        <form string="License">
+          <sheet>
+            <group>
+                <field name="mcode" readonly="1"/>
+                <field name="license"/>
+                <field name="note"/>
+            </group>
+            <group>
+              <div style="width: 100%; padding: 2px 40px;">
+                <p>请把以上机器码请交给康虎软件工作室以获取授权许可证！</p>
+                <p>康虎软件工作室联系方式：</p>
+                <p>QQ：360026606</p>
+                <p>微信：360026606</p>
+                <p>QQ群：583804904</p>
+              </div>
+            </group>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <!-- actions opening views on models -->
+    <record id="act_cf_report_define_win" model="ir.actions.act_window">
+      <field name="name">康虎云报表定义</field>
+      <field name="res_model">cf.report.define</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+<!--    <record id="act_cf_cfprint_license_win" model="ir.actions.act_window">-->
+<!--      <field name="name">康虎云报表授权许可</field>-->
+<!--      <field name="res_model">cf.cfprint.license</field>-->
+<!--      <field name="view_mode">form</field>-->
+<!--    </record>-->
+
+    <record id="act_cf_cfprint_license_srv" model="ir.actions.server">
+      <field name="name">康虎云报表授权许可</field>
+      <field name="type">ir.actions.server</field>
+      <field name="model_id" ref="model_cf_cfprint_license"/>
+      <field name="binding_model_id" ref="model_cf_cfprint_license"/>
+      <field name="state">code</field>
+      <field name="code">action = model.create_or_show_license()</field>
+<!--      <field name="activity_user_type">generic</field>-->
+    </record>
+
+    <menuitem id="menu_cf_report_define" name="Report Define" parent="cfprint.menu_cf_root" action="act_cf_report_define_win" sequence="1" groups="cfprint.cfprint_group_manager"/>
+
+    <menuitem id="menu_cf_cfprint_license" name="License" parent="cfprint.menu_cf_cfprint_conf" action="act_cf_cfprint_license_srv" sequence="10" groups="cfprint.cfprint_group_manager"/>
+
+  </data>
+</odoo>

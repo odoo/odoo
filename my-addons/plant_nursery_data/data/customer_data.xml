@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="res_partner_0" model="res.partner">
+            <field name="name">Brett Starkaxe</field>
+            <field name="title" ref="base.res_partner_title_prof"/>
+            <field name="image_1920" type="base64" file="plant_nursery_data/static/img/people_man_hipster_0.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">Plant Owner</field>
+            <field name="street">Castle Esplanade</field>
+            <field name="zip">FK8 1EJ</field>
+            <field name="city">Stirling</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="phone">+44 1234 567 890</field>
+            <field name="mobile">+44 7700 900764</field>
+            <field name="email">brett@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_1" model="res.partner">
+            <field name="name">Leodegrance de Carmelide</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+            <field name="image_1920" type="base64" file="plant_nursery_data/static/img/k_leodagan.jpg"/>
+            <field name="type">contact</field>
+            <field name="function">CEO</field>
+            <field name="street">Rue Montagne aux Herbes Potagères 7</field>
+            <field name="zip">1000</field>
+            <field name="city">Bruxelles</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="phone">+3269001122</field>
+            <field name="mobile">+32485112233</field>
+            <field name="email">leodagan@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+        <record id="res_partner_2" model="res.partner">
+            <field name="name">Yannick Vitesse</field>
+            <field name="title" ref="base.res_partner_title_prof"/>
+            <field name="image_1920" type="base64" file="plant_nursery_data/static/img/people_man_hipster_1.jpg"/>
+            <field name="type">invoice</field>
+            <field name="function">Mandator</field>
+            <field name="street">Place d'Youville, 995</field>
+            <field name="zip">QC G1R 3P1</field>
+            <field name="city">Ville de Quebec</field>
+            <field name="country_id" ref="base.ca"/>
+            <field name="phone">+1 418 123 4567</field>
+            <field name="mobile">+1 418 765 4321</field>
+            <field name="email">yannick@example.com</field>
+            <field name="website">www.example.com</field>
+        </record>
+
+        <record id="customer_0" model="nursery.customer">
+            <field name="name">Brett Starkaxe</field>
+            <field name="partner_id" ref="plant_nursery_data.res_partner_0"/>
+        </record>
+        <function model="nursery.customer"
+            name="_onchange_partner_id"
+            eval="[ref('plant_nursery_data.customer_0')]"/>
+        <record id="customer_1" model="nursery.customer">
+            <field name="name">Leodegrance de Carmelide</field>
+            <field name="partner_id" ref="plant_nursery_data.res_partner_1"/>
+        </record>
+        <function model="nursery.customer"
+            name="_onchange_partner_id"
+            eval="[ref('plant_nursery_data.customer_1')]"/>
+        <record id="customer_2" model="nursery.customer">
+            <field name="name">Yannick Vitesse</field>
+            <field name="partner_id" ref="plant_nursery_data.res_partner_2"/>
+        </record>
+        <function model="nursery.customer"
+            name="_onchange_partner_id"
+            eval="[ref('plant_nursery_data.customer_2')]"/>
+    </data>
+</odoo>

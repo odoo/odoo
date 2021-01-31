@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 6.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="sale_order_template" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Jasper Sale Order Template"/>
+	<queryString language="xPath">
+		<![CDATA[/data/record]]>
+	</queryString>
+	<field name="id" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="id"/>
+		<fieldDescription><![CDATA[id]]></fieldDescription>
+	</field>
+	<field name="Taxes-amount_tax" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Taxes-amount_tax"/>
+		<fieldDescription><![CDATA[Taxes-amount_tax]]></fieldDescription>
+	</field>
+	<field name="Total-amount_total" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Total-amount_total"/>
+		<fieldDescription><![CDATA[Total-amount_total]]></fieldDescription>
+	</field>
+	<field name="Untaxed_Amount-amount_untaxed" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Untaxed_Amount-amount_untaxed"/>
+		<fieldDescription><![CDATA[Untaxed_Amount-amount_untaxed]]></fieldDescription>
+	</field>
+	<field name="Customer_Reference-client_order_ref" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Customer_Reference-client_order_ref"/>
+		<fieldDescription><![CDATA[Customer_Reference-client_order_ref]]></fieldDescription>
+	</field>
+	<field name="Confirmation_Date-confirmation_date" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Confirmation_Date-confirmation_date"/>
+		<fieldDescription><![CDATA[Confirmation_Date-confirmation_date]]></fieldDescription>
+	</field>
+	<field name="Creation_Date-create_date" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Creation_Date-create_date"/>
+		<fieldDescription><![CDATA[Creation_Date-create_date]]></fieldDescription>
+	</field>
+	<field name="Order_Date-date_order" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Order_Date-date_order"/>
+		<fieldDescription><![CDATA[Order_Date-date_order]]></fieldDescription>
+	</field>
+	<field name="Display_Name-display_name" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Display_Name-display_name"/>
+		<fieldDescription><![CDATA[Display_Name-display_name]]></fieldDescription>
+	</field>
+	<field name="Invoice_Status-invoice_status" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Invoice_Status-invoice_status"/>
+		<fieldDescription><![CDATA[Invoice_Status-invoice_status]]></fieldDescription>
+	</field>
+	<field name="Status-state" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Status-state"/>
+		<fieldDescription><![CDATA[Status-state]]></fieldDescription>
+	</field>
+	<field name="Expiration_Date-validity_date" class="java.lang.String">
+		<property name="net.sf.jasperreports.xpath.field.expression" value="Expiration_Date-validity_date"/>
+		<fieldDescription><![CDATA[Expiration_Date-validity_date]]></fieldDescription>
+	</field>
+	<field name="Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[Name-name]]></fieldDescription>
+	</field>
+	<field name="Related_Partner-partner_id" class="java.lang.String">
+		<fieldDescription><![CDATA[Related_Partner-partner_id]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="206" y="29" width="161" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Sale Order Report]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement x="470" y="10" width="101" height="21"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<textField>
+				<reportElement x="80" y="10" width="100" height="30">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="7c53c044-d815-4f7d-818e-c13a9a61dc11"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Name-name}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="10" width="90" height="30"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="10" width="100" height="30"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="440" y="10" width="100" height="30"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Related_Partner-partner_id}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

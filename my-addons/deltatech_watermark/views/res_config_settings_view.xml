@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form</field>
+        <field name="model">res.config.settings</field>
+        <field name="priority" eval="11" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='business_documents']//div" position="inside">
+                <div class="col-12 col-lg-6 o_setting_box" id="watermark_image_setting">
+                    <div class="o_setting_right_pane">
+                        <label for="watermark_image" />
+                        <span
+                            class="fa fa-lg fa-building-o"
+                            title="Values set here are company-specific."
+                            role="img"
+                            aria-label="Values set here are company-specific."
+                            groups="base.group_multi_company"
+                        />
+                        <div class="text-muted">
+                            If set, watermark will can use in website or documents.
+                        </div>
+                        <field name="watermark_image" widget="image" class="w-25 mt-2" />
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+    <!--        <template id="styles_company_report" inherit_id="web.styles_company_report">-->
+    <!--            <t t-set="layout" position="after">-->
+    <!--                <t t-if="company.watermark_image">-->
+    <!--                   -->
+    <!--                    .o_report_layout_background {-->
+    <!--                         background-image: url(/web/image/res.company/<t t-esc="company.id"/>/watermark_image);-->
+    <!--                    }-->
+    <!--                </t>-->
+    <!--            </t>-->
+    <!--        </template>-->
+</odoo>

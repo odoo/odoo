@@ -1,0 +1,232 @@
+<odoo>
+    <!-- 明细账 -->
+    <template id='subsidiary_book_report'>
+            <t t-call="web.basic_layout"> 
+                    <style>
+h4{padding-top:2rem;padding-bottom:1rem;}
+thead, th {text-align: center;white-space: nowrap; !important}
+td, th {vertical-align: middle!important;font-size: small;}
+.orgs{font-size: small;}
+.damount, .camount, .bamount{white-space: nowrap!important;}
+           </style>
+                    <t t-set="start" t-value="data['form']['startDate']"></t>
+                    <t t-set="end" t-value="data['form']['endDate']"></t>
+                    <t t-set='start_year' t-value='data["period"].start_year'></t>
+                    <t t-set='start_month' t-value='data["period"].start_month'></t>
+                    <t t-set='show_general' t-value="data['form']['show_general']"></t>
+                    <t t-set='show_unique_number' t-value="data['form']['show_unique_number']"></t>
+                    <t t-set='show_orgs' t-value="data['form']['show_orgs']"></t>
+                    <div class="header text-center">
+                        <h4 t-if="show_general" class='ac_title'>科目总账</h4>
+                        <h4 t-else="" class='col ac_title'>科目明细账</h4>
+                        <h6  t-if="start=='1900-01-01' and end=='2219-12-31'">1900年1月至2219年12月</h6>
+                        <h6  t-else="">
+                            <t t-esc="(start[0:7]).replace('-','年')"></t>
+                            <span>月至</span>
+                            <span t-if="end!='2219-12-31'">
+                                <t t-esc="(end[0:7]).replace('-','年')"></t>月
+                            </span>
+                            <span t-if="end=='2219-12-31'">2219年12月</span>
+                        </h6>
+                       
+                    </div>
+                <div id="ac_table" class="container text-center" style="vertical-align:middle;">
+                 <span t-if="show_orgs" class="ac-no-border orgs">机构/主体:<t t-esc="data['sum_orgs_name']"></t></span>
+                    <t t-foreach="docs" t-as="account_entry">
+                            <!-- 没有余额不显示 -->
+                        <t t-if="not (len(account_entry.entrys)==1 and account_entry.entrys[0].balance==0)">
+                            <!-- 有余额显示 -->
+                            <t t-set='direction' t-value='account_entry.main_account.direction'></t>
+                            <t t-set='account_name' t-value='account_entry.main_account.name'></t>
+                            <t t-set='item' t-value='account_entry.item'></t>
+                             <!-- 单个科目循环开始 -->
+                            <div class="row" style="page-break-after:always;">
+                                <table  t-attf-class="{{'m-auto' if report_type == 'pdf' or show_general else ''}} o_list_table table-bordered table-sm table-hover ac-no-border">
+                                    <thead> 
+                                        <tr style='page-break-inside:avoid !important' t-attf-accountid="{{account_entry.main_account.id}}" t-attf-itemid="{{account_entry.item[0] if account_entry.item else 0}}">
+                                            <th colspan="5" class='text-left ac-no-border'><h5>科目:<t t-esc='account_name'></t></h5></th>
+                                            <th colspan="6" class='text-left ac-no-border'><h5 t-if='item'>核算项目:<t t-esc='item[1]'></t></h5></th>
+                                        </tr>
+                                        <tr t-if="not show_general">
+                                            <th>凭证日期</th>
+                                            <th>月</th>
+                                            <th>凭证号</th>
+                                            <th t-if="show_unique_number">唯一号</th>
+                                            <th>分录摘要</th>
+                                            <th>机构/主体名称</th>
+                                            <th>科目和核算项目</th>
+                                            <th>借方金额</th>
+                                            <th>贷方金额</th>
+                                            <th>方向</th>
+                                            <th>余额</th>
+                                        </tr>
+                                        <tr t-else="">
+                                            <th style="width:8rem !important">年</th>
+                                            <th style="width:2rem !important">月</th>
+                                            <th style="width:8rem !important">内容摘要</th>
+                                            <th style="width:10rem !important">借方金额</th>
+                                            <th style="width:10rem !important">贷方金额</th>
+                                            <th style="width:2rem !important">方向</th>
+                                            <th style="width:10rem !important">余额</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class='text-left'>
+                                        <t t-set='openVoucher_id' t_value='%(accountore_voucher_id_actions_window)d'></t>
+                                        <!-- 显示明细账 -->
+                                        <t t-if="not show_general" t-foreach="account_entry.entrys" t-as="entry"> 
+                                            <tr t-attf-class="{{'bg-warning' if entry.need_check else ''}}" t-if="(start_year==entry.year and entry.month >= start_month) or (start_year &lt; entry.year) or (entry.explain in ('年初余额','本月合计','本年累计','年初至启用月初','月初到启用日'))" style='page-break-inside:avoid !important;' >
+                                                <td>
+                                                    <span t-esc="entry.voucherdate"></span>
+                                                </td>
+                                                <td class='text-center'>
+                                                    <span t-esc='entry.month'></span>
+                                                </td>
+                                                <td class='text-center' >
+                                                    <span  t-esc='entry.v_number'></span>
+                                                    <a t-if="report_type=='html' and  isinstance(entry.voucher_id,int)" class="fa fa-reply" t-attf-href='/web?#id={{entry.voucher_id}}&amp;action=%(accountore_voucher_id_actions_window)d&amp;model=accountcore.voucher&amp;' target='_blank'></a>
+                                                </td>
+                                                <td t-if="show_unique_number" class='text-center' >
+                                                    <span t-esc="entry.uniqueNumber"></span>
+                                                </td> 
+                                                <td>
+                                                    <span t-esc='entry.explain'></span>
+                                                </td>
+                                                <td>
+                                                    <span t-esc='entry.org_name'></span>
+                                                </td>
+                                                <td> 
+                                                <span>
+                                                        <span t-esc="entry.account_number"></span>
+                                                        <span t-esc="entry.items_html"></span>
+                                                </span>
+                                                </td>
+                                                <td class='damount text-right'>
+                                                    <span t-if='entry.damount!=0' t-esc="'{:,.2f}'.format(entry.damount)"></span>
+                                                </td>
+                                                <td class='camount text-right'>
+                                                    <span t-if='entry.camount!=0' t-esc="'{:,.2f}'.format(entry.camount)"></span>
+                                                </td>
+                                                <td class='text-center'>
+                                                    <span t-if="entry.balance==0">平</span>
+                                                    <span t-elif="entry.direction=='1'">借</span>
+                                                    <span t-else="">贷</span>
+                                                </td>
+                                                <td class='bamount text-right'>
+                                                    <span t-if='entry.balance!=0' t-esc="'{:,.2f}'.format(entry.balance)"></span>
+                                                    <span t-else="" t-esc="'{:,.2f}'.format(entry.balance)"></span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                                <!-- 显示总账 -->
+                                        <t  t-if="show_general" t-foreach="account_entry.entrys" t-as="entry"> 
+                                            <tr t-attf-class="{{'bg-warning' if entry.need_check else ''}}" t-if="(start_year==entry.year and entry.month >= start_month) and (start_year &lt; entry.year) or (entry.explain in ('年初余额','本月合计','本年累计','年初至启用月初','月初到启用日'))" style='page-break-inside:avoid !' >
+                                                <td class='text-center ac_year'>
+                                                    <span t-esc="entry.voucherdate"></span>
+                                                </td>
+                                                <td class='text-center ac_month' >
+                                                    <span t-esc='entry.month'></span>
+                                                </td>
+                                                <td class='text-center'>
+                                                    <span t-esc='entry.explain'></span>
+                                                </td>
+                                                <td class='damount text-right'>
+                                                    <span t-if='entry.damount!=0' t-esc="'{:,.2f}'.format(entry.damount)"></span>
+                                                </td>
+                                                <td class='camount text-right'>
+                                                    <span t-if='entry.camount!=0' t-esc="'{:,.2f}'.format(entry.camount)"></span>
+                                                </td>
+                                                <td class='text-center'>
+                                                    <span t-if="entry.balance==0">平</span>
+                                                    <span t-elif="entry.direction=='1'">借</span>
+                                                    <span t-else="">贷</span>
+                                                </td>
+                                                <td class='bamount text-right'>
+                                                    <span t-if='entry.balance!=0' t-esc="'{:,.2f}'.format(entry.balance)"></span>
+                                                    <span t-else="" t-esc="'{:,.2f}'.format(entry.balance)"></span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                </table>
+                            </div>
+                              <!-- 单个科目循环结束 -->
+                        </t>
+                    </t>
+                </div>
+            </t>
+            <div class="footer o_standard_footer">
+                <div class="text-right">
+                    <div t-if="report_type == 'pdf'">
+                    Page: <span class="page" />/<span class="topage" />
+                     </div>
+                </div>
+            </div>
+
+<script type="text/javascript">
+$(function () {
+    //点击打开凭证
+    $("tr").on("dblclick", openVoucher);
+});
+function openVoucher(e) {
+    var tr = $(e.target).parents("tr");
+    var year =tr.find(".ac_year").find("span").text();
+    if (!!year){return;}
+    var url=$(e.currentTarget).find("a").attr('href');
+    window.open(url);
+};
+//导出Excel
+odoo.define(['accountcore.table2excel'], function (require) {
+	$(function () {
+		var btn_contaner = $('.o_report_buttons', window.parent.document);
+        if ($('#t2excel', window.parent.document).length > 0) {
+          $('#t2excel', window.parent.document).remove();
+		}
+        btn_contaner.append('<button id="t2excel" type="button" class="btn btn-secondary fa fa-download" title="导出EXCEL">EXCEL</button>');
+		var btn2excel = require('accountcore.table2excel');
+		$('#t2excel', window.parent.document).click(function () {
+            var fileName=$('.ac_title').text()+"[<t t-esc="data['form']['startDate']"></t>至<t t-esc="data['form']['endDate']"></t>]<t t-esc="data['sum_orgs_name']"></t>.xls";
+            if (fileName.length>60){fileName=fileName.slice(0,60)+"等等"};
+			$("#ac_table").table2excel({
+				filename: fileName,
+				preserveColors: false
+			});
+		});
+	});
+});
+//关联打开明细账向导
+odoo.define(function (require) {
+    $(function () {
+        $('#ac_table tbody').bind("dblclick", function (e) {
+            var tr = $(e.target).parents("tr");
+            var year =tr.find(".ac_year").find("span").text();
+            if (!(!!year)){return;}
+            var web_client_ = window.top.odoo.__DEBUG__.services['web.web_client'];
+            var ac_orgs = <t t-esc = "data['sum_orgids']" /> ;
+            var _startDate = year +"-"+tr.find(".ac_month").find("span").text()+"-1";
+            var _endDate=_startDate;
+            var _account = [parseInt(tr.parents("table").find("thead [accountid]").attr("accountid"))];
+            var _item = parseInt(tr.parents("table").find("thead [itemid]").attr("itemid"));
+            web_client_.do_action({
+                name: '关联查询明细账',
+                type: 'ir.actions.act_window',
+                res_model: 'accountcore.get_subsidiary_book',
+                context: {
+                    default_startDate: _startDate,
+                    default_endDate: _endDate,
+                    default_account: _account,
+                    default_orgs: ac_orgs,
+                    default_item: _item
+                },
+                views: [
+                    [false, 'form']
+                ],
+                target: 'new'
+            });
+        });
+    });
+});
+        </script>
+    </template>
+</odoo>

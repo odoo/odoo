@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="view_employee_tree_with_dpttree" model="ir.ui.view">
+        <field name="name">hr.employee.tree</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_tree" />
+        <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="categ_property">department_id</attribute>
+                <attribute name="categ_model">hr.department</attribute>
+                <attribute name="categ_parent_key">parent_id</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_kanban_view_employees_with_dpttree" model="ir.ui.view">
+        <field name="name">hr.employee.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees" />
+        <field name="arch" type="xml">
+            <xpath expr="//kanban" position="attributes">
+                <attribute name="categ_property">department_id</attribute>
+                <attribute name="categ_model">hr.department</attribute>
+                <attribute name="categ_parent_key">parent_id</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

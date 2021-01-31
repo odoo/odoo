@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <record id="module_cfprint" model="ir.module.category">
+        <field name="name">CFPrint</field>
+        <field name="sequence">117</field>
+<!--        <field name="comment">康虎云报表权限类别</field>-->
+    </record>
+
+    <record id="cfprint_group_user" model="res.groups">
+        <field name="name">User</field>
+        <field name="category_id" ref="module_cfprint"/>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+<!--        <field name="comment">康虎云报表普通用户</field>-->
+    </record>
+
+    <record id="cfprint_group_manager" model="res.groups">
+        <field name="name">Manager</field>
+        <field name="category_id" ref="module_cfprint"/>
+        <field name="implied_ids" eval="[(4, ref('cfprint_group_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+<!--        <field name="comment">康虎云报表管理员</field>-->
+    </record>
+
+
+    <data noupdate="1">
+
+        <!-- Example
+        <record id="fleet_rule_contract_visibility_user" model="ir.rule">
+            <field name="name">User can only see his/her contracts</field>
+            <field name="model_id" ref="model_fleet_vehicle_log_contract"/>
+            <field name="groups" eval="[(4, ref('fleet_group_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+            <field name="domain_force">[('cost_id.vehicle_id.driver_id','=',user.partner_id.id)]</field>
+        </record>
+        -->
+
+    </data>
+</odoo>
+

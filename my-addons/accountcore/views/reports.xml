@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<odoo>
+        <!-- list-接收者 -->
+        <record model='ir.ui.view' id='accountcore_receiver_list'>
+            <field name='name'>接收者</field>
+            <field name='model'>accountcore.receiver</field>
+            <field name='arch' type='xml'>
+                <tree>
+                    <field name='number' />
+                    <field name='name' />
+                    <field name='glob_tag' widget='many2many_tags' />
+                </tree>
+            </field>
+        </record>
+        <!--form-接收者 -->
+        <record id="accountcore_receiver_action_window_form" model="ir.ui.view">
+            <field name='name'>接收者</field>
+            <field name="model">accountcore.receiver</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <h1>新增编辑=>接收者</h1>
+                        <hr></hr>
+                        <group>
+                            <field name="number" />
+                            <field name="name" />
+                            <field name='glob_tag' widget='many2many_tags' />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- list-报表类型 -->
+        <record model='ir.ui.view' id='accountcore_report_type_list'>
+            <field name='name'>报表类型</field>
+            <field name='model'>accountcore.report_type</field>
+            <field name='arch' type='xml'>
+                <tree>
+                    <field name='number' />
+                    <field name='name' />
+                    <field name='glob_tag' widget='many2many_tags' />
+                </tree>
+            </field>
+        </record>
+        <!--form-报表类型 -->
+        <record id="accountcore_report_type_action_window_form" model="ir.ui.view">
+            <field name='name'>报表类型</field>
+            <field name="model">accountcore.report_type</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <h1>新增编辑=>报表类型</h1>
+                        <hr></hr>
+                        <group>
+                            <field name="number" />
+                            <field name="name" />
+                            <field name='glob_tag' widget='many2many_tags' />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- list-已归档报表-->
+        <record model='ir.ui.view' id='accountcore_storage_report_list'>
+            <field name='name'>已归档报表</field>
+            <field name='model'>accountcore.storage_report</field>
+            <field name='arch' type='xml'>
+                <tree class="oe_accountcore_table_fix" duplicate='1' import='0' export_xlsx='0'>
+                    <field name="report_type" />
+                    <field name="startDate" />
+                    <field name="endDate" />
+                    <field name='number' />
+                    <field name='name' />
+                    <field name="receivers" widget='many2many_tags' />
+                    <field name="orgs" widget='many2many_tags' options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name="summary" />
+                    <field name="create_user" />
+                    <field name='glob_tag' widget='many2many_tags' />
+                </tree>
+            </field>
+        </record>
+        <!--form-已归档类型 -->
+        <record id="accountcore_storage_report_action_window_form" model="ir.ui.view">
+            <field name='name'>已归档报表</field>
+            <field name="model">accountcore.storage_report</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <h1>新增编辑=>已归档报表</h1>
+                        <hr></hr>
+                        <notebook>
+                            <page string='内容'>
+                                <center>
+                                    <span>期间从</span>
+                                    <field name='startDate'  />
+                                    <span class='fa fa-calendar-minus-o'>到</span>
+                                    <field name="endDate" />
+                                    <br />
+                                    <field colspan='6' name="fast_period" widget="ac_fast_period" />
+                                </center>
+                                <center>
+                                    <field name="data" widget='ac_jexcel' default_focus='1' />
+                                    <field name="onlydata" invisible='1' widget='ac_jexcel_only_data' />
+                                    <field name="data_style" invisible='1' widget='ac_jexcel_style' />
+                                    <field name="width_info" invisible='1' widget='ac_jexcel_width_info' />
+                                    <field name="height_info" invisible='1' widget='ac_jexcel_height_info' />
+                                    <field name="header_info" invisible='1' widget='ac_jexcel_header_info' />
+                                    <field name="comments_info" invisible='1' widget='ac_jexcel_comments_info' />
+                                    <field name="merge_info" invisible='1' widget='ac_jexcel_merge_info' />
+                                    <field name="meta_info" invisible='1' widget='ac_jexcel_meta_info' />
+                                </center>
+                                <group>
+                                    <field name='glob_tag' widget='many2many_tags' />
+                                </group>
+                            </page>
+                            <page string='机构/主体范围'>
+                                <group>
+                                    <field name="orgs" widget="many2many_tags" options="{'no_create_edit':1,'no_create':1,'no_open':1}" class="ac_choice_orgs" required='True' />
+                                </group>
+                            </page>
+                            <page string='归档信息'>
+                                <group>
+                                    <field name="report_type" />
+                                    <field name='number' />
+                                    <field name='name' />
+                                    <field name="receivers" widget='many2many_tags' />
+                                    <field name="create_user" />
+                                    <field name="summary" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-打开报表模板生成报表向导 -->
+        <record model="ir.actions.act_window" id="accountcore_get_report_actions_window">
+            <field name="name">根据报表模板生成报表</field>
+            <field name="res_model">accountcore.get_report</field>
+            <field name='view_mode'>form</field>
+            <field name='target'>new</field>
+        </record>
+
+        <!-- list-报表模板-->
+        <record model='ir.ui.view' id='accountcore_report_model_list'>
+            <field name='name'>报表模板</field>
+            <field name='model'>accountcore.report_model</field>
+            <field name='arch' type='xml'>
+                <tree duplicate='1' import='0' export_xlsx='0'>
+                    <field name="id" invisible='1' />
+                    <button type='action' class="btn-sm fa fa-caret-square-o-right oe_right" aria-label="get_report" title="get_report" name='%(accountcore_get_report_actions_window)d' context="{'default_report_model':id}"></button>
+                    <field name="report_type" />
+                    <!-- <field name="guid" /> -->
+                    <field name='name' />
+                    <field name="version" />
+                    <field name="summary" />
+                    <field name='glob_tag' widget='many2many_tags' />
+                </tree>
+            </field>
+        </record>
+        <!--form-报表模板 -->
+        <record id="accountcore_report_model_base_form" model="ir.ui.view">
+            <field name='name'>报表模板母板</field>
+            <field name="model">accountcore.report_model</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <notebook>
+                            <page string='模板'>
+                                <center>
+                                    <span>期间从</span>
+                                    <field name='startDate'  />
+                                    <span class='fa fa-calendar-minus-o'>到</span>
+                                    <field name="endDate" />
+                                    <br />
+                                    <field colspan='6' name="fast_period" widget="ac_fast_period" />
+                                </center>
+                                <center>
+                                    <field name="data" widget='ac_jexcel' default_focus='1' />
+                                    <field name="onlydata" invisible='1' widget='ac_jexcel_only_data' />
+                                    <field name="data_style" invisible='1' widget='ac_jexcel_style' />
+                                    <field name="width_info" invisible='1' widget='ac_jexcel_width_info' />
+                                    <field name="height_info" invisible='1' widget='ac_jexcel_height_info' />
+                                    <field name="header_info" invisible='1' widget='ac_jexcel_header_info' />
+                                    <field name="comments_info" invisible='1' widget='ac_jexcel_comments_info' />
+                                    <field name="merge_info" invisible='1' widget='ac_jexcel_merge_info' />
+                                    <field name="meta_info" invisible='1' widget='ac_jexcel_meta_info' />
+                                </center>
+                                <group>
+                                    <field name='glob_tag' widget='many2many_tags' />
+                                    <field name="explain" />
+                                </group>
+                            </page>
+                            <page string='机构/主体范围'>
+                                <group>
+                                    <field name="orgs" widget="many2many_tags" options="{'no_create_edit':1,'no_create':1,'no_open':1}" class="ac_choice_orgs" required='True' />
+                                </group>
+                            </page>
+                            <page string='模板名称和说明'>
+                                <group>
+                                    <field name="report_type" />
+                                    <field name='name' string="模板名称" />
+                                    <field name="version" string="模板版本" />
+                                    <field name="guid" readonly='1' />
+                                    <field name="summary" />
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <script type="text/javascript">
+                        <!-- 另一个模板使用该标签，别删 -->
+                    </script>
+                </form>
+            </field>
+        </record>
+         <!--form-报表模板 不自动计算-->
+        <record id="accountcore_report_model_action_window_form" model="ir.ui.view">
+            <field name="name">报表模板</field>
+            <field name="model">accountcore.report_model</field>
+            <field name="inherit_id" ref="accountcore.accountcore_report_model_base_form" />
+            <field name="mode" >primary</field>
+            <field name="arch" type="xml">
+            <xpath expr="script[last()]" position="after">
+                    <script type="text/javascript">
+                    </script>
+                </xpath>
+            </field>
+        </record>
+        <!--form-报表模板 生成报表向导自动计算-->
+        <record id="accountcore_report_model_auto_form" model="ir.ui.view">
+            <field name="name">报表模板自动计算</field>
+            <field name="model">accountcore.report_model</field>
+            <field name="mode" >primary</field>
+            <field name="inherit_id" ref="accountcore.accountcore_report_model_base_form" />
+            <field name="arch" type="xml">
+                <xpath expr="script[last()]" position="after">
+                    <script type="text/javascript">
+odoo.define(function (require) {
+	$(function () {
+        //自动计算
+        $(".jexcel_toolbar_item:contains('exposure')").trigger('click');
+	});
+});
+                    </script>
+                </xpath>
+            </field>
+        </record>
+        <!--form-用报表模板生成报表向导-->
+        <record id="accountcore_get_report_action_window_form" model="ir.ui.view">
+            <field name='name'>报表模板生成报表</field>
+            <field name="model">accountcore.get_report</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <field name="report_model" options="{'no_create_edit':1,'no_create':1,'no_open':1}" required='1' />
+                            <!-- <field name="guid" /> -->
+                            <field name="summary" />
+                        </group>
+                        <group>
+                            <field name='startDate' />
+                            <field name="endDate" />
+                            <field name="fast_period" widget="ac_fast_period" />
+                        </group>
+                        <group>
+                            <field name="orgs" widget="many2many_tags" options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                        </group>
+                        <div id="spreadsheet"></div>
+                    </sheet>
+                    <footer>
+                        <button name="do" type="object" string="确定" class='btn-primary' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!--form-报表模板科目取数公式设置向导-->
+        <record id="accountcore_reportmodel_formula_form" model="ir.ui.view">
+            <field name='name'>报表模板科目取数公式设置向导</field>
+            <field name="model">accountcore.reportmodel_formula</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <field name="account_id" options="{'no_create_edit':1,'no_create':1,'no_open':1}" />
+                            <field name="has_child" />
+                            <field name="item_ids" />
+                            <field name="account_amount_type" widget='selection' options="{'no_create_edit':1,'no_create':1,'no_open':1}" />
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="do" type="object" string="把公式填回单元格" class='btn-primary' />
+                        <field name="btn_clear" string=" " class='fa fa-eraser' widget='ac_btn_trigger_onchange' />
+                        <field name="btn_show_orgs" string="取数机构/主体" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_start_date" string="开始日期" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_end_date" string="结束日期" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_between_date" string="取数期间" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_join_reduce" string=" " class='fa fa-minus-square' widget='ac_btn_trigger_onchange' />
+                        <field name="btn_join_add" string=" " class='fa fa-plus-square' widget='ac_btn_trigger_onchange' />
+                        <field name="formula" class='formula font-weight-bold' placeholder='公式内容' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!--form-报表归档向导 -->
+        <record id="accountcore_store_report_form" model="ir.ui.view">
+            <field name="name">报表归档向导</field>
+            <field name="model">accountcore.store_report</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <field name="number" />
+                            <field name="name" />
+                            <field name="receivers" widget='many2many_tags' />
+                            <field name="summary" />
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="do" type="object" string="归档" class='btn-primary' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-打开接收者列表 -->
+        <record model="ir.actions.act_window" id="accountcore_receivers_actions_window">
+            <field name="name">接受者列表</field>
+            <field name="res_model">accountcore.receiver</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <!-- 窗体动作-打开报表类型列表 -->
+        <record model="ir.actions.act_window" id="accountcore_report_type_actions_window">
+            <field name="name">报表类型列表</field>
+            <field name="res_model">accountcore.report_type</field>
+            <field name='view_mode'>tree,form</field>
+        </record>
+        <!-- 窗体动作-打开已归档列表 -->
+        <record model="ir.actions.act_window" id="accountcore_storage_report_actions_window">
+            <field name="name">已归档报表列表</field>
+            <field name="res_model">accountcore.storage_report</field>
+            <field name='view_mode'>tree,form</field>
+            <field name="target">current</field>
+        </record>
+        <!-- 窗体动作-打开报表类型列表 -->
+        <record model="ir.actions.act_window" id="accountcore_report_model_actions_window">
+            <field name="name">报表模板列表</field>
+            <field name="res_model">accountcore.report_model</field>
+            <field name='view_mode'>tree,form</field>
+            <field name="target">current</field>
+        </record>
+        <!-- 窗体动作-打开报表模板科目取数公式设置向导 -->
+        <record id='accountcore_reportmodel_formula_actions_window' model='ir.actions.act_window' >
+            <field name="name">报表模板科目取数公式设置向导</field>
+            <field name='res_model'>accountcore.reportmodel_formula</field>
+            <field name='view_mode'>form</field>
+        </record>
+        <!-- 窗体动作-打开报表归档向导 -->
+        <record id='accountcore_store_report_actions_window' model='ir.actions.act_window' >
+            <field name="name">报表模板科目取数公式设置向导</field>
+            <field name='res_model'>accountcore.store_report</field>
+            <field name='view_mode'>form</field>
+        </record>
+        <!-- 搜索视图-报表模板  -->
+        <record id="accountcore_reportmodel_search" model="ir.ui.view">
+            <field name="name">报表模板查询</field>
+            <field name="model">accountcore.report_model</field>
+            <field name="arch" type="xml">
+                <search string="reportModelFilter">
+                    <field name="name" string="模板名称包含" filter_domain="[('name','ilike', self)]" />
+                    <field name="glob_tag" string="全局标签包含" filter_domain="[('glob_tag','ilike', self)]" widget='many2one' />
+                    <group expand="0" string="Group By">
+                        <filter name="group_by_report_type" string="按报表类型分组" domain="[]" context = "{'group_by': 'report_type'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
+       
+
+        <!-- 搜索视图-归档报表  -->
+        <record id="accountcore_storage_report_search" model="ir.ui.view">
+            <field name="name">归档报表查询</field>
+            <field name="model">accountcore.storage_report</field>
+            <field name="arch" type="xml">
+                <search string="storageReportFilter">
+                    <field name="name" string="归档报表名称包含" filter_domain="[('name','ilike', self)]" />
+                    <field name="number" string="归档报表编号包含" filter_domain="[('number','ilike', self)]" />
+                    <field name="glob_tag" string="全局标签包含" filter_domain="[('glob_tag','ilike', self)]" widget='many2one' />
+                    <field name="receivers" string="接收者包含" filter_domain="[('receivers','ilike', self)]" widget='many2one' />
+                    <field name="orgs" string="机构/主体范围包含" filter_domain="[('orgs','ilike', self)]" widget='many2one' />
+                    <filter string="取数开始期间范围" name="startDate" date='startDate' default_period="this_week" />
+                    <filter name="group_by_report_type" string="按报表类型分组" context = "{'group_by': 'report_type'}" />
+                    <filter string="取数结束期间范围" name="endDate" date='endDate' default_period="this_week" />
+                </search>
+            </field>
+        </record>
+       
+        <!--form-报表模板现金流量取数公式设置向导-->
+        <record id="accountcore_report_cashflow_formula_form" model="ir.ui.view">
+            <field name='name'>报表模板现金流量取数公式设置向导</field>
+            <field name="model">accountcore.report_cashflow_formula</field>
+            <field name="arch" type="xml">
+                <form string="">
+                    <sheet>
+                        <group>
+                            <field name="cashflow_id" options="{'no_create_edit':1,'no_create':1,'no_open':1}" />
+                            <field name="has_child" />
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="do" type="object" string="把公式填回单元格" class='btn-primary' />
+                        <field name="btn_clear" string=" " class='fa fa-eraser' widget='ac_btn_trigger_onchange' />
+                        <field name="btn_show_orgs" string="取数机构/主体" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_start_date" string="开始日期" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_end_date" string="结束日期" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_between_date" string="取数期间" widget='ac_btn_trigger_onchange' />
+                        <field name="btn_join_reduce" string=" " class='fa fa-minus-square' widget='ac_btn_trigger_onchange' />
+                        <field name="btn_join_add" string=" " class='fa fa-plus-square' widget='ac_btn_trigger_onchange' />
+                        <field name="formula" class='formula font-weight-bold' placeholder='公式内容' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-打开报表现金流量取数公式设置向导 -->
+        <record id='accountcore_report_cashflow_formula_actions_window' model='ir.actions.act_window' >
+            <field name="name">报表模板现金流量取数公式设置向导</field>
+            <field name='res_model'>accountcore.report_cashflow_formula</field>
+            <field name='view_mode'>form</field>
+        </record>
+</odoo>

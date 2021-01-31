@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <record id="order_0" model="nursery.order">
+        <field name="name">Leodegrance Order</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="category_id" ref="category_0"/>
+        <field name="customer_id" ref="customer_1"/>
+    </record>
+    <record id="order_0_line_0" model="nursery.order.line">
+        <field name="order_id" ref="order_0"/>
+        <field name="plant_id" ref="plant_10"/>
+    </record>
+    <record id="order_0_line_1" model="nursery.order.line">
+        <field name="order_id" ref="order_0"/>
+        <field name="plant_id" ref="plant_1"/>
+    </record>
+
+    <record id="order_1" model="nursery.order">
+        <field name="name">Brett Order</field>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="category_id" ref="category_0"/>
+        <field name="customer_id" ref="customer_0"/>
+    </record>
+    <record id="order_1_line_0" model="nursery.order.line">
+        <field name="order_id" ref="order_1"/>
+        <field name="plant_id" ref="plant_0"/>
+    </record>
+    <record id="order_1_line_1" model="nursery.order.line">
+        <field name="order_id" ref="order_1"/>
+        <field name="plant_id" ref="plant_1"/>
+    </record>
+    <record id="order_1_line_2" model="nursery.order.line">
+        <field name="order_id" ref="order_1"/>
+        <field name="plant_id" ref="plant_2"/>
+    </record>
+
+    <record id="order_2" model="nursery.order">
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="category_id" ref="category_0"/>
+        <field name="customer_id" ref="customer_0"/>
+    </record>
+    <record id="order_2_line_0" model="nursery.order.line">
+        <field name="order_id" ref="order_2"/>
+        <field name="plant_id" ref="plant_20"/>
+    </record>
+    <record id="order_2_line_1" model="nursery.order.line">
+        <field name="order_id" ref="order_2"/>
+        <field name="plant_id" ref="plant_22"/>
+    </record>
+</data></odoo>

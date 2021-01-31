@@ -1,0 +1,27 @@
+﻿一、
+使用康虎云报表与odoo集成，生成json时，有时候会遇到字符串有换行
+或特殊字符导致生成的json格式错误时，可以按下面的方法解决：
+<!-- 替换掉字符串中的特殊字符 -->
+<t t-set="line_name" t-value="l.name.replace('\n','').encode('utf-8')"/>
+
+<!-- 再输出替换后的字符串-->
+_tableOrderLines.Data.push(
+{
+    "line_name": "<t t-esc="line_name"/>",  //输出订单明细产品名称
+});
+
+二、怎样把报表模板保存在数据库？
+1、从菜单 设置 -- 技术 -- 报告 -- 康虎云报表 -- 模板 进入，把在客户端设计好的模板上传并保存到数据库
+2、通过以下两种方法在QWeb模板中取报表模板数据：
+/******************************* 康虎云报表与ODOO集成时，模板调用方法 **********************************/
+/*从数据库中获取打印模板方法1（调用简短方法）：*/
+var _data = {"template": "base64:<t t-esc="cf_template(user.env, '12345')" />", "ver": 4, "Copies": 1, "Duplex": 0, "Tables":[]};
+
+/*从数据库中获取打印模板方法2（直接查询法）：*/
+var _data = {"template": "base64:<t t-esc="user.env['cf.template'].search([('templ_id', '=', '12345')], limit=1).template" />", "ver": 4, "Copies": 1, "Duplex": 0, "Tables":[]};
+
+
+
+康虎云报表官网地址： http://www.khcloud.net
+
+

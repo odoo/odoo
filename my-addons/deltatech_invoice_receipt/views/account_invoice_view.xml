@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="invoice_supplier_form" model="ir.ui.view">
+            <field name="name">account.invoice.supplier.form</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_move_form" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="invoice_create_picking"
+                        states="draft"
+                        type="object"
+                        string="Receipt without purchase order"
+                        groups="base.group_user"
+                        attrs="{'invisible':[('picking_ids','!=',False)]}"
+                        confirm="Are you sure you want to receive products without purchase order?  If these products exist items in a purchase order they will stay open."
+                    />
+                    <button
+                        name="invoice_create_receipt"
+                        states="draft"
+                        type="object"
+                        string="Create receipt"
+                        class="oe_highlight"
+                        groups="base.group_user"
+                    />
+                </xpath>
+                <field name="type" position="before">
+                    <div name="buttons" class="oe_right oe_button_box">
+                        <button
+                            class="oe_stat_button"
+                            string="Stock"
+                            name="view_stock"
+                            type="object"
+                            groups="stock.group_stock_user"
+                            icon="fa-building-o"
+                        />
+                    </div>
+                </field>
+                <field name="date_invoice" position="attributes">
+                    <attribute name="required">1</attribute>
+                </field>
+                <!--                <field name="invoice_line_ids" position="attributes">
+                    <attribute name="context">{'partner_id': partner_id, 'price_type': context.get('price_type') or
+                        False, 'type': type, 'date':date_invoice}
+                    </attribute>
+                </field>-->
+                <!--            <xpath expr="//notebook" position="inside">
+                    <page string="Picking List">
+                       <field name="picking_ids"/>
+                    </page>
+                </xpath>-->
+            </field>
+        </record>
+        <!--
+
+        <record id="invoice_form" model="ir.ui.view">
+            <field name="name">account.invoice.form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form"/>
+            <field name="arch" type="xml">
+                <field name="invoice_line_ids" position="attributes">
+                    <attribute name="context">{'partner_id': partner_id, 'type': type, 'date':date_invoice}</attribute>
+                </field>
+                <xpath expr="//notebook" position="inside">
+                    <page string="Picking List">
+                       <field name="picking_ids"/>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+
+-->
+    </data>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="odtree assets" inherit_id="web.assets_backend">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/less" href="/odtree/static/src/scss/odtree.scss"/>
+            <link rel="stylesheet" type="text/css" href="/odtree/static/src/lib/zTree_v3/css/zTreeStyle/zTreeStyle.css"/>
+        </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/odtree/static/src/lib/zTree_v3/js/jquery.ztree.core.js"/>
+            <script type="text/javascript" src="/odtree/static/src/js/odtree.js"/>
+        </xpath>
+    </template>
+</odoo>

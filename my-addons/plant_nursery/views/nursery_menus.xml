@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem name="Plant Nursery"
+        id="nursery_root_menu"
+        web_icon="plant_nursery,static/description/icon.png"/>
+
+    <menuitem name="Plants"
+        id="nursery_plant_menu"
+        parent="nursery_root_menu"
+        sequence="1"/>
+    <menuitem name="Plants"
+        id="nursery_plant_menu_plant"
+        parent="nursery_plant_menu"
+        sequence="1"/>
+    <menuitem name="Planning"
+        id="nursery_plant_menu_planning"
+        parent="nursery_plant_menu"
+        sequence="2"/>
+
+    <menuitem name="Customers"
+        id="nursery_customer_menu"
+        parent="nursery_root_menu"
+        sequence="2"/>
+
+    <menuitem name="Orders"
+        id="nursery_order_menu"
+        parent="nursery_root_menu"
+        sequence="3"/>
+    <menuitem name="Orders"
+        id="nursery_order_menu_order"
+        parent="nursery_order_menu"
+        sequence="1"/>
+    <menuitem name="Reviews"
+        id="nursery_order_menu_rating"
+        parent="nursery_order_menu"
+        sequence="2"/>
+
+    <menuitem name="Configuration"
+        id="nursery_configuration_menu"
+        parent="nursery_root_menu"
+        sequence="99"/>
+    <menuitem name="Categories"
+        id="nursery_plant_category_menu"
+        parent="nursery_configuration_menu"
+        sequence="1"/>
+    <menuitem name="Tags"
+        id="nursery_plant_tag_menu"
+        parent="nursery_configuration_menu"
+        sequence="2"/>
+</odoo>

@@ -1,0 +1,32 @@
+<odoo>
+    <data noupdate="1">
+        <!-- 预设用户 -->
+        <record id="accounter_1" model="res.users">
+            <field name="name">李会计</field>
+            <field name="login">accountcore</field>
+            <field name="password">666666</field>
+        </record>
+    </data>
+            <!-- 预设用户-结束 -->
+    <data noupdate="1">
+        <!-- 创建用户组类别-开始 -->
+        <record model="ir.module.category" id="accountcore_group_default">
+            <field name="name">AccountCore总账</field>
+            <field name="sequence">1</field>
+        </record>
+        <!-- 创建用户组类别-结束 -->
+        <!-- 预设用户添加进“AccountCore总账类别”-开始 -->
+        <record id="group_role_ac" model="res.groups">
+            <field name="name">通用会计组(预设)</field>
+            <field name="category_id" ref="accountcore_group_default" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="users" eval="[(6,0,[ref('accounter_1')])]" />
+        </record>
+        <record id="group_role_search" model="res.groups">
+            <field name="name">只查询组(预设)</field>
+            <field name="category_id" ref="accountcore_group_default" />
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+        </record>
+        <!-- 预设用户添加进“AccountCore总账类别”-开始 -->
+    </data>
+</odoo>

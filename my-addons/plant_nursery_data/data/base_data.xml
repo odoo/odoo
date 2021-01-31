@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="base.main_partner" model="res.partner">
+            <field name="name">Woody Cutters</field>
+            <field name="street">Orval 1</field>
+            <field name="zip">6823</field>
+            <field name="city">Florenville</field>
+            <field name="country_id" ref="base.be"/>
+            <field name="phone">+32 987 65 43 21</field>
+            <field name="mobile">+32 987 65 43 21</field>
+            <field name="email">wow@example.com</field>
+            <field name="website">www.example.com</field>
+            <field name="image_1920" type="base64" file="plant_nursery_data/static/img/logo_wood.jpg"/>
+        </record>
+        <record id="base.main_company" model="res.company">
+            <field name="name">Woody Cutters</field>
+        </record>
+
+        <record id="second_company_partner" model="res.partner">
+            <field name="name">OpenBrewery Company</field>
+            <field name="is_company" eval="True"/>
+            <field name="street">271 Van Buren St</field>
+            <field name="zip">OR 97402</field>
+            <field name="city">Eugene</field>
+            <field name="state_id" ref="base.state_us_32"/>
+            <field name="country_id" ref="base.us"/>
+            <field name="phone">+1 555 11 22 33 44</field>
+            <field name="mobile">+1 555 44 33 22 11</field>
+            <field name="email">brewery@example.com</field>
+            <field name="website">www.example.com</field>
+            <field name="image_1920" type="base64" file="plant_nursery_data/static/img/logo_brewery.jpg"/>
+        </record>
+        <record id="second_company" model="res.company">
+            <field name="name">OpenBrewery Company</field>
+            <field name="partner_id" ref="plant_nursery_data.second_company_partner"/>
+        </record>
+    </data>
+
+    <data noupdate="0">
+        <record id="base.user_root" model="res.users">
+            <field name="parent_id" eval="ref('base.main_partner')"/>
+            <field name="company_ids" eval="[(4, ref('base.main_company')), (4, ref('plant_nursery_data.second_company'))]"/>
+            <field name="notification_type">inbox</field>
+            <field name="function">Root</field>
+        </record>
+
+        <record id="base.user_admin" model="res.users">
+            <field name="parent_id" ref="base.main_partner"/>
+            <field name="company_ids" eval="[(4, ref('base.main_company')), (4, ref('plant_nursery_data.second_company'))]"/>
+            <field name="image_1920" type="base64" file="plant_nursery_data/static/img/people_man_user_0.jpg"/>
+            <field name="notification_type">inbox</field>
+            <field name="function">Über Boss</field>
+            <field name="phone">+32456001122</field>
+            <field name="mobile">+32445001122</field>
+            <field name="email">admin@example.com</field>
+            <field name="tz">Europe/Brussels</field>
+            <field name="title" ref="base.res_partner_title_mister"/>
+        </record>
+    </data>
+</odoo>

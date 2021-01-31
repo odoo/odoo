@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <template id="assets_backend" inherit_id="web.assets_backend" name="Plant Nursery Backend Assets">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/plant_nursery/static/src/scss/plant_nursery_views.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" inherit_id="web.assets_frontend" name="Plant Nursery Frontend Assets">
+        <xpath expr="link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/plant_nursery/static/src/scss/plant_nursery_templates.scss"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/plant_nursery/static/src/js/quote_ask.js"></script>
+        </xpath>
+    </template>
+</data></odoo>

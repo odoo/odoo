@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="mail_template_plant_order_rating" model="mail.template">
+            <field name="name">Plant: Rating Request</field>
+            <field name="model_id" ref="plant_nursery.model_nursery_order"/>
+            <field name="subject">${object.name}: Satisfaction Survey</field>
+            <field name="email_from">${(object.rating_get_rated_partner_id().email_formatted if object.rating_get_rated_partner_id() else user.email_formatted) | safe}</field>
+            <field name="partner_to" >${object.rating_get_partner_id().id}</field>
+            <field name="body_html" type="html">
+<div>
+    % set access_token = object.rating_get_access_token()
+    % set partner = object.rating_get_partner_id()
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin:0px auto;">
+    <tbody>
+        <tr><td valign="top" style="font-size: 13px;">
+            Hello ${partner.name},<br/>
+            Please take a moment to rate our services related to the order "<strong>${object.name}</strong>"
+            % if object.rating_get_rated_partner_id().name:
+                assigned to <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>
+            % else:
+                .<br/>
+            % endif
+        </td></tr>
+        <tr><td style="text-align: center;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
+                <tr><td style="font-size: 13px;">
+                    <strong>Tell us how you feel about our service</strong><br/>
+                    <span style="text-color: #888888">(click on one of these smileys)</span>
+                </td></tr>
+                <tr><td style="font-size: 13px;">
+                    <table style="width:100%;text-align:center;">
+                        <tr>
+                            <td>
+                                <a href="/rate/${access_token}/5">
+                                    <img alt="Satisfied" src="/rating/static/src/img/rating_5.png" title="Satisfied"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/rate/${access_token}/3">
+                                    <img alt="Not satisfied" src="/rating/static/src/img/rating_3.png" title="Not satisfied"/>
+                                </a>
+                            </td>
+                            <td>
+                                <a href="/rate/${access_token}/1">
+                                    <img alt="Highly Dissatisfied" src="/rating/static/src/img/rating_1.png" title="Highly Dissatisfied"/>
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </td></tr>
+            </table>
+        </td></tr>
+        <tr><td valign="top" style="font-size: 13px;">
+            We appreciate your feedback. It helps us to improve continuously.
+        </td></tr>
+    </tbody>
+    </table>
+</div></field>
+            <field name="lang">${object.rating_get_partner_id().lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="mail_template_plant_price_updated" model="mail.template">
+            <field name="name">Plant: Price Updated</field>
+            <field name="subject">${object.name} Price Updated</field>
+            <field name="model_id" ref="plant_nursery.model_nursery_plant"/>
+            <field name="partner_to" >${object.user_id.partner_id.id}</field>
+            <field name="auto_delete" eval="True"/>
+            <field name="body_html" type="html">
+                <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                        <tbody>
+                            <tr><td style="padding:15px 20px 10px 20px;">
+                                <p>Hello,</p>
+                                <p>Plant ${object.name} price updated to ${object.price}.</p>
+                            </td></tr>
+                        </tbody>
+                    </table>
+                    <table style="width:600px;margin:auto;text-align:center;font-size:12px;">
+                        <tbody>
+                            <tr>
+                                <td style="padding-top:10px;color:#afafaf;">
+                                    <p>Email automatically sent by
+                                        <a href="https://www.example.com" style="color:#a24689;text-decoration:none;">Odoo Plant Nursery</a>
+                                        for <a href="${object.user_id.company_id.website}" style="color:#a24689;text-decoration:none;">${object.user_id.company_id.name}</a>
+                                    </p>
+                            </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </field>
+        </record>
+     </data>
+</odoo> 

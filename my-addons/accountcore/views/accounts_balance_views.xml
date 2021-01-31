@@ -1,0 +1,42 @@
+<odoo>
+    <data>
+        <!-- list-内部科目余额表 -->
+        <record id='accountcore_accounts_balance_tree' model='ir.ui.view'>
+            <field name='name'>内部科目余额表列表(谨慎操作)</field>
+            <field name='model'>accountcore.accounts_balance</field>
+            <field name='arch' type='xml'>
+                <tree  default_order="org,account,items,isbegining desc,year,month" create='false' duplicate='0' import="0" editable="top"  decoration-warning='preRecord and nextRecord' limit='300'>
+                    <field name="preRecord" string="前期id"/>
+                    <field name="name" string="id"/>
+                    <field name="nextRecord" string="后期id"/>
+                    <field name='org' readonly="1"  options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name='year'  readonly='1'  options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name="month"  readonly='1'  options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name='isbegining'  readonly='1'  options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name="account_number"  options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name="account" readonly='1' attrs="{'readonly':[('accountItemClass','=',False)]}" options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name="accountItemClass" options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name="items" domain="[('itemClass.id','=',accountItemClass)]" context="{'org_id':org}" readonly='1' options="{'no_create_edit':1,'no_create':1,'no_open':1}"/>
+                    <field name="beginingDamount" />
+                    <field name="beginingCamount" />
+                    <field name="damount" />
+                    <field name="camount" />
+                    <field name="endDamount" />
+                    <field name="endCamount" />
+                    <field name="cumulativeDamount" />
+                    <field name="cumulativeCamount" />
+                    <field name="beginCumulativeDamount" />
+                    <field name="beginCumulativeCamount" />
+                </tree>
+            </field>
+        </record>
+        <!-- 窗体动作-打开科目余额列表 -->
+        <record model='ir.actions.act_window' id='accountcore_accounts_balance_window'>
+            <field name='name'>内部科目余额表列表(谨慎操作)</field>
+            <field name='res_model'>accountcore.accounts_balance</field>
+            <field name='view_mode'>tree</field>
+            <field name='target'>current</field>
+        </record>
+
+    </data>
+</odoo>

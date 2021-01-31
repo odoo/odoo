@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <!-- ALIASES -->
+    <record id="category_0_alias" model="mail.alias">
+        <field name="alias_name">xmas</field>
+        <field name="alias_model_id" ref="plant_nursery.model_nursery_order"/>
+        <field name="alias_parent_model_id" ref="plant_nursery.model_nursery_plant_category"/>
+    </record>
+
+    <!-- CATEGORIES -->
+    <record id="category_0" model="nursery.plant.category">
+        <field name="name">Nursery</field>
+        <field name="order_user_id" ref="base.user_admin"/>
+        <field name="sequence">1</field>
+        <field name="image" type="base64" file="plant_nursery_data/static/img/plant_category_nursery.jpg"/>
+        <field name="description">Nursering and selling plants. Lot of choice !</field>
+        <field name="alias_id" ref="category_0_alias"/>
+    </record>
+    <record id="category_1" model="nursery.plant.category">
+        <field name="name">Planning</field>
+        <field name="order_user_id" ref="base.user_admin"/>
+        <field name="sequence">2</field>
+        <field name="image" type="base64" file="plant_nursery_data/static/img/plant_category_planning.jpg"/>
+        <field name="description">You want to make your garden and don't know where to start ? Contact us ! </field>
+    </record>
+    <record id="category_2" model="nursery.plant.category">
+        <field name="name">Maintenance</field>
+        <field name="order_user_id" ref="base.user_admin"/>
+        <field name="sequence">3</field>
+        <field name="image" type="base64" file="plant_nursery_data/static/img/plant_category_maintenance.jpg"/>
+        <field name="description">Beautiful gardens require careful maintenance. We do it for you.</field>
+    </record>
+    <record id="category_3" model="nursery.plant.category">
+        <field name="name">Internal</field>
+        <field name="internal" eval="True"/>
+        <field name="order_user_id" ref="base.user_admin"/>
+        <field name="sequence">4</field>
+        <field name="image" type="base64" file="plant_nursery_data/static/img/plant_category_internal.jpg"/>
+        <field name="description">Internal stuff. Much private.</field>
+    </record>
+
+    <!-- TAGS: PLANT CHARACTERISTICS -->
+    <record id="tag_0" model="nursery.plant.tag">
+        <field name="name">Evergreen</field>
+        <field name="color">1</field>
+    </record>
+    <record id="tag_1" model="nursery.plant.tag">
+        <field name="name">Fruit</field>
+        <field name="color">2</field>
+    </record>
+    <record id="tag_2" model="nursery.plant.tag">
+        <field name="name">Potted</field>
+        <field name="color">3</field>
+    </record>
+    <record id="tag_3" model="nursery.plant.tag">
+        <field name="name">Annual</field>
+        <field name="color">4</field>
+    </record>
+    <record id="tag_4" model="nursery.plant.tag">
+        <field name="name">Perennial</field>
+        <field name="color">5</field>
+    </record>
+
+    <!-- TAGS: CATEGORIES -->
+    <record id="tag_10" model="nursery.plant.tag">
+        <field name="name">Palm</field>
+        <field name="color">1</field>
+    </record>
+    <record id="tag_11" model="nursery.plant.tag">
+        <field name="name">Fruit Tree</field>
+        <field name="color">2</field>
+    </record>
+    <record id="tag_12" model="nursery.plant.tag">
+        <field name="name">Culinary Herb</field>
+        <field name="color">3</field>
+    </record>
+
+    <!-- TAGS: SALE -->
+    <record id="tag_20" model="nursery.plant.tag">
+        <field name="name">Promo</field>
+        <field name="color">1</field>
+    </record>
+
+</data></odoo>

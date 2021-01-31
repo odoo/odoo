@@ -1,0 +1,66 @@
+<odoo>
+  <data>
+
+<!--    产品类别导入-->
+    <record id="run_product_category1" model="ir.actions.server">
+        <field name="model_id" ref="model_product_category"/>
+        <field name="name">产品类别导入</field>
+        <field name="binding_model_id" ref="model_product_category" />
+        <field name="state">code</field>
+        <field name="code">action=records.prod_imp()</field>
+        </record>
+
+<!--供应商导入-->
+    <record id="view_res_partner_custom" model="ir.ui.view">
+            <field name="name">res.partner.tree.custom</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+            <xpath expr="//field[@name='phone']" position="before">
+                <field name="short_name" optional='show'/>
+                <field name="Entper" optional='show'/>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="before">
+                <field name="production_scale" optional='show'/>
+                <field name="monthly_capacity" optional='show'/>
+                <field name="annual_capacity" optional='show'/>
+            </xpath>
+            <xpath expr="//field[@name='email']" position="after">
+                <field name="address" optional='show'/>
+                <field name="bank_of_deposit" optional='show'/>
+                <field name="bank_account" optional='show'/>
+                <field name="remarks" optional='show'/>
+            </xpath>
+            </field>
+        </record>
+      <record id="view_res_partner_custom1" model="ir.ui.view">
+            <field name="name">res.partner.from.custom</field>
+            <!--        继承模型id-->
+            <field name="model">res.partner</field>
+            <!--        视图id-->
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+
+            <xpath expr="//field[@name='vat']" position="before">
+                <field name="short_name"/>
+                <field name="production_scale" />
+                <field name="monthly_capacity" />
+                <field name="annual_capacity" />
+                <field name="address" />
+                <field name="bank_of_deposit" />
+                <field name="bank_account"/>
+                <field name="remarks" />
+            </xpath>
+            </field>
+        </record>
+
+      <record id="run_res_partner" model="ir.actions.server">
+        <field name="model_id" ref="model_res_partner"/>
+        <field name="name">供应商导入</field>
+        <field name="binding_model_id" ref="model_res_partner" />
+        <field name="state">code</field>
+        <field name="code">action=records.imp()</field>
+        </record>
+
+  </data>
+</odoo>

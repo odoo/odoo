@@ -1,0 +1,287 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data noupdate="0">
+
+<template id="plant_hello" name="Hello World">
+    <html>
+        <body>
+            <h1>Hello <t t-esc="name"/>!</h1>
+        </body>
+    </html>
+</template>
+
+<template id="plant_hello2" name="Hello World">
+    <t t-call="web.layout">
+        <t t-set="head_website">
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="web.assets_frontend" t-css="false"/>
+        </t>
+        <t t-set="head" t-value="head_website + (head or '')"/>
+
+        <div id="wrapwrap">
+            <div class="row">
+                <h1 class="col-md-12">Hello <t t-esc="name"/>!</h1>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="plant_hello3" name="Hello World">
+    <t t-call="web.layout">
+        <t t-set="head_website">
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="web.assets_frontend" t-css="false"/>
+        </t>
+        <t t-set="head" t-value="head_website + (head or '')"/>
+
+        <div id="wrapwrap">
+            <div class="row">
+                <h1 class="col-md-12">Hello world!</h1>
+                <div class="col-md-12">
+                    <p>Welcome to <strong><span t-field="company.name"/>'s Plant Store</strong></p>
+                </div>
+                <ul t-foreach="plants" t-as="plant">
+                    <li class="col-md-3"><span t-field="plant.name"/></li>
+                </ul>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="frontend_layout" name="Main Frontend Layout">
+    <t t-call="web.layout">
+        <t t-set="head_website">
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+
+            <t t-call-assets="web.assets_common" t-css="false"/>
+            <t t-call-assets="web.assets_frontend" t-css="false"/>
+        </t>
+        <t t-set="head" t-value="head_website + (head or '')"/>
+
+        <div id="wrapwrap" t-att-class="pageName or ''">
+            <header>
+                <div class="navbar navbar-default navbar-static-top">
+                    <div class="container">
+                        <div class="navbar-header">
+                            <a href="/plants" class="navbar-brand logo">
+                                <span t-field="res_company.logo"
+                                    t-options="{
+                                        'widget': 'image',
+                                        'class': 'pull-left',
+                                         'style': 'max-width: 32px; display: inline-block'}"
+                                    t-att-alt="'Logo of %s' % res_company.name"
+                                    t-att-title="res_company.name"/>
+                                <h4 style="margin-left: 16px; display: inline-block;">Welcome to <strong t-esc="company.name"/>'s Plant Store !</h4>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <t t-raw="0"/>
+            </main>
+            <footer >
+                <div id="footer">
+                </div>
+            </footer>
+        </div>
+    </t>
+</template>
+
+<template id="plant_layout" name="Frontend Layout">
+    <t t-set="body_classname" t-value="'o_nursery_body'"/>
+    <t t-call="website.layout">
+        <div id="wrap" class="wrap o_nursery_wrap mt-0">
+            <div class="o_nursery_gradient position-relative text-white pb-md-5 pb-2 pt-md-0 pt-0">
+                <a href="/plants">
+                    <img src="/plant_nursery/static/img/bg_plant_0.jpg"
+                        class="o_nursery_banner img img-responsive"
+                        style="width: 100%;"/>
+                </a>
+            </div>
+
+            <div class="container mb64 mt8">
+                <div t-if="error and error == 'access'" class="alert alert-warning">
+                    This is not possible ! Please use a token.
+                </div>
+                <div class="o_nursery_wrap_main">
+                    <t t-raw="0"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="portal_plants" name="Portal Layout">
+    <t t-call="plant_nursery.plant_layout">
+        <div class="row mt-3">
+            <div t-attf-class="col-md-8">
+                <div>
+                    <h5 class="m-0">Select a Plant</h5>
+                    <hr class="mt-2 pb-1 mb-1"/>
+                </div>
+                <h4 t-if="search.get('category')">Category: <t t-esc="search['category']"/></h4>
+                <div class="row mx-n2">
+                    <t t-foreach="plants" t-as="plant">
+                        <div class="col-12 col-sm-6 col-md-4 px-2 d-flex flex-grow-1" t-call="plant_nursery.plant_card"/>
+                    </t>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="o_plant_quote">
+                    <div>
+                        <h5 class="m-0">Contact Us !</h5>
+                        <hr class="mt-2 pb-1 mb-1"/>
+                    </div>
+                    <t t-if="order">
+                        <div>
+                            You just ordered <t t-esc="order.name"/> for
+                            <span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <t t-call="plant_nursery.quote_ask">
+                        </t>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="portal_plant_page" name="Plant Page View">
+    <t t-call="plant_nursery.plant_layout">
+        <div t-if="order" class="row">
+            <div class="col-12 alert alert-success text-center" role="alert">
+                <p class="h3">Thanks for buying <span t-esc="plant.name"/> !</p>
+                <p>Order <span t-esc="order.name"/> of <span t-esc="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.currency_id}"/></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card flex-column flex-lg-row">
+                    <t t-set="image_url" t-value="website.image_url(plant, 'image')"/>
+                    <div class="w-100 w-lg-25 flex-shrink-0 rounded">
+                        <div t-attf-style="background-image:url(#{image_url}); background-size: cover; background-position:center; padding-bottom: 35%;" class="h-lg-100"/>
+                    </div>
+
+                    <div class="card-body">
+                        <a t-attf-href="/plants/plant/#{slug(plant)}#{query_string}"
+                           class="h4 d-block" t-att-title="plant.name" t-field="plant.name"/>
+                        <div t-if="plant.tag_ids" class="border-top mt-2 pt-1">
+                            <t t-foreach="plant.tag_ids" t-as="tag">
+                                <a t-att-href="'/plants?tag_id=%s' % (slug(tag))" class="badge badge-light" t-esc="tag.name"/>
+                            </t>
+                        </div>
+                        <div class="o_nursery_text_truncate_10 mt-3" t-field="plant.description_short"/>
+                        <table class="table table-sm mt-3">
+                            <tr>
+                                <th class="border-top-0">Category</th>
+                                <td class="border-top-0"><span t-field="plant.category_id"/></td>
+                            </tr>
+                            <tr>
+                                <th class="border-top-0">Exposure</th>
+                                <td class="border-top-0"><t t-esc="plant.exposure"/></td>
+                            </tr>
+                            <tr>
+                                <th class="border-top-0">Ground</th>
+                                <td class="border-top-0"><t t-esc="plant.ground"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-9">
+                <div itemprop="description"
+                    class="o_nursery_bordered bg-white-50 p-3"
+                    t-field="plant.description"/>
+            </div>
+            <div class="col-md-3">
+                <div class="o_nursery_bordered bg-white-50 p-3">
+                    <span class="h5 mb-2">Order this Plant</span>
+                    <t t-call="plant_nursery.plant_order"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id='plant_card' name="Plant Card">
+    <div class="card w-100 o_nursery_plant_card mb-4">
+        <t t-set="plant_image" t-value="website.image_url(plant, 'image')"/>
+        <a t-attf-href="/plants/plant/#{slug(plant)}" t-att-title="plant.name">
+            <div groups="website.group_website_publisher">
+                <t t-call="website.publish_short">
+                    <t t-set="object" t-value="plant"/>
+                    <t t-set="publish_edit" t-value="True"/>
+                    <t t-set="additionnal_btn_classes" t-value="'btn-sm'"/>
+                </t>
+            </div>
+            <div class="card-img-top" t-attf-style="padding-top: 60%; background-image: url(#{plant_image}); background-size: cover; background-position:center"/>
+        </a>
+        <div class="card-body p-3">
+            <a class="card-title h5 mb-2 o_nursery_text_truncate_2" t-attf-href="/plants/plant/#{slug(plant)}" t-esc="plant.name"/>
+            <div class="card-text mt-1">
+                <div class="font-weight-light o_nursery_text_truncate_3" t-field="plant.description_short"/>
+                <div t-if="plant.tag_ids" class="mt-2 pt-1 o_nursery_text_truncate_2">
+                    <t t-foreach="plant.tag_ids" t-as="tag">
+                        <a t-att-href="'/plants?tag_id=%s' % tag.id" class="badge badge-light" t-esc="tag.name"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer bg-white text-600 px-3">
+            <div class="d-flex justify-content-between align-items-center">
+                <small t-esc="plant.price" t-options="{'widget': 'monetary', 'display_currency': plant.currency_id}"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id='plant_order' name="Plant Order">
+    <div class="collapse d-md-block">
+        <table class="table table-sm mt-3">
+            <tr>
+                <th class="border-top-0">Price</th>
+                <td class="border-top-0"><t t-esc="plant.price" t-options="{'widget': 'monetary', 'display_currency': plant.currency_id}"/></td>
+            </tr>
+            <tr>
+                <th class="border-top-0">Stock</th>
+                <td class="border-top-0"><t t-esc="plant.number_in_stock"/></td>
+            </tr>
+        </table>
+    </div>
+   <form t-att-action="'/plants/plant/%s/order' % (slug(plant))" class="form-horizontal" method="POST">
+        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+        <div class="form-group row">
+            <label class="control-label col-sm-4" for="customer_name">Your Name</label>
+            <div class="col-sm-8">
+                <input type="text" name="customer_name" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-sm-4" for="customer_email">Your Email</label>
+            <div class="col-sm-8">
+                <input type="text" name="customer_email" class="form-control"/>
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div class="flex-grow-1">
+                <button type="submit" class="btn btn-primary w-100">
+                    <span class="text_small_caps">Order now</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</template>
+
+</data></odoo>

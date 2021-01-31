@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="cfprint.assets_common">
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+
+        <script type="text/javascript" src='/cfprint/static/src/js/cfprint.min.js' charset="utf-8"/>
+        <script type="text/javascript" src='/cfprint/static/src/js/cfprint_ext.js' charset="utf-8"/>
+    </template>
+
+    <template id="report_layout" inherit_id="web.report_layout" name="CFPrint Report Assets">
+        <xpath expr="//head" position="inside">
+            <t t-call-assets="cfprint.assets_common" t-css="false"/>
+        </xpath>
+    </template>
+
+    <template id="html_container">
+        <t t-set="body_classname" t-value="'container'"/>
+        <t t-call="cfprint.report_layout">
+            <t t-raw="0"/>
+        </t>
+    </template>
+
+</odoo>

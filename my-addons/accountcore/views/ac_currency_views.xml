@@ -1,0 +1,23 @@
+<odoo>
+    <data>
+        <!-- list-币别 -->
+        <record model='ir.ui.view' id='accountcore_ac_currency_list'>
+            <field name='name'>币别列表</field>
+            <field name='model'>accountcore.ac_currency</field>
+            <field name='arch' type='xml'>
+                <tree  editable='top' create='1' duplicate='0' import="0">
+                    <field name='number' />
+                    <field name='name' />
+                    <field name="exchange_rate"></field>
+                    <field name='glob_tag' widget='many2many_tags' />
+                </tree>
+            </field>
+        </record>
+    <!-- 窗体动作-打开币别列表 -->
+    <record model='ir.actions.act_window' id='accountcore_ac_currency_list_action_window'>
+      <field name='name'>币别列表</field>
+      <field name='res_model'>accountcore.ac_currency</field>
+      <field name='view_mode'>tree</field>
+    </record>
+    </data>
+</odoo>

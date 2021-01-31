@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <report
+            string="Declaration of Conformity"
+            id="action_report_dc"
+            model="deltatech.dc"
+            report_type="qweb-pdf"
+            name="deltatech_dc.report_dc"
+            file="deltatech_dc.report_dc"
+        />
+        <report
+            string="Declaration of Conformity"
+            id="action_report_dc_lot"
+            model="stock.production.lot"
+            report_type="qweb-pdf"
+            name="deltatech_dc.report_dc_lot"
+            file="deltatech_dc.report_dc_lot"
+        />
+        <report
+            string="Declaration of Conformity"
+            id="action_report_dc_invoice"
+            model="account.move"
+            report_type="qweb-pdf"
+            name="deltatech_dc.report_dc_invoice"
+            file="deltatech_dc.report_dc_invoice"
+        />
+    </data>
+</odoo>

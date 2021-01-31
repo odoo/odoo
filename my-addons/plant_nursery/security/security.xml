@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record model="ir.rule" id="ir_rule_nursery_plant_public">
+        <field name="name">Nursery Plant: public: published only</field>
+        <field name="model_id" ref="model_nursery_plant"/>
+        <field name="domain_force">[('website_published', '=', True)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+
+    <record model="ir.rule" id="ir_rule_nursery_order_public">
+        <field name="name">Nursery Plant: public: published only</field>
+        <field name="model_id" ref="model_nursery_order"/>
+        <field name="domain_force">[('customer_id.partner_id', '=', user.partner_id.id)]</field>
+        <field name="groups" eval="[(4, ref('base.group_public')), (4, ref('base.group_portal'))]"/>
+    </record>
+</odoo>

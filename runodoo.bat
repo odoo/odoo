@@ -1,0 +1,1 @@
+python ../odoo-bin -r odoo -w odoo --addons-path=../addons,../my-addons --db-filter=^odoo15$ -d odoo15

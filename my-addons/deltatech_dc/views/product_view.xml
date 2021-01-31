@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.normal.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Quality Control">
+                        <group>
+                            <group>
+                                <field name="company_standard" />
+                                <field name="data_sheet" />
+                                <field name="technical_specification" />
+                            </group>
+                            <group>
+                                <field name="standards" />
+                            </group>
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 用户机构/主体权限-开始 -->
+    <record id="accountcore_system_org_rule" model="ir.rule">
+        <field name="name">管理员拥有的全部机构/主体权限</field>
+        <field name="model_id" ref="accountcore.model_accountcore_org" />
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]" />
+    </record>
+    <!-- 用户机核算构权限-结束 -->
+        <!-- 用户对凭证的权限-开始 -->
+    <record model="ir.rule" id="accountcore_system_voucher_r_rule">
+        <field name="name">管理员拥有的全部凭证</field>
+        <field name="model_id" ref="accountcore.model_accountcore_voucher" />
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <!-- 用户对凭证的权限-结束 -->
+    <!-- 用户对凭证分录的权限-开始 -->
+    <record model="ir.rule" id="accountcore_system_entry_r_rule">
+        <field name="name">管理员拥有的全部凭证分录</field>
+        <field name="model_id" ref="accountcore.model_accountcore_entry" />
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+        <!-- 用户对凭证分录的权限-结束 -->
+            <!-- 用户对核算项目的权限-开始 -->
+    <record model="ir.rule" id="accountcore_system_item_r_rule">
+        <field name="name">管理员拥有的全部核算项目</field>
+        <field name="model_id" ref="accountcore.model_accountcore_item" />
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <!-- 用户对核算项目的权限-结束 -->
+        <!-- 用户对会计科目的权限-开始 -->
+    <record model="ir.rule" id="accountcore_system_account_r_rule">
+        <field name="name">管理员拥有的全部会计科目</field>
+        <field name="model_id" ref="accountcore.model_accountcore_account" />
+        <field name="domain_force">[(1,'=',1)]</field>
+        <field name="groups" eval="[(4,ref('base.group_system'))]" />
+        <field name="perm_read" eval="True" />
+        <field name="perm_write" eval="True" />
+        <field name="perm_create" eval="True" />
+        <field name="perm_unlink" eval="True" />
+    </record>
+    <!-- 用户对会计科目的权限-结束 -->
+</odoo>

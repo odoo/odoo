@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="product_category_form_view" model="ir.ui.view">
+            <field name="name">product.category.form</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view" />
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group name="product_code">
+                        <group string="Products">
+                            <field name="sequence_id" />
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+        <record id="product_template_only_form_view" model="ir.ui.view">
+            <field name="name">product.template.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="button_new_code"
+                        string="New internal code"
+                        type="object"
+                        class="oe_edit_only"
+                        attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+        <record id="product_normal_form_view" model="ir.ui.view">
+            <field name="name">product.product.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button
+                        name="button_new_code"
+                        string="New internal code"
+                        type="object"
+                        class="oe_edit_only"
+                        attrs="{'invisible': [('product_variant_count', '&gt;', 1)]}"
+                    />
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

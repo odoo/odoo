@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>     
+<odoo>        
+    <record id="res_config_settings_view_form" model="ir.ui.view">       
+        <field name="name">res.config.settings.view.form.inherit.frepple</field>      
+        <field name="model">res.config.settings</field>          
+        <field name="priority" eval="5" />
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+            <div class="app_settings_block" data-string="FrePPLe" data-key="frepple">
+               <h2>FrePPLe</h2>
+               <div class="row mt16 o_settings_container">
+               <div class="col-12 col-lg-6 o_setting_box" id="frepple_manufacturing_warehouse">
+                  <div class="o_setting_left_pane"/>               
+                  <div class="o_setting_right_pane">
+                     <label for="manufacturing_warehouse"/>
+                     <div class="text-muted">
+                     Manufacturing warehouse
+                     </div>
+                     <field name="manufacturing_warehouse"/>
+                  </div>
+               </div>   
+               <div class="col-12 col-lg-6 o_setting_box" id="frepple_calendar">
+                  <div class="o_setting_left_pane"/>               
+                  <div class="o_setting_right_pane">                     
+                     <label for="calendar"/>
+                     <div class="text-muted">
+                     Working hour calendar at the manufacturing location
+                     </div>
+                     <field name="calendar"/>
+                  </div>
+               </div>   
+               <div class="col-12 col-lg-6 o_setting_box" id="frepple_calendar">
+                  <div class="o_setting_left_pane"/>               
+                  <div class="o_setting_right_pane">                     
+                     <label for="webtoken_key"/>
+                     <div class="text-muted">
+                     Key to generate web tokens to authenticate on the frePPLe server
+                     </div>
+                     <field name="webtoken_key"/>
+                  </div>
+               </div>   
+               <div class="col-12 col-lg-6 o_setting_box" id="frepple_calendar">
+                  <div class="o_setting_left_pane"/>               
+                  <div class="o_setting_right_pane">
+                     <label for="frepple_server"/>
+                     <div class="text-muted">
+                     URL of the frePPLe server
+                     </div>                     
+                     <field name="frepple_server"/> 
+                  </div>   
+               </div>               
+            </div>
+            </div>
+            </xpath>
+        </field>      
+     </record>     
+</odoo>

@@ -1,0 +1,24 @@
+.modal {
+    .dialog_full_screen {
+        @include media-breakpoint-up(sm) {
+            max-width: 100%;
+            width: calc(100% - 50px);
+        }
+    }
+    .modal-header button.close {
+        font-size: 18px;
+
+        &:not(.dialog_button_extend):not(.dialog_button_restore) {
+            @include media-breakpoint-up(sm) {
+                margin-left: 15px;
+            }
+        }
+
+        &.dialog_button_extend,
+        .dialog_button_restore {
+            @include media-breakpoint-down(sm) {
+                display: none !important;
+            }
+        }
+    }
+}

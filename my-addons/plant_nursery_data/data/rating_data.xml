@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <record id="rating_order_O_0" model="rating.rating">
+        <field name="res_model_id" ref="plant_nursery.model_nursery_order"/>
+        <field name="res_id" ref="plant_nursery_data.order_0"/>
+        <field name="partner_id" ref="base.partner_admin"/>
+        <field name="consumed" eval="True"/>
+        <field name="feedback">Very good services !</field>
+        <field name="rating">5</field>
+        <field name="message_id" eval="False"/>
+    </record>
+    <record id="rating_order_O_1" model="rating.rating">
+        <field name="res_model_id" ref="plant_nursery.model_nursery_order"/>
+        <field name="res_id" ref="plant_nursery_data.order_0"/>
+        <field name="partner_id" ref="base.partner_root"/>
+        <field name="consumed" eval="True"/>
+        <field name="feedback">Excellent !</field>
+        <field name="rating">4</field>
+        <field name="message_id" eval="False"/>
+    </record>
+    <record id="rating_order_O_2" model="rating.rating">
+        <field name="res_model_id" ref="plant_nursery.model_nursery_order"/>
+        <field name="res_id" ref="plant_nursery_data.order_0"/>
+        <field name="partner_id" ref="base.partner_root"/>
+        <field name="consumed" eval="True"/>
+        <field name="feedback">Impressive. Fast and efficient.</field>
+        <field name="rating">4</field>
+        <field name="message_id" eval="False"/>
+    </record>
+</data></odoo>

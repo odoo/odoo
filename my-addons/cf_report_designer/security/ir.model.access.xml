@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 康虎软件工作室 -->
+<!-- http://www.khcloud.net -->
+<!-- QQ: 360026606 -->
+<!-- wechat: 360026606 -->
+<odoo>
+
+    <record id="access_cf_report_define" model="ir.model.access">
+        <field name="name">cf_report_designer.cf_report_define</field>
+        <field name="model_id" ref="model_cf_report_define"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="comment">Report Define</field>
+    </record>
+
+    <record id="access_cf_report_define_field" model="ir.model.access">
+        <field name="name">cf_report_designer.cf_report_define_field</field>
+        <field name="model_id" ref="model_cf_report_define_field"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="comment">Field Define</field>
+    </record>
+
+    <record id="access_cf_report_define_category" model="ir.model.access">
+        <field name="name">cf_report_designer.cf_report_define_category</field>
+        <field name="model_id" ref="model_cf_report_define_category"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="comment">Report Category</field>
+    </record>
+
+    <record id="access_cf_report_printer" model="ir.model.access">
+        <field name="name">cf_report_designer.cf_report_printer</field>
+        <field name="model_id" ref="model_cf_report_printer"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="comment">Printer Define</field>
+    </record>
+
+    <record id="access_cf_cfprint_license" model="ir.model.access">
+        <field name="name">cf_report_designer.cf_cfprint_license</field>
+        <field name="model_id" ref="model_cf_cfprint_license"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+        <field name="comment">CFPrint License</field>
+    </record>
+
+    <data noupdate="1">
+
+    </data>
+</odoo>

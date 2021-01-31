@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <record id="app_system_name" model="ir.config_parameter">
+            <field name="key">app_system_name</field>
+            <field name="value">odooApp14</field>
+        </record>
+
+        <record id="app_show_lang" model="ir.config_parameter">
+            <field name="key">app_show_lang</field>
+            <field name="value">True</field>
+        </record>
+        <record id="app_show_debug" model="ir.config_parameter">
+            <field name="key">app_show_debug</field>
+            <field name="value">True</field>
+        </record>
+        <record id="app_show_documentation" model="ir.config_parameter">
+            <field name="key">app_show_documentation</field>
+            <field name="value">True</field>
+        </record>
+        <record id="app_show_documentation_dev" model="ir.config_parameter">
+            <field name="key">app_show_documentation_dev</field>
+            <field name="value">True</field>
+        </record>
+        <record id="app_show_support" model="ir.config_parameter">
+            <field name="key">app_show_support</field>
+            <field name="value">True</field>
+        </record>
+        <record id="app_show_account" model="ir.config_parameter">
+            <field name="key">app_show_account</field>
+            <field name="value">True</field>
+        </record>
+        <record id="app_show_enterprise" model="ir.config_parameter">
+            <field name="key">app_show_enterprise</field>
+            <field name="value">False</field>
+        </record>
+        <record id="app_show_share" model="ir.config_parameter">
+            <field name="key">app_show_share</field>
+            <field name="value">False</field>
+        </record>
+        <record id="app_show_poweredby" model="ir.config_parameter">
+            <field name="key">app_show_poweredby</field>
+            <field name="value">False</field>
+        </record>
+        <record id="app_documentation_url" model="ir.config_parameter">
+            <field name="key">app_documentation_url</field>
+            <field name="value">https://www.sunpop.cn/documentation/user/12.0/zh_CN/index.html</field>
+        </record>
+        <record id="app_documentation_dev_url" model="ir.config_parameter">
+            <field name="key">app_documentation_dev_url</field>
+            <field name="value">https://www.sunpop.cn/documentation/12.0/index.html</field>
+        </record>
+        <record id="app_support_url" model="ir.config_parameter">
+            <field name="key">app_support_url</field>
+            <field name="value">https://www.sunpop.cn/trial</field>
+        </record>
+        <record id="app_account_title" model="ir.config_parameter">
+            <field name="key">app_account_title</field>
+            <field name="value">My Online Account</field>
+        </record>
+        <record id="app_account_url" model="ir.config_parameter">
+            <field name="key">app_account_url</field>
+            <field name="value">https://www.sunpop.cn/my-account</field>
+        </record>
+        <!--测试环境，from oca/web-->
+        <record id="app_ribbon_name" model="ir.config_parameter">
+            <field name="key">app_ribbon_name</field>
+            <field name="value"><![CDATA[Sunpop Test<br/>({db_name})]]></field>
+        </record>
+        <!-- Add ribbon color configuration parameter -->
+        <record id="app_ribbon_color" model="ir.config_parameter">
+            <field name="key">app_ribbon_color</field>
+            <field name="value">#f0f0f0</field>
+        </record>
+        <!-- Add ribbon background color configuration parameter -->
+        <record id="app_ribbon_background_color" model="ir.config_parameter">
+            <field name="key">app_ribbon_background_color</field>
+            <field name="value">rgba(255,0,0,.4)</field>
+        </record>
+    </data>
+</openerp>

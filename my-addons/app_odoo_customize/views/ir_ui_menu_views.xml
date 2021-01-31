@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+<!--        将菜单管理在设置中提前-->
+        <record id="base.menu_grant_menu_access" model="ir.ui.menu">
+            <field name="parent_id" ref="base.menu_administration"/>
+        </record>
+        <record id="app_edit_menu" model="ir.ui.view">
+            <field name="name">app.ir.ui.menu.tree</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree"  position="attributes">
+                    <multi_edit eval="True"/>
+                </xpath>
+                <field name="complete_name" position="after">
+                    <field name="name"/>
+                    <field name="parent_id"/>
+                </field>
+            </field>
+        </record>
+        <record id="app_edit_menu_access_search" model="ir.ui.view">
+            <field name="name">app.ir.ui.menu.search</field>
+            <field name="model">ir.ui.menu</field>
+            <field name="inherit_id" ref="base.edit_menu_access_search"/>
+            <field name="arch" type="xml">
+                <filter name="inactive" position="before">
+                    <filter string="Top Menu" name="top_menu" domain="[('parent_id','=', False)]"/>
+                </filter>
+            </field>
+        </record>
+        <record id="base.grant_menu_access" model="ir.actions.act_window">
+            <field name="context">{'ir.ui.menu.full_list': True, 'search_default_top_menu': 1}</field>
+        </record>
+    </data>
+</odoo>

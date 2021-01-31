@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template
+        id="assets_backend"
+        name="web_dialog_size assets"
+        inherit_id="web.assets_backend"
+    >
+        <xpath expr="." position="inside">
+            <link
+                rel="stylesheet"
+                href="/web_dialog_size/static/src/scss/web_dialog_size.scss"
+            />
+            <script
+                type="text/javascript"
+                src="/web_dialog_size/static/src/js/web_dialog_size.js"
+            />
+        </xpath>
+    </template>
+</odoo>

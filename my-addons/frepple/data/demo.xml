@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <!-- Only load the demo data when the module is initially installed. -->
+	<data noupdate="1">
+	        
+        <!-- mrp.workcenter -->
+        <record id="workcenter_assembly_line" model="mrp.workcenter">
+            <field name="name">assembly line</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="capacity">5</field>
+            <field name="time_start">10</field>
+            <field name="time_stop">8</field>
+            <field name="time_efficiency">87</field>
+        </record>
+        <record id="workcenter_grinder" model="mrp.workcenter">
+            <field name="name">grinder</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="capacity">1</field>
+            <field name="time_start">0</field>
+            <field name="time_stop">0</field>
+            <field name="time_efficiency">100</field>
+        </record>
+        <record id="workcenter_saw" model="mrp.workcenter">
+            <field name="name">saw</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="capacity">1</field>
+            <field name="time_start">0</field>
+            <field name="time_stop">0</field>
+            <field name="time_efficiency">87</field>
+        </record>
+        <record id="workcenter_paint" model="mrp.workcenter">
+            <field name="name">paint</field>
+            <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
+            <field name="capacity">1</field>
+            <field name="time_start">0</field>
+            <field name="time_stop">0</field>
+            <field name="time_efficiency">100</field>
+        </record>      
+                
+	      <!-- product.product -->
+        <record id="product_product_chair" model="product.product">
+            <field name="name">chair</field>
+            <field name="default_code">chair</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_chair_leg" model="product.product">
+            <field name="name">chair leg</field>
+            <field name="default_code">chair leg</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_cushion" model="product.product">
+            <field name="name">cushion</field>
+            <field name="default_code">cushion</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_grinded_wooden_panel" model="product.product">
+            <field name="name">grinded wooden panel</field>
+            <field name="default_code">grinded wooden panel</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_round_table" model="product.product">
+            <field name="name">round table</field>
+            <field name="default_code">round table</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_screws" model="product.product">
+            <field name="name">screws</field>
+            <field name="default_code">screws</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_square_table" model="product.product">
+            <field name="name">square table</field>
+            <field name="default_code">square table</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_table_leg" model="product.product">
+            <field name="name">table leg</field>
+            <field name="default_code">table leg</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_varnished_chair" model="product.product">
+            <field name="name">varnished chair</field>
+            <field name="default_code">varnished chair</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_wooden_beam" model="product.product">
+            <field name="name">wooden beam</field>
+            <field name="default_code">wooden beam</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        <record id="product_product_wooden_panel" model="product.product">
+            <field name="name">wooden panel</field>
+            <field name="default_code">wooden panel</field>
+            <field name="standard_price">10</field>
+            <field name="list_price">10.0</field>
+            <field name="type">consu</field>
+            <field name="uom_id" ref="uom.product_uom_unit"/>
+            <field name="uom_po_id" ref="uom.product_uom_unit"/>
+        </record>
+        
+        <!-- product.template -->
+        <record id="product_template_chair" model="product.template">
+            <field name="name">chair</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_chair_leg" model="product.template">
+            <field name="name">chair leg</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_cushion" model="product.template">
+            <field name="name">cushion</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_grinded_wooden_panel" model="product.template">
+            <field name="name">grinded wooden panel</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_round_table" model="product.template">
+            <field name="name">round table</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_screws" model="product.template">
+            <field name="name">screws</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_square_table" model="product.template">
+            <field name="name">square table</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_table_leg" model="product.template">
+            <field name="name">table leg</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_varnished_chair" model="product.template">
+            <field name="name">varnished chair</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_wooden_beam" model="product.template">
+            <field name="name">wooden beam</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+        <record id="product_template_wooden_panel" model="product.template">
+            <field name="name">wooden panel</field>
+            <field name="route_ids" eval="[(6, 0, [ref('stock.route_warehouse0_mto'), ref('mrp.route_warehouse0_manufacture')])]"/>
+        </record>
+
+        <!-- mrp.routing -->
+        <record id="routing_assemble_chair" model="mrp.routing">
+            <field name="name">Assemble chair</field>
+        </record>
+        <record id="routing_assemble_round_table" model="mrp.routing">
+            <field name="name">Assemble round table</field>
+        </record>
+        <record id="routing_assemble_square_table" model="mrp.routing">
+            <field name="name">Assemble square table</field>
+        </record>
+        <record id="routing_grind_wooden_panel" model="mrp.routing">
+            <field name="name">Grind wooden panel</field>
+        </record>
+        <record id="routing_saw_chair_leg" model="mrp.routing">
+            <field name="name">Saw chair leg</field>
+        </record>
+        <record id="routing_saw_table_leg" model="mrp.routing">
+            <field name="name">Saw table leg</field>
+        </record>
+        <record id="routing_varnish_chair" model="mrp.routing">
+            <field name="name">Varnish chair</field>
+        </record>
+        
+        <!-- mrp.routing.workcenter -->
+        <record id="routing_workcenter_assemble_chair_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_assemble_chair"/>
+            <field name="workcenter_id" ref="workcenter_assembly_line"/>
+            <field name="name">Assemble chair</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">0</field>
+        </record>
+        <record id="routing_workcenter_assemble_round_table_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_assemble_round_table"/>
+            <field name="workcenter_id" ref="workcenter_assembly_line"/>
+            <field name="name">Assemble round table</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">0</field>
+        </record>
+        <record id="routing_workcenter_assemble_square_table_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_assemble_square_table"/>
+            <field name="workcenter_id" ref="workcenter_assembly_line"/>
+            <field name="name">Assemble square table</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">0</field>
+        </record>
+        <record id="routing_workcenter_grind_wooden_panel_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_grind_wooden_panel"/>
+            <field name="workcenter_id" ref="workcenter_grinder"/>
+            <field name="name">Grind wooden panel</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">0</field>
+        </record>
+        <record id="routing_workcenter_saw_chair_leg_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_saw_chair_leg"/>
+            <field name="workcenter_id" ref="workcenter_saw"/>
+            <field name="name">Saw chair leg</field>
+            <field name="time_cycle">20</field>
+            <field name="sequence">0</field>
+        </record>          
+        <record id="routing_workcenter_saw_table_leg_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_saw_table_leg"/>
+            <field name="workcenter_id" ref="workcenter_saw"/>
+            <field name="name">Saw table leg</field>
+            <field name="time_cycle">20</field>
+            <field name="sequence">0</field>
+        </record>
+        <record id="routing_workcenter_varnish_chair_0" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_varnish_chair"/>
+            <field name="workcenter_id" ref="workcenter_paint"/>
+            <field name="name">Apply varnish for chair</field>
+            <field name="time_cycle">30</field>
+            <field name="sequence">0</field>
+        </record>   
+        <record id="routing_workcenter_varnish_chair_1" model="mrp.routing.workcenter">
+            <field name="routing_id" ref="routing_varnish_chair"/>
+            <field name="workcenter_id" ref="workcenter_paint"/>
+            <field name="name">Drying varnish for chair</field>
+            <field name="time_cycle">360</field>
+            <field name="sequence">0</field>
+        </record>   
+
+        <!-- mrp.bom -->
+        <record id="bom_chair" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_template_chair"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="routing_assemble_chair"/>
+        </record>
+        <record id="bom_chair_leg" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_template_chair_leg"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="routing_saw_chair_leg"/>
+        </record>
+        <record id="bom_grinded_wooden_panel" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_template_grinded_wooden_panel"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="routing_grind_wooden_panel"/>
+        </record>
+        <record id="bom_round_table" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_template_round_table"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="routing_assemble_round_table"/>
+        </record>
+        <record id="bom_square_table" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_template_square_table"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="routing_assemble_square_table"/>
+        </record>
+        <record id="bom_table_leg" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_template_table_leg"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="routing_saw_table_leg"/>
+        </record>
+        <record id="bom_varnished_chair" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_template_varnished_chair"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">1</field>
+            <field name="routing_id" ref="routing_varnish_chair"/>
+        </record>
+
+        <!-- mrp.bom.line -->
+        <record id="bom_line_chair_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_screws"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_chair"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_chair_0"/>
+        </record>
+        <record id="bom_line_chair_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_chair_leg"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_chair"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_chair_0"/>
+        </record>
+        <record id="bom_line_chair_3" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_cushion"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_chair"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_chair_0"/>
+        </record>
+        <record id="bom_line_chair_leg_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_wooden_beam"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_chair_leg"/>
+            <field name="operation_id" ref="routing_workcenter_saw_chair_leg_0"/>
+        </record>
+        <record id="bom_line_grinded_wooden_panel_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_wooden_panel"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_grinded_wooden_panel"/>
+            <field name="operation_id" ref="routing_workcenter_grind_wooden_panel_0"/>
+        </record>    
+        <record id="bom_line_round_table_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_table_leg"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_round_table"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_round_table_0"/>
+        </record>       
+        <record id="bom_line_round_table_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_grinded_wooden_panel"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_round_table"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_round_table_0"/>
+        </record>                     
+        <record id="bom_line_round_table_3" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_screws"/>
+            <field name="product_qty">10</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_round_table"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_round_table_0"/>
+        </record>                     
+        <record id="bom_line_square_table_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_table_leg"/>
+            <field name="product_qty">4</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_square_table"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_square_table_0"/>
+        </record>       
+        <record id="bom_line_square_table_2" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_grinded_wooden_panel"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_square_table"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_square_table_0"/>
+        </record>                     
+        <record id="bom_line_square_table_3" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_screws"/>
+            <field name="product_qty">5</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_square_table"/>
+            <field name="operation_id" ref="routing_workcenter_assemble_square_table_0"/>
+        </record>      
+        <record id="bom_line_table_leg_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_wooden_beam"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_table_leg"/>
+            <field name="operation_id" ref="routing_workcenter_saw_table_leg_0"/>
+        </record>       
+        <record id="bom_line_varnished_chair_1" model="mrp.bom.line">
+            <field name="product_id" ref="product_product_chair"/>
+            <field name="product_qty">1</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="sequence">0</field>
+            <field name="bom_id" ref="bom_varnished_chair"/>
+            <field name="operation_id" ref="routing_workcenter_varnish_chair_0"/>
+        </record> 
+        
+        <!-- res.parter vendors-->
+        <record id="res_partner_cushion_supplier" model="res.partner">
+            <field name="name">cushion supplier</field>
+            <field eval="[(6, 0, [ref('base.res_partner_category_0')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field name="is_company">1</field>
+        </record>        
+        <record id="res_partner_screw_supplier" model="res.partner">
+            <field name="name">screw supplier</field>
+            <field eval="[(6, 0, [ref('base.res_partner_category_0')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field name="is_company">1</field>
+        </record> 
+        <record id="res_partner_wood_supplier" model="res.partner">
+            <field name="name">wood supplier</field>
+            <field eval="[(6, 0, [ref('base.res_partner_category_0')])]" name="category_id"/>
+            <field name="supplier">1</field>
+            <field eval="0" name="customer"/>
+            <field name="is_company">1</field>
+        </record>         
+	</data>
+</odoo>

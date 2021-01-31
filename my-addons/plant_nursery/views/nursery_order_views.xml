@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="nursery_order_view_form" model="ir.ui.view">
+        <field name="name">nursery.order.view.form</field>
+        <field name="model">nursery.order</field>
+        <field name="arch" type="xml">
+            <form string="Order">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                    <button string="Send Rating Request" name="action_send_rating"
+                            type="object" class="oe_highlight"/>
+                    <button name="%(portal.portal_share_action)d" string="Share" type="action" class="oe_highlight oe_read_only"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_ratings" type="object"
+                                class="oe_stat_button" icon="fa-star">
+                            <field name="rating_count" string="Reviews" widget="statinfo"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="Customer Name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="category_id"/>
+                            <field name="customer_id"/>
+                            <field name="company_id"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="amount_total" widget="monetary"
+                                options="{'currency_field': 'currency_id'}"/>
+                            <field name="date_open"/>
+                            <field name="campaign_id"/>
+                            <field name="source_id"/>
+                            <field name="medium_id"/>
+                        </group>
+                    </group>
+                    <field name="line_ids">
+                        <tree string="Order Lines" editable="bottom">
+                            <field name="plant_id"/>
+                            <field name="price"/>
+                        </tree>
+                    </field>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="nursery_order_view_list" model="ir.ui.view">
+        <field name="name">nursery.order.view.list</field>
+        <field name="model">nursery.order</field>
+        <field name="arch" type="xml">
+            <tree string="Orders">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="category_id"/>
+                <field name="customer_id"/>
+                <field name="amount_total"/>
+                <field name="state"/>
+                <field name="date_open"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="nursery_order_view_kanban" model="ir.ui.view">
+        <field name="name">nursery.order.view.kanban</field>
+        <field name="model">nursery.order</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_small_column">
+                <field name="customer_id"/>
+                <field name="user_id"/>
+                <field name="activity_ids"/>
+                <field name="activity_state"/>
+                <field name="message_needaction_counter"/>
+                <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                            <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button">
+                                <span class="fa fa-ellipsis-v" aria-label="menuitems" title="Items"/>
+                            </a>
+                            <ul class="dropdown-menu" role="menu">
+                                <t t-if="widget.editable"><a type="edit" role="menuitem" class="dropdown-item">Edit Order</a></t>
+                                <t t-if="widget.deletable"><a type="delete" role="menuitem" class="dropdown-item">Delete</a></t>
+                            </ul>
+                        </div>
+                        <div class="oe_kanban_details">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    <small class="o_kanban_record_subtitle text-muted font-weight-bold">
+                                        <field name="customer_id"/>
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="text-muted o_kanban_record_subtitle">
+                                <field name="amount_total" widget="monetary"/>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <div class="o_kanban_inline_block">
+                                        <field name="activity_ids" widget="kanban_activity"/>
+                                    </div>
+                                    <t t-if="record.message_needaction_counter.raw_value">
+                                        <span class='oe_kanban_mail_new ml8' title='Unread Messages'><i class='fa fa-comments'/><t t-raw="record.message_needaction_counter.raw_value"/></span>
+                                    </t>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_256', record.user_id.raw_value)" width="24" height="24" class="oe_kanban_avatar float-right" alt="Responsible Image"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="oe_clear"></div>
+                    </div>
+                </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="nursery_order_view_search" model="ir.ui.view">
+        <field name="name">nursery.order.view.search</field>
+        <field name="model">nursery.order</field>
+        <field name="arch" type="xml">
+            <search string="Search Orders">
+                <field name="line_ids" string="Plant" filter_domain="[('line_ids.plant_id.name', 'ilike', self)]"/>
+                <field name="customer_id" string="Customer"/>
+                <field name="category_id"/>
+                <field name="state"/>
+                <field name="campaign_id"/>
+                <field name="source_id"/>
+                <field name="medium_id"/>
+                <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirm')]"/>
+                <separator/>
+                <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all opportunities for which the next action date is before today"/>
+                <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Future Activities" name="activities_upcoming_all"
+                    domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
+                    ]"/>
+                <group expand="0" string="Group By">
+                    <filter string="State" name="group_by_state" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Category" name="group_by_category_id" domain="[]" context="{'group_by': 'category_id'}"/>
+                    <filter string="UTM Campaign" name="group_by_campaign_id" domain="[]" context="{'group_by': 'campaign_id'}"/>
+                    <filter string="UTM Source" name="group_by_source_id" domain="[]" context="{'group_by': 'source_id'}"/>
+                    <filter string="UTM Medium" name="group_by_medium_id" domain="[]" context="{'group_by': 'medium_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="nursery_order_action" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="res_model">nursery.order</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{'search_default_group_by_state': 1}</field>
+    </record>
+
+    <record id="nursery_order_action_category" model="ir.actions.act_window">
+        <field name="name">Orders</field>
+        <field name="res_model">nursery.order</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="context">{
+            'search_default_category_id': active_id,
+            'search_default_group_by_state': 1,
+            'default_category_id': active_id}</field>
+    </record>
+
+    <record id="nursery_order_menu" model="ir.ui.menu">
+        <field name="action" ref="nursery_order_action"/>
+    </record>
+    <record id="nursery_order_menu_order" model="ir.ui.menu">
+        <field name="action" ref="nursery_order_action"/>
+    </record>
+</odoo>

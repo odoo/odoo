@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+            <!-- 窗体动作-打开启用期初导入向导-->
+        <record id="accountcore_down_begin_model_action_url" model="ir.actions.act_url">
+            <field name="name">下载导入模板</field>
+            <field name="target">self</field>
+            <field name="url">/web/export/accountcore.begin_model</field>
+        </record>
+        <!-- form- 启用期初导入向导 -->
+        <record id="accountcore_import_begin_form" model="ir.ui.view">
+            <field name="name">启用期初导入向导</field>
+            <field name="model">accountcore.import_begin</field>
+            <field name="arch" type="xml">
+                <form >
+                    <sheet>
+                        <group>
+                            <field name="file"></field>
+                            <field name="last_only"></field>
+                            <field name="control_direction"></field>
+                            <field name="auto_create"></field>
+                            <field name="result" readonly='1'></field>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="do" type="object" string="导入" class='btn-primary' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-打开启用期初导入向导-->
+        <!-- <act_window id="accountcore_import_begin_action" name="启用期导入向导" binding_model="accountcore.accounts_balance" res_model="accountcore.accounts_balance" view_mode="form" target="new" /> -->
+        <record id="accountcore_import_begin_action" model="ir.actions.act_window">
+            <field name="name">启用期初导入向导</field>
+            <field name="res_model">accountcore.import_begin</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_view_types">list</field>
+        </record>
+    </data>
+</odoo>

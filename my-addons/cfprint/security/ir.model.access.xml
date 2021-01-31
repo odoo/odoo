@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 康虎软件工作室 -->
+<!-- http://www.khcloud.net -->
+<!-- QQ: 360026606 -->
+<!-- wechat: 360026606 -->
+<odoo>
+
+    <record id="access_cfprint_template_all" model="ir.model.access">
+        <field name="name">cfprint template</field>
+        <field name="model_id" ref="model_cf_template"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+<!--        <field name="comment"></field>-->
+    </record>
+
+    <record id="access_cfprint_template_category_all" model="ir.model.access">
+        <field name="name">cfprint template_category</field>
+        <field name="model_id" ref="model_cf_template_category"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+<!--        <field name="comment"></field>-->
+    </record>
+
+    <record id="access_cfprint_template_history_all" model="ir.model.access">
+        <field name="name">cfprint template_history</field>
+        <field name="model_id" ref="model_cf_template_history"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+<!--        <field name="comment"></field>-->
+    </record>
+
+    <record id="access_print_server_user_mapping" model="ir.model.access">
+        <field name="name">Print Server User Mapping</field>
+        <field name="model_id" ref="model_cf_print_server_user_mapping"/>
+        <field name="group_id" ref=""/>
+        <field name="perm_read" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
+<!--        <field name="comment"></field>-->
+    </record>
+
+    <data noupdate="1">
+
+    </data>
+</odoo>

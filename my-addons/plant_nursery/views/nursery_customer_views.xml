@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="nursery_customer_view_search" model="ir.ui.view">
+        <field name="name">nursery.customer.view.search</field>
+        <field name="model">nursery.customer</field>
+        <field name="arch" type="xml">
+            <search string="Search Customers">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="address"/>
+                <field name="partner_id"/>
+                <separator />
+                <group expand="0" string="Group By">
+                    <filter string="Country" name="group_by_country_id" domain="[]" context="{'group_by': 'country_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="nursery_customer_view_kanban" model="ir.ui.view">
+        <field name="name">nursery.customer.view.kanban</field>
+        <field name="model">nursery.customer</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile o_plant_nursery_kanban">
+                <field name="id"/>
+                <field name="image"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill">
+                            <div class="o_dropdown_kanban dropdown" groups="base.group_user">
+                                <a class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" role="button">
+                                    <span class="fa fa-ellipsis-v" aria-label="menuitems"/>
+                                </a>
+                                <ul class="dropdown-menu" role="menu">
+                                    <t t-if="widget.editable"><a type="edit" role="menuitem" class="dropdown-item">Edit Customer</a></t>
+                                    <t t-if="widget.deletable"><a type="delete" role="menuitem" class="dropdown-item">Delete</a></t>
+                                </ul>
+                            </div>
+                            <div class="o_kanban_image_fill_left d-none d-md-block"
+                                t-attf-style="background-image:url('#{kanban_image('nursery.customer', 'image', record.id.raw_value)}')">
+                            </div>
+                            <div class="o_kanban_image rounded-circle d-md-none"
+                                t-attf-style="background-image:url('#{kanban_image('nursery.customer', 'image', record.id.raw_value)}')">
+                            </div>
+                            <div class="oe_kanban_details d-flex flex-column">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title"><field name="name"/></strong><br/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-flag-o mr-2 font-weight-bold" aria-label="Duration" role="img" title="Duration"/><field name="address"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-street-view mr-2 font-weight-bold" aria-label="Country" role="img" title="Country"/> <field name="country_id"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-envelope-o mr-2 font-weight-bold" aria-label="Email" role="img" title="Email"/> <field name="email"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-building MR-2 font-weight-bold" aria-label="Company" role="img" title="company"/> <field name="partner_id"/>
+                                    </div>
+                                    <div class="d-flex align-items-baseline">
+                                        <i class="fa fa-phone mr-2 font-weight-bold" aria-label="Mobile" role="img" title="Mobile"/> <field name="mobile"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <div class="oe_kanban_bottom_left">
+                                    </div>
+                                    <div class="oe_kanban_bottom_right">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="nursery_customer_view_form" model="ir.ui.view">
+        <field name="name">nursery.customer.view.form</field>
+        <field name="model">nursery.customer</field>
+        <field name="arch" type="xml">
+            <form string="Customer">
+                <sheet>
+                    <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Customer Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="mobile"
+                                widget="phone"
+                                options="{'enable_sms': True}"/>
+                        </group>
+                        <group>
+                            <field name="address"/>
+                            <field name="partner_id"/>
+                            <field name="country_id"/>
+                            <field name="partner_id"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="nursery_customer_view_list" model="ir.ui.view">
+        <field name="name">nursery.customer.view.list</field>
+        <field name="model">nursery.customer</field>
+        <field name="arch" type="xml">
+            <tree string="Customers">
+                <field name="name"/>
+                <field name="mobile"/>
+                <field name="email"/>
+                <field name="country_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="nursery_customer_action" model="ir.actions.act_window">
+        <field name="name">Customers</field>
+        <field name="res_model">nursery.customer</field>
+        <field name="view_mode">kanban,tree,form</field>
+    </record>
+
+    <record id="nursery_customer_menu" model="ir.ui.menu">
+        <field name="action" ref="nursery_customer_action"/>
+    </record>
+
+
+    <!-- Add action entry in the Action Menu for Customer -->
+    <record id="nursery_customer_act_window_sms_composer_multi" model="ir.actions.act_window">
+        <field name="name">Send SMS Text Message"</field>
+        <field name="binding_model_id" ref="model_nursery_customer"/>
+        <field name="res_model">sms.composer</field>
+        <field name="binding_view_types">list</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'mass',
+            'default_mass_keep_log': True,
+            'default_res_ids': active_ids
+        }</field>
+    </record>
+
+    <record id="nursery_customer_act_window_sms_composer_single" model="ir.actions.act_window">
+        <field name="name">Send SMS Text Message</field>
+        <field name="binding_model_id" ref="model_nursery_customer"/>
+        <field name="res_model">sms.composer</field>
+        <field name="binding_view_types">form</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{
+            'default_composition_mode': 'comment',
+            'default_res_id': active_id,
+        }</field>
+    </record>
+</odoo>

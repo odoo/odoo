@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+
+<odoo>
+
+    <report id="action_library_book_sql_report"
+
+        string="Library Book SQL Report"
+
+        model="academy.library.book.report"
+
+        report_type="qweb-html"
+
+        name="academy.report_library_book_sql" />
+
+
+    <template id="report_library_book_sql">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+
+                <div class="page">
+                    <!-- Report page content -->
+                    <table class="table table-striped">
+                        <tr>
+                            <th>Title</th>
+                            <th>Published</th>
+                            <th>Date</th>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

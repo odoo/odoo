@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <!-- form- 批量改变阶段向导 -->
+        <record id="accountcore_org_change_lock_date_form" model="ir.ui.view">
+            <field name="name">批量改变机构/主体锁定日期</field>
+            <field name="model">accountcore.org_change_lock_date</field>
+            <field name="arch" type="xml">
+                <form>
+                        <group>
+                            <field name="lock_date" />
+                        </group>
+                    <footer>
+                        <button name="do" type="object" string="确定" class='btn-primary' />
+                    </footer>
+                </form>
+            </field>
+        </record>
+        <!-- 窗体动作-改变机构/主体锁定日期向导-->
+        <act_window id="accountcore_org_change_lock_date_action" name="改变锁定日期" binding_model="accountcore.org" res_model="accountcore.org_change_lock_date" view_mode="form" target="new" />
+    </data>
+</odoo>

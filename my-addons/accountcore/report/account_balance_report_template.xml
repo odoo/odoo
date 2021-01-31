@@ -1,0 +1,354 @@
+<odoo>
+<!-- 查询科目余额表用 -->
+    <report id='accounctore_accountsbalance_report' model='accountcore.accounts_balance' string='科目余额表' report_type='qweb-html' name='accountcore.account_balance_report' paperformat='book_A4_Landspace' />
+    <template id='account_balance_report'>
+        <style>
+h4{padding-top:2rem;padding-bottom:1rem;}
+table{table-layout: fixed !important;width:100% !important}
+thead,th{text-align:center;}
+td,th{vertical-align:middle !important;font-size:small;}
+.beginingDamount,.beginingCamount,.damount,.camount,.endDamount,.endCamount{white-space:nowrap !important;}
+.account_number{}
+table tr{page-break-inside: avoid !important;}
+
+        </style>
+        <!-- 通过列表选择(例如：启用期初) -->
+        <t t-if='lines'>
+            <t t-call="web.basic_layout">
+                <div class="header text-center">
+                    <h4>启用期初余额表</h4>
+                </div>  
+                <div class="container center text-center" style='display:flex;flex-direction:column;'>      
+                    <div class="row">
+                            <table class='m-auto o_list_table table-bordered table-sm table-hover'>
+                                <thead>
+                                    <tr>
+                                        <th rowspan='2' colspan="2">机构/主体名称</th>
+                                        <th rowspan='2' colspan="2">启用日期</th>
+                                        <th rowspan='2'  colspan="4">科目和项目</th>
+                                        <th colspan="4">年初余额</th>
+                                        <th colspan="4">累计发生</th>
+                                        <th colspan="4">启用余额</th>
+                                    </tr>
+                                    <tr>
+                                        <th colspan="2">借方</th>
+                                        <th colspan="2">贷方</th>
+                                        <th colspan="2">借方</th>
+                                        <th colspan="2">贷方</th>
+                                        <th colspan="2">借方</th>
+                                        <th colspan="2">贷方</th>
+                                    </tr>
+                                </thead>
+                                <tbody class='text-left'>
+                                    <t t-foreach="lines" t-as="l">
+                                        <tr style="page-break-inside: avoid !important;" >
+                                        <td colspan="2"><span t-esc='l.org.name'></span></td>
+                                        <td colspan="2" class='text-center'><span t-esc='l.createDate'></span></td>
+                                        <td t-if='l.accountItemClass' colspan="4"><span t-esc='l.account_number'></span><span t-esc='l.account.name'></span><br/>[<span t-esc='l.accountItemClass.name'></span>]<span t-esc='l.items.name'></span></td>
+                                        <td t-else='l.accountItemClass' colspan="4"><span t-esc='l.account_number'></span><span t-esc='l.account.name'></span><br/><span t-esc='l.accountItemClass.name'></span><span t-esc='l.items.name'></span></td>
+                                        <td  class='amount text-right' colspan="2"><span t-esc="'{:,.2f}'.format(l.beginingDamount-l.beginCumulativeDamount)"></span></td>
+                                        <td  class='amount text-right' colspan="2"><span t-esc="'{:,.2f}'.format(l.beginingCamount-l.beginCumulativeCamount)"></span></td>
+                                        <td  class='amount text-right' colspan="2"><span t-esc="'{:,.2f}'.format(l.damount+l.beginCumulativeDamount)"></span></td>
+                                        <td  class='amount text-right' colspan="2"><span t-esc="'{:,.2f}'.format(l.camount+l.beginCumulativeCamount)"></span></td>
+                                        <td  class='amount text-right' colspan="2"><span t-esc="'{:,.2f}'.format(l.beginingDamount+l.damount)"></span></td>
+                                        <td  class='amount text-right' colspan="2"><span t-esc="'{:,.2f}'.format(l.beginingCamount+l.camount)"></span></td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                                <tfoot>
+                                </tfoot>
+                            </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+        <!-- 通过科目余额表查询 -->
+        <t t-if='not lines'>
+        <t t-call="web.basic_layout">
+                <t t-set="start" t-value="data['form']['startDate']">
+                </t>
+                <t t-set="sum_orgs" t-value="data['form']['sum_orgs']"></t>
+                <t t-set="orgs_count" t-value="data['orgs_count']"></t>
+                <t t-set="end" t-value="data['form']['endDate']">
+                </t>
+                <div class="header text-center">
+                    <h4>科目余额表</h4>
+                    <h6 t-if="start=='1900-01-01' and end=='2219-12-31'">1900年1月至2219年12月</h6>
+                    <h6 t-else="">
+                        <t t-esc="(start[0:7]).replace('-','年')"></t>
+                        <span>月至</span>
+                        <span t-if="end!='2219-12-31'">
+                            <t t-esc="(end[0:7]).replace('-','年')"></t>月
+                        </span>
+                        <span t-if="end=='2219-12-31'">2219年12月</span>
+                    </h6>
+                </div> 
+            <div class="container text-center" style='vertical-align:middle;'>
+                <div class="row">
+                        <table id='ac_table' class='m-auto o_list_table ac-no-border table-bordered table-sm table-hover'>
+                            <thead class='ac-no-border'>
+                            <tr style='page-break-inside:avoid !important'>
+                              <th class='ac-no-border text-left'  colspan="8">机构/主体:<t t-esc="data['sum_orgs_name']"></t></th>
+                            </tr>
+                                <tr>
+                                    <th t-if='not (sum_orgs or orgs_count==1)' rowspan='2' colspan="1">机构/主体名称</th>
+                                    <th rowspan='2' colspan="2" >科目和核算项目</th> 
+                                    <th colspan="2" >期初余额</th>
+                                    <th colspan="2">发生金额</th>
+                                    <th colspan="2" >期末余额</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="1" style='min-width:9rem !important'>借方</th>
+                                    <th colspan="1" style='min-width:9rem !important'>贷方</th>
+                                    <th colspan="1" style='min-width:9rem !important'>借方</th>
+                                    <th colspan="1" style='min-width:9rem !important'>贷方</th>
+                                    <th colspan="1" style='min-width:9rem !important'>借方</th>
+                                    <th colspan="1" style='min-width:9rem !important'>贷方</th>
+                                </tr>
+                            </thead>
+                            <tbody class='text-left'>
+                                <t t-foreach="docs" t-as="account">
+                                    <tr style="page-break-inside: avoid !important;" t-att="{'ac_org_id': account['org_id'],'accountId':account['account_id']}">
+                                        <td t-if='not (sum_orgs or orgs_count==1)' class='org_name' data-toggle="tooltip" t-att-title="account['org_name']">
+                                            <span t-esc="account['org_name']"></span>
+                                        </td>
+                                        <td  colspan="2" class='account_name'>
+                                        <input type='checkbox' style="display:none"></input>
+                                        <span class="b_account_number" t-esc="account['account_number']"></span>
+                                        <t t-if="'item_id' in account and account['item_id'] != 0">
+                                            <span class="b_account" t-esc="account['account_name']"></span>
+                                            <span class="b_itemClass" t-esc="'【'+account['item_class_name']+'】'"></span>
+                                            <span class="b_item" t-esc="account['item_name']" t-att="{'itemId':account['item_id']}"></span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="b_account" t-esc="account['account_name']"></span>
+                                            <span class="b_itemClass"></span>
+                                            <span class="b_item"></span>
+                                        </t>
+                                        </td>
+                                        <t t-set='direction' t-value="account['direction']"></t>
+                                        <t t-set='beginingAmount' t-value="account['beginingDamount']-account['beginingCamount']"></t>
+                                        <td class='beginingDamount text-right'>
+                                            <span t-if="direction=='1' and beginingAmount &gt; 0" t-esc="'{:,.2f}'.format(beginingAmount)"></span>
+                                            <span t-elif="direction=='1' and beginingAmount == 0"></span>
+                                            <span t-elif="direction=='1' and beginingAmount &lt; 0" t-esc="'{:,.2f}'.format(beginingAmount)"></span>
+                                            <span t-elif="direction=='-1'"></span>
+                                        </td>
+                                        <td class='beginingCamount  text-right'>
+                                            <span t-if="direction=='-1' and beginingAmount &gt; 0" t-esc="'{:,.2f}'.format(-beginingAmount)"></span>
+                                            <span t-elif="direction=='-1' and beginingAmount == 0"></span>
+                                            <span t-elif="direction=='-1' and beginingAmount &lt; 0" t-esc="'{:,.2f}'.format(-beginingAmount)"></span>
+                                            <span t-elif="direction=='1'"></span>
+                                        </td>
+                                        <td class='damount text-right'>
+                                            <span t-if="account['damount']!=0" t-esc="'{:,.2f}'.format(account['damount'])"></span>
+                                            <span t-else=""></span>
+                                        </td>
+                                        <td class='camount text-right'>
+                                            <span t-if="account['camount']!=0" t-esc="'{:,.2f}'.format(account['camount'])"></span>
+                                            <span t-else=""></span>
+                                        </td>
+                                        <t t-set='endAmount' t-value="account['beginingDamount']+account['damount']-account['beginingCamount']-account['camount']"></t>
+                                        <td class='endDamount text-right'>
+                                            <span t-if="direction=='1' and endAmount &gt; 0" t-esc="'{:,.2f}'.format(endAmount)"></span>
+                                            <span t-elif="direction=='1' and endAmount == 0"></span>
+                                            <span t-elif="direction=='1' and endAmount &lt; 0" t-esc="'{:,.2f}'.format(endAmount)"></span>
+                                            <span t-elif="direction=='-1'"></span>
+                                        </td>
+                                        <td class='endCamount text-right'>
+                                            <span t-if="direction=='-1' and endAmount &gt; 0" t-esc="'{:,.2f}'.format(-endAmount)"></span>
+                                            <span t-elif="direction=='-1' and endAmount == 0"></span>
+                                            <span t-elif="direction=='-1' and endAmount &lt; 0" t-esc="'{:,.2f}'.format(-endAmount)"></span>
+                                            <span t-elif="direction=='1'"></span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot></tfoot>
+                        </table>
+                </div>
+            </div>
+        </t>
+        <t t-call-assets="web.assets_backend" t-css="false"/>
+         <script type="text/javascript">
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+});
+//导出EXCEL,快建凭证等按钮
+odoo.define(['accountcore.table2excel'], function (require) {
+    $(function () {
+        var btn_contaner = $('.o_report_buttons', window.parent.document);
+        if ($('#t2excel', window.parent.document).length > 0) {
+            $('#t2excel', window.parent.document).remove();
+        }
+        btn_contaner.append('<button id="t2excel" type="button" class="btn btn-secondary fa fa-download" title="导出EXCEL">EXCEL</button>');
+        $('#t2excel', window.parent.document).click(function () {
+            var fileName = "科目余额表[<t t-esc="data['form']['startDate']"></t>至<t t-esc="data['form']['endDate']"></t>]<t t-esc="data['sum_orgs_name']"></t>.xls";
+            if (fileName.length>60){fileName=fileName.slice(0,60)+"等等"};
+            $("#ac_table").table2excel({
+                filename: fileName,
+                preserveColors: false
+            });
+        });
+    })
+});
+//关联打开明细账向导
+odoo.define(function (require) {
+    $(function () {
+        $('#ac_table>tbody').bind("dblclick", function (e) {
+            var web_client_ = window.top.odoo.__DEBUG__.services['web.web_client'];
+            var _startDate = '<t t-esc="data['form']['startDate']"/>';
+            var _endDate = '<t t-esc="data['form']['endDate']"/>';
+            var ac_orgs = <t t-esc = "data['sum_orgids']" /> ;
+            var tr = $(e.target).parents("tr");
+            if(parseInt(tr.attr('ac_org_id'))>0){
+            ac_orgs = [parseInt(tr.attr('ac_org_id'))];
+            };
+            var _account = [parseInt(tr.attr("accountId"))];
+            var _item = parseInt(tr.find("span[itemId]").attr("itemId"));
+            web_client_.do_action({
+                name: '关联查询明细账',
+                type: 'ir.actions.act_window',
+                res_model: 'accountcore.get_subsidiary_book',
+                context: {
+                    default_startDate: _startDate,
+                    default_endDate: _endDate,
+                    default_account: _account,
+                    default_orgs: ac_orgs,
+                    default_item: _item
+                },
+                views: [
+                    [false, 'form']
+                ],
+                target: 'new'
+            });
+        });
+    });
+});
+//余额记录
+var balanceLines = [];
+ //快建凭证
+odoo.define(['accountcore.main_models'], function(require){
+   var m=require('accountcore.main_models');
+   var Account=m.Account;
+   var Item=m.Item;
+   var ItemClass=m.ItemClass;
+   var AccountItem=m.AccountItem;
+   var BalanceAmount=m.BalanceAmount;
+   var BalanceLine=m.BalanceLine;
+   var Amountdc=m.Amountdc;
+    
+    $(function () {
+        //选择的对象
+        //获得
+        function getTrs() {
+            var checkboxs = $("tbody").find("input:checked");
+            var trs = checkboxs.parent('td').parent('tr');
+            return trs;
+        }
+        //通过td获得选择行的科目项目数据
+        function geBbalanceLines(trs) {
+            var number = "";
+            var accountName = "";
+            var accountId=0;
+            var itemClassName = "";
+            var itemName = "";
+            var itemId=0;
+            var beginingDamount=0;
+            var beginingCamount=0;
+            var damount=0;
+            var camount=0;
+            var endDamount=0;
+            var endCamount=0;
+            balanceLines=[];
+            $.each(trs, function (i, n) {
+                var tr = $(n);
+                number = tr.find('.b_account_number').text();
+                accountName = tr.find('.b_account').text();
+                accountId =tr.attr('accountId');
+                itemClassName = tr.find('.b_itemClass').text();
+                itemName =tr.find('.b_item').text();
+                if(itemName.length>0){
+                   itemId=tr.find('.b_item').attr("itemId");
+                }else{
+                    itemId=0;
+                }             
+                beginingDamount = tr.find('.beginingDamount').find('span').text();
+                beginingCamount = tr.find('.beginingCamount').find('span').text();
+                damount = tr.find('.damount').find('span').text();
+                camount = tr.find('.camount').find('span').text();
+                endDamount = tr.find('.endDamount').find('span').text();
+                endCamount = tr.find('.endcamount').find('span').text();
+                var account= new Account(accountName,number,accountId);
+                var itemClass= new ItemClass(itemClassName);
+                var item= new Item(itemName,itemId,itemClass);
+                var accountItem=new AccountItem(account,item);
+                var balanceAmount=new BalanceAmount(beginingDamount,beginingCamount,damount,camount,endDamount,endCamount);
+                var balanceLine=new BalanceLine(accountItem,balanceAmount);
+                balanceLines.push(balanceLine);
+            });
+            return balanceLines;
+        };
+        var btn_contaner = $('.o_report_buttons', window.parent.document);
+        //避免重复加载按钮
+        btn_contaner.find('#full_checked').remove()
+        btn_contaner.find('#create_voucher').remove()
+        btn_contaner.find("#hidden_checkboxs").remove()
+        var btn_full_checked = $('<button id="full_checked" type="button" class="btn btn-secondary" style="margin-left:5px" title="全部选择或全部取消">全部选择</button>');
+        btn_contaner.append(btn_full_checked);
+        btn_full_checked.bind("click", function (e) {
+            var btn=$(e.target)
+            if(btn.text()=="全部选择"){
+            btn.text("取消选择");check=true;}
+            else{btn.text("全部选择");check=false;}
+           $("tr input[type='checkbox']").prop("checked",check);
+           var trs=$("tbody tr");
+           if(check){trs.addClass('back-color');}
+           else{trs.removeClass('back-color');}
+        })
+        $("tr input[type='checkbox']").bind("click",function(e){
+            $(e.target).parent().parent("tr").toggleClass("back-color");
+        })
+        var btn_build_voucher = $('<button id="create_voucher" type="button" class="btn btn-secondary" style="margin-left:5px" title="通过选取行数据购建凭证">快建凭证</button>');
+        btn_contaner.append(btn_build_voucher);
+        btn_build_voucher.bind("click", function (e) {
+            var trs = getTrs();
+            var lines = geBbalanceLines(trs);
+            var web_client_ = window.top.odoo.__DEBUG__.services['web.web_client'];
+            web_client_.do_action({
+                name: '快建记账凭证向导',
+                type: 'ir.actions.act_window',
+                res_model: 'accountcore.build_voucher',
+                context: {
+                    default_temp: JSON.stringify(lines),
+                },
+                views: [
+                    [false, 'form']
+                ],
+                target: 'new'
+            });
+        });
+        var btn_hidden = $('<button id="hidden_checkboxs" type="button" class="btn btn-secondary" style="margin-left:5px" title="隐藏显示选框">显示选框</button>');
+        btn_contaner.append(btn_hidden);
+        btn_hidden.bind("click", function (e) {
+            var btn=$(e.target)
+            if(btn.text()=="隐藏选框"){
+            btn.text("显示选框");
+            $("tr input[type='checkbox']").attr("style","display:none;");}
+            else{btn.text("隐藏选框");
+            $("tr input[type='checkbox']").removeAttr("style")}
+        })
+    });
+});
+        </script>
+        </t>
+        <!-- 页脚 -->
+        <div class="footer o_standard_footer">
+            <div class="text-right">
+                <div t-if="report_type == 'pdf'" >
+                    Page: <span class="page"/> / <span class="topage"/>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

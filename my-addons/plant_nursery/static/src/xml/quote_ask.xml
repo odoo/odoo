@@ -1,0 +1,72 @@
+<templates id="template" xml:space="preserve">
+    <t t-name="plant_nursery.quote_ask_plants">
+        <form action="/plants/quote" class="form-horizontal" method="POST">
+            <input type="hidden" name="csrf_token" t-att-value="widget.options.csrf_token"/>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="customer_name">Your Name</label>
+                <div class="col-sm-8">
+                    <input type="text" name="customer_name" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="control-label col-sm-4" for="customer_email">Your Email</label>
+                <div class="col-sm-8">
+                    <input type="text" name="customer_email" class="form-control"/>
+                </div>
+            </div>
+            <div class="form-group" t-if="widget.plants.promo">
+                <label class="control-label col-sm-4" for="o_plant_name">Promo</label>
+                <div class="col-sm-7 col-sm-offset-1">
+                    <div class="checkbox">
+                        <input type="checkbox"
+                            t-att-data-id="widget.plants.promo[0].plant_id"
+                            t-att-name="'promo_' + widget.plants.promo[0].plant_id">
+                            <t t-esc="widget.plants.promo[0].plant"/>
+                            <strong><t t-esc="widget.plants.promo[0].promo"/> % OFF</strong>
+                        </input>
+                        <input type="hidden"
+                            t-att-name="'reduc_promo_' + widget.plants.promo[0].plant_id"
+                            t-att-value="widget.plants.promo[0].promo"/>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group" t-if="widget.plants.free">
+                <label class="control-label col-sm-4" for="o_plant_name">Free</label>
+                <div class="col-sm-7 col-sm-offset-1">
+                    <div class="checkbox">
+                        <input type="checkbox"
+                            t-att-data-id="widget.plants.free[0].plant_id"
+                            t-att-name="'free_' + widget.plants.free[0].plant_id">
+                            <t t-esc="widget.plants.free[0].plant"/>
+                            <strong><t t-esc="widget.plants.free[0].promo"/> % OFF</strong>
+                        </input>
+                        <input type="hidden"
+                            t-att-name="'reduc_free_' + widget.plants.free[0].plant_id"
+                            t-att-value="widget.plants.free[0].promo"/>
+                    </div>
+                </div>
+            </div>
+            <div class="mt16 pull-right">
+                <button type="submit" id="o_quote_reset" class="btn btn-primary">
+                    <t t-esc="widget.options.resetLabel or 'I want another'"/>
+                </button>
+                <button type="submit" id="o_quote_accept" class="btn btn-success">
+                    <t t-esc="widget.options.signLabel or 'Get XMas'"/>
+                </button>
+            </div>
+        </form>
+    </t>
+    <t t-name="plant_nursery.quote_ask">
+        <div>
+            <div class="o_plant_quote_content">
+                <span class="btn btn-success">Ask now</span>
+            </div>
+        </div>
+    </t>
+    <t t-name="plant_nursery.quote_ask_success">
+        <div class="alert alert-success" role="alert">
+            <strong>Thank You !</strong><br />
+            <span t-esc="widget.success"/>
+        </div>
+    </t>
+</templates>

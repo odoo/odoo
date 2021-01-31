@@ -1,0 +1,102 @@
+.o_list_view_categ {
+    float: left;
+    height: 100%;
+    border-collapse: collapse;
+    overflow: auto;
+    padding-left: 0px;
+    padding-right: 0px;
+    border-right: 1px solid #b9b9b9;
+}
+
+.o_list_view_categ_hidden{
+    width:20px;
+    padding:0px;
+}
+
+.o_list_view_width_withcateg {
+    position: relative;
+    width: auto;
+    overflow: auto;
+}
+
+.ztree{
+    width:95%;
+    float: left;
+}
+
+
+.handle_menu_arrow{
+    display: block;
+    top: 50%;
+    width: 18px;
+    height: 120px;
+    margin-top: -60px;
+    padding: 0px;
+    position: absolute;
+    font-weight: normal;
+    color: #454545;
+    transition: width 1s;
+    -moz-transition:width 1s; /* Firefox 4 */
+    -webkit-transition:width 1s; /* Safari and Chrome */
+    -o-transition:width 1s; /* Opera */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.handle_menu_arrow_left {
+    left: 100%;
+    margin-left: -20px;
+    text-align: right;
+    border-left: 0px;
+    border-right: 12px solid rgba(0, 0, 0, 0.3);
+    border-top: solid 8px transparent;
+    border-bottom: solid 8px transparent;
+}
+
+.handle_menu_arrow_left:hover {
+    width: 18px;
+    border-right: 18px solid rgba(0, 0, 0, 0.3);
+}
+
+.handle_menu_arrow_right {
+    text-align: right;
+    border-left: 0px;
+    border-right: 12px solid rgba(0, 0, 0, 0.3);
+    border-top: solid 8px transparent;
+    border-bottom: solid 8px transparent;
+
+    transform:rotate(180deg);
+    -ms-transform:rotate(180deg); /* Internet Explorer */
+    -moz-transform:rotate(180deg); /* Firefox */
+    -webkit-transform:rotate(180deg); /* Safari 和 Chrome */
+    -o-transform:rotate(180deg); /* Opera */
+}
+
+.handle_menu_arrow_right:hover {
+    width: 18px;
+    border-right: 18px solid rgba(0, 0, 0, 0.3);
+}
+
+.fas{
+    z-index: 1;
+    position: absolute;
+    top: 50px;
+}
+
+.odtree_control_panel{
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-flow: row wrap;
+    flex-flow: row wrap;
+    border-bottom: 1px solid #b9b9b9;
+    padding-top: 10px;
+    padding-right: 16px;
+    padding-bottom: 10px;
+    padding-left: 16px;
+    background-color: #ececec;
+}

@@ -1,0 +1,63 @@
+<odoo>
+    <data>
+        <record model="ir.actions.act_window" id="report_category_action_window">
+            <field name="name">报表类别</field>
+            <field name="res_model">report.category</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="report_category_tree_search" model="ir.ui.view">
+            <field name="name">报表类别搜索</field>
+            <field name="model">report.category</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <search >
+                    <field name="name" string="报表类别名称"/>
+                    <field name="complete_name" string="报表类别全名"/>
+                    <searchpanel>
+                        <field name="report_cate_id" enable_counters="1"></field>
+                    </searchpanel>
+                </search>
+            </field>
+        </record>
+        
+        <record id="report_category_tree_view" model="ir.ui.view">
+            <field name="name">报表类别视图</field>
+            <field name="model">report.category</field>
+            <field name="priority">1</field>
+            <field name="arch" type="xml">
+                <tree multi_edit="1">
+                    <field name="name" string="报表类别名称"/>
+                    <field name="complete_name" string="报表类别全名"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="report_category_from_view">
+            <field name="name">报表类别表单</field>
+            <field name="model">report.category</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="parent_id" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <menuitem action="report_category_action_window"
+                  name="报表类别"
+                  id="menu_ir_action_report_cate"
+                  parent="fastreport_reports_menu"
+                  sequence="3"/>
+<!--        <menuitem action="ir_action_report_fastreport"-->
+<!--            id="menu_ir_action_report_fastreport"-->
+<!--            parent="fastreport_reports_menu"-->
+<!--            sequence="1"/>-->
+    </data>
+</odoo>

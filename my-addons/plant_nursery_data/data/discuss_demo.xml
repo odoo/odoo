@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="0">
+    <record id="message_data_plant_0_0" model="mail.message">
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+    <record id="message_data_plant_10_0" model="mail.message">
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+    <record id="message_data_order_0_0" model="mail.message">
+        <field name="author_id" ref="base.partner_demo"/>
+    </record>
+
+	<record id="message_data_order_0_1_notif_0" model="mail.notification">
+		<field name="sms_number">+32485116927</field>
+	</record>
+
+	<!-- Override SMS demo data to avoid messing with systray -->
+	<record id="sms.message_demo_partner_1_2_notif_0" model="mail.notification">
+		<field name="notification_status">sent</field>
+	</record>
+	<record id="sms.message_demo_partner_1_3_notif_0" model="mail.notification">
+		<field name="notification_status">sent</field>
+	</record>
+    <record id="sms.message_demo_partner_1_5_notif_0" model="mail.notification">
+        <field name="notification_status">sent</field>
+    </record>
+</data></odoo>

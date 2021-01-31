@@ -1,0 +1,63 @@
+<?xml version="1.0" ?>
+<odoo>
+    <record id="view_product_list_tree" model="ir.ui.view">
+        <field name="name">Product Lists</field>
+        <field name="model">product.list</field>
+        <field name="priority" eval="1" />
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name" />
+            </tree>
+        </field>
+    </record>
+    <record id="view_product_list_form" model="ir.ui.view">
+        <field name="name">Product Lists</field>
+        <field name="model">product.list</field>
+        <field name="priority" eval="1" />
+        <field name="arch" type="xml">
+            <form>
+                <header>
+
+                </header>
+                <sheet>
+                    <field name="active" invisible="1" />
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="bg-danger"
+                        attrs="{'invisible': [('active', '=', True)]}"
+                    />
+                    <div class="oe_title oe_left">
+                        <h1>
+                            <field name="name" placeholder="Name" />
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field
+                                name="products_domain"
+                                placeholder="Select product"
+                                widget="domain"
+                                options="{'model': 'product.product', 'in_dialog': true}"
+                            />
+                        </group>
+                        <group>
+                            <field name="limit" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_product_list" model="ir.actions.act_window">
+        <field name="name">Product List</field>
+        <field name="res_model">product.list</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <menuitem
+        name="Product List"
+        id="menu_product_list"
+        action="action_product_list"
+        parent="sale.product_menu_catalog"
+    />
+</odoo>

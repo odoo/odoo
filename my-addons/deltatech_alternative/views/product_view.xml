@@ -1,0 +1,181 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record id="view_product_catalog_tree" model="ir.ui.view">
+            <field name="name">Product Catalog</field>
+            <field name="model">product.catalog</field>
+            <field name="arch" type="xml">
+                <tree string="Product Catalog">
+                    <field name="code" />
+                    <field name="code_new" />
+                    <field name="name" />
+                    <field name="list_price" />
+                    <field name="categ_id" />
+                    <field name="product_id" />
+                </tree>
+            </field>
+        </record>
+        <record id="view_product_catalog_form" model="ir.ui.view">
+            <field name="name">Product Catalog</field>
+            <field name="model">product.catalog</field>
+            <field name="arch" type="xml">
+                <form string="Product Catalog">
+                    <header>
+                        <button name="create_product" string="Create Product" type="object" />
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="code" />
+                                <field name="code_new" />
+                                <field name="name" />
+                            </group>
+                            <group>
+                                <field name="categ_id" />
+                                <field name="product_id" />
+                            </group>
+                            <group>
+                                <field
+                                    name="purchase_price"
+                                    widget="monetary"
+                                    options="{'currency_field': 'list_price_currency_id'}"
+                                />
+                                <field name="purchase_delay" />
+                                <field name="supplier_id" />
+                            </group>
+                            <group>
+                                <field
+                                    name="list_price"
+                                    widget="monetary"
+                                    options="{'currency_field': 'list_price_currency_id'}"
+                                />
+                                <field name="sale_delay" />
+                                <field name="list_price_currency_id" />
+                            </group>
+                            <group>
+
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record id="view_product_catalog_filter" model="ir.ui.view">
+            <field name="name">product.catalog.select</field>
+            <field name="model">product.catalog</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <field name="code" />
+                    <field name="code_new" />
+                    <field name="categ_id" filter_domain="[('categ_id', 'child_of', self)]" />
+                    <filter name="categ" string="Category" domain="[]" context="{'group_by' : 'categ_id'}" />
+                </search>
+            </field>
+        </record>
+        <record id="action_product_catalog" model="ir.actions.act_window">
+            <field name="name">Product Catalog</field>
+            <field name="res_model">product.catalog</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            name="Product Catalog"
+            id="menu_product_catalog"
+            action="action_product_catalog"
+            parent="stock.menu_stock_inventory_control"
+            sequence="102"
+        />
+        <!-- Product Alternative_ -->
+        <record model="ir.ui.view" id="product_alternative_search_form_view">
+            <field name="name">product.template.search</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_search_view" />
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="alternative_ids" />
+                </field>
+            </field>
+        </record>
+        <record id="product_product_tree_alternative" model="ir.ui.view">
+            <field name="name">product.product.alternative.tree</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_product_tree_view" />
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <!-- <field name="seller_id" /> -->
+                    <field name="alternative_code" />
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_product_tree_alternative">
+            <field name="name">product.template.product.alternative.tree</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_tree_view" />
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="alternative_code" />
+                    <field name="used_for" />
+                </field>
+            </field>
+        </record>
+        <!--        <record id="view_product_template_form_alternative" model="ir.ui.view">
+            <field name="name">product.template.alternative.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_only_form_view"/>
+            -->
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.common.form</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field name="priority" eval="16" />
+            <field name="arch" type="xml">
+                <group name="group_standard_price" position="after">
+                    <group>
+                        <field name="alternative_code" />
+                        <field name="used_for" />
+                    </group>
+                </group>
+                <notebook position="inside">
+                    <page string="Alternative">
+                        <separator string="Alternative" colspan="4" />
+                        <field name="alternative_ids" colspan="4" nolabel="1">
+                            <tree string="Product Alternatives" editable="bottom">
+                                <field name="sequence" widget="handle" />
+                                <field name="name" />
+                                <field name="hide" />
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="product_alternative_tree_view">
+            <field name="name">product.alternative.tree</field>
+            <field name="model">product.alternative</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Product Alternatives" editable="bottom">
+                    <field name="product_tmpl_id" />
+                    <field name="sequence" widget="handle" />
+                    <field name="name" />
+                    <field name="hide" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="product_alternative_form_view">
+            <field name="name">product.alternative.form</field>
+            <field name="model">product.alternative</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Product Alternatives">
+                    <field name="product_tmpl_id" />
+                    <field name="name" />
+                    <field name="hide" />
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

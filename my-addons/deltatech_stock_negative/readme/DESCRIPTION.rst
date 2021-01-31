@@ -1,0 +1,2 @@
+Features:
+ - No negative stock

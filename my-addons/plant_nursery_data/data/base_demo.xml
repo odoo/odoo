@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="base.user_demo" model="res.users">
+            <field name="name">Beverly Demo</field>
+            <field name="parent_id" ref="base.main_partner"/>
+            <field name="company_ids" eval="[(4, ref('base.main_company'))]"/>
+            <field name="image_1920" type="base64" file="plant_nursery_data/static/img/people_woman_lumber_0.jpg"/>
+            <field name="notification_type">inbox</field>
+            <field name="function">Sales Woman</field>
+            <field name="phone">+32456334455</field>
+            <field name="mobile">+32456334455</field>
+            <field name="email">demo@example.com</field>
+            <field name="tz">Europe/Brussels</field>
+            <field name="title" ref="base.res_partner_title_miss"/>
+        </record>
+    </data>
+</odoo>

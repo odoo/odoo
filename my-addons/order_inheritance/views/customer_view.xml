@@ -1,0 +1,11 @@
+<odoo>
+    <data>
+        <record id="import_customer_data_actions_server" model="ir.actions.server">
+            <field name="model_id" ref="model_res_partner"/>
+            <field name="name">客户导入</field>
+            <field name="binding_model_id" ref="model_res_partner"/>
+            <field name="state">code</field>
+            <field name="code">action=records.customer_import_data()</field>
+        </record>
+    </data>
+</odoo>

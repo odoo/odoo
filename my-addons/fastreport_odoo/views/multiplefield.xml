@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <record id="view_multiple_field_form" model="ir.ui.view">
+        <field name="name">multiple.field.form</field>
+        <field name="model">multiple.field</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Select Products">
+                <group>
+                    <field name="field_model_id" invisible="1"/>
+                </group>
+                <group string="Products">
+                    <field name="select_field" nolabel="1" />
+                </group>
+                <footer>
+                    <button name="select_fields" string="Add" type="object" class="oe_highlight" />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record model="ir.actions.act_window" id="act_open_multiple_field_view">
+        <field name="name">multiple field</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">multiple.field</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record model="ir.actions.act_window.view" id="act_open_multiple_field_view_form">
+        <field name="act_window_id" ref="act_open_multiple_field_view" />
+        <field name="sequence" eval="10" />
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_multiple_field_form" />
+    </record>
+
+    </data>
+</odoo>

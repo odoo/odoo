@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data noupdate="0">
+        <record id="group_external_employee" model="res.groups">
+            <field name="name">External Employee</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]" />
+            <field name="category_id" ref="base.module_category_human_resources" />
+        </record>
+        <record model="ir.rule" id="res_partner_external_employee">
+            <field name="name">Partner: access to all partners assigned</field>
+            <field name="model_id" ref="base.model_res_partner" />
+            <field name="domain_force">['|',('id', 'child_of', user.commercial_partner_id.id),
+                ('message_follower_ids','child_of',[user.commercial_partner_id.id]) ]
+            </field>
+            <field name="groups" eval="[ (4, ref('group_external_employee'))]" />
+            <field name="perm_create" eval="False" />
+            <field name="perm_unlink" eval="False" />
+            <field name="perm_write" eval="False" />
+        </record>
+    </data>
+</odoo>

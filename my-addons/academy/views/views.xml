@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_academy_teachers" model="ir.actions.act_window">
+            <field name="name">Academy teachers</field>
+            <field name="res_model">academy.teachers</field>
+        </record>
+
+        <act_window id="action_library_book_report"
+        name="AcademyList"
+        res_model="academy.library.book.report"
+        view_mode="tree,form"/>
+
+        <record id="action_report_param_wizard" model="ir.actions.act_window">
+            <field name="name">向导测试弹窗</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">academy.report.param.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
+        <record id="action_modify_ccname_server" model="ir.actions.server">
+            <field name="name">更新名称AA</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                records.write({'name':"更新名称测试AA"})
+            </field>
+        </record>
+
+        <record id="action_modify_ccname_serverbb" model="ir.actions.server">
+            <field name="name">更新名称AABB</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                records.write({'name':"更新名称测试BB"})
+            </field>
+        </record>
+
+         <record id="action_modify_ccname_serverCC" model="ir.actions.server">
+            <field name="name">更新名称AABBCC</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                records.write({'name':"更新名称测试BBCC"})
+            </field>
+        </record>
+
+         <record id="action_modify_ccname_serverCCdd" model="ir.actions.server">
+            <field name="name">更新名称AABBCCDD</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                records.write({'name':"更新名称测试BBCCdd"})
+            </field>
+        </record>
+        
+        <record id="action_modify_name_server" model="ir.actions.server" >
+            <field name="name">更新名称</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="academy.model_academy_teachers"/>
+            <field name="crud_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                records.write({'name':"更新名称测试"})
+            </field>
+        </record>
+
+        <!--<record id="ir_cron_scheduler_create_record" model="ir.cron">
+            <field name="name">自动创建记录测试</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="usage">ir_cron</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field name="model" eval="academy.teachers"/>
+            <field name="function" eval="'auto_create_record'" />
+        </record>-->
+        
+        <record id="ir_cron_scheduler_create_record" model="ir.cron">
+            <field name="name">自动创建记录测试</field>
+            <field name="model_id" ref="model_academy_teachers"/>
+            <field name="state">code</field>
+            <field name="code">model.auto_create_record</field>
+            <field name="interval_number">5</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="active" eval="True"/>
+            <field name="doall" eval="False"/>
+        </record>
+
+        <!--<record id="action_update_name_server" model="ir.actions.server" >
+            <field name="name">更新名称测试</field>records.action_quotation_sent()
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="academy.model_academy_teachers" />
+            <field name="crud_model_id" ref="academy.model_academy_teachers"/>
+            <field name="binding_model_id" ref="academy.model_academy_teachers" />
+            <field name="binding_view_types">list,form</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    records.write({'name':"更新名称测试"})
+            </field>
+        </record>-->
+
+        <!--<record id="action_production_order_mark_done" model="ir.actions.server">
+            <field name="name">Mark as Done</field>          <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_model_id" ref="mrp.model_mrp_production"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+            if records:
+                res = records.filtered(lambda mo: mo.state in {'confirmed', 'to_close', 'progress'}).button_mark_done()
+                if res is not True:
+                    action = res
+            </field>
+        </record>-->
+
+
+        <!--<record id="action_run_ir_action_todo" model="ir.actions.server">
+            <field name="name">Config: Run Remaining Action Todo</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_res_config"/>
+            <field name="state">code</field>
+            <field name="code">
+                config = model.next() or {}
+                if config.get('type') not in ('ir.actions.act_window_close',):
+                action = config
+            </field>
+        </record>-->
+
+        <!--<record id="action_change_stage_ttest_inv" model="ir.actions.act_window">
+            <field name="name">bbbbbbbbbbbbbbbbb</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">academy.report.param.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            -->
+        <!-- TODO: check if we need this -->
+        <!--
+            <field name="binding_model_id" ref="academy.teachers" />
+        </record>-->
+
+        <!--<act_window id="action_report_param_wizard"
+            name="向导测试菜单"
+            src_model="academy.teachers"
+            res_model="academy.report.param.wizard"
+            view_mode="tree,form"
+            target="new"
+            key2="client_action_multi"
+            multi="True"
+                     />-->
+
+
+        <menuitem sequence="0"
+                  id="menu_academy"
+                  name="Academy"/>
+        <menuitem id="menu_academy_content"
+                  parent="menu_academy"
+                  name="Academy Content"/>
+        <menuitem id="menu_academy_content_teachers"
+                  parent="menu_academy_content"
+                  action="action_academy_teachers"/>
+
+
+        <menuitem id="menu_academy_custom_report"
+                  parent="menu_academy"
+                  name ="Custom Report"
+                  action="action_library_book_report"/>
+
+        <menuitem id="menu_report_param_wizard"
+                 parent="menu_academy"
+                 name="Report Param Wizard"
+                 action="action_library_book_report"/>
+
+        <menuitem id="menu_academy_custom_report2"
+                 parent="menu_academy"
+                 name ="Custom Report2"
+                 action="action_report_param_wizard"/>
+
+        <record model="ir.ui.view" id="academy.list">
+            <field name="name">AcademyList</field>
+            <field name="model">academy.library.book.report</field>
+            <field name="arch" type="xml">
+                <tree js_class="bicon_list_view_button">
+                    <field name="name"/>
+                    <field name="date_published"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <record id="academy_teachers_list" model="ir.ui.view">
+            <field name="name">academy.teachers.list</field>
+            <field name="model">academy.teachers</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <header>
+                        <button class="oe_highlight" type="object"
+                         name="do_advanced_query"
+                         icon="fa-dollar">
+                        </button>
+                    </header>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+
+        <!--<record id="nursery_plant_view_form" model="ir.ui.view" >
+          <field name="name">nursery.plant.view.form</field>
+          <field name="model">nursery.plant</field>
+          <field name="arch" type="xml">
+              <form string="Plant">
+                  <sheet>
+                      <div class="oe_button_box" name="button_box">
+                          <button class="oe_stat_button" type="object"
+                              name="action_view_orders"
+                              icon="fa-dollar">
+                              <field string="Orders" name="order_count" widget="statinfo"/>
+                          </button>
+                          <field name="is_published" widget="website_redirect_button"/>
+                      </div>
+                      <widget name="web_ribbon" text="Published" bg_color="bg-success" attrs="{'invisible': [('website_published', '=', False)]}"/>
+                      <field name="image" widget="image" class="oe_avatar" options="{'preview_image': 'image'}"/>
+                      <div class="oe_title">
+                          <h1>
+                              <field name="name" placeholder="Plant Name"/>
+                          </h1>
+                      </div>
+                      <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                      <group>
+                          <group string="Characteristics" name="group_charac">
+                              <field name="user_id"/>
+                              <field name="exposure"/>
+                              <field name="ground"/>
+                          </group>
+                          <group string="Shop" name="group_shop">
+                              <field name="category_id"/>
+                              <field name="website_published" invisible="1"/>
+                              <field name="website_id"/>
+                              <field name="price"/>
+                              <field name="internal"/>
+                              <field name="number_in_stock"/>
+                          </group>
+                      </group>
+                      <notebook>
+                          <page string="Short description">
+                             
+                          </page>
+                          <page string="Description">
+                              <group>
+                                
+                              </group>
+                          </page>
+                          <page string="Planning">
+                              <group>
+                               
+                              </group>
+                          </page>
+                      </notebook>
+                  </sheet>
+                  <div class="oe_chatter">
+                     
+                  </div>
+              </form>
+          </field>
+                <record model="ir.ui.view" id="academy.teachers.list2">
+            <field name="name">academy_teachers2</field>
+            <field name="model">academy.teachers</field>
+            <field name="arch" type="xml">
+                <tree>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+      </record>-->
+
+        <!-- explicit list view definition -->
+        <!--
+    <record model="ir.ui.view" id="academy.list">
+      <field name="name">Academy list</field>
+      <field name="model">academy.academy</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+    <div class="oe_button_box" name="button_box">
+    <button type="object"
+            class="oe_stat_button" icon="fa-user-secret">
+        <field string="手上数量" name="name"
+               widget="statinfo"  modifiers="{'readonly':true}"/>
+    </button>
+</div> 
+-->
+
+        <!-- actions opening views on models -->
+        <!--
+    <record model="ir.actions.act_window" id="academy.action_window">
+      <field name="name">Academy window</field>
+      <field name="res_model">academy.academy</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+        <!-- server action to the one above -->
+        <!--
+    <record model="ir.actions.server" id="academy.action_server">
+      <field name="name">Academy server</field>
+      <field name="model_id" ref="model_academy_academy"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+        <!-- Top menu item -->
+        <!--
+    <menuitem name="Academy" id="academy.menu_root"/>
+-->
+        <!-- menu categories -->
+        <!--
+    <menuitem name="Menu 1" id="academy.menu_1" parent="academy.menu_root"/>
+    <menuitem name="Menu 2" id="academy.menu_2" parent="academy.menu_root"/>
+-->
+        <!-- actions -->
+        <!--
+    <menuitem name="List" id="academy.menu_1_list" parent="academy.menu_1"
+              action="academy.action_window"/>
+    <menuitem name="Server to list" id="academy" parent="academy.menu_2"
+              action="academy.action_server"/>
+-->
+    </data>
+</odoo>

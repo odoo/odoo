@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+</head>
+
+<body>
+<section class="oe_container">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">康虎云报表</h2>
+        <h3 class="oe_slogan">你只负责收集数据，打印的事我来</h3>
+        <div class="oe_span12">
+            <div class="oe_demo oe_picture oe_screenshot">
+                <h2>康虎云报表基础模块</h2>
+                <div>
+                    ============================<br/>
+                    基于康虎云报表的打印功能必须依赖此模块。
+                </div>
+                <div>
+                    本模块主要功能：<br/>
+                    ----------------------------<br/>
+                    <ul>
+                        <li>引入康虎云报表所需的javascript库</li>
+                        <li>实现打印模板管理功能，模板可以存入数据库，便于统一管理（从菜单  设置--技术--报告--康虎云报表 进入）</li>
+                        <li>增加了根据原QWeb报表取值功能，该功能按QWeb模板中的方式取值，但把HTML去掉，否则数据不干净可能导打印失败</li>
+                        <li>(功能持续增加中...)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">怎样使用康虎云报表</h2>
+        <h3 class="oe_slogan">康虎云报表概要用法.</h3>
+    </div>
+    <div class="oe_row">
+        <div class="oe_span12 oe_mt32">
+<pre>
+----------------------------<br/>
+<b>step 1、把报表类型由原来的qweb-pdf改成qweb-html：</b><br/>
+&lt;report  <br/>
+    string="Warehouse Checklist"  <br/>
+    id="action_report_warehouse_checklist"  <br/>
+    model="stock.picking"  <br/>
+    report_type="qweb-html"     &lt;!-- 这里由原来的 qweb- 改为 qweb-html --&gt;  <br/>
+    name="stock_cf.report_warehousechecklist"  <br/>
+    file="stock_cf.report_warehousechecklist"  <br/>
+/&gt;
+<br/><br/>
+<b>step 2、根据康虎云报表的数据规范生成报表数据：</b><br/>
+报表数据格式如下(json格式，详细说明请参考康虎云报表相关帮助文档)：<br/>
+=====================================================  <br/>
+&lt;script type="text/javascript"&gt;<br/>
+var cfprint_addr = "127.0.0.1";   //打印服务器监听地址<br/>
+var _delay_close = -1;      //打印完成后关闭窗口的延时时长(毫秒), -1则表示不关闭<br/>
+<br/>
+/**定义主表结构**/  <br/>
+var _tablePack = {  <br/>
+  "Name": "Pack",  <br/>
+  "Cols":[  <br/>
+    { "type": "str", "size": 255, "name": "仓库", "required": false },  <br/>
+    { "type": "str", "size": 50, "name": "供应商", "required": false },  <br/>
+    { "type": "str", "size": 30, "name": "日期", "required": false },  <br/>
+    { "type": "str", "size": 255, "name": "入库单号", "required": false },  <br/>
+    { "type": "str", "size": 30, "name": "采购单号", "required": false },  <br/>
+    { "type": "int", "size": 0, "name": "件数", "required": false },  <br/>
+    { "type": "str", "size": 20, "name": "包装种类", "required": false },  <br/>
+    { "type": "str", "size": 30, "name": "车号", "required": false },  <br/>
+    { "type": "str", "size": 30, "name": "柜号", "required": false }  <br/>
+  ],  <br/>
+  "Data":[ ]  <br/>
+};  <br/>
+  <br/>
+/**定义从表结构**/  <br/>
+var _tablePackLines = {  <br/>
+  "Name": "PackLines",  <br/>
+  "Cols":[  <br/>
+    { "type": "str", "size": 30, "name": "入库单号", "required": false },  <br/>
+    { "type": "str", "size": 255, "name": "产品", "required": false },  <br/>
+    { "type": "str", "size": 30, "name": "条形码", "required": false },  <br/>
+    { "type": "float", "size": 0, "name": "采购数量", "required": false },  <br/>
+    { "type": "float", "size": 0, "name": "实际数量", "required": false },  <br/>
+    { "type": "str", "size": 20, "name": "计量单位", "required": false },  <br/>
+  ],  <br/>
+  "Data":[ ]  <br/>
+};  <br/>
+&lt;t t-foreach="docs" t-as="o"&gt;  <br/>
+/*增加主表记录*/  <br/>
+_tablePack.Data.push(  <br/>
+{  <br/>
+  "仓库":"&lt;span t-field="o.picking_type_id.warehouse_id.partner_id" t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true, "no_tag_br": true, "data_type": "raw"}' /&gt;",  <br/>
+  "供应商":"&lt;t t-if="o.partner_id" name="partner_header"&gt;&lt;span t-field="o.partner_id" t-field-options='{"widget": "contact", "fields": ["name"], "no_marker": true, "no_tag_br": true, "data_type": "raw"}' /&gt;&lt;/t&gt;",  <br/>
+  "日期":"&lt;t t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d %H:%M')"/&gt;",  <br/>
+  "入库单号":"&lt;t t-esc="o.name" class="mt0"/&gt;",  <br/>
+  "采购单号":"&lt;t t-if="o.origin"&gt;&lt;t t-esc="o.origin"/&gt;&lt;/t&gt;",  <br/>
+  "件数":"&lt;t t-esc="sum(pack_operation.product_qty for pack_operation in o.pack_operation_ids)"/&gt;",  <br/>
+  "包装种类":"",  <br/>
+  "车号":"",  <br/>
+  "柜号":""  <br/>
+});  <br/>
+  <br/>
+&lt;t t-foreach="o.move_lines" t-as="move"&gt;  <br/>
+/**增加从表记录**/  <br/>
+_tablePackLines.Data.push(  <br/>
+{  <br/>
+  "入库单号":"&lt;t t-esc="o.name" class="mt0"/&gt;",  <br/>
+  "产品":"&lt;span t-field="move.product_id" t-field-options='{"data_type":"raw"}'/&gt;",  <br/>
+  "条形码":"&lt;t t-if="move.product_id and move.product_id.ean13"&gt;&lt;span t-field="move.product_id.ean13" t-field-options='{"data_type":"raw"}'/&gt;&lt;/t&gt;",  <br/>
+  "采购数量":"&lt;t t-esc="move.product_uom_qty"/&gt;",  <br/>
+  "实际数量":"",  <br/>
+  "计量单位":"&lt;span t-field="move.product_id.uom_id" t-field-options='{"data_type":"raw"}'/&gt;"  <br/>
+});  <br/>
+&lt;/t&gt;  <br/>
+&lt;/t&gt;  <br/>
+  <br/>
+//下面把所有表合并到一个json中  <br/>
+var _data = {"template": "warehouse_checklist.fr3", "ver": 4, "Copies": 1, "Duplex": 0, "Tables":[]};  <br/>
+_data["Tables"].push(_tablePack);  <br/>
+_data["Tables"].push(_tablePackLines);  <br/>
+var _reportData = JSON.stringify(_data);  //转成json字符串  <br/>
+<br/>
+console.log(_reportData);  <br/>
+//生成数据之后，在cfprint_ext.js中会自动调用进行打印  <br/>
+&lt;/script&gt;  <br/>
+=====================================================  <br/>
+以上数据文件中的数据项，可以根据原来QWeb报表模板中的数据项生成，对于关联字段需要生成字段不带HTML标签的内容，  <br/>
+可以在 t-field-options 中增加 data_type属性来指定输出所需要格式：<br/>
+ "data_type":"raw" : 输出纯文本，不同数据项间使用逗号分隔 <br/>
+ 示例如下：<br/>
+&lt;address t-field="o.move_lines[0].partner_id" t-field-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": true, "no_tag_br": true,"data_type": "raw"}' /&gt;<br/>
+将生成：<br/>
+中国福建省厦门市 361000,远海码头便利店<br/>
+<br/><br/>
+
+<b>step 3、自动输出到打印机</b><br/>
+如果生成的json字符串名为 _reportData 且没有语法错误，则会自动输出到打印机；  <br/>
+如果没有打印，则先用浏览器的脚本调试功能打开看一下，有没有脚本错。 <br/>
+</pre>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_dark">
+    <div class="oe_row oe_spaced">
+        <h2 class="oe_slogan" style="color:#875A7B;">打印模板服务端统一管理</h2>
+        <h3 class="oe_slogan">把打印模板保存在数据库中.</h3>
+    </div>
+    <div class="oe_row">
+        <div class="oe_span12 oe_mt32">
+            <pre>
+<b>step 1、把模板上传到数据库：</b><br/>
+从菜单  设置--技术--报告--康虎云报表 进入模板管理功能，其中：<br/>
+<ul>
+    <li>模板ID： 是用以区分模板的唯一标识，最后根据该ID取用模板</li>
+    <li>名称： 是便于识别模板的名称</li>
+    <li>说明：是对模板用途或其他信息的说明</li>
+    <li>模板：上传的模板内容</li>
+    <li>预览图：是便于了解模板具体格式的一个预览效果截图</li>
+</ul>
+<img src="image1.png" style="max-width: 700px;"><br/>
+<img src="image2.png" style="max-width: 700px"><br/>
+<img src="image3.png" style="max-width: 700px">
+<br/><br/>
+<b>step 2、从数据库取用模板：</b><br/>
+康虎云报表支持客户端模板也支持服务端模板，客户端模板是默认的方式：<br/>
+客户端模板：<br/>
+{<br/>
+    "template": "report_saleorder.fr3",  /*模板保存在客户端 cfprint.exe目录下templates目录下*/<br/>
+    "ver": 4, <br/>
+    "Copies": 1, <br/>
+    "Duplex": 0, <br/>
+    "Tables":[]<br/>
+}<br/><br/>
+服务端模板：<br/>
+{
+    "template": "base64: &lt;这里放模板Base64内容&gt;",
+    "ver": 4, <br/>
+    "Copies": 1, <br/>
+    "Duplex": 0, <br/>
+    "Tables":[]<br/>
+}<br/><br/><br/>
+
+这里主要介绍服务端模板，可以通过两种方式从数据库中取出模板数据：<br/>
+从数据库中获取打印模板方法1（调用简短方法）：<br/>
+{"template": "base64:<span style="color:red">&lt;t t-esc="get_cf_template(user.env, '12345')" /&gt;</span>", "ver": 4, "Copies": 1, "Duplex": 0, "Tables":[]}
+<br/><br/>
+从数据库中获取打印模板方法2（直接查询法）：<br/>
+{"template": "base64:<span style="color:red">&lt;t t-esc="user.env['cf.template'].search([('templ_id', '=', '12345')], limit=1).template" /&gt;</span>", "ver": 4, "Copies": 1, "Duplex": 0, "Tables":[]}<br/><br/>
+
+</pre>
+        </div>
+    </div>
+</section>
+
+<section class="oe_container oe_separator">
+</section>
+</body>
+</html>

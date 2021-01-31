@@ -1,0 +1,23 @@
+ @api.multi
+ def open_rec(self):
+    # return an window action
+    form_id = self.env.ref('module_name.form_xml_id').id
+    context = self.env.context
+    context.update({'current_rec': self.id} # change context to add rec id
+    return {
+        'name': _('Title'),
+        'type': 'ir.actions.act_window',
+        'view_type': 'form',
+        'view_mode': 'form',
+        'res_model': 'model.name',
+        'view_id': form_id,
+        'target': 'current',
+        'context': context,
+    }
+
+
+@api.model
+def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
+    result = super(YourClass, self).fields_view_get(view_id, view_typ, toolbar, submenu)
+    if context.get('current_rec') and view_type='form':
+        # this is when you need to change the resutl

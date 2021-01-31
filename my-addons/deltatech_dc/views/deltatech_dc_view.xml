@@ -1,0 +1,61 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="view_deltatech_dc_type_form">
+            <field name="name">deltatech.declaration.conformity.form</field>
+            <field name="model">deltatech.dc</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Declaration of Conformity">
+                    <header />
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" />
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date" />
+                                <field name="product_id" />
+                                <field name="company_standard" />
+                                <field name="data_sheet" />
+                                <field name="technical_specification" />
+                            </group>
+                            <group />
+                            <group colspan="2" col="4">
+                                <field name="standards" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="view_deltatech_dc_type_tree">
+            <field name="name">deltatech.declaration.conformity.tree</field>
+            <field name="model">deltatech.dc</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Declaration of Conformity">
+                    <field name="name" />
+                    <field name="date" />
+                    <field name="product_id" />
+                    <field name="company_standard" />
+                    <field name="data_sheet" />
+                    <field name="technical_specification" />
+                </tree>
+            </field>
+        </record>
+        <record model="ir.actions.act_window" id="action_deltatech_dc">
+            <field name="name">Declaration of Conformity</field>
+            <field name="res_model">deltatech.dc</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+        <menuitem
+            name="Declaration of Conformity"
+            id="menu_deltatech_dc"
+            action="action_deltatech_dc"
+            parent="sale.product_menu_catalog"
+        />
+    </data>
+</odoo>

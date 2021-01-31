@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright Nova Code (http://www.novacode.nl)
+See LICENSE file for full licensing details. -->
+
+<odoo>
+    <record id="view_formio_translation_tree" model="ir.ui.view">
+        <field name="name">formio.translation.tree</field>
+        <field name="model">formio.translation</field>
+        <field name="arch" type="xml">
+            <tree string="Translations" editable="top">
+                <field name="lang_id"/>
+                <field name="property"/>
+                <field name="source_id"/>
+                <field name="value"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_formio_translation_form" model="ir.ui.view">
+        <field name="name">formio.translation.form</field>
+        <field name="model">formio.translation</field>
+        <field name="arch" type="xml">
+	    <form string="Translation">
+                <sheet>
+                    <group>
+                        <field name="lang_id"/>
+                        <field name="property"/>
+                        <field name="source_id"/>
+                        <field name="value"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_formio_translation" model="ir.actions.act_window">
+        <field name="name">Translations</field>
+        <field name="res_model">formio.translation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_formio_translation_tree"/>
+    </record>
+</odoo>

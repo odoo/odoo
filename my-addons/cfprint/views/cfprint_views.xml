@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="cf_print_server_mapping_form" model="ir.ui.view">
+            <field name="name">Print Server IP Form</field>
+            <field name="model">cf.print.server.user.mapping</field>
+<!--            <field name="comment">打印服务器地址</field>-->
+            <field name="arch" type="xml">
+                <form string="Print Server IP">
+                    <sheet>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="prn_server_ip" required="1" placeholer="打印服务器地址，如果不需要发送到别的电脑上打印，请勿修改！"/>
+                            <field name="prn_server_port" required="1" placeholer="打印服务器端口，如果不需要发送到别的电脑上打印，请勿修改！"/>
+                        </group>
+                        <group>
+                            <div style="width: 100%; padding: 2px 40px;">
+                                当从移动设备（Android或iOS）等无法运行康虎云报表打印伺服器的设备上打印时，需要在配备一台Windows电脑运行康虎云报表打印伺服器，然后从移动设备上向该Windows电脑发送打印任务。<br/>
+                                在上面的“打印服务器IP”中填入Windows电脑的IP地址和“打印服务器端口”填入打印伺服器监听端口（默认则不需要修改)即可。
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="act_cf_print_svr_ip" model="ir.actions.server">
+            <field name="name">打印服务器地址</field>
+            <field name="type">ir.actions.server</field>
+            <field name="model_id" ref="model_cf_print_server_user_mapping"/>
+            <field name="binding_model_id" ref="model_cf_print_server_user_mapping"/>
+            <field name="state">code</field>
+            <field name="code">action = model.create_or_show_print_svr_ip()</field>
+        </record>
+
+        <menuitem id="menu_cf_cfprint_conf" name="Setting" parent="menu_cf_root" sequence="50" groups="cfprint.cfprint_group_manager"/>
+
+        <menuitem id="menu_cf_prn_server_ip" name="Print Server IP" parent="menu_cf_cfprint_conf" action="act_cf_print_svr_ip" sequence="1" groups="cfprint.cfprint_group_manager"/>
+
+    </data>
+</odoo>

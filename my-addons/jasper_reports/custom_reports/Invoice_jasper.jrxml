@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.5.1.final using JasperReports Library version 3.5.1  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Invoice_demo" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Key">
+	<property name="OPENERP_RELATIONS" value="[&apos;invoice_line_ids&apos;]"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Odoo Invoice"/>
+	<style name="Table" lineSpacing="Single">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+			<topPen lineWidth="1.0" lineColor="#000000"/>
+			<leftPen lineWidth="1.0" lineColor="#000000"/>
+			<bottomPen lineWidth="1.0" lineColor="#000000"/>
+			<rightPen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#CACED0" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF" lineSpacing="Single">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<queryString language="xPath">
+		<![CDATA[/data/record]]>
+	</queryString>
+	<field name="City-city" class="java.lang.String">
+		<fieldDescription><![CDATA[Commercial_Entity-commercial_partner_id/City-city]]></fieldDescription>
+	</field>
+	<field name="Email-email" class="java.lang.String">
+		<fieldDescription><![CDATA[Commercial_Entity-commercial_partner_id/Email-email]]></fieldDescription>
+	</field>
+	<field name="Mobile-mobile" class="java.lang.String">
+		<fieldDescription><![CDATA[Commercial_Entity-commercial_partner_id/Mobile-mobile]]></fieldDescription>
+	</field>
+	<field name="Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[Commercial_Entity-commercial_partner_id/Name-name]]></fieldDescription>
+	</field>
+	<field name="Street-street" class="java.lang.String">
+		<fieldDescription><![CDATA[Commercial_Entity-commercial_partner_id/Street-street]]></fieldDescription>
+	</field>
+	<field name="Company_Name-name" class="java.lang.String">
+		<fieldDescription><![CDATA[Company-company_id/Company_Name-name]]></fieldDescription>
+	</field>
+	<field name="City-city_1" class="java.lang.String">
+		<fieldDescription><![CDATA[Company-company_id/City-city]]></fieldDescription>
+	</field>
+	<field name="Email-email_1" class="java.lang.String">
+		<fieldDescription><![CDATA[Company-company_id/Email-email]]></fieldDescription>
+	</field>
+	<field name="Street-street_1" class="java.lang.String">
+		<fieldDescription><![CDATA[Company-company_id/Street-street]]></fieldDescription>
+	</field>
+	<field name="Phone-phone" class="java.lang.String">
+		<fieldDescription><![CDATA[Company-company_id/Phone-phone]]></fieldDescription>
+	</field>
+	<field name="Description-name" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Lines-invoice_line_ids/Description-name]]></fieldDescription>
+	</field>
+	<field name="Amount-price_total" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Lines-invoice_line_ids/Amount-price_total]]></fieldDescription>
+	</field>
+	<field name="Unit_Price-price_unit" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Lines-invoice_line_ids/Unit_Price-price_unit]]></fieldDescription>
+	</field>
+	<field name="Quantity-quantity" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Lines-invoice_line_ids/Quantity-quantity]]></fieldDescription>
+	</field>
+	<field name="Amount-price_subtotal" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Lines-invoice_line_ids/Amount-price_subtotal]]></fieldDescription>
+	</field>
+	<field name="Total-amount_total" class="java.lang.String">
+		<fieldDescription><![CDATA[Total-amount_total]]></fieldDescription>
+	</field>
+	<field name="ID-id" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Lines-invoice_line_ids/ID-id]]></fieldDescription>
+	</field>
+	<field name="Invoice_Reference-invoice_id" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Lines-invoice_line_ids/Invoice_Reference-invoice_id]]></fieldDescription>
+	</field>
+	<field name="Display_Name-display_name" class="java.lang.String">
+		<fieldDescription><![CDATA[Display_Name-display_name]]></fieldDescription>
+	</field>
+	<field name="Number-number" class="java.lang.String">
+		<fieldDescription><![CDATA[Number-number]]></fieldDescription>
+	</field>
+	<field name="Tax-amount_tax" class="java.lang.String">
+		<fieldDescription><![CDATA[Tax-amount_tax]]></fieldDescription>
+	</field>
+	<field name="Total__In_Words_-amount_total_words" class="java.lang.String">
+		<fieldDescription><![CDATA[Total__In_Words_-amount_total_words]]></fieldDescription>
+	</field>
+	<field name="Untaxed_Amount-amount_untaxed" class="java.lang.String">
+		<fieldDescription><![CDATA[Untaxed_Amount-amount_untaxed]]></fieldDescription>
+	</field>
+	<field name="Invoice_Date-date_invoice" class="java.lang.String">
+		<fieldDescription><![CDATA[Invoice_Date-date_invoice]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="243">
+			<printWhenExpression><![CDATA[!$F{Name-name}.equals("Name-name")]]></printWhenExpression>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="3" y="7" width="548" height="25" isRemoveLineWhenBlank="true">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement lineSpacing="Single">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Company_Name-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="2" y="131" width="258" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Street-street} + "-" + $F{City-city}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="2" y="146" width="258" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Email-email}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement isPrintRepeatedValues="false" x="433" y="32" width="119" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="2" y="116" width="258" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="383" y="32" width="50" height="15" isRemoveLineWhenBlank="true"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : "Print Date:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="383" y="47" width="50" height="14" isRemoveLineWhenBlank="true"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : "Invoice Date :"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="2" y="91" width="84" height="25" isRemoveLineWhenBlank="true">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement lineSpacing="Single">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : "Bill to:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="2" y="161" width="258" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Mobile-mobile}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="3" y="32" width="257" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Street-street_1} + "-" + $F{City-city_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="3" y="47" width="257" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Email-email_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="3" y="62" width="257" height="15" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Phone-phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" isPrintRepeatedValues="false" x="41" y="194" width="199" height="20" isRemoveLineWhenBlank="true" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Description"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="241" y="194" width="78" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Quantity"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="340" y="194" width="78" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Unit Price"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="440" y="194" width="78" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA["Subtotal"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" isPrintRepeatedValues="false" x="41" y="220" width="199" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Left" lineSpacing="1_1_2"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Description-name}.equals("Description-name") ? "" : $F{Description-name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="241" y="220" width="78" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="1_1_2"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Quantity-quantity}.equals("Quantity-quantity") ? "" : String.format("%.2f", Float.parseFloat($F{Quantity-quantity}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="220" width="78" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="1_1_2"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Unit_Price-price_unit}.equals("Unit_Price-price_unit") ? "" : String.format("%.2f", Float.parseFloat($F{Unit_Price-price_unit}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="220" width="78" height="20"/>
+				<textElement textAlignment="Right" lineSpacing="1_1_2"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Amount-price_subtotal}.equals("Amount-price_subtotal") ? "" : String.format("%.2f", Float.parseFloat($F{Amount-price_subtotal}))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement isPrintRepeatedValues="false" x="41" y="216" width="477" height="1" isPrintInFirstWholeBand="true" forecolor="#B5B3B3">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<printWhenExpression><![CDATA[!$F{Description-name}.equals("Description-name")]]></printWhenExpression>
+				</reportElement>
+			</line>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="433" y="47" width="119" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Invoice_Date-date_invoice}.equals("Invoice_Date-date_invoice") ? "" : new SimpleDateFormat("dd/MM/yyyy").format(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse($F{Invoice_Date-date_invoice}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="383" y="61" width="50" height="14" isRemoveLineWhenBlank="true"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle" lineSpacing="Single">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : "Invoice:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="433" y="61" width="119" height="14" isRemoveLineWhenBlank="true"/>
+				<textElement verticalAlignment="Middle" lineSpacing="Single"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Display_Name-display_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<lastPageFooter>
+		<band height="177">
+			<staticText>
+				<reportElement positionType="Float" x="-1" y="40" width="261" height="101"/>
+				<box>
+					<topPen lineWidth="1.1" lineStyle="Dashed"/>
+					<leftPen lineWidth="1.1" lineStyle="Dashed"/>
+					<bottomPen lineWidth="1.1" lineStyle="Dashed"/>
+					<rightPen lineWidth="1.1" lineStyle="Dashed"/>
+				</box>
+				<textElement lineSpacing="Single"/>
+				<text><![CDATA[Your notes here]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" mode="Opaque" x="0" y="147" width="556" height="30" backcolor="#E6E8E9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" lineSpacing="Single">
+					<font fontName="Serif" size="9" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[THANKYOU FOR YOUR BUSINESS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="380" y="3" width="65" height="20"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : "Untaxed Amount :"]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="445" y="3" width="108" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Untaxed_Amount-amount_untaxed}.equals("Untaxed_Amount-amount_untaxed") ? "" : String.format("%.2f", Float.parseFloat($F{Untaxed_Amount-amount_untaxed}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="23" width="65" height="20"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : "Tax :"]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="445" y="23" width="108" height="20" isRemoveLineWhenBlank="true"/>
+				<textElement lineSpacing="Single">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Tax-amount_tax}.equals("Tax-amount_tax") && $F{Tax-amount_tax}.equals("") ? "" : String.format("%.2f", Float.parseFloat($F{Tax-amount_tax}))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="46" width="65" height="20"/>
+				<box rightPadding="4"/>
+				<textElement textAlignment="Left" lineSpacing="Single">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Name-name}.equals("Name-name") ? "" : "Total :"]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement x="445" y="46" width="108" height="20"/>
+				<textElement lineSpacing="Single">
+					<font size="16"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Total-amount_total}.equals("Total-amount_total") ? "" : String.format("%.2f", Float.parseFloat($F{Total-amount_total}))]]></textFieldExpression>
+			</textField>
+		</band>
+	</lastPageFooter>
+</jasperReport>

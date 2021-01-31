@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <data>
+        <record id="view_fastreport_designer_form" model="ir.ui.view">
+            <field name="name">fastreport.designer.form</field>
+            <field name="model">fastreport.designer</field>
+            <field name="arch" type="xml">
+                <form string="FastReport Designer" create="0" delete="0" edit="0">
+                    <sheet>
+                        <notebook>
+                            <page string="设计报表">
+                                <form string="Embedded Webpage">
+                                    <field name="iframe" widget="html"/>
+                                </form>
+                            </page>
+                            <page string="预览报表">
+                                <form string="Embedded Webpage">
+                                    <field name="framed_page_rendered" widget="html"/>
+                                </form>
+                            </page>                          
+                        </notebook>
+                    </sheet>  
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

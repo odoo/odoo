@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <data>
+        <template id="report_dc">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="o">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h3>
+                                <span>Declaration of Conformity:</span>
+                                <t t-if="not lot">
+                                    <span t-field="o.name" />
+                                    /
+                                    <span t-field="o.date" />
+                                </t>
+                            </h3>
+                            <br />
+                            <div>
+                                <span>We,</span>
+                                <strong t-field="res_company.partner_id.name" />
+                                <span>, with dates the tax identification</span>
+                                <span t-field="res_company.partner_id.vat" />
+                                ,
+                                <span t-field="res_company.partner_id.nrc" />
+
+                                <span>, with its headquarters in</span>
+                                <span t-field="res_company.partner_id.city" />
+                                <span>street</span>
+                                <span t-field="res_company.partner_id.street" />
+                                <span t-field="res_company.partner_id.street2" />
+                                <span>, declare that the product:</span>
+                                <h4>
+                                    <strong t-field="o.product_id.name" />
+                                    <t t-if="lot">
+                                        <span>with lot number</span>
+                                        <span t-field="o.name" />
+                                        /
+                                        <span t-field="o.create_date" t-options='{"widget": "date"}' />
+                                    </t>
+                                </h4>
+                                <span>is made in accordance with:</span>
+                            </div>
+                            <div class="col-md-11 col-md-offset-1">
+                                <ul>
+                                    <li t-if="o.product_id.company_standard">
+                                        <span>Standard of Company #:</span>
+                                        <span t-field="o.product_id.company_standard" />
+                                    </li>
+                                    <li t-if="o.product_id.data_sheet">
+                                        <span>Technical Data Sheet #:</span>
+                                        <span t-field="o.product_id.data_sheet" />
+                                    </li>
+                                    <li t-if="o.product_id.technical_specification">
+                                        <span>Technical Specification #:</span>
+                                        <span t-field="o.product_id.technical_specification" />
+                                    </li>
+                                    <li t-if="o.product_id.standards">
+                                        <span>Standards:</span>
+                                        <span t-field="o.product_id.standards" />
+                                    </li>
+                                </ul>
+                            </div>
+                            <div>
+                                <span>and controlled according to Quality Control Plan dated in</span>
+                                <t t-if="lot">
+                                    <span t-field="o.create_date" t-options='{"widget": "date"}' />
+                                </t>
+                                <t t-if="not lot">
+                                    <span t-field="o.date" />
+                                </t>
+                            </div>
+                            <br />
+                            <div
+                            >We hereby certify that the above mentioned materials has been inspected by ourselves and
+                                meets our manufacturing specification and the
+                                requirements of your order. Final physical properties and compliance with any finished
+                                product specification depends on satisfactory
+                                processing by yourselves.
+                            </div>
+                            <br />
+                            <br />
+                            <div>Signature,</div>
+                            <br />
+                            <br />
+                            <div>F(PP 7.5/4.4.6-01)03</div>
+                            <div class="oe_structure" />
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+        <template id="report_dc_lot">
+            <t t-call="deltatech_dc.report_dc" />
+        </template>
+        <template id="report_dc_invoice">
+            <t t-call="deltatech_dc.report_dc" />
+        </template>
+    </data>
+</odoo>
