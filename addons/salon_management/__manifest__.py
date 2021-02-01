@@ -36,7 +36,12 @@
              'templates/salon_booking_templates.xml',
              ],
     'images': ['static/description/banner.jpg'],
+    # Module Price
+    'price':130.00,
+    # Module Currency Price
+    'currency':'USD',
     'license': 'AGPL-3',
     'installable': True,
     'application': True,
+    'auto_install': False,
 }
