@@ -7,6 +7,7 @@ from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS
 from odoo.tools import float_round
 
 from itertools import groupby
+from collections import defaultdict
 
 
 class MrpBom(models.Model):
@@ -15,7 +16,7 @@ class MrpBom(models.Model):
     _description = 'Bill of Material'
     _inherit = ['mail.thread']
     _rec_name = 'product_tmpl_id'
-    _order = "sequence"
+    _order = "sequence, id"
     _check_company_auto = True
 
     def _get_default_product_uom_id(self):
@@ -168,34 +169,47 @@ class MrpBom(models.Model):
         return self._search(AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.model
-    def _bom_find_domain(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
-        if product:
-            if not product_tmpl:
-                product_tmpl = product.product_tmpl_id
-            domain = ['|', ('product_id', '=', product.id), '&', ('product_id', '=', False), ('product_tmpl_id', '=', product_tmpl.id)]
-        elif product_tmpl:
-            domain = [('product_tmpl_id', '=', product_tmpl.id)]
-        else:
-            # neither product nor template, makes no sense to search
-            raise UserError(_('You should provide either a product or a product template to search a BoM'))
-        if picking_type:
-            domain += ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]
+    def _bom_find_domain(self, products, picking_type=None, company_id=False, bom_type=False):
+        domain = ['|', ('product_id', 'in', products.ids), '&', ('product_id', '=', False), ('product_tmpl_id', 'in', products.product_tmpl_id.ids)]
         if company_id or self.env.context.get('company_id'):
-            domain = domain + ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]
+            domain = AND([domain, ['|', ('company_id', '=', False), ('company_id', '=', company_id or self.env.context.get('company_id'))]])
+        if picking_type:
+            domain = AND([domain, ['|', ('picking_type_id', '=', picking_type.id), ('picking_type_id', '=', False)]])
         if bom_type:
-            domain += [('type', '=', bom_type)]
-        # order to prioritize bom with product_id over the one without
+            domain = AND([domain, [('type', '=', bom_type)]])
         return domain
 
     @api.model
-    def _bom_find(self, product_tmpl=None, product=None, picking_type=None, company_id=False, bom_type=False):
-        """ Finds BoM for particular product, picking and company """
-        if product and product.type == 'service' or product_tmpl and product_tmpl.type == 'service':
-            return self.env['mrp.bom']
-        domain = self._bom_find_domain(product_tmpl=product_tmpl, product=product, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
-        if domain is False:
-            return self.env['mrp.bom']
-        return self.search(domain, order='sequence, product_id', limit=1)
+    def _bom_find(self, products, picking_type=None, company_id=False, bom_type=False):
+        """ Find the first BoM for each products
+
+        :param products: `product.product` recordset
+        :return: One bom (or empty recordset `mrp.bom` if none find) by product (`product.product` record)
+        :rtype: defaultdict(`lambda: self.env['mrp.bom']`)
+        """
+        bom_by_product = defaultdict(lambda: self.env['mrp.bom'])
+        products = products.filtered(lambda p: p.type != 'service')
+        if not products:
+            return bom_by_product
+        domain = self._bom_find_domain(products, picking_type=picking_type, company_id=company_id, bom_type=bom_type)
+
+        # Performance optimization, allow usage of limit and avoid the for loop `bom.product_tmpl_id.product_variant_ids`
+        if len(products) == 1:
+            bom = self.search(domain, order='sequence, product_id, id', limit=1)
+            if bom:
+                bom_by_product[products] = bom
+            return bom_by_product
+
+        boms = self.search(domain, order='sequence, product_id, id')
+
+        products_ids = set(products.ids)
+        for bom in boms:
+            products_implies = bom.product_id or bom.product_tmpl_id.product_variant_ids
+            for product in products_implies:
+                if product.id in products_ids and product not in bom_by_product:
+                    bom_by_product[product] = bom
+
+        return bom_by_product
 
     def explode(self, product, quantity, picking_type=False):
         """
@@ -236,7 +250,7 @@ class MrpBom(models.Model):
                 continue
 
             line_quantity = current_qty * current_line.product_qty
-            bom = self._bom_find(product=current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id, bom_type='phantom')
+            bom = self._bom_find(current_line.product_id, picking_type=picking_type or self.picking_type_id, company_id=self.company_id.id, bom_type='phantom')[current_line.product_id]
             if bom:
                 converted_line_quantity = current_line.product_uom_id._compute_quantity(line_quantity / bom.product_qty, bom.product_uom_id)
                 bom_lines = [(line, current_line.product_id, converted_line_quantity, current_line) for line in bom.bom_line_ids] + bom_lines
@@ -331,9 +345,7 @@ class MrpBomLine(models.Model):
             if not line.product_id:
                 line.child_bom_id = False
             else:
-                line.child_bom_id = self.env['mrp.bom']._bom_find(
-                    product_tmpl=line.product_id.product_tmpl_id,
-                    product=line.product_id)
+                line.child_bom_id = self.env['mrp.bom']._bom_find(line.product_id)[line.product_id]
 
     @api.depends('product_id')
     def _compute_attachments_count(self):

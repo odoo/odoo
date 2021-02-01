@@ -51,7 +51,7 @@ class SaleOrderLine(models.Model):
             if line.state == 'sale':
                 boms = line.move_ids.mapped('bom_line_id.bom_id')
             elif line.state in ['draft', 'sent'] and line.product_id:
-                boms = boms._bom_find(product=line.product_id, company_id=line.company_id.id, bom_type='phantom')
+                boms = boms._bom_find(line.product_id, company_id=line.company_id.id, bom_type='phantom')[line.product_id]
             relevant_bom = boms.filtered(lambda b: b.type == 'phantom' and
                     (b.product_id == line.product_id or
                     (b.product_tmpl_id == line.product_id.product_tmpl_id and not b.product_id)))
@@ -70,7 +70,7 @@ class SaleOrderLine(models.Model):
                 boms = order_line.move_ids.mapped('bom_line_id.bom_id')
                 dropship = False
                 if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
-                    boms = boms._bom_find(product=order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')
+                    boms = boms._bom_find(order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')[order_line.product_id]
                     dropship = True
                 # We fetch the BoMs of type kits linked to the order_line,
                 # the we keep only the one related to the finished produst.
@@ -137,7 +137,7 @@ class SaleOrderLine(models.Model):
         # We don't try to be too smart and keep a simple approach: we compare the quantity before
         # and after update, and return the difference. We don't take into account what was already
         # sent, or any other exceptional case.
-        bom = self.env['mrp.bom']._bom_find(product=self.product_id, bom_type='phantom')
+        bom = self.env['mrp.bom']._bom_find(self.product_id, bom_type='phantom')[self.product_id]
         if bom and previous_product_uom_qty:
             return previous_product_uom_qty and previous_product_uom_qty.get(self.id, 0.0)
         return super(SaleOrderLine, self)._get_qty_procurement(previous_product_uom_qty=previous_product_uom_qty)
