@@ -3,7 +3,6 @@
 
 {
     "name" : "Norway - Accounting",
-    'icon': '/base/static/img/country_flags/no.png',
     "version" : "2.0",
     "author" : "Rolv Råen",
     'category': 'Accounting/Localizations/Account Charts',

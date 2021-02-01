@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': "Switzerland - QR-IBAN",
+    'icon': '/l10n_ch/static/description/icon.png',
     'description': """
 Swiss localization
 ==================

@@ -8,7 +8,6 @@
 
 {
     'name' : 'Venezuela - Accounting',
-    'icon': '/base/static/img/country_flags/ve.png',
     'author': ['Odoo S.A.', 'Vauxoo'],
     'category': 'Accounting/Localizations/Account Charts',
     'description':
