@@ -6,7 +6,6 @@
 
 {
     'name': 'Portugal - Accounting',
-    'icon': '/base/static/img/country_flags/pt.png',
     'version': '0.011',
     'author': 'ThinkOpen Solutions',
     'website': 'http://www.thinkopensolutions.com/',

@@ -3,6 +3,7 @@
 
 {
     'name': "India Purchase and Warehouse Management",
+    'icon': '/l10n_in/static/description/icon.png',
 
     'summary': """
         Define default purchase journal on the warehouse""",

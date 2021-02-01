@@ -3,7 +3,6 @@
 
 {
     'name': 'Italy - Accounting',
-    'icon': '/base/static/img/country_flags/it.png',
     'version': '0.2',
     'depends': [
         'account',
