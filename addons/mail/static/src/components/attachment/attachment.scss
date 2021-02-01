@@ -5,7 +5,7 @@
 .o_Attachment {
     display: flex;
 
-    &:hover .o_Attachment_asideItemUnlink.o-pretty {
+    &:hover .o-pretty .o_Attachment_asideItemUnlink {
         transform: translateX(0);
     }
 }
@@ -22,7 +22,6 @@
 
 .o_Attachment_aside {
     position: relative;
-    overflow: hidden;
 
     &:not(.o-has-multiple-action) {
         min-width: 50px;
@@ -43,10 +42,25 @@
     justify-content: center;
 }
 
-.o_Attachment_asideItemUnlink.o-pretty {
+.o-pretty {
     position: absolute;
-    top: 0;
-    transform: translateX(100%);
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+
+    .o_Attachment_asideItemUnlink {
+        position: absolute;
+        top: 0;
+        transform: translateX(100%);
+    }
+}
+
+.o_Attachment_asideItemUnlink {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .o_Attachment_details {
@@ -150,19 +164,18 @@
 .o_Attachment_asideItemUnlink {
     cursor: pointer;
 
-    &:not(.o-pretty):hover {
+    &:hover {
         background-color: gray('400');
     }
+}
 
-    &.o-pretty {
-        color: white;
-        background-color: $o-brand-primary;
+.o-pretty .o_Attachment_asideItemUnlink {
+    color: white;
+    background-color: $o-brand-primary;
 
-        &:hover {
-            background-color: darken($o-brand-primary, 10%);
-        }
+    &:hover {
+        background-color: darken($o-brand-primary, 10%);
     }
-
 }
 
 .o_Attachment_asideItemUploaded {
@@ -194,7 +207,7 @@
 // Animation
 // ------------------------------------------------------------------
 
-.o_Attachment_asideItemUnlink.o-pretty {
+.o-pretty > .o_Attachment_asideItemUnlink {
     transition: transform 0.3s ease 0s;
 }
 

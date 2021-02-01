@@ -4,6 +4,11 @@ odoo.define('mail/static/src/components/attachment/attachment.js', function (req
 const useShouldUpdateBasedOnProps = require('mail/static/src/component_hooks/use_should_update_based_on_props/use_should_update_based_on_props.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
+const {
+    isEventHandled,
+    markEventHandled,
+} = require('mail/static/src/utils/utils.js');
+
 const components = {
     AttachmentDeleteConfirmDialog: require('mail/static/src/components/attachment_delete_confirm_dialog/attachment_delete_confirm_dialog.js'),
 };
@@ -110,7 +115,7 @@ class Attachment extends Component {
      * @param {MouseEvent} ev
      */
     _onClickDownload(ev) {
-        ev.stopPropagation();
+        markEventHandled(ev, 'Attachment.clickDownload');
         this.env.services.navigate(`/web/content/ir.attachment/${this.attachment.id}/datas`, { download: true });
     }
 
@@ -122,6 +127,12 @@ class Attachment extends Component {
      */
     _onClickImage(ev) {
         if (!this.attachment.isViewable) {
+            return;
+        }
+        if (isEventHandled(ev, 'Attachment.clickDownload')) {
+            return;
+        }
+        if (isEventHandled(ev, 'Attachment.clickUnlink')) {
             return;
         }
         this.env.models['mail.attachment'].view({
@@ -137,7 +148,7 @@ class Attachment extends Component {
      * @param {MouseEvent} ev
      */
     _onClickUnlink(ev) {
-        ev.stopPropagation();
+        markEventHandled(ev, 'Attachment.clickUnlink');
         if (!this.attachment) {
             return;
         }

@@ -82,16 +82,18 @@
                                 <i class="fa fa-spin fa-spinner"/>
                             </div>
                         </t>
+                        <!-- Remove button -->
+                        <t t-if="props.isEditable">
+                            <div class="o_Attachment_asideItem" t-att-class="{ 'o-pretty': attachment.isLinkedToComposer }">
+                                <div class="o_Attachment_asideItemUnlink" t-on-click="_onClickUnlink" title="Remove">
+                                    <i class="fa fa-times"/>
+                                </div>
+                            </div>
+                        </t>
                         <!-- Uploaded icon -->
                         <t t-if="!attachment.isUploading and attachment.isLinkedToComposer">
                             <div class="o_Attachment_asideItem o_Attachment_asideItemUploaded" title="Uploaded">
                                 <i class="fa fa-check"/>
-                            </div>
-                        </t>
-                        <!-- Remove button -->
-                        <t t-if="props.isEditable">
-                            <div class="o_Attachment_asideItem o_Attachment_asideItemUnlink" t-att-class="{ 'o-pretty': attachment.isLinkedToComposer }" t-on-click="_onClickUnlink" title="Remove">
-                                <i class="fa fa-times"/>
                             </div>
                         </t>
                         <!-- Download button -->
