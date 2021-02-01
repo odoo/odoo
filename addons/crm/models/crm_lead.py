@@ -57,14 +57,6 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'probability',
 ]
 
-# Subset of partner fields: sync any of those
-PARTNER_FIELDS_TO_SYNC = [
-    'mobile',
-    'title',
-    'function',
-    'website',
-]
-
 # Subset of partner fields: sync all or none to avoid mixed addresses
 PARTNER_ADDRESS_FIELDS_TO_SYNC = [
     'street',
@@ -175,40 +167,40 @@ class Lead(models.Model):
     partner_is_blacklisted = fields.Boolean('Partner is blacklisted', related='partner_id.is_blacklisted', readonly=True)
     contact_name = fields.Char(
         'Contact Name', tracking=30,
-        compute='_compute_partner_id_values', readonly=False, store=True)
+        compute='_compute_contact_name', readonly=False, store=True)
     partner_name = fields.Char(
         'Company Name', tracking=20, index=True,
-        compute='_compute_partner_id_values', readonly=False, store=True,
+        compute='_compute_partner_name', readonly=False, store=True,
         help='The name of the future partner company that will be created while converting the lead into opportunity')
-    function = fields.Char('Job Position', compute='_compute_partner_id_values', readonly=False, store=True)
-    title = fields.Many2one('res.partner.title', string='Title',compute='_compute_partner_id_values', readonly=False, store=True)
+    function = fields.Char('Job Position', compute='_compute_function', readonly=False, store=True)
+    title = fields.Many2one('res.partner.title', string='Title', compute='_compute_title', readonly=False, store=True)
     email_from = fields.Char(
         'Email', tracking=40, index=True,
         compute='_compute_email_from', inverse='_inverse_email_from', readonly=False, store=True)
     phone = fields.Char(
         'Phone', tracking=50,
         compute='_compute_phone', inverse='_inverse_phone', readonly=False, store=True)
-    mobile = fields.Char('Mobile', compute='_compute_partner_id_values', readonly=False, store=True)
+    mobile = fields.Char('Mobile', compute='_compute_mobile', readonly=False, store=True)
     phone_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Phone Quality', compute="_compute_phone_state", store=True)
     email_state = fields.Selection([
         ('correct', 'Correct'),
         ('incorrect', 'Incorrect')], string='Email Quality', compute="_compute_email_state", store=True)
-    website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_partner_id_values", store=True, readonly=False)
+    website = fields.Char('Website', index=True, help="Website of the contact", compute="_compute_website", store=True, readonly=False)
     lang_id = fields.Many2one('res.lang', string='Language')
     # Address fields
-    street = fields.Char('Street', compute='_compute_partner_id_values', readonly=False, store=True)
-    street2 = fields.Char('Street2', compute='_compute_partner_id_values', readonly=False, store=True)
-    zip = fields.Char('Zip', change_default=True, compute='_compute_partner_id_values', readonly=False, store=True)
-    city = fields.Char('City', compute='_compute_partner_id_values', readonly=False, store=True)
+    street = fields.Char('Street', compute='_compute_partner_id_address', readonly=False, store=True)
+    street2 = fields.Char('Street2', compute='_compute_partner_id_address', readonly=False, store=True)
+    zip = fields.Char('Zip', change_default=True, compute='_compute_partner_id_address', readonly=False, store=True)
+    city = fields.Char('City', compute='_compute_partner_id_address', readonly=False, store=True)
     state_id = fields.Many2one(
         "res.country.state", string='State',
-        compute='_compute_partner_id_values', readonly=False, store=True,
+        compute='_compute_partner_id_address', readonly=False, store=True,
         domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one(
         'res.country', string='Country',
-        compute='_compute_partner_id_values', readonly=False, store=True)
+        compute='_compute_partner_id_address', readonly=False, store=True)
     # Probability (Opportunity only)
     probability = fields.Float(
         'Probability', group_operator="avg", copy=False,
@@ -356,10 +348,42 @@ class Lead(models.Model):
                 lead.name = _("%s's opportunity") % lead.partner_id.name
 
     @api.depends('partner_id')
-    def _compute_partner_id_values(self):
-        """ compute the new values when partner_id has changed """
+    def _compute_contact_name(self):
         for lead in self:
-            lead.update(lead._prepare_values_from_partner(lead.partner_id))
+            contact_name = (
+                False if lead.partner_id and lead.partner_id.is_company
+                else lead.partner_id.name
+            )
+            lead.contact_name = contact_name or lead.contact_name
+
+    @api.depends('partner_id')
+    def _compute_partner_name(self):
+        for lead in self:
+            partner_name = lead.partner_id.parent_id.name
+            if not partner_name and lead.partner_id.is_company:
+                partner_name = lead.partner_id.name
+
+            lead.partner_name = partner_name or lead.partner_name
+
+    @api.depends('partner_id')
+    def _compute_function(self):
+        for lead in self:
+            lead.function = lead.partner_id.function or lead.function
+
+    @api.depends('partner_id')
+    def _compute_title(self):
+        for lead in self:
+            lead.title = lead.partner_id.title or lead.title
+
+    @api.depends('partner_id')
+    def _compute_mobile(self):
+        for lead in self:
+            lead.mobile = lead.partner_id.mobile or lead.mobile
+
+    @api.depends('partner_id')
+    def _compute_website(self):
+        for lead in self:
+            lead.website = lead.partner_id.website or lead.website
 
     @api.depends('partner_id.email')
     def _compute_email_from(self):
@@ -415,6 +439,17 @@ class Lead(models.Model):
                         email_state = 'correct'
                         break
             lead.email_state = email_state
+
+    @api.depends('partner_id')
+    def _compute_partner_id_address(self):
+        for lead in self:
+            # Sync all address fields from partner, or none, to avoid mixing them.
+            if any(lead.partner_id[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC):
+                values = {f: lead.partner_id[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+            else:
+                values = {f: lead[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+
+            lead.update(values)
 
     @api.depends('probability', 'automated_probability')
     def _compute_is_automated_probability(self):
@@ -493,31 +528,6 @@ class Lead(models.Model):
     def _onchange_mobile_validation(self):
         if self.mobile:
             self.mobile = self.phone_get_sanitized_number(number_fname='mobile', force_format='INTERNATIONAL') or self.mobile
-
-    def _prepare_values_from_partner(self, partner):
-        """ Get a dictionary with values coming from partner information to
-        copy on a lead. Non-address fields get the current lead
-        values to avoid being reset if partner has no value for them. """
-
-        # Sync all address fields from partner, or none, to avoid mixing them.
-        if any(partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC):
-            values = {f: partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
-        else:
-            values = {f: self[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
-
-        # For other fields, get the info from the partner, but only if set
-        values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
-
-        # Fields with specific logic
-        partner_name = partner.parent_id.name
-        if not partner_name and partner.is_company:
-            partner_name = partner.name
-        contact_name = False if partner.is_company else partner.name
-        values.update({
-            'partner_name': partner_name or self.partner_name,
-            'contact_name': contact_name or self.contact_name,
-        })
-        return self._convert_to_write(values)
 
     # ------------------------------------------------------------
     # ORM

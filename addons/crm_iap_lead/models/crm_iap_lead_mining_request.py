@@ -67,9 +67,9 @@ class CRMLeadMiningRequest(models.Model):
     seniority_id = fields.Many2one('crm.iap.lead.seniority', string='Seniority')
 
     # Fields for the blue tooltip
-    lead_credits = fields.Char(compute='_compute_tooltip', readonly=True)
-    lead_contacts_credits = fields.Char(compute='_compute_tooltip', readonly=True)
-    lead_total_credits = fields.Char(compute='_compute_tooltip', readonly=True)
+    lead_credits = fields.Char(compute='_compute_tooltip')
+    lead_contacts_credits = fields.Char(compute='_compute_tooltip')
+    lead_total_credits = fields.Char(compute='_compute_tooltip')
 
     @api.depends('lead_type', 'lead_number')
     def _compute_display_lead_label(self):
@@ -148,7 +148,7 @@ class CRMLeadMiningRequest(models.Model):
     def _onchange_company_size_max(self):
         if self.company_size_max < self.company_size_min:
             self.company_size_max = self.company_size_min
-    
+
     def _prepare_iap_payload(self):
         """
         This will prepare the data to send to the server

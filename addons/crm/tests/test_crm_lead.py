@@ -256,6 +256,20 @@ class TestCRMLead(TestCrmCommon):
         self.assertEqual(self.contact_company_1.email, 'broken')
         self.assertEqual(self.contact_company_1.phone, 'alsobroken')
 
+        # Check that editable stored computed field based on partner
+        # do not impact others field during a write
+        self.contact_2.mobile = '+32 499 99 99 99'
+        self.contact_2.website = 'Website_partner'
+        lead.write({
+            'contact_name': 'Contact Name',
+            'partner_name': 'Partner Name',
+            'function': 'Function',
+            'partner_id': self.contact_2.id,
+        })
+        self.assertEqual(lead.mobile, self.contact_2.mobile)
+        self.assertEqual(lead.contact_name, 'Contact Name')
+        self.assertEqual(lead.website, 'http://Website_partner')
+
     @users('user_sales_manager')
     def test_crm_team_alias(self):
         new_team = self.env['crm.team'].create({
