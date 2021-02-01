@@ -85,6 +85,7 @@ class MailChannel(models.Model):
                 if channel.livechat_operator_id:
                     res = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
                     channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
+                    channel_infos_dict[channel.id]['is_pinned'] = False
                 # add the anonymous or partner name
                 channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
         return list(channel_infos_dict.values())
