@@ -70,6 +70,7 @@
             <field name="stage_id" ref="utm.campaign_stage_1"/>
             <field name="user_id" ref="base.user_admin"/>
             <field name="tag_ids" eval="[(6,0,[ref('utm.utm_tag_1')])]"/>
+            <field name="is_relevant" eval="True"/>
         </record>
 
         <record id="mass_mail_1" model="mailing.mailing">

@@ -33,6 +33,7 @@
                         <field class="o_text_overflow" name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                        <field name="is_relevant" invisible="1"/>
                     </group>
                     <notebook>
                     </notebook>
@@ -64,6 +65,7 @@
                     <field class="o_text_overflow" name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
                     <field name="user_id" domain="[('share', '=', False)]"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    <field name="is_relevant" invisible="1"/>
                 </group>
             </form>
         </field>

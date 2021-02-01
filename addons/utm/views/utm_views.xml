@@ -24,6 +24,8 @@
                 Campaigns are used to centralize your marketing efforts and track their results.
             </p>
         </field>
+        <field name="domain">[('is_relevant', '=', True)]</field>
+        <field name="context">{'default_is_relevant': True}</field>
     </record>
 
     <menuitem id="menu_utm_campaign_act"

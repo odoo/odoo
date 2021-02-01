@@ -84,9 +84,6 @@ var SelectBox = publicWidget.Widget.extend({
         var args = {
             name: name
         };
-        if (this.obj === "utm.campaign"){
-            args.is_website = true;
-        }
         return this._rpc({
             model: this.obj,
             method: 'create',
