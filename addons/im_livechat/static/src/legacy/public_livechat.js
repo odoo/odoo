@@ -22,8 +22,8 @@ var LIVECHAT_COOKIE_HISTORY = 'im_livechat_history';
 var HISTORY_LIMIT = 15;
 
 var RATING_TO_EMOJI = {
-    "10": "😊",
-    "5": "😐",
+    "5": "😊",
+    "3": "😐",
     "1": "😞"
 };
 
