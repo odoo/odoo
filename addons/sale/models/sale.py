@@ -1907,3 +1907,7 @@ class SaleOrderLine(models.Model):
             name += "\n" + pacv.with_context(lang=self.order_id.partner_id.lang).display_name
 
         return name
+
+    def _is_not_sellable_line(self):
+        # True if the line is a computed line (reward, delivery, ...) that user cannot add manually
+        return False

@@ -147,6 +147,9 @@ class SaleOrderLine(models.Model):
     product_qty = fields.Float(compute='_compute_product_qty', string='Product Qty', digits='Product Unit of Measure')
     recompute_delivery_price = fields.Boolean(related='order_id.recompute_delivery_price')
 
+    def _is_not_sellable_line(self):
+        return self.is_delivery or super(SaleOrderLine, self)._is_not_sellable_line()
+
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_product_qty(self):
         for line in self:

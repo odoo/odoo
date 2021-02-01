@@ -114,12 +114,12 @@ class SaleOrder(models.Model):
         """ Returns the sale order lines that are not reward lines.
             It will also return reward lines being free product lines. """
         free_reward_product = self.env['coupon.program'].search([('reward_type', '=', 'product')]).mapped('discount_line_product_id')
-        return self.order_line.filtered(lambda x: not x.is_reward_line or x.product_id in free_reward_product)
+        return self.order_line.filtered(lambda x: not x._is_not_sellable_line() or x.product_id in free_reward_product)
 
     def _get_base_order_lines(self, program):
         """ Returns the sale order lines not linked to the given program.
         """
-        return self.order_line.filtered(lambda x: not (x.is_reward_line and x.product_id == program.discount_line_product_id))
+        return self.order_line.filtered(lambda x: not x._is_not_sellable_line() or (x.is_reward_line and x.product_id != program.discount_line_product_id))
 
     def _get_reward_values_discount_fixed_amount(self, program):
         total_amount = sum(self._get_base_order_lines(program).mapped('price_total'))
@@ -131,7 +131,7 @@ class SaleOrder(models.Model):
 
     def _get_cheapest_line(self):
         # Unit prices tax included
-        return min(self.order_line.filtered(lambda x: not x.is_reward_line and x.price_reduce > 0), key=lambda x: x['price_reduce'])
+        return min(self.order_line.filtered(lambda x: not x._is_not_sellable_line() and x.price_reduce > 0), key=lambda x: x['price_reduce'])
 
     def _get_reward_values_discount_percentage_per_line(self, program, line):
         discount_amount = line.product_uom_qty * line.price_reduce * (program.discount_percentage / 100)
@@ -468,6 +468,9 @@ class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
 
     is_reward_line = fields.Boolean('Is a program reward line')
+
+    def _is_not_sellable_line(self):
+        return self.is_reward_line or super()._is_not_sellable_line()
 
     def unlink(self):
         related_program_lines = self.env['sale.order.line']
