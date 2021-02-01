@@ -2982,6 +2982,77 @@ class TestRoutes(TestStockCommon):
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
 
+    def test_packaging_route(self):
+        """Create a route for product and another route for its packaging. Create
+        a move of this product with this packaging. Check packaging route has
+        priority over product route.
+        """
+        stock_location = self.env.ref('stock.stock_location_stock')
+
+        push_location_1 = self.env['stock.location'].create({
+            'location_id': stock_location.location_id.id,
+            'name': 'push location 1',
+        })
+
+        push_location_2 = self.env['stock.location'].create({
+            'location_id': stock_location.location_id.id,
+            'name': 'push location 2',
+        })
+
+        route_on_product = self.env['stock.location.route'].create({
+            'name': 'route on product',
+            'rule_ids': [(0, False, {
+                'name': 'create a move to push location 1',
+                'location_src_id': stock_location.id,
+                'location_id': push_location_1.id,
+                'company_id': self.env.company.id,
+                'action': 'push',
+                'auto': 'manual',
+                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            })],
+        })
+
+        route_on_packaging = self.env['stock.location.route'].create({
+            'name': 'route on packaging',
+            'packaging_selectable': True,
+            'rule_ids': [(0, False, {
+                'name': 'create a move to push location 2',
+                'location_src_id': stock_location.id,
+                'location_id': push_location_2.id,
+                'company_id': self.env.company.id,
+                'action': 'push',
+                'auto': 'manual',
+                'picking_type_id': self.env.ref('stock.picking_type_in').id,
+            })],
+        })
+
+        product = self.env['product.product'].create({
+            'name': 'Product with packaging',
+            'type': 'product',
+            'route_ids': [(4, route_on_product.id, 0)]
+        })
+
+        packaging = self.env['product.packaging'].create({
+            'name': 'box',
+            'product_id': product.id,
+            'route_ids': [(4, route_on_packaging.id, 0)]
+        })
+
+
+        move1 = self.env['stock.move'].create({
+            'name': 'move with a route',
+            'location_id': stock_location.id,
+            'location_dest_id': stock_location.id,
+            'product_id': product.id,
+            'product_packaging_id': packaging.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move1._action_confirm()
+
+        pushed_move = move1.move_dest_ids
+        self.assertEqual(pushed_move.location_dest_id.id, push_location_2.id)
+
 
 class TestAutoAssign(TestStockCommon):
     def create_pick_ship(self):
