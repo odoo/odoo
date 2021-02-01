@@ -197,13 +197,18 @@ class Location(models.Model):
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
-    def _get_putaway_strategy(self, product, quantity=0, package=None):
+    def _get_putaway_strategy(self, product, quantity=0, package=None, packaging=None):
         """Returns the location where the product has to be put, if any compliant
         putaway strategy is found. Otherwise returns self.
         The quantity should be in the default UOM of the product, it is used when
         no package is specified.
         """
-        package_type = package and package.package_type_id or self.env['stock.package.type']
+        # find package type on package or packaging
+        package_type = self.env['stock.package.type']
+        if package:
+            package_type = package.package_type_id
+        elif packaging:
+            package_type = packaging.package_type_id
 
         putaway_rules = self.env['stock.putaway.rule']
         putaway_rules |= self.putaway_rule_ids.filtered(lambda x: x.product_id == product and (package_type in x.package_type_ids or package_type == x.package_type_ids))
