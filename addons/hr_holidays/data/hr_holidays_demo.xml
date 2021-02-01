@@ -62,10 +62,10 @@
     <record id="hr_holidays_cl" model="hr.leave">
         <field name="name">Trip with Family</field>
         <field name="holiday_status_id" ref="holiday_status_comp"/>
-        <field eval="time.strftime('%Y-%m-01')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-03')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-01')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-03')" name="request_date_to"/>
+        <field eval="time.strftime('%Y-%m-01 08:00:00')" name="date_from"/>
+        <field eval="time.strftime('%Y-%m-03 17:00:00')" name="date_to"/>
+        <field eval="time.strftime('%Y-%m-01 08:00:00')" name="request_date_from"/>
+        <field eval="time.strftime('%Y-%m-03 17:00:00')" name="request_date_to"/>
         <field name="number_of_days">10</field>
         <field name="employee_id" ref="hr.employee_admin"/>
     </record>
@@ -80,10 +80,10 @@
     <record id="hr_holidays_sl" model="hr.leave">
         <field name="name">Doctor Appointment</field>
         <field name="holiday_status_id" ref="holiday_status_sl"/>
-        <field eval="time.strftime('%Y-%m-20')" name="date_from"/>
-        <field eval="time.strftime('%Y-%m-22')" name="date_to"/>
-        <field eval="time.strftime('%Y-%m-20')" name="request_date_from"/>
-        <field eval="time.strftime('%Y-%m-22')" name="request_date_to"/>
+        <field eval="time.strftime('%Y-%m-20 08:00:00')" name="date_from"/>
+        <field eval="time.strftime('%Y-%m-22 17:00:00')" name="date_to"/>
+        <field eval="time.strftime('%Y-%m-20 08:00:00')" name="request_date_from"/>
+        <field eval="time.strftime('%Y-%m-22 17:00:00')" name="request_date_to"/>
         <field name="number_of_days">3</field>
         <field name="employee_id" ref="hr.employee_admin"/>
         <field name="state">confirm</field>
