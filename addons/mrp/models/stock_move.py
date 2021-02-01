@@ -219,7 +219,7 @@ class StockMove(models.Model):
             if not move.picking_type_id or (move.production_id and move.production_id.product_id == move.product_id):
                 moves_ids_to_return.add(move.id)
                 continue
-            bom = self.env['mrp.bom'].sudo()._bom_find(product=move.product_id, company_id=move.company_id.id, bom_type='phantom')
+            bom = self.env['mrp.bom'].sudo()._bom_find(move.product_id, company_id=move.company_id.id, bom_type='phantom')[move.product_id]
             if not bom:
                 moves_ids_to_return.add(move.id)
                 continue
