@@ -366,7 +366,6 @@ class EventEvent(models.Model):
 
         Updated by this method
           * seats_max -> triggers _compute_seats (all seats computation)
-          * seats_limited
           * auto_confirm
           * tag_ids
         """
@@ -377,9 +376,6 @@ class EventEvent(models.Model):
                 continue
 
             event.seats_max = event.event_type_id.seats_max
-
-            if event.event_type_id.has_seats_limitation != event.seats_limited:
-                event.seats_limited = event.event_type_id.has_seats_limitation
 
             event.auto_confirm = event.event_type_id.auto_confirm
             if not event.tag_ids and event.event_type_id.tag_ids:
@@ -514,6 +510,7 @@ class EventEvent(models.Model):
         if missing_fields and values:
             cache_event = self.new(values)
             cache_event._compute_from_event_type()
+            cache_event._compute_seats_limited()
             return dict((fname, cache_event[fname]) for fname in missing_fields)
         else:
             return {}
