@@ -101,6 +101,49 @@ class WebsiteSnippetFilter(models.Model):
                 _logger.warning("The provided domain %s in 'ir.actions.server' generated a MissingError in '%s'", search_domain, self._name)
                 return []
 
+    def _record_to_dict_values(self, meta_data, records):
+        """Converts a list of dictionary records into the structure used by the template for rendering:
+
+            [{
+                'fields':
+                    OrderedDict([
+                        ('name', 'Afghanistan'),
+                        ('code', 'AF'),
+                    ]),
+                'image_fields':
+                    OrderedDict([
+                        ('image', '/web/image/res.country/3/image?unique=5d9b44e')
+                    ]),
+            }, ... , ...]
+
+        @param meta_data: OrderedDict result of _get_filter_meta_data
+        @param records: records as dictionaries of non-escaped values associated to field names
+
+        @return List of Dict matching the rendering structure
+        """
+        result = []
+        for record in records:
+            data = self._get_rendering_data_structure()
+            for field_name, field_widget in meta_data.items():
+                value = record[field_name]
+                if field_widget in ('binary', 'image'):
+                    data['image_fields'][field_name] = self.escape_falsy_as_empty(value)
+                elif field_widget == 'monetary':
+                    FieldMonetary = self.env['ir.qweb.field.monetary']
+                    website_currency = self._get_website_currency()
+                    data['fields'][field_name] = FieldMonetary.value_to_html(
+                        value,
+                        {'display_currency': website_currency}
+                    )
+                elif 'ir.qweb.field.%s' % field_widget in self.env:
+                    data['fields'][field_name] = self.env['ir.qweb.field.%s' % field_widget].value_to_html(
+                        value, {})
+                else:
+                    data['fields'][field_name] = self.escape_falsy_as_empty(value)
+            data['fields']['call_to_action_url'] = record['call_to_action_url']
+            result.append(data)
+        return result
+
     def _get_field_name_and_type(self, model, field_name):
         """
         Separates the name and the widget type
@@ -122,6 +165,20 @@ class WebsiteSnippetFilter(models.Model):
             field_type = 'text'
         return field_name, field_widget or field_type
 
+    def _get_filter_meta_data(self):
+        """
+        Extracts the meta data of each field
+
+        @return OrderedDict containing the widget type for each field name
+        """
+        model = self.env[self.filter_id.model_id] if self.filter_id else (
+            self.action_server_id.model_id if self.action_server_id else None)
+        meta_data = OrderedDict({})
+        for field_name in self.field_names.split(","):
+            field_name, field_widget = self._get_field_name_and_type(model, field_name)
+            meta_data[field_name] = field_widget
+        return meta_data
+
     def _prepare_sample(self, length=4):
         """
         Generates sample data and returns it the right format for render.
@@ -133,37 +190,17 @@ class WebsiteSnippetFilter(models.Model):
         if not length:
             return []
         sample = []
+        meta_data = self._get_filter_meta_data()
         model = self.env[self.filter_id.model_id] if self.filter_id else (
             self.action_server_id.model_id if self.action_server_id else None)
         sample_data = self._get_hardcoded_sample(model)
         for index in range(0, length):
             single_sample_data = sample_data[index % len(sample_data)].copy()
-            self._fill_sample(single_sample_data, model, index)
-            data = self._get_rendering_data_structure()
-            for field_name in self.field_names.split(","):
-                field_name, field_widget = self._get_field_name_and_type(model, field_name)
-                value = single_sample_data[field_name]
-                if field_widget == 'binary':
-                    data['image_fields'][field_name] = self.escape_falsy_as_empty(value)
-                elif field_widget == 'image':
-                    data['image_fields'][field_name] = value
-                elif field_widget == 'monetary':
-                    FieldMonetary = self.env['ir.qweb.field.monetary']
-                    website_currency = self._get_website_currency()
-                    data['fields'][field_name] = FieldMonetary.value_to_html(
-                        value,
-                        {'display_currency': website_currency}
-                    )
-                elif 'ir.qweb.field.%s' % field_widget in self.env:
-                    data['fields'][field_name] = self.env['ir.qweb.field.%s' % field_widget].value_to_html(
-                        value, {})
-                else:
-                    data['fields'][field_name] = self.escape_falsy_as_empty(value)
-            data['fields']['call_to_action_url'] = ''
-            sample.append(data)
-        return sample
+            self._fill_sample(single_sample_data, meta_data, index)
+            sample.append(single_sample_data)
+        return self._record_to_dict_values(meta_data, sample)
 
-    def _fill_sample(self, sample, model, index):
+    def _fill_sample(self, sample, meta_data, index):
         """
         Fills the sample for the given model
 
@@ -171,8 +208,7 @@ class WebsiteSnippetFilter(models.Model):
         @param model: Model to which the sample belongs
         @param index: Index of the sample within the dataset
         """
-        for field_name in self.field_names.split(","):
-            field_name, field_widget = self._get_field_name_and_type(model, field_name)
+        for field_name, field_widget in meta_data.items():
             if field_name not in sample:
                 if field_widget == 'binary':
                     sample[field_name] = None
@@ -184,6 +220,7 @@ class WebsiteSnippetFilter(models.Model):
                     sample[field_name] = index
                 else:
                     sample[field_name] = _('Sample %s', index + 1)
+        sample['call_to_action_url'] = ''
 
     def _get_hardcoded_sample(self, model):
         """
@@ -222,19 +259,15 @@ class WebsiteSnippetFilter(models.Model):
         self.ensure_one()
         values = []
         model = self.env[self.filter_id.model_id]
+        meta_data = self._get_filter_meta_data()
         Website = self.env['website']
         for record in records:
-            data = self._get_rendering_data_structure()
-            for field_name in self.field_names.split(","):
-                field_name, _, field_widget = field_name.partition(":")
+            data = {}
+            for field_name, field_widget in meta_data.items():
                 field = model._fields.get(field_name)
-                field_widget = field_widget or field.type
                 if field.type == 'binary':
-                    data['image_fields'][field_name] = self.escape_falsy_as_empty(Website.image_url(record, field_name))
-                elif field_widget == 'image':
-                    data['image_fields'][field_name] = self.escape_falsy_as_empty(record[field_name])
+                    data[field_name] = Website.image_url(record, field_name)
                 elif field_widget == 'monetary':
-                    FieldMonetary = self.env['ir.qweb.field.monetary']
                     model_currency = None
                     if field.type == 'monetary':
                         model_currency = record[record[field_name].currency_field]
@@ -242,25 +275,20 @@ class WebsiteSnippetFilter(models.Model):
                         model_currency = record['currency_id']
                     if model_currency:
                         website_currency = self._get_website_currency()
-                        data['fields'][field_name] = FieldMonetary.value_to_html(
-                            model_currency._convert(
-                                record[field_name],
-                                website_currency,
-                                Website.get_current_website().company_id,
-                                fields.Date.today()
-                            ),
-                            {'display_currency': website_currency}
+                        data[field_name] = model_currency._convert(
+                            record[field_name],
+                            website_currency,
+                            Website.get_current_website().company_id,
+                            fields.Date.today()
                         )
                     else:
-                        data['fields'][field_name] = self.escape_falsy_as_empty(record[field_name])
-                elif ('ir.qweb.field.%s' % field_widget) in self.env:
-                    data['fields'][field_name] = self.env[('ir.qweb.field.%s' % field_widget)].record_to_html(record, field_name, {})
+                        data[field_name] = record[field_name]
                 else:
-                    data['fields'][field_name] = self.escape_falsy_as_empty(record[field_name])
+                    data[field_name] = record[field_name]
 
-            data['fields']['call_to_action_url'] = 'website_url' in record and record['website_url']
+            data['call_to_action_url'] = 'website_url' in record and record['website_url']
             values.append(data)
-        return values
+        return self._record_to_dict_values(meta_data, values)
 
     @api.model
     def _get_website_currency(self):
