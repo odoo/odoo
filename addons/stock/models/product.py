@@ -953,6 +953,10 @@ class ProductPackaging(models.Model):
     _inherit = "product.packaging"
 
     package_type_id = fields.Many2one('stock.package.type', 'Package Type')
+    route_ids = fields.Many2many(
+        'stock.location.route', 'stock_location_route_packaging', 'packaging_id', 'route_id', 'Routes',
+        domain=[('packaging_selectable', '=', True)],
+        help="Depending on the modules installed, this will allow you to define the route of the product in this packaging: whether it will be bought, manufactured, replenished on order, etc.")
 
 
 class UoM(models.Model):
