@@ -3,12 +3,11 @@ odoo.define('website.root', function (require) {
 
 const ajax = require('web.ajax');
 const {_t} = require('web.core');
-var Dialog = require('web.Dialog');
 const KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 const session = require('web.session');
 var publicRootData = require('web.public.root');
 require("web.zoomodoo");
-
+const {FullscreenIndication} = require('@website/js/widgets/fullscreen_indication');
 var websiteRootRegistry = publicRootData.publicRootRegistry;
 
 var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
@@ -34,6 +33,16 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
             autoAccessKeys: false,
         });
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    willStart: async function () {
+        this.fullscreenIndication = new FullscreenIndication(this);
+        return Promise.all([
+            this._super(...arguments),
+            this.fullscreenIndication.appendTo(document.body),
+        ]);
     },
     /**
      * @override
@@ -170,6 +179,11 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
      */
     _toggleFullscreen(state) {
         this.isFullscreen = state;
+        if (this.isFullscreen) {
+            this.fullscreenIndication.show();
+        } else {
+            this.fullscreenIndication.hide();
+        }
         document.body.classList.add('o_fullscreen_transition');
         document.body.classList.toggle('o_fullscreen', this.isFullscreen);
         document.body.style.overflowX = 'hidden';
