@@ -167,6 +167,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='name']" position="after">
                     <field name="package_type_id" groups="stock.group_tracking_lot"/>
+                    <field name="route_ids" groups="stock.group_adv_location" optional="hide" widget="many2many_tags"/>
                 </xpath>
             </field>
         </record>
@@ -178,6 +179,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//label[@for='qty']" position="before">
                     <field name="package_type_id" groups="stock.group_tracking_lot"/>
+                </xpath>
+                <xpath expr="//group[@name='qty']" position="after">
+                    <group name="logistic">
+                        <field name="route_ids" groups="stock.group_adv_location" widget="many2many_tags"/>
+                    </group>
                 </xpath>
             </field>
         </record>
