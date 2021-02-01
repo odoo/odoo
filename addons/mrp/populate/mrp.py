@@ -85,7 +85,7 @@ class MrpBomLine(models.Model):
 
     def _populate_factories(self):
         # TODO: tree of product by company to be more closer to the reality
-        boms = self.env['mrp.bom'].search([('id', 'in', self.env.registry.populated_models['mrp.bom'])], order='sequence, product_id')
+        boms = self.env['mrp.bom'].search([('id', 'in', self.env.registry.populated_models['mrp.bom'])], order='sequence, product_id, id')
 
         product_manu_ids = OrderedSet()
         for bom in boms:
@@ -236,7 +236,7 @@ class MrpBomByproduct(models.Model):
         boms_ids = self.env.registry.populated_models['mrp.bom']
         boms_ids = random.sample(boms_ids, int(len(boms_ids) * 0.5))
 
-        boms = self.env['mrp.bom'].search([('id', 'in', self.env.registry.populated_models['mrp.bom'])], order='sequence, product_id')
+        boms = self.env['mrp.bom'].search([('id', 'in', self.env.registry.populated_models['mrp.bom'])], order='sequence, product_id, id')
 
         product_manu_ids = OrderedSet()
         for bom in boms:
