@@ -2016,6 +2016,30 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test("select a many2many value by focusing out", async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form><field name="timmy" widget="many2many_tags"/></form>`,
+        });
+
+        assert.containsNone(form, '.o_field_many2manytags .badge');
+
+        form.$('.o_field_many2manytags input').focus().val('go').trigger('input').trigger('keyup');
+        await testUtils.nextTick();
+        form.$('.o_field_many2manytags input').trigger('blur');
+        await testUtils.nextTick();
+
+        assert.containsNone(document.body, '.modal');
+        assert.containsOnce(form, '.o_field_many2manytags .badge');
+        assert.strictEqual(form.$('.o_field_many2manytags .badge').text().trim(), 'gold');
+
+        form.destroy();
+    });
+
     QUnit.module('FieldRadio');
 
     QUnit.test('fieldradio widget on a many2one in a new record', async function (assert) {
