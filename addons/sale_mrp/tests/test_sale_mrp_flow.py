@@ -66,7 +66,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         #         |- component_b   x1
         #         |- component_c   x3
 
-        cls.kit_1 = cls._cls_create_product('Kit 1', cls.uom_unit)
+        cls.kit_1 = cls._cls_create_product('Kit 1', cls.uom_unit, type='consu')
 
         cls.bom_kit_1 = cls.env['mrp.bom'].create({
             'product_tmpl_id': cls.kit_1.product_tmpl_id.id,
@@ -101,9 +101,9 @@ class TestSaleMrpFlow(common.SavepointCase):
         #              |- component_e x1
 
         # Creating all kits
-        cls.kit_2 = cls._cls_create_product('Kit 2', cls.uom_unit)
-        cls.kit_3 = cls._cls_create_product('kit 3', cls.uom_unit)
-        cls.kit_parent = cls._cls_create_product('Kit Parent', cls.uom_unit)
+        cls.kit_2 = cls._cls_create_product('Kit 2', cls.uom_unit, type='consu')
+        cls.kit_3 = cls._cls_create_product('kit 3', cls.uom_unit, type='consu')
+        cls.kit_parent = cls._cls_create_product('Kit Parent', cls.uom_unit, type='consu')
 
         # Linking the kits and the components via some 'phantom' BoMs
         bom_kit_2 = cls.env['mrp.bom'].create({
@@ -154,10 +154,10 @@ class TestSaleMrpFlow(common.SavepointCase):
             'bom_id': bom_kit_parent.id})
 
     @classmethod
-    def _cls_create_product(cls, name, uom_id, routes=()):
+    def _cls_create_product(cls, name, uom_id, routes=(), type='product'):
         p = Form(cls.env['product.product'])
         p.name = name
-        p.type = 'product'
+        p.type = type
         p.uom_id = uom_id
         p.uom_po_id = uom_id
         p.route_ids.clear()
@@ -165,10 +165,10 @@ class TestSaleMrpFlow(common.SavepointCase):
             p.route_ids.add(r)
         return p.save()
 
-    def _create_product(self, name, uom_id, routes=()):
+    def _create_product(self, name, uom_id, routes=(), type='product'):
         p = Form(self.env['product.product'])
         p.name = name
-        p.type = 'product'
+        p.type = type
         p.uom_id = uom_id
         p.uom_po_id = uom_id
         p.route_ids.clear()
@@ -238,7 +238,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         route_mto = self.warehouse.mto_pull_id.route_id
         product_a = self._create_product('Product A', self.uom_unit, routes=[route_manufacture, route_mto])
         product_c = self._create_product('Product C', self.uom_kg)
-        product_b = self._create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto])
+        product_b = self._create_product('Product B', self.uom_dozen, routes=[route_manufacture, route_mto], type='consu')
         product_d = self._create_product('Product D', self.uom_unit, routes=[route_manufacture, route_mto])
 
         # ------------------------------------------------------------------------------------------
@@ -504,8 +504,6 @@ class TestSaleMrpFlow(common.SavepointCase):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
         product = self.env.ref('mrp.product_product_table_kit')
-        qty_available = self.env['stock.quant']._get_available_quantity(product, self.stock_location)
-        self.env['stock.quant']._update_available_quantity(product, self.stock_location, -qty_available)
         product.invoice_policy = 'delivery'
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
         product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})
@@ -556,9 +554,6 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEqual(so.invoice_status, 'to invoice', 'Sale MRP: so invoice_status should be "to invoice" after complete delivery of a kit')
 
     def test_02_sale_mrp_anglo_saxon(self):
-        self._test_sale_mrp_anglo_saxon('product')
-
-    def _test_sale_mrp_anglo_saxon(self, finished_product_type):
         """Test the price unit of a kit"""
         # This test will check that the correct journal entries are created when a stockable product in real time valuation
         # and in fifo cost method is sold in a company using anglo-saxon.
@@ -594,7 +589,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         Product = self.env['product.product']
         self.finished_product = Product.create({
                 'name': 'Finished product',
-                'type': finished_product_type,
+                'type': 'consu',
                 'uom_id': self.uom_unit.id,
                 'invoice_policy': 'delivery',
                 'categ_id': self.category.id})
@@ -1118,7 +1113,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         #             |- component_uom_dozen   x1 Test-Dozen
         #             |- component_uom_kg      x3 Test-G
 
-        kit_uom_1 = self._create_product('Kit 1', self.uom_unit)
+        kit_uom_1 = self._create_product('Kit 1', self.uom_unit, type='consu')
 
         bom_kit_uom_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
@@ -1225,8 +1220,8 @@ class TestSaleMrpFlow(common.SavepointCase):
         #                                                       |- component_uom_dozen   x1 Test-Dozen
         #                                                       |- component_uom_kg      x3 Test-G
 
-        kit_uom_1 = self._create_product('Sub Kit 1', self.uom_unit)
-        kit_uom_in_kit = self._create_product('Parent Kit', self.uom_unit)
+        kit_uom_1 = self._create_product('Sub Kit 1', self.uom_unit, type='consu')
+        kit_uom_in_kit = self._create_product('Parent Kit', self.uom_unit, type='consu')
 
         bom_kit_uom_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': kit_uom_1.product_tmpl_id.id,
@@ -1330,7 +1325,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # kit_1 --|- component_shelf1   x3
         #         |- component_shelf2   x2
 
-        kit_1 = self._create_product('Kit1', self.uom_unit)
+        kit_1 = self._create_product('Kit1', self.uom_unit, type='consu')
         component_shelf1 = self._create_product('Comp Shelf1', self.uom_unit)
         component_shelf2 = self._create_product('Comp Shelf2', self.uom_unit)
 
@@ -1413,7 +1408,7 @@ class TestSaleMrpFlow(common.SavepointCase):
         # 2x Dozens kit_1 --|- component_unit   x6 Units
         #                   |- component_kg     x7 Kg
 
-        kit_1 = self._create_product('Kit1', self.uom_unit)
+        kit_1 = self._create_product('Kit1', self.uom_unit, type='consu')
         component_unit = self._create_product('Comp Unit', self.uom_unit)
         component_kg = self._create_product('Comp Kg', self.uom_kg)
 
@@ -1462,8 +1457,103 @@ class TestSaleMrpFlow(common.SavepointCase):
         self.assertEquals(move_component_unit.product_uom_qty, 0.5)
         self.assertEquals(move_component_kg.product_uom_qty, 0.583)
 
-    def test_12_sale_mrp_anglo_saxon_consu_kit(self):
-        self._test_sale_mrp_anglo_saxon('consu')
+    def test_12_sale_mrp_anglo_saxon_02(self):
+        # This test will check that no journal entries are created when a consumable product is sold in a company using anglo-saxon.
+        # For this test, let's consider a product category called Test category in real-time valuation and real price costing method
+        # Let's also consider a finished product with a bom with two components: component1(cost = 20) and component2(cost = 10)
+        # Finished product, component1 and component2 are consumable
+        # These products are in the Test category
+        # The bom is phantom-type and consists of 2 component1 and 1 component2
+        # The invoice policy of the finished product is based on delivered quantities
+        self.env.company.currency_id = self.env.ref('base.USD')
+        self.uom_unit = self.UoM.create({
+            'name': 'Test-Unit',
+            'category_id': self.categ_unit.id,
+            'factor': 1,
+            'uom_type': 'bigger',
+            'rounding': 1.0})
+        self.company = self.env.ref('base.main_company')
+        self.company.anglo_saxon_accounting = True
+        self.partner = self.env.ref('base.res_partner_1')
+        self.category = self.env.ref('product.product_category_1').copy({'name': 'Test category','property_valuation': 'real_time', 'property_cost_method': 'fifo'})
+        account_type = self.env['account.account.type'].create({'name': 'RCV type', 'type': 'other', 'internal_group': 'asset'})
+        self.account_receiv = self.env['account.account'].create({'name': 'Receivable', 'code': 'RCV00' , 'user_type_id': account_type.id, 'reconcile': True})
+        account_expense = self.env['account.account'].create({'name': 'Expense', 'code': 'EXP00' , 'user_type_id': account_type.id, 'reconcile': True})
+        account_output = self.env['account.account'].create({'name': 'Output', 'code': 'OUT00' , 'user_type_id': account_type.id, 'reconcile': True})
+        account_valuation = self.env['account.account'].create({'name': 'Valuation', 'code': 'STV00' , 'user_type_id': account_type.id, 'reconcile': True})
+        self.partner.property_account_receivable_id = self.account_receiv
+        self.category.property_account_income_categ_id = self.account_receiv
+        self.category.property_account_expense_categ_id = account_expense
+        self.category.property_stock_account_input_categ_id = self.account_receiv
+        self.category.property_stock_account_output_categ_id = account_output
+        self.category.property_stock_valuation_account_id = account_valuation
+        self.category.property_stock_journal = self.env['account.journal'].create({'name': 'Stock journal', 'type': 'sale', 'code': 'STK00'})
+
+        Product = self.env['product.product']
+        self.finished_product = Product.create({
+                'name': 'Finished product',
+                'type': 'consu',
+                'uom_id': self.uom_unit.id,
+                'invoice_policy': 'delivery',
+                'categ_id': self.category.id})
+        self.component1 = Product.create({
+                'name': 'Component 1',
+                'type': 'consu',
+                'uom_id': self.uom_unit.id,
+                'categ_id': self.category.id,
+                'standard_price': 20})
+        self.component2 = Product.create({
+                'name': 'Component 2',
+                'type': 'consu',
+                'uom_id': self.uom_unit.id,
+                'categ_id': self.category.id,
+                'standard_price': 10})
+        self.bom = self.env['mrp.bom'].create({
+                'product_tmpl_id': self.finished_product.product_tmpl_id.id,
+                'product_qty': 1.0,
+                'type': 'phantom'})
+        BomLine = self.env['mrp.bom.line']
+        BomLine.create({
+                'product_id': self.component1.id,
+                'product_qty': 2.0,
+                'bom_id': self.bom.id})
+        BomLine.create({
+                'product_id': self.component2.id,
+                'product_qty': 1.0,
+                'bom_id': self.bom.id})
+
+        # Create a SO for a specific partner for three units of the finished product
+        so_vals = {
+            'partner_id': self.partner.id,
+            'partner_invoice_id': self.partner.id,
+            'partner_shipping_id': self.partner.id,
+            'order_line': [(0, 0, {
+                'name': self.finished_product.name,
+                'product_id': self.finished_product.id,
+                'product_uom_qty': 1,
+                'product_uom': self.finished_product.uom_id.id,
+                'price_unit': self.finished_product.list_price
+            })],
+            'pricelist_id': self.env.ref('product.list0').id,
+            'company_id': self.company.id,
+        }
+        self.so = self.env['sale.order'].create(so_vals)
+        # Validate the SO
+        self.so.action_confirm()
+        # Deliver the finished product
+        pick = self.so.picking_ids
+        # To check the products on the picking
+        self.assertEqual(pick.move_lines.mapped('product_id'), self.component1 | self.component2)
+        wiz_act = pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+        # Create the invoice
+        self.so._create_invoices()
+        self.invoice = self.so.invoice_ids
+        self.invoice.post()
+        aml = self.invoice.line_ids
+        # Since finished product and its components are consumable:
+        self.assertFalse(aml.filtered(lambda l: l.is_anglo_saxon_line), "No anglo saxon line should exist.")
 
     def test_product_type_service_1(self):
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id

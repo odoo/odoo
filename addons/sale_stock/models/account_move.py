@@ -109,6 +109,8 @@ class AccountMoveLine(models.Model):
         return not self.is_anglo_saxon_line and super(AccountMoveLine, self)._sale_can_be_reinvoice()
 
     def _eligible_for_cogs(self):
+        # Since `sale_line_ids` and `move_ids` are both many2many, current account move line can be linked to several products
+        # An account move line is eligible for cogs if at least one of these products is storable and in real-time valuation
         return super()._eligible_for_cogs() or any(p.type == 'product' and p.valuation == 'real_time' for p in self.sale_line_ids.move_ids.product_id)
 
     def _stock_account_get_anglo_saxon_price_unit(self):

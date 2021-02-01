@@ -100,6 +100,13 @@ class MrpBom(models.Model):
                             (ptav.display_name, ptav.product_tmpl_id.display_name, bom_line.parent_product_tmpl_id.display_name)
                         )
 
+    @api.constrains('product_tmpl_id', 'product_id', 'type')
+    def _check_kit_is_consumable(self):
+        for bom in self.filtered(lambda b: b.type == 'phantom'):
+            if (bom.product_id and bom.product_id.type or bom.product_tmpl_id.type) != "consu":
+                raise ValidationError(_("For %s to be a kit, its product type must be 'Consumable'."
+                                        % (bom.product_id and bom.product_id.display_name or bom.product_tmpl_id.display_name)))
+
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
         res = {}

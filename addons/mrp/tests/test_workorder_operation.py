@@ -1227,6 +1227,7 @@ class TestWorkOrderProcess(TestMrpCommon):
             - wo line 2 (comp1, qty=4)
             - wo line 3 (comp2, qty=1) """
         # Kit bom
+        self.product_4.type = 'consu'
         self.env['mrp.bom'].create({
             'product_id': self.product_4.id,
             'product_tmpl_id': self.product_4.product_tmpl_id.id,

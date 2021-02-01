@@ -54,7 +54,7 @@ class TestSaleMrpFlow(TransactionCase):
         #         |- component_b   x1
         #         |- component_c   x3
 
-        self.kit_1 = self._create_product('Kit 1', self.uom_unit)
+        self.kit_1 = self._create_product('Kit 1', self.uom_unit, type='consu')
 
         self.bom_kit_1 = self.env['mrp.bom'].create({
             'product_tmpl_id': self.kit_1.product_tmpl_id.id,
@@ -89,9 +89,9 @@ class TestSaleMrpFlow(TransactionCase):
         #              |- component_e x1
 
         # Creating all kits
-        self.kit_2 = self._create_product('Kit 2', self.uom_unit)
-        self.kit_3 = self._create_product('kit 3', self.uom_unit)
-        self.kit_parent = self._create_product('Kit Parent', self.uom_unit)
+        self.kit_2 = self._create_product('Kit 2', self.uom_unit, type='consu')
+        self.kit_3 = self._create_product('kit 3', self.uom_unit, type='consu')
+        self.kit_parent = self._create_product('Kit Parent', self.uom_unit, type='consu')
 
         # Linking the kits and the components via some 'phantom' BoMs
         bom_kit_2 = self.env['mrp.bom'].create({
@@ -141,10 +141,10 @@ class TestSaleMrpFlow(TransactionCase):
             'product_qty': 2.0,
             'bom_id': bom_kit_parent.id})
 
-    def _create_product(self, name, uom_id, routes=()):
+    def _create_product(self, name, uom_id, routes=(), type='product'):
         p = Form(self.env['product.product'])
         p.name = name
-        p.type = 'product'
+        p.type = type
         p.uom_id = uom_id
         p.uom_po_id = uom_id
         p.route_ids.clear()
