@@ -6,7 +6,6 @@
 # Translation contributors: brain-tec AG, Agile Business Group
 {
     'name': "Switzerland - Accounting",
-    'icon': '/base/static/img/country_flags/ch.png',
     'description': """
 Swiss localization
 ==================

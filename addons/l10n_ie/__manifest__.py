@@ -3,7 +3,6 @@
 
 {
     'name': 'Ireland - Accounting',
-    'icon': '/base/static/img/country_flags/ie.png',
     'version': '1.0',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """

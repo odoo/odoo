@@ -3,7 +3,6 @@
 
 {
     'name': 'Saudi Arabia - Accounting',
-    'icon': '/base/static/img/country_flags/sa.png',
     'version': '1.1',
     'author': 'DVIT.ME',
     'category': 'Accounting/Localizations/Account Charts',

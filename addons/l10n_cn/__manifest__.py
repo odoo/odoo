@@ -9,7 +9,6 @@
 
 {
     'name': 'China - Accounting',
-    'icon': '/base/static/img/country_flags/cn.png',
     'version': '1.8',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'www.openerp-china.org',

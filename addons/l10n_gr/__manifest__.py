@@ -5,7 +5,6 @@
 
 {
     'name': 'Greece - Accounting',
-    'icon': '/base/static/img/country_flags/gr.png',
     'author': 'P. Christeas, OpenERP SA.',
     'website': 'http://openerp.hellug.gr/',
     'category': 'Accounting/Localizations/Account Charts',
