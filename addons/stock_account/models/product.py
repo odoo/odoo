@@ -195,7 +195,20 @@ class ProductProduct(models.Model):
                 vals.update(fifo_vals)
         return vals
 
+<<<<<<< HEAD
     def _change_standard_price(self, new_price):
+=======
+    def write(self, vals):
+        res = super(ProductProduct, self).write(vals)
+        if self.env.context.get('import_file') and not self.env.context.get('import_standard_price'):
+            if 'standard_price' in vals:
+                for product in self:
+                    counterpart_account_id = product.property_account_expense_id.id or product.categ_id.property_account_expense_categ_id.id
+                    product.with_context(import_standard_price=True)._change_standard_price(vals['standard_price'], counterpart_account_id)
+        return res
+
+    def _change_standard_price(self, new_price, counterpart_account_id=False):
+>>>>>>> 4190205fe2f... temp
         """Helper to create the stock valuation layers and the account moves
         after an update of standard price.
 
