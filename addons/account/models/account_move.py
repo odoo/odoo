@@ -196,6 +196,12 @@ class AccountMove(models.Model):
     statement_line_id = fields.Many2one(
         comodel_name='account.bank.statement.line',
         string="Statement Line", copy=False, check_company=True)
+    statement_id = fields.Many2one(
+        related='statement_line_id.statement_id',
+        copy=False,
+        readonly=True,
+        help="Technical field used to open the linked bank statement from the edit button in a group by view,"
+             " or via the smart button on journal entries.")
 
     # === Amount fields ===
     amount_untaxed = fields.Monetary(string='Untaxed Amount', store=True, readonly=True, tracking=True,
@@ -2330,6 +2336,24 @@ class AccountMove(models.Model):
 
     def open_reconcile_view(self):
         return self.line_ids.open_reconcile_view()
+
+    def open_bank_statement_view(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.bank.statement',
+            'view_mode': 'form',
+            'res_id': self.statement_id.id,
+            'views': [(False, 'form')],
+        }
+
+    def open_payment_view(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.payment',
+            'view_mode': 'form',
+            'res_id': self.payment_id.id,
+            'views': [(False, 'form')],
+        }
 
     @api.model
     def message_new(self, msg_dict, custom_values=None):
