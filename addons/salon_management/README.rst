@@ -1,26 +1,26 @@
-Beauty Spa Management v14
+Sport Management v14
 =========================
-This Spa management system developed by Cybrosys Techno Solutions helps
-your customers to do the online booking for using the service. This module
+This Sport management system developed by A2A Digital helps
+your customers to do the online booking for using the sport service. This module
 integrates with other Odoo modules like accounting and website.
 
 Configuration
 =============
-* No additional configurations needed
+* SMTP Email Configuration for sending & Receiving the email notification  
+* QRCode Payment ( If business require Payment before booking approved )
 
 Company
 -------
-* `Cybrosys Techno Solutions <https://cybrosys.com/>`__
+* `A2A Digital <https://a2a-digital.com/>`__
 
 Credits
 -------
-* Developer:	AVINASH N K @ cybrosys, Contact: odoo@cybrosys.com
-    		    Version 13: Vaishnavi B@cybrosys,Contact: odoo@cybrosys.com
-                Version 14: JIBIN JAMES, Contact: odoo@cybrosys.com
+* Developer:	H O N G T E A N, DevFolio : Contact:  * `ZatinFolio <http://zatin009.pythonanywhere.com/>`__ 
+
 Contacts
 --------
-* Mail Contact : odoo@cybrosys.com
-* Website : https://cybrosys.com
+* Mail Contact : a2adigital@kit.edu.kh
+* Website : https://a2a-digital.com/
 
 Bug Tracker
 -----------
@@ -28,12 +28,12 @@ Bugs are tracked on GitHub Issues. In case of trouble, please check there if you
 
 Maintainer
 ==========
-.. image:: https://cybrosys.com/images/logo.png
-   :target: https://cybrosys.com
+.. image:: https://a2a-digital.com/img/logo_color.73e89357.svg
+   :target: https://a2a-digital.com/
 
-This module is maintained by Cybrosys Technologies.
+This module is maintained by A2A Digital.
 
-For support and more information, please visit `Our Website <https://cybrosys.com/>`__
+For support and more information, please visit `Our Website <https://a2a-digital.com/>`__
 
 Further information
 ===================
