@@ -15,6 +15,15 @@ class Partner(models.Model):
         help="This pricelist will be used, instead of the default one, for sales to the current partner")
 
     @api.multi
+    def write(self, vals):
+        if 'parent_id' in vals:
+            Property = self.env['ir.property'].with_context(force_company=self.env.user.company_id.id)
+            properties = Property.get_multi('property_product_pricelist', 'res.partner', self.ids)
+            for partner_id in self.ids:
+                properties[partner_id].unlink()
+        return super(Partner, self).write(vals)
+
+    @api.multi
     @api.depends('country_id')
     def _compute_product_pricelist(self):
         company = self.env.context.get('force_company', False)
