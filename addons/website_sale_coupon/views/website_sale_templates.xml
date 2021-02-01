@@ -27,19 +27,6 @@
             <t>$0</t>
         </t>
     </xpath>
-    <xpath expr="//td[hasclass('td-qty')]/div" position="attributes">
-        <attribute name="t-att-style">line.is_reward_line and "display:none;"</attribute>
-    </xpath>
-    <xpath expr="//table[@id='cart_products']/tbody//tr//td[hasclass('td-product_name')]//div" position="attributes">
-    <!-- Can't xpath "//table[@id='cart_products']/tbody//tr" since optional_product already xpath that one.
-         There will be the same xpath attribute class on the same element. Last installed module will only be taken into account -->
-        <attribute name="t-att-class">'reward_product' if line.is_reward_line else None</attribute>
-    </xpath>
-    <xpath expr="//td[hasclass('td-qty')]/div" position="after">
-        <t t-if="line.is_reward_line">
-            <span class="js_quantity text-muted" t-esc="int(line.product_uom_qty)"/>
-        </t>
-    </xpath>
     <xpath expr="//del" position="attributes">
         <attribute name="t-if">not line.is_reward_line</attribute>
     </xpath>
