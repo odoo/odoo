@@ -193,7 +193,7 @@ class SalonOrder(models.Model):
     invoice_number = fields.Integer(string="Invoice Number")
     validation_controller = fields.Boolean(string="Validation controller", default=False)
     start_date_only = fields.Date(string="Date Only")
-    booking_identifier = fields.Boolean(string="Booking Identifier")
+    booking_identifier = fields.Boolean(string="Booking Identifier",help="This field is used to identify whether the order is created from booking or not")
     start_time_only = fields.Char(string="Start Time Only")
     end_time_only = fields.Char(string="End Time Only")
     chair_user = fields.Many2one('res.users', string="Court User")
