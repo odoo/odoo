@@ -46,37 +46,45 @@ class L10nInProductHsnReport(models.Model):
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst') OR at.l10n_in_reverse_charge = True
                 THEN 0
                 ELSE aml.quantity
-                END AS quantity,
+                END * (CASE WHEN am.type in ('in_refund','out_refund') THEN -1 ELSE 1 END)
+                AS quantity,
             CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_igst')
-                THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
+                THEN aml.balance * (CASE WHEN aj.type = 'sale' and am.type != 'out_refund' THEN -1 ELSE 1 END)
                 ELSE 0
-                END AS igst_amount,
+                END * (CASE WHEN am.type in ('in_refund','out_refund') THEN -1 ELSE 1 END)
+                AS igst_amount,
             CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_cgst')
-                THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
+                THEN aml.balance * (CASE WHEN aj.type = 'sale' and am.type != 'out_refund' THEN -1 ELSE 1 END)
                 ELSE 0
-                END AS cgst_amount,
+                END * (CASE WHEN am.type in ('in_refund','out_refund') THEN -1 ELSE 1 END)
+                AS cgst_amount,
             CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst')
-                THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
+                THEN aml.balance * (CASE WHEN aj.type = 'sale' and am.type != 'out_refund' THEN -1 ELSE 1 END)
                 ELSE 0
-                END AS sgst_amount,
+                END * (CASE WHEN am.type in ('in_refund','out_refund') THEN -1 ELSE 1 END)
+                AS  sgst_amount,
             CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_cess')
-                THEN aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END)
+                THEN aml.balance * (CASE WHEN aj.type = 'sale' and am.type != 'out_refund' THEN -1 ELSE 1 END)
                 ELSE 0
-                END AS cess_amount,
+                END * (CASE WHEN am.type in ('in_refund','out_refund') THEN -1 ELSE 1 END)
+                AS cess_amount,
             CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst')
                 THEN 0
                 ELSE (CASE WHEN aml.tax_line_id IS NOT NULL THEN aml.tax_base_amount ELSE aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END) END)
-                END AS price_total,
-            (CASE WHEN tag_rep_ln.account_tax_report_line_id IN
+                END * (CASE WHEN am.type in ('in_refund','out_refund') THEN -1 ELSE 1 END)
+                AS price_total,
+            ((CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                 (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name='tax_report_line_sgst')
                 THEN 0
                 ELSE (CASE WHEN aml.tax_line_id IS NOT NULL THEN aml.tax_base_amount ELSE 1 END)
-                END) + (aml.balance * (CASE WHEN aj.type = 'sale' THEN -1 ELSE 1 END))  AS total
+                    END) + (aml.balance * (CASE WHEN aj.type = 'sale' and am.type != 'out_refund' THEN -1 ELSE 1 END))
+                 )* (CASE WHEN am.type in ('in_refund','out_refund') THEN -1 ELSE 1 END)
+                AS total
         """
         return select_str
 
@@ -94,6 +102,7 @@ class L10nInProductHsnReport(models.Model):
             LEFT JOIN account_move_line_account_tax_rel mt ON mt.account_move_line_id = aml.id
             LEFT JOIN uom_uom uom ON uom.id = aml.product_uom_id
             WHERE aa.internal_type = 'other' AND (aml.tax_line_id IS NOT NULL OR mt.account_tax_id IS NULL)
+              AND am.state = 'posted'
         """
         return from_str
 
