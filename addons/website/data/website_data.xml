@@ -723,10 +723,11 @@
         </record>
         <!-- Template for Dynamic Snippet -->
         <template id="dynamic_filter_template_image_title_footer" name="Image Title Footer Card">
-            <t t-foreach="records" t-as="record">
+            <t t-foreach="to_generic(records)" t-as="record">
                 <t t-set="fields" t-value="list(record['fields'].values())"/>
                 <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
-                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                <t t-set="call_to_action_url" t-value="record['call_to_action_url']"/>
+                <div class="card h-100" t-att-data-url="call_to_action_url">
                     <h4 t-if="is_sample" class="o_ribbon_right bg-warning text-uppercase">Sample</h4>
                     <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
                     <div class="card-body">
@@ -741,7 +742,7 @@
                         <div t-if="len(fields) > 2" class="card-text">
                             <t t-raw="fields[2]"/>
                         </div>
-                        <a t-if="call_to_action" class="btn btn-primary ml-auto" t-att-href="record['fields']['call_to_action_url']">
+                        <a t-if="call_to_action" class="btn btn-primary ml-auto" t-att-href="call_to_action_url">
                             <i class="fa fa-fw fa-eye"/>
                         </a>
                     </div>
@@ -749,10 +750,11 @@
             </t>
         </template>
         <template id="dynamic_filter_template_header_image_footer_card" name="Header Image Footer Card">
-            <t t-foreach="records" t-as="record">
+            <t t-foreach="to_generic(records)" t-as="record">
                 <t t-set="fields" t-value="list(record['fields'].values())"/>
                 <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
-                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                <t t-set="call_to_action_url" t-value="record['call_to_action_url']"/>
+                <div class="card h-100" t-att-data-url="call_to_action_url">
                     <h4 t-if="is_sample" class="o_ribbon_right bg-warning text-uppercase">Sample</h4>
                     <h5 t-if="len(fields) > 0" class="card-header">
                         <t t-raw="fields[0]"/>
