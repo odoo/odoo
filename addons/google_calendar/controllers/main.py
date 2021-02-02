@@ -21,7 +21,7 @@ class GoogleCalendarController(http.Controller):
             GoogleCal = GoogleCalendarService(request.env['google.service'])
 
             # Checking that admin have already configured Google API for google synchronization !
-            client_id = request.env["google.service"].get_client_credentials("calendar")
+            client_id = request.env["google.service"]._get_client_credentials("calendar")
 
             if not client_id or client_id == '':
                 action_id = ''

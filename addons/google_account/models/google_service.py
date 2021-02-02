@@ -23,7 +23,7 @@ class GoogleService(models.AbstractModel):
     _name = 'google.service'
     _description = 'Google Service'
 
-    def get_client_credentials(self, service):
+    def _get_client_credentials(self, service):
         get_param = self.env['ir.config_parameter'].sudo().get_param
         return {
             "client_id": get_param('google_%s_client_id' % service),
@@ -39,7 +39,7 @@ class GoogleService(models.AbstractModel):
         """
         Parameters = self.env['ir.config_parameter'].sudo()
         redirect_uri = Parameters.get_param('google_redirect_uri')
-        credentials = self.get_client_credentials(service)
+        credentials = self._get_client_credentials(service)
         client_id = credentials["client_id"]
         client_secret = credentials["client_secret"]
 
@@ -65,7 +65,7 @@ class GoogleService(models.AbstractModel):
     @api.model
     def _get_google_token_uri(self, service, scope):
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        credentials = self.get_client_credentials(service)
+        credentials = self._get_client_credentials(service)
         encoded_params = urls.url_encode({
             'scope': scope,
             'redirect_uri': get_param('google_redirect_uri'),
@@ -86,7 +86,7 @@ class GoogleService(models.AbstractModel):
         }
 
         get_param = self.env['ir.config_parameter'].sudo().get_param
-        credentials = self.get_client_credentials(service)
+        credentials = self._get_client_credentials(service)
         base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
 
         encoded_params = urls.url_encode({
@@ -107,7 +107,7 @@ class GoogleService(models.AbstractModel):
         """
         get_param = self.env['ir.config_parameter'].sudo().get_param
         base_url = get_param('web.base.url', default='http://www.odoo.com?NoBaseUrl')
-        credentials = self.get_client_credentials(service)
+        credentials = self._get_client_credentials(service)
 
         headers = {"content-type": "application/x-www-form-urlencoded"}
         data = {

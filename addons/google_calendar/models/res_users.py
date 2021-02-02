@@ -46,7 +46,7 @@ class User(models.Model):
     def _refresh_google_calendar_token(self):
         # LUL TODO similar code exists in google_drive. Should be factorized in google_account
         self.ensure_one()
-        credentials = self.env["google.service"].get_client_credentials("calendar")
+        credentials = self.env["google.service"]._get_client_credentials("calendar")
         client_id = credentials["client_id"]
         client_secret = credentials["client_secret"]
 
