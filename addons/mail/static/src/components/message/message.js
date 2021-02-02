@@ -15,6 +15,7 @@ const useStore = require('mail/static/src/component_hooks/use_store/use_store.js
 const useUpdate = require('mail/static/src/component_hooks/use_update/use_update.js');
 
 const { _lt } = require('web.core');
+const { format } = require('web.field_utils');
 const { getLangDatetimeFormat } = require('web.time');
 
 const { Component, useState } = owl;
@@ -309,6 +310,14 @@ class Message extends Component {
                 }
                 if (value.new_value !== undefined){
                     value.new_value = value.new_value ? this.env._t("True") : this.env._t("False");
+                }
+            } else if (value.field_type === 'monetary' && value.currency_id) {
+                const currency_id = this.env.session.currencies[value.currency_id]
+                if (value.old_value !== undefined) {
+                    value.old_value = format.monetary(value.old_value, null, { currency: currency_id, forceString: true });
+                }
+                if (value.new_value !== undefined) {
+                    value.new_value = format.monetary(value.new_value, null, { currency: currency_id, forceString: true });
                 }
             }
             return value;

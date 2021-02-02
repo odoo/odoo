@@ -985,6 +985,7 @@ class Message(models.Model):
                         'old_value': tracking.get_old_display_value()[0],
                         'new_value': tracking.get_new_display_value()[0],
                         'field_type': tracking.field_type,
+                        'currency_id': tracking.currency_id.id,
                     })
 
             vals.update({

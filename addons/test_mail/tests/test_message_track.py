@@ -3,7 +3,7 @@
 
 from unittest.mock import patch
 
-from odoo.addons.test_mail.tests.common import TestMailCommon
+from odoo.addons.test_mail.tests.common import TestMailCommon, TestMailMultiCompanyCommon
 from odoo.tests.common import tagged
 from odoo.tests import Form
 
@@ -283,6 +283,44 @@ class TestTracking(TestMailCommon):
             ('partner_email', 'char', 'foo@example.com', 'bar@example.com'),
         ])
 
+@tagged('mail_track')
+class TestTrackingMonetary(TestMailMultiCompanyCommon):
+
+    def setUp(self):
+        super(TestTrackingMonetary, self).setUp()
+
+        record = self.env['mail.test.track.monetary'].with_user(self.user_employee).with_context(self._test_context).create({
+            'company_id': self.user_employee.company_id.id,
+        })
+        self.flush_tracking()
+        self.record = record.with_context(mail_notrack=False)
+
+    def test_message_track_monetary(self):
+        """ Update a record with a tracked monetary field """
+
+        # Check if the tracking value have the correct currency and values
+        self.record.write({
+            'revenue': 100,
+        })
+        self.flush_tracking()
+        self.assertEqual(len(self.record.message_ids), 1)
+
+        self.assertTracking(self.record.message_ids[0], [
+            ('revenue', 'monetary', 0, 100),
+        ])
+
+        # Check if the tracking value have the correct currency and values after changing the value and the company
+        self.record.write({
+            'revenue': 200,
+            'company_id': self.company_2.id,
+        })
+        self.flush_tracking()
+        self.assertEqual(len(self.record.message_ids), 2)
+
+        self.assertTracking(self.record.message_ids[0], [
+            ('revenue', 'monetary', 100, 200),
+            ('company_currency', 'many2one', self.user_employee.company_id.currency_id, self.company_2.currency_id)
+        ])
 
 @tagged('mail_track')
 class TestTrackingInternals(TestMailCommon):
