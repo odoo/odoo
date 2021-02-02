@@ -378,8 +378,8 @@ QUnit.module('relational_fields', {
             },
         });
 
-        assert.strictEqual(form.$('.o_field_one2many[name=turtles] tbody').text().trim(), "kawablip",
-            'The o2m should not have been sorted.');
+        assert.strictEqual(form.$('.o_field_one2many[name=turtles] .o_data_row')
+            .text().trim(), "kawablip", 'The o2m should not have been sorted.');
 
         form.destroy();
     });
@@ -1884,6 +1884,7 @@ QUnit.module('relational_fields', {
 
         // open the x2m form view
         await testUtils.dom.click(form.$('.o_field_one2many[name="turtles"] .o_list_view td.o_data_cell:first'));
+        await testUtils.nextTick(); // wait for quick edit
         assert.strictEqual($('.modal .o_form_view .o_field_many2many[name="partner_ids"] .o_list_view .o_data_cell').text(),
             "blipMy little Foo Value", "the list view should be correctly rendered with foo");
 
@@ -1891,7 +1892,6 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
             "secondrecordaaa", "the tags should still be correctly rendered");
 
-        await testUtils.form.clickEdit(form);
         assert.strictEqual(form.$('.o_field_one2many[name="turtles"] .o_list_view .o_field_many2manytags[name="partner_ids"]').text().replace(/\s/g, ''),
             "secondrecordaaa", "the tags should still be correctly rendered");
 
@@ -2172,7 +2172,7 @@ QUnit.module('relational_fields', {
     });
 
     QUnit.test('fieldradio widget with numerical keys encoded as strings', async function (assert) {
-        assert.expect(5);
+        assert.expect(7);
 
         this.data.partner.fields.selection = {
             type: 'selection',
@@ -2197,8 +2197,8 @@ QUnit.module('relational_fields', {
         });
 
 
-        assert.strictEqual(form.$('.o_field_widget').text(), '',
-            "field should be unset");
+        assert.strictEqual(form.$('.o_field_widget').text().trim().split(/\s+/g).join(','), 'Red,Black');
+        assert.containsNone(form, '.o_radio_input:checked', "no value should be checked");
 
         await testUtils.form.clickEdit(form);
 
@@ -2209,8 +2209,9 @@ QUnit.module('relational_fields', {
 
         await testUtils.form.clickSave(form);
 
-        assert.strictEqual(form.$('.o_field_widget').text(), 'Black',
-            "value should be 'Black'");
+        assert.strictEqual(form.$('.o_field_widget').text().trim().split(/\s+/g).join(','), 'Red,Black');
+        assert.containsOnce(form, '.o_radio_input[data-index=1]:checked',
+            "'Black' should be checked");
 
         await testUtils.form.clickEdit(form);
 
@@ -2404,8 +2405,8 @@ QUnit.module('relational_fields', {
         assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
 
-        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').prop('disabled'),
-            "the checkboxes should be disabled");
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').prop('disabled'),
+            "the checkboxes should not be disabled");
 
         await testUtils.form.clickEdit(form);
 
@@ -2429,6 +2430,50 @@ QUnit.module('relational_fields', {
         assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(0).prop('checked'),
             "first checkbox should be checked");
         assert.ok(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
+            "second checkbox should not be checked");
+
+        form.destroy();
+    });
+
+    QUnit.test('widget many2many_checkboxes (readonly)', async function (assert) {
+        assert.expect(7);
+
+        this.data.partner.records[0].timmy = [12];
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form string="Partners">
+                    <group>
+                        <field name="timmy" widget="many2many_checkboxes"
+                            attrs="{'readonly': true}"/>
+                    </group>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsN(form, 'div.o_field_widget div.custom-checkbox', 2,
+            "should have fetched and displayed the 2 values of the many2many");
+
+        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').eq(0).prop('checked'),
+            "first checkbox should be checked");
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
+            "second checkbox should not be checked");
+
+        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').prop('disabled'),
+            "the checkboxes should be disabled");
+
+        await testUtils.form.clickEdit(form);
+
+        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').prop('disabled'),
+            "the checkboxes should be disabled");
+
+        await testUtils.dom.click(form.$('div.o_field_widget div.custom-checkbox > label').eq(1));
+
+        assert.ok(form.$('div.o_field_widget div.custom-checkbox input').eq(0).prop('checked'),
+            "first checkbox should be checked");
+        assert.notOk(form.$('div.o_field_widget div.custom-checkbox input').eq(1).prop('checked'),
             "second checkbox should not be checked");
 
         form.destroy();
@@ -2662,7 +2707,8 @@ QUnit.module('relational_fields', {
                     '<field name="p"/>' +
                 '</form>',
             archs: {
-                'partner,false,form': '<form><field name="reference"/></form>',
+                // make field reference readonly as the modal opens in edit mode
+                'partner,false,form': '<form><field name="reference" attrs="{\'readonly\': 1}"/></form>',
                 'partner,false,list': '<tree><field name="display_name"/></tree>',
             },
             res_id: 1,

@@ -222,7 +222,7 @@ QUnit.module('base_settings_tests', {
         await testUtils.dom.click(actionManager.$('button[name="4"]'));
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
-        await testUtils.dom.click($('.modal button:contains(Ok)'));
+        await testUtils.dom.click($('.modal button:contains(Discard)'));
         assert.containsOnce(actionManager, '.o_list_view', "should be open list view");
 
         await testUtils.dom.click($('.o_control_panel .breadcrumb-item a'));
@@ -233,7 +233,7 @@ QUnit.module('base_settings_tests', {
         await testUtils.dom.click(actionManager.$('button[name="4"]'));
         assert.containsOnce(document.body, '.modal', "should open a warning dialog");
 
-        await testUtils.dom.click($('.modal button:contains(Cancel)'));
+        await testUtils.dom.click($('.modal button:contains(Stay Here)'));
         assert.containsOnce(actionManager, '.o_form_view' ,"should be remain on form view");
 
         await testUtils.dom.click(actionManager.$("button[name='execute']"));
@@ -475,6 +475,76 @@ QUnit.module('base_settings_tests', {
             'The one2many relation item should still be present');
 
         form.destroy();
+    });
+
+    QUnit.test('call "call_button/execute" when clicking on a button in dirty settings', async function (assert) {
+        assert.expect(7);
+
+        const actions = [{
+            id: 1,
+            name: 'Settings view',
+            res_model: 'res.config.settings',
+            type: 'ir.actions.act_window',
+            views: [[1, 'form']],
+        }];
+        const archs = {
+            'res.config.settings,1,form': `
+                <form string="Settings" js_class="base_settings">
+                    <div class="app_settings_block" string="CRM" data-key="crm">
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane">
+                                    <field name="foo"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <span class="o_form_label">Foo</span>
+                                    <div class="text-muted">
+                                        this is foo
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button name="4" string="Execute action" type="action"/>
+                    </div>
+                </form>
+                `,
+            'res.config.settings,false,search': '<search></search>',
+        };
+
+        const actionManager = await createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            mockRPC(route, args) {
+                if (route === '/web/dataset/call_button' && args.method === 'execute') {
+                    assert.step('execute');
+                    return Promise.resolve(true);
+                } else if (args.method === 'create') {
+                    assert.step('create');
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.containsNone(actionManager, '.o_field_boolean input:checked',
+            'checkbox should not be checked');
+
+        await testUtils.dom.click(actionManager.$('input[type="checkbox"]'));
+        assert.containsOnce(actionManager, '.o_field_boolean input:checked',
+            'checkbox should be checked');
+
+        await testUtils.dom.click(actionManager.$('button[name="4"]'));
+        assert.containsOnce(document.body, '.modal', 'should open a warning dialog');
+
+        await testUtils.dom.click($('.modal-footer .btn-primary'));
+        assert.verifySteps([
+            'create', // saveRecord from modal
+            'execute', // execute_action
+            'create' // saveRecord from FormController._onButtonClicked
+        ]);
+
+        actionManager.destroy();
     });
 
 });

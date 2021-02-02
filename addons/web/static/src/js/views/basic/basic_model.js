@@ -1618,16 +1618,20 @@ var BasicModel = AbstractModel.extend({
         }
         var rel_data = _.pick(data, 'id', 'display_name');
 
+        const viewType = options.viewType || record.viewType;
+        const fieldInfo = record.fieldsInfo[viewType][fieldName] || {};
+        const fieldOptions = fieldInfo.options || {};
+
         // the reference field doesn't store its co-model in its field metadata
         // but directly in the data (as the co-model isn't fixed)
         var def;
-        if (rel_data.display_name === undefined) {
+        if (rel_data.display_name === undefined || fieldOptions.always_reload) {
             // TODO: refactor this to use _fetchNameGet
             def = this._rpc({
                     model: coModel,
                     method: 'name_get',
                     args: [data.id],
-                    context: record.context,
+                    context: this._getContext(record, { fieldName, viewType }),
                 })
                 .then(function (result) {
                     rel_data.display_name = result[0][1];

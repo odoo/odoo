@@ -328,7 +328,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('many2ones in form views with show_address', async function (assert) {
-            assert.expect(4);
+            assert.expect(6);
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -360,6 +360,11 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('a.o_form_uri').html(), '<span>aaa</span><br><span>Street</span><br><span>City ZIP</span>',
                 "input should have a multi-line content in readonly due to show_address");
             await testUtils.form.clickEdit(form);
+
+            assert.strictEqual(form.$('input.o_input').val(), 'aaa');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>Street</span><br><span>City ZIP</span>');
+
             assert.containsOnce(form, 'button.o_external_button:visible',
                 "should have an open record button");
 
@@ -374,8 +379,59 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('many2one show_address in edit', async function (assert) {
+            assert.expect(6);
+
+            const addresses = {
+                "aaa": "\nAAA\nRecord",
+                "first record": "\nFirst\nRecord",
+                "second record": "\nSecond\nRecord",
+            };
+
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form><sheet><group>
+                        <field name="trululu" context="{'show_address': 1}" options="{'always_reload': True}"/>
+                    </group></sheet></form>
+                `,
+                mockRPC: function (route, args) {
+                    if (args.method === 'name_get') {
+                        return this._super(route, args).then(function (result) {
+                            result[0][1] += addresses[result[0][1]];
+                            return result;
+                        });
+                    }
+                    return this._super(route, args);
+                },
+                res_id: 1,
+            });
+
+            await testUtils.form.clickEdit(form);
+            assert.strictEqual(form.$('input').val(), 'aaa');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>AAA</span><br><span>Record</span>');
+
+            await testUtils.fields.editInput(form.$('input'), 'first record');
+            await testUtils.fields.many2one.clickHighlightedItem('trululu');
+
+            assert.strictEqual(form.$('input').val(), 'first record');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>First</span><br><span>Record</span>');
+
+            await testUtils.fields.editInput(form.$('input'), 'second record');
+            await testUtils.fields.many2one.clickHighlightedItem('trululu');
+            assert.strictEqual(form.$('input').val(), 'second record');
+            assert.strictEqual(form.$('.o_field_many2one_extra').html(),
+                '<span>Second</span><br><span>Record</span>');
+
+            form.destroy();
+        });
+
         QUnit.test('show_address works in a view embedded in a view of another type', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             this.data.turtle.records[1].turtle_trululu = 2;
 
@@ -393,7 +449,7 @@ QUnit.module('fields', {}, function () {
                         '<field name="display_name"/>' +
                         '<field name="turtle_trululu" context="{\'show_address\': 1}" options="{\'always_reload\': True}"/>' +
                         '</form>',
-                    "turtle,false,list": '<tree editable="bottom">' +
+                    "turtle,false,list": '<tree>' +
                         '<field name="display_name"/>' +
                         '</tree>',
                 },
@@ -412,13 +468,15 @@ QUnit.module('fields', {}, function () {
             // click the turtle field, opens a modal with the turtle form view
             await testUtils.dom.click(form.$('.o_data_row:first td.o_data_cell'));
 
-            assert.strictEqual($('[name="turtle_trululu"]').text(), "second recordrue morgueparis 75013",
-                "The partner's address should be displayed");
+            assert.strictEqual($('[name="turtle_trululu"] .o_input').val(),
+                "second record", "many2one value should be displayed in input");
+            assert.strictEqual($('[name="turtle_trululu"] .o_field_many2one_extra').text(),
+                "rue morgueparis 75013", "The partner's address should be displayed");
             form.destroy();
         });
 
         QUnit.test('many2one data is reloaded if there is a context to take into account', async function (assert) {
-            assert.expect(1);
+            assert.expect(2);
 
             this.data.turtle.records[1].turtle_trululu = 2;
 
@@ -436,7 +494,7 @@ QUnit.module('fields', {}, function () {
                         '<field name="display_name"/>' +
                         '<field name="turtle_trululu" context="{\'show_address\': 1}" options="{\'always_reload\': True}"/>' +
                         '</form>',
-                    "turtle,false,list": '<tree editable="bottom">' +
+                    "turtle,false,list": '<tree>' +
                         '<field name="display_name"/>' +
                         '<field name="turtle_trululu"/>' +
                         '</tree>',
@@ -456,8 +514,10 @@ QUnit.module('fields', {}, function () {
             // click the turtle field, opens a modal with the turtle form view
             await testUtils.dom.click(form.$('.o_data_row:first'));
 
-            assert.strictEqual($('.modal [name=turtle_trululu]').text(), "second recordrue morgueparis 75013",
-                "The partner's address should be displayed");
+            assert.strictEqual($('.modal [name="turtle_trululu"] .o_input').val(),
+                "second record", "many2one value should be displayed in input");
+            assert.strictEqual($('.modal [name=turtle_trululu] .o_field_many2one_extra').text(),
+                "rue morgueparis 75013", "The partner's address should be displayed");
             form.destroy();
         });
 

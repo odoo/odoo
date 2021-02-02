@@ -127,7 +127,7 @@
                         </button>
                     </div>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
                             <field name="name" placeholder="e.g. Lunch with Customer"/>
                         </h1>
@@ -512,7 +512,7 @@
                         <field name="id" invisible="True"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'image_preview': 'image_128'}"/>
                         <div class="oe_title">
-                            <label class="oe_edit_only" for="name" string="Product Name"/>
+                            <label for="name" string="Product Name"/>
                             <h1><field name="name" placeholder="e.g. Lunch"/></h1>
                             <div name="options" groups="base.group_user" invisible="1">
                                 <div>
@@ -700,7 +700,7 @@
                     </div>
                     <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('state', '!=', 'done')]}"/>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name"/>
                         <h1>
                             <field name="name" placeholder="e.g. Trip to NY"/>
                         </h1>
