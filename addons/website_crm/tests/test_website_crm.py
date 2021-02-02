@@ -8,9 +8,12 @@ import odoo.tests
 class TestWebsiteCrm(odoo.tests.HttpCase):
 
     def test_tour(self):
+        all_utm_campaign = self.env['utm.campaign'].search([])
+        utm_medium = self.env['utm.medium'].create({'name': 'Medium'})
+        utm_source = self.env['utm.source'].create({'name': 'Source'})
         # change action to create opportunity
         self.start_tour("/", 'website_crm_pre_tour', login='admin')
-        self.start_tour("/", 'website_crm_tour')
+        self.start_tour("/?utm_source=Source&utm_medium=Medium&utm_campaign=New campaign", 'website_crm_tour')
 
         # check result
         record = self.env['crm.lead'].search([('description', '=', '### TOUR DATA ###')])
@@ -18,6 +21,12 @@ class TestWebsiteCrm(odoo.tests.HttpCase):
         self.assertEqual(record.contact_name, 'John Smith')
         self.assertEqual(record.email_from, 'john@smith.com')
         self.assertEqual(record.partner_name, 'Odoo S.A.')
+
+        # check UTM records
+        self.assertEqual(record.source_id, utm_source)
+        self.assertEqual(record.medium_id, utm_medium)
+        self.assertNotIn(record.campaign_id, all_utm_campaign, 'Should have created a new campaign')
+        self.assertEqual(record.campaign_id.name, 'New campaign', 'Name of the "on the fly" created campaign is wrong')
 
     def test_catch_logged_partner_info_tour(self):
         user_login = 'admin'

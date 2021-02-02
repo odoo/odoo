@@ -17,9 +17,9 @@ class TestUTMSecurity(TestUTMCommon):
         UtmSource = self.env['utm.source']
 
         # CREATE
-        test_utm_campaign = UtmCampaign.create({'name': 'Test Campaign'})
-        test_utm_medium = UtmMedium.create({'name': 'Test Medium'})
-        test_utm_source = UtmSource.create({'name': 'Test Source'})
+        test_utm_campaign = UtmCampaign.create({'name': 'Campaign ACLs'})
+        test_utm_medium = UtmMedium.create({'name': 'Medium ACLs'})
+        test_utm_source = UtmSource.create({'name': 'Source ACLs'})
 
         # READ
         self.assertEqual(
@@ -50,9 +50,9 @@ class TestUTMSecurity(TestUTMCommon):
         UtmSource = self.env['utm.source']
 
         # CREATE
-        test_utm_campaign = UtmCampaign.create({'name': 'Test Campaign'})
-        test_utm_medium = UtmMedium.create({'name': 'Test Medium'})
-        test_utm_source = UtmSource.create({'name': 'Test Source'})
+        test_utm_campaign = UtmCampaign.create({'name': 'Campaign ACLs'})
+        test_utm_medium = UtmMedium.create({'name': 'Medium ACLs'})
+        test_utm_source = UtmSource.create({'name': 'Source ACLs'})
 
         # READ
         self.assertEqual(

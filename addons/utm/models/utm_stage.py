@@ -13,4 +13,4 @@ class UtmStage(models.Model):
     _order = 'sequence'
 
     name = fields.Char(required=True, translate=True)
-    sequence = fields.Integer()
+    sequence = fields.Integer(default=1)

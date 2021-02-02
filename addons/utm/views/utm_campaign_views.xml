@@ -5,7 +5,7 @@
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
             <search string="UTM Campaigns">
-                <field name="name" string="Campaigns"/>
+                <field name="title" string="Campaigns"/>
                 <field name="tag_ids"/>
                 <field name="user_id"/>
                 <field name="is_auto_campaign"/>
@@ -31,7 +31,8 @@
                     <div class="oe_button_box d-flex justify-content-end" name="button_box">
                     </div>
                     <group id="top-group">
-                        <field class="o_text_overflow" name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
+                        <field class="o_text_overflow" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
+                        <field name="name" invisible="1"/>
                         <field name="user_id" domain="[('share', '=', False)]"/>
                         <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                     </group>
@@ -47,7 +48,8 @@
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
             <tree string="UTM Campaigns" multi_edit="1" sample="1">
-                <field name="name" readonly="1"/>
+                <field name="title" readonly="1"/>
+                <field name="name" invisible="1"/>
                 <field name="user_id"/>
                 <field name="stage_id"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
@@ -62,7 +64,8 @@
         <field name="arch" type="xml">
             <form>
                 <group>
-                    <field class="o_text_overflow" name="name" string="Campaign Name" placeholder="e.g. Black Friday"/>
+                    <field name="name" invisible="1"/>
+                    <field class="o_text_overflow" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                     <field name="user_id" domain="[('share', '=', False)]"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                 </group>
@@ -99,7 +102,7 @@
                             <div class="oe_kanban_content">
                                 <div class="o_kanban_record_top">
                                     <div class="o_kanban_record_headings">
-                                        <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="name"/></h3>
+                                        <h3 class="oe_margin_bottom_8 o_kanban_record_title"><field name="title"/></h3>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_body">

@@ -30,9 +30,8 @@ class MassMailing(models.Model):
     A mass mailing is an occurence of sending emails. """
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'mail.render.mixin', 'utm.source.mixin']
     _order = 'calendar_date DESC'
-    _inherits = {'utm.source': 'source_id'}
     _rec_name = "subject"
 
     @api.model
@@ -93,8 +92,6 @@ class MassMailing(models.Model):
         'mass_mailing_id', 'attachment_id', string='Attachments')
     keep_archives = fields.Boolean(string='Keep Archives')
     campaign_id = fields.Many2one('utm.campaign', string='UTM Campaign', index=True, ondelete='set null')
-    source_id = fields.Many2one('utm.source', string='Source', required=True, ondelete='restrict',
-                                help="This is the link source, e.g. Search Engine, another domain, or name of email list")
     medium_id = fields.Many2one(
         'utm.medium', string='Medium',
         compute='_compute_medium_id', readonly=False, store=True, ondelete='restrict',
@@ -400,11 +397,8 @@ class MassMailing(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        now = fields.Datetime.now()
         ab_testing_cron = self.env.ref('mass_mailing.ir_cron_mass_mailing_ab_testing').sudo()
         for values in vals_list:
-            if values.get('subject') and not values.get('name'):
-                values['name'] = "%s %s" % (values['subject'], now)
             if values.get('body_html'):
                 values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
             if values.get('ab_testing_schedule_datetime'):
@@ -451,9 +445,7 @@ class MassMailing(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
         self.ensure_one()
-        default = dict(default or {},
-                       name=_('%s (copy)', self.name),
-                       contact_list_ids=self.contact_list_ids.ids)
+        default = dict(default or {}, contact_list_ids=self.contact_list_ids.ids)
         return super(MassMailing, self).copy(default=default)
 
     def _group_expand_states(self, states, domain, order):
