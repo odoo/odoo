@@ -38,6 +38,14 @@ def calc_check_digits(number):
     checksum = int(number_base10) % 97
     return '%02d' % ((98 - 100 * checksum) % 97)
 
+PAYMENT_STATE_SELECTION = [
+        ('not_paid', 'Not Paid'),
+        ('in_payment', 'In Payment'),
+        ('paid', 'Paid'),
+        ('partial', 'Partially Paid'),
+        ('reversed', 'Reversed'),
+        ('invoicing_legacy', 'Invoicing App Legacy'),
+]
 
 class AccountMove(models.Model):
     _name = "account.move"
@@ -233,15 +241,8 @@ class AccountMove(models.Model):
     amount_by_group = fields.Binary(string="Tax amount by group",
         compute='_compute_invoice_taxes_by_group',
         help='Edit Tax amounts if you encounter rounding issues.')
-    payment_state = fields.Selection(selection=[
-        ('not_paid', 'Not Paid'),
-        ('in_payment', 'In Payment'),
-        ('paid', 'Paid'),
-        ('partial', 'Partially Paid'),
-        ('reversed', 'Reversed'),
-        ('invoicing_legacy', 'Invoicing App Legacy')],
-        string="Payment Status", store=True, readonly=True, copy=False, tracking=True,
-        compute='_compute_amount')
+    payment_state = fields.Selection(PAYMENT_STATE_SELECTION, string="Payment Status", store=True,
+        readonly=True, copy=False, tracking=True, compute='_compute_amount')
 
     # ==== Cash basis feature fields ====
     tax_cash_basis_rec_id = fields.Many2one(
@@ -1271,7 +1272,7 @@ class AccountMove(models.Model):
                 if line.currency_id and line in move._get_lines_onchange_currency():
                     currencies.add(line.currency_id)
 
-                if move.is_invoice(include_receipts=True):
+                if move._payment_state_matters():
                     # === Invoices ===
 
                     if not line.exclude_from_invoice_tab:
@@ -1315,8 +1316,7 @@ class AccountMove(models.Model):
             # Compute 'payment_state'.
             new_pmt_state = 'not_paid' if move.move_type != 'entry' else False
 
-            if move.is_invoice(include_receipts=True) and move.state == 'posted':
-
+            if move._payment_state_matters() and move.state == 'posted':
                 if currency.is_zero(move.amount_residual):
                     reconciled_payments = move._get_reconciled_payments()
                     if not reconciled_payments or all(payment.is_matched for payment in reconciled_payments):
@@ -2023,6 +2023,13 @@ class AccountMove(models.Model):
     @api.model
     def get_invoice_types(self, include_receipts=False):
         return ['out_invoice', 'out_refund', 'in_refund', 'in_invoice'] + (include_receipts and ['out_receipt', 'in_receipt'] or [])
+
+    def _payment_state_matters(self):
+        ''' Determines when new_pmt_state must be upated.
+        Method created to allow overrides.
+        :return: Boolean '''
+        self.ensure_one()
+        return self.is_invoice(include_receipts=True)
 
     def is_invoice(self, include_receipts=False):
         return self.move_type in self.get_invoice_types(include_receipts)

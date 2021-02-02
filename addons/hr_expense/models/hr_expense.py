@@ -2,10 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import re
-
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import email_split, float_is_zero, float_repr
+from odoo.addons.account.models.account_move import PAYMENT_STATE_SELECTION
 
 
 class HrExpense(models.Model):
@@ -538,6 +538,7 @@ Or send your receipts at <a href="mailto:%(email)s?subject=Lunch%%20with%%20cust
                 'currency_id': expense.currency_id.id,
                 'expense_id': expense.id,
                 'partner_id': partner_id,
+                'exclude_from_invoice_tab': True,
             }
             move_line_values.append(move_line_dst)
 
@@ -828,9 +829,11 @@ class HrExpenseSheet(models.Model):
         ('submit', 'Submitted'),
         ('approve', 'Approved'),
         ('post', 'Posted'),
-        ('done', 'Paid'),
+        ('done', 'Done'),
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True, help='Expense Report State')
+    payment_state = fields.Selection(selection=PAYMENT_STATE_SELECTION, string="Payment Status",
+        store=True, readonly=True, copy=False, tracking=True, compute='_compute_payment_state')
     employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())
     address_id = fields.Many2one('res.partner', compute='_compute_from_employee_id', store=True, readonly=False, copy=True, string="Employee Home Address", check_company=True)
     payment_mode = fields.Selection(related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Paid By", tracking=True)
@@ -839,7 +842,7 @@ class HrExpenseSheet(models.Model):
     amount_residual = fields.Monetary(
         string="Amount Due", store=True,
         currency_field='currency_id',
-        compute='_compute_amount_residual')
+        related='account_move_id.amount_residual')
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)
     attachment_number = fields.Integer(compute='_compute_attachment_number', string='Number of Attachments')
@@ -863,21 +866,10 @@ class HrExpenseSheet(models.Model):
         for sheet in self:
             sheet.total_amount = sum(sheet.expense_line_ids.mapped('total_amount_company'))
 
-    @api.depends(
-        'currency_id',
-        'account_move_id.line_ids.amount_residual',
-        'account_move_id.line_ids.amount_residual_currency',
-        'account_move_id.line_ids.account_internal_type',)
-    def _compute_amount_residual(self):
+    @api.depends('account_move_id.payment_state')
+    def _compute_payment_state(self):
         for sheet in self:
-            if sheet.currency_id == sheet.company_id.currency_id:
-                residual_field = 'amount_residual'
-            else:
-                residual_field = 'amount_residual_currency'
-
-            payment_term_lines = sheet.account_move_id.line_ids\
-                .filtered(lambda line: line.account_internal_type in ('receivable', 'payable'))
-            sheet.amount_residual = -sum(payment_term_lines.mapped(residual_field))
+            sheet.payment_state = sheet.account_move_id.payment_state or 'not_paid'
 
     def _compute_attachment_number(self):
         for sheet in self:
@@ -977,7 +969,7 @@ class HrExpenseSheet(models.Model):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
 
         if any(not sheet.journal_id for sheet in self):
-            raise UserError(_("Expenses must have an expense journal specified to generate accounting entries."))
+            raise UserError(_("Specify expense journal in tab Other Info to generate accounting entries."))
 
         expense_line_ids = self.mapped('expense_line_ids')\
             .filtered(lambda r: not float_is_zero(r.total_amount, precision_rounding=(r.currency_id or self.env.company.currency_id).rounding))
