@@ -127,8 +127,8 @@
                             <group>
                                 <field name="booking_identifier" invisible="1"/>
                                 <field name="date" attrs="{'readonly': [('stage_id', '!=', 1)]}"/>
-                                <field name="start_time" attrs="{'readonly': [('stage_id', '!=', 1)], 'invisible': ['|',('stage_id', '!=', 1), ('booking_identifier', '!=', True)]}"/>
-                                <field name="end_time" attrs="{'readonly': [('stage_id', '!=', 1)], 'invisible': ['|',('stage_id', '!=', 1), ('booking_identifier', '!=', True)]}"/>
+                                <field name="start_time" attrs="{'readonly': [('stage_id', '!=', 1)]}"/>
+                                <field name="end_time" attrs="{'readonly': [('stage_id', '!=', 1)]}"/>
                                 <field name="start_date_only" invisible="1"/>
                                 <field name="inv_stage_identifier" invisible="1"/>
                                 <field name="invoice_number" invisible="1"/>
