@@ -3332,7 +3332,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         $weight.find('b').text(`${(weight / 1024).toFixed(1)} kb`);
         $weight.removeClass('d-none');
         img.classList.add('o_modified_image_to_save');
-        return loadImage(dataURL, img);
+        const loadedImg = await loadImage(dataURL, img);
+        this._applyImage(loadedImg);
+        return loadedImg;
     },
     /**
      * Loads the image's attachment info.
@@ -3378,6 +3380,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @returns {Int} the maximum width at which the image can be displayed
      */
     _computeMaxDisplayWidth() {},
+    /**
+     * Use the processed image when it's needed in the DOM.
+     *
+     * @private
+     * @abstract
+     * @param {HTMLImageElement} img
+     */
+    _applyImage(img) {},
 });
 
 /**
@@ -3509,13 +3519,6 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         return 1920;
     },
     /**
-     * @override
-     */
-    async _applyOptions() {
-        await this._super(...arguments);
-        this.$target.css('background-image', `url('${this._getImg().getAttribute('src')}')`);
-    },
-    /**
      * Initializes this.img to an image with the background image url as src.
      *
      * @override
@@ -3529,6 +3532,12 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         // Don't set the src if not relative (ie, not local image: cannot be modified)
         this.img.src = src.startsWith('/') ? src : '';
         return await this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _applyImage(img) {
+        this.$target.css('background-image', `url('${img.getAttribute('src')}')`);
     },
 
     //--------------------------------------------------------------------------
