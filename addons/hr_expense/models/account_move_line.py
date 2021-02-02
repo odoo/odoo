@@ -3,6 +3,15 @@
 
 from odoo import api, fields, models
 
+class AccountMove(models.Model):
+    _inherit = "account.move"
+
+    def _payment_state_matters(self):
+        self.ensure_one()
+        if self.line_ids.expense_id:
+            return True
+        return super()._payment_state_matters()
+
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"

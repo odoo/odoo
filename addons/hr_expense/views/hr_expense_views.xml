@@ -625,6 +625,7 @@
                     <field name="currency_id" optional="hide"/>
                     <field name="journal_id" optional="hide"/>
                     <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
+                    <field name="payment_state" optional="show" decoration-info="payment_state in ('partial','in_payment')" decoration-success="payment_state == 'paid'" decoration-danger="payment_state in ('reversed','not_paid')" widget="badge"/>
                     <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
@@ -698,7 +699,11 @@
                             <field name="attachment_number" widget="statinfo" string="Documents"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <field name="payment_state" invisible="True"/>
+                    <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('payment_state', '!=', 'paid')]}"/>
+                    <widget name="web_ribbon" title="Partial" bg_color="bg-info" attrs="{'invisible': [('payment_state', '!=', 'partial')]}"/>
+                    <widget name="web_ribbon" title="Reversed" bg_color="bg-danger" attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"/>
+                    <widget name="web_ribbon" title="In Payment" attrs="{'invisible': [('payment_state', '!=', 'in_payment')]}"/>
                     <div class="oe_title">
                         <label for="name"/>
                         <h1>
