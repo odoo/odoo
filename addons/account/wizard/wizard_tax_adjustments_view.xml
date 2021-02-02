@@ -11,7 +11,7 @@
             </h1>
             <group>
                 <field name="report_id" invisible="1"/>
-                <field name="tax_report_line_id" widget="selection" domain="[('tag_name', '!=', None), ('report_id', '=', report_id)]"/>
+                <field name="tax_report_line_id" widget="selection" domain="[('tag_name', '!=', None)]"/>
             </group>
             <group>
                 <group>
