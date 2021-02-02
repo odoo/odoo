@@ -35,12 +35,25 @@ var Widget = require('web.Widget');
 
 var AbstractField = Widget.extend({
     events: {
+        'click': '_onClick',
         'keydown': '_onKeydown',
     },
     custom_events: {
         navigation_move: '_onNavigationMove',
     },
 
+    /**
+     * Determines if the field can be quick editable which means that when
+     * the field is clicked and if it's quick editable, it will trigger an event
+     * to the form view to switch into edit mode and then it'll perform
+     * some action (@see quickEdit)
+     */
+    isQuickEditable: false,
+    /**
+     * List of selectors matching elements that must never trigger the 'quick_edit'
+     * event when being clicked on.
+     */
+    quickEditExclusion: [],
     /**
     * An object representing fields to be fetched by the model eventhough not present in the view
     * This object contains "field name" as key and an object as value.
@@ -164,6 +177,9 @@ var AbstractField = Widget.extend({
         // recreate a new field widget.
         this.mode = options.mode || "readonly";
 
+        // the widget can be readonly because of a modifier
+        this.hasReadonlyModifier = options.hasReadonlyModifier || false;
+
         // this flag tracks if the widget is in a valid state, meaning that the
         // current value represented in the DOM is a value that can be parsed
         // and saved.  For example, a float field can only use a number and not
@@ -194,6 +210,7 @@ var AbstractField = Widget.extend({
         if (this.attrs.decorations) {
             this.resetOnAnyFieldChange = true;
         }
+        this._canQuickEdit = this.isQuickEditable;
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,
@@ -206,6 +223,7 @@ var AbstractField = Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             self.$el.attr('name', self.name);
             self.$el.addClass('o_field_widget');
+            self.$el.toggleClass('o_quick_editable', self._canQuickEdit);
             return self._render();
         });
     },
@@ -254,6 +272,19 @@ var AbstractField = Widget.extend({
      * @returns {Promise|undefined}
      */
     commitChanges: function () {},
+    /**
+     * This function is called when the form view auto focus a field for
+     * quick editing. Some fields have a special behaviour for the quick edit
+     * like the checkbox: when we click on checkbox to quick-edit it,
+     * it toggles its value as we've already been in edit mode.
+     *
+     * @param {any} extraInfo info to change the behaviour
+     */
+    quickEdit: function (extraInfo) {
+        if (this._canQuickEdit && this.mode !== "readonly") {
+            this._quickEdit(extraInfo);
+        }
+    },
     /**
      * Returns the main field's DOM element (jQuery form) which can be focused
      * by the browser.
@@ -380,6 +411,14 @@ var AbstractField = Widget.extend({
         });
     },
     /**
+     * @private
+     * @see quickEdit
+     * @param {any} extraInfo info to change the behaviour
+     */
+    _quickEdit: function (extraInfo) {
+        this.activate({noAutomaticCreate: true});
+    },
+    /**
      * Converts the value from the field to a string representation.
      *
      * @private
@@ -402,6 +441,14 @@ var AbstractField = Widget.extend({
      */
     _getClassFromDecoration: function (decoration) {
         return `text-${decoration.split('-')[1]}`;
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     * @returns {Object}
+     */
+    _getQuickEditExtraInfo(ev) {
+        return {};
     },
     /**
      * Compares the given value with the last value that has been set.
@@ -548,6 +595,23 @@ var AbstractField = Widget.extend({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * Triggers quick edit only if the field is authorized to do it.
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClick: function (ev) {
+        if (this._canQuickEdit && this.mode === 'readonly' &&
+            !this.quickEditExclusion.some(x => ev.target.closest(x))
+        ) {
+            this.trigger_up('quick_edit', {
+                fieldName: this.name,
+                target: this.el,
+                extraInfo: this._getQuickEditExtraInfo(ev),
+            });
+        }
+    },
     /**
      * Intercepts navigation keyboard events to prevent their default behavior
      * and notifies the view so that it can handle it its own way.

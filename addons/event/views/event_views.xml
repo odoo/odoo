@@ -10,8 +10,8 @@
                 <form string="Event Category">
                    <sheet>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
+                            <label for="name"/>
+                            <h1><field name="name" placeholder="e.g. Exhibition"/></h1>
                         </div>
                         <h2>Location</h2>
                         <div class="row mt16 o_settings_container" name="event_type_location">
@@ -218,7 +218,7 @@
                         <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="kanban_state" widget="state_selection" class="ml-auto float-right"/>
                         <div class="oe_title">
-                            <label for="name" class="oe_edit_only" string="Event Name"/>
+                            <label for="name" string="Event Name"/>
                             <h1><field class="o_text_overflow" name="name" placeholder="e.g. Conference for Architects"/></h1>
                         </div>
                         <group>

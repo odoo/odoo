@@ -568,7 +568,7 @@ var ListRenderer = BasicRenderer.extend({
         if (field.type !== 'boolean') {
             title = formatter(value, field, _.extend(formatOptions, {escape: false}));
         }
-        return $td.html(formattedValue).attr('title', title);
+        return $td.html(formattedValue).attr('title', title).attr('name', name);
     },
     /**
      * Renders the button element associated to the given node and record.

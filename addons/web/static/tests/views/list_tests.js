@@ -6593,10 +6593,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(list.$('.o_data_cell:first'));
         await testUtils.fields.editInput(list.$('input[name="foo"]'), "hello");
         await testUtils.dom.click(list.$buttons.find('.o_list_button_discard'));
-        assert.strictEqual($('.modal:visible').length, 1,
-            "a modal to ask for discard should be visible");
+        assert.containsNone(document.body, '.modal',
+            "a modal to ask for discard should not be visible");
 
-        await testUtils.dom.click($('.modal:visible .btn-primary'));
         assert.strictEqual(list.$('.o_data_cell:first').text(), "yop",
             "first cell should still contain 'yop'");
 
@@ -7731,8 +7730,7 @@ QUnit.module('Views', {
         $discardButton[0].dispatchEvent(new MouseEvent('mouseup'));
         await testUtils.dom.click($discardButton);
 
-        assert.ok($('.modal').text().includes("Warning"), "Modal should ask to discard changes");
-        await testUtils.dom.click($('.modal .btn-primary'));
+        assert.containsNone(document.body, '.modal', 'should not open modal');
 
         assert.strictEqual(list.$('.o_data_row:first() .o_data_cell:first()').text(), "yop");
 
@@ -9261,7 +9259,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pressing ESC in editable grouped list should discard the current line changes', async function (assert) {
-        assert.expect(5);
+        assert.expect(6);
 
         var list = await createView({
             View: ListView,
@@ -9280,7 +9278,7 @@ QUnit.module('Views', {
         await testUtils.fields.editAndTrigger(list.$('tr.o_selected_row .o_data_cell:first input[name="foo"]'), 'new_value', 'input');
         // discard by pressing ESC
         await testUtils.fields.triggerKeydown(list.$('input[name="foo"]'), 'escape');
-        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.containsNone(document.body, '.modal', 'should not open modal');
 
         assert.containsOnce(list, 'tbody tr td:contains(yop)');
         assert.containsN(list, 'tr.o_data_row', 3);
@@ -9830,9 +9828,8 @@ QUnit.module('Views', {
 
         await testUtils.fields.triggerKeydown($(document.activeElement), 'escape');
 
-        assert.hasClass($('body'), 'modal-open',
-            'record has been modified, are you sure modal should be opened');
-        await testUtils.dom.click($('body .modal button span:contains(Ok)'));
+        assert.containsNone(document.body, '.modal',
+            'record has been modified but modal should not be opened');
 
         assert.doesNotHaveClass(list.$('tr.o_data_row:eq(1)'), 'o_selected_row',
             'second row should be closed');
@@ -11118,6 +11115,220 @@ QUnit.module('Views', {
         ]);
 
         ControlPanel.unpatch('test.ControlPanel');
+
+        list.destroy();
+    });
+
+    QUnit.test("Auto save: add a record and leave action", async function (assert) {
+        assert.expect(4);
+
+        const actionManager = await createActionManager({
+            actions: [{
+                id: 1,
+                name: 'Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[2, 'list']],
+                search_view_id: [1, 'search'],
+            }, {
+                id: 2,
+                name: 'Action 2',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [1, 'search'],
+            }],
+            archs:  {
+                'foo,1,search': '<search></search>',
+                'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
+                'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
+            },
+            data: this.data,
+        });
+
+        await actionManager.doAction(1);
+
+        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
+        assert.containsN(actionManager, '.o_data_row', 4);
+
+        await testUtils.dom.click(actionManager.$('.o_list_button_add'));
+        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="foo"]'), "test");
+
+        // change action and come back
+        await actionManager.doAction(2);
+        await actionManager.doAction(1, { clear_breadcrumbs: true });
+
+        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapbliptest");
+        assert.containsN(actionManager, '.o_data_row', 5);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test("Auto save: modify a record and leave action", async function (assert) {
+        assert.expect(2);
+
+        const actionManager = await createActionManager({
+            actions: [{
+                id: 1,
+                name: 'Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[2, 'list']],
+                search_view_id: [1, 'search'],
+            }, {
+                id: 2,
+                name: 'Action 2',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [1, 'search'],
+            }],
+            archs:  {
+                'foo,1,search': '<search></search>',
+                'foo,2,list': '<tree editable="top"><field name="foo"/></tree>',
+                'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
+            },
+            data: this.data,
+        });
+
+        await actionManager.doAction(1);
+
+        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
+
+        await testUtils.dom.click(actionManager.$('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="foo"]'), "test");
+
+        // change action and come back
+        await actionManager.doAction(2);
+        await actionManager.doAction(1, { clear_breadcrumbs: true });
+
+        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "testblipgnapblip");
+
+        actionManager.destroy();
+    });
+
+    QUnit.test("Auto save: modify a record and leave action (reject)", async function (assert) {
+        assert.expect(5);
+
+        const actionManager = await createActionManager({
+            actions: [{
+                id: 1,
+                name: 'Action 1',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[2, 'list']],
+                search_view_id: [1, 'search'],
+            }, {
+                id: 2,
+                name: 'Action 2',
+                res_model: 'foo',
+                type: 'ir.actions.act_window',
+                views: [[3, 'list']],
+                search_view_id: [1, 'search'],
+            }],
+            archs:  {
+                'foo,1,search': '<search></search>',
+                'foo,2,list': '<tree editable="top"><field name="foo" required="1"/></tree>',
+                'foo,3,list': '<tree editable="top"><field name="foo"/></tree>',
+            },
+            data: this.data,
+        });
+
+        await actionManager.doAction(1);
+
+        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "yopblipgnapblip");
+
+        await testUtils.dom.click(actionManager.$('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput(actionManager.$('.o_field_widget[name="foo"]'), "");
+
+        await assert.rejects(actionManager.doAction(2));
+
+        assert.strictEqual(actionManager.$('.o_field_cell[name="foo"]').text(), "blipgnapblip");
+        assert.hasClass(actionManager.$('.o_field_widget[name="foo"]:first'), 'o_field_invalid');
+        assert.containsN(actionManager, '.o_data_row', 4);
+
+        actionManager.destroy();
+    });
+
+    QUnit.test("Auto save: add a record and change page", async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            debug: true,
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top" limit="3">
+                    <field name="foo"/>
+                </tree>`,
+        });
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "yopblipgnap");
+
+        await testUtils.dom.click(list.$('.o_list_button_add'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name="foo"]'), "test");
+        await testUtils.controlPanel.pagerNext(list);
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "bliptest");
+
+        await testUtils.controlPanel.pagerPrevious(list);
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "yopblipgnap");
+
+        list.destroy();
+    });
+
+    QUnit.test("Auto save: modify a record and change page", async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top" limit="3">
+                    <field name="foo"/>
+                </tree>`,
+        });
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "yopblipgnap");
+
+        await testUtils.dom.click(list.$('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name="foo"]'), "test");
+        await testUtils.controlPanel.pagerNext(list);
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "blip");
+
+        await testUtils.controlPanel.pagerPrevious(list);
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "testblipgnap");
+
+        list.destroy();
+    });
+
+    QUnit.test("Auto save: modify a record and change page (reject)", async function (assert) {
+        assert.expect(3);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top" limit="3">
+                    <field name="foo" required="1"/>
+                </tree>`,
+        });
+
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "yopblipgnap");
+
+        await testUtils.dom.click(list.$('.o_field_cell[name="foo"]:first'));
+        await testUtils.fields.editInput(list.$('.o_field_widget[name="foo"]'), "");
+
+        await testUtils.controlPanel.pagerNext(list);
+
+        assert.hasClass(list.$('.o_field_widget[name="foo"]:first'), 'o_field_invalid');
+        assert.strictEqual(list.$('.o_field_cell[name="foo"]').text(), "blipgnap");
 
         list.destroy();
     });

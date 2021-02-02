@@ -98,6 +98,10 @@
                 display: inline-block;
             }
         }
+
+        .o_quick_editable:not(.o_form_uri) {
+            cursor: default;
+        }
     }
 
     .o_form_uri {
@@ -486,6 +490,12 @@
         .o_priority > .o_priority_star {
             font-size: inherit;
         }
+        > h1 {
+            min-height: 55px;
+        }
+        > h2 {
+            min-height: 43px;
+        }
     }
 
     // Avatar
@@ -506,6 +516,10 @@
         display: inline-block;
         width: 100%;
         margin: 10px 0;
+
+        .o_group {
+            margin: 0;
+        }
 
         // o_group contains nested groups
         @for $i from 1 through $o-form-group-cols {
@@ -554,7 +568,7 @@
                                               // it does not really matter
             // Makes extra buttons (e.g. m2o external button) overflow on the
             // right padding of the parent element
-            > .o_input_dropdown {
+            .o_input_dropdown {
                 flex: 1 0 auto;
             }
         }
@@ -604,6 +618,14 @@
         .o_field_widget {
             margin-bottom: 0px;
         }
+    }
+    td.o_td_label .o_form_label {
+        min-height: 33px;
+    }
+    td:not(.o_field_cell) .o_form_uri > span:first-child {
+        display: inline-block;
+        padding: 1px 0;
+        margin-bottom: 1px;
     }
 
     // Translate icon

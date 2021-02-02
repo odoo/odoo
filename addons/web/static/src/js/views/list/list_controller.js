@@ -78,6 +78,15 @@ var ListController = BasicController.extend({
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     * @returns {Promise}
+     */
+    canBeRemoved: async function () {
+        const _super = this._super.bind(this);
+        await this.renderer.unselectRow();
+        return _super(...arguments);
+    },
     /*
      * @override
      */
@@ -406,7 +415,9 @@ var ListController = BasicController.extend({
         if (!state.count) {
             return null;
         }
-        return this._super(...arguments);
+        return Object.assign(this._super(...arguments), {
+            validate: () => this.renderer.unselectRow(),
+        });
     },
     /**
      * @override

@@ -212,7 +212,7 @@ QUnit.module('basic_fields', {
     QUnit.module('FieldBoolean');
 
     QUnit.test('boolean field in form view', async function (assert) {
-        assert.expect(13);
+        assert.expect(15);
 
         var form = await createView({
             View: FormView,
@@ -224,11 +224,15 @@ QUnit.module('basic_fields', {
 
         assert.containsOnce(form, '.o_field_boolean input:checked',
             "checkbox should be checked");
+        assert.containsNone(form, '.o_field_boolean input:disabled',
+            'checkbox should not be disabled');
 
         // switch to edit mode and check the result
         await testUtils.form.clickEdit(form);
         assert.containsOnce(form, '.o_field_boolean input:checked',
             "checkbox should still be checked");
+        assert.containsNone(form, '.o_field_boolean input:disabled',
+            'checkbox should not be disabled');
 
         // uncheck the checkbox
         await testUtils.dom.click(form.$('.o_field_boolean input:checked'));
@@ -348,6 +352,41 @@ QUnit.module('basic_fields', {
         assert.strictEqual(list.$('tbody td:not(.o_list_record_selector) .custom-checkbox input:checked').length, 4,
             "should now have 4 checked input back");
         list.destroy();
+    });
+
+    QUnit.test('readonly boolean field', async function (assert) {
+        assert.expect(6);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="bar" attrs="{'readonly': True}"/>
+                </form>`,
+            res_id: 1,
+        });
+
+        assert.containsOnce(form, '.o_field_boolean input:checked',
+            "checkbox should be checked");
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            'checkbox should be disabled');
+
+        await testUtils.form.clickEdit(form);
+        assert.containsOnce(form, '.o_field_boolean input:checked',
+            "checkbox should still be checked");
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            'checkbox should still be disabled');
+
+        await testUtils.dom.click(form.$('.o_field_boolean label'));
+
+        assert.containsOnce(form, '.o_field_boolean input:checked',
+            "checkbox should still be checked");
+        assert.containsOnce(form, '.o_field_boolean input:disabled',
+            'checkbox should still be disabled');
+
+        form.destroy();
     });
 
     QUnit.module('FieldBooleanToggle');
@@ -2879,10 +2918,19 @@ QUnit.module('basic_fields', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="document" widget="image" options="{\'size\': [90, 90]}"/>' +
-                    '<field name="timmy" widget="many2many">' +
-                        '<tree>' +
+                    '<field name="timmy" widget="many2many" mode="kanban">' +
+                        // use kanban view as the tree will trigger edit mode
+                        // and thus won't display the field
+                        '<kanban>' +
                             '<field name="display_name"/>' +
-                        '</tree>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_global_click">' +
+                                        '<span><t t-esc="record.display_name.value"/></span>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
                         '<form>' +
                             '<field name="image" widget="image"/>' +
                         '</form>' +
@@ -2903,11 +2951,11 @@ QUnit.module('basic_fields', {
         });
         assert.verifySteps(["The view's image should have been fetched"]);
 
-        assert.containsOnce(form, 'tr.o_data_row',
+        assert.containsOnce(form, '.o_kanban_record.oe_kanban_global_click',
             'There should be one record in the many2many');
 
         // Actual flow: click on an element of the m2m to get its form view
-        await testUtils.dom.click(form.$('tbody td:contains(gold)'));
+        await testUtils.dom.click(form.$('.oe_kanban_global_click'));
         assert.strictEqual($('.modal').length, 1,
             'The modal should have opened');
         assert.verifySteps(["The dialog's image should have been fetched"]);
@@ -3032,10 +3080,19 @@ QUnit.module('basic_fields', {
             data: this.data,
             arch: '<form string="Partners">' +
                     '<field name="foo" widget="image_url" options="{\'size\': [90, 90]}"/>' +
-                    '<field name="timmy" widget="many2many">' +
-                        '<tree>' +
+                    '<field name="timmy" widget="many2many" mode="kanban">' +
+                        // use kanban view as the tree will trigger edit mode
+                        // and thus won't display the field
+                        '<kanban>' +
                             '<field name="display_name"/>' +
-                        '</tree>' +
+                            '<templates>' +
+                                '<t t-name="kanban-box">' +
+                                    '<div class="oe_kanban_global_click">' +
+                                        '<span><t t-esc="record.display_name.value"/></span>' +
+                                    '</div>' +
+                                '</t>' +
+                            '</templates>' +
+                        '</kanban>' +
                         '<form>' +
                             '<field name="image" widget="image_url"/>' +
                         '</form>' +
@@ -3056,11 +3113,11 @@ QUnit.module('basic_fields', {
         });
         assert.verifySteps(["The view's image should have been fetched"]);
 
-        assert.containsOnce(form, 'tr.o_data_row',
+        assert.containsOnce(form, '.o_kanban_record.oe_kanban_global_click',
             'There should be one record in the many2many');
 
         // Actual flow: click on an element of the m2m to get its form view
-        await testUtils.dom.click(form.$('tbody td:contains(gold)'));
+        await testUtils.dom.click(form.$('.oe_kanban_global_click'));
         assert.strictEqual($('.modal').length, 1,
             'The modal should have opened');
         assert.verifySteps(["The dialog's image should have been fetched"]);
@@ -4524,7 +4581,8 @@ QUnit.module('basic_fields', {
                             '<field name="datetime"/>' +
                         '</tree>' +
                         '<form>' +
-                            '<field name="datetime" widget="date"/>' +
+                            // display datetime in readonly as modal will open in edit
+                            '<field name="datetime" widget="date" attrs="{\'readonly\': 1}"/>' +
                         '</form>' +
                      '</field>' +
                  '</form>',
@@ -4568,7 +4626,8 @@ QUnit.module('basic_fields', {
                             '<field name="datetime"/>' +
                         '</tree>' +
                         '<form>' +
-                            '<field name="datetime" widget="date"/>' +
+                            // display datetime in readonly as modal will open in edit
+                            '<field name="datetime" widget="date" attrs="{\'readonly\': 1}"/>' +
                         '</form>' +
                      '</field>' +
                  '</form>',

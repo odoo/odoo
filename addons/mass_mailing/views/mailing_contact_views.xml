@@ -155,13 +155,12 @@
             <form string="Mailing List Contacts">
                 <sheet>
                     <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
+                        <label for="name" string="Contact Name"/>
                         <h1>
                             <field class="o_text_overflow" name="name" placeholder="e.g. John Smith"/>
                         </h1>
-                        <label for="tag_ids" class="oe_edit_only"/>
                         <div>
-                            <field name="tag_ids" widget="many2many_tags" style="width: 100%%"/>
+                            <field name="tag_ids" widget="many2many_tags" placeholder="Tags" style="width: 100%%"/>
                         </div>
                     </div>
                     <group>
