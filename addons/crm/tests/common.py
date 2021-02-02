@@ -131,6 +131,8 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'name': 'Philip J Fry',
             'email': 'philip.j.fry@test.example.com',
             'mobile': '+1 202 555 0122',
+            'title': cls.env.ref('base.res_partner_title_mister').id,
+            'function': 'Delivery Boy',
             'phone': False,
             'parent_id': cls.contact_company_1.id,
             'is_company': False,
