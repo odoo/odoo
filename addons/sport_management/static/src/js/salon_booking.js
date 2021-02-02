@@ -1,4 +1,4 @@
-odoo.define('salon_management.website_salon_booking_system', function(require) {
+odoo.define('sport_management.website_salon_booking_system', function(require) {
     'use strict';
     var ajax = require('web.ajax');
     $(document).on('click', "#submit_button", function() {

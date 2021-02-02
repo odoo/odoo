@@ -159,7 +159,7 @@ class SalonBookingWeb(http.Controller):
 
     @http.route('/page/sport_management.sport_booking_thank_you', type='http', auth="public", website=True)
     def thank_you(self, **post):
-        return request.render('salon_management.salon_booking_thank_you', {})
+        return request.render('sport_management.salon_booking_thank_you', {})
 
     @http.route('/page/sport_management/sport_booking_form', type='http', auth="public", website=True)
     def chair_info(self, **post):
@@ -190,7 +190,7 @@ class SalonBookingWeb(http.Controller):
         salon_service_obj = request.env['salon.service'].search([])
         booking_payment_obj = request.env['salon.booking.payment'].search([('activate_payment','=',True)])
         court_option = ["Booked Court","Available Court"]
-        return request.render('salon_management.salon_booking_form',
+        return request.render('sport_management.salon_booking_form',
                               {'chair_details': chair_obj, 'order_details': order_obj,
                                 'duration_details': duration_obj, 
                                 'date_search': date_check,

@@ -74,12 +74,12 @@ class SalonBookingBackend(models.Model):
                 'salon_order': order.id,
             }
             salon_service_obj.create(service_data)
-        template = self.env.ref('salon_management.salon_email_template_approved')
+        template = self.env.ref('sport_management.salon_email_template_approved')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
         self.state = "approved"
 
     def booking_reject(self):
-        template = self.env.ref('salon_management.salon_email_template_rejected')
+        template = self.env.ref('sport_management.salon_email_template_rejected')
         self.env['mail.template'].browse(template.id).send_mail(self.id)
         self.state = "rejected"
 

@@ -10,13 +10,13 @@
 
         <record id="group_salon_user" model="res.groups">
             <field name="name">Court User</field>
-            <field name="category_id" ref="salon_management.module_category_salon_management"/>
+            <field name="category_id" ref="sport_management.module_category_salon_management"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
         <record id="group_salon_manager" model="res.groups">
             <field name="name">Sport Manager </field>
-            <field name="category_id" ref="salon_management.module_category_salon_management"/>
+            <field name="category_id" ref="sport_management.module_category_salon_management"/>
             <field name="implied_ids" eval="[(4, ref('group_salon_user'))]"/>
             <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
         </record>
