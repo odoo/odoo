@@ -78,6 +78,7 @@ class StockRule(models.Model):
                 # Create now the procurement group that will be assigned to the new MO
                 # This ensure that the outgoing move PostProduction -> Stock is linked to its MO
                 # rather than the original record (MO or SO)
+                self = self.with_context(use_group_name=True)
                 procurement.values['group_id'] = self.env["procurement.group"].create({'name': name})
         return super()._run_pull(procurements)
 
@@ -119,7 +120,7 @@ class StockRule(models.Model):
         if location_id.get_warehouse().manufacture_steps == 'pbm_sam':
             # Use the procurement group created in _run_pull mrp override
             # Preserve the origin from the original stock move, if available
-            if len(values.get('move_dest_ids', [])) == 1 and values['move_dest_ids'][0].origin and values['group_id']:
+            if len(values.get('move_dest_ids', [])) == 1 and values['move_dest_ids'][0].origin and values['group_id'] and self._context.get('use_group_name'):
                 origin = values['move_dest_ids'][0].origin
                 mo_values.update({
                     'name': values['group_id'].name,
