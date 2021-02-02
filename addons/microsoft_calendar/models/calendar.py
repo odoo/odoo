@@ -125,18 +125,15 @@ class Meeting(models.Model):
         commands_partner = []
 
         microsoft_attendees = microsoft_event.attendees or []
-        if microsoft_event.isOrganizer:
-            user = microsoft_event.owner(self.env)
-            microsoft_attendees += [{
-                'emailAddress': {'address': user.partner_id.email},
-                'status': {'response': 'organizer'}
-            }]
         emails = [a.get('emailAddress').get('address') for a in microsoft_attendees]
         existing_attendees = self.env['calendar.attendee']
         if microsoft_event.exists(self.env):
             existing_attendees = self.env['calendar.attendee'].search([
                 ('event_id', '=', microsoft_event.odoo_id(self.env)),
                 ('email', 'in', emails)])
+        elif self.env.user.partner_id.email not in emails:
+            commands_attendee += [(0, 0, {'state': 'accepted', 'partner_id': self.env.user.partner_id.id})]
+            commands_partner += [(4, self.env.user.partner_id.id)]
         attendees_by_emails = {a.email: a for a in existing_attendees}
         for attendee in microsoft_attendees:
             email = attendee.get('emailAddress').get('address')
