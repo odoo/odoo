@@ -5,10 +5,12 @@ from ast import literal_eval
 from datetime import datetime
 from freezegun import freeze_time
 from psycopg2 import IntegrityError
+from unittest.mock import patch
 
 from odoo.addons.base.tests.test_ir_cron import CronMixinCase
 from odoo.addons.mass_mailing.tests.common import MassMailCommon
 from odoo.exceptions import ValidationError
+from odoo.sql_db import Cursor
 from odoo.tests.common import users, Form
 from odoo.tools import mute_logger
 
@@ -226,6 +228,50 @@ class TestMassMailValues(MassMailCommon):
         with self.assertRaises(IntegrityError):
             activity.write({'res_id': 0})
             activity.flush()
+
+    @freeze_time('2022-01-02')
+    @patch.object(Cursor, 'now', lambda *args, **kwargs: datetime(2022, 1, 2))
+    @users('user_marketing')
+    def test_mailing_unique_name(self):
+        """Test that the names are generated and unique for each mailing.
+
+        If the name is missing, it's generated from the subject. Then we should ensure
+        that this generated name is unique.
+        """
+        mailing_0 = self.env['mailing.mailing'].create({'subject': 'First subject'})
+
+        mailing_1, mailing_2, mailing_3, mailing_4, mailing_5, mailing_6 = self.env['mailing.mailing'].create([{
+            'subject': 'First subject',
+        }, {
+            'subject': 'First subject',
+        }, {
+            'subject': 'First subject',
+            'source_id': self.env['utm.source'].create({'name': 'Custom Source'}).id,
+        }, {
+            'subject': 'First subject',
+            'name': 'Mailing',
+        }, {
+            'subject': 'Second subject',
+            'name': 'Mailing',
+        }, {
+            'subject': 'Second subject',
+        }])
+
+        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02)')
+        self.assertEqual(mailing_1.name, 'First subject (Mass Mailing created on 2022-01-02) [2]')
+        self.assertEqual(mailing_2.name, 'First subject (Mass Mailing created on 2022-01-02) [3]')
+        self.assertEqual(mailing_3.name, 'Custom Source')
+        self.assertEqual(mailing_4.name, 'Mailing')
+        self.assertEqual(mailing_5.name, 'Mailing [2]')
+        self.assertEqual(mailing_6.name, 'Second subject (Mass Mailing created on 2022-01-02)')
+
+        mailing_0.subject = 'First subject'
+        self.assertEqual(mailing_0.name, 'First subject (Mass Mailing created on 2022-01-02) [4]',
+            msg='The name must have been re-generated')
+
+        mailing_0.name = 'Second subject (Mass Mailing created on 2022-01-02)'
+        self.assertEqual(mailing_0.name, 'Second subject (Mass Mailing created on 2022-01-02) [2]',
+            msg='The name must be unique')
 
 
 class TestMassMailFeatures(MassMailCommon, CronMixinCase):
