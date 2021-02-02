@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.crm.models.crm_lead import PARTNER_FIELDS_TO_SYNC, PARTNER_ADDRESS_FIELDS_TO_SYNC
 from odoo.addons.crm.tests.common import TestCrmCommon, INCOMING_EMAIL
 from odoo.addons.phone_validation.tools.phone_validation import phone_format
 from odoo.tests.common import Form, users
@@ -14,6 +15,54 @@ class TestCRMLead(TestCrmCommon):
         cls.country_ref = cls.env.ref('base.be')
         cls.test_email = '"Test Email" <test.email@example.com>'
         cls.test_phone = '0485112233'
+
+    def assertLeadAddress(self, lead, street, street2, city, lead_zip, state, country):
+        self.assertEqual(lead.street, street)
+        self.assertEqual(lead.street2, street2)
+        self.assertEqual(lead.city, city)
+        self.assertEqual(lead.zip, lead_zip)
+        self.assertEqual(lead.state_id, state)
+        self.assertEqual(lead.country_id, country)
+
+    @users('user_sales_leads')
+    def test_crm_lead_contact_fields_mixed(self):
+        """ Test mixed configuration from partner: both user input and coming
+        from partner, in order to ensure we do not loose information or make
+        it incoherent. """
+        lead_data = {
+            'name': 'TestMixed',
+            'partner_id': self.contact_1.id,
+            # address
+            'country_id': self.country_ref.id,
+            # other contact fields
+            'function': 'Parmesan Rappeur',
+            # specific contact fields
+            'email_from': self.test_email,
+            'phone': self.test_phone,
+        }
+        lead = self.env['crm.lead'].create(lead_data)
+        # classic
+        self.assertEqual(lead.name, "TestMixed")
+        # address
+        self.assertLeadAddress(lead, False, False, False, False, self.env['res.country.state'], self.country_ref)
+        # other contact fields
+        for fname in set(PARTNER_FIELDS_TO_SYNC) - set(['function']):
+            self.assertEqual(lead[fname], self.contact_1[fname], 'No user input -> take from contact for field %s' % fname)
+        self.assertEqual(lead.function, 'Parmesan Rappeur', 'User input should take over partner value')
+        # specific contact fields
+        self.assertEqual(lead.partner_name, self.contact_company_1.name)
+        self.assertEqual(lead.contact_name, self.contact_1.name)
+        self.assertEqual(lead.email_from, self.test_email)
+        self.assertEqual(lead.phone, self.test_phone)
+
+        # update a single address fields -> only those are updated
+        lead.write({'street': 'Super Street', 'city': 'Super City'})
+        self.assertLeadAddress(lead, 'Super Street', False, 'Super City', False, self.env['res.country.state'], self.country_ref)
+
+        # change partner -> whole address updated
+        lead.write({'partner_id': self.contact_company_1.id})
+        for fname in PARTNER_ADDRESS_FIELDS_TO_SYNC:
+            self.assertEqual(lead[fname], self.contact_company_1[fname])
 
     @users('user_sales_leads')
     def test_crm_lead_creation_no_partner(self):
