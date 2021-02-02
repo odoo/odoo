@@ -3369,8 +3369,11 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
 
         if (update) {
             img.classList.add('o_modified_image_to_save');
-            return loadImage(dataURL, img);
+            const loadedImg = await loadImage(dataURL, img);
+            this._applyImage(loadedImg);
+            return loadedImg;
         }
+        return img;
     },
     /**
      * Loads the image's attachment info.
@@ -3416,6 +3419,14 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @returns {Int} the maximum width at which the image can be displayed
      */
     _computeMaxDisplayWidth() {},
+    /**
+     * Use the processed image when it's needed in the DOM.
+     *
+     * @private
+     * @abstract
+     * @param {HTMLImageElement} img
+     */
+    _applyImage(img) {},
 });
 
 /**
@@ -3555,15 +3566,6 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         return 1920;
     },
     /**
-     * @override
-     */
-    async _applyOptions(update = true) {
-        await this._super(...arguments);
-        if (update) {
-            this.$target.css('background-image', `url('${this._getImg().getAttribute('src')}')`);
-        }
-    },
-    /**
      * Initializes this.img to an image with the background image url as src.
      *
      * @override
@@ -3593,6 +3595,12 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
             'flex': '0 0 0', // But force no forced width
             'margin-left': 'auto',
         });
+    },
+    /**
+     * @override
+     */
+    _applyImage(img) {
+        this.$target.css('background-image', `url('${img.getAttribute('src')}')`);
     },
 
     //--------------------------------------------------------------------------
