@@ -252,7 +252,7 @@ class AccountChartTemplate(models.Model):
         limited_install = self.env["ir.config_parameter"].get_param("account_data_import_company_%d" % company.id)
 
         # Install all the templates objects and generate the real objects
-        acc_template_ref, taxes_ref = self._install_template(company, code_digits=self.code_digits, limited_install=limited_install)
+        acc_template_ref, dummy = self._install_template(company, code_digits=self.code_digits, limited_install=limited_install)
         if limited_install:
             return {}
 
