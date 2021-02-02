@@ -49,7 +49,7 @@ class SaleOrder(models.Model):
         }
 
     def _compute_option_data_for_template_change(self, option):
-        if self.pricelist_id:
+        if self.pricelist_id and not option.price_unit:
             price = self.pricelist_id.with_context(uom=option.uom_id.id).get_product_price(option.product_id, 1, False)
         else:
             price = option.price_unit
