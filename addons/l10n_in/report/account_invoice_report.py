@@ -78,7 +78,7 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.shipping_bill_number,
             sub.shipping_bill_date,
             sub.shipping_port_code_id,
-            sub.total,
+            sub.total * sub.b2cs_refund_sign as total,
             sub.journal_id,
             sub.company_id,
             sub.move_type,
@@ -103,11 +103,11 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.gst_format_date,
             sub.gst_format_refund_date,
             sub.gst_format_shipping_bill_date,
-            sum(sub.igst_amount) * sub.amount_sign AS igst_amount,
-            sum(sub.cgst_amount) * sub.amount_sign AS cgst_amount,
-            sum(sub.sgst_amount) * sub.amount_sign AS sgst_amount,
-            avg(sub.cess_amount) * sub.amount_sign AS cess_amount,
-            sum(sub.price_total) AS price_total,
+            sum(sub.igst_amount) * sub.amount_sign * sub.b2cs_refund_sign AS igst_amount,
+            sum(sub.cgst_amount) * sub.amount_sign * sub.b2cs_refund_sign AS cgst_amount,
+            sum(sub.sgst_amount) * sub.amount_sign * sub.b2cs_refund_sign AS sgst_amount,
+            avg(sub.cess_amount) * sub.amount_sign * sub.b2cs_refund_sign AS cess_amount,
+            sum(sub.price_total) * sub.amount_sign * sub.b2cs_refund_sign AS price_total,
             sub.tax_id
         """
         return select_str
@@ -231,9 +231,16 @@ class L10nInAccountInvoiceReport(models.Model):
                 CASE WHEN tag_rep_ln.account_tax_report_line_id IN
                     (SELECT res_id FROM ir_model_data WHERE module='l10n_in' AND name in ('tax_report_line_sgst', 'tax_report_line_sgst_rc'))
                     THEN NULL
-                    ELSE (CASE WHEN aml.tax_base_amount <> 0 THEN aml.tax_base_amount ELSE NULL END)
+                    ELSE (CASE WHEN aml.tax_base_amount <> 0 THEN aml.tax_base_amount * (CASE WHEN aml.balance < 0 THEN -1 ELSE 1 END) ELSE NULL END)
                     END AS price_total,
                 (CASE WHEN (aj.type = 'sale' AND am.move_type != 'out_refund') or (aj.type = 'purchase' AND at.l10n_in_reverse_charge AND am.move_type != 'in_refund') THEN -1 ELSE 1 END) AS amount_sign,
+                (CASE WHEN am.move_type in ('in_refund','out_refund')
+                      AND p.vat IS NULL
+                      AND am.l10n_in_gst_treatment != 'overseas'
+                      AND (ABS(am.amount_total_signed) <= 250000 OR
+                          (ps.id = cp.state_id OR p.id IS NULL))
+                      THEN -1
+                      ELSE 1 END) AS b2cs_refund_sign,
                 (CASE WHEN atr.parent_tax IS NOT NULL THEN atr.parent_tax
                     ELSE at.id END) AS tax_id,
                 (CASE WHEN atr.parent_tax IS NOT NULL THEN parent_at.amount
@@ -303,7 +310,8 @@ class L10nInAccountInvoiceReport(models.Model):
             sub.gst_format_shipping_bill_date,
             sub.amount_sign,
             sub.tax_id,
-            sub.tax_rate
+            sub.tax_rate,
+            sub.b2cs_refund_sign
         """
         return group_by_str
 
