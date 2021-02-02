@@ -43,6 +43,7 @@ class TestMailMultiCompanyCommon(MailCommon):
         super(TestMailMultiCompanyCommon, cls).setUpClass()
         cls.company_2 = cls.env['res.company'].create({
             'name': 'Second Test Company',
+            'currency_id': 2,
         })
 
 
