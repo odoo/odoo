@@ -734,7 +734,7 @@ var FieldDateRange = InputField.extend({
      */
     _onDateRangePickerShow() {
         this._onScroll = ev => {
-            if (!this.$pickerContainer.get(0).contains(ev.target)) {
+            if (!config.device.isMobile && !this.$pickerContainer.get(0).contains(ev.target)) {
                 let data = this.$el.data('daterangepicker');
                 if (data) {
                     data.hide();
