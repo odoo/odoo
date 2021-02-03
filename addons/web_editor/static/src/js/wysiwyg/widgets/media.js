@@ -557,13 +557,18 @@ var FileWidget = SearchableMediaWidget.extend({
      * @private
      * @returns {Promise}
      */
-    _addData: function () {
+    async _addData() {
+        let files = this.$fileInput[0].files;
+        if (!files.length) {
+            // Case if the input is emptied, return resolved promise
+            return;
+        }
+
         var self = this;
         var uploadMutex = new concurrency.Mutex();
 
         // Upload the smallest file first to block the user the least possible.
-        var files = _.sortBy(this.$fileInput[0].files, 'size');
-
+        files = _.sortBy(files, 'size');
         _.each(files, function (file) {
             // Upload one file at a time: no need to parallel as upload is
             // limited by bandwidth.
