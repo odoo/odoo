@@ -159,6 +159,14 @@ const ColorPaletteWidget = Widget.extend({
     getColorNames: function () {
         return this.colorNames;
     },
+    /**
+     * Sets the currently selected color
+     *
+     * @param {string} color rgb[a]
+     */
+    setSelectedColor: function (color) {
+        this._selectColor({color: color});
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -261,13 +269,16 @@ const ColorPaletteWidget = Widget.extend({
      * Set the selectedColor and trigger an event
      *
      * @param {Object} color
-     * @param {string} eventName
+     * @param {string} [eventName]
      */
     _selectColor: function (colorInfo, eventName) {
         this.selectedColor = colorInfo.color = this.colorToColorNames[colorInfo.color] || colorInfo.color;
-        this.trigger_up(eventName, colorInfo);
+        if (eventName) {
+            this.trigger_up(eventName, colorInfo);
+        }
         this._buildCustomColors();
         this._markSelectedColor();
+        this.colorPicker.setSelectedColor(colorInfo.color);
     },
     /**
      * Mark the selected color
